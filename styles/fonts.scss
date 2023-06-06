@@ -1,0 +1,29 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                               //
+//                In side this file there will be commen fonts for the project.                  //
+//                                                                                               //
+///////////////////////////////////////////////////////////////////////////////////////////////////
+
+$path: "../public/fonts/";
+
+@font-face {
+  font-family: "LeagueSpartan-Bold";
+  src: local("LeagueSpartan Bold"), local("LeagueSpartan-Bold"),
+    url($path + "LeagueSpartan-Bold.woff2") format("woff2"),
+    url($path + "LeagueSpartan-Bold.woff") format("woff"),
+    url($path + "LeagueSpartan-Bold.ttf") format("truetype");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+    font-family: "LeagueSpartan-SemiBold";
+    src: local("LeagueSpartan SemiBold"), local("LeagueSpartan-SemiBold"),
+      url($path + "LeagueSpartan-SemiBold.woff2") format("woff2"),
+      url($path + "LeagueSpartan-SemiBold.woff") format("woff"),
+      url($path + "LeagueSpartan-SemiBold.ttf") format("truetype");
+    font-weight: 600;
+    font-style: normal;
+    font-display: swap;
+  }
