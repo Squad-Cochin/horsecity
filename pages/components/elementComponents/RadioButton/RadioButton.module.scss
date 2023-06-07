@@ -1,0 +1,58 @@
+//////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                          //
+//                          FILE FOR STYLING OF CHECKBOX COMPONENT                          //
+//                                                                                          //
+//////////////////////////////////////////////////////////////////////////////////////////////
+
+
+
+@import "../../../../styles/_config.scss";
+.radioLabel{
+    border-radius: $default-border-radius;
+    border: solid 1px $black;
+    margin-bottom: $default-margin-bottom;
+    .radioinnerBox{
+        padding: 10px 35px 10px 10px;
+        position: $r-position;
+        background-color: $violet;
+        .radioTitle{
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.2;
+            color: $white;
+            margin-bottom: 0;
+        }
+        &::before{
+            content: '';
+            width: 18px;
+            height: 18px;
+            border: solid 1px $violet;
+            border-radius: 50%;
+            background-color: $white;
+            position: $a-position;
+            right: 10px;
+            top: 10px;
+        }
+        &::after{
+            content: '';
+            width: 10px;
+            height: 10px;
+            border: solid 1px $violet;
+            border-radius: 50%;
+            background-color: $violet;
+            position: $a-position;
+            right: 14px;
+            top: 14px;
+            opacity: 0;
+        }  
+    }
+    &:last-child{
+        margin-bottom: 0;
+    }
+    input[type="radio"]:checked + .radioinnerBox::after{
+        opacity: 1;
+    }
+    input[type="radio"]{
+        display: none;
+    }
+}
