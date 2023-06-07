@@ -1,7 +1,8 @@
+// components/OfflinePage.js
+import React from 'react';
 import Head from "next/head";
-import Test2 from "./components/pageComponents/Test2/Test2";
 
-const Home = () => {
+const OfflinePage = () => {
   return (
     <>
       <Head>
@@ -11,11 +12,11 @@ const Home = () => {
           content="Check out the transfer Detail Page..."
           key="desc"
         />
-        <link rel='manifest' href="/manifest.json" />
       </Head>
-      <Test2 />
+      <h1>Offline Page</h1>
+      <p>You are currently offline. Please check your internet connection.</p>
     </>
   );
 };
 
-export default Home;
+export default OfflinePage;

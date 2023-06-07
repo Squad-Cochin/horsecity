@@ -17,6 +17,7 @@ const Home = () => {
         content="Check out the transfer Detail Page..."
         key="desc"
         />
+        <link rel='manifest' href="/manifest.json" />
       </Head>
       
       <TestDesign1 />
