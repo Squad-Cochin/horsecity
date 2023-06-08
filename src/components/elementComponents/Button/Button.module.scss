@@ -1,1 +1,17 @@
 @import "../../../styles/config";
+
+
+.login-button {
+  background-color: #4caf50 !important;
+  color: #ffffff;
+  padding: 10px;
+  border: none;
+  border-radius: 3px;
+  width: 100%;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #45a049;
+  }
+}

@@ -3,13 +3,14 @@ import Button from "react-bootstrap/Button";
 import Styles from "./Button.module.scss";
 
 const ButtonType = (props) => {
+  console.log(props);
   return (        
     <>
       <Button
         variant=""
         type="button"
         value={props.value}
-        className={props.className ?? `${Styles.btntype1}`}
+        className={`${Styles[props.className]}` ?? `${Styles['login-button']}`}
         onClick={props.onClick} 
         >
           {props.icon} 
