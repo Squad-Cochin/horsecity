@@ -1,17 +1,51 @@
-// styles.scss
-.my-component {
-    background-color: #f1f1f1;
-    padding: 10px;
-    border-radius: 5px;
-  
-    h1 {
-      color: blue;
-      font-size: 24px;
-    }
-  
-    .subtext {
-      color: red;
-      font-size: 16px;
-    }
+// header.scss
+
+// Define colors
+$header-background-color: #f0f0f0;
+$header-text-color: #333333;
+$primary-color: #007bff;
+$secondary-color: #6c757d;
+
+.header {
+  display: flex;
+  align-items: center;
+  background-color: $header-background-color;
+  padding: 10px;
+  height: 75px;
+
+  .header-left {
+    flex: 1;
   }
-  
+
+  .header-right {
+    display: flex;
+    align-items: center;
+  }
+
+  .logo {
+    height: 60px;
+    width: auto;
+  }
+
+  .language-select {
+    margin-right: 10px;
+    padding: 5px;
+    border: none;
+    border-radius: 3px;
+    background-color: white;
+    color: $header-text-color;
+  }
+
+  .notification-icon,
+  .profile-icon {
+    font-size: 20px;
+    color: $secondary-color;
+    margin-right: 10px;
+    cursor: pointer;
+  }
+
+  .notification-icon:hover,
+  .profile-icon:hover {
+    color: $primary-color;
+  }
+}

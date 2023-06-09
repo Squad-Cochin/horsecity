@@ -1,0 +1,25 @@
+// listingPage.scss
+
+
+
+.sidebar {
+    width: 25%;
+    height: 65vh;
+    background-color: #f0f0f0;
+    padding: 20px;
+
+    .total-results {
+      font-weight: bold;
+      margin-bottom: 10px;
+    }
+
+    .filters {
+      margin-bottom: 10px;
+
+      label {
+        display: block;
+        margin-bottom: 5px;
+      }
+    }
+  }
+

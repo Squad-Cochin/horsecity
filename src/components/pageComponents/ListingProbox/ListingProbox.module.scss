@@ -1,0 +1,60 @@
+// Define colors
+$primary-color: #007bff;
+$secondary-color: #6c757d;
+$background-color: #f0f0f0;
+$text-color: #333333;
+
+// Define spacing
+$padding-small: 10px;
+$padding-medium: 20px;
+$margin-bottom-small: 10px;
+$margin-bottom-medium: 20px;
+// listingPage.scss
+
+// Rest of the styles...
+
+.listing-item {
+  display: flex;
+  align-items: center;
+  border: 1px solid $secondary-color;
+  border-radius: 5px;
+  background-color: $background-color;
+  width: 950px;
+  margin: 10px;
+  position: relative;
+  left: 30px;
+
+  .image-container {
+    flex: 0 0 30%; // Adjust the width of the image container as needed
+    padding: $padding-medium;
+
+    .car-image {
+      width: 100%;
+      height: auto;
+    }
+  }
+
+  .details-container {
+    flex-grow: 1;
+    padding: $padding-medium;
+
+    h3 {
+      margin-top: 0;
+      margin-bottom: $margin-bottom-small;
+    }
+    .detail-row {
+      display: flex;
+      align-items: center;
+      margin-bottom: 10px;
+    
+      .detail-label {
+        font-weight: bold;
+        margin-right: 5px;
+      }
+    
+      .detail-value {
+        color: #888;
+      }
+    }
+  }
+}
