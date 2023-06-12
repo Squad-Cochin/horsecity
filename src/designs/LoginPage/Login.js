@@ -4,6 +4,7 @@ import styles from './Login.module.scss';
 import ButtonType from '../../components/elementComponents/Button/Button';
 import InputType from '../../components/elementComponents/Input/Input';
 import { LoginSocialFacebook } from 'reactjs-social-login';
+
 import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate, Link } from "react-router-dom";
 
@@ -16,6 +17,13 @@ const errorMessage = (error) => {
     console.log(error);
 };
 
+// Facebook
+const handleResolve = (response) => {
+  console.log(response);
+};
+const handleReject = (error) => {
+  console.log('err', error);
+};
   return (
     <>
       <div className={styles['login-container']}>
@@ -27,12 +35,8 @@ const errorMessage = (error) => {
           <div className={styles['social-login-buttons']}>
             <LoginSocialFacebook
               appId="App id"
-              onResolve={(response) => {
-                console.log(response);
-              }}
-              onReject={(error) => {
-                console.log("err", error);
-              }}
+              onResolve={handleResolve}
+              onReject={handleReject}
             >
               <ButtonType className="facebook-button" name="Facebook" />
             </LoginSocialFacebook>

@@ -9,6 +9,7 @@ const SideBar = () => {
                 <div className={styles['filters']}>
                     <label> <input type="checkbox" /> Private </label>
                     <label> <input type="checkbox" /> GCC </label>
+                    <label> <input type="checkbox" /> Sharing </label>
                 </div>
             </div>
 
