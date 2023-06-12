@@ -16,6 +16,12 @@
       "src": "./images/icon-chrome-512x512.png",
       "type": "image/png",
       "sizes": "512x512"
+    },
+    {
+      "src": "./images/maskable.png",
+      "type": "image/png",
+      "sizes": "128x128",
+      "purpose" : "any maskable"
     }
   ],
   "start_url": "/",
