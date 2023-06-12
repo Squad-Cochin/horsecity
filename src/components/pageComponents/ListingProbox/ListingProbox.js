@@ -52,7 +52,6 @@ function ListingProbox() {
         {listingArray.map((listing) =>
           listing.vehcile.map((item) => (
 
-
             <div className={styles["listing-item"]} key={item.id}>
               <div className={styles["image-container"]}>
                 <img src={item.picture} alt="Car" className={styles["car-image"]} />

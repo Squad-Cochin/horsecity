@@ -4,26 +4,28 @@ import styles from './Login.module.scss';
 import ButtonType from '../../components/elementComponents/Button/Button';
 import InputType from '../../components/elementComponents/Input/Input';
 import { LoginSocialFacebook } from 'reactjs-social-login';
-
-import { GoogleLogin } from '@react-oauth/google';
+ 
+import { GoogleLogin } from '@leecheuk/react-google-login';
+// import { GoogleLogin } from '@react-oauth/google';
 import { useNavigate, Link } from "react-router-dom";
-
+const clientID = "1023374887244-5ckguqq4o592365am9gfmrd9s9ojvp1d.apps.googleusercontent.com"
 function LoginPage() {
   let navigate = useNavigate();
-  const responseMessage = (response) => {
+  //Google response
+  const onSuccess = (response) => {
     console.log(response);
-};
-const errorMessage = (error) => {
-    console.log(error);
-};
+  };
+  const onFailure = (error) => {
+      console.log(error);
+  };
 
-// Facebook
-const handleResolve = (response) => {
-  console.log(response);
-};
-const handleReject = (error) => {
-  console.log('err', error);
-};
+  // Facebook response
+  const handleResolve = (response) => {
+    console.log(response);
+  };
+  const handleReject = (error) => {
+    console.log('err', error);
+  };
   return (
     <>
       <div className={styles['login-container']}>
@@ -40,8 +42,15 @@ const handleReject = (error) => {
             >
               <ButtonType className="facebook-button" name="Facebook" />
             </LoginSocialFacebook>
-            {/* <ButtonType className="gmail-button" name="Gmail" onClick={() => console.log("hello world")} /> */}
-            <GoogleLogin onSuccess={responseMessage} onError={errorMessage} />
+            <GoogleLogin
+              clientId = {clientID}
+              buttonText = 'Login'
+              onSuccess = {onSuccess}
+              onFailure = {onFailure}
+              cookiePolicy = {'single_host_origin'}
+              isSignedIn = {true}
+              />
+            {/* <GoogleLogin onSuccess={responseMessage} onError={errorMessage} /> */}
           </div>
           <div className={styles['signup-button']}>
             Don't have an account? <Link to={'/'}>Sign up</Link>
