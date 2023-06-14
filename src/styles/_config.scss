@@ -1,15 +1,16 @@
-///////////////////////////////////////////////////////////////////////////////////////
-//                                                                                   //
-//         In side this file there will be commen style for the project.             //
-//                                                                                   //
-///////////////////////////////////////////////////////////////////////////////////////
-
-
 @import "./mixins";
 @import "./variables";
 @import "./fonts";
 
-$r-position: relative;
-$a-position: absolute;
-$default-border-radius: 4px;
-$default-margin-bottom: 10px;
+/* Colors*/
+$c-black: #000;
+$c-white: #FFF;
+$c-purple: #972bf7;
+$c-dgrey: #333539;
+
+/* Font CSS */
+$f-bold: 700;
+$f-normal: 400;
+
+/* Border Radius */
+$border-radius: 4px;

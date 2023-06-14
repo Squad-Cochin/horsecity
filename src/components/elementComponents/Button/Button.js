@@ -3,19 +3,18 @@ import Button from "react-bootstrap/Button";
 import Styles from "./Button.module.scss";
 
 const ButtonType = (props) => {
-  console.log(props.className);
-  return (        
+
+  return (
     <>
       <Button
         variant=""
         type="button"
-        value={props.value}
-        className={props.className ? Styles[props.className] : Styles['default-button']}
-        onClick={props.onClick} 
-        >
-          {props.icon} 
-          {props.name}
-        </Button>
+        className={Styles[props.className]}
+        onClick={props.onClick}
+      >
+        {props.icon}
+        {props.name}
+      </Button>
     </>
   );
 };
@@ -27,7 +26,7 @@ ButtonType.defaultProps = {
   value: "Submit",
   disabled: false,
   className: "btntype2",
-  onClick: function(){},
+  onClick: function () { },
 };
 
 export default ButtonType;

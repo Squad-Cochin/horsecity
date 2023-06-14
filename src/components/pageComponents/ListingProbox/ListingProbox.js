@@ -1,83 +1,84 @@
-import React from 'react'
+//{ On the component that displays the homepage, 
+// this component displays all destination images, along with descriptions, booking amounts, and more }
+
+import React, { useState } from "react";
+
+import Row from "react-bootstrap/Row";
+import Col from "react-bootstrap/Col";
+import { Link } from 'react-router-dom';
+import { Image } from "react-bootstrap";
+// This component is designed for reusing buttons
+import ButtonType from "../../elementComponents/Button/Button";
+
+import Styles from "./ListingProbox.module.scss";
+
+const ListingProbox = (props) => {
+  const [active, setActive] = useState(false);
 
 
 
-import styles from './ListingProbox.module.scss'
-function ListingProbox() {
 
-  const listingArray =
-  [
-    {
-      "currency": "AED",
-      "vehcile": [
-        {
-          "id": 0,
-          "picture": "https://via.placeholder.com/250x250",
-          "name": "Rosetta Massey",
-          "vehicleType": "international",
-          "company": "Maryellen",
-          "description": "Commodo labore do officia dolore non. Ipsum labore veniam irure dolore in enim aute in consequat consequat dolore. Magna elit consequat eiusmod cupidatat. Esse ea pariatur aliqua nulla do enim. Nulla ex occaecat id veniam. Eiusmod minim aute fugiat ex qui duis nostrud amet in veniam exercitation dolor.\r\n",
-          "price": "2,109.54",
-          "isActive": true
-        },
-        {
-          "id": 1,
-          "picture": "https://via.placeholder.com/250x250",
-          "name": "Mariana Sanford",
-          "vehicleType": "private",
-          "company": "Jodi",
-          "description": "Consequat qui ut nostrud anim ea quis veniam excepteur aute mollit adipisicing nulla tempor. In ipsum sit exercitation deserunt cillum excepteur. Occaecat irure reprehenderit consectetur id nisi do reprehenderit et sunt nisi qui mollit Lorem exercitation. Excepteur est pariatur magna sit ex esse id sunt velit cillum nostrud. Irure reprehenderit laborum reprehenderit laborum.\r\n",
-          "price": "3,321.37",
-          "isActive": true
-        },
-        {
-          "id": 2,
-          "picture": "https://via.placeholder.com/250x250",
-          "name": "Ferrell Stephens",
-          "vehicleType": "international",
-          "company": "Cornelia",
-          "description": "In cillum anim pariatur nulla sit qui nulla quis in aute magna ullamco consectetur. Velit sit incididunt voluptate cupidatat ad aliquip cupidatat. Eiusmod id amet nostrud dolor.\r\n",
-          "price": "3,869.04",
-          "isActive": true
-        }
-      ]
-    }
-  ]
-  
+  const handleClick = (item) => {
 
-
+  };
+  //
   return (
     <>
-      <div className={styles["main-content"]}>
-        {listingArray.map((listing) =>
-          listing.vehcile.map((item) => (
 
-            <div className={styles["listing-item"]} key={item.id}>
-              <div className={styles["image-container"]}>
-                <img src={item.picture} alt="Car" className={styles["car-image"]} />
-              </div>
-              <div className={styles["details-container"]}>
-                <h3 >{item.name}</h3>
-                <div className="detail-row">
-                  <span className="detail-value">{item.vehicleType}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="detail-value">{item.company}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="detail-label">{item.description}</span>
-                </div>
-                <div className="detail-row">
-                  <span className="detail-label">{item.price} </span>
-                </div>
-              </div>
-            </div>
-          )))}
+      {props.boxData[0].vehicle.map((item) => (
+        <div className={Styles.list_probox} id={item.id} key={item.id}>
+          <Row className="g-3">
+            <Col className="d-flex align-items-center" lg={{ span: 3, order: 1 }} xs={{ span: 5, order: 1 }}>
+              <div className={`position-relative ${Styles['imagebox']}`}>
+                <Image src={item.picture} className={Styles[`image`]} alt="Activity Image" />
+                <span className={`${Styles.favourite_list} ${active === (true && item.id) ? Styles.activeFavouritelist : ""}`} onClick={() => setActive(!active && item.id)}>
+                  <svg
+                    height="20px"
+                    version="1.1"
+                    viewBox="0 0 512 512"
+                    width="20px"
+                    xmlns="http://www.w3.org/2000/svg"
 
-      </div>
+                  >
+                    <path d="M340.8,83C307,83,276,98.8,256,124.8c-20-26-51-41.8-84.8-41.8C112.1,83,64,131.3,64,190.7c0,27.9,10.6,54.4,29.9,74.6  L245.1,418l10.9,11l10.9-11l148.3-149.8c21-20.3,32.8-47.9,32.8-77.5C448,131.3,399.9,83,340.8,83L340.8,83z" onClick={() => handleClick(item)} />
+
+                  </svg>
+                </span>
+              </div>
+            </Col>
+            <Col lg={{ span: 6, order: 2 }} xs={{ span: 12, order: 3 }}>
+              <h2 className="header-type1">
+                {item.name}
+              </h2>
+              <div className={Styles.probox_type}>{item.vehicleType}</div>
+              <div className={Styles.probox_time}>{item.company}</div>
+              <div className={Styles.probox_text}>
+                {item.description}
+              </div>
+              <Link to={"/activitydetail"}>
+                <span className="link-type1">More details</span>
+              </Link>
+            </Col>
+            <Col
+              lg={{ span: 3, order: 3 }}
+              xs={{ span: 7, order: 2 }}
+              className="text-end"
+            >
+              <div className={Styles.price_section}>
+                <span>From</span>
+                <div className={Styles.price}>{item.price}</div>
+
+                <div className={Styles.btn_bar}>
+                  <ButtonType className="btntype2" name={'Book'} />
+                </div>
+              </div>
+            </Col>
+          </Row>
+        </div>
+      )
+      )}
     </>
+  );
+};
 
-  )
-}
-
-export default ListingProbox
+export default ListingProbox;

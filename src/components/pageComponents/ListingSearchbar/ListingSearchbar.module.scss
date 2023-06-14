@@ -1,35 +1,189 @@
-.search-bar {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    top: 70px;
-    
+@import "../../../styles/config";
+.listingSearchbar {
+  background-color: #ffffff;
 
-    
-    button {
-      padding: 5px 10px;
-      background-color: #4caf50;
-      color: #fff;
-      border: none;
-      border-radius: 4px;
-      cursor: pointer;
+  .searchInput {
+    position: relative;
+    &::before {
+      content: "";
+      position: absolute;
+      top: 50%;
+      left: 15px;
+      transform: translateY(-50%);
+      width: 14px;
+      height: 20px;
+      background-image: url('../../../asset/images/horseVehicle.jpg');
+      background-repeat: no-repeat;
+      background-position: center center;
     }
   }
+  .form-control {
+    border: 1px solid black;
+  }
+  :global(.form-select){
+    height: 35px;
+  }
+  .date_fromtext {
+    position: absolute;
+    left: 40px;
+    top: 5px;
+    z-index: 1;
+  }
+  :global(.react-datepicker__input-container) {
+    input {
+      padding: 20px 10px 5px 40px;
+      font-size: 16px;
+      font-weight: 600;
+    }
+  }
+  :global(.dropdown) {
+    button {
+      border-color: #999;
+      width: 100%;
+      padding: 12px 10px 12px 40px;
+      font-size: 16px;
+      font-weight: 600;
+      background-image: url('../../../asset/images/horseVehicle.jpg');
+      background-repeat: no-repeat;
+      background-position: center left 10px;
+    }
+  }
+  .selecttraveller_box {
+    :global(.dropdown-toggle){
+      &::after{
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        right: 10px;
+      }
+    }
+    :global(.dropdown-menu) {
+      padding: 15px 15px;
+      min-width: 250px;
+      max-height: 250px;
+      // overflow-x: auto;
+      .label{
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 600;
+        color: #1d1d1d;
+      }
+      :global(.css-t3ipsp-control){
+        overflow-y: auto;
+      }
+      // :global(.css-1nmdiq5-menu){
+      //   height: 150px;
+      //   overflow-y: auto;
+      // }
+    }
+  }
+  .applyButton{
+    min-width: 100px;
+    padding: 10px;
+  }
+}
+/* car search section */
+.listingCarHeader{
+  border-bottom: 1px solid #dfdfdf;
+.listingCarSearch{
+  margin:5px 0;
   
+  .searchCriteria{
+    font-size: 14px;
+    line-height: 35px;
+    color:#2b2b2b;
+  }
+  .location{
+    position: relative;
+    padding:8px;
+    padding-left: 40px;
+    border: 1px solid #999;
+    border-radius: $border-radius;
+    .locationTxt{
+      font-size: 13px;
+      line-height: 17px;
+      color: #1d1d1d;
+      display: block;
+    }
+    .locationName{
+      font-size: 16px;
+      font-weight: bold;
+      display: block;
+    }
+    &::before{
+      background: url('../../../asset/images/horseVehicle.jpg');
+      content: '';
+      background-size: contain;
+      height: 20px;
+      width: 14px;
+      position: absolute;
+      vertical-align: middle;
+      display: inline-block;
+      background-repeat: no-repeat;
+      top: 50%;
+      left: 0;
+      transform: translateY(-50%);
+      margin:0 12px;
+    }
+  }
+  .locationCol{
+    width:30%;
+    @media (max-width:991px) {
+      width:100%;
+    }
+  }
+  .searchBtn{
+    width: 10%;
+    @media (max-width:991px) {
+      width:100%;
+      text-align: center;
+    }
+  }
+  .pickupDate, .pickupTime{
+    .pickupDateDiv, .pickupTimeDiv{
+      position: relative;
+      :global(.react-datepicker__input-container) {
+        input {
+          padding: 20px 10px 5px 40px;
+          font-size: 16px;
+          font-weight: 600;
+        }
+      }
+      .date_fromtext {
+        position: absolute;
+        left: 40px;
+        top: 5px;
+        z-index: 1;
+      }
+      :global(.react-datepicker__time-container) {
+        width: 252px;
+        :global(.react-datepicker__time-box){
+          width: 252px;
+        }
+      }
+    }
+  }
+  .diffLocation
+  {
+    margin-top: 5px;
+    :global(.form-check .form-check-label) {
+      font-size: 14px;
+      // line-height: 35px;
+      // margin-top: 0;
+      color: #2b2b2b;
+    }
+  }
+}
+}
 
-  // styles.scss
-
-.container {
-  display: flex;
-  justify-content: flex-end;
+.searchButton{
+  min-width: 100% !important;
+}
+.tt{
   position: relative;
-  top: 100px;
-  right: 20px;
 }
 
-.button-group {
-  display: flex;
-  gap: 10px;
+.myRow {
+  position: relative;
+  left: 198px;
 }
-

@@ -1,31 +1,16 @@
-@import "../../../styles//config";
+@import "../../../styles/_config.scss";
+
+// .search_formbox{
+//    background-color:#ffff;
+//       padding-left: 40px;
+  
+// }
 
 .search_formbox{
+position: relative;
+bottom: 22px;
    .form-control{
-      border-color: $black;
+      border-color: #000;
       padding-left: 40px;
    }
-}
-.login-input {
-   margin-bottom: 10px;
-   padding: 10px;
-   border: 1px solid #cccccc;
-   border-radius: 3px;
-   width: 100%;
- }
- 
- .default-input {
-   margin-bottom: 10px;
-   padding: 10px;
-   border: 1px solid #7c1616;
-   border-radius: 3px;
-   width: 100%;
- }
-
-.search-input  {
-   width: 400px;
- padding: 5px;
- border: 1px solid #ccc;
- border-radius: 4px;
- margin-right: 5px;
 }

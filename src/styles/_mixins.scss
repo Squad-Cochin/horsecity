@@ -1,9 +1,3 @@
-///////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                               //
-//       In side this file there will be commen style for making the project responsive.         //
-//                                                                                               //
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
 // $breakpoint is the variable that can have several values
 @mixin devices($breakpoint) {
   //the name of the mixin is devices

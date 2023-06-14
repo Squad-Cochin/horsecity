@@ -1,0 +1,50 @@
+@import "../../../styles/_config.scss";
+.radioLabel{
+    border-radius: 4px;
+    border: solid 1px $c-black;
+    margin-bottom: 10px;
+    .radioinnerBox{
+        padding: 10px 35px 10px 10px;
+        position: relative;
+        background-color: $primary-color;
+        .radioTitle{
+            font-size: 14px;
+            font-weight: 600;
+            line-height: 1.2;
+            color: $c-white;
+            margin-bottom: 0;
+        }
+        &::before{
+            content: '';
+            width: 18px;
+            height: 18px;
+            border: solid 1px $primary-color;
+            border-radius: 50%;
+            background-color: $c-white;
+            position: absolute;
+            right: 10px;
+            top: 10px;
+        }
+        &::after{
+            content: '';
+            width: 10px;
+            height: 10px;
+            border: solid 1px $primary-color;
+            border-radius: 50%;
+            background-color: $primary-color;
+            position: absolute;
+            right: 14px;
+            top: 14px;
+            opacity: 0;
+        }  
+    }
+    &:last-child{
+        margin-bottom: 0;
+    }
+    input[type="radio"]:checked + .radioinnerBox::after{
+        opacity: 1;
+    }
+    input[type="radio"]{
+        display: none;
+    }
+}

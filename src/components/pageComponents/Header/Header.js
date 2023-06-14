@@ -1,34 +1,29 @@
-import React from 'react'
-import { AiOutlineBell, AiOutlineUser } from 'react-icons/ai';
+// { This component displays the moonstride logo on the homepage ,so we can reuse this component }
 
-/**Imported components */
-import styles from './Header.module.scss'
+import  { Container, Image } from "react-bootstrap";
+import { useNavigate, Link } from "react-router-dom";
 
-function HeaderPage() {
+
+import Styles from "./Header.module.scss";
+
+const Header = () => { 
   return (
-    <>
-      <header className={styles["header"]}>
-        <div className={styles["header-left"]}>
-          <img src={process.env.PUBLIC_URL + '/images/icon-36x36.png'} alt="Logo" className={styles["logo"]} />
-          {/* <h3>Horscity</h3> */}
-        </div>
-        <div className={styles["header-right"]}>
-          <select className={styles["language-select"]}>
-            <option value="en">English</option>
-            <option value="fr">French</option>
-            <option value="es">Spanish</option>
-          </select>
-          <div className={styles["notification-icon"]}>
-            <AiOutlineBell />
-          </div>
-          <div className={styles["profile-icon"]}>
-            <AiOutlineUser />
-          </div>
-        </div>
-      </header>
+    <header className={Styles['topbar']}>
+    
+      <Container>
+        <Link to={"/listing"}>
 
-    </>
-  )
-}
+            {/* The logo image will be displayed here */}
+            <Image src={process.env.PUBLIC_URL + '/images/icon-36x36.png'} alt="Moonstride Logo" />
 
-export default HeaderPage
+        </Link>
+      </Container>
+    </header>
+    
+  );
+};
+
+export default Header;
+
+
+// src={process.env.PUBLIC_URL + '/images/icon-36x36.png'}
