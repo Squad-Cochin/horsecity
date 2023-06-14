@@ -22,8 +22,8 @@ function ActivitySearchWidgetHome() {
   return (
     <>
       <div className={Styles['listingSearchbar']}>
-        <Row className={`${Styles.myRow} g-2`}>
-          <Col lg={6} md={12} xs={12}>
+        <Row>
+          <Col lg={10} md={12} xs={12}>
             {/*Search input*/}
 
             <InputType
@@ -34,7 +34,7 @@ function ActivitySearchWidgetHome() {
 
           </Col>
 
-          <Col lg={1} md={3} xs={12}>
+          <Col lg={2} md={3} xs={12}>
             {/* Clicking the search button will submit the data */}
             <ButtonType className={'btntype2'} name="Search" />
           </Col>
