@@ -1,0 +1,77 @@
+@import "../../../styles/config";
+@import "../../../styles/mixins";
+.accordiontype{
+    margin-bottom: 50px;
+    padding: 0px;
+    border-top: 1px solid #dfdfdf;
+    border-bottom: 1px solid #dfdfdf;
+    :global(.accordion-button){
+        color: $primary-color;
+        padding: 17px 0px;
+        font-size: 16px;
+        font-weight: 500;
+        background-color: transparent;
+        box-shadow: none !important;
+        @include devices(mobile){
+            font-size: 14px;
+        }
+        &:after{
+            background-image: url("../../../asset/images/faq-arrow.svg");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: 14px;
+        }
+    }
+    
+    :global(.accordion-body){
+        font-size: 16px;
+        line-height: 1.69;
+        padding: 0px 0px 17px;
+        :global(.aminities){
+            list-style: none;
+            padding: 0;
+            li{
+                position: relative;
+                padding-left: 20px;
+                &::before{
+                    content: '';
+                    height: 7px;
+                    width: 7px;
+                    background: #000;
+                    border-radius: 100%;
+                    display: inline-block;
+                    position: absolute;
+                    left: 4px;
+                    top: 10px;
+                }
+            }
+            :global(.inclusiveitem){
+                &::before{
+                    content: '';
+                    background: url('../../../asset/images/inclusive.svg');
+                    top: 6px !important;
+                    background-repeat: no-repeat !important;
+                    background-position: center center !important;
+                    height: 17px;
+                    width: 17px;
+                    left: 0 !important;
+                    background-size: contain !important;
+                }
+            }
+            :global(.exclusiveitem){
+                &::before{
+                    content: '';
+                    background: url('../../../asset/images/exclusive.svg');
+                    top: 6px !important;
+                    background-repeat: no-repeat !important;
+                    background-position: center center !important;
+                    left: 0 !important;
+                    height: 17px;
+                    width: 17px;
+                    background-size: contain !important;
+                }
+            }
+        }
+    }
+
+}

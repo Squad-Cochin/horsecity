@@ -55,7 +55,8 @@ const ListingProbox = (props) => {
               <div className={Styles.probox_text}>
                 {item.description}
               </div>
-              <Link to={"/activitydetail"}>
+
+              <Link to={`/detail/${item.id}`}>
                 <span className="link-type1">More details</span>
               </Link>
             </Col>
@@ -65,11 +66,11 @@ const ListingProbox = (props) => {
               className="text-end"
             >
               <div className={Styles.price_section}>
-                <span>From</span>
-                <div className={Styles.price}>{item.price}</div>
+        
+                <div className={Styles.price}>{props.boxData[0].currency} {item.price}</div>
 
                 <div className={Styles.btn_bar}>
-                  <ButtonType className="btntype2" name={'Book'} />
+                  <ButtonType className="btntype2" name={'Add to cart'} />
                 </div>
               </div>
             </Col>

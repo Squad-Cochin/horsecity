@@ -1,0 +1,26 @@
+.backtopage{
+    border-bottom: solid 1px rgba(151, 151, 151, 0.25);
+    padding: 14px 0px 17px;
+    .backlink{
+        font-size: 15px;
+        font-weight: 600;
+        letter-spacing: 0.23px;
+        color: #410f4e;
+        text-decoration: none;
+        position: relative;
+        padding-left: 20px;
+        display: inline-block;
+        &::before{
+            content: "";
+            position: absolute;
+            left: 0px;
+            top: 4px;
+            background: url("../../../asset/images/back-arrow.svg") no-repeat left center;
+            width: 10px;
+            height: 10px;
+        }
+        &:hover{
+            text-decoration: underline;
+        }
+    }
+}

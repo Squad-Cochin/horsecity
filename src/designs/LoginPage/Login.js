@@ -64,3 +64,20 @@ function LoginPage() {
 }
 
 export default LoginPage
+
+
+
+
+
+
+
+
+
+// <LoginSocialGoogle
+// client_id='1023374887244-5ckguqq4o592365am9gfmrd9s9ojvp1d.apps.googleusercontent.com'
+//  onSuccess={handleGoogleLogin}
+//  onFailure={handleGoogleLogin}
+//  buttonText="Login with Google"
+// >
+//  <ButtonType name='Google'/>
+// </LoginSocialGoogle>
