@@ -9,7 +9,9 @@ import ButtonType from "../../components/elementComponents/Button/Button";
 import ListingProbox from "../../components/pageComponents/ListingProbox/ListingProbox";
 import Sidebar from '../../components/pageComponents/SideBar/SideBar';
 import ActivityFilter from '../../components/pageComponents/ActivityFilter/ActivityFilter';
+import SidebarBooking from '../../components/pageComponents/SidebarBookingItems/SidebarBookingItems';
 function TestPage() {
+
   return (
     <>
       <Header />
@@ -26,6 +28,7 @@ function TestPage() {
           <Col xl={3} lg={4}>
           <div className={`pageSidebar`}>
               <Sidebar />
+              <SidebarBooking/>
           </div>  
           </Col>
           <Col xl={9} lg={8}>

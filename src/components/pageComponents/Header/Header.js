@@ -1,6 +1,6 @@
 // { This component displays the moonstride logo on the homepage ,so we can reuse this component }
 
-import { useState } from "react";
+import { useState ,useEffect} from "react";
 import { Container, Image } from "react-bootstrap";
 import { useNavigate, Link } from "react-router-dom";
 // import carticon from "../../../../public/images/carticon"
@@ -9,7 +9,13 @@ import Styles from "./Header.module.scss";
 
 const Header = () => {
   const [notificationCount, setNotificationCount] = useState(0);
-
+  const [wcount,setWcount] =useState("")
+  const[d,setD] =useState("")
+    useEffect(() => {
+      const storedData = JSON.parse(localStorage.getItem('wishlisted')) || [];
+        setD(storedData)
+        setWcount(storedData.length)
+    }, [d]);
   return (
   <header className={Styles["topbar"]}>
   <Container>
@@ -19,7 +25,7 @@ const Header = () => {
     </Link>
     <div className={`${Styles.cartIcon}`}>
       <Image src={process.env.PUBLIC_URL + "/images/favourateicon.svg"} alt="favourate Icon" width={"25px"} /> 
-      <p className="faviconCount">{notificationCount}</p> 
+      <p className="faviconCount">{wcount}</p> 
       <Image src={process.env.PUBLIC_URL + "/images/carticon.svg"} alt="Cart Icon" width={"25px"} />
       <p className={`${Styles.cartCount}`}>{notificationCount}</p> 
     </div>
