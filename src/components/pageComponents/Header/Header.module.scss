@@ -3,11 +3,29 @@
   padding: 15px 0;
   background-color: $header-bgcolor;
   border-bottom: 1px solid #dfdfdf;
-  .cartIcon{
-    float: right;
-    display: flex;
-    img{
-      margin: 0 2px;
+    .cartIcon
+    {
+      float: right;
+      display: flex;
+    img
+    {
+      margin: 0 4px;
+    }
+    .faviconCount
+    {
+      position: absolute;
+      top:-19px;
+      right: 3px;
+      margin: 0;
+    }
+    .cartCount
+    {
+      position: absolute;
+      right : 123px;
+      top: 9px;
+      margin: 0;
+      margin-top: 0;
+      margin-bottom: 0;
     }
   }
 }
