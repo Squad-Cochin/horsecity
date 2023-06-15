@@ -15,7 +15,8 @@ import { Col } from "react-bootstrap";
 import Image from "react-bootstrap/Image";
 
 // Define the DetailSlider component
-export default function DetailSlider() {
+export default function DetailSlider(props) {
+  console.log("images",props);
   // Declare a state variable named 'nav1' using the useState hook
   const [nav1, setNav1] = useState();
   // Declare another state variable named 'nav2' using the useState hook
@@ -51,7 +52,7 @@ export default function DetailSlider() {
       <div className={Styles.bannerSlider}>
         <Row className={Styles.bannerFlex}> 
           <Col className={Styles.cmnCol} md={8}>
- 
+     
             <Slider
               asNavFor={nav2}
               ref={(slider1) => setNav1(slider1)}
@@ -59,17 +60,13 @@ export default function DetailSlider() {
               arrows={false}
               swipeToSlide={false}
               fade={true}
-            >
-              <div className={Styles.bannerslide}>
-                <Image className={Styles.bannerimg} src={banner1} alt=""/>
+            >     {props.images && props.images.map((item)=>(
+              <div className={Styles.bannerslide} key={item.id}>
+                <Image className={Styles.bannerimg} src={item.name} alt=""/>
               </div>
-              <div className={Styles.bannerslide}>
-                <Image className={Styles.bannerimg} src={banner2} alt=""/>
-              </div>
-              <div className={Styles.bannerslide}>
-                <Image className={Styles.bannerimg} src={banner3} alt=""/>
-              </div>
-            </Slider>
+                     ))
+                      }
+            </Slider>         
           </Col>
           <Col className={Styles.cmnCol} md={4}>
             <Slider
@@ -78,21 +75,13 @@ export default function DetailSlider() {
               ref={(slider2) => setNav2(slider2)}
               {...settings}
             >
-              <div className={Styles.bannerslide}>
+              {props.images && props.images.map((item)=>(
+              <div className={Styles.bannerslide} key={item.id}>
                 <div>
-                  <Image className={Styles.bannersideimg} src={banner1} alt=""/>
+                  <Image className={Styles.bannersideimg} src={item.name} alt=""/>
                 </div>
               </div>
-              <div className={Styles.bannerslide}>
-                <div>
-                  <Image className={Styles.bannersideimg} src={banner2} alt="" />
-                </div>
-              </div>
-              <div className={Styles.bannerslide}>
-                <div>         
-                <Image className={Styles.bannersideimg} src={banner3} alt=""/>
-                </div>
-              </div>
+                 ))}
               
             </Slider>
    

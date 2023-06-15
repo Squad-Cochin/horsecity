@@ -22,7 +22,8 @@ function Menu(props) {
     </li>
   );
 }
-export const MainMenu = () => {
+export const MainMenu = (props) => {
+
   // Menu bar options
   const menuitems = ["About", "Important information", "Itenerary", "Reviews"];
   const [show, setShow] = useState(false);
@@ -42,7 +43,7 @@ export const MainMenu = () => {
               ))}
             </ul>
             <div className={Styles.rightMenu}>
-              <div className={Styles.headerPrice}>From $85.60</div>
+              <div className={Styles.headerPrice}> {props.currency} {props.price}</div>
               {/* Button */}
               <ButtonType
                 variant="primary"
