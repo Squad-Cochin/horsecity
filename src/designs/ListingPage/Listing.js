@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useState} from 'react'
 import Styles from "./Listing.module.scss";
 import Row from "react-bootstrap/Row";
 import Col from "react-bootstrap/Col";
@@ -11,10 +11,11 @@ import Sidebar from '../../components/pageComponents/SideBar/SideBar';
 import ActivityFilter from '../../components/pageComponents/ActivityFilter/ActivityFilter';
 import SidebarBooking from '../../components/pageComponents/SidebarBookingItems/SidebarBookingItems';
 function TestPage() {
-
+  const [wishlist, setWishlist] = useState([]);
+  const [cart,setCart] =useState([])
   return (
     <>
-      <Header />
+      <Header wishlist={wishlist} cart={cart}/>
       <div className={Styles['listingpage']}>
         <Container>
           <ListingSearchbar template="home" />
@@ -27,14 +28,14 @@ function TestPage() {
         <Row>
           <Col xl={3} lg={4}>
           <div className={`pageSidebar`}>
-               <SidebarBooking/>
+               <SidebarBooking cart={cart} setCart={setCart}/>
               <Sidebar />
       
           </div>  
           </Col>
           <Col xl={9} lg={8}>
             {/* In this case, we will pass data into the ListingProbox component using props.*/}
-            <ListingProbox boxData = {boxData}/>
+            <ListingProbox boxData = {boxData} wishlist={wishlist} setWishlist={setWishlist} setCart={setCart}/>
             <div className="text-center">
               <ButtonType className="btntype2" name="Show More" />
             </div>

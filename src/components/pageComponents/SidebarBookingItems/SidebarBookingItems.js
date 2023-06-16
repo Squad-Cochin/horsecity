@@ -25,20 +25,20 @@ import Styles from "./SidebarBookingItems.module.scss";
 // import { pushCartData } from "../../../api/tourPackages"
 
 // FUNCTION FOR CART COMPONENT
-const SidebarBooking = () => {
-
+const SidebarBooking = (props) => {
+        console.log("prop",props.cart);
     // const [cartLoader, setCartLoader] = useState(false);
 
     // FUNCTION FOR DELETE ITEM FROM CART
-    const deleteFromCart = ()=>{
-        // let sessionData = JSON.parse(sessionStorage.getItem('cart'));
-        // if (sessionData && Array.isArray(sessionData)) {
-        //     const updatedArray = sessionData.filter(item => item.orderId !== orderId);
-        //     sessionData = updatedArray;
-        //     sessionStorage.setItem('cart', JSON.stringify(sessionData));
-        //     props.setcartdata(updatedArray)
-        alert("deleted")
-        // }
+    const deleteFromCart = (id)=>{
+        let cartStore = JSON.parse(localStorage.getItem("cart")) || [];
+        if(Array.isArray(cartStore)){
+            cartStore = cartStore.filter((value,index)=>value.id !== id)
+            localStorage.setItem('cart', JSON.stringify(cartStore));
+            props.setCart(cartStore)
+        }
+        // alert("deleted")
+
     }
     
     const addProduct = async () => {
@@ -65,36 +65,35 @@ const SidebarBooking = () => {
     //     )
     // }
     
-    let count = 1;
+
     // if(cartLoader){
     //     return(
     //         <Loader></Loader>
     //     )
     // }
     // else{
+        const cartCount = props.cart.length
         return (
             <aside>
                 <div className={Styles.sidebar_booking_section}>
                     <div className={Styles.sidebar_box}>
-                        <h2 className={Styles.booking_title}>Cart Item({count})</h2>
-                        {/* {props.cartData.map((item, index)=>{ */}
-                            {/* return( */}
-                                <div className={Styles.booked_trip} key={1}>
-                                <h1 className={Styles.booking_product_title}>Mariana Sanford</h1>
+                        <h2 className={Styles.booking_title}>Your cart({cartCount})</h2>
+                        {props.cart.map((item, index)=>{
+                             return( 
+                                <div className={Styles.booked_trip} key={item.id}>
+                                <h1 className={Styles.booking_product_title}>{item.name}</h1>
                                 <div className={Styles.booking_details}>
-                                    {/* <div className={Styles.Details_value}> <BsCalendar3 /><span></span></div>    */}
-                                    {/* <div className={Styles.Details_value}> <FiClock /><span> Pick-Up Time: HH:MM hours</span></div> */}
-                                    <div className={Styles.Details_value}> <span> 1. Booking Type: international </span></div>   
-                                    <div className={Styles.Details_value}> <span> 2. Prize: AED 2,109.54</span></div>   
-                                    <div className={Styles.Details_value}> <span> 3. Provider: Maryellen</span></div>   
-                                    {/* <div className={Styles.Details_value}> <FaHorse /><span> No Of Horse: 2</span></div>   
-                                    <div className={Styles.Details_value}> <RiTimerLine /> 2:99</div>                 */}
+                               
+                                    <div className={Styles.Details_value}> <span> 1. Booking Type: {item.vehicleType} </span></div>   
+                                    <div className={Styles.Details_value}> <span> 2. Prize: AED {item.price}</span></div>   
+                                    <div className={Styles.Details_value}> <span> 3. Provider: {item.company}</span></div>   
+
                                 </div>
-                                <button className={Styles.trash} onClick={()=> deleteFromCart()}><IoMdTrash /></button>
+                                <button className={Styles.trash} onClick={()=> deleteFromCart(item.id)}><IoMdTrash /></button>
                             </div> 
-                            {/* ) */}
+                            ) 
                              
-                        {/* })} */}
+                        })}
                             <button className={Styles.btntype1} onClick={addProduct}> Confirm</button>  
                     </div>
                 </div>

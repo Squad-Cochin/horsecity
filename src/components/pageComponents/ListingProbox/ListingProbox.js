@@ -14,12 +14,14 @@ import Styles from "./ListingProbox.module.scss";
 
 const ListingProbox = (props) => {
   const [active, setActive] = useState(false);
-  const [wishlist, setWishlist] = useState([]);
-  const [cart,setCart] =useState([])
+
+
 
   useEffect(() => {
     const storedData = JSON.parse(localStorage.getItem('wishlisted')) || [];
-    setWishlist(storedData);
+    const cartStore = JSON.parse(localStorage.getItem("cart")) || [];
+    props.setWishlist(storedData);
+    props.setCart(cartStore)  
   }, []);
 
 
@@ -33,14 +35,16 @@ const ListingProbox = (props) => {
       }
 
     localStorage.setItem('wishlisted', JSON.stringify(storedData));
-    setWishlist(storedData);
+    props.setWishlist(storedData);
   }
 
   const addToCart = (item) => {
-    let storedData = JSON.parse(localStorage.getItem('cart')) || [];
+    console.log("ite",item)
+    let storedData = JSON.parse(localStorage.getItem('cart')) || []
+    console.log(storedData)
   
     const isItemExists = storedData.some((storedItem) => storedItem.id === item.id);
-
+    console.log(isItemExists)
     if (isItemExists) {
       console.log("Item already exists in the cart.");
     } else {
@@ -51,8 +55,10 @@ const ListingProbox = (props) => {
         let array = [item];
         localStorage.setItem('cart', JSON.stringify(array));
       }
+      props.setCart(storedData)
       console.log("Item added to the cart.");
     }
+    // props.setCart(storedData)
   };
   
   
@@ -76,7 +82,7 @@ const ListingProbox = (props) => {
                   >
                     <path
                       d="M340.8,83C307,83,276,98.8,256,124.8c-20-26-51-41.8-84.8-41.8C112.1,83,64,131.3,64,190.7c0,27.9,10.6,54.4,29.9,74.6  L245.1,418l10.9,11l10.9-11l148.3-149.8c21-20.3,32.8-47.9,32.8-77.5C448,131.3,399.9,83,340.8,83L340.8,83z"
-                      fill={wishlist.includes(item.id) ? "red" : null}
+                      fill={props.wishlist.includes(item.id) ? "red" : null}
                     />
 
                   </svg>
