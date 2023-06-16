@@ -33,7 +33,7 @@ function AccordionType(props) {
   // Mapping the faqsList array to create the accordion items
   const myList = (props.faqsList ? faqsList : faqsList).map((faqlist) => (
     // eslint-disable-next-line react/jsx-key
-    <Accordion.Item className={Styles.accordionPlus} eventKey={faqlist.Key}>
+    <Accordion.Item className={Styles.accordionPlus} key={faqlist.Key}>
 
       <Accordion.Header>{faqlist.header}</Accordion.Header>
       <Accordion.Body
@@ -49,7 +49,7 @@ function AccordionType(props) {
       flush // Removing the borders and backgrounds of the Accordion component
       className={`${Styles.accordiontype} ${props.className}`} // Applying the styles from local module and any additional className provided through props
     >
-      {myList} // Rendering the mapped accordion items
+      {myList} 
     </Accordion>
   );
 }
