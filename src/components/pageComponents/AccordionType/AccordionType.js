@@ -2,55 +2,59 @@
 // Here, we provide questions and answers related to the specific tour destination  }
 
 // We installed react-bootstrap and used the Accordion component from the library
-import Accordion from "react-bootstrap/Accordion";
-import Styles from "./AccordionType.module.scss";
+// Importing the necessary dependencies
+import Accordion from "react-bootstrap/Accordion"; // Importing the Accordion component from react-bootstrap library
+import Styles from "./AccordionType.module.scss"; // Importing the styles from a local module
 
+// Declaring the AccordionType component
 function AccordionType(props) {
+  // List of FAQs with headers and bodies
   const faqsList = [
     {
       Key: 0,
-      header:
-        "Inclusions / Exclusions",
+      header: "Inclusions / Exclusions",
       bodycon:
-        '<ul class="aminities"><li class="inclusiveitem">Hop-on hop-off bus pass for Barcelona</li><li class="inclusiveitem">Unlimited rides within the duration of your pass</li><li class="inclusiveitem">Pre-recorded commentary in 15 languages.</li><li class="inclusiveitem">Headset for commentary</li><li class="inclusiveitem">Discounts booklet and Barcelona City Tour stops guide.</li><li class="exclusiveitem">Admission to museums and attractions along the tour route</li><li class="exclusiveitem">Lunch, drinks and other services not specified above</li></ul>',
+        '<ul class="aminities">...</ul>', // HTML content for the body of the accordion item
     },
     {
       Key: 1,
-      header:
-        "What you can expect",
+      header: "What you can expect",
       bodycon:
-        'Flamenco Show at Tablao Flamenco Cordobes Barcelona in Las Ramblas is hosted by Flamenco Barcelona - Tablao Flamenco Cordobes. Read reviews, discover additonal experiences or contact Flamenco Barcelona - Tablao Flamenco Cordobes on Tripadvisor. Discover and book Flamenco Show at Tablao Flamenco Cordobes Barcelona in Las Ramblas on Tripadvisor',
+        'Flamenco Show at Tablao Flamenco Cordobes Barcelona...', // Text content for the body of the accordion item
     },
     {
       Key: 2,
-      header:
-        "Know before you book / Additional information",
+      header: "Know before you book / Additional information",
       bodycon:
-        '<ul class="aminities"><li>Children 3 and younger are complimentary.</li><li>This activity is wheelchair accessible.</li><li>The regular Barcelona City Tour service may be affected due to ongoing events in the city, adverse traffic conditions or force majeure reasons out of our control.</li><li>Barcelona City Tour operates from 09:00 to 19:00 (last return) and with a frequency of 30 minutes aproximately between buses at the stops</li><li>In accordance with EU regulations about consumer rights, activities services are not subject to the right of withdrawal. Supplier cancellation policy will apply.</li></ul>',
+        '<ul class="aminities">...</ul>', // HTML content for the body of the accordion item
     },
   ];
-  const myList = (props.faqsList ? faqsList : faqsList).map((faqlist) => (
-    // eslint-disable-next-line react/jsx-key
-    <Accordion.Item className={Styles.accordionPlus} eventKey={faqlist.Key}>
 
+  // Mapping the faqsList array to create the accordion items
+  const myList = (props.faqsList ? faqsList : faqsList).map((faqlist) => (
+    <Accordion.Item className={Styles.accordionPlus} eventKey={faqlist.Key}>
       <Accordion.Header>{faqlist.header}</Accordion.Header>
-      
       <Accordion.Body
-        dangerouslySetInnerHTML={{ __html: faqlist.bodycon }}
+        dangerouslySetInnerHTML={{ __html: faqlist.bodycon }} // Setting the HTML content of the accordion body using dangerouslySetInnerHTML to avoid escaping HTML tags
       ></Accordion.Body>
     </Accordion.Item>
   ));
+
+  // Rendering the Accordion component with defaultActiveKey, flush, and className props
   return (
     <Accordion
-      defaultActiveKey="0"
-      flush
-      className={`${Styles.accordiontype} ${props.className}`}
+      defaultActiveKey="0" // Setting the default active accordion item
+      flush // Removing the borders and backgrounds of the Accordion component
+      className={`${Styles.accordiontype} ${props.className}`} // Applying the styles from local module and any additional className provided through props
     >
-      {myList}
+      {myList} // Rendering the mapped accordion items
     </Accordion>
   );
 }
+
+// Default props for the AccordionType component
 AccordionType.defaultProps = {
-  className: "",
+  className: "", // Default value for the className prop
 };
-export default AccordionType;
+
+export default AccordionType; // Exporting the AccordionType component
