@@ -29,12 +29,16 @@ const Header = () => {
       <Image src={process.env.PUBLIC_URL + "/images/icon-36x36.png"} alt="Moonstride Logo" />
     </Link>
     <div className={`${Styles.cartIcon}`}>
-      <Image src={process.env.PUBLIC_URL + "/images/favourateicon.svg"} alt="favourate Icon" width={"25px"} /> 
-      <p className="faviconCount">{wcount}</p> 
+      <div>
+      <Image src={process.env.PUBLIC_URL + "/images/favourateicon.svg"} alt="favourate Icon" width={"18px"} /> 
+      <p className={`${Styles.faviconCount}`}>{wcount}</p> 
+      </div>
+      <div>
       <Image src={process.env.PUBLIC_URL + "/images/carticon.svg"} alt="Cart Icon" width={"25px"} />
       <p className={`${Styles.cartCount}`}>{cartCount}</p> 
+      </div>
     </div>
-  </Container>
+  </Container> 
   </header>
   );
 };
