@@ -27,8 +27,9 @@ function TestPage() {
         <Row>
           <Col xl={3} lg={4}>
           <div className={`pageSidebar`}>
+               <SidebarBooking/>
               <Sidebar />
-              <SidebarBooking/>
+      
           </div>  
           </Col>
           <Col xl={9} lg={8}>

@@ -2,7 +2,7 @@
 
 import { useState ,useEffect} from "react";
 import { Container, Image } from "react-bootstrap";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, json } from "react-router-dom";
 // import carticon from "../../../../public/images/carticon"
 
 import Styles from "./Header.module.scss";
@@ -10,12 +10,17 @@ import Styles from "./Header.module.scss";
 const Header = () => {
   const [notificationCount, setNotificationCount] = useState(0);
   const [wcount,setWcount] =useState("")
-  const[d,setD] =useState("")
+  const [storedata,setStoredata] =useState("")
+  const [cartData, setCartData] =useState("")
+  const [cartCount, setCartCount] = useState("")
     useEffect(() => {
       const storedData = JSON.parse(localStorage.getItem('wishlisted')) || [];
-        setD(storedData)
+      const cartStore = JSON.parse(localStorage.getItem("cart")) || [];
+        setStoredata(storedData)
         setWcount(storedData.length)
-    }, [d]);
+        setCartData(cartStore)
+        setCartCount(cartStore.length)
+    });
   return (
   <header className={Styles["topbar"]}>
   <Container>
@@ -27,7 +32,7 @@ const Header = () => {
       <Image src={process.env.PUBLIC_URL + "/images/favourateicon.svg"} alt="favourate Icon" width={"25px"} /> 
       <p className="faviconCount">{wcount}</p> 
       <Image src={process.env.PUBLIC_URL + "/images/carticon.svg"} alt="Cart Icon" width={"25px"} />
-      <p className={`${Styles.cartCount}`}>{notificationCount}</p> 
+      <p className={`${Styles.cartCount}`}>{cartCount}</p> 
     </div>
   </Container>
   </header>
