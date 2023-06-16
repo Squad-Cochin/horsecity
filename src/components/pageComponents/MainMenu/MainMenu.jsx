@@ -7,8 +7,8 @@ import { useState } from "react";
 import { Container } from "react-bootstrap";
 // This component is designed for reusing buttons
 import ButtonType from "../../elementComponents/Button/Button";
-import Button from "react-bootstrap/Button";
-import { useContext } from "react";
+// import Button from "react-bootstrap/Button";
+// import { useContext } from "react";
 /*import CanvasPopup from "../AvailabilityPopup/AvailabilityPopupState";*/
 import Styles from "./MainMenu.module.scss";
 import Offcanvas from "react-bootstrap/Offcanvas";
@@ -38,8 +38,8 @@ export const MainMenu = (props) => {
         <Container>
           <div className={Styles.mainMenu}>
             <ul className={Styles.leftMenu}>
-              {menuitems.map((menuitem) => (
-                <Menu key="1" brand={menuitem} />
+              {menuitems.map((menuitem,index) => (
+                <Menu key={index} brand={menuitem} />
               ))}
             </ul>
             <div className={Styles.rightMenu}>

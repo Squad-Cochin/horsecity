@@ -22,6 +22,7 @@ const ListingProbox = (props) => {
     const cartStore = JSON.parse(localStorage.getItem("cart")) || [];
     props.setWishlist(storedData);
     props.setCart(cartStore)  
+    // eslint-disable-next-line 
   }, []);
 
 
@@ -39,9 +40,7 @@ const ListingProbox = (props) => {
   }
 
   const addToCart = (item) => {
-    console.log("ite",item)
     let storedData = JSON.parse(localStorage.getItem('cart')) || []
-    console.log(storedData)
   
     const isItemExists = storedData.some((storedItem) => storedItem.id === item.id);
     console.log(isItemExists)

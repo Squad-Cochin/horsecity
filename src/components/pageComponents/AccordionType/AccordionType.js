@@ -30,8 +30,8 @@ function AccordionType(props) {
     },
   ];
   const myList = (props.faqsList ? faqsList : faqsList).map((faqlist) => (
-    // eslint-disable-next-line react/jsx-key
-    <Accordion.Item className={Styles.accordionPlus} eventKey={faqlist.Key}>
+
+    <Accordion.Item className={Styles.accordionPlus} key={faqlist.Key}>
 
       <Accordion.Header>{faqlist.header}</Accordion.Header>
       
