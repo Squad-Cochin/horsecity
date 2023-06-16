@@ -2,8 +2,8 @@
 // in there have all the destination details }
 
 import React from "react";
-import { Container } from "react-bootstrap";
-import { ReactDOM } from "react";
+
+
 import Styles from "./FeatureTable.module.scss";
 import Image from "react-bootstrap/Image";
 import Ftime from "../../../asset/images/duration.svg";

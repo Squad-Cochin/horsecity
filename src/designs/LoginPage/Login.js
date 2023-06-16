@@ -3,7 +3,8 @@ import React from 'react'
 import styles from './Login.module.scss';
 import ButtonType from '../../components/elementComponents/Button/Button';
 import InputType from '../../components/elementComponents/Input/Input';
-import { LoginSocialFacebook ,LoginSocialGoogle } from 'reactjs-social-login';
+import { LoginSocialFacebook } from 'reactjs-social-login';
+// LoginSocialGoogle 
 import { GoogleLogin } from '@react-oauth/google';
 import jwtDecode from 'jwt-decode';
 import { GoogleOAuthProvider } from '@react-oauth/google';

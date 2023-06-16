@@ -2,9 +2,9 @@
 import React, { useState } from "react";
 import Styles from "./DetailSlider.module.scss";
 // Images 
-import banner1 from "../../../asset/images/mainbanner.jpg";
-import banner2 from "../../../asset/images/rightbanner1.jpg";
-import banner3 from "../../../asset/images/rightbanner2.jpg";
+// import banner1 from "../../../asset/images/mainbanner.jpg";
+// import banner2 from "../../../asset/images/rightbanner1.jpg";
+// import banner3 from "../../../asset/images/rightbanner2.jpg";
 import "bootstrap/dist/css/bootstrap.min.css";
 // Import the Slider component from the react-slick/lib/slider library
 import Slider from "react-slick/lib/slider";

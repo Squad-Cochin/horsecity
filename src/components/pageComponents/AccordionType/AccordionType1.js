@@ -33,7 +33,7 @@ const faqsList = [
 
 // Define the AccordionType component
 function AccordionType(props) {
-  const myLists = props.myLists;
+  // const myLists = props.myLists;
 
   return (
     <Accordion defaultActiveKey="0" flush className={`${Styles.accordiontype} ${props.className}`}>

@@ -5,12 +5,6 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////
 
 import React from "react";
-// import React, { useState }from "react";
-import { BsCalendar3 } from "react-icons/bs";
-import { FiClock } from "react-icons/fi";
-import { RiTimerLine } from "react-icons/ri";
-import { FaHorse } from "react-icons/fa";
-// import { ImTicket } from "react-icons/im";
 import { IoMdTrash } from "react-icons/io";
 // import { AiFillCaretRight } from "react-icons/Ai";
 
@@ -26,21 +20,19 @@ import Styles from "./SidebarBookingItems.module.scss";
 
 // FUNCTION FOR CART COMPONENT
 const SidebarBooking = (props) => {
-        console.log("prop",props.cart);
+    console.log("prop", props.cart);
     // const [cartLoader, setCartLoader] = useState(false);
 
     // FUNCTION FOR DELETE ITEM FROM CART
-    const deleteFromCart = (id)=>{
+    const deleteFromCart = (id) => {
         let cartStore = JSON.parse(localStorage.getItem("cart")) || [];
-        if(Array.isArray(cartStore)){
-            cartStore = cartStore.filter((value,index)=>value.id !== id)
+        if (Array.isArray(cartStore)) {
+            cartStore = cartStore.filter((value, index) => value.id !== id)
             localStorage.setItem('cart', JSON.stringify(cartStore));
             props.setCart(cartStore)
         }
-        // alert("deleted")
-
     }
-    
+
     const addProduct = async () => {
         // setCartLoader(true);
         // let searchData = JSON.parse(sessionStorage.getItem('searchdata')) || {};
@@ -61,10 +53,10 @@ const SidebarBooking = (props) => {
     //             <Image src="" width="250" height="250" alt="Loader Image"/>
     //             </div>
     //         </aside>
-            
+
     //     )
     // }
-    
+
 
     // if(cartLoader){
     //     return(
@@ -72,38 +64,38 @@ const SidebarBooking = (props) => {
     //     )
     // }
     // else{
-        const cartCount = props.cart.length
-        return (
-            <aside>
-                <div className={Styles.sidebar_booking_section}>
-                    <div className={Styles.sidebar_box}>
-                        <h2 className={Styles.booking_title}>Your cart({cartCount})</h2>
-                        {props.cart.map((item, index)=>{
-                             return( 
-                                <div className={Styles.booked_trip} key={item.id}>
+    const cartCount = props.cart.length
+    return (
+        <aside>
+            <div className={Styles.sidebar_booking_section}>
+                <div className={Styles.sidebar_box}>
+                    <h2 className={Styles.booking_title}>Your cart({cartCount})</h2>
+                    {props.cart.map((item, index) => {
+                        return (
+                            <div className={Styles.booked_trip} key={item.id}>
                                 <h1 className={Styles.booking_product_title}>{item.name}</h1>
                                 <div className={Styles.booking_details}>
-                               
-                                    <div className={Styles.Details_value}> <span> 1. Booking Type: {item.vehicleType} </span></div>   
-                                    <div className={Styles.Details_value}> <span> 2. Prize: AED {item.price}</span></div>   
-                                    <div className={Styles.Details_value}> <span> 3. Provider: {item.company}</span></div>   
+
+                                    <div className={Styles.Details_value}> <span> 1. Booking Type: {item.vehicleType} </span></div>
+                                    <div className={Styles.Details_value}> <span> 2. Prize: AED {item.price}</span></div>
+                                    <div className={Styles.Details_value}> <span> 3. Provider: {item.company}</span></div>
 
                                 </div>
-                                <button className={Styles.trash} onClick={()=> deleteFromCart(item.id)}><IoMdTrash /></button>
-                            </div> 
-                            ) 
-                             
-                        })}
-                            <button className={Styles.btntype1} onClick={addProduct}> Confirm</button>  
-                    </div>
+                                <button className={Styles.trash} onClick={() => deleteFromCart(item.id)}><IoMdTrash /></button>
+                            </div>
+                        )
+
+                    })}
+                    <button className={Styles.btntype1} onClick={addProduct}> Confirm</button>
                 </div>
-            </aside>
-        );
+            </div>
+        </aside>
+    );
     // }
 };
 
 SidebarBooking.defaultProps = {
-    cartData : []
+    cartData: []
 }
 
 export default SidebarBooking;

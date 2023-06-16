@@ -1,11 +1,11 @@
 import Form from "react-bootstrap/Form";
-import Styles from "./Select.module.scss";
+import  "./Select.module.scss";
 
 
 const SelectType = (props) => {
   return (
     <Form.Group className={`mb-3 ${props.class}`}>
-      {props.label != "" && <Form.Label>{props.label}{props.mandatory}</Form.Label>}
+      {props.label !== "" && <Form.Label>{props.label}{props.mandatory}</Form.Label>}
       <Form.Select required={props.mandatory ? "required" : ""}>
         {props.selectarr.map((num) => {
           return(
