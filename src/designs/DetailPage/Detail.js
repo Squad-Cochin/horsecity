@@ -15,11 +15,12 @@ import DetailContent from "../../components/pageComponents/DetailContent/DetailC
 import AccordionType from "../../components/pageComponents/AccordionType/AccordionType";
 import AccordionType1 from "../../components/pageComponents/AccordionType/AccordionType1";
 import Styles from './Detail.module.scss'
+import { Link } from 'react-router-dom';
 function DetailPage() {
     const [show, setShow] = useState(false);         
     const [pdetails, setPdetails] =useState([])
-
-
+    const [wishlistData, setWishlistData] = useState([])
+    const [cartData, setCartData] = useState([])
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
 
@@ -31,9 +32,11 @@ function DetailPage() {
         console.log('height: ', ref.current.offsetHeight);
         if (detailData && detailData.length > 0) {
           setPdetails(detailData[0]);
-    
         }
-  
+      let wishlistDatas = JSON.parse(localStorage.getItem('wishlisted')) || [];
+      let cartDatas = JSON.parse(localStorage.getItem('cart')) || [];
+      setWishlistData(wishlistDatas);
+      setCartData(cartDatas)
       }, [pdetails]);
 
       const vehicleData = {
@@ -54,7 +57,7 @@ function DetailPage() {
   return (
     <>
       <div id="header" className={Styles.mainHeader} ref={ref} >
-        <Header />
+        <Header wishlist={wishlistData} cart={cartData}/>
         <BackTopage label="See all Activities" href="/" />
         <MainMenu currency={pdetails.currency} price={vehicleData.price} />
       </div>
@@ -81,9 +84,11 @@ function DetailPage() {
          
 
                 <div className="mt-1">
-                  <a href="#" className="link-type1">
-                    See all reviews
-                  </a>
+                <Link to={''}>
+                See all reviews
+                </Link>
+                 
+       
                 </div>
               </div>
             </Col>

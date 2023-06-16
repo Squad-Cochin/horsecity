@@ -38,12 +38,14 @@ function AccordionType(props) {
   return (
     <Accordion defaultActiveKey="0" flush className={`${Styles.accordiontype} ${props.className}`}>
       {/* Render the accordion items based on the faqsList array */}
-      {faqsList.map((faqlist) => (
-        <Accordion.Item eventKey={faqlist.Key} key={faqlist.Key}>
+      {/*We will display the data here*/}
+      {faqsList.map((faqlist) =>
+        // eslint-disable-next-line react/jsx-key
+        <Accordion.Item key={faqlist.Key}>
           <Accordion.Header>{faqlist.header}</Accordion.Header>
           <Accordion.Body>{faqlist.bodycon}</Accordion.Body>
         </Accordion.Item>
-      ))}
+      )}
     </Accordion>
   );
 }

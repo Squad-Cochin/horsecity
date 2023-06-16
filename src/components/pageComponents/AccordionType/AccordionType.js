@@ -32,7 +32,9 @@ function AccordionType(props) {
 
   // Mapping the faqsList array to create the accordion items
   const myList = (props.faqsList ? faqsList : faqsList).map((faqlist) => (
+    // eslint-disable-next-line react/jsx-key
     <Accordion.Item className={Styles.accordionPlus} eventKey={faqlist.Key}>
+
       <Accordion.Header>{faqlist.header}</Accordion.Header>
       <Accordion.Body
         dangerouslySetInnerHTML={{ __html: faqlist.bodycon }} // Setting the HTML content of the accordion body using dangerouslySetInnerHTML to avoid escaping HTML tags
