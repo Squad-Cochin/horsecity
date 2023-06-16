@@ -166,17 +166,17 @@ const detailData = [
                 "images": [
                     {
                         "id": 0,
-                        "name": "https://via.placeholder.com/250x150",
+                        "name": "https://via.placeholder.com/250x250",
                         "alt": "Image 1"
                     },
                     {
                         "id": 1,
-                        "name": "https://via.placeholder.com/250x150",
+                        "name": "https://via.placeholder.com/250x250",
                         "alt": "Image 2"
                     },
                     {
                         "id": 2,
-                        "name": "https://via.placeholder.com/250x150",
+                        "name": "https://via.placeholder.com/250x250",
                         "alt": "Image 3"
                     }
                 ],

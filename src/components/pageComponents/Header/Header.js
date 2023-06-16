@@ -15,15 +15,16 @@ const Header = (props) => {
   return (
     <header className={Styles["topbar"]}>
       <Container>
+
         <Link to={"/listing"}>
           {/* The logo image will be displayed here */}
           <Image src={process.env.PUBLIC_URL + "/images/icon-36x36.png"} alt="Moonstride Logo" />
         </Link>
         <div className={`${Styles.cartIcon}`}>
           <Image src={process.env.PUBLIC_URL + "/images/favourateicon.svg"} alt="favourate Icon" width={"25px"} />
-          <p className="faviconCount">{wishlistCount}</p>
+         <b> <p className={Styles.faviconCount}>{wishlistCount}</p></b>
           <Image src={process.env.PUBLIC_URL + "/images/carticon.svg"} alt="Cart Icon" width={"25px"} />
-          <p className={`${Styles.cartCount}`}>{cartCount}</p>
+          <b>  <p className={`${Styles.cartCount}`}>{cartCount}</p></b>
         </div>
 
       </Container>

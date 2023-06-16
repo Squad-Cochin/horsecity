@@ -78,7 +78,7 @@ export default function DetailSlider(props) {
               {props.images && props.images.map((item)=>(
               <div className={Styles.bannerslide} key={item.id}>
                 <div>
-                  <Image className={Styles.bannersideimg} src={item.name} alt=""/>
+                  <Image className={Styles.bannersideimg} src={item.name} alt="f"/>
                 </div>
               </div>
                  ))}

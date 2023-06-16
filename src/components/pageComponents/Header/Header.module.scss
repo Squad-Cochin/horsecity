@@ -13,23 +13,21 @@
     }
     .faviconCount
     {
-      position: absolute;
-      top:-0.5px;
-      right: 155px;
-      margin: 0;
-      margin-top: 0;
-      margin-bottom: 0;
+      position: relative;
+      left: -6px;
+
+      margin-bottom: 26px;
+  
       color: #fe6652 !important
     }
     .cartCount
     {
-      position: absolute;
-      right : 123px;
-      top: -0.5px;
-      margin: 0;
-      margin-top: 0;
-      margin-bottom: 0;
-      color : #fe6652 !important
+      position: relative;
+      left: -6px;
+
+      margin-bottom: 26px;
+  
+      color: #fe6652 !important
     }
   }
 }
