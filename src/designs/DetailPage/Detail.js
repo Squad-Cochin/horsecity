@@ -16,6 +16,41 @@ import AccordionType1 from "../../components/pageComponents/AccordionType/Accord
 import Styles from './Detail.module.scss';
 import { Link } from 'react-router-dom';
 
+const templValue = 
+{
+    "currency": "AED",
+    "vechicleLocation": "NA",
+    "price": "NA",
+    "name": "Vehicle Name",
+    "vehicleType": "Private/Sharing/GCC",
+    "company": "XYZ Transportaion Corporation",
+    "description": "This is just a testing value. The value value is not rendered from the json",
+    "registered": "Country Registration number",
+    "occupancy": "No of Horses",
+    "vehcile": 
+    {
+            "id": 0,
+            "images": [
+            {
+                "id": 0,
+                "name": "https://via.placeholder.com/250x250",
+                "alt": "Image 1"
+            },
+            {
+                "id": 1,
+                "name": "https://via.placeholder.com/250x250",
+                "alt": "Image 2"
+            },
+            {
+                "id": 2,
+                "name": "https://via.placeholder.com/250x250",
+                "alt": "Image 3"
+            }
+        ]
+    }
+
+}
+
 function DetailPage() {
     // State variables
     const [show, setShow] = useState(false); // State for showing/hiding the Offcanvas component
@@ -64,7 +99,7 @@ function DetailPage() {
             <div id="header" className={Styles.mainHeader} ref={ref} >
                 <Header wishlist={wishlistData} cart={cartData} />
                 <BackTopage label="See all Activities" href="/" />
-                <MainMenu currency={pdetails.currency} price={vehicleData.price} />
+                <MainMenu currency={!pdetails.currency ? templValue.currency : pdetails.currency} price={!vehicleData.price ? templValue.price : vehicleData.price} />
             </div>
 
             {/* Detail page content */}
@@ -73,14 +108,14 @@ function DetailPage() {
 
                 <Container>
                     {/* Detail slider */}
-                    <DetailSlider images={vehicleData.images} />
+                    <DetailSlider images={!vehicleData.images ? templValue.images : vehicleData.images} />
 
                     <Row className="mt-5">
                         <Col lg={8} md={7}>
                             {/* Product description */}
                             <div className={Styles.productDesc}>
                                 <h2 className="header-type2">
-                                    {pdetails.vechicleLocation} - {vehicleData.name}
+                                    {!pdetails.vechicleLocation ? templValue.vechicleLocation : pdetails.vechicleLocation} - {vehicleData.name}
                                 </h2>
                                 <div className={Styles.byTravelText}>
                                     <u>{vehicleData.vehicleType} - {vehicleData.company}</u>

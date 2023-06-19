@@ -82,10 +82,7 @@ export default function DetailSlider(props) {
                 </div>
               </div>
                  ))}
-              
             </Slider>
-   
-
           </Col>
         </Row>
       </div>
