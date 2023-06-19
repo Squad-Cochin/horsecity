@@ -63,7 +63,7 @@ function DetailPage() {
             {/* Main header section */}
             <div id="header" className={Styles.mainHeader} ref={ref} >
                 <Header wishlist={wishlistData} cart={cartData} />
-                <BackTopage label="See all Activities" href="/" />
+                <BackTopage label="See all Activities" href="listing" />
                 <MainMenu currency={pdetails.currency} price={vehicleData.price} />
             </div>
 

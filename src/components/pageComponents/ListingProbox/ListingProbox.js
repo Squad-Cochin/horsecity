@@ -72,7 +72,7 @@ const ListingProbox = (props) => {
             <Col className="d-flex align-items-center" lg={{ span: 3, order: 1 }} xs={{ span: 5, order: 1 }}>
               <div className={`position-relative ${Styles['imagebox']}`}>
                 <Image src={item.picture} className={Styles[`image`]} alt="Activity Image" />
-                <span className={`${Styles.favourite_list} ${active === (true && item.id) ? Styles.activeFavouritelist : ""}`} onClick={() => { setActive(!active); handleClick(item); }}>
+                <span className={`${Styles.favourite_list} ${active === (true && item.id) ? Styles.activeFavouritelist : ""}`} onClick={() => { setActive(!active); handleClick(item); }}       data-testid="favorite-icon" >
                   <svg
                     height="20px"
                     version="1.1"

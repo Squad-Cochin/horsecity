@@ -47,15 +47,15 @@ function LoginPage() {
             <ButtonType className="login-button" name="Login" onClick={() => navigate('/listing')} />
           </div>
 
-          <div className={styles['social-login-buttons']}>
+          <div className={styles['social-login-buttons']} >
             {/* Facebook login */}
             <LoginSocialFacebook appId="App id" onResolve={handleResolve} onReject={handleReject}>
               <ButtonType className="facebook-button" name="Facebook" />
             </LoginSocialFacebook>
 
             {/* Google login */}
-            <GoogleOAuthProvider clientId="1023374887244-5ckguqq4o592365am9gfmrd9s9ojvp1d.apps.googleusercontent.com">
-              <GoogleLogin onSuccess={onSuccess} onError={onFailure} />
+            <GoogleOAuthProvider clientId="1023374887244-5ckguqq4o592365am9gfmrd9s9ojvp1d.apps.googleusercontent.com" >
+              <GoogleLogin onSuccess={onSuccess} onError={onFailure}   />
             </GoogleOAuthProvider>
           </div>
 

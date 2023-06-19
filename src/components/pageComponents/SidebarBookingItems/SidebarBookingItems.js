@@ -37,7 +37,7 @@ const SidebarBooking = (props) => {
                     {/* Render each item in the cart */}
                     {props.cart.map((item, index) => {
                         return (
-                            <div className={Styles.booked_trip} key={item.id}>
+                            <div className={Styles.booked_trip} key={item.id} data-testid="cart-item">
                                 <h1 className={Styles.booking_product_title}>{item.name}</h1>
                                 <div className={Styles.booking_details}>
                                     {/* Display item details */}
@@ -46,7 +46,7 @@ const SidebarBooking = (props) => {
                                     <div className={Styles.Details_value}> <span> 3. Provider: {item.company}</span></div>
                                 </div>
                                 {/* Button to delete the item from the cart */}
-                                <button className={Styles.trash} onClick={() => deleteFromCart(item.id)}><IoMdTrash /></button>
+                                <button className={Styles.trash} onClick={() => deleteFromCart(item.id)}    data-testid={`delete-button-${item.id}`} ><IoMdTrash /></button>
                             </div>
                         )
                     })}

@@ -11,24 +11,25 @@ import Sidebar from '../../components/pageComponents/SideBar/SideBar';
 import ActivityFilter from '../../components/pageComponents/ActivityFilter/ActivityFilter';
 import SidebarBooking from '../../components/pageComponents/SidebarBookingItems/SidebarBookingItems';
 
-function TestPage() {
+function ListingPage() {
   // State variables
   const [wishlist, setWishlist] = useState([]);
   const [cart, setCart] = useState([]);
 
   return (
     <>
+       <div  data-testid="header-component">
       {/* Header component with wishlist and cart */}
-      <Header wishlist={wishlist} cart={cart} />
-
-      <div className={Styles['listingpage']}>
-        <Container>
+      <Header   wishlist={wishlist} cart={cart} />
+      </div>
+      <div className={Styles['listingpage']} >
+        <Container data-testid="listing-searchbar">
           {/* Search bar component */}
-          <ListingSearchbar template="home" />
+          <ListingSearchbar data-testid="listing-searchbar" template="home"  />
         </Container>
       </div>
 
-      <Container>
+      <Container data-testid="activityFilter-component">
         {/* Activity filter component */}
         <ActivityFilter />
       </Container>
@@ -39,21 +40,24 @@ function TestPage() {
             <div className={`pageSidebar`}>
               {/* Sidebar booking items */}
               <SidebarBooking cart={cart} setCart={setCart} />
-
-              {/* Sidebar component */}
-              <Sidebar />
+              <div data-testid="sidebar-component">
+                {/* Sidebar component */}
+                <Sidebar />
+              </div>
+       
             </div>
           </Col>
           <Col xl={9} lg={8}>
             {/* Listing pro box component */}
             {/* Data is passed to the ListingProbox component through props */}
-            <ListingProbox
+            <div data-testid="listingProbox-component">
+            <ListingProbox 
               boxData={boxData}
               wishlist={wishlist}
               setWishlist={setWishlist}
               setCart={setCart}
             />
-
+            </div>
             <div className="text-center">
               {/* Button for showing more */}
               <ButtonType className="btntype2" name="Show More" />
@@ -65,7 +69,7 @@ function TestPage() {
   );
 }
 
-export default TestPage;
+export default ListingPage;
 
 // Data for ListingProbox component
 const boxData = [

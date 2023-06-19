@@ -22,9 +22,9 @@ const Header = (props) => {
         </Link>
         <div className={`${Styles.cartIcon}`}>
           <Image src={process.env.PUBLIC_URL + "/images/favourateicon.svg"} alt="favourate Icon" width={"25px"} />
-         <b> <p className={Styles.faviconCount}>{wishlistCount}</p></b>
+         <b> <p className={Styles.faviconCount}  data-testid="wishlist-count">{wishlistCount}</p></b>
           <Image src={process.env.PUBLIC_URL + "/images/carticon.svg"} alt="Cart Icon" width={"25px"} />
-          <b>  <p className={`${Styles.cartCount}`}>{cartCount}</p></b>
+          <b>  <p className={`${Styles.cartCount}`} data-testid="cart-count">{cartCount}</p></b>
         </div>
 
       </Container>
