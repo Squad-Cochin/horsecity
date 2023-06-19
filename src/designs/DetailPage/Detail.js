@@ -70,7 +70,7 @@ function DetailPage() {
         console.log('height: ', ref.current.offsetHeight);
 
         if (detailData && detailData.length > 0) {
-            setPdetails(detailData[0]); // Set the product details from the data
+            setPdetails(    [0]); // Set the product details from the data
         }
 
         // Retrieve wishlist and cart data from local storage
