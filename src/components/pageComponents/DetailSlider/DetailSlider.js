@@ -7,9 +7,10 @@ import Styles from "./DetailSlider.module.scss";
 // import banner3 from "../../../asset/images/rightbanner2.jpg";
 import "bootstrap/dist/css/bootstrap.min.css";
 // Import the Slider component from the react-slick/lib/slider library
-import Slider from "react-slick/lib/slider";
-import "../../../../node_modules/slick-carousel/slick/slick.css";
-import "../../../../node_modules/slick-carousel/slick/slick-theme.css";
+import 'matchmedia-polyfill';
+import Slider from 'react-slick';
+import 'slick-carousel/slick/slick.css';
+import 'slick-carousel/slick/slick-theme.css';
 import { Row } from "react-bootstrap";
 import { Col } from "react-bootstrap";
 import Image from "react-bootstrap/Image";

@@ -97,9 +97,15 @@ function DetailPage() {
         <>
             {/* Main header section */}
             <div id="header" className={Styles.mainHeader} ref={ref} >
+                <div  data-testid="header-component">
                 <Header wishlist={wishlistData} cart={cartData} />
-                <BackTopage label="See all Activities" href="/" />
+                </div>
+                <div  data-testid="backToPage-component">
+                <BackTopage label="See all Activities" href="/"  />
+                </div>
+                <div  data-testid="mainMenu-component">
                 <MainMenu currency={!pdetails.currency ? templValue.currency : pdetails.currency} price={!vehicleData.price ? templValue.price : vehicleData.price} />
+                </div>
             </div>
 
             {/* Detail page content */}
@@ -107,9 +113,10 @@ function DetailPage() {
                 <BreadcrumbType wishlist={false} />
 
                 <Container>
+                    <div  data-testid="slider-component">
                     {/* Detail slider */}
                     <DetailSlider images={!vehicleData.images ? templValue.images : vehicleData.images} />
-
+                    </div>
                     <Row className="mt-5">
                         <Col lg={8} md={7}>
                             {/* Product description */}
