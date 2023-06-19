@@ -7,7 +7,7 @@ import Styles from "./DetailSlider.module.scss";
 // import banner3 from "../../../asset/images/rightbanner2.jpg";
 import "bootstrap/dist/css/bootstrap.min.css";
 // Import the Slider component from the react-slick/lib/slider library
-import 'matchmedia-polyfill';
+// import 'matchmedia-polyfill';
 import Slider from 'react-slick';
 import 'slick-carousel/slick/slick.css';
 import 'slick-carousel/slick/slick-theme.css';
