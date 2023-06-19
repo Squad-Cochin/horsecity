@@ -22,5 +22,5 @@ test('renders the Header component with logo and cart/wishlist counts', () => {
   const cartCount = screen.getByTestId('cart-count');
   const wishlistCount = screen.getByTestId('wishlist-count');
   expect(cartCount).toHaveTextContent(mockCart.length.toString());
-  expect(wishlistCount).toHaveTextContent(mockWishlist.length.toString());
+  expect(wishlistCount).toHaveTextContent(mockWishlist.length.toString());   
 });

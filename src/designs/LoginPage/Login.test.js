@@ -8,7 +8,7 @@ test('renders LoginPage component', () => {
     <MemoryRouter>
       <LoginPage />
     </MemoryRouter>
-  );
+  ); 
 
   // Check if the login form elements are rendered
   const usernameInput = screen.getByPlaceholderText('Username');

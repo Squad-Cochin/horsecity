@@ -13,7 +13,7 @@ const mockCart = [
   {
     id: 2,
     name: 'Product 2',
-    vehicleType: 'Type 2',
+    vehicleType: 'Type 2', 
     price: '20.00',
     company: 'Company 2',
   },

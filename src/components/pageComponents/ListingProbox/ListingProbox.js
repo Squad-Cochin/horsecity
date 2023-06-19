@@ -71,8 +71,8 @@ const ListingProbox = (props) => {
           <Row className="g-3">
             <Col className="d-flex align-items-center" lg={{ span: 3, order: 1 }} xs={{ span: 5, order: 1 }}>
               <div className={`position-relative ${Styles['imagebox']}`}>
-                <Image src={item.picture} className={Styles[`image`]} alt="Activity Image" />
-                <span className={`${Styles.favourite_list} ${active === (true && item.id) ? Styles.activeFavouritelist : ""}`} onClick={() => { setActive(!active); handleClick(item); }}       data-testid="favorite-icon" >
+                <Image src={!item.picture ? tempValue.picture : item.picture } className={Styles[`image`]} alt="Activity Image" />
+                <span className={`${Styles.favourite_list} ${active === (true && item.id) ? Styles.activeFavouritelist : ""}`} onClick={() => { setActive(!active); handleClick(item); }}  data-testid="favorite-icon">
                   <svg
                     height="20px"
                     version="1.1"
@@ -90,12 +90,12 @@ const ListingProbox = (props) => {
             </Col>
             <Col lg={{ span: 6, order: 2 }} xs={{ span: 12, order: 3 }}>
               <h2 className="header-type1">
-                {item.name}
+                {!item.name ? tempValue.name : item.name}
               </h2>
-              <div className={Styles.probox_type}>{item.vehicleType}</div>
-              <div className={Styles.probox_time}>{item.company}</div>
+              <div className={Styles.probox_type}>{!item.vehicleType ? tempValue.vehicleType : item.vehicleType}</div>
+              <div className={Styles.probox_time}>{!item.company ? tempValue.company : item.company}</div>
               <div className={Styles.probox_text}>
-                {item.description}
+              {!item.description ? tempValue.desc : item.description}
               </div>
               <Link to={`/detail/${item.id}`}>
                 <span className="link-type1">More details</span>
@@ -107,7 +107,7 @@ const ListingProbox = (props) => {
               className="text-end"
             >
               <div className={Styles.price_section}>
-                <div className={Styles.price}>{props.boxData[0].currency} {item.price}</div>
+                <div className={Styles.price}>{!props.boxData[0].currency ? tempValue.currency : props.boxData[0].currency} {!item.price ? tempValue.price : item.price}</div>
                 <div className={Styles.btn_bar}>
                   {/* Render the ButtonType component with the "Add to cart" text and the addToCart function as the onClick handler */}
                   <ButtonType className="btntype2" name={'Add to cart'} onClick={() => addToCart(item)} />
@@ -120,6 +120,17 @@ const ListingProbox = (props) => {
     </>
   );
 };
+
+const tempValue =
+{
+  currency : "AED",
+  price : "NA",
+  vehicleType : "Company",
+  company : "Horse City Corporation",
+  name : "Company Vehicle",
+  picture : "https://www.123rf.com/photo_131224058_car-for-carrying-horses-funny-horse-transport-carriage-for-horses.html",
+  desc : "Consequat qui ut nostrud anim ea quis veniam excepteur aute mollit adipisicing nulla tempor. In ipsum sit exercitation deserunt cillum excepteur. Occaecat irure reprehenderit consectetur id nisi do reprehenderit et sunt nisi qui mollit Lorem exercitation."
+}
 
 export default ListingProbox;
 
