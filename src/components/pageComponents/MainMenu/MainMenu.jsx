@@ -46,9 +46,9 @@ export const MainMenu = (props) => {
               <div className={Styles.headerPrice}> {props.currency} {props.price}</div>
               {/* Button */}
               <ButtonType
-                variant="primary"
+       
                 onClick={handleShow}
-                className={`btntype1 mt-4 ${Styles.headerBtn}`}
+                className={'btntype2'}
                 name= "Check availability"
               />
               <Offcanvas

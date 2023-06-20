@@ -16,7 +16,7 @@ import AccordionType1 from "../../components/pageComponents/AccordionType/Accord
 import Styles from './Detail.module.scss';
 import { Link } from 'react-router-dom';
 
-const tempValue = 
+const tempValue =
 {
     "currency": "AED",
     "vechicleLocation": "NA",
@@ -27,10 +27,10 @@ const tempValue =
     "description": "This is just a testing value. The value value is not rendered from the json",
     "registered": "Country Registration number",
     "occupancy": "No of Horses",
-    "vehcile": 
+    "vehcile":
     {
-            "id": 0,
-            "images": [
+        "id": 0,
+        "images": [
             {
                 "id": 0,
                 "name": "https://via.placeholder.com/250x250",
@@ -97,15 +97,15 @@ function DetailPage() {
         <>
             {/* Main header section */}
             <div id="header" className={Styles.mainHeader} ref={ref} >
-      <div  data-testid="header-component">
-                <Header wishlist={wishlistData} cart={cartData} />
-   </div>
-     <div  data-testid="backToPage-component">
-                <BackTopage label="See all Activities" href="/" />
+                <div data-testid="header-component">
+                    <Header wishlist={wishlistData} cart={cartData} />
                 </div>
-      <div  data-testid="mainMenu-component">
-                <MainMenu currency={!pdetails.currency ? tempValue.currency : pdetails.currency} price={!vehicleData.price ? tempValue.price : vehicleData.price} />
-       </div>
+                <div data-testid="backToPage-component">
+                    <BackTopage label="See all Activities" href="/" />
+                </div>
+                <div data-testid="mainMenu-component">
+                    <MainMenu currency={!pdetails.currency ? tempValue.currency : pdetails.currency} price={!vehicleData.price ? tempValue.price : vehicleData.price} />
+                </div>
             </div>
 
             {/* Detail page content */}
@@ -113,16 +113,16 @@ function DetailPage() {
                 <BreadcrumbType wishlist={false} />
 
                 <Container>
-   <div  data-testid="slider-component">
-                    {/* Detail slider */}
-                    <DetailSlider images={!vehicleData.images ? tempValue.images : vehicleData.images} />
-      </div>
+                    <div data-testid="slider-component">
+                        {/* Detail slider */}
+                        <DetailSlider images={!vehicleData.images ? tempValue.images : vehicleData.images} />
+                    </div>
                     <Row className="mt-5">
                         <Col lg={8} md={7}>
                             {/* Product description */}
                             <div className={Styles.productDesc}>
                                 <h2 className="header-type2">
-                                    {!pdetails.vechicleLocation ? tempValue.vechicleLocation : pdetails.vechicleLocation} - {!vehicleData.name ? tempValue.name : vehicleData.name }
+                                    {!pdetails.vechicleLocation ? tempValue.vechicleLocation : pdetails.vechicleLocation} - {!vehicleData.name ? tempValue.name : vehicleData.name}
                                 </h2>
                                 <div className={Styles.byTravelText}>
                                     <u>{!vehicleData.vehicleType ? tempValue.vehicleType : vehicleData.vehicleType} - {!vehicleData.company ? tempValue.company : vehicleData.company}</u>
@@ -155,10 +155,10 @@ function DetailPage() {
                                 </div>
                                 {/* Button for checking availability */}
                                 <ButtonType
-                                    variant = "primary"
-                                    onClick = {handleShow}
-                                    className = "btntype1 mt-4"
-                                    name = "Check availability"
+                                    variant="primary"
+                                    onClick={handleShow}
+                                    className={'btntype2'}
+                                    name="Check availability"
                                 />
                             </div>
                         </Col>
