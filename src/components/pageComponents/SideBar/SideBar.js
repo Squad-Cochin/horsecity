@@ -40,7 +40,7 @@ const Sidebar = () => {
                 <Form.Label className={Styles.rangeTitle}>
                   Price
                 </Form.Label>
-                <label className="w-100">
+                <label className="w-100" data-testid="rangeslider">
                   {/* The price range bar will be displayed here */}
                   <RangeSlider 
                     aria-label= "Choose a value"

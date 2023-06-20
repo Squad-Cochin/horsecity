@@ -79,9 +79,9 @@ const boxData = [
     vehicle: [
       {
         id: 0,
-        // picture: 'https://via.placeholder.com/250x250',
+        picture: 'https://via.placeholder.com/250x250',
         name: 'Rosetta Massey',
-
+        vehicleType: 'international',
         company: 'Maryellen',
         description : 'Commodo labore do officia dolore non. Ipsum labore veniam irure dolore in enim aute in consequat consequat dolore. Magna elit consequat eiusmod cupidatat. Esse ea pariatur aliqua nulla do enim. Nulla ex occaecat id veniam. Eiusmod minim aute fugiat ex qui duis nostrud amet in veniam exercitation dolor.\r\n',
         price: '2,109.54',
