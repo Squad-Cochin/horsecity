@@ -16,7 +16,7 @@ import AccordionType1 from "../../components/pageComponents/AccordionType/Accord
 import Styles from './Detail.module.scss';
 import { Link } from 'react-router-dom';
 
-const templValue = 
+const tempValue = 
 {
     "currency": "AED",
     "vechicleLocation": "NA",
@@ -70,7 +70,7 @@ function DetailPage() {
         console.log('height: ', ref.current.offsetHeight);
 
         if (detailData && detailData.length > 0) {
-            setPdetails(    [0]); // Set the product details from the data
+            setPdetails(detailData[0]); // Set the product details from the data
         }
 
         // Retrieve wishlist and cart data from local storage
@@ -97,15 +97,15 @@ function DetailPage() {
         <>
             {/* Main header section */}
             <div id="header" className={Styles.mainHeader} ref={ref} >
-                <div  data-testid="header-component">
+      <div  data-testid="header-component">
                 <Header wishlist={wishlistData} cart={cartData} />
+   </div>
+     <div  data-testid="backToPage-component">
+                <BackTopage label="See all Activities" href="/" />
                 </div>
-                <div  data-testid="backToPage-component">
-                <BackTopage label="See all Activities" href="/"  />
-                </div>
-                <div  data-testid="mainMenu-component">
-                <MainMenu currency={!pdetails.currency ? templValue.currency : pdetails.currency} price={!vehicleData.price ? templValue.price : vehicleData.price} />
-                </div>
+      <div  data-testid="mainMenu-component">
+                <MainMenu currency={!pdetails.currency ? tempValue.currency : pdetails.currency} price={!vehicleData.price ? tempValue.price : vehicleData.price} />
+       </div>
             </div>
 
             {/* Detail page content */}
@@ -113,23 +113,23 @@ function DetailPage() {
                 <BreadcrumbType wishlist={false} />
 
                 <Container>
-                    <div  data-testid="slider-component">
+   <div  data-testid="slider-component">
                     {/* Detail slider */}
-                    <DetailSlider images={!vehicleData.images ? templValue.images : vehicleData.images} />
-                    </div>
+                    <DetailSlider images={!vehicleData.images ? tempValue.images : vehicleData.images} />
+      </div>
                     <Row className="mt-5">
                         <Col lg={8} md={7}>
                             {/* Product description */}
                             <div className={Styles.productDesc}>
                                 <h2 className="header-type2">
-                                    {!pdetails.vechicleLocation ? templValue.vechicleLocation : pdetails.vechicleLocation} - {vehicleData.name}
+                                    {!pdetails.vechicleLocation ? tempValue.vechicleLocation : pdetails.vechicleLocation} - {!vehicleData.name ? tempValue.name : vehicleData.name }
                                 </h2>
                                 <div className={Styles.byTravelText}>
-                                    <u>{vehicleData.vehicleType} - {vehicleData.company}</u>
+                                    <u>{!vehicleData.vehicleType ? tempValue.vehicleType : vehicleData.vehicleType} - {!vehicleData.company ? tempValue.company : vehicleData.company}</u>
                                 </div>
                                 {/* Rating */}
                                 <div className="mt-4">
-                                    <b>{vehicleData.registered}</b> (68 ratings)
+                                    <b>{!vehicleData.registered ? tempValue.registered : vehicleData.registered}</b> (68 ratings)
                                 </div>
                                 <div className="mt-4">
                                     <b>4.5/5</b> (68 ratings)
@@ -144,7 +144,7 @@ function DetailPage() {
                         <Col lg={4} md={5}>
                             {/* Price section */}
                             <div className={Styles.priceSection}>
-                                <h2 className="header-type2">{pdetails.currency} {vehicleData.price} </h2>
+                                <h2 className="header-type2">{!pdetails.currency ? tempValue.currency : pdetails.currency} {!vehicleData.price ? tempValue.price : vehicleData.price} </h2>
                                 <div className={Styles.duration}>
                                     Offer ID: 98292{" "}
                                     <span className={Styles.durationSeparator}></span> Exp:
@@ -155,10 +155,10 @@ function DetailPage() {
                                 </div>
                                 {/* Button for checking availability */}
                                 <ButtonType
-                                    variant="primary"
-                                    onClick={handleShow}
-                                    className="btntype1 mt-4"
-                                    name="Check availability"
+                                    variant = "primary"
+                                    onClick = {handleShow}
+                                    className = "btntype1 mt-4"
+                                    name = "Check availability"
                                 />
                             </div>
                         </Col>
@@ -168,7 +168,7 @@ function DetailPage() {
                     <FeatureTable />
 
                     {/* Detail content */}
-                    <DetailContent description={vehicleData.description} />
+                    <DetailContent description={!vehicleData.description ? tempValue.description : vehicleData.description} />
 
                     {/* Accordion */}
                     <AccordionType className="plusicon" />
