@@ -1,7 +1,7 @@
 // { On the component page that displays the homepage, a sidebar filter will also be included. 
 // This component will include all filter type functionalities on the homepage. }
 
-import React from "react";
+import React, {useState} from "react";
 // We installed react-bootstrap and used the Accordion component from the library
 
 import { Link } from "react-router-dom";
@@ -13,11 +13,32 @@ import Styles from "./SideBar.module.scss";
 import RangeSlider from '../../../../node_modules/react-range-slider-input/dist/components/RangeSlider';
 import 'react-range-slider-input/dist/style.css';
 import { Form } from "react-bootstrap";
-const Sidebar = () => {
+const Sidebar = (props) => {
   // This function is used to close the sidebar
 
   const closeIcon = () => {
     document.body.classList.toggle("sidebarActive");
+  };
+  const checkboxOptions = [
+    { id: 0, label: "GCC" },
+    { id: 1, label: "Private" },
+    { id: 2, label: "Sharing" },
+  ];
+
+  // const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+
+  const handleCheckboxChange = (checkedItems) => {
+
+    const filterData = [...props.vehicles[0].vehicle].filter((value, index) => {
+      return checkedItems.some((item) => {
+        console.log("item", item); // Log the current item in the checkedItems array
+        console.log("value", value); // Log the current value in props.vehicles[0].vehicle
+        return item.name === value.vehicleType && item.status;
+      });
+    });
+    
+    console.log("filter",filterData);
+    console.log("chh",checkedItems);
   };
   return (
     <aside>
@@ -53,9 +74,7 @@ const Sidebar = () => {
               </Form.Group>
             </Form>
           </div>
-          <CheckboxType label={'GCC'} />
-          <CheckboxType label={'Private'} />
-          <CheckboxType label={'Sharing'} />
+          <CheckboxType checkboxOptions={checkboxOptions} onChange={handleCheckboxChange} />
         </div>
       </div>
     </aside>

@@ -44,7 +44,7 @@ function ListingPage() {
               <SidebarBooking cart={cart} setCart={setCart} />
               <div data-testid="sidebar-component">
                 {/* Sidebar component */}
-                <Sidebar />
+                <Sidebar  setVehicles={setVehicles} vehicles={vehicles} />
               </div>
        
             </div>
