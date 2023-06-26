@@ -16,6 +16,8 @@ function ListingPage() {
   const [wishlist, setWishlist] = useState([]);
   const [cart, setCart] = useState([]);
 
+  const [sortOption, setSortOption] = useState('');
+  const [vehicles, setVehicles] = useState(boxData);
   return (
     <>
        <div  data-testid="header-component">
@@ -31,7 +33,7 @@ function ListingPage() {
 
       <Container data-testid="activityFilter-component">
         {/* Activity filter component */}
-        <ActivityFilter />
+        <ActivityFilter setVehicles={setVehicles} vehicles={vehicles} setSortOption={setSortOption}/>
       </Container>
 
       <Container>
@@ -52,7 +54,7 @@ function ListingPage() {
             {/* Data is passed to the ListingProbox component through props */}
             <div data-testid="listingProbox-component">
             <ListingProbox
-              boxData = {boxData}
+              boxData = {vehicles}
               wishlist={wishlist}
               setWishlist={setWishlist}
               setCart={setCart}
@@ -75,7 +77,7 @@ export default ListingPage;
 // Data for ListingProbox component
 const boxData = [
   {
-    // currency: 'AED',
+     currency: 'AED',
     vehicle: [
       {
         id: 0,

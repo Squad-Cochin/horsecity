@@ -7,15 +7,57 @@ import Col from "react-bootstrap/Col";
 // import Select, { components } from 'react-select';
 import Styles from "./ActivityFilter.module.scss";
 import ButtonType from "../../elementComponents/Button/Button";
-
+import Select from 'react-select';
 // Defining the ActivityFilter component
 const ActivityFilter = (props) => {
+ 
+  
 
   // This function is used to show/hide the sidebar by toggling the "sidebarActive" class on the body element
   const handleClick = () => {
     document.body.classList.toggle("sidebarActive");
   };
+  // Function for sort on the basis select.
+  // const handleSort = (e) => {
+  //   let value = e.value
+  //   props.setSortValue(value);
+  //   // props.page == 0 ? props.setPage(1) : props.setPage(0);
+  // }
+  // Drop down options.
+  
+  const sortByOptions = [
+    { value: "PRICE:ASCENDING", label: "Price (low to high)", key: "1" },
+    { value: "PRICE:DESCENDING", label: "Price (high to low)", key: "2" }
+  ];
+  
+  const handleSortChange = (e) => {
+    const option = e.value;
+  
+    if (option === 'PRICE:ASCENDING') {
 
+      const vehicle = [...props.vehicles[0].vehicle].sort((a, b) => {
+        return parseFloat(a.price.replace(/,/g, '')) - parseFloat(b.price.replace(/,/g, ''));
+      });
+
+      let boxData = [{ currency: 'AED',
+      vehicle: vehicle}]
+      console.log("ascHomes", boxData);
+     
+        props.setVehicles(boxData)
+    } else if (option === 'PRICE:DESCENDING') {
+      const vehicle = [...props.vehicles[0].vehicle].sort((a, b) => {
+        return parseFloat(b.price.replace(/,/g, '')) - parseFloat(a.price.replace(/,/g, ''));
+      });
+      let boxData = [{ currency: 'AED',
+      vehicle: vehicle}]
+      console.log("ascHomes", boxData);
+     
+        props.setVehicles(boxData)
+
+    }
+  }
+  
+  
   return (
     // The main container with a class name of "filterbox"
     <div className={Styles.filterbox}>
@@ -42,6 +84,12 @@ const ActivityFilter = (props) => {
               {/* Two instances of a custom ButtonType component, with different names and classNames */}
               <ButtonType name={'My bookings'} className='my-bookings-button' />
               <ButtonType name={'My payments'} className='my-payments-button' />
+
+              <div className="mt-2">
+                <span className="d-inline-block align-middle me-2">Sort by</span>
+                {/* We will show the select dropdown here */}
+                <Select class="d-inline-block sort-select" label="Sort by" defaultValue={sortByOptions[0]} options={sortByOptions} onChange={handleSortChange} />
+              </div>
             </div>
           </div>
         </Col>

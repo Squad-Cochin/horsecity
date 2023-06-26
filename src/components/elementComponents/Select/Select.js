@@ -18,7 +18,7 @@ const SelectType = (props) => {
 };
 SelectType.defaultProps = {
   width: "auto",
-  label: "Label",
+  label: "",
   mandatory: "",
   active: false,
   class: "formbox",
