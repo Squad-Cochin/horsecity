@@ -25,43 +25,90 @@ console.log("sideBarProps",props);
     { id: 2, label: "Sharing" },
   ];
 
-  // const [selectedCheckboxes, setSelectedCheckboxes] = useState([]);
+
 
 
  
   
-  let array = [];
-  const handleCheckboxChange = (checkedItems) => {
+  // let array = [];
+  // const handleCheckboxChange = (checkedItems) => {
 
-    array.push(checkedItems);
-    console.log("updated!!!!!!!!!!!!!", array);
-    // console.log("props :",props);
-    let updatedArray = []
-    for(let i = 0; i < array.length ; i++){
-        if(array[i].status){
-          for (let j=0 ; j < props.boxData[0].vehicle.length ; j++ ){
-           if( props.boxData[0].vehicle[j].vehicleType == array[i].name){
-              updatedArray.push(props.boxData[0].vehicle[j])
-           }
-        }
-        }else{
-          for (let j=0 ; j < props.boxData[0].vehicle.length ; j++ ){
-              updatedArray.push(props.boxData[0].vehicle[j])
-            }
-        }
-   
-  }
-
-    // console.log("updateArray",updatedArray);
-    let boxData = [{ currency: "AED", vehicle: updatedArray }];
-    // console.log("boxx",boxData);
-    props.setVhFilter(boxData); 
-
-
-   
-  };
-
+  //   array.push(checkedItems);
+  //   console.log("updated!!!!!!!!!!!!!", array);
   
+  //   let updatedArray = [];
+  //   for (let i = 0; i < array.length; i++) {
+  //     const currentItem = array[i];
+  //     if (currentItem.status) {
+  //       for (let j = 0; j < props.boxData[0].vehicle.length; j++) {
+  //         if (props.boxData[0].vehicle[j].vehicleType === currentItem.name) {
+  //           updatedArray.push(props.boxData[0].vehicle[j]);
+  //         }
+  //       }
+  //     } else {
+  //       for (let j = 0; j < props.boxData[0].vehicle.length; j++) {
+  //         updatedArray.push(props.boxData[0].vehicle[j]);
+  //       }
+  //     }
+  //   }
+
+  //   // console.log("updateArray",updatedArray);
+  //   let boxData = [{ currency: "AED", vehicle: updatedArray }];
+  //   // console.log("boxx",boxData);
+  //   props.setVhFilter(boxData); 
+
+
+   
+  // };
+
+  const [checkedItems, setCheckedItems] = useState([]);
+
+  // Function to handle checkbox change
+  const handleCheckboxChange = (checkedItem) => {
+    // Create a copy of the checked items array
+    const updatedCheckedItems = [...checkedItems];
+  
+    // Find the index of the item in the array based on its name
+    const existingIndex = updatedCheckedItems.findIndex(item => item.name === checkedItem.name);
+  
+    // If the item already exists, update it; otherwise, add it to the array
+    if (existingIndex !== -1) {
+      updatedCheckedItems[existingIndex] = checkedItem;
+    } else {
+      updatedCheckedItems.push(checkedItem);
+    }
+  
+    // Log the updated items
+    console.log("Updated Items:", updatedCheckedItems);
+  
+    // Create an array to store the updated vehicles based on the checked items
+    let updatedArray = [];
+  
+    // Check if any item in updatedCheckedItems has status true
+    const hasCheckedItems = updatedCheckedItems.some(item => item.status);
+  
+    if (hasCheckedItems) {
+      // Include only the vehicles that match the checked items with status true
+      updatedArray = props.boxData[0].vehicle.filter(vehicle =>
+        updatedCheckedItems.some(item =>
+          item.name === vehicle.vehicleType && item.status
+        )
+      );
+    } else {
+      // If no checked item has status true, include all vehicles
+      updatedArray = props.boxData[0].vehicle;
+    }
+  
+    // Create the boxData object with the updatedArray
+    let boxData = [{ currency: "AED", vehicle: updatedArray }];
+  
+    // Call the setVhFilter function with the updated boxData
+    props.setVhFilter(boxData);
+  
+    // Update the checkedItems state with the updatedCheckedItems array
+    setCheckedItems(updatedCheckedItems);
+  };
+    
   
 
   return (
