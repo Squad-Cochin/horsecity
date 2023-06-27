@@ -11,7 +11,7 @@ import ButtonType from "../../elementComponents/Button/Button";
 import Styles from "./ListingProbox.module.scss";
 
 const ListingProbox = (props) => {
-  console.log(props.boxData);
+  console.log("box",props.boxData);
   const [active, setActive] = useState(false);
 
   useEffect(() => {

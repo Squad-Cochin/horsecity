@@ -18,6 +18,8 @@ function ListingPage() {
 
   const [sortOption, setSortOption] = useState('');
   const [vehicles, setVehicles] = useState(boxData);
+  const [ vhfilter, setVhFilter] = useState(boxData);
+  console.log(vehicles);
   return (
     <>
        <div  data-testid="header-component">
@@ -33,7 +35,7 @@ function ListingPage() {
 
       <Container data-testid="activityFilter-component">
         {/* Activity filter component */}
-        <ActivityFilter setVehicles={setVehicles} vehicles={vehicles} setSortOption={setSortOption}/>
+        <ActivityFilter setVehicles={setVhFilter} vehicles={vehicles} setSortOption={setSortOption}/>
       </Container>
 
       <Container>
@@ -44,9 +46,8 @@ function ListingPage() {
               <SidebarBooking cart={cart} setCart={setCart} />
               <div data-testid="sidebar-component">
                 {/* Sidebar component */}
-                <Sidebar  setVehicles={setVehicles} vehicles={vehicles} />
+                <Sidebar  setVhFilter={setVhFilter} boxData={vehicles} />
               </div>
-       
             </div>
           </Col>
           <Col xl={9} lg={8}>
@@ -54,7 +55,7 @@ function ListingPage() {
             {/* Data is passed to the ListingProbox component through props */}
             <div data-testid="listingProbox-component">
             <ListingProbox
-              boxData = {vehicles}
+              boxData = {vhfilter}
               wishlist={wishlist}
               setWishlist={setWishlist}
               setCart={setCart}

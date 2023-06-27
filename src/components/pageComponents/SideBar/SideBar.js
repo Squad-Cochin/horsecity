@@ -14,6 +14,7 @@ import RangeSlider from '../../../../node_modules/react-range-slider-input/dist/
 import 'react-range-slider-input/dist/style.css';
 import { Form } from "react-bootstrap";
 const Sidebar = (props) => {
+console.log("sideBarProps",props);
   // This function is used to close the sidebar
   const closeIcon = () => {
     document.body.classList.toggle("sidebarActive");
@@ -28,45 +29,39 @@ const Sidebar = (props) => {
 
 
  
-  const [checkedItems, setCheckedItems] = useState([]);
+  
+  let array = [];
+  const handleCheckboxChange = (checkedItems) => {
 
-  // const handleCheckboxChange = (checkedItems) => {
-  //   console.log("SS",checkedItems);
+    array.push(checkedItems);
+    console.log("updated!!!!!!!!!!!!!", array);
+    // console.log("props :",props);
+    let updatedArray = []
+    for(let i = 0; i < array.length ; i++){
+        if(array[i].status){
+          for (let j=0 ; j < props.boxData[0].vehicle.length ; j++ ){
+           if( props.boxData[0].vehicle[j].vehicleType == array[i].name){
+              updatedArray.push(props.boxData[0].vehicle[j])
+           }
+        }
+        }else{
+          for (let j=0 ; j < props.boxData[0].vehicle.length ; j++ ){
+              updatedArray.push(props.boxData[0].vehicle[j])
+            }
+        }
+   
+  }
 
-  //   const selectedItems = checkedItems.filter((item) => item.status !== false);
-  //   console.log("selectedItems",checkedItems);
-  //   let filteredData;
-  //   if (selectedItems.length === 0) {
-  //     console.log("one");
-  //     filteredData = [...props.vehicles[0].vehicle];
-  //   } else {
-  //     console.log("two");
-  //     filteredData = [...props.vehicles[0].vehicle].filter((vehicle) => {
-  //       return selectedItems.some((item) => item.name === vehicle.vehicleType && item.status) && vehicle.isActive;
-  //     });
-  //   }
-  //   console.log("filter",filteredData);
-  //   const updatedBoxData = [{ currency: 'AED', vehicle: filteredData }];
-  //   props.setVehicles(updatedBoxData);
-  // };
+    // console.log("updateArray",updatedArray);
+    let boxData = [{ currency: "AED", vehicle: updatedArray }];
+    // console.log("boxx",boxData);
+    props.setVhFilter(boxData); 
 
-  // const filterResult = (e) => {
-  //   let checkBoxArray = document.querySelectorAll(".checkbox-filter input[type='checkbox']");
-  //   let filteredArray = Array.from(checkBoxArray).filter((value) => {
-  //     return value.checked  === true
-  //   });
 
-  //   let filterValuesArray = filteredArray.concat(filteredArrayRadio);
-  //   filterValuesArray.forEach((item) => {
-  //     valuesArray.push(item.value);
-  //     filtersArray.push(item.nextElementSibling.innerText)
-  //   });
-  //   valuesArray.push('PF:' + rangeMinValue + '&' + rangeMaxValue);
-  //   setappliedFilters(filtersArray);
-  //   props.setFilterData(valuesArray);
-  //   props.page == 0 ? props.setPage(1) : props.setPage(0);
+   
+  };
 
-  // }
+  
   
 
   return (
@@ -103,7 +98,7 @@ const Sidebar = (props) => {
               </Form.Group>
             </Form>
           </div>
-          {/* <CheckboxType checkboxOptions={checkboxOptions}  /> */}
+          <CheckboxType checkboxOptions={checkboxOptions} onChange={handleCheckboxChange} />
         </div>
       </div>
     </aside>
