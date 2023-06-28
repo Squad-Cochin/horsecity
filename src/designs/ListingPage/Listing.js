@@ -16,12 +16,11 @@ function ListingPage() {
   const [wishlist, setWishlist] = useState([]);
   const [cart, setCart] = useState([]);
 
-  const [sortOption, setSortOption] = useState('');
   const [vehicles, setVehicles] = useState(boxData);
-  const [ vhfilter, setVhFilter] = useState(boxData);
+  const [ filterData, setFilterData] = useState(boxData);
   console.log(vehicles);
   return (
-    <>
+    <>    
        <div  data-testid="header-component">
       {/* Header component with wishlist and cart */}
       <Header   wishlist={wishlist} cart={cart} />
@@ -35,7 +34,7 @@ function ListingPage() {
 
       <Container data-testid="activityFilter-component">
         {/* Activity filter component */}
-        <ActivityFilter setVehicles={setVhFilter} vehicles={vehicles} setSortOption={setSortOption}/>
+        <ActivityFilter setVehicles={setFilterData} vehicles={vehicles} />
       </Container>
 
       <Container>
@@ -46,7 +45,7 @@ function ListingPage() {
               <SidebarBooking cart={cart} setCart={setCart} />
               <div data-testid="sidebar-component">
                 {/* Sidebar component */}
-                <Sidebar  setVhFilter={setVhFilter} boxData={vehicles} />
+                <Sidebar  setVhFilter={setFilterData} boxData={vehicles} />
               </div>
             </div>
           </Col>
@@ -55,7 +54,7 @@ function ListingPage() {
             {/* Data is passed to the ListingProbox component through props */}
             <div data-testid="listingProbox-component">
             <ListingProbox
-              boxData = {vhfilter}
+              boxData = {filterData}
               wishlist={wishlist}
               setWishlist={setWishlist}
               setCart={setCart}

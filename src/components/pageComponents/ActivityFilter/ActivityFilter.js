@@ -14,6 +14,8 @@ const ActivityFilter = (props) => {
   const handleClick = () => {
     document.body.classList.toggle("sidebarActive");
   };
+  
+  const vehiclesLength = props.vehicles[0].vehicle.length
   // Function for sort on the basis select.
   // const handleSort = (e) => {
   //   let value = e.value
@@ -31,7 +33,7 @@ const ActivityFilter = (props) => {
     const option = e.value;
 
     if (option === "PRICE:ASCENDING") {
-      const vehicle = [...props.vehicles[0].vehicle].sort((a, b) => {
+      const vehicle = props.vehicles[0].vehicle.sort((a, b) => {
         return (
           parseFloat(a.price.replace(/,/g, "")) -
           parseFloat(b.price.replace(/,/g, ""))
@@ -64,7 +66,7 @@ const ActivityFilter = (props) => {
         {/* First column */}
         <Col md={6}>
           {/* A span element to display the total search results */}
-          <span className={Styles.filterpoint}>123 Total Search Results</span>
+          <span className={Styles.filterpoint}>{vehiclesLength} Total Search Results</span>
           {/* Commented out span element, presumably for future use */}
           {/* <span className={Styles.filterpoint}>
             Total includes taxes and fees
