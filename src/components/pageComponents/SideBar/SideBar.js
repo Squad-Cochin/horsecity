@@ -17,60 +17,54 @@ const Sidebar = (props) => {
 
   const [rangeMinValue, setrangeMinValue] = useState(2108/*Math.min(...props.searchData.map(obj => obj.price))*/);
   const [rangeMaxValue, setrangeMaxValue] = useState(4000/*Math.max(...props.searchData.map(obj => obj.price))*/);
-  const [appliedFilters, setappliedFilters] = useState([]);
-  const [checking, setChecking] = useState([])
-  const [checkedItems, setCheckedItems] = useState([]);
 
+
+  // const [appliedFilters, setappliedFilters] = useState([]);
+  // const [checking, setChecking] = useState([])
+  const [checkedItems, setCheckedItems] = useState([]);
+  // const [ checked , setChecked ] = useState('');
 
   // This function is used to close the sidebar
   const closeIcon = () => {
     document.body.classList.toggle("sidebarActive");
   };
   const checkboxOptions = [
-    { id: 0, label: "GCC" },
+    { id: 0, label: "international" },
     { id: 1, label: "Private" },
     { id: 2, label: "Sharing" },
   ];
 
+  const setSliderValue = (e) => {
+    setrangeMinValue(e[0]);
+    setrangeMaxValue(e[1]);
+    }
 
+ //RESET FUNCTION
+ const resetFilters = () => {
+   console.log("reset");
+   props.setVhFilter(props.boxData);
 
+   setCheckedItems([]);
+   setrangeMinValue(2108);
+   setrangeMaxValue(4000);
 
- 
-  
-  // let array = [];
-  // const handleCheckboxChange = (checkedItems) => {
-
-  //   array.push(checkedItems);
-  //   console.log("updated!!!!!!!!!!!!!", array);
-  
-  //   let updatedArray = [];
-  //   for (let i = 0; i < array.length; i++) {
-  //     const currentItem = array[i];
-  //     if (currentItem.status) {
-  //       for (let j = 0; j < props.boxData[0].vehicle.length; j++) {
-  //         if (props.boxData[0].vehicle[j].vehicleType === currentItem.name) {
-  //           updatedArray.push(props.boxData[0].vehicle[j]);
-  //         }
-  //       }
-  //     } else {
-  //       for (let j = 0; j < props.boxData[0].vehicle.length; j++) {
-  //         updatedArray.push(props.boxData[0].vehicle[j]);
-  //       }
-  //     }
-  //   }
-
-  //   // console.log("updateArray",updatedArray);
-  //   let boxData = [{ currency: "AED", vehicle: updatedArray }];
-  //   // console.log("boxx",boxData);
-  //   props.setVhFilter(boxData); 
-
-
+  //  setChecked(false);
    
-  // };
+   console.log("Checked items",checkedItems);
+   console.log("Max",rangeMaxValue,"Min",rangeMinValue);
+}
 
 
   // Function to handle checkbox change
   const handleCheckboxChange = (checkedItem) => {
+
+    // console.log("check")
+    // if(checkedItem.status == true && checkedItem.name == 'international' || checkedItem.status == true && checkedItem.name == 'private' || checkedItem.status == true && checkedItem.name == 'sharing'){
+    //   setChecked(true);
+    // }else{
+    //   setChecked(false);
+    // }
+   
     // Create a copy of the checked items array
     const updatedCheckedItems = [...checkedItems];
     console.log("updatedCheckeditems",updatedCheckedItems);
@@ -111,20 +105,24 @@ const Sidebar = (props) => {
     props.setVhFilter(boxData);
     // Update the checkedItems state with the updatedCheckedItems array
     setCheckedItems(updatedCheckedItems);
-
   };
-    
-    const setSliderValue = (e) => {
-      setrangeMinValue(e[0]);
-      setrangeMaxValue(e[1]);
-      }
-     const resetFilters = () => {
-    console.log("reset");
-      setCheckedItems([])
-      setrangeMaxValue(4000);
-      setrangeMinValue(2108);
+   
+   function getStatus(value){
+      console.log(value)
+      let filterArray = checkedItems.filter((item) => {
+        console.log(item);
+        if(item.name.toLowerCase() == value.label.toLowerCase() && item.status){
+          return true
+        }
+        else{
+          return false;
+        }
+      });
+      console.log(filterArray);
+      return filterArray;
 
     }
+ 
     // var valuesArray = [];
     const filterResult = ()=>{
       // valuesArray.push('PF:' + rangeMinValue + '&' + rangeMaxValue);
@@ -140,6 +138,8 @@ const Sidebar = (props) => {
           if(rangeMinValue<parseFloat(vehicleData[i].price.replace(/,/g, '')) && parseFloat(vehicleData[i].price.replace(/,/g, '')) < rangeMaxValue ){
             console.log("parse",parseFloat(vehicleData[i].price.replace(/,/g, '')));
             updatedArray.push(vehicleData[i]);
+          }else{
+            console.log("No DataFound");
           }
 
       }
@@ -178,7 +178,8 @@ const Sidebar = (props) => {
                     aria-label="Choose a value"
                     min= {2108}
                     max= {4000}
-                    // defaultValue={[2108, 4000]}
+                    value={[rangeMinValue, rangeMaxValue]}
+                    defaultValue={[rangeMinValue, rangeMaxValue]}
                     tooltip={true}
                     onThumbDragEnd={filterResult}
                     onInput={setSliderValue}
@@ -189,7 +190,22 @@ const Sidebar = (props) => {
               </Form.Group>
             </Form>
           </div>
-          <CheckboxType checkboxOptions={checkboxOptions} onChange={handleCheckboxChange} />
+          {checkboxOptions.map((value, index) => {
+            let filterArray = getStatus(value);
+            console.log("FILTER",filterArray);
+            if(filterArray.length > 0 ){
+              return(
+                <CheckboxType key={index} checkBoxData={value} checked={true} handleCheckboxChange={handleCheckboxChange} />
+              )
+            }
+            else{
+              return(
+                <CheckboxType key={index} checkBoxData={value}  checked={false} handleCheckboxChange={handleCheckboxChange} />
+              )
+            }
+            
+          })}
+          
         </div>
       </div>
     </aside>

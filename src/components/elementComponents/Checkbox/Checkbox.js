@@ -21,41 +21,42 @@ const CheckboxType = (props) => {
       status: event.target.checked,
     };
     // const updatedCheckedItems = { ...props.checkedItems, [checkboxItem.name]: checkboxItem };
-    props.onChange(checkboxItem);
+    props.handleCheckboxChange(checkboxItem);
   };
-  const CheckboxType = (props) => {
+  
+  // const CheckboxType = (props) => {
 
-    return (
+  //   return (
   
-      <div key={props.id} className= "mb-3">
+  //     <div key={props.id} className= "mb-3">
   
-        <label>
+  //       <label>
   
-          <Form.Check className={props.className} value={props.value} type={props.type} label={props.label} name={props.group} onClick={props.onClick} checked={props.checked} onChange={props.onChange}/>
+  //         <Form.Check className={props.className} value={props.value} type={props.type} label={props.label} name={props.group} onClick={props.onClick} checked={props.checked} onChange={props.onChange}/>
   
-        </label>
+  //       </label>
   
-      </div>
+  //     </div>
   
-    );
+  //   );
   
-  };
+  // };
   
 
 
   return (
     <div>
-      {props.checkboxOptions.map((option) => (
+      {/* {props.checkboxOptions.map((option) => ( */}
         <Form.Check
-          key={option.id}
+          key={props.checkBoxData.id}
           className={props.className}
           type={props.type}
-          label={option.label}
-          name={option.label}
-          value={checkedItems}
+          label={props.checkBoxData.label}
+          name={props.checkBoxData.label}
+          checked={props.checked}
           onChange={handleCheckboxChange}
         />
-      ))}
+      {/* ))} */}
     </div>
   );
 };
@@ -68,7 +69,8 @@ CheckboxType.defaultProps = {
   active: false,
   class: "checkbox",
   group:"",
-  className: ""
+  className: "",
+  checked:false,
 
 };
 
