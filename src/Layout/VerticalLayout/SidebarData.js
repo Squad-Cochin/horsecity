@@ -156,5 +156,11 @@ const SidebarData = [
             },
         ],
     },
+    {
+        label: "Profile Page",
+        url: "/profile-page",
+        icon: "mdi mdi-calendar-outline",
+        isHasArrow: true,
+    }
 ]
 export default SidebarData;

@@ -95,6 +95,8 @@ import IconBoxicons from "../Pages/Icons/IconBoxicons"
 import VectorMaps from "../Pages/Maps/VectorMap";
 import GoogleMap from "../Pages/Maps/GoogleMap";
 
+//Profile page
+import Profile from "../Pages/ProfilePage";
 
 const authProtectedRoutes = [
   //dashboard
@@ -174,6 +176,8 @@ const authProtectedRoutes = [
   { path: "/maps-vector", component: <VectorMaps /> },
   { path: "/maps-google", component: <GoogleMap /> },
 
+
+
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name
   {
@@ -203,6 +207,10 @@ const publicRoutes = [
   { path: "/pages-500", component: <Error500 /> },
   { path: "/pages-maintenance", component: <Maintenance /> },
   { path: "/pages-comingsoon", component: <ComingSoon /> },
+
+  //Profile page
+  { path: "/profile-page", component: <Profile /> },
+
 ];
 
 export { authProtectedRoutes, publicRoutes };
