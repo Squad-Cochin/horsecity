@@ -1,7 +1,7 @@
 import PropTypes from "prop-types";
 import React, { useEffect } from "react";
 import logo from "../../assets/images/logo.png";
-import { loginAPI }  from '../../helpers/AuthType/apiRoutes';
+// import { loginAPI }  from '../../helpers/AuthType/apiRoutes';
 // import logodark from "../../assets/images/logo-dark.png";
 
 import { Row, Col, CardBody, Card, Alert, Container, Form, Input, FormFeedback, Label } from "reactstrap";
@@ -39,8 +39,8 @@ const Login = props => {
     enableReinitialize: true,
 
     initialValues: {
-      userName: "Saurabh" || '',
-      password: "Asdf@1234" || '',
+      userName: "Saurabh1997" || '',
+      password: "Asdf$1234" || '',
     },
     validationSchema: Yup.object({
       userName: Yup.string().required("Please Enter Your Username"),
@@ -48,7 +48,7 @@ const Login = props => {
     }),
     onSubmit: (values) => {
       dispatch(loginUser(values, props.router.navigate));
-      loginAPI(values)
+      // loginAPI(values)
     }
   });
 

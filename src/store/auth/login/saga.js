@@ -19,26 +19,26 @@ function* loginUser({ payload: { user, history } }) {
     if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
       const response = yield call(
         fireBaseBackend.loginUser,
-        user.email,
+        user.userName,
         user.password
       );
       yield put(loginSuccess(response));
     } else if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
       const response = yield call(postJwtLogin, {
-        email: user.email,
+        userName: user.userName,
         password: user.password,
       });
       localStorage.setItem("authUser", JSON.stringify(response));
       yield put(loginSuccess(response));
     } else if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
       const response = yield call(postFakeLogin, {
-        email: user.email,
+        userName: user.userName,
         password: user.password,
       });
       localStorage.setItem("authUser", JSON.stringify(response));
       yield put(loginSuccess(response));
     }
-    history("/dashboard");
+    history("/profile-page");
   } catch (error) {
     yield put(apiError(error));
   }
@@ -70,7 +70,7 @@ function* socialLogin({ payload: { data, history, type } }) {
       localStorage.setItem("authUser", JSON.stringify(response));
       yield put(loginSuccess(response));
     }
-    history("/dashboard");
+    history("/profile-page");
   } catch (error) {
     yield put(apiError(error));
   }

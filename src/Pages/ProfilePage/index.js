@@ -7,13 +7,13 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 
     const ProfilePage = () => {
         const navigate = useNavigate();
-        document.title = "New Page | Upzet - React Admin & Dashboard Template";
+        document.title = "Profile | Horscity";
 
         return (
             <>
                 <div className="page-content">
                     <Container fluid={false}>
-                        {/* <Breadcrumbs title="New Page" breadcrumbItem="New Page" /> */}
+                        <Breadcrumbs title="Profile Page" breadcrumbItem="Profile Page" />
                         <h1>Welcome</h1>
                         <div>
                             <button onClick={()=>navigate("/change-password")}>Click Me</button>
