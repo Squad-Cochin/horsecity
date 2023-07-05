@@ -70,17 +70,18 @@ const fakeBackend = () => {
 
   mock.onPost(url.POST_FAKE_LOGIN).reply(async (config) => {
     const user = JSON.parse(config["data"]);
-    console.log("ggg",user)
     const data = await axios.post(`${url.LOGIN_URL}`, user);
-    console.log(data)
+    console.log("RES",data)
     return new Promise((resolve, reject) => {
       setTimeout(() => {
-        if (data.success === true) {
-          resolve([200, data.data]);
-        } else {
-          reject([
-            data.message,
-          ]);
+        if (data.status === "success") {
+            resolve([200, data.data]);
+        }else if(data.status === "expired"){
+            resolve([200, data.status]);
+        }else {
+            reject([
+                data.message,
+            ]);
         }
       });
     });

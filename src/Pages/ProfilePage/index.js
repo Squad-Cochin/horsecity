@@ -16,7 +16,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
                         <Breadcrumbs title="Profile Page" breadcrumbItem="Profile Page" />
                         <h1>Welcome</h1>
                         <div>
-                            <button onClick={()=>navigate("/change-password")}>Click Me</button>
+                            <button onClick={()=>navigate("/change-password")}>Change password</button>
                         </div>
 
                     </Container>

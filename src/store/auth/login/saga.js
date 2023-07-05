@@ -38,7 +38,23 @@ function* loginUser({ payload: { user, history } }) {
       localStorage.setItem("authUser", JSON.stringify(response));
       yield put(loginSuccess(response));
     }
-    history("/profile-page");
+    const data = new Promise((resolve, reject)=>{
+      let storeData = localStorage.getItem("authUser")
+      resolve(storeData)
+      reject("")
+    })
+
+    data.then((e) => {
+      console.log(e)
+      console.log("hi")
+      if(e === `"expired"`){
+        history("/change-password");
+      }else{
+        history("/profile-page");
+      }
+    })
+    
+    
   } catch (error) {
     yield put(apiError(error));
   }
@@ -70,7 +86,19 @@ function* socialLogin({ payload: { data, history, type } }) {
       localStorage.setItem("authUser", JSON.stringify(response));
       yield put(loginSuccess(response));
     }
-    history("/profile-page");
+    const data2 = new Promise((resolve, reject)=>{
+      resolve(
+        localStorage.getItem("authUser")
+      )
+      reject("")
+      
+    })
+    console.log(data)
+    if(data2 === "expired"){
+      history("/change-password");
+    }else{
+      history("/profile-page");
+    }
   } catch (error) {
     yield put(apiError(error));
   }
