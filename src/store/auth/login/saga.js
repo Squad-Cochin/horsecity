@@ -1,8 +1,9 @@
 import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
 
 // Login Redux States
-import { LOGIN_USER, LOGOUT_USER, SOCIAL_LOGIN } from "./actionTypes";
-import { apiError, loginSuccess, logoutUserSuccess } from "./actions";
+import { LOGIN_USER, LOGOUT_USER, SOCIAL_LOGIN , RECOVER_PASSWORD, CHANGE_NEW_PASSWORD} from "./actionTypes";
+
+import { apiError, loginSuccess, logoutUserSuccess, updatePWDSuccess } from "./actions";
 
 //Include Both Helper File with needed methods
 import { getFirebaseBackend } from "../../../helpers/firebase_helper";
@@ -10,6 +11,8 @@ import {
   postFakeLogin,
   postJwtLogin,
   postSocialLogin,
+  recoverPassword,
+  changePassword,
 } from "../../../helpers/fakebackend_helper";
 
 const fireBaseBackend = getFirebaseBackend();
@@ -22,6 +25,7 @@ function* loginUser({ payload: { user, history } }) {
         user.userName,
         user.password
       );
+      console.log("RRR",response);
       yield put(loginSuccess(response));
     } else if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
       const response = yield call(postJwtLogin, {
@@ -56,9 +60,33 @@ function* loginUser({ payload: { user, history } }) {
     
     
   } catch (error) {
+    console.log("err",error);
+
     yield put(apiError(error));
   }
 }
+/**RECOVER NEW PASSWORD */
+function* recoverNewPassword({ payload: { user } }) {
+  try{
+  yield call(recoverPassword, {
+    email: user.email,
+  });
+}catch (error) {
+
+  yield put(apiError(error));
+}
+}
+
+/**rECOVER NEW PASSWORD */
+function* updateNewPassword({ payload: { user } }) {
+  try{
+   const response =   yield call(changePassword, user);
+      yield put(updatePWDSuccess(response));
+}catch (error) {
+  yield put(apiError(error));
+}
+}
+
 
 function* logoutUser() {
   try {
@@ -108,6 +136,8 @@ function* authSaga() {
   yield takeEvery(LOGIN_USER, loginUser);
   yield takeLatest(SOCIAL_LOGIN, socialLogin);
   yield takeEvery(LOGOUT_USER, logoutUser);
+  yield takeEvery(RECOVER_PASSWORD, recoverNewPassword);
+  yield takeEvery(CHANGE_NEW_PASSWORD, updateNewPassword);
 }
 
 export default authSaga;

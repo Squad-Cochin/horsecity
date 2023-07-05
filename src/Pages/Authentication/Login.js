@@ -39,8 +39,8 @@ const Login = props => {
     enableReinitialize: true,
 
     initialValues: {
-      userName: "" || '',
-      password: "" || '',
+      userName: "Saurabh1997" || '',
+      password: "Asdf$12344" || '',
     },
     validationSchema: Yup.object({
       userName: Yup.string().required("Please Enter Your Username"),
@@ -48,13 +48,14 @@ const Login = props => {
     }),
     onSubmit: (values) => {
       dispatch(loginUser(values, props.router.navigate));
-      // loginAPI(values)
+
     }
   });
 
   const { error } = useSelector(state => ({
     error: state.login.error,
   }));
+
 
   // handleValidSubmit
   // const handleValidSubmit = (event, values) => {

@@ -87,6 +87,47 @@ const fakeBackend = () => {
     });
   });
 
+    //Change password
+    mock.onPost(url.POST_FAKE_CHANGE_PWD).reply(async (config) => {
+      const user = JSON.parse(config["data"]);
+      console.log("user",user);
+      const data = await axios.post(`${url.CHANGE_PASSWORD_URL}`, user);
+      console.log("response",data)
+      return new Promise((resolve, reject) => {
+        setTimeout(() => {
+          if (data.success === true) {
+            resolve([200, data.data]);
+          } else {
+         
+            reject([
+              data.message
+            ]);       
+          }
+        });
+      });
+    });
+
+  //Recovery password
+  mock.onPost(url.RECOVER_PASSWORD).reply(async (config) => {
+    const user = JSON.parse(config["data"]);
+    console.log("user",user);
+    // const data = await axios.post(`${url.RECOVER_PWD_URL}`, user);
+    // console.log(data)
+    // return new Promise((resolve, reject) => {
+    //   setTimeout(() => {
+    //     if (data.success === true) {
+    //       resolve([200, data.data]);
+    //     } else {
+    //       reject([
+    //         data.message,
+    //       ]);       
+    //     }
+    //   });
+    // });
+  });
+
+
+
   mock.onPost("/fake-forget-pwd").reply((config) => {
     // User needs to check that user is eXist or not and send mail for Reset New password
 

@@ -6,11 +6,15 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
 export const API_BASE_URL = "http://192.168.200.130:8080";
 
 const apiBaseUrl = "http://192.168.200.130:8080";
+// const apiBaseUrl = "http://localhost:8080";
 const token = "/horsecity661809"
 
 export const LOGIN_URL = apiBaseUrl + token + "/login"
-
-
+export const RECOVER_PWD_URL = apiBaseUrl + token + "/recoveryPassword"
+export const CHANGE_PASSWORD_URL = apiBaseUrl + token + "/changePassword"
+/**NEW */
+export const RECOVER_PASSWORD = "/fake-recover-password";
+export const POST_FAKE_CHANGE_PWD = "/post-fake-change-password";
 
 export const POST_FAKE_LOGIN = "/post-fake-login";
 export const POST_FAKE_JWT_LOGIN = "/post-jwt-login";

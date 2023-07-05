@@ -24,3 +24,10 @@ export const userForgetPasswordError = message => {
     payload: message,
   }
 }
+
+// export const userRecoverPassword = (user ) => {
+//   return {
+//     type: RECOVER_PASSWORD,
+//     payload: { user },
+//   }
+// }

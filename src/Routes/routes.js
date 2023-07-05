@@ -199,7 +199,7 @@ const publicRoutes = [
   // Authentication Inner Pages
   // { path: "/auth-login", component: <Login1 /> },
   // { path: "/auth-register", component: <Register1 /> },
-  { path: "/auth-recoverpw", component: <RecoverPassword /> },
+  { path: "/auth-recoverpwd", component: <RecoverPassword /> },
   // { path: "/auth-lock-screen", component: <LockScreen /> },
 
   // Utility Pages

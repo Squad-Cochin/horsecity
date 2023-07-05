@@ -3,14 +3,40 @@ import React from 'react';
 
 import logo from '../../assets/images/logo.png';
 
-import { Container, Row, Col, Card, CardBody } from 'reactstrap';
+import { Container, Row, Col, Card, CardBody, Label, Input, FormFeedback } from 'reactstrap';
 import { Link } from 'react-router-dom';
+import { useFormik } from "formik";
+import * as Yup from "yup";
+import { userRecoverPassword } from "../../store/actions";
+//redux
+import { useSelector, useDispatch } from "react-redux";
 
-const RecoverPassword = () => {
+const RecoverPassword = (props) => {
     document.title = "Recover Password | HORSCITY - React Admin & Dashboard Template";
+    const dispatch = useDispatch();
+    const validation = useFormik({
+        // enableReinitialize : use this flag when initial values needs to be changed
+        enableReinitialize: true,
+
+        initialValues: {
+            email: ''
+        },
+        validationSchema: Yup.object({
+            email: Yup.string().required("Please Enter Your Email")
+        }),
+        onSubmit: (values) => {
+            console.log("email");
+            dispatch(userRecoverPassword(values));
+        }
+    });
+    
+  const { error } = useSelector(state => ({
+    error: state.login.error,
+  }));
+
     return (
         <React.Fragment>
-            <div className="bg-pattern" style={{height:"100vh"}}>
+            <div className="bg-pattern" style={{ height: "100vh" }}>
                 <div className="bg-overlay"></div>
                 <div className="account-pages pt-5">
                     <Container>
@@ -20,14 +46,20 @@ const RecoverPassword = () => {
                                     <CardBody className="p-4">
                                         <div className="">
                                             <div className="text-center">
-                                                 <Link to="/" className="">
+                                                <Link to="/" className="">
                                                     <img src={logo} alt="" height="50" className="auth-logo logo-dark mx-auto" />
                                                     <img src={logo} alt="" height="50" className="auth-logo logo-light mx-auto" />
-                                                 </Link>
+                                                </Link>
                                             </div>
                                             <h4 className="font-size-18 text-muted mt-2 text-center">Reset Password</h4>
                                             <p className="mb-5 text-center">Reset your Password with HORSCITY.</p>
-                                            <form className="form-horizontal" action="/login">
+                                            <form
+                                                className="form-horizontal"
+                                                onSubmit={(e) => {
+                                                    e.preventDefault();
+                                                    validation.handleSubmit();
+                                                    return false;
+                                                }} action="/login">
                                                 <Row>
                                                     <Col md={12}>
                                                         <div className="alert alert-warning alert-dismissible">
@@ -35,9 +67,23 @@ const RecoverPassword = () => {
                                                             Enter your <b>Email</b> and instructions will be sent to you!
                                                         </div>
 
-                                                        <div className="mt-4">
-                                                            <label className="form-label" htmlFor="useremail">Email</label>
-                                                            <input type="email" className="form-control" id="useremail" placeholder="Enter email" />
+                                                        <div className="mb-4">
+                                                            <Label className="form-label">Email</Label>
+                                                            <Input
+                                                                name="email"
+                                                                className="form-control"
+                                                                placeholder="Enter email"
+                                                                type="email"
+                                                                onChange={validation.handleChange}
+                                                                onBlur={validation.handleBlur}
+                                                                value={validation.values.email || ""}
+                                                                invalid={
+                                                                    validation.touched.email && validation.errors.email ? true : false
+                                                                }
+                                                            />
+                                                            {validation.touched.email && validation.errors.email ? (
+                                                                <FormFeedback type="invalid"><div>{validation.errors.email}</div></FormFeedback>
+                                                            ) : null}
                                                         </div>
                                                         <div className="d-grid mt-4">
                                                             <button className="btn btn-primary waves-effect waves-light" type="submit">Send Email</button>

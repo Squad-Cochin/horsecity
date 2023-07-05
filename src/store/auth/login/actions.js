@@ -5,6 +5,9 @@ import {
   LOGOUT_USER_SUCCESS,
   API_ERROR,
   SOCIAL_LOGIN,
+  RECOVER_PASSWORD,
+  CHANGE_NEW_PASSWORD,
+  CHANGE_PASSWORD_SUCCESS
 } from "./actionTypes"
 
 export const loginUser = (user, history) => {
@@ -13,6 +16,20 @@ export const loginUser = (user, history) => {
     payload: { user, history },
   }
 }
+export const userRecoverPassword = (user ) => {
+  return {
+    type: RECOVER_PASSWORD,
+    payload: { user },
+  }
+}
+
+export const updateNewPwd = (user) => {
+  return {
+    type: CHANGE_NEW_PASSWORD,
+    payload: { user },
+  }
+}
+
 
 export const loginSuccess = user => {
   return {
@@ -20,6 +37,15 @@ export const loginSuccess = user => {
     payload: user,
   }
 }
+
+export const updatePWDSuccess = user => {
+  return {
+    type: CHANGE_PASSWORD_SUCCESS,
+    payload: user,
+  }
+}
+
+
 
 export const logoutUser = history => {
   return {

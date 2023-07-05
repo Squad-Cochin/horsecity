@@ -41,7 +41,10 @@ const postFakeRegister = (data) => {
 
 // Login Method
 const postFakeLogin = data => api.create(url.POST_FAKE_LOGIN, data);
-
+// recoverPassword
+const recoverPassword = data => api.create(url.RECOVER_PASSWORD, data);
+//changePassword
+const changePassword = data =>  api.create(url.POST_FAKE_CHANGE_PWD, data);
 // postForgetPwd
 const postFakeForgetPwd = data => api.create(url.POST_FAKE_PASSWORD_FORGET, data);
 
@@ -111,4 +114,6 @@ export {
   postJwtLogin,
   postJwtForgetPwd,
   postJwtProfile,
+  recoverPassword,
+  changePassword
 };

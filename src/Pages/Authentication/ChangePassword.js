@@ -22,7 +22,7 @@ import { useFormik } from "formik";
 
 // actions
 // import { loginUser, socialLogin } from "../../store/actions";
-import { loginUser } from "../../store/actions";
+import { updateNewPwd } from "../../store/actions";
 
 
 //Import config
@@ -32,15 +32,18 @@ const ChangePassword = props => {
   document.title = "Change-Password | HORSCITY";
 
   const dispatch = useDispatch();
+  const { user } = useSelector(state => ({
+    user: state.login.user,
+  }));
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
 
     initialValues: {
-      oldPassword: "Asdf@1234" || '',
-      password: "Asdf@123456" || '',
-      confirmPassword : "Asdf@123456" || '',
+      oldPassword: "Asdf$12344" || '',
+      password: "Asdf$1234" || '',
+      confirmPassword : "Asdf$1234" || '',
     },
     validationSchema: Yup.object({
       oldPassword: Yup.string().required("Please Enter Your Old password"),
@@ -48,7 +51,15 @@ const ChangePassword = props => {
       confirmPassword: Yup.string().required("Please Enter Your Confirm Password"),
     }),
     onSubmit: (values) => {
-      dispatch(loginUser(values, props.router.navigate));
+    let username = user[0].user_name
+    let updatePwdValues =   {
+        userName : username,// 
+        password : values.oldPassword,
+        newpassword : values.password,
+        confirmnewpassword : values.confirmPassword
+      }
+
+      dispatch(updateNewPwd(updatePwdValues));
     }
   });
 
@@ -56,6 +67,7 @@ const ChangePassword = props => {
     error: state.login.error,
   }));
 
+  console.log("Errr",error);
   // handleValidSubmit
   // const handleValidSubmit = (event, values) => {
   //   dispatch(loginUser(values, props.router.navigate));
