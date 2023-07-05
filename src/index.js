@@ -1,17 +1,24 @@
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import reportWebVitals from './reportWebVitals';
 
-import  ReactDOM  from "react-dom/client";
-import './index.css';
-import  App from './App';
-import 'bootstrap/dist/css/bootstrap.min.css';
-import 'bootstrap/dist/js/bootstrap.min.js';
-import { GoogleOAuthProvider } from '@react-oauth/google';
+import { BrowserRouter } from "react-router-dom";
+import { Provider } from "react-redux";
+import "./i18n";
 
-const root = ReactDOM.createRoot(document.getElementById('root'))
+import {configureStore} from "./store/store";
 
+const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
-  <>
-    <GoogleOAuthProvider clientId= "1023374887244-5ckguqq4o592365am9gfmrd9s9ojvp1d.apps.googleusercontent.com">
-     <App/>
-     </GoogleOAuthProvider>
-  </>
-)
+  <Provider store={configureStore({})}>
+    <React.Fragment>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </React.Fragment>
+  </Provider>
+);
+reportWebVitals();
+// serviceWorker.unregister();
+
