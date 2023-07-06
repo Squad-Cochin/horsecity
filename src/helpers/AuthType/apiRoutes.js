@@ -4,7 +4,7 @@ import * as url from "../url_helper";
 import MockAdapter from "axios-mock-adapter";
 // import * as url from "../url_helper";
 import accessToken from "../jwt-token-access/accessToken";
-import { calenderDefaultCategories, events } from "../../CommonData/Data";
+import { calenderDefaultCategories, events, serviceProviders, Drivers } from "../../CommonData/Data";
 import { APIClient } from "../api_helper";
 
 
@@ -19,11 +19,33 @@ const loginAPI = async (userdata) => {
         console.log("err",error);
     }
   }
+
+  export {loginAPI};
+  
+  /** get service provider details */
+  export  function getSPAllData(){
+    // try {
+    //     const { data } = await axios.get(`${url.GET_SP_ALL_DATA_URL}`);
+    //     return { data };
+    // } catch (error) {
+    //     return { error : "Password doesn't Match...!"}
+    // }
+    if(serviceProviders){
+        return serviceProviders ;
+    }
+    return null ;
+  }
+
+  export function getDriversData(){
+
+    if(Drivers){
+          return Drivers ;
+    }
+    return null ;
+  }
   
   
-  
-  
-export {loginAPI};
+
 
 
 
@@ -287,6 +309,8 @@ const fakeBackend = () => {
       });
     });
   });
+
+
 
   mock.onPost(url.ADD_NEW_EVENT).reply((event) => {
     return new Promise((resolve, reject) => {

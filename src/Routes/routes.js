@@ -8,11 +8,17 @@ import Dashboard from "../Pages/Dashboard";
 import Calender from "../Pages/Calender";
 
 
+
 // Import E-mail
 import Inbox from "../Pages/E-mail/Inbox";
 import ReadEmail from "../Pages/E-mail/ReadEmail";
 import EmailCompose from "../Pages/E-mail/EmailCompose";
 
+// import service providers
+import ServiceProviders from "../Pages/ServiceProviders/ServiceProviderTable";
+
+// import drivers
+import Drivers from "../Pages/Drivers/DriverTable";
 // Import Authentication pages
 import Login from "../Pages/Authentication/Login";
 import ChangePassword from "../Pages/Authentication/ChangePassword";
@@ -74,7 +80,7 @@ import FormWizard from "../Pages/Forms/FormWizard";
 
 // Import Tables
 import BasicTable from "../Pages/Tables/BasicTable.js";
-import ListJs from "../Pages/Tables/ListTables/ListTables";
+import ListJs from "../Pages/ServiceProviders/ServiceProviderTable";
 import DataTable from "../Pages/Tables/DataTables/DataTables";
 
 
@@ -112,6 +118,12 @@ const authProtectedRoutes = [
   { path: "/inbox", component: <Inbox /> },
   { path: "/read-email", component: <ReadEmail /> },
   { path: "/compose-email", component: <EmailCompose /> },
+// **************************
+  //ServiceProvider
+  { path: "/service-providers", component: <ServiceProviders /> },
+
+  //Driver
+  { path: "/drivers", component: <Drivers /> },
 
   // Utility Pages
   { path: "/pages-starter", component: <StarterPage /> },

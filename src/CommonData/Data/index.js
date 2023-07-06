@@ -7,7 +7,8 @@ import {
 } from "./dashboard";
 
 import {calenderDefaultCategories, events} from "./calender";
-
+import {serviceProviders} from "./serviceProvider";
+import { Drivers } from "./Drivers"
 export {
   LatestTransationData,
   OrderStatusData,
@@ -15,5 +16,7 @@ export {
   SocialSourceData,
   NotificationsData,
   calenderDefaultCategories, 
-  events
+  events,
+  serviceProviders,
+  Drivers
 };
