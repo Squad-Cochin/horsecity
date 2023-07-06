@@ -3,7 +3,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
-// import Breadcrumbs from "../../components/Common/Breadcrumb";
+import Breadcrumbs from "../../../components/Common/Breadcrumb";
 // import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
@@ -92,7 +92,7 @@ const ListVehiclesTable = () => {
         <React.Fragment>
             <div className="page-content">
                 <Container fluid>
-                    {/* <Breadcrumbs title="Tables" breadcrumbItem="Drivers" /> */}
+                    <Breadcrumbs title="Tables" breadcrumbItem="Drivers" />
 
                     <Row>
                         <Col lg={12}>
