@@ -1,18 +1,18 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-import SimpleBar from 'simplebar-react';
+// import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
 // Import Flatepicker
 import Flatpickr from "react-flatpickr";
 
 // Import Images
-import avatar1 from "../../assets/images/users/avatar-1.jpg";
-import avatar2 from "../../assets/images/users/avatar-2.jpg";
-import avatar3 from "../../assets/images/users/avatar-3.jpg";
-import avatar4 from "../../assets/images/users/avatar-4.jpg";
-import avatar5 from "../../assets/images/users/avatar-5.jpg";
+// import avatar1 from "../../assets/images/users/avatar-1.jpg";
+// import avatar2 from "../../assets/images/users/avatar-2.jpg";
+// import avatar3 from "../../assets/images/users/avatar-3.jpg";
+// import avatar4 from "../../assets/images/users/avatar-4.jpg";
+// import avatar5 from "../../assets/images/users/avatar-5.jpg";
 
 //Import get Api
 import { getSPAllData } from '../../helpers/AuthType/apiRoutes'
@@ -36,35 +36,35 @@ const ListTables = () => {
 
     useEffect(() => {
 
-        const attroptions = {
-            valueNames: [
-                'name',
-                'born',
-                {
-                    data: ['id']
-                },
-                {
-                    attr: 'src',
-                    name: 'image'
-                },
-                {
-                    attr: 'href',
-                    name: 'link'
-                },
-                {
-                    attr: 'data-timestamp',
-                    name: 'timestamp'
-                }
-            ]
-        };
-        const attrList = new List('users', attroptions);
-        attrList.add({
-            name: 'Leia',
-            born: '1954',
-            image: avatar5,
-            id: 5,
-            timestamp: '67893'
-        });
+        // const attroptions = {
+        //     valueNames: [
+        //         'name',
+        //         'born',
+        //         {
+        //             data: ['id']
+        //         },
+        //         {
+        //             attr: 'src',
+        //             name: 'image'
+        //         },
+        //         {
+        //             attr: 'href',
+        //             name: 'link'
+        //         },
+        //         {
+        //             attr: 'data-timestamp',
+        //             name: 'timestamp'
+        //         }
+        //     ]
+        // };
+        // const attrList = new List('users', attroptions);
+        // attrList.add({
+        //     name: 'Leia',
+        //     born: '1954',
+        //     image: avatar5,
+        //     id: 5,
+        //     timestamp: '67893'
+        // });
 
         // Existing List
         const existOptionsList = {
@@ -138,8 +138,8 @@ const ListTables = () => {
                                                         <th className="sort" data-sort="phone">Contact no</th>
                                                         <th className="sort" data-sort="customer_address">Contact address</th>
                                                         <th className="sort" data-sort="phone">Emergency contact no</th>
-                                                        <th className="sort" data-sort="certification">Certification or license image</th>
-                                                        <th className="sort" data-sort="license no">Certification or license no</th>
+                                                        {/* <th className="sort" data-sort="certification">Certification or license image</th> */}
+                                                        <th className="sort" data-sort="license no">License no</th>
                                             
                                                         <th className="sort" data-sort="date">Created at</th>
                                                         <th className="sort" data-sort="date">Expiry at</th>
@@ -164,7 +164,7 @@ const ListTables = () => {
                                                         <td className="phone">{value.contact_no}</td>
                                                         <td className="address">{value.contact_address}</td>
                                                         <td className="phone">{value.emergency_contact_no}</td>
-                                                        <td className="lisenceimage">{value.certification_or_license_img}</td>
+                                                        {/* <td className="lisenceimage">{value.certification_or_license_img}</td> */}
                                                         <td className="licenseno">{value.certification_or_license_no}</td>
                                                         <td className="date">{value.created_at}</td>
                                                         <td className="date">{value.expiry_at}</td>
@@ -215,7 +215,7 @@ const ListTables = () => {
                         </Col>
                     </Row>
 
-                    <Row>
+                    {/* <Row>
                  <Col xl={4}>
                             <Card>
                            
@@ -234,7 +234,7 @@ const ListTables = () => {
 
 
                        
-                    </Row>
+                    </Row> */}
 
                 
                 </Container>

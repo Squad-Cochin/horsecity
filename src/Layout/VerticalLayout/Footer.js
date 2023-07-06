@@ -9,10 +9,10 @@ const Footer = () => {
           <Row>
             <Col sm={6}>{new Date().getFullYear()} © HORSCITY.</Col>
             <Col sm={6}>
-              <div className="text-sm-end d-none d-sm-block">
+              {/* <div className="text-sm-end d-none d-sm-block">
                 Crafted with <i className="mdi mdi-heart text-danger"></i> by
                 Themesdesign
-              </div>
+              </div> */}
             </Col>
           </Row>
         </Container>

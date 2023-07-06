@@ -8,11 +8,11 @@ import List from 'list.js';
 import Flatpickr from "react-flatpickr";
 
 // Import Images
-import avatar1 from "../../assets/images/users/avatar-1.jpg";
-import avatar2 from "../../assets/images/users/avatar-2.jpg";
-import avatar3 from "../../assets/images/users/avatar-3.jpg";
-import avatar4 from "../../assets/images/users/avatar-4.jpg";
-import avatar5 from "../../assets/images/users/avatar-5.jpg";
+// import avatar1 from "../../assets/images/users/avatar-1.jpg";
+// import avatar2 from "../../assets/images/users/avatar-2.jpg";
+// import avatar3 from "../../assets/images/users/avatar-3.jpg";
+// import avatar4 from "../../assets/images/users/avatar-4.jpg";
+// import avatar5 from "../../assets/images/users/avatar-5.jpg";
 
 //Import Drivers
 import { getDriversData } from '../../helpers/AuthType/apiRoutes'
@@ -34,35 +34,35 @@ const ListTables = () => {
     },[])
     useEffect(() => {
 
-        const attroptions = {
-            valueNames: [
-                'name',
-                'born',
-                {
-                    data: ['id']
-                },
-                {
-                    attr: 'src',
-                    name: 'image'
-                },
-                {
-                    attr: 'href',
-                    name: 'link'
-                },
-                {
-                    attr: 'data-timestamp',
-                    name: 'timestamp'
-                }
-            ]
-        };
-        const attrList = new List('users', attroptions);
-        attrList.add({
-            name: 'Leia',
-            born: '1954',
-            image: avatar5,
-            id: 5,
-            timestamp: '67893'
-        });
+        // const attroptions = {
+        //     valueNames: [
+        //         'name',
+        //         'born',
+        //         {
+        //             data: ['id']
+        //         },
+        //         {
+        //             attr: 'src',
+        //             name: 'image'
+        //         },
+        //         {
+        //             attr: 'href',
+        //             name: 'link'
+        //         },
+        //         {
+        //             attr: 'data-timestamp',
+        //             name: 'timestamp'
+        //         }
+        //     ]
+        // };
+        // const attrList = new List('users', attroptions);
+        // attrList.add({
+        //     name: 'Leia',
+        //     born: '1954',
+        //     image: avatar5,
+        //     id: 5,
+        //     timestamp: '67893'
+        // });
 
         // Existing List
         const existOptionsList = {
@@ -129,13 +129,13 @@ const ListTables = () => {
                                                             </div>
                                                         </th>
                                                         <th className="sort" data-sort="customer_name">Name</th>
-                                                        <th className="sort" data-sort="image">Image</th>
+                                                        {/* <th className="sort" data-sort="image">Image</th> */}
                                                         <th className="sort" data-sort="email">Email</th>
                                                         <th className="sort" data-sort="phone">Contact no</th>
                                                         <th className="sort" data-sort="phone">Emergency contct no</th>
                                                         <th className="sort" data-sort="date">Date of birth </th>
                                                         <th className="sort" data-sort="phone">Licence no</th>
-                                                        <th className="sort" data-sort="licence_img">Licence image  </th>
+                                                        {/* <th className="sort" data-sort="licence_img">Licence image  </th> */}
                                                         <th className="sort" data-sort="description ">Description </th>
                                                         <th className="sort" data-sort="date"> Created at</th>
                                                         <th className="sort" data-sort="status">Status</th>
@@ -154,13 +154,13 @@ const ListTables = () => {
                                                         </th>
                                                         <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
                                                         <td className="customer_name">{item.name}</td>
-                                                        <td className="email">{item.profile_image}</td>
+                                                        {/* <td className="email">{item.profile_image}</td> */}
                                                         <td className="phone">{item.email}</td>
                                                         <td className="phone">{item.contact_no}</td>
                                                         <td className="phone">{item.emergency_contact_no}</td>
                                                         <td className="date">{item.date_of_birth}</td>
                                                         <td className="licence_no">{item.licence_no}</td>
-                                                        <td className="licence_IMG">{item.licence_img}</td>
+                                                        {/* <td className="licence_IMG">{item.licence_img}</td> */}
                                                         <td className="name">{item.description}</td>
                                                         <td className="date">{item.created_at}</td>
                                                         <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td>
