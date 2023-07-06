@@ -12,7 +12,7 @@ import { userRecoverPassword } from "../../store/actions";
 import { useSelector, useDispatch } from "react-redux";
 
 const RecoverPassword = (props) => {
-    document.title = "Recover Password | HORSCITY - React Admin & Dashboard Template";
+    document.title = "Recover Password | HORSCITY ";
     const dispatch = useDispatch();
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed

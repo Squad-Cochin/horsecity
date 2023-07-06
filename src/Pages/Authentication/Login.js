@@ -40,7 +40,7 @@ const Login = props => {
 
     initialValues: {
       userName: "Saurabh1997" || '',
-      password: "Asdf$12344" || '',
+      password: "Asdf$1234" || '',
     },
     validationSchema: Yup.object({
       userName: Yup.string().required("Please Enter Your Username"),

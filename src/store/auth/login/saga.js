@@ -54,7 +54,7 @@ function* loginUser({ payload: { user, history } }) {
       if(e === `"expired"`){
         history("/change-password");
       }else{
-        history("/profile-page");
+        history("/dashboard");
       }
     })
     
@@ -125,7 +125,7 @@ function* socialLogin({ payload: { data, history, type } }) {
     if(data2 === "expired"){
       history("/change-password");
     }else{
-      history("/profile-page");
+      history("/dashboard");
     }
   } catch (error) {
     yield put(apiError(error));
