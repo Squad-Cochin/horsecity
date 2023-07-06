@@ -14,9 +14,12 @@ import Flatpickr from "react-flatpickr";
 // import avatar4 from "../../../assets/images/users/avatar-4.jpg";
 // import avatar5 from "../../../assets/images/users/avatar-5.jpg";
 
+//Get all customers data
+import { getCustomersData } from '../../../helpers/AuthType/apiRoutes'
 
 const ListCustomerTable = () => {
 
+    const [ customers , setCustomers] = useState([]);
     const [modal_list, setmodal_list] = useState(false);
     function tog_list() {
         setmodal_list(!modal_list);
@@ -26,6 +29,11 @@ const ListCustomerTable = () => {
     function tog_delete() {
         setmodal_delete(!modal_delete);
     }
+
+    useEffect(() => {
+        let getAllCustomers = getCustomersData() ;
+        setCustomers(getAllCustomers);
+    },[])   
 
     useEffect(() => {
 
@@ -129,31 +137,33 @@ const ListCustomerTable = () => {
                                                         <th className="sort" data-sort="contact_no">Contact Number</th>
                                                         <th className="sort" data-sort="date_of_birth">Date Of Birth</th>
                                                         <th className="sort" data-sort="id_proof">Id Proof</th>
-                                                        <th className="sort" data-sort="status">Status</th>
-                                                        <th className="sort" data-sort="contact_number_verified">Contact Number Verified</th>
                                                         <th className="sort" data-sort="email_verified">Email Verified</th>
                                                         <th className="sort" data-sort="registered_date">Registered Date</th>
+                                                        <th className="sort" data-sort="status">Status</th>
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    <tr>
+                                                    { customers.map((item)=>(
+
+                                               
+                                                    <tr key={item.id}>
                                                         <th scope="row">
                                                             <div className="form-check">
                                                                 <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
                                                             </div>
                                                         </th>
                                                         <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
-                                                        <td className="customer_name">Mary Cousar</td>
-                                                        <td className="email">marycousar@velzon.com</td>
-                                                        <td className="username">marycou1</td>
-                                                        <td className="contact_no">580-464-4694</td>
-                                                        <td className="date_of_birth">1997-11-06</td>
-                                                        <td className="id_proof">1234567895142</td>
-                                                        <td className="status"><span className="badge badge-soft-success text-uppercase">ACTIVE</span></td>
-                                                        <td className="contact_number_verified"><span className="badge badge-soft-success text-uppercase">TRUE</span></td>
-                                                        <td className="email_verified"><span className="badge badge-soft-success text-uppercase">FALSE</span></td>
-                                                        <td className="registered_date">2023-07-06 10:21:52</td>
+                                                        <td className="customer_name">{item.name}</td>
+                                                        <td className="email">{item.email}</td>
+                                                        <td className="username">{item.user_name}</td>
+                                                        <td className="contact_no">{item.phone}</td>
+                                                        <td className="date_of_birth">{item.date_of_birth}</td>
+                                                        <td className="id_proof">{item.id_proof}</td>
+                                                        <td className="status">{item.email_verified}</td>
+                                                        <td className="registered_date">{item.created_at}</td>
+                                                        <td className="email_verified"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td>
+                                                  
                                                         <td>
                                                             <div className="d-flex gap-2">
                                                                 <div className="edit">
@@ -166,35 +176,8 @@ const ListCustomerTable = () => {
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <div className="form-check">
-                                                                <input className="form-check-input" type="checkbox" name="checkAll" value="option2" />
-                                                            </div>
-                                                        </th>
-                                                        <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2102</Link></td>
-                                                        <td className="customer_name">Jeff Taylor</td>
-                                                        <td className="email">jefftaylor@velzon.com</td>
-                                                        <td className="username">jefftaylor1</td>
-                                                        <td className="contact_no">863-577-5537</td>
-                                                        <td className="date_of_birth">1997-11-06</td>
-                                                        <td className="id_proof">1234567895142</td>
-                                                        <td className="status"><span className="badge badge-soft-success text-uppercase">ACTIVE</span></td>
-                                                        <td className="contact_number_verified"><span className="badge badge-soft-success text-uppercase">FALSE</span></td>
-                                                        <td className="email_verified"><span className="badge badge-soft-success text-uppercase">TRUE</span></td>
-                                                        <td className="registered_date">2023-09-22 10:21:52</td>
-                                                        <td>
-                                                            <div className="d-flex gap-2">
-                                                                <div className="edit">
-                                                                    <button className="btn btn-sm btn-success edit-item-btn"
-                                                                        data-bs-toggle="modal" data-bs-target="#showModal">Edit</button>
-                                                                </div>
-                                                                <div className="remove">
-                                                                    <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                    ))}
+                                            
                                                 </tbody>
                                             </table>
                                             <div className="noresult" style={{ display: "none" }}>

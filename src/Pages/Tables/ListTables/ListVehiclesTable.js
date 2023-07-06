@@ -17,8 +17,10 @@ import Flatpickr from "react-flatpickr";
 // import avatar4 from "../../assets/images/users/avatar-4.jpg";
 // import avatar5 from "../../assets/images/users/avatar-5.jpg";
 
+//Get vehicles data
+import { getVehiclesData } from '../../../helpers/AuthType/apiRoutes'
 const ListVehiclesTable = () => {
-
+    const [ vehicles ,setVehicles ] =useState([]);
     const [modal_list, setmodal_list] = useState(false);
     function tog_list() {
         setmodal_list(!modal_list);
@@ -28,6 +30,10 @@ const ListVehiclesTable = () => {
     function tog_delete() {
         setmodal_delete(!modal_delete);
     }
+    useEffect(()=>{
+       let getvehicles = getVehiclesData();
+       setVehicles(getvehicles);
+    },[])
 
     useEffect(() => {
 
@@ -125,39 +131,71 @@ const ListVehiclesTable = () => {
                                                                 <input className="form-check-input" type="checkbox" id="checkAll" value="option" />
                                                             </div>
                                                         </th>
-                                                        <th className="sort" data-sort="customer_name">Driver</th>
-                                                        <th className="sort" data-sort="image">Image</th>
-                                                        <th className="sort" data-sort="email">Email</th>
-                                                        <th className="sort" data-sort="phone">Contact no</th>
-                                                        <th className="sort" data-sort="phone">Emergency contct no</th>
-                                                        <th className="sort" data-sort="date">Date of birth </th>
-                                                        <th className="sort" data-sort="phone">Licence no</th>
-                                                        <th className="sort" data-sort="licence_img">Licence image  </th>
-                                                        <th className="sort" data-sort="description ">Description </th>
-                                                        <th className="sort" data-sort="date"> Created at</th>
+                                                        <th className="sort" data-sort="customer_name">Provider</th>
+                                                        <th className="sort" data-sort="image">Vehicle number</th>
+                                                        <th className="sort" data-sort="email">Make</th>
+                                                        <th className="sort" data-sort="phone">Models</th>
+                                                        <th className="sort" data-sort="phone">Color</th>
+                                                        <th className="sort" data-sort="date">Length(cm)</th>
+                                                        <th className="sort" data-sort="phone">Breadth(cm)</th>
+                                                        <th className="sort" data-sort="licence_img">Height(cm)</th>
+                                                        <th className="sort" data-sort="description ">Capacity</th>
+                                                        <th className="sort" data-sort="date"> Air conditioner</th>
+                                                        <th className="sort" data-sort="date"> Temperature manageable</th>
+                                                        {/* <th className="sort" data-sort="date"> Image</th> */}
+                                                        <th className="sort" data-sort="phone">Insurance cover</th>
+                                                        <th className="sort" data-sort="date">Insurance date</th>
+                                                        <th className="sort" data-sort="phone">Registration no</th>
+                                                        <th className="sort" data-sort="licence_img">GCC travel allowed </th>
+                                                        <th className="sort" data-sort="description ">Insurance policy no</th>
+                                                        <th className="sort" data-sort="date">Insurance provider</th>
+                                                        <th className="sort" data-sort="description ">Insurance expiration date</th>
+                                                        <th className="sort" data-sort="date">Safety certificate</th>
+                                                        <th className="sort" data-sort="date">Vehicle type</th>
+                                                        <th className="sort" data-sort="description ">Vehicle registration date</th>
+                                                        <th className="sort" data-sort="date">Vehicle expiration date</th>
+                                                        <th className="sort" data-sort="date">Created at</th>
                                                         <th className="sort" data-sort="status">Status</th>
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    <tr> 
+                                                   {    vehicles.map((item)=>(
+
+                                           
+                                                    <tr  key={item.id}> 
                                                         <th scope="row">
                                                             <div className="form-check">
                                                                 <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
                                                             </div>
                                                         </th>
                                                         <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
-                                                        <td className="customer_name">Mary Cousar</td>
-                                                        <td className="email">marycousar@velzon.com</td>
-                                                        <td className="phone">580-464-4694</td>
-                                                        <td className="date">06 Apr, 2021</td>
-                                                        <td className="email">marycousar@velzon.com</td>
-                                                        <td className="phone">580-464-4694</td>
-                                                        <td className="date">06 Apr, 2021</td>
-                                                        <td className="phone">580-464-4694</td>
-                                                        <td className="date">06 Apr, 2021</td>
-                                                        <td className="date">06 Apr, 2021</td>
-                                                        <td className="status"><span className="badge badge-soft-success text-uppercase">Active</span></td>
+                                                        <td className="name">{item.service_provider}</td>
+                                                        <td className="vhnumber">{item.vehicle_number}</td>
+                                                        <td className="make">{item.make}</td>
+                                                        <td className="modal">{item.modals}</td>
+                                                        <td className="color">{item.color}</td>
+                                                        <td className="length">{item.length}</td>
+                                                        <td className="breadth">{item.breadth}</td>
+                                                        <td className="hight">{item.height}</td>
+                                                        <td className="capacity">{item.max_no_of_horse}</td>
+                                                        <td className="status">{item.air_conditioner}</td>
+                                                        <td className="phone">{item.temp_manageable}</td>
+                                                        {/* <td className="date">{item.image}</td> */}
+                                                        <td className="email">{item.insurance_cover}</td>
+                                                        <td className="email">{item.insurance_cover}</td>
+                                                        <td className="phone">{item.insurance_date}</td>
+                                                        <td className="date">{item.registration_no}</td>
+                                                        <td className="phone">{item.gcc_travel_allowed}</td>
+                                                        <td className="date">{item.insurance_policy_no}</td>
+                                                        <td className="date">{item.insurance_provider}</td>
+                                                        <td className="phone">{item.insurance_expiration_date}</td>
+                                                        <td className="date">{item.safety_certificate}</td>
+                                                        <td className="date">{item.vehicle_type}</td>
+                                                        <td className="phone">{item.vehicle_registration_date}</td>
+                                                        <td className="date">{item.vehicle_expiration_date}</td>
+                                                        <td className="date">{item.created_at}</td>
+                                                        <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td>
                                                         <td>
                                                             <div className="d-flex gap-2">
                                                                 <div className="edit">
@@ -170,36 +208,10 @@ const ListVehiclesTable = () => {
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    <tr> 
-                                                        <th scope="row">
-                                                            <div className="form-check">
-                                                                <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
-                                                            </div>
-                                                        </th>
-                                                        <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
-                                                        <td className="customer_name">Mary Cousar</td>
-                                                        <td className="email">marycousar@velzon.com</td>
-                                                        <td className="phone">580-464-4694</td>
-                                                        <td className="date">06 Apr, 2021</td>
-                                                        <td className="email">marycousar@velzon.com</td>
-                                                        <td className="phone">580-464-4694</td>
-                                                        <td className="date">06 Apr, 2021</td>
-                                                        <td className="phone">580-464-4694</td>
-                                                        <td className="date">06 Apr, 2021</td>
-                                                        <td className="date">06 Apr, 2021</td>
-                                                        <td className="status"><span className="badge badge-soft-success text-uppercase">Active</span></td>
-                                                        <td>
-                                                            <div className="d-flex gap-2">
-                                                                <div className="edit">
-                                                                    <button className="btn btn-sm btn-success edit-item-btn"
-                                                                        data-bs-toggle="modal" data-bs-target="#showModal">Edit</button>
-                                                                </div>
-                                                                <div className="remove">
-                                                                    <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+
+))
+}   
+                                                  
                                                 </tbody>
                                             </table>
                                             <div className="noresult" style={{ display: "none" }}>

@@ -8,7 +8,10 @@ import {
 
 import {calenderDefaultCategories, events} from "./calender";
 import {serviceProviders} from "./serviceProvider";
-import { Drivers } from "./Drivers"
+import { Drivers } from "./Drivers";
+import { Customers } from "./Customers";
+import { Vehicles } from "./Vehicles";
+
 export {
   LatestTransationData,
   OrderStatusData,
@@ -18,5 +21,7 @@ export {
   calenderDefaultCategories, 
   events,
   serviceProviders,
-  Drivers
+  Drivers,
+  Customers,
+  Vehicles
 };
