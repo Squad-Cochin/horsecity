@@ -11,6 +11,7 @@ import {serviceProviders} from "./serviceProvider";
 import { Drivers } from "./Drivers";
 import { Customers } from "./Customers";
 import { Vehicles } from "./Vehicles";
+import { TripDetails } from "./TripDeatails";
 
 export {
   LatestTransationData,
@@ -23,5 +24,6 @@ export {
   serviceProviders,
   Drivers,
   Customers,
-  Vehicles
+  Vehicles,
+  TripDetails
 };

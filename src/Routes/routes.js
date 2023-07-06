@@ -15,11 +15,15 @@ import Inbox from "../Pages/E-mail/Inbox";
 import ReadEmail from "../Pages/E-mail/ReadEmail";
 import EmailCompose from "../Pages/E-mail/EmailCompose";
 
-// import service providers
+// Import service providers
 import ServiceProviders from "../Pages/ServiceProviders/ServiceProviderTable";
 
-// import drivers
+// Import drivers
 import Drivers from "../Pages/Drivers/DriverTable";
+
+//Import trip deatails
+import TripDeatails from "../Pages/TripDetails/TripDetailTable";
+
 // Import Authentication pages
 import Login from "../Pages/Authentication/Login";
 import ChangePassword from "../Pages/Authentication/ChangePassword";
@@ -125,6 +129,9 @@ const authProtectedRoutes = [
 
   //Driver
   { path: "/drivers", component: <Drivers /> },
+
+  //Trip Deatails
+  { path: "/trip-deatails", component: <TripDeatails /> },
 
   // Utility Pages
   { path: "/pages-starter", component: <StarterPage /> },

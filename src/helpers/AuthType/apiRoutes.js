@@ -4,7 +4,7 @@ import * as url from "../url_helper";
 import MockAdapter from "axios-mock-adapter";
 // import * as url from "../url_helper";
 import accessToken from "../jwt-token-access/accessToken";
-import { calenderDefaultCategories, events, serviceProviders, Drivers, Customers, Vehicles } from "../../CommonData/Data";
+import { calenderDefaultCategories, events, serviceProviders, Drivers, Customers, Vehicles ,TripDetails} from "../../CommonData/Data";
 import { APIClient } from "../api_helper";
 
 
@@ -60,6 +60,13 @@ const loginAPI = async (userdata) => {
     }
     return null ;
   }
+
+  export function getTripDeatails(){
+    if(TripDetails){
+      return TripDetails ;
+}
+    return null ;
+  }
   
 
 
@@ -107,7 +114,7 @@ const fakeBackend = () => {
   mock.onPost(url.POST_FAKE_LOGIN).reply(async (config) => {
     const user = JSON.parse(config["data"]);
     const data = await axios.post(`${url.LOGIN_URL}`, user);
-    console.log("RES",data)
+    // console.log("RES",data)
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (data.status === "success") {

@@ -49,7 +49,7 @@ function* loginUser({ payload: { user, history } }) {
     })
 
     data.then((e) => {
-      console.log(e)
+      // console.log(e)
       console.log("hi")
       if(e === `"expired"`){
         history("/change-password");
