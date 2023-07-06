@@ -7,7 +7,8 @@ import Dashboard from "../Pages/Dashboard";
 // Import Calender
 import Calender from "../Pages/Calender";
 
-
+import ListCustomerTable from "../Pages/Tables/ListTables/ListCustomerTable";
+import ListVehiclesTable from "../Pages/Tables/ListTables/ListVehiclesTable";
 
 // Import E-mail
 import Inbox from "../Pages/E-mail/Inbox";
@@ -166,10 +167,13 @@ const authProtectedRoutes = [
   { path: "/form-wizard", component: <FormWizard /> },
   { path: "/form-mask", component: <FormMask /> },
 
-  // Tables pages
-  { path: "/tables-basic", component: <BasicTable /> },
-  { path: "/tables-listjs", component: <ListJs /> },
-  { path: "/table-datatables", component: <DataTable /> },
+// Tables pages
+
+{ path: "/tables-basic", component: <BasicTable /> },
+{ path: "/service-providers", component: <ListJs /> },
+{ path: "/customers", component: <ListCustomerTable /> },
+{ path: "/vehicles", component: <ListVehiclesTable /> },
+{ path: "/table-datatables", component: <DataTable /> },
 
   // Charts Pages
   { path: "/chart-apexcharts", component: <ApexCharts /> },
