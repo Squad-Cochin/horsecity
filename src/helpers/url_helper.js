@@ -12,6 +12,7 @@ const token = "/horsecity661809"
 export const LOGIN_URL = apiBaseUrl + token + "/login"
 export const RECOVER_PWD_URL = apiBaseUrl + token + "/recoveryPassword"
 export const CHANGE_PASSWORD_URL = apiBaseUrl + token + "/changePassword"
+export const GET_SP_ALL_DATA_URL = apiBaseUrl + token + "/get-all-provider-data"
 /**NEW */
 export const RECOVER_PASSWORD = "/fake-recover-password";
 export const POST_FAKE_CHANGE_PWD = "/post-fake-change-password";
@@ -32,4 +33,5 @@ export const ADD_NEW_EVENT = "/add/event";
 export const UPDATE_EVENT = "/update/event";
 export const DELETE_EVENT = "/delete/event";
 export const GET_CATEGORIES = "/categories";
+
 
