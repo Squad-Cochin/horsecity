@@ -24,6 +24,7 @@ import { useFormik } from "formik";
 // import { loginUser, socialLogin } from "../../store/actions";
 import { updateNewPwd } from "../../store/actions";
 
+import { logoutUser } from "../../store/actions";
 
 //Import config
 // import { facebook, google } from "../../config";
@@ -31,7 +32,18 @@ import { updateNewPwd } from "../../store/actions";
 const ChangePassword = props => {
   document.title = "Change-Password | HORSCITY";
 
+
+  // const { isUserLogout } = useSelector((state) => ({
+  //   isUserLogout: state.login.isUserLogout,
+  // }));
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(logoutUser());
+  }, [dispatch]);
+
+
+  
   const { user } = useSelector(state => ({
     user: state.login.user,
   }));
@@ -41,9 +53,9 @@ const ChangePassword = props => {
     enableReinitialize: true,
 
     initialValues: {
-      oldPassword: "Asdf$12344" || '',
-      password: "Asdf$1234" || '',
-      confirmPassword : "Asdf$1234" || '',
+      oldPassword: "" || '',
+      password: "" || '',
+      confirmPassword : "" || '',
     },
     validationSchema: Yup.object({
       oldPassword: Yup.string().required("Please Enter Your Old password"),
@@ -112,6 +124,7 @@ const ChangePassword = props => {
     return function cleanup() {
       document.body.className = "";
     };
+
   });
 
   return (

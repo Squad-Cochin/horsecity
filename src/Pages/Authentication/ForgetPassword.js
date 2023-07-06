@@ -16,7 +16,7 @@ import { useFormik } from "formik";
 import { userForgetPassword } from "../../store/actions";
 
 // import images
-import profile from "../../assets/images/bg.jpg";
+// import profile from "../../assets/images/bg.jpg";
 import logo from "../../assets/images/logo.png";
 
 const ForgetPasswordPage = props => {
@@ -53,18 +53,18 @@ const ForgetPasswordPage = props => {
               <Card className="overflow-hidden">
                 <div className="bg-primary bg-softbg-soft-primary">
                   <Row>
-                    <Col xs={7}>
+                    {/* <Col className="col-5 align-self-end">
+                      <img src={profile} alt="" className="img-fluid" />
+                    </Col> */}
+                    {/* <Col xs={7}>
                       <div className="text-primary p-4">
                         <h5 className="text-primary">Welcome Back !</h5>
                         <p>Sign in to continue to HORSCITY.</p>
                       </div>
-                    </Col>
-                    <Col className="col-5 align-self-end">
-                      <img src={profile} alt="" className="img-fluid" />
-                    </Col>
+                    </Col> */}
                   </Row>
                 </div>
-                <CardBody className="pt-0">
+                <CardBody className="pt-3">
                   <div>
                     <Link to="/">
                       <div className="avatar-md profile-user-wid mb-4">

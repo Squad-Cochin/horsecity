@@ -12,28 +12,28 @@ const SidebarData = [
         // badgeValue: "3"
     },
     {
-        label: "Servise providers",
+        label: "Service providers",
         icon: "mdi mdi-account-hard-hat",
         isHasArrow: true,
-        url: "/tables-listjs",
+        url: "/service-providers",
     },
     {
         label: "Customers",
         icon: "mdi mdi-account-group-outline",
         isHasArrow: true,
-        url: "/tables-listjs",
+        url: "/customers",
     },
     {
         label: "Vehicles",
         icon: "mdi mdi-rv-truck",
         isHasArrow: true,
-        url: "/tables-listjs",
+        url: "/vehicles",
     },
     {
         label: "Drivers",
         icon: "mdi mdi-card-account-details-outline",
         isHasArrow: true,
-        url: "/tables-listjs",
+        url: "/drivers",
     },
     {
         label: "Enquiries",
@@ -60,11 +60,22 @@ const SidebarData = [
         url: "/tables-listjs",
     },
     {
-        label: "Logout",
-        icon: "mdi mdi-logout-variant",
-        isHasArrow: true,
-        url: "/tables-listjs",
+        label: "Settings",
+        icon: "mdi mdi-cogs",
+        subItem: [
+            { sublabel: "Language", link: "/dashboard" },
+            { sublabel: "Discounts", link: "/dashboard" },
+            { sublabel: "Taxations", link: "/dashboard" },
+            // { sublabel: "Read Email", link: "/read-email" },
+            // { sublabel: "Email Compose", link: "/compose-email" },
+        ],
     },
+    // {
+    //     label: "Logout",
+    //     icon: "mdi mdi-logout-variant",
+    //     isHasArrow: true,
+    //     url: "/login",
+    // },
     // {
     //     label: "Servise providers",
     //     icon: "mdi mdi-email-outline",

@@ -187,7 +187,15 @@ const Sidebar = (props) => {
                   )}
                 </React.Fragment>
               ))}
+              <li>
+                <Link to="/logout" className="dropdown-item">
+                  <i className="ri-shut-down-line align-middle me-2 text-danger" />
+                  <span>{props.t("Logout")}</span>
+                </Link>
+              </li>
+              
             </ul>
+            
           </div>
         </SimpleBar>
       </div>
