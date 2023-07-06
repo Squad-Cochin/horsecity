@@ -9,7 +9,8 @@ import { useFormik } from "formik";
 import * as Yup from "yup";
 import { userRecoverPassword } from "../../store/actions";
 //redux
-import { useSelector, useDispatch } from "react-redux";
+// import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 
 const RecoverPassword = (props) => {
     document.title = "Recover Password | HORSCITY ";
@@ -30,9 +31,9 @@ const RecoverPassword = (props) => {
         }
     });
     
-  const { error } = useSelector(state => ({
-    error: state.login.error,
-  }));
+//   const { error } = useSelector(state => ({
+//     error: state.login.error,
+//   }));
 
     return (
         <React.Fragment>

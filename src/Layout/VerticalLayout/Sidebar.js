@@ -144,7 +144,7 @@ const Sidebar = (props) => {
                           className={item.icon}
                           style={{ marginRight: "5px" }}
                         ></i>
-                        {item.issubMenubadge && (
+                        {/* {item.issubMenubadge && (
                           <span
                             className={
                               "badge rounded-pill float-end " + item.bgcolor
@@ -153,7 +153,7 @@ const Sidebar = (props) => {
                             {" "}
                             {item.badgeValue}{" "}
                           </span>
-                        )}
+                        )} */}
                         <span>{props.t(item.label)}</span>
                       </Link>
                       {item.subItem && (
