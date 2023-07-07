@@ -24,7 +24,11 @@ import Drivers from "../Pages/Drivers/DriverTable";
 //Import trip deatails
 import TripDeatails from "../Pages/TripDetails/TripDetailTable";
 
+//Import monthly reports
 import MonthlyReports  from "../Pages/Reports/ReportTable"
+
+//Languages
+import Language from "../Pages/Languages/ListLanguage"
 
 // Import Authentication pages
 import Login from "../Pages/Authentication/Login";
@@ -136,8 +140,11 @@ const authProtectedRoutes = [
 
   //Trip Deatails
   { path: "/trip-deatails", component: <TripDeatails /> },
-
+  //Monthly reports
   { path: "/monthly-reports", component: <MonthlyReports /> },
+
+  //Language
+  { path: "/languages", component: <Language /> },
 
   // Utility Pages
   { path: "/pages-starter", component: <StarterPage /> },

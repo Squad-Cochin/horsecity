@@ -15,6 +15,7 @@ import { TripDetails } from "./TripDeatails";
 import { quotationData } from "./quotationPageData";
 import { enquiriesData } from "./enquiriesPageData";
 import { Reports } from "./reports";
+import { Languages } from "./languages"
 export {
   LatestTransationData,
   OrderStatusData,
@@ -30,5 +31,6 @@ export {
   TripDetails,
   quotationData,
   enquiriesData,
-  Reports
+  Reports,
+  Languages
 };
