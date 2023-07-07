@@ -47,5 +47,5 @@ const enquiriesData = [
     }
   ];
   
-  export default enquiriesData;
+  export { enquiriesData } ;
   

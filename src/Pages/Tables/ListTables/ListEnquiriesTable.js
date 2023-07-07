@@ -6,11 +6,12 @@ import { Link } from 'react-router-dom';
 import List from 'list.js';
 // Import Flatepicker
 import Flatpickr from "react-flatpickr";
-import enquiriesData from "../../../CommonData/Data/enquiriesPageData";
+import { qetEnquiriesData } from "../../../helpers/AuthType/apiRoutes";
 
 const ListEnquiriesTable = () => {
 
     const [modal_list, setmodal_list] = useState(false);
+    const [ enquiries, setEnquiries ] = useState([])
     function tog_list() {
         setmodal_list(!modal_list);
     }
@@ -19,6 +20,9 @@ const ListEnquiriesTable = () => {
     function tog_delete() {
         setmodal_delete(!modal_delete);
     }
+    useEffect(()=>{
+        setEnquiries(qetEnquiriesData());
+    },[])
 
     useEffect(() => {
 
@@ -105,7 +109,7 @@ const ListEnquiriesTable = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {enquiriesData.map((item) => ( 
+                                                    {enquiries.map((item) => ( 
                                                         <tr key = {item.id}>   
                                                         <th scope="row">
                                                             <div className="form-check">
