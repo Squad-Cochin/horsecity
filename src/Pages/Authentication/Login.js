@@ -39,8 +39,8 @@ const Login = props => {
     enableReinitialize: true,
 
     initialValues: {
-      userName: "Saurabh1997" || '',
-      password: "Asdf$1234" || '',
+      userName: "" || '',
+      password: "" || '',
     },
     validationSchema: Yup.object({
       userName: Yup.string().required("Please Enter Your Username"),

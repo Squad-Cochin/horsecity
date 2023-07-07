@@ -543,50 +543,18 @@ const ListCustomerTable = () => {
                         </div>
 
                         <div className="mb-3">
+                            <label htmlFor="password-field" className="form-label">Password</label>
+                            <input type="password" id="password-field" className="form-control" placeholder="Enter Password" required />
+                        </div>
+
+                        <div className="mb-3">
                             <label htmlFor="contact_no-field" className="form-label">Contact Number</label>
                             <input type="text" id="contact_no-field" className="form-control" placeholder="Enter Contact Number" required />
                         </div>
                         
                         <div className="mb-3">
                             <label htmlFor="date_of_birth-field" className="form-label">Date Of Birth</label>
-                            <input type="date_of_birth" id="date_of_birth-field" className="form-control" placeholder="Enter Date Of Birth" required />
-                        </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="id_proof-field" className="form-label">Id Proof</label>
-                            <input type="id_proof" id="id_proof-field" className="form-control" placeholder="Enter Id Proof" required />
-                        </div>
-
-                        <div>
-                            <label htmlFor="status-field" className="form-label">Status</label>
-                            <select className="form-control" data-trigger name="status-field" id="status-field" >
-                                <option value="">Status</option>
-                                <option value="active">ACTIVE</option>
-                                <option value="inactive">INACTIVE</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label htmlFor="contact_number_verified-field" className="form-label" s>Contact Number Verified</label>
-                            <select className="form-control" data-trigger name="contact_number_verified-field" id="contact_number_verified-field" >
-                                <option value="">Status</option>
-                                <option value="true">TRUE</option>
-                                <option value="false">FALSE</option>
-                            </select>
-                        </div>
-
-
-                        <div>
-                            <label htmlFor="email_verified-field" className="form-label">Email Verified</label>
-                            <select className="form-control" data-trigger name="email_verified-field" id="email_verified-field" >
-                                <option value="">Status</option>
-                                <option value="true">TRUE</option>
-                                <option value="false">FALSE</option>
-                            </select>
-                        </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="registered_date-field" className="form-label">Registered Date</label>
+                            {/* <input type="date_of_birth" id="date_of_birth-field" className="form-control" placeholder="Enter Date Of Birth" required /> */}
                             <Flatpickr
                                 className="form-control"
                                 options={{
@@ -594,15 +562,34 @@ const ListCustomerTable = () => {
                                 }}
                                 placeholder="Select Date"
                             />
+                        </div>                  
+
+                        <div className="mb-3">
+                            <label htmlFor="contact_no-field" className="form-label">Id Proof Number</label>
+                            <input type="text" id="contact_no-field" className="form-control" placeholder="Enter Contact Number" required />
                         </div>
 
-                        
+                        <div className="mb-3">
+                            <label htmlFor="contact_no-field" className="form-label">Id Proof Image</label>
+                            <input type="file" id="contact_no-field" className="form-control" placeholder="Enter Contact Number" required />
+                        </div>
+
+                        {/* <div className="mb-3">
+                        <label htmlFor="id_proof-field" className="form-label">Id Proof</label>
+                        <div className="text-center">
+                            <input type="text" id="id_proof-field" className="form-control mb-2" placeholder="Enter Id Proof" required />
+                            <div>
+                            <span className="me-2">OR</span>
+                            </div>
+                            <input type="file" className="form-control" accept="image/*" />
+                        </div>
+                        </div>                         */}
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
                             <button type="button" className="btn btn-light" onClick={() => setmodal_list(false)}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">Add Customer</button>
-                            {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
+                            <button type="submit" className="btn btn-success" id="add-btn">Add 
+                            </button>
                         </div>
                     </ModalFooter>
                 </form>

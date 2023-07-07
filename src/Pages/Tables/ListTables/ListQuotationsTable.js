@@ -516,7 +516,7 @@ const ListQuotationsTable = () => {
 
             {/* Add Modal */}
             <Modal isOpen={modal_list} toggle={() => { tog_list(); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Add Customer </ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Add Quotation </ModalHeader>
                 <form className="tablelist-form">
                     <ModalBody>
                         <div className="mb-3" id="modal-id" style={{ display: "none" }}>
@@ -525,8 +525,8 @@ const ListQuotationsTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="customername-field" className="form-label">Name </label>
-                            <input type="text" id="customername-field" className="form-control" placeholder="Enter Name" required />
+                            <label htmlFor="username-field" className="form-label">User Name</label>
+                            <input type="username" id="username-field" className="form-control" placeholder="Enter User Name" required />
                         </div>
 
                         <div className="mb-3">
@@ -534,10 +534,10 @@ const ListQuotationsTable = () => {
                             <input type="email" id="email-field" className="form-control" placeholder="Enter Email" required />
                         </div>
 
-                        <div className="mb-3">
+                        {/* <div className="mb-3">
                             <label htmlFor="username-field" className="form-label">Username</label>
                             <input type="username" id="username-field" className="form-control" placeholder="Enter Username" required />
-                        </div>
+                        </div> */}
 
                         <div className="mb-3">
                             <label htmlFor="contact_no-field" className="form-label">Contact Number</label>
@@ -545,44 +545,60 @@ const ListQuotationsTable = () => {
                         </div>
                         
                         <div className="mb-3">
-                            <label htmlFor="date_of_birth-field" className="form-label">Date Of Birth</label>
-                            <input type="date_of_birth" id="date_of_birth-field" className="form-control" placeholder="Enter Date Of Birth" required />
+                            <label htmlFor="startLocation" className="form-label">Start Location</label>
+                            <input type="text" id="startLocation" className="form-control" placeholder="Enter Start Location" required />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="id_proof-field" className="form-label">Id Proof</label>
-                            <input type="id_proof" id="id_proof-field" className="form-control" placeholder="Enter Id Proof" required />
+                            <label htmlFor="endLocation" className="form-label">End Location</label>
+                            <input type="text" id="endLocation" className="form-control" placeholder="Enter End Location" required />
                         </div>
 
-                        <div>
+                        {/* <div className="mb-3">
+                            <label htmlFor="id_proof-field" className="form-label">Id Proof</label>
+                            <input type="id_proof" id="id_proof-field" className="form-control" placeholder="Enter Id Proof" required />
+                        </div> */}
+
+                        {/* <div className="mb-3">
                             <label htmlFor="status-field" className="form-label">Status</label>
                             <select className="form-control" data-trigger name="status-field" id="status-field" >
                                 <option value="">Status</option>
                                 <option value="active">ACTIVE</option>
                                 <option value="inactive">INACTIVE</option>
                             </select>
+                        </div> */}
+
+                        <div className="mb-3">
+                            <label htmlFor="pickup_date-field" className="form-label">Pick-up Date</label>
+                            <Flatpickr
+                                className="form-control"
+                                options={{
+                                    dateFormat: "d M, Y"
+                                }}
+                                placeholder="Select Pick-up Date"
+                            />
                         </div>
 
-                        <div>
-                            <label htmlFor="contact_number_verified-field" className="form-label" s>Contact Number Verified</label>
+                        <div className="mb-3">
+                            <label htmlFor="contact_number_verified-field" className="form-label" s>Quotation Status</label>
                             <select className="form-control" data-trigger name="contact_number_verified-field" id="contact_number_verified-field" >
                                 <option value="">Status</option>
-                                <option value="true">TRUE</option>
-                                <option value="false">FALSE</option>
+                                <option value="true">Completed</option>
+                                <option value="false">Pending</option>
                             </select>
                         </div>
 
 
-                        <div>
+                        {/* <div className="mb-3">
                             <label htmlFor="email_verified-field" className="form-label">Email Verified</label>
                             <select className="form-control" data-trigger name="email_verified-field" id="email_verified-field" >
                                 <option value="">Status</option>
                                 <option value="true">TRUE</option>
                                 <option value="false">FALSE</option>
                             </select>
-                        </div>
+                        </div> */}
 
-                        <div className="mb-3">
+                        {/* <div className="mb-3">
                             <label htmlFor="registered_date-field" className="form-label">Registered Date</label>
                             <Flatpickr
                                 className="form-control"
@@ -591,14 +607,14 @@ const ListQuotationsTable = () => {
                                 }}
                                 placeholder="Select Date"
                             />
-                        </div>
+                        </div> */}
 
                         
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
                             <button type="button" className="btn btn-light" onClick={() => setmodal_list(false)}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">Add Customer</button>
+                            <button type="submit" className="btn btn-success" id="add-btn">Add Quotation</button>
                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>

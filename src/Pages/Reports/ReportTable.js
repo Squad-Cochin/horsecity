@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-import SimpleBar from 'simplebar-react';
+// import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
 // Import Flatepicker
@@ -197,7 +197,7 @@ const MonthlyReportsList  = () => {
                         </Col>
                     </Row>
 
-                    <Row>
+                    {/* <Row>
                  <Col xl={4}>
                             <Card>
                            
@@ -216,7 +216,7 @@ const MonthlyReportsList  = () => {
 
 
                        
-                    </Row>
+                    </Row> */}
 
                 
                 </Container>

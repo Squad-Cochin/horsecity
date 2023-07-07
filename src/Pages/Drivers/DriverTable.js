@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-import SimpleBar from 'simplebar-react';
+// import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
 // Import Flatepicker
@@ -209,7 +209,7 @@ const ListTables = () => {
                         </Col>
                     </Row>
 
-                    <Row>
+                    {/* <Row>
                  <Col xl={4}>
                             <Card>
                            
@@ -228,7 +228,7 @@ const ListTables = () => {
 
 
                        
-                    </Row>
+                    </Row> */}
 
                 
                 </Container>
@@ -255,12 +255,17 @@ const ListTables = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="phone-field" className="form-label">Phone</label>
-                            <input type="text" id="phone-field" className="form-control" placeholder="Enter Phone no." required />
+                            <label htmlFor="contactNumber-field" className="form-label">Contact Number</label>
+                            <input type="text" id="contactNumber" className="form-control" placeholder="Enter Contact Number" required />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="date-field" className="form-label">Joining Date</label>
+                            <label htmlFor="emergencyContactNumber" className="form-label">Emergency Contact Number</label>
+                            <input type="text" id="emergencyContactNumber" className="form-control" placeholder="Enter Emergency Contact Number" required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="dateOfBirth-field" className="form-label">Date Of Birth</label>
                             <Flatpickr
                                 className="form-control"
                                 options={{
@@ -268,6 +273,21 @@ const ListTables = () => {
                                 }}
                                 placeholder="Select Date"
                             />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="profileImage" className="form-label">Profile Image</label>
+                            <input type="file" id="profileImage" className="form-control" placeholder="Ender Profile Image" required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="idNumber" className="form-label">Licensce Number</label>
+                            <input type="text" id="idNumber" className="form-control" placeholder="Enter Licensce Number" required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="idProofImage" className="form-label">Licensce Image</label>
+                            <input type="file" id="idProofImage" className="form-control" placeholder="Ender Licensce Image" required />
                         </div>
 
                         <div>
@@ -282,7 +302,7 @@ const ListTables = () => {
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
                             <button type="button" className="btn btn-light" onClick={() => setmodal_list(false)}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">Add Customer</button>
+                            <button type="submit" className="btn btn-success" id="add-btn">Add Driver</button>
                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>

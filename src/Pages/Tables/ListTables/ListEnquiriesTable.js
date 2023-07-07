@@ -5,7 +5,7 @@ import Breadcrumbs from "../../../components/Common/Breadcrumb";
 import { Link } from 'react-router-dom';
 import List from 'list.js';
 // Import Flatepicker
-import Flatpickr from "react-flatpickr";
+// import Flatpickr from "react-flatpickr";
 import { qetEnquiriesData } from "../../../helpers/AuthType/apiRoutes";
 
 const ListEnquiriesTable = () => {
@@ -183,7 +183,7 @@ const ListEnquiriesTable = () => {
 
             {/* Add Modal */}
             <Modal isOpen={modal_list} toggle={() => { tog_list(); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Add Customer </ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Add Enquiries </ModalHeader>
                 <form className="tablelist-form">
                     <ModalBody>
 
@@ -193,80 +193,53 @@ const ListEnquiriesTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="customer_name-field" className="form-label">Name</label>
-                            <input type="text" id="customer_name-field" className="form-control" placeholder="Enter Name" required />
+                            <label htmlFor="customer_name-field" className="form-label">Customer Name</label>
+                            <input type="text" id="customer_name-field" className="form-control" placeholder="Enter Customer Name" required />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="customer_email-field" className="form-label">Email</label>
-                            <input type="email" id="customer_email-field" className="form-control" placeholder="Enter Email" required />
+                            <label htmlFor="customer_username-field" className="form-label">Customer Username</label>
+                            <input type="username" id="customer_username-field" className="form-control" placeholder="Enter Customer Username" required />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="customer_username-field" className="form-label">Username</label>
-                            <input type="username" id="customer_username-field" className="form-control" placeholder="Enter Username" required />
+                            <label htmlFor="vehicle-field" className="form-label">Desired Vehicle Number</label>
+                            <input type="text" id="vehicle-field" className="form-control" placeholder="Enter Desired Vehicle Number" required />
                         </div>
 
                         <div className="mb-3">
                             <label htmlFor="contact_no-field" className="form-label">Contact Number</label>
                             <input type="text" id="contact_no-field" className="form-control" placeholder="Enter Contact Number" required />
                         </div>
-                        
-                        <div className="mb-3">
-                            <label htmlFor="date_of_birth-field" className="form-label">Date Of Birth</label>
-                            <input type="date_of_birth" id="date_of_birth-field" className="form-control" placeholder="Enter Date Of Birth" required />
-                        </div>
 
                         <div className="mb-3">
-                            <label htmlFor="id_proof-field" className="form-label">Id Proof</label>
-                            <input type="id_proof" id="id_proof-field" className="form-control" placeholder="Enter Id Proof" required />
+                            <label htmlFor="pickup_location-field" className="form-label">Pick-Up Location</label>
+                            <input type="text" id="pickup_location-field" className="form-control" placeholder="Enter Pick-Up Location" required />
                         </div>
 
-                        <div>
-                            <label htmlFor="status-field" className="form-label">Status</label>
-                            <select className="form-control" data-trigger name="status-field" id="status-field" >
-                                <option value="">Status</option>
-                                <option value="active">ACTIVE</option>
-                                <option value="inactive">INACTIVE</option>
-                            </select>
+                        <div className="mb-3">
+                            <label htmlFor="drop_location-field" className="form-label">Drop Location</label>
+                            <input type="text" id="drop_location-field" className="form-control" placeholder="Enter Drop Location" required />
                         </div>
-
-                        <div>
-                            <label htmlFor="contact_number_verified-field" className="form-label" s>Contact Number Verified</label>
-                            <select className="form-control" data-trigger name="contact_number_verified-field" id="contact_number_verified-field" >
-                                <option value="">Status</option>
-                                <option value="true">TRUE</option>
-                                <option value="false">FALSE</option>
+                        <div className="mb-3">
+                            <label htmlFor="drop_location-field" className="form-label">Number Of Horses</label>
+                            <select id="drop_location-field" className="form-control" required>
+                                {Array.from({ length: 50 }, (_, index) => (
+                                    <option key={index + 1} value={index + 1}>{index + 1}</option>
+                                ))}
                             </select>
                         </div>
 
 
-                        <div>
-                            <label htmlFor="email_verified-field" className="form-label">Email Verified</label>
-                            <select className="form-control" data-trigger name="email_verified-field" id="email_verified-field" >
-                                <option value="">Status</option>
-                                <option value="true">TRUE</option>
-                                <option value="false">FALSE</option>
-                            </select>
-                        </div>
-
                         <div className="mb-3">
-                            <label htmlFor="registered_date-field" className="form-label">Registered Date</label>
-                            <Flatpickr
-                                className="form-control"
-                                options={{
-                                    dateFormat: "d M, Y"
-                                }}
-                                placeholder="Select Date"
-                            />
-                        </div>
-
-                        
+                            <label htmlFor="description-field" className="form-label">Description</label>
+                            <input type="text" id="description-field" className="form-control" placeholder="Description" required />
+                        </div>                     
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
                             <button type="button" className="btn btn-light" onClick={() => setmodal_list(false)}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">Add Customer</button>
+                            <button type="submit" className="btn btn-success" id="add-btn">Add Enquiry</button>
                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>

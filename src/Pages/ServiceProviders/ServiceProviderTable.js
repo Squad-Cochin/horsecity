@@ -5,7 +5,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { Link } from 'react-router-dom';
 import List from 'list.js';
 // Import Flatepicker
-import Flatpickr from "react-flatpickr";
+// import Flatpickr from "react-flatpickr";
 
 // Import Images
 // import avatar1 from "../../assets/images/users/avatar-1.jpg";
@@ -251,8 +251,8 @@ const ListTables = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="customername-field" className="form-label">Provider Name</label>
-                            <input type="text" id="customername-field" className="form-control" placeholder="Enter Name" required />
+                            <label htmlFor="providerName-field" className="form-label">Provider Name</label>
+                            <input type="text" id="providerName-field" className="form-control" placeholder="Enter Provider Name" required />
                         </div>
 
                         <div className="mb-3">
@@ -261,11 +261,46 @@ const ListTables = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="phone-field" className="form-label">Phone</label>
-                            <input type="text" id="phone-field" className="form-control" placeholder="Enter Phone no." required />
+                            <label htmlFor="userName-field" className="form-label">User Name</label>
+                            <input type="text" id="userName-field" className="form-control" placeholder="Enter User Name" required />
                         </div>
 
                         <div className="mb-3">
+                            <label htmlFor="password-field" className="form-label">Password</label>
+                            <input type="password" id="password-field" className="form-control" placeholder="Enter Password" required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="contactPerson-field" className="form-label">Contact Person</label>
+                            <input type="text" id="contactPerson-field" className="form-control" placeholder="Enter Person Name" required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="phone-field" className="form-label">Contact Number</label>
+                            <input type="text" id="phone-field" className="form-control" placeholder="Enter Phone No." required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="emergencyPhone-field" className="form-label">Emergency Contact Number</label>
+                            <input type="text" id="emergencyPhone-field" className="form-control" placeholder="Enter Emergency Phone No." required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="contactAddress-field" className="form-label">Contact Address</label>
+                            <input type="text" id="contactAddress-field" className="form-control" placeholder="Enter Contact Address" required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="certificateNumber-field" className="form-label">Certificate Number</label>
+                            <input type="text" id="certificateNumber-field" className="form-control" placeholder="Enter Certificate Number" required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="certificateNumber-field" className="form-label">Certificate Image</label>
+                            <input type="file" id="certificateNumber-field" className="form-control" placeholder="Enter Certificate Number" required />
+                        </div>
+
+                        {/* <div className="mb-3">
                             <label htmlFor="date-field" className="form-label">Joining Date</label>
                             <Flatpickr
                                 className="form-control"
@@ -274,21 +309,21 @@ const ListTables = () => {
                                 }}
                                 placeholder="Select Date"
                             />
-                        </div>
+                        </div> */}
 
                         <div>
                             <label htmlFor="status-field" className="form-label">Status</label>
                             <select className="form-control" data-trigger name="status-field" id="status-field" >
                                 <option value="">Status</option>
                                 <option value="Active">Active</option>
-                                <option value="Block">Block</option>
+                                <option value="Inactive">Inactive</option>
                             </select>
                         </div>
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
                             <button type="button" className="btn btn-light" onClick={() => setmodal_list(false)}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">Add Customer</button>
+                            <button type="submit" className="btn btn-success" id="add-btn">Add Service Provider</button>
                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>

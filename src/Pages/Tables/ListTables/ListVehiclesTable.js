@@ -173,7 +173,7 @@ const ListVehiclesTable = () => {
                                                         <td className="name">{item.service_provider}</td>
                                                         <td className="vhnumber">{item.vehicle_number}</td>
                                                         <td className="make">{item.make}</td>
-                                                        <td className="modal">{item.modals}</td>
+                                                        <td className="model">{item.models}</td>
                                                         <td className="color">{item.color}</td>
                                                         <td className="length">{item.length}</td>
                                                         <td className="breadth">{item.breadth}</td>
@@ -183,7 +183,7 @@ const ListVehiclesTable = () => {
                                                         <td className="phone">{item.temp_manageable}</td>
                                                         {/* <td className="date">{item.image}</td> */}
                                                         <td className="email">{item.insurance_cover}</td>
-                                                        <td className="email">{item.insurance_cover}</td>
+                                                        {/* <td className="email">{item.insurance_cover}</td> */}
                                                         <td className="phone">{item.insurance_date}</td>
                                                         <td className="date">{item.registration_no}</td>
                                                         <td className="phone">{item.gcc_travel_allowed}</td>
@@ -248,30 +248,215 @@ const ListVehiclesTable = () => {
 
             {/* Add Modal */}
             <Modal isOpen={modal_list} toggle={() => { tog_list(); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Add Driver </ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Add Vehicle </ModalHeader>
                 <form className="tablelist-form">
                     <ModalBody>
+                        
                         <div className="mb-3" id="modal-id" style={{ display: "none" }}>
                             <label htmlFor="id-field" className="form-label">ID</label>
                             <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="customername-field" className="form-label">Name</label>
-                            <input type="text" id="customername-field" className="form-control" placeholder="Enter Name" required />
+                            <label htmlFor="vehiclename-field" className="form-label">Name</label>
+                            <input type="text" id="vehiclename-field" className="form-control" placeholder="Enter Vehicle Name" required />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="email-field" className="form-label">Email</label>
-                            <input type="email" id="email-field" className="form-control" placeholder="Enter Email" required />
+                            <label htmlFor="vehicle_number-field" className="form-label">Vehicle Number</label>
+                            <input type="email" id="vehicle_number-field" className="form-control" placeholder="Enter Vehicle Number" required />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="phone-field" className="form-label">Phone</label>
-                            <input type="text" id="phone-field" className="form-control" placeholder="Enter Phone no." required />
+                            <label htmlFor="vehicle_company-field" className="form-label">Vehicle Company</label>
+                            <input type="text" id="vehicle_company-field" className="form-control" placeholder="Enter Vehicle Company" required />
                         </div>
 
                         <div className="mb-3">
+                            <label htmlFor="vehicle_model-field" className="form-label">Vehicle Model</label>
+                            <input type="text" id="vehicle_model-field" className="form-control" placeholder="Enter Vehicle Model" required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="vehicle_color-field" className="form-label">Vehicle Color</label>
+                            <input type="color" id="vehicle_color-field" className="form-control" placeholder="Enter Vehicle Color" required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="vehicle_length-field" className="form-label">Vehicle Length(cm)</label>
+                            <input type="text" id="vehicle_length-field" className="form-control" placeholder="Enter Vehicle Length In (cm)" required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="vehicle_length-field" className="form-label">Vehicle Breadth(cm)</label>
+                            <input type="text" id="vehicle_length-field" className="form-control" placeholder="Enter Vehicle Breadth In (cm)" required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="vehicle_height-field" className="form-label">Vehicle Height(cm)</label>
+                            <input type="text" id="vehicle_height-field" className="form-control" placeholder="Enter Vehicle Height in (cm)" required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="drop_location-field" className="form-label">Max No Of Horses</label>
+                            <select id="drop_location-field" className="form-control" required>
+                                {Array.from({ length: 10 }, (_, index) => (
+                                    <option key={index + 1} value={index + 1}>{index + 1}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        {/* <div className="mb-3">
+                            <label htmlFor="air_conditioner-field" className="form-label">Air Conditioner</label>
+                            <input type="text" id="air_conditioner-field" className="form-control" placeholder="Air Conditioner" required />
+                        </div> */}
+
+                        {/* <div className="mb-3">
+                        <label htmlFor="air_conditioner-field" className="form-label">Air Conditioner</label>
+                        <div className="form-check">
+                            <div>
+                            <input type="checkbox" id="air_conditioner-yes" className="form-check-input" required />
+                            <label htmlFor="air_conditioner-yes" className="form-check-label">YES</label>
+                            </div>
+                            <div>
+                            <input type="checkbox" id="air_conditioner-no" className="form-check-input" required />
+                            <label htmlFor="air_conditioner-no" className="form-check-label">NO</label>
+                            </div>
+                        </div>
+                        </div> */}
+
+                        <div className="mb-3">
+                        <label className="form-label">Air Conditioner</label>
+                        <div className="form-check">
+                            <input type="radio" id="air_conditioner-yes" name="air_conditioner" className="form-check-input" value="yes" required />
+                            <label htmlFor="air_conditioner-yes" className="form-check-label">YES</label>
+                        </div>
+                        <div className="form-check">
+                            <input type="radio" id="air_conditioner-no" name="air_conditioner" className="form-check-input" value="no" required />
+                            <label htmlFor="air_conditioner-no" className="form-check-label">NO</label>
+                        </div>
+                        </div>
+
+
+                        <div className="mb-3">
+                        <label className="form-label">Temperature Manageable</label>
+                        <div className="form-check">
+                            <input type="radio" id="temperature_manageable-yes" name="temperature_manageable" className="form-check-input" value="yes" required />
+                            <label htmlFor="temperature_manageable-yes" className="form-check-label">YES</label>
+                        </div>
+                        <div className="form-check">
+                            <input type="radio" id="temperature_manageable-no" name="temperature_manageable" className="form-check-input" value="no" required />
+                            <label htmlFor="temperature_manageable-no" className="form-check-label">NO</label>
+                        </div>
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="vehicle_image-field" className="form-label">Vehicle Image</label>
+                            <input type="file" id="Vehicle_image-field" className="form-control" placeholder="Upload Vehicle Image" required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="vehicle_registration_number-field" className="form-label">Vehicle Registration Number</label>
+                            <input type="text" id="vehicle_registration_number-field" className="form-control" placeholder="Enter Vehicle Registration Number" required />
+                        </div>
+
+                        <div className="mb-3">
+                        <label className="form-label">GCC Travel Allowed</label>
+                        <div className="form-check">
+                            <input type="radio" id="gcc_travel_allowed-yes" name="gcc_travel_allowed" className="form-check-input" value="yes" required />
+                            <label htmlFor="gcc_travel_allowed-yes" className="form-check-label">YES</label>
+                        </div>
+                        <div className="form-check">
+                            <input type="radio" id="gcc_travel_allowed-no" name="gcc_travel_allowed" className="form-check-input" value="no" required />
+                            <label htmlFor="gcc_travel_allowed-no" className="form-check-label">NO</label>
+                        </div>
+                        </div>
+
+                        <div className="mb-3">
+                        <label className="form-label">Insurance Coverered</label>
+                        <div className="form-check">
+                            <input type="radio" id="insurance_covered-yes" name="insurance_covered" className="form-check-input" value="yes" required />
+                            <label htmlFor="insurance_covered-yes" className="form-check-label">YES</label>
+                        </div>
+                        <div className="form-check">
+                            <input type="radio" id="insurance_covered-no" name="insurance_covered" className="form-check-input" value="no" required />
+                            <label htmlFor="insurance_covered-no" className="form-check-label">NO</label>
+                        </div>
+                        </div>
+
+
+                        <div className="mb-3">
+                            <label htmlFor="insurance_date-field" className="form-label">Insurance Date</label>
+                            {/* <input type="date_of_birth" id="date_of_birth-field" className="form-control" placeholder="Enter Date Of Birth" required /> */}
+                            <Flatpickr
+                                className="form-control"
+                                options={{
+                                    dateFormat: "d M, Y"
+                                }}
+                                placeholder="Select Insurance Date"
+                            />
+                        </div> 
+
+
+                        <div className="mb-3">
+                            <label htmlFor="insurance_policy_no-field" className="form-label">Insurance Policy Number</label>
+                            <input type="text" id="insurance_policy_no-field" className="form-control" placeholder="Enter Insurance Policy Number" required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="insurance_policy_provider-field" className="form-label">Insurance Policy Provider</label>
+                            <input type="text" id="insurance_policy_provider-field" className="form-control" placeholder="Enter Insurance Policy Number" required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="insurance_expiry_date-field" className="form-label">Insurance Expiry Date</label>
+                            {/* <input type="date_of_birth" id="date_of_birth-field" className="form-control" placeholder="Enter Date Of Birth" required /> */}
+                            <Flatpickr
+                                className="form-control"
+                                options={{
+                                    dateFormat: "d M, Y"
+                                }}
+                                placeholder="Select Insurance Expiry Date"
+                            />
+                        </div> 
+
+                        <div className="mb-3">
+                        <label className="form-label">Vehicle Type</label>
+                        <div className="form-check">
+                            <input type="radio" id="vehicle_type-private" name="insurance_covered" className="form-check-input" value="PRIVATE" required />
+                            <label htmlFor="vehicle_type-private" className="form-check-label">PRIVATE</label>
+                        </div>
+                        <div className="form-check">
+                            <input type="radio" id="vehicle_type-commercial" name="insurance_covered" className="form-check-input" value="COMMERCIAL" required />
+                            <label htmlFor="vehicle_type-commercial" className="form-check-label">COMMERCIAL</label>
+                        </div>
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="vehicle_registration_date-field" className="form-label">Vehicle Registration Date</label>
+                            {/* <input type="date_of_birth" id="date_of_birth-field" className="form-control" placeholder="Enter Date Of Birth" required /> */}
+                            <Flatpickr
+                                className="form-control"
+                                options={{
+                                    dateFormat: "d M, Y"
+                                }}
+                                placeholder="Select Vehicle Registration Date"
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="vehicle_exipration_date-field" className="form-label">Vehicle Expiration Date</label>
+                            {/* <input type="date_of_birth" id="date_of_birth-field" className="form-control" placeholder="Enter Date Of Birth" required /> */}
+                            <Flatpickr
+                                className="form-control"
+                                options={{
+                                    dateFormat: "d M, Y"
+                                }}
+                                placeholder="Select Vehicle Expiration Date"
+                            />
+                        </div>
+
+                        {/* <div className="mb-3">
                             <label htmlFor="date-field" className="form-label">Joining Date</label>
                             <Flatpickr
                                 className="form-control"
@@ -289,17 +474,20 @@ const ListVehiclesTable = () => {
                                 <option value="Active">Active</option>
                                 <option value="Block">Block</option>
                             </select>
-                        </div>
+                        </div> */}
+
+
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
                             <button type="button" className="btn btn-light" onClick={() => setmodal_list(false)}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">Add Customer</button>
+                            <button type="submit" className="btn btn-success" id="add-btn">Add Vehicle</button>
                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>
                 </form>
             </Modal>
+
 
             {/* Remove Modal */}
             <Modal isOpen={modal_delete} toggle={() => { tog_delete(); }} className="modal fade zoomIn" id="deleteRecordModal" centered >
