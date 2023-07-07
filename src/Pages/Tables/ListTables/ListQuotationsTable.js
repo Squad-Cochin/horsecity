@@ -6,11 +6,13 @@ import { Link } from 'react-router-dom';
 import List from 'list.js';
 // Import Flatepicker
 import Flatpickr from "react-flatpickr";
-import quotationData from '../../../CommonData/Data/quotationPageData';
+
+import { getQuotationData } from "../../../helpers/AuthType/apiRoutes";
 
 const ListQuotationsTable = () => {
 
     const [modal_list, setmodal_list] = useState(false);
+    const [quotaions, setQuotaions] =useState([]);
     function tog_list() {
         setmodal_list(!modal_list);
     }
@@ -19,6 +21,10 @@ const ListQuotationsTable = () => {
     function tog_delete() {
         setmodal_delete(!modal_delete);
     }
+
+    useEffect(()=>{
+        setQuotaions(getQuotationData());
+    },[])
 
     useEffect(() => {
 
@@ -119,8 +125,8 @@ const ListQuotationsTable = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                {quotationData.map((item) => ( 
-                                                    <tr key = {item.id}>
+                                                {quotaions.map((item) => ( 
+                                                    <tr key={item.id}>
                                                         <th scope="row">
                                                             <div className="form-check">
                                                                 <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />

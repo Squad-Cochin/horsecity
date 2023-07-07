@@ -12,7 +12,8 @@ import { Drivers } from "./Drivers";
 import { Customers } from "./Customers";
 import { Vehicles } from "./Vehicles";
 import { TripDetails } from "./TripDeatails";
-
+import { quotationData } from "./quotationPageData";
+import { enquiriesData } from "./enquiriesPageData";
 export {
   LatestTransationData,
   OrderStatusData,
@@ -25,5 +26,7 @@ export {
   Drivers,
   Customers,
   Vehicles,
-  TripDetails
+  TripDetails,
+  quotationData,
+  enquiriesData
 };

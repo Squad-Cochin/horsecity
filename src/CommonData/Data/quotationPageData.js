@@ -1,5 +1,6 @@
 const quotationData = [
-    {
+    {   
+        id : 1,
         cName : "Saurabh Pande",
         cEmail : "sp832154@gmail.com",
         cUser_name : "Saura1997",
@@ -33,6 +34,7 @@ const quotationData = [
 
 
     {
+        id : 2,
         cName : "Shubham Singh",
         cEmail : "ss@gmail.com",
         cUser_name : "Shubham1997",
@@ -65,5 +67,5 @@ const quotationData = [
     }
   ];
   
-  export default quotationData;
+  export { quotationData  };
   
