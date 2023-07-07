@@ -4,7 +4,7 @@ import * as url from "../url_helper";
 import MockAdapter from "axios-mock-adapter";
 // import * as url from "../url_helper";
 import accessToken from "../jwt-token-access/accessToken";
-import { calenderDefaultCategories, events, serviceProviders, Drivers, Customers, Vehicles ,TripDetails, quotationData, enquiriesData} from "../../CommonData/Data";
+import { calenderDefaultCategories, events, serviceProviders, Drivers, Customers, Vehicles ,TripDetails, quotationData, enquiriesData, Reports} from "../../CommonData/Data";
 import { APIClient } from "../api_helper";
 
 
@@ -75,6 +75,7 @@ const loginAPI = async (userdata) => {
     }
     return null ;
   }
+
   //Get enguiries
   export function qetEnquiriesData(){
     if(enquiriesData){
@@ -83,6 +84,12 @@ const loginAPI = async (userdata) => {
     return null ;
   }
 
+  export function getMonthlyReports(){
+    if(Reports){
+      return Reports ;
+    }
+    return null ;
+  }
 
 // import * as url from "./url_helper";
                                         

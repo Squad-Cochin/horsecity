@@ -24,6 +24,8 @@ import Drivers from "../Pages/Drivers/DriverTable";
 //Import trip deatails
 import TripDeatails from "../Pages/TripDetails/TripDetailTable";
 
+import MonthlyReports  from "../Pages/Reports/ReportTable"
+
 // Import Authentication pages
 import Login from "../Pages/Authentication/Login";
 import ChangePassword from "../Pages/Authentication/ChangePassword";
@@ -134,6 +136,8 @@ const authProtectedRoutes = [
 
   //Trip Deatails
   { path: "/trip-deatails", component: <TripDeatails /> },
+
+  { path: "/monthly-reports", component: <MonthlyReports /> },
 
   // Utility Pages
   { path: "/pages-starter", component: <StarterPage /> },
