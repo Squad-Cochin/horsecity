@@ -57,7 +57,7 @@ const SidebarData = [
         label: "Reports",
         icon: "mdi mdi-finance",
         isHasArrow: true,
-        url: "/tables-listjs",
+        url: "/monthly-reports",
     },
     {
         label: "Settings",
