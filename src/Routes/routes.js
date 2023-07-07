@@ -31,6 +31,8 @@ import ForgetPasswordPage from "../Pages/Authentication/ForgetPassword";
 import Logout from "../Pages/Authentication/Logout";
 import Register from "../Pages/Authentication/Register";
 import UserProfile from "../Pages/Authentication/user-profile";
+import ListEnquiriesTable from "../Pages/Tables/ListTables/ListEnquiriesTable";
+import ListQuotationsTable from "../Pages/Tables/ListTables/ListQuotationsTable";
 
 // Import Authentication Inner Pages
 // import Login1 from "../Pages/AuthenticationPages/Login";
@@ -176,11 +178,13 @@ const authProtectedRoutes = [
 
 // Tables pages
 
-{ path: "/tables-basic", component: <BasicTable /> },
-{ path: "/service-providers", component: <ListJs /> },
-{ path: "/customers", component: <ListCustomerTable /> },
-{ path: "/vehicles", component: <ListVehiclesTable /> },
-{ path: "/table-datatables", component: <DataTable /> },
+  { path: "/tables-basic", component: <BasicTable /> },
+  { path: "/service-providers", component: <ListJs /> },
+  { path: "/customers", component: <ListCustomerTable /> },
+  { path: "/vehicles", component: <ListVehiclesTable /> },
+  { path: "/table-datatables", component: <DataTable /> },
+  { path: "/enquires", component: <ListEnquiriesTable /> },
+  { path: "/quotations", component: <ListQuotationsTable /> },
 
   // Charts Pages
   { path: "/chart-apexcharts", component: <ApexCharts /> },

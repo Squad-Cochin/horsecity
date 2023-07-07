@@ -39,19 +39,19 @@ const SidebarData = [
         label: "Enquiries",
         icon: "mdi mdi-phone-plus",
         isHasArrow: true,
-        url: "/tables-listjs",
+        url: "/enquires",
     },
     {
         label: "Quotations",
         icon: "mdi mdi-handshake-outline",
         isHasArrow: true,
-        url: "/tables-listjs",
+        url: "/quotations",
     },
     {
         label: "Trip details",
         icon: "mdi mdi-chevron-triple-right",
         isHasArrow: true,
-        url: "/tables-listjs",
+        url: "/trip-deatails",
     },
     {
         label: "Reports",

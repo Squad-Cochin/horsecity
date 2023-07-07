@@ -92,7 +92,7 @@ const ListVehiclesTable = () => {
         <React.Fragment>
             <div className="page-content">
                 <Container fluid>
-                    <Breadcrumbs title="Tables" breadcrumbItem="Drivers" />
+                    <Breadcrumbs title="Tables" breadcrumbItem="Vechiles" />
 
                     <Row>
                         <Col lg={12}>
@@ -132,7 +132,7 @@ const ListVehiclesTable = () => {
                                                             </div>
                                                         </th>
                                                         <th className="sort" data-sort="customer_name">Provider</th>
-                                                        <th className="sort" data-sort="image">Vehicle number</th>
+                                                        <th className="sort" data-sort="image">Vehicle Number</th>
                                                         <th className="sort" data-sort="email">Make</th>
                                                         <th className="sort" data-sort="phone">Models</th>
                                                         <th className="sort" data-sort="phone">Color</th>
@@ -140,21 +140,21 @@ const ListVehiclesTable = () => {
                                                         <th className="sort" data-sort="phone">Breadth(cm)</th>
                                                         <th className="sort" data-sort="licence_img">Height(cm)</th>
                                                         <th className="sort" data-sort="description ">Capacity</th>
-                                                        <th className="sort" data-sort="date"> Air conditioner</th>
-                                                        <th className="sort" data-sort="date"> Temperature manageable</th>
+                                                        <th className="sort" data-sort="date"> Air Conditioner</th>
+                                                        <th className="sort" data-sort="date"> Temperature Manageable</th>
                                                         {/* <th className="sort" data-sort="date"> Image</th> */}
-                                                        <th className="sort" data-sort="phone">Insurance cover</th>
-                                                        <th className="sort" data-sort="date">Insurance date</th>
-                                                        <th className="sort" data-sort="phone">Registration no</th>
-                                                        <th className="sort" data-sort="licence_img">GCC travel allowed </th>
-                                                        <th className="sort" data-sort="description ">Insurance policy no</th>
-                                                        <th className="sort" data-sort="date">Insurance provider</th>
-                                                        <th className="sort" data-sort="description ">Insurance expiration date</th>
-                                                        <th className="sort" data-sort="date">Safety certificate</th>
-                                                        <th className="sort" data-sort="date">Vehicle type</th>
-                                                        <th className="sort" data-sort="description ">Vehicle registration date</th>
-                                                        <th className="sort" data-sort="date">Vehicle expiration date</th>
-                                                        <th className="sort" data-sort="date">Created at</th>
+                                                        <th className="sort" data-sort="phone">Insurance Cover</th>
+                                                        <th className="sort" data-sort="date">Insurance Date</th>
+                                                        <th className="sort" data-sort="phone">Registration Number</th>
+                                                        <th className="sort" data-sort="licence_img">GCC Travel Allowed </th>
+                                                        <th className="sort" data-sort="description ">Insurance Policy Number</th>
+                                                        <th className="sort" data-sort="date">Insurance Provider</th>
+                                                        <th className="sort" data-sort="description ">Insurance Expiration Date</th>
+                                                        <th className="sort" data-sort="date">Safety Certificate Number</th>
+                                                        <th className="sort" data-sort="date">Vehicle Type</th>
+                                                        <th className="sort" data-sort="description ">Vehicle Registration Date</th>
+                                                        <th className="sort" data-sort="date">Vehicle Expiration Date</th>
+                                                        <th className="sort" data-sort="date">Created At</th>
                                                         <th className="sort" data-sort="status">Status</th>
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>

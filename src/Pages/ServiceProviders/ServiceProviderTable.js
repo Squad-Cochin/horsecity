@@ -132,18 +132,18 @@ const ListTables = () => {
                                                         </th>
                                                         <th className="sort" data-sort="sprovider_name">Name</th>
                                                         <th className="sort" data-sort="email">Email</th>
-                                                        <th className="sort" data-sort="username">Username</th>
-                                                        <th className="sort" data-sort="contactperson">Contact person</th>
-                                                        <th className="sort" data-sort="idproof">Id proof</th>
-                                                        <th className="sort" data-sort="phone">Contact no</th>
-                                                        <th className="sort" data-sort="customer_address">Contact address</th>
-                                                        <th className="sort" data-sort="phone">Emergency contact no</th>
+                                                        <th className="sort" data-sort="username">User Name</th>
+                                                        <th className="sort" data-sort="contactperson">Contact Person</th>
+                                                        <th className="sort" data-sort="idproof">Id Proof</th>
+                                                        <th className="sort" data-sort="phone">Contact Number</th>
+                                                        <th className="sort" data-sort="customer_address">Contact Address</th>
+                                                        <th className="sort" data-sort="phone">Emergency Contact Number</th>
                                                         {/* <th className="sort" data-sort="certification">Certification or license image</th> */}
-                                                        <th className="sort" data-sort="license no">License no</th>
+                                                        <th className="sort" data-sort="license no">License Number</th>
                                             
-                                                        <th className="sort" data-sort="date">Created at</th>
-                                                        <th className="sort" data-sort="date">Expiry at</th>
-                                                        <th className="sort" data-sort="status">status</th>
+                                                        <th className="sort" data-sort="date">Created At</th>
+                                                        <th className="sort" data-sort="date">Expiry At</th>
+                                                        <th className="sort" data-sort="status">Status</th>
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>

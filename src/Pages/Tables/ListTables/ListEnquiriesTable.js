@@ -1,25 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
-import Breadcrumbs from "../../components/Common/Breadcrumb";
-import SimpleBar from 'simplebar-react';
+import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+import Breadcrumbs from "../../../components/Common/Breadcrumb";
+// import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
 // Import Flatepicker
 import Flatpickr from "react-flatpickr";
+import enquiriesData from "../../../CommonData/Data/enquiriesPageData";
 
-// Import Images
-// import avatar1 from "../../assets/images/users/avatar-1.jpg";
-// import avatar2 from "../../assets/images/users/avatar-2.jpg";
-// import avatar3 from "../../assets/images/users/avatar-3.jpg";
-// import avatar4 from "../../assets/images/users/avatar-4.jpg";
-// import avatar5 from "../../assets/images/users/avatar-5.jpg";
+const ListEnquiriesTable = () => {
 
-//Import Drivers
-import { getDriversData } from '../../helpers/AuthType/apiRoutes'
-const ListTables = () => {
-
-    const [ modal_list, setmodal_list] = useState(false);
-    const [ drivers, setDrivers] = useState([])
+    const [modal_list, setmodal_list] = useState(false);
     function tog_list() {
         setmodal_list(!modal_list);
     }
@@ -28,41 +19,8 @@ const ListTables = () => {
     function tog_delete() {
         setmodal_delete(!modal_delete);
     }
-    useEffect(()=>{
-    let getDrivers = getDriversData();
-    setDrivers(getDrivers)
-    },[])
-    useEffect(() => {
 
-        // const attroptions = {
-        //     valueNames: [
-        //         'name',
-        //         'born',
-        //         {
-        //             data: ['id']
-        //         },
-        //         {
-        //             attr: 'src',
-        //             name: 'image'
-        //         },
-        //         {
-        //             attr: 'href',
-        //             name: 'link'
-        //         },
-        //         {
-        //             attr: 'data-timestamp',
-        //             name: 'timestamp'
-        //         }
-        //     ]
-        // };
-        // const attrList = new List('users', attroptions);
-        // attrList.add({
-        //     name: 'Leia',
-        //     born: '1954',
-        //     image: avatar5,
-        //     id: 5,
-        //     timestamp: '67893'
-        // });
+    useEffect(() => {
 
         // Existing List
         const existOptionsList = {
@@ -89,7 +47,7 @@ const ListTables = () => {
         <React.Fragment>
             <div className="page-content">
                 <Container fluid>
-                    <Breadcrumbs title="Tables" breadcrumbItem="Drivers" />
+                    <Breadcrumbs title = "Tables" breadcrumbItem = "Enquiries" />
 
                     <Row>
                         <Col lg={12}>
@@ -129,41 +87,47 @@ const ListTables = () => {
                                                             </div>
                                                         </th>
                                                         <th className="sort" data-sort="customer_name">Name</th>
-                                                        {/* <th className="sort" data-sort="image">Image</th> */}
-                                                        <th className="sort" data-sort="email">Email</th>
-                                                        <th className="sort" data-sort="phone">Contact Number</th>
-                                                        <th className="sort" data-sort="phone">Emergency Contct Number</th>
-                                                        <th className="sort" data-sort="date">Date Of Birth </th>
-                                                        <th className="sort" data-sort="phone">Licence Number</th>
-                                                        {/* <th className="sort" data-sort="licence_img">Licence image  </th> */}
-                                                        <th className="sort" data-sort="description ">Description </th>
-                                                        <th className="sort" data-sort="date"> Created At</th>
+                                                        <th className="sort" data-sort="customer_email">Email</th>
+                                                        <th className="sort" data-sort="customer_username">User Name</th>
+                                                        <th className="sort" data-sort="contact_no">Contact Number</th>
+                                                        {/* <th className="sort" data-sort="vehicle_requested">Vehicle Requested</th> */}
+                                                        <th className="sort" data-sort="service_provider">Service Provider</th>
+                                                        <th className="sort" data-sort="vehicle_number">Vehicle Number</th>
+                                                        <th className="sort" data-sort="vehicle_maker">Maker</th>
+                                                        <th className="sort" data-sort="pickup_location">Pickup Location</th>
+                                                        <th className="sort" data-sort="drop_location">Drop Location</th>
+                                                        <th className="sort" data-sort="total_horse">Number Of Horse</th>
+                                                        <th className="sort" data-sort="description">Description</th>
                                                         <th className="sort" data-sort="status">Status</th>
+                                                        <th className="sort" data-sort="created_date">Created Date</th>
+                                                        <th className="sort" data-sort="updated_date">Update Date</th>
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {drivers.map((item)=>(
-
-                                        
-                                                    <tr key={item.id}> 
+                                                    {enquiriesData.map((item) => ( 
+                                                        <tr key = {item.id}>   
                                                         <th scope="row">
                                                             <div className="form-check">
                                                                 <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
                                                             </div>
                                                         </th>
                                                         <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
-                                                        <td className="customer_name">{item.name}</td>
-                                                        {/* <td className="email">{item.profile_image}</td> */}
-                                                        <td className="phone">{item.email}</td>
-                                                        <td className="phone">{item.contact_no}</td>
-                                                        <td className="phone">{item.emergency_contact_no}</td>
-                                                        <td className="date">{item.date_of_birth}</td>
-                                                        <td className="licence_no">{item.licence_no}</td>
-                                                        {/* <td className="licence_IMG">{item.licence_img}</td> */}
-                                                        <td className="name">{item.description}</td>
-                                                        <td className="date">{item.created_at}</td>
+                                                        <td className="customer_name">{item.cName}</td>
+                                                        <td className="customer_email">{item.cEmail}</td>
+                                                        <td className="customer_username">{item.cUser_name}</td>
+                                                        <td className="contact_no">{item.cPhone}</td>
+                                                        {/* <td className="vehicle_requested">BMW</td> */}
+                                                        <td className="service_provider">{item.vService_provider}</td>
+                                                        <td className="vehicle_number">{item.vVvehicle_number}</td>
+                                                        <td className="vehicle_maker">{item.vMake}</td>
+                                                        <td className="pickup_location">{item.pickup_location}</td>
+                                                        <td className="drop_location">{item.drop_location}</td>
+                                                        <td className="total_horse">{item.no_of_horse}</td>
+                                                        <td className="description">{item.description}</td>
                                                         <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td>
+                                                        <td className="created_date">{item.created_at}</td>
+                                                        <td className="updated_date">{item.updated_at}</td>
                                                         <td>
                                                             <div className="d-flex gap-2">
                                                                 <div className="edit">
@@ -176,10 +140,12 @@ const ListTables = () => {
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                 ))}
-                                                
+                                                    ))}
                                                 </tbody>
                                             </table>
+
+
+
                                             <div className="noresult" style={{ display: "none" }}>
                                                 <div className="text-center">
                                                     <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
@@ -197,7 +163,7 @@ const ListTables = () => {
                                                 <Link className="page-item pagination-prev disabled" to="#">
                                                     Previous
                                                 </Link>
-                                                <ul className="pagination listjs-pagination mb-0"></ul>
+                                                <ul className="pagination customers-pagination mb-0"></ul>
                                                 <Link className="page-item pagination-next" to="#">
                                                     Next
                                                 </Link>
@@ -208,59 +174,80 @@ const ListTables = () => {
                             </Card>
                         </Col>
                     </Row>
-
-                    <Row>
-                 <Col xl={4}>
-                            <Card>
-                           
-                                <CardBody>    
-                                    <div id="users">
-                                        <SimpleBar style={{ height: "242px" }} className="mx-n3">
-                                            <ListGroup className="list mb-0" flush>
-                                                <ListGroupItem data-id="1">
-                                              </ListGroupItem>
-                                            </ListGroup>
-                                        </SimpleBar>
-                                    </div>
-                                </CardBody>
-                            </Card>
-                        </Col>
-
-
-                       
-                    </Row>
-
-                
                 </Container>
             </div>
 
             {/* Add Modal */}
             <Modal isOpen={modal_list} toggle={() => { tog_list(); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Add Driver </ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Add Customer </ModalHeader>
                 <form className="tablelist-form">
                     <ModalBody>
+
                         <div className="mb-3" id="modal-id" style={{ display: "none" }}>
                             <label htmlFor="id-field" className="form-label">ID</label>
                             <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="customername-field" className="form-label">Name</label>
-                            <input type="text" id="customername-field" className="form-control" placeholder="Enter Name" required />
+                            <label htmlFor="customer_name-field" className="form-label">Name</label>
+                            <input type="text" id="customer_name-field" className="form-control" placeholder="Enter Name" required />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="email-field" className="form-label">Email</label>
-                            <input type="email" id="email-field" className="form-control" placeholder="Enter Email" required />
+                            <label htmlFor="customer_email-field" className="form-label">Email</label>
+                            <input type="email" id="customer_email-field" className="form-control" placeholder="Enter Email" required />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="phone-field" className="form-label">Phone</label>
-                            <input type="text" id="phone-field" className="form-control" placeholder="Enter Phone no." required />
+                            <label htmlFor="customer_username-field" className="form-label">Username</label>
+                            <input type="username" id="customer_username-field" className="form-control" placeholder="Enter Username" required />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="date-field" className="form-label">Joining Date</label>
+                            <label htmlFor="contact_no-field" className="form-label">Contact Number</label>
+                            <input type="text" id="contact_no-field" className="form-control" placeholder="Enter Contact Number" required />
+                        </div>
+                        
+                        <div className="mb-3">
+                            <label htmlFor="date_of_birth-field" className="form-label">Date Of Birth</label>
+                            <input type="date_of_birth" id="date_of_birth-field" className="form-control" placeholder="Enter Date Of Birth" required />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="id_proof-field" className="form-label">Id Proof</label>
+                            <input type="id_proof" id="id_proof-field" className="form-control" placeholder="Enter Id Proof" required />
+                        </div>
+
+                        <div>
+                            <label htmlFor="status-field" className="form-label">Status</label>
+                            <select className="form-control" data-trigger name="status-field" id="status-field" >
+                                <option value="">Status</option>
+                                <option value="active">ACTIVE</option>
+                                <option value="inactive">INACTIVE</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label htmlFor="contact_number_verified-field" className="form-label" s>Contact Number Verified</label>
+                            <select className="form-control" data-trigger name="contact_number_verified-field" id="contact_number_verified-field" >
+                                <option value="">Status</option>
+                                <option value="true">TRUE</option>
+                                <option value="false">FALSE</option>
+                            </select>
+                        </div>
+
+
+                        <div>
+                            <label htmlFor="email_verified-field" className="form-label">Email Verified</label>
+                            <select className="form-control" data-trigger name="email_verified-field" id="email_verified-field" >
+                                <option value="">Status</option>
+                                <option value="true">TRUE</option>
+                                <option value="false">FALSE</option>
+                            </select>
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="registered_date-field" className="form-label">Registered Date</label>
                             <Flatpickr
                                 className="form-control"
                                 options={{
@@ -270,14 +257,7 @@ const ListTables = () => {
                             />
                         </div>
 
-                        <div>
-                            <label htmlFor="status-field" className="form-label">Status</label>
-                            <select className="form-control" data-trigger name="status-field" id="status-field" >
-                                <option value="">Status</option>
-                                <option value="Active">Active</option>
-                                <option value="Block">Block</option>
-                            </select>
-                        </div>
+                        
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
@@ -313,4 +293,4 @@ const ListTables = () => {
     );
 };
 
-export default ListTables;
+export default ListEnquiriesTable;

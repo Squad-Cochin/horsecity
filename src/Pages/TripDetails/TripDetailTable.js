@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, ListGroup, ListGroupItem, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-import SimpleBar from 'simplebar-react';
+// import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
 // Import Flatepicker
@@ -29,7 +29,7 @@ const TripDeatails = () => {
         setmodal_delete(!modal_delete);
     }
     useEffect(()=>{
-    let TripDeatails = getTripDeatails();
+    // let TripDeatails = getTripDeatails();
     setTripData(getTripDeatails)
     },[])
     useEffect(() => {
@@ -89,7 +89,7 @@ const TripDeatails = () => {
         <React.Fragment>
             <div className="page-content">
                 <Container fluid>
-                    <Breadcrumbs title="Tables" breadcrumbItem="Drivers" />
+                    <Breadcrumbs title="Tables" breadcrumbItem="Trip details" />
 
                     <Row>
                         <Col lg={12}>
@@ -103,7 +103,7 @@ const TripDeatails = () => {
                                         <Row className="g-4 mb-3">
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
-                                                    <Button color="success" className="add-btn" onClick={() => tog_list()} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
+                                                    {/* <Button color="success" className="add-btn" onClick={() => tog_list()} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button> */}
                                                     <Button color="soft-danger"
                                                     // onClick="deleteMultiple()"
                                                     ><i className="ri-delete-bin-2-line"></i></Button>
@@ -128,16 +128,19 @@ const TripDeatails = () => {
                                                                 <input className="form-check-input" type="checkbox" id="checkAll" value="option" />
                                                             </div>
                                                         </th>
-                                                        <th className="sort" data-sort="customer_name">Start location</th>
+                                                        <th className="sort" data-sort="service-provider">Service Provider</th>
+                                                        <th className="sort" data-sort="vehicle-number">Vehicle Number</th>
+                                                        <th className="sort" data-sort="start-location">Start Location</th>
                                                         {/* <th className="sort" data-sort="image">Image</th> */}
-                                                        <th className="sort" data-sort="email">End location</th>
+                                                        <th className="sort" data-sort="end-location">End Location</th>
                                                       
-                                                        <th className="sort" data-sort="phone">Booking date</th>
-                                                        <th className="sort" data-sort="date">Quatation date</th>
-                                                        <th className="sort" data-sort="phone">Compleated date</th>
+                                                        <th className="sort" data-sort="booking-date">Booking Date</th>
+                                                        <th className="sort" data-sort="quotation-date">Quotation Date</th>
+                                                        <th className="sort" data-sort="trip-date">Trip Date</th>
                                                         {/* <th className="sort" data-sort="licence_img">Licence image  </th> */}
-                                                     
-                                                        <th className="sort" data-sort="status">Status</th>
+                                                        <th className="sort" data-sort="amount">Amount</th>
+                                                        <th className="sort" data-sort="payment-status">Trip Status</th>
+                                                        <th className="sort" data-sort="trip-status">Trip Status</th>
                                                   
                                                     </tr>
                                                 </thead>
@@ -152,15 +155,18 @@ const TripDeatails = () => {
                                                             </div>
                                                         </th>
                                                         <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
-                                                        <td className="customer_name">{item.start_location}</td>
+                                                        <td className="service-provider">{item.service_provider}</td>
+                                                        <td className="vehicle-number">{item.vehicle_number}</td>
+                                                        <td className="start-lication">{item.start_location}</td>
                                                         {/* <td className="email">{item.profile_image}</td> */}
-                                                        <td className="phone">{item.end_location}</td>
-                                                        <td className="phone">{item.booking_date}</td>
-                                                        <td className="phone">{item.quotation_date}</td>
-                                           
+                                                        <td className="end-location">{item.end_location}</td>
+                                                        <td className="booking-date">{item.booking_date}</td>
+                                                        <td className="quotation-date">{item.quotation_date}</td>
+                                                        <td className="trip-date">{item.trip_date}</td>
+                                                        <td className="amount">{item.amount}</td>
                                                         {/* <td className="licence_IMG">{item.licence_img}</td> */}
-                                                
-                                                        <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td>
+                                                        <td className="payment-status"><span className="badge badge-soft-success text-uppercase">{item.payment_status}</span></td>
+                                                        <td className="trip-status"><span className="badge badge-soft-success text-uppercase">{item.trip_status}</span></td>
                                                         <td>
                                                             <div className="d-flex gap-2">
                                                                 <div className="edit">
@@ -206,7 +212,7 @@ const TripDeatails = () => {
                         </Col>
                     </Row>
 
-                    <Row>
+                    {/* <Row>
                  <Col xl={4}>
                             <Card>
                            
@@ -225,7 +231,7 @@ const TripDeatails = () => {
 
 
                        
-                    </Row>
+                    </Row> */}
 
                 
                 </Container>

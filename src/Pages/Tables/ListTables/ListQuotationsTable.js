@@ -6,20 +6,10 @@ import { Link } from 'react-router-dom';
 import List from 'list.js';
 // Import Flatepicker
 import Flatpickr from "react-flatpickr";
+import quotationData from '../../../CommonData/Data/quotationPageData';
 
-// Import Images
-// import avatar1 from "../../../assets/images/users/avatar-1.jpg";
-// import avatar2 from "../../../assets/images/users/avatar-2.jpg";
-// import avatar3 from "../../../assets/images/users/avatar-3.jpg";
-// import avatar4 from "../../../assets/images/users/avatar-4.jpg";
-// import avatar5 from "../../../assets/images/users/avatar-5.jpg";
+const ListQuotationsTable = () => {
 
-//Get all customers data
-import { getCustomersData } from '../../../helpers/AuthType/apiRoutes'
-
-const ListCustomerTable = () => {
-
-    const [ customers , setCustomers] = useState([]);
     const [modal_list, setmodal_list] = useState(false);
     function tog_list() {
         setmodal_list(!modal_list);
@@ -31,41 +21,6 @@ const ListCustomerTable = () => {
     }
 
     useEffect(() => {
-        let getAllCustomers = getCustomersData() ;
-        setCustomers(getAllCustomers);
-    },[])   
-
-    useEffect(() => {
-
-        // const attroptions = {
-        //     valueNames: [
-        //         'name',
-        //         'born',
-        //         {
-        //             data: ['id']
-        //         },
-        //         {
-        //             attr: 'src',
-        //             name: 'image'
-        //         },
-        //         {
-        //             attr: 'href',
-        //             name: 'link'
-        //         },
-        //         {
-        //             attr: 'data-timestamp',
-        //             name: 'timestamp'
-        //         }
-        //     ]
-        // };
-        // const attrList = new List('users', attroptions);
-        // attrList.add({
-        //     name: 'Leia',
-        //     born: '1954',
-        //     image: avatar5,
-        //     id: 5,
-        //     timestamp: '67893'
-        // });
 
         // Existing List
         const existOptionsList = {
@@ -92,7 +47,7 @@ const ListCustomerTable = () => {
         <React.Fragment>
             <div className="page-content">
                 <Container fluid>
-                    <Breadcrumbs title="Tables" breadcrumbItem="Customers" />
+                    <Breadcrumbs title="Tables" breadcrumbItem="Quotations" />
 
                     <Row>
                         <Col lg={12}>
@@ -135,35 +90,72 @@ const ListCustomerTable = () => {
                                                         <th className="sort" data-sort="email">Email</th>
                                                         <th className="sort" data-sort="username">User Name</th>
                                                         <th className="sort" data-sort="contact_no">Contact Number</th>
-                                                        <th className="sort" data-sort="date_of_birth">Date Of Birth</th>
                                                         <th className="sort" data-sort="id_proof">Id Proof</th>
-                                                        <th className="sort" data-sort="email_verified">Email Verified</th>
-                                                        <th className="sort" data-sort="registered_date">Registered Date</th>
+                                                        <th className="sort" data-sort="enquiry_date">Enquiry Date</th>
+                                                        <th className="sort" data-sort="enquiry_update">Enquiry Update</th>
+                                                        <th className="sort" data-sort="service_provider">Service Provider</th>
+                                                        <th className="sort" data-sort="vehicle_number">Vehicle Number</th>
+                                                        <th className="sort" data-sort="vehicle_maker">Maker</th>
+                                                        <th className="sort" data-sort="trip_type">Trip Type</th>
+                                                        <th className="sort" data-sort="pickup_location">Pickup Location</th>
+                                                        <th className="sort" data-sort="pickup_country">Pickup Country</th>
+                                                        <th className="sort" data-sort="pickup_date">Pickup Date</th>
+                                                        <th className="sort" data-sort="drop_location">Drop Location</th>
+                                                        <th className="sort" data-sort="drop_country">Drop Country</th>
+                                                        <th className="sort" data-sort="drop_date">Drop Date</th>
+                                                        <th className="sort" data-sort="total_horse">Number Of Horse</th>   
+                                                        <th className="sort" data-sort="special_requirement">Special Requirement</th>
+                                                        <th className="sort" data-sort="additional_service">Additional Service</th>
+                                                        <th className="sort" data-sort="transportation_insurance_coverage">Transportation Insurance</th>
+                                                        <th className="sort" data-sort="tax_rate">Tax Rate</th>
+                                                        <th className="sort" data-sort="tax_amount">Tax Amount</th>
+                                                        <th className="sort" data-sort="discount_rate">Discount Rate</th>
+                                                        <th className="sort" data-sort="discount_amount">Discount Amount</th>
+                                                        <th className="sort" data-sort="final_amount">Final Amount</th>
                                                         <th className="sort" data-sort="status">Status</th>
+                                                        <th className="sort" data-sort="quotation_date">Quotation Date</th>
+                                                        <th className="sort" data-sort="quotation_updated">Quotation Updated</th>
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    { customers.map((item)=>(
-
-                                               
-                                                    <tr key={item.id}>
+                                                {quotationData.map((item) => ( 
+                                                    <tr key = {item.id}>
                                                         <th scope="row">
                                                             <div className="form-check">
                                                                 <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
                                                             </div>
                                                         </th>
                                                         <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
-                                                        <td className="customer_name">{item.name}</td>
-                                                        <td className="email">{item.email}</td>
-                                                        <td className="username">{item.user_name}</td>
-                                                        <td className="contact_no">{item.phone}</td>
-                                                        <td className="date_of_birth">{item.date_of_birth}</td>
-                                                        <td className="id_proof">{item.id_proof}</td>
-                                                        <td className="status">{item.email_verified}</td>
-                                                        <td className="registered_date">{item.created_at}</td>
-                                                        <td className="email_verified"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td>
-                                                  
+                                                        <td className="customer_name">{item.cName}</td>
+                                                        <td className="customer_email">{item.cEmail}</td>
+                                                        <td className="customer_username">{item.cUser_name}</td>
+                                                        <td className="contact_no">{item.cPhone}</td>
+                                                        <td className="id_proof">{item.cId_proof}</td>
+                                                        <td className="enquiry_date">{item.enquiry_date}</td>
+                                                        <td className="enquiry_update">{item.enquiry_updated_date}</td>
+                                                        <td className="service_provider">{item.Service_provider}</td>
+                                                        <td className="vehicle_number">{item.Vehicle_number}</td>
+                                                        <td className="vehicle_maker">{item.sMake}</td>
+                                                        <td className="trip_type">{item.trip_type}</td>
+                                                        <td className="pickup_location">{item.pickup_location}</td>
+                                                        <td className="pickup_country">{item.pickup_country}</td>
+                                                        <td className="pickup_date">{item.pickup_date}</td>
+                                                        <td className="drop_location">{item.drop_location}</td>
+                                                        <td className="drop_country">{item.drop_country}</td>
+                                                        <td className="drop_date">{item.drop_date}</td>
+                                                        <td className="total_horse text-center">{item.no_of_horse}</td>
+                                                        <td className="special_requirement">{item.special_requirement}</td>
+                                                        <td className="additional_service">{item.additional_service}</td>
+                                                        <td className="transportation_insurance_coverage text-center"><span className="badge badge-soft-success text-uppercase">{item.transportation_insurance_coverage}</span></td>
+                                                        <td className="tax_rate text-center">{item.trate}</td>
+                                                        <td className="tax_amount text-center">{item.tax_amount}</td>
+                                                        <td className="discount_rate text-center">{item.drate}</td>
+                                                        <td className="discount_amount text-center">{item.discount_amount}</td>
+                                                        <td className="final_amount text-center">{item.final_amount}</td>
+                                                        <td className="status text-center"><span className="badge badge-soft-success text-uppercase">ACTIVE</span></td>
+                                                        <td className="quotation_date">{item.created_at}</td>
+                                                        <td className="quotation_updated">{item.updated_at}</td>
                                                         <td>
                                                             <div className="d-flex gap-2">
                                                                 <div className="edit">
@@ -177,7 +169,6 @@ const ListCustomerTable = () => {
                                                         </td>
                                                     </tr>
                                                     ))}
-                                            
                                                 </tbody>
                                             </table>
                                             <div className="noresult" style={{ display: "none" }}>
@@ -632,4 +623,4 @@ const ListCustomerTable = () => {
     );
 };
 
-export default ListCustomerTable;
+export default ListQuotationsTable;
