@@ -44,9 +44,9 @@ const ChangePassword = props => {
 
 
   
-  const { user } = useSelector(state => ({
-    user: state.login.user,
-  }));
+  // const { user } = useSelector(state => ({
+  //   user: state.login.user,
+  // }));
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -63,7 +63,7 @@ const ChangePassword = props => {
       confirmPassword: Yup.string().required("Please Enter Your Confirm Password"),
     }),
     onSubmit: (values) => {
-    let username = user[0].user_name
+    let username = localStorage.getItem('userName');
     let updatePwdValues =   {
         userName : username,// 
         password : values.oldPassword,

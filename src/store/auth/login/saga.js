@@ -80,6 +80,7 @@ function* recoverNewPassword({ payload: { user } }) {
 /**rECOVER NEW PASSWORD */
 function* updateNewPassword({ payload: { user } }) {
   try{
+    console.log("yy")
    const response =   yield call(changePassword, user);
       yield put(updatePWDSuccess(response));
 }catch (error) {
