@@ -9,7 +9,7 @@ const Discounts = [
     {
         id: "2",
         name: "FLAT",
-        rate: "10%",
+        rate: "$1000",
         status: "ACTIVE",
         created_at: "2023-01-01",
       },

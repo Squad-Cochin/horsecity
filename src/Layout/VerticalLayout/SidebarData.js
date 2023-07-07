@@ -63,9 +63,9 @@ const SidebarData = [
         label: "Settings",
         icon: "mdi mdi-cogs",
         subItem: [
-            { sublabel: "Language", link: "/dashboard" },
-            { sublabel: "Discounts", link: "/dashboard" },
-            { sublabel: "Taxations", link: "/dashboard" },
+            { sublabel: "Language", link: "/languages" },
+            { sublabel: "Discounts", link: "/discount-list" },
+            { sublabel: "Taxations", link: "/taxation-list" },
             // { sublabel: "Read Email", link: "/read-email" },
             // { sublabel: "Email Compose", link: "/compose-email" },
         ],

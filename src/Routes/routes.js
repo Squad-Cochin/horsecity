@@ -25,10 +25,16 @@ import Drivers from "../Pages/Drivers/DriverTable";
 import TripDeatails from "../Pages/TripDetails/TripDetailTable";
 
 //Import monthly reports
-import MonthlyReports  from "../Pages/Reports/ReportTable"
+import MonthlyReports  from "../Pages/Reports/ReportTable";
 
 //Languages
-import Language from "../Pages/Languages/ListLanguage"
+import Language from "../Pages/Languages/ListLanguage";
+
+//Tax listing 
+import TaxListing from "../Pages/Taxation/TaxationList";
+
+//Discount listing 
+import DiscountListing from "../Pages/Discounts/DiscountsList";
 
 // Import Authentication pages
 import Login from "../Pages/Authentication/Login";
@@ -145,6 +151,9 @@ const authProtectedRoutes = [
 
   //Language
   { path: "/languages", component: <Language /> },
+   
+  { path : "/taxation-list", component : <TaxListing />},
+  { path : "/discount-list", component : <DiscountListing />},
 
   // Utility Pages
   { path: "/pages-starter", component: <StarterPage /> },
