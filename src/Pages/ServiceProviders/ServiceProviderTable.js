@@ -71,23 +71,26 @@ const ListTables = () =>
 
         setmodal_list(!modal_list);
     }
+    
+    const initialValues = {
+        name: !add_list ? sprovider[0]?.name : '',
+        email: !add_list ? sprovider[0]?.email : '',
+        username: !add_list ? sprovider[0]?.user_name : '',
+        role: !add_list ? sprovider[0]?.role_name : '',
+        contact_person: !add_list ? sprovider[0]?.contact_person : '',
+        contact_no: !add_list ? sprovider[0]?.contact_no : '',
+        emergency_contact_no: !add_list ? sprovider[0]?.emergency_contact_no : '',
+        contact_address: !add_list ? sprovider[0]?.contact_address : '',
+        certification_or_license_no: !add_list ? sprovider[0]?.certification_or_license_no : '',
+        certification_or_license_img: !add_list ? sprovider[0]?.certification_or_license_img : '',
+      };
+      
+      
 
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
-    
-        initialValues: {
-          name:  '',
-          email:  '',
-          username:  '',
-          role : '' ,
-          contact_person : '',
-          contact_no : '',
-          emergency_contact_no : '',
-          contact_address : '',
-          certification_or_license_no : '',
-          certification_or_license_img : ''
-        },
+        initialValues,
         onSubmit: (values) => {
                 console.log(values);
     
@@ -335,43 +338,67 @@ console.log("Add list",add_list);
             <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
                 <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ?  'Add service provider' : 'Edit service provider' }</ModalHeader>
                 <form className="tablelist-form"
-                       onSubmit={(e) => {
-                        e.preventDefault();
-                        validation.handleSubmit();
-                        return false;
-                      }}>
+                    onSubmit={validation.handleSubmit}>
       
-
-         
                     <ModalBody>
-                      {sprovider?.map((item, index)=>(  
-                        <div key={index}>
-                        {/* <div className="mb-3" id="modal-id" style={{ display: "none" }}>
-                            <label htmlFor="id-field" className="form-label">ID</label>
-                            <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
-                        </div> */}
+                {sprovider?.map((item, index) => (
+                    <div key={index}>
+                    {/* Provider Name */}
+                    <div className="mb-3">
+                        <label htmlFor="providerName-field" className="form-label">Provider Name</label>
+                        <input
+                        type="text"
+                        name="name"
+                        id="providerName-field"
+                        className="form-control"
+                        value={validation.values.name}
+                        onChange={validation.handleChange}
+                        placeholder="Enter Provider Name"
+                        required
+                        />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="providerName-field" className="form-label">Provider Name</label>
-                            <input type="text" name='name' id="providerName-field" className="form-control"  defaultValue={!add_list ? item?.name : ''}         placeholder="Enter Provider Name" required />
-                        </div>
+                    {/* Email */}
+                    <div className="mb-3">
+                        <label htmlFor="email-field" className="form-label">Email</label>
+                        <input
+                        type="email"
+                        name="email"
+                        id="email-field"
+                        className="form-control"
+                        value={validation.values.email}
+                        onChange={validation.handleChange}
+                        placeholder="Enter Email"
+                        required
+                        />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="email-field" className="form-label">Email</label>
-                            <input type="email" name='email'  id="email-field" className="form-control" defaultValue={!add_list ? item?.email : ''}  placeholder="Enter Email" required />
-                        </div>
+                    {/* User Name */}
+                    <div className="mb-3">
+                        <label htmlFor="userName-field" className="form-label">User Name</label>
+                        <input
+                        type="text"
+                        id="userName-field"
+                        name="username"
+                        className="form-control"
+                        value={validation.values.username}
+                        onChange={validation.handleChange}
+                        placeholder="Enter User Name"
+                        required
+                        />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="userName-field" className="form-label">User Name</label>
-                            <input type="text" id="userName-field" name='username' className="form-control" defaultValue={!add_list ? item?.email : ''} placeholder="Enter User Name" required />
-                        </div>
-                 
-                     
-
-                   
-                        <div className="mb-3">
+                    {/* Role */}
+                    <div className="mb-3">
                         <label htmlFor="status-field" className="form-label">Role</label>
-                        <select className="form-control"  data-trigger name="role" id="status-field">
+                        <select
+                        className="form-control"
+                        data-trigger
+                        name="role"
+                        id="status-field"
+                        value={validation.values.role}
+                        onChange={validation.handleChange}
+                        >
                         {!add_list ? (
                             <>
                             <option value="service provider">{item?.role_name}</option>
@@ -385,63 +412,101 @@ console.log("Add list",add_list);
                             </>
                         )}
                         </select>
+                    </div>
 
-                        </div>
+                    {/* Contact Person */}
+                    <div className="mb-3">
+                        <label htmlFor="contactPerson-field" className="form-label">Contact Person</label>
+                        <input
+                        type="text"
+                        id="contactPerson-field"
+                        className="form-control"
+                        name="contact_person"
+                        value={validation.values.contact_person}
+                        onChange={validation.handleChange}
+                        placeholder="Enter Person Name"
+                        required
+                        />
+                    </div>
 
+                    {/* Contact Number */}
+                    <div className="mb-3">
+                        <label htmlFor="phone-field" className="form-label">Contact Number</label>
+                        <input
+                        type="text"
+                        id="phone-field"
+                        className="form-control"
+                        name="contact_no"
+                        value={validation.values.contact_no}
+                        onChange={validation.handleChange}
+                        placeholder="Enter Phone No."
+                        required
+                        />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="contactPerson-field" className="form-label">Contact Person</label>
-                            <input type="text" id="contactPerson-field" className="form-control" name='contact_person'  defaultValue={!add_list ? item?.contact_person : ''} placeholder="Enter Person Name" required />
-                        </div>
+                    {/* Emergency Contact Number */}
+                    <div className="mb-3">
+                        <label htmlFor="emergencyPhone-field" className="form-label">Emergency Contact Number</label>
+                        <input
+                        type="text"
+                        id="emergencyPhone-field"
+                        name="emergency_contact_no"
+                        className="form-control"
+                        value={validation.values.emergency_contact_no}
+                        onChange={validation.handleChange}
+                        placeholder="Enter Emergency Phone No."
+                        required
+                        />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="phone-field" className="form-label">Contact Number</label>
-                            <input type="text" id="phone-field" className="form-control" name='contact_no' defaultValue={!add_list ? item?.contact_no : ''} placeholder="Enter Phone No." required />
-                        </div>
+                    {/* Contact Address */}
+                    <div className="mb-3">
+                        <label htmlFor="contactAddress-field" className="form-label">Contact Address</label>
+                        <input
+                        type="text"
+                        id="contactAddress-field"
+                        name="contact_address"
+                        className="form-control"
+                        value={validation.values.contact_address}
+                        onChange={validation.handleChange}
+                        placeholder="Enter Contact Address"
+                        required
+                        />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="emergencyPhone-field" className="form-label">Emergency Contact Number</label>
-                            <input type="text" id="emergencyPhone-field" name='emergency_contact_no' className="form-control" defaultValue={!add_list ? item?.emergency_contact_no : ''}  placeholder="Enter Emergency Phone No." required />
-                        </div>
+                    {/* Certificate Number */}
+                    <div className="mb-3">
+                        <label htmlFor="certificateNumber-field" className="form-label">Certificate Number</label>
+                        <input
+                        type="text"
+                        id="certificateNumber-field"
+                        name="certification_or_license_no"
+                        value={validation.values.certification_or_license_no}
+                        onChange={validation.handleChange}
+                        className="form-control"
+                        placeholder="Enter Certificate Number"
+                        required
+                        />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="contactAddress-field" className="form-label">Contact Address</label>
-                            <input type="text" id="contactAddress-field" name='contact_address' className="form-control" defaultValue={!add_list ? item?.contact_address : ''} placeholder="Enter Contact Address" required />
-                        </div>
+                    {/* Certificate Image */}
+                    <div className="mb-3">
+                        <label htmlFor="certificateNumber-field" className="form-label">Certificate Image</label>
+                        <input
+                        type="file"
+                        id="certificateNumber-field"
+                        name="certification_or_license_img"
+                        className="form-control"
+                        placeholder="Upload Certificate image"
+                        required
+                        />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="certificateNumber-field" className="form-label">Certificate Number</label>
-                            <input type="text" id="certificateNumber-field" name='certification_or_license_no' defaultValue={!add_list ? item?.certification_or_license_no : ''} className="form-control" placeholder="Enter Certificate Number" required />
-                        </div>
+                    {/* Continue> adding other fields in a similar pattern */}
+                    </div>
+                ))}
+                </ModalBody>
 
-                        <div className="mb-3">
-                            <label htmlFor="certificateNumber-field" className="form-label">Certificate Image</label>
-                            <input type="file" id="certificateNumber-field" name='certification_or_license_img' className="form-control" placeholder="Upload Certificate image" required />
-                        </div>
-                  
-
-                        {/* <div className="mb-3">
-                            <label htmlFor="date-field" className="form-label">Joining Date</label>
-                            <Flatpickr
-                                className="form-control"
-                                options={{
-                                    dateFormat: "d M, Y"
-                                }}
-                                placeholder="Select Date"
-                            />
-                        </div> */}
-{/* 
-                        <div>
-                            <label htmlFor="status-field" className="form-label">Status</label>
-                            <select className="form-control" data-trigger name="status-field" id="status-field" >
-                                <option value="">Status</option>
-                                <option value="Active">Active</option>
-                                <option value="Inactive">Inactive</option>
-                            </select>
-                        </div> */}
-                        </div>
-                        ))}
-                    </ModalBody>
                       
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
