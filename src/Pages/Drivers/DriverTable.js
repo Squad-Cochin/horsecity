@@ -16,7 +16,45 @@ import Flatpickr from "react-flatpickr";
 
 //Import Drivers
 import { getDriversData } from '../../helpers/AuthType/apiRoutes'
+import { Drivers } from '../../CommonData/Data';
+
 const ListTables = () => {
+
+    function toggleStatus(button, driverID) 
+    {
+        var currentStatus = button.innerText.trim();
+
+        if (currentStatus === 'ACTIVE') 
+        {
+            button.innerText = 'INACTIVE';
+            button.classList.remove('btn-success');
+            button.classList.add('btn-danger');
+
+            // Find the corresponding customer by ID
+            const driver = Drivers.find((d) => d.id === driverID);
+            console.log("Driver", driver);
+            if (driver) 
+            {
+            console.log('Came here');
+            driver.status = 'INACTIVE';
+            console.log("Driver", driver);
+            }
+        } 
+        else if (currentStatus === 'INACTIVE')
+        {
+            button.innerText = 'ACTIVE';
+            button.classList.remove('btn-danger');
+            button.classList.add('btn-success');
+
+            // Find the corresponding customer by ID
+            const driver = Drivers.find((d) => d.id === driverID);
+            if (driver) 
+            {
+                driver.status = 'ACTIVE';
+            }
+        }
+    }
+
 
     const [ modal_list, setmodal_list] = useState(false);
     const [ drivers, setDrivers] = useState([])
@@ -163,7 +201,21 @@ const ListTables = () => {
                                                         {/* <td className="licence_IMG">{item.licence_img}</td> */}
                                                         <td className="name">{item.description}</td>
                                                         <td className="date">{item.created_at}</td>
-                                                        <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td>
+                                                        {/* <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td> */}
+                                                        
+                                                        <div>
+                                                            <div className="d-flex gap-2">
+                                                                <div className="status">
+                                                                    <button className="btn btn-sm btn-success status-item-btn"
+                                                                        data-bs-toggle="modal" data-bs-target="#showModal"
+                                                                        onClick={(event) => toggleStatus(event.target, item.id)}>
+                                                                        {item.status}
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
+                                                        
                                                         <td>
                                                             <div className="d-flex gap-2">
                                                                 <div className="edit">

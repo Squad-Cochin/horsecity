@@ -5,7 +5,8 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { Link } from 'react-router-dom';
 import List from 'list.js';
 
-import * as Yup from "yup";
+import { serviceProviders } from '../../CommonData/Data/serviceProvider';
+
 import { useFormik } from "formik";
 // Import Flatepicker
 // import Flatpickr from "react-flatpickr";
@@ -19,17 +20,53 @@ import { useFormik } from "formik";
 
 //Import get Api
 import { getSPAllData } from '../../helpers/AuthType/apiRoutes'
-const ListTables = () => {
+const ListTables = () => 
+{
+
+
+    function toggleStatus(button, serviceProviderId)
+    {
+        var currentStatus = button.innerText.trim();
+        if (currentStatus === 'ACTIVE')
+        {
+            button.innerText = 'INACTIVE';
+            button.classList.remove('btn-success');
+            button.classList.add('btn-danger');
+            // Find the corresponding customer by ID
+            const service_provider = serviceProviders.find((s) => s.id === serviceProviderId);
+            console.log("Service Provider ", service_provider);
+            if (service_provider)
+            {
+                console.log('Came here');
+                service_provider.status = 'INACTIVE';
+                console.log("Service Provider", service_provider);
+            }
+        }
+        else if (currentStatus === 'INACTIVE')
+        {
+            button.innerText = 'ACTIVE';
+            button.classList.remove('btn-danger');
+            button.classList.add('btn-success');
+            // Find the corresponding customer by ID
+            const service_provider = serviceProviders.find((s) => s.id === serviceProviderId);
+            if (service_provider)
+            {
+                service_provider.status = 'ACTIVE';
+            }
+        }
+    }
+
+
 
     const [modal_list, setmodal_list] = useState(false);
     const [ add_list, setAdd_list ] = useState(false);
     const [sproviders, setSproviders] = useState([]);
     const [sprovider, setSprovider] = useState([]);
     function tog_list(param,productId) {
-        if(param == 'ADD'){
+        if(param === 'ADD'){
             setAdd_list(!add_list);
         }
-        const data = sproviders?.find((item)=>item?.id == productId)
+        const data = sproviders?.find((item)=>item?.id === productId)
         setSprovider([data]);
 
         setmodal_list(!modal_list);
@@ -119,9 +156,9 @@ const ListTables = () => {
             pagination: true
         });
     });
-     const   handleProviderNameChange = (e) =>{
-        console.log(e);
-    }
+    //  const handleProviderNameChange = (e) =>{
+    //     console.log(e);
+    // }
 console.log("Add list",add_list);
     return (
         <React.Fragment>
@@ -206,7 +243,20 @@ console.log("Add list",add_list);
                                                             <td className="licenseno">{value.certification_or_license_no}</td>
                                                             <td className="date">{value.created_at}</td>
                                                             <td className="date">{value.expiry_at}</td>
-                                                            <td className="status"><span className="badge badge-soft-success text-uppercase">{value.status}</span></td>
+                                                            {/* <td className="status"><span className="badge badge-soft-success text-uppercase">{value.status}</span></td> */}
+                                                            
+                                                            <div>
+                                                                <div className="d-flex gap-2">
+                                                                    <div className="status">
+                                                                        <button className="btn btn-sm btn-success status-item-btn"
+                                                                            data-bs-toggle="modal" data-bs-target="#showModal"
+                                                                            onClick={(event) => toggleStatus(event.target, value.id)}>
+                                                                            {value.status}
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>  
+
                                                             <td>
                                                                 <div className="d-flex gap-2">
                                                                     <div className="edit">

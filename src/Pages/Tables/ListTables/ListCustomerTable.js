@@ -17,6 +17,43 @@ import Flatpickr from "react-flatpickr";
 //Get all customers data
 import { getCustomersData } from '../../../helpers/AuthType/apiRoutes'
 
+// Define the toggleStatus function outside the component
+import { Customers } from '../../../CommonData/Data';
+
+function toggleStatus(button, customerId) 
+{
+  var currentStatus = button.innerText.trim();
+
+  if (currentStatus === 'ACTIVE') {
+    button.innerText = 'INACTIVE';
+    button.classList.remove('btn-success');
+    button.classList.add('btn-danger');
+
+    // Find the corresponding customer by ID
+    const customer = Customers.find((c) => c.id === customerId);
+    console.log("Customer", customer);
+    if (customer) 
+    {
+      console.log('Came here');
+      customer.status = 'INACTIVE';
+      console.log("Customer", customer);
+    }
+  } else if (currentStatus === 'INACTIVE') {
+    button.innerText = 'ACTIVE';
+    button.classList.remove('btn-danger');
+    button.classList.add('btn-success');
+
+    // Find the corresponding customer by ID
+    const customer = Customers.find((c) => c.id === customerId);
+    if (customer) {
+      customer.status = 'ACTIVE';
+    }
+  }
+}
+
+
+
+
 const ListCustomerTable = () => {
 
     const [ customers , setCustomers] = useState([]);
@@ -162,8 +199,44 @@ const ListCustomerTable = () => {
                                                         <td className="id_proof">{item.id_proof}</td>
                                                         <td className="status">{item.email_verified}</td>
                                                         <td className="registered_date">{item.created_at}</td>
-                                                        <td className="email_verified"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td>
-                                                  
+                                                        {/* <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td> */}
+
+                                                        {/* <td>
+                                                            <div className="d-flex gap-2">
+                                                                <div className="status">
+                                                                    <button className="btn btn-sm btn-success status-item-btn"
+                                                                        data-bs-toggle="modal" data-bs-target="#showModal">{item.status}</button>
+                                                                </div>
+                                                            </div>
+                                                        </td> */}
+
+                                                    {/* <div>
+                                                    <div className="d-flex gap-2">
+                                                        <div className="status">
+                                                        <button className="btn btn-sm btn-success status-item-btn"
+                                                            data-bs-toggle="modal" data-bs-target="#showModal"
+                                                            onClick={(event) => toggleStatus(event.target)}>
+                                                            {item.status}
+                                                        </button>
+                                                        </div>
+                                                    </div>
+                                                    </div> */}
+
+                                                    <div>
+                                                        <div className="d-flex gap-2">
+                                                            <div className="status">
+                                                                <button className="btn btn-sm btn-success status-item-btn"
+                                                                    data-bs-toggle="modal" data-bs-target="#showModal"
+                                                                    onClick={(event) => toggleStatus(event.target, item.id)}>
+                                                                    {item.status}
+                                                                </button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+
+
+
                                                         <td>
                                                             <div className="d-flex gap-2">
                                                                 <div className="edit">

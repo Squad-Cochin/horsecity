@@ -7,9 +7,46 @@ import List from 'list.js';
 // Import Flatepicker
 import Flatpickr from "react-flatpickr";
 
+import { quotationData } from '../../../CommonData/Data';
+
 import { getQuotationData } from "../../../helpers/AuthType/apiRoutes";
 
-const ListQuotationsTable = () => {
+const ListQuotationsTable = () => 
+{
+
+    function toggleStatus(button, quotationID) 
+    {
+        var currentStatus = button.innerText.trim();
+        if (currentStatus === 'ACTIVE') 
+        {
+            button.innerText = 'INACTIVE';
+            button.classList.remove('btn-success');
+            button.classList.add('btn-danger');
+
+            // Find the corresponding customer by ID
+            const quotation = quotationData.find((q) => q.id === quotationID);
+            console.log("Quotation:", quotation);
+            if (quotation) 
+            {
+                console.log('Came here');
+                quotation.status = 'INACTIVE';
+                console.log("Quotation", quotation);
+            }
+        }
+        else if (currentStatus === 'INACTIVE')
+        {
+            button.innerText = 'ACTIVE';
+            button.classList.remove('btn-danger');
+            button.classList.add('btn-success');
+
+            // Find the corresponding customer by ID
+            const quotation = quotationData.find((q) => q.id === quotationID);
+            if (quotation)
+            {
+                quotation.status = 'ACTIVE';
+            }
+        }
+    }
 
     const [modal_list, setmodal_list] = useState(false);
     const [quotaions, setQuotaions] =useState([]);
@@ -118,9 +155,9 @@ const ListQuotationsTable = () => {
                                                         <th className="sort" data-sort="discount_rate">Discount Rate</th>
                                                         <th className="sort" data-sort="discount_amount">Discount Amount</th>
                                                         <th className="sort" data-sort="final_amount">Final Amount</th>
-                                                        <th className="sort" data-sort="status">Status</th>
                                                         <th className="sort" data-sort="quotation_date">Quotation Date</th>
                                                         <th className="sort" data-sort="quotation_updated">Quotation Updated</th>
+                                                        <th className="sort" data-sort="status">Status</th>
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
@@ -159,9 +196,22 @@ const ListQuotationsTable = () => {
                                                         <td className="discount_rate text-center">{item.drate}</td>
                                                         <td className="discount_amount text-center">{item.discount_amount}</td>
                                                         <td className="final_amount text-center">{item.final_amount}</td>
-                                                        <td className="status text-center"><span className="badge badge-soft-success text-uppercase">ACTIVE</span></td>
                                                         <td className="quotation_date">{item.created_at}</td>
                                                         <td className="quotation_updated">{item.updated_at}</td>
+                                                        {/* <td className="status text-center"><span className="badge badge-soft-success text-uppercase">ACTIVE</span></td> */}
+                                                        
+                                                        <div>
+                                                            <div className="d-flex gap-2">
+                                                                <div className="status">
+                                                                    <button className="btn btn-sm btn-success status-item-btn"
+                                                                        data-bs-toggle="modal" data-bs-target="#showModal"
+                                                                        onClick={(event) => toggleStatus(event.target, item.id)}>
+                                                                        {item.status}
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        
                                                         <td>
                                                             <div className="d-flex gap-2">
                                                                 <div className="edit">

@@ -8,7 +8,43 @@ import List from 'list.js';
 // import Flatpickr from "react-flatpickr";
 import { qetEnquiriesData } from "../../../helpers/AuthType/apiRoutes";
 
-const ListEnquiriesTable = () => {
+import { enquiriesData } from '../../../CommonData/Data';
+
+const ListEnquiriesTable = () => 
+{
+    function toggleStatus(button, enquiryId) 
+    {
+        var currentStatus = button.innerText.trim();
+        if (currentStatus === 'ACTIVE') 
+        {
+            button.innerText = 'INACTIVE';
+            button.classList.remove('btn-success');
+            button.classList.add('btn-danger');
+
+            // Find the corresponding customer by ID
+            const enquiry = enquiriesData.find((e) => e.id === enquiryId);
+            console.log("Enquiry", enquiry);
+            if (enquiry) 
+            {
+                console.log('Came here');
+                enquiry.status = 'INACTIVE';
+                console.log("Enquiry", enquiry);
+            }
+        }
+        else if (currentStatus === 'INACTIVE')
+        {
+            button.innerText = 'ACTIVE';
+            button.classList.remove('btn-danger');
+            button.classList.add('btn-success');
+
+            // Find the corresponding customer by ID
+            const enquiry = enquiriesData.find((e) => e.id === enquiryId);
+            if (enquiry)
+            {
+                enquiry.status = 'ACTIVE';
+            }
+        }
+    }
 
     const [modal_list, setmodal_list] = useState(false);
     const [ enquiries, setEnquiries ] = useState([])
@@ -102,9 +138,9 @@ const ListEnquiriesTable = () => {
                                                         <th className="sort" data-sort="drop_location">Drop Location</th>
                                                         <th className="sort" data-sort="total_horse">Number Of Horse</th>
                                                         <th className="sort" data-sort="description">Description</th>
-                                                        <th className="sort" data-sort="status">Status</th>
                                                         <th className="sort" data-sort="created_date">Created Date</th>
                                                         <th className="sort" data-sort="updated_date">Update Date</th>
+                                                        <th className="sort" data-sort="status">Status</th>
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
@@ -129,9 +165,23 @@ const ListEnquiriesTable = () => {
                                                         <td className="drop_location">{item.drop_location}</td>
                                                         <td className="total_horse">{item.no_of_horse}</td>
                                                         <td className="description">{item.description}</td>
-                                                        <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td>
                                                         <td className="created_date">{item.created_at}</td>
                                                         <td className="updated_date">{item.updated_at}</td>
+                                                        {/* <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td> */}
+                                                        
+                                                        <div>
+                                                            <div className="d-flex gap-2">
+                                                                <div className="status">
+                                                                    <button className="btn btn-sm btn-success status-item-btn"
+                                                                        data-bs-toggle="modal" data-bs-target="#showModal"
+                                                                        onClick={(event) => toggleStatus(event.target, item.id)}>
+                                                                        {item.status}
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
+
                                                         <td>
                                                             <div className="d-flex gap-2">
                                                                 <div className="edit">
@@ -143,6 +193,8 @@ const ListEnquiriesTable = () => {
                                                                 </div>
                                                             </div>
                                                         </td>
+
+
                                                     </tr>
                                                     ))}
                                                 </tbody>

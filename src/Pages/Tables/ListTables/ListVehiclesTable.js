@@ -19,6 +19,11 @@ import Flatpickr from "react-flatpickr";
 
 //Get vehicles data
 import { getVehiclesData } from '../../../helpers/AuthType/apiRoutes'
+
+// Define the toggleStatus function outside the component
+import { Vehicles } from '../../../CommonData/Data';
+
+
 const ListVehiclesTable = () => {
     const [ vehicles ,setVehicles ] =useState([]);
     const [modal_list, setmodal_list] = useState(false);
@@ -34,6 +39,42 @@ const ListVehiclesTable = () => {
        let getvehicles = getVehiclesData();
        setVehicles(getvehicles);
     },[])
+
+
+    function toggleStatus(button, vehiclesId) 
+    {
+        var currentStatus = button.innerText.trim();
+
+        if (currentStatus === 'ACTIVE') {
+        button.innerText = 'INACTIVE';
+        button.classList.remove('btn-success');
+        button.classList.add('btn-danger');
+
+        // Find the corresponding customer by ID
+        const vehicle = Vehicles.find((v) => v.id === vehiclesId);
+        console.log("Vehicle", vehicle);
+        if (vehicle) 
+        {
+            console.log('Came here');
+            vehicle.status = 'INACTIVE';
+            console.log("Customer", vehicle);
+        }
+    }
+    else if (currentStatus === 'INACTIVE')
+    {
+        button.innerText = 'ACTIVE';
+        button.classList.remove('btn-danger');
+        button.classList.add('btn-success');
+
+        // Find the corresponding customer by ID
+        const vehicle = Vehicles.find((v) => v.id === vehiclesId);
+        if (vehicle)
+        {
+            vehicle.status = 'ACTIVE';
+        }
+    }
+}
+
 
     useEffect(() => {
 
@@ -195,7 +236,20 @@ const ListVehiclesTable = () => {
                                                         <td className="phone">{item.vehicle_registration_date}</td>
                                                         <td className="date">{item.vehicle_expiration_date}</td>
                                                         <td className="date">{item.created_at}</td>
-                                                        <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td>
+                                                        {/* <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td> */}
+
+                                                        <div>
+                                                            <div className="d-flex gap-2">
+                                                                <div className="status">
+                                                                    <button className="btn btn-sm btn-success status-item-btn"
+                                                                        data-bs-toggle="modal" data-bs-target="#showModal"
+                                                                        onClick={(event) => toggleStatus(event.target, item.id)}>
+                                                                        {item.status}
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+
                                                         <td>
                                                             <div className="d-flex gap-2">
                                                                 <div className="edit">
