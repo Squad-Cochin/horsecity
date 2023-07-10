@@ -156,8 +156,9 @@ const fakeBackend = () => {
 
   mock.onPost(url.POST_FAKE_LOGIN).reply(async (config) => {
     const user = JSON.parse(config["data"]);
+    console.log("req",user)
     const data = await axios.post(`${url.LOGIN_URL}`, user);
-    // console.log("RES",data)
+    console.log("RES",data)
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (data.status === "success") {

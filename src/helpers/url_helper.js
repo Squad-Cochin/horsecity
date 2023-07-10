@@ -3,9 +3,9 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
 
 //LOGIN
 
-export const API_BASE_URL = "http://192.168.200.130:8080";
+export const API_BASE_URL = "http://192.168.200.88:8080";
 
-const apiBaseUrl = "http://192.168.200.130:8080";
+const apiBaseUrl = "http://192.168.200.88:8080";
 // const apiBaseUrl = "http://localhost:8080";
 const token = "/horsecity661809"
 
