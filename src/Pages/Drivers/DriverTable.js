@@ -57,8 +57,16 @@ const ListTables = () => {
 
 
     const [ modal_list, setmodal_list] = useState(false);
-    const [ drivers, setDrivers] = useState([])
-    function tog_list() {
+    const [ drivers, setDrivers] = useState([]);
+    const [ driver, setDriver] = useState([]);
+    const [ add_list, setAdd_list ] = useState(false);
+    function tog_list(param,productId) {
+        if(param === 'ADD'){
+            setAdd_list(!add_list);
+        }
+        const data = drivers?.find((item)=>item?.id === productId)
+        setDriver([data]);
+
         setmodal_list(!modal_list);
     }
 
@@ -220,7 +228,7 @@ const ListTables = () => {
                                                             <div className="d-flex gap-2">
                                                                 <div className="edit">
                                                                     <button className="btn btn-sm btn-success edit-item-btn"
-                                                                        data-bs-toggle="modal" data-bs-target="#showModal">Edit</button>
+                                                                        data-bs-toggle="modal" data-bs-target="#showModal" onClick={() => tog_list('EDIT',item.id)}>Edit</button>
                                                                 </div>
                                                                 <div className="remove">
                                                                     <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
@@ -287,33 +295,35 @@ const ListTables = () => {
             </div>
 
             {/* Add Modal */}
-            <Modal isOpen={modal_list} toggle={() => { tog_list(); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Add Driver </ModalHeader>
+            <Modal isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel"  toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}>{!add_list ?  'Add Driver' : 'Edit Driver' } </ModalHeader>
                 <form className="tablelist-form">
                     <ModalBody>
-                        <div className="mb-3" id="modal-id" style={{ display: "none" }}>
+                    {driver?.map((item,index)=>(  
+                        <div key={index}>
+                        {/* <div className="mb-3" id="modal-id" style={{ display: "none" }}>
                             <label htmlFor="id-field" className="form-label">ID</label>
                             <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
-                        </div>
+                        </div> */}
 
                         <div className="mb-3">
                             <label htmlFor="customername-field" className="form-label">Name</label>
-                            <input type="text" id="customername-field" className="form-control" placeholder="Enter Name" required />
+                            <input type="text" id="customername-field" className="form-control" defaultValue={!add_list ? item?.name : ''}  placeholder="Enter Name" required />
                         </div>
 
                         <div className="mb-3">
                             <label htmlFor="email-field" className="form-label">Email</label>
-                            <input type="email" id="email-field" className="form-control" placeholder="Enter Email" required />
+                            <input type="email" id="email-field" className="form-control" defaultValue={!add_list ? item?.email : ''}  placeholder="Enter Email" required />
                         </div>
 
                         <div className="mb-3">
                             <label htmlFor="contactNumber-field" className="form-label">Contact Number</label>
-                            <input type="text" id="contactNumber" className="form-control" placeholder="Enter Contact Number" required />
+                            <input type="text" id="contactNumber" className="form-control" defaultValue={!add_list ? item?.contact_no  : ''}  placeholder="Enter Contact Number" required />
                         </div>
 
                         <div className="mb-3">
                             <label htmlFor="emergencyContactNumber" className="form-label">Emergency Contact Number</label>
-                            <input type="text" id="emergencyContactNumber" className="form-control" placeholder="Enter Emergency Contact Number" required />
+                            <input type="text" id="emergencyContactNumber" className="form-control" defaultValue={!add_list ? item?.emergency_contct_no  : ''} placeholder="Enter Emergency Contact Number" required />
                         </div>
 
                         <div className="mb-3">
@@ -323,6 +333,7 @@ const ListTables = () => {
                                 options={{
                                     dateFormat: "d M, Y"
                                 }}
+                                defaultValue={!add_list ? item?.date_of_birth   : ''}
                                 placeholder="Select Date"
                             />
                         </div>
@@ -334,7 +345,7 @@ const ListTables = () => {
 
                         <div className="mb-3">
                             <label htmlFor="idNumber" className="form-label">Licensce Number</label>
-                            <input type="text" id="idNumber" className="form-control" placeholder="Enter Licensce Number" required />
+                            <input type="text" id="idNumber" className="form-control"      defaultValue={!add_list ? item?.licence_no    : ''}placeholder="Enter Licensce Number" required />
                         </div>
 
                         <div className="mb-3">
@@ -342,19 +353,13 @@ const ListTables = () => {
                             <input type="file" id="idProofImage" className="form-control" placeholder="Ender Licensce Image" required />
                         </div>
 
-                        <div>
-                            <label htmlFor="status-field" className="form-label">Status</label>
-                            <select className="form-control" data-trigger name="status-field" id="status-field" >
-                                <option value="">Status</option>
-                                <option value="Active">Active</option>
-                                <option value="Block">Block</option>
-                            </select>
                         </div>
+                        ))}
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() => setmodal_list(false)}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">Add Driver</button>
+                            <button type="button" className="btn btn-light" onClick={() =>{ setmodal_list(false); setAdd_list(false);}} >Close</button>
+                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ?  'Add Customer' : 'Update Customer' }</button>
                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>
