@@ -60,12 +60,13 @@ const SidebarData = [
         url: "/monthly-reports",
     },
     {
-        label: "Settings",
+        label: "Application Setting",
         icon: "mdi mdi-cogs",
         subItem: [
             { sublabel: "Language", link: "/languages" },
             { sublabel: "Discounts", link: "/discount-list" },
             { sublabel: "Taxations", link: "/taxation-list" },
+            { sublabel: "Settings", link: "/setting-page" },
             // { sublabel: "Read Email", link: "/read-email" },
             // { sublabel: "Email Compose", link: "/compose-email" },
         ],

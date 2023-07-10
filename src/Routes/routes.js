@@ -29,6 +29,7 @@ import MonthlyReports  from "../Pages/Reports/ReportTable";
 
 //Languages
 import Language from "../Pages/Languages/ListLanguage";
+import SettingPage from "../Pages/Settings/settings";
 
 //Tax listing 
 import TaxListing from "../Pages/Taxation/TaxationList";
@@ -150,10 +151,10 @@ const authProtectedRoutes = [
   { path: "/monthly-reports", component: <MonthlyReports /> },
 
   //Language
-  { path: "/languages", component: <Language /> },
-   
+  { path: "/languages", component: <Language /> },   
   { path : "/taxation-list", component : <TaxListing />},
   { path : "/discount-list", component : <DiscountListing />},
+  { path: "/setting-page", component: <SettingPage /> },
 
   // Utility Pages
   { path: "/pages-starter", component: <StarterPage /> },
