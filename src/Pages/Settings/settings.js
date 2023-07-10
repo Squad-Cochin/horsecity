@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Card, CardBody, Col, Row, CardTitle, Container, Label, Input, } from "reactstrap";
+import { Card, CardBody, Col, Row, Container } from "reactstrap";
 // import { Link } from 'react-router-dom';
 // import List from 'list.js';
 // import { useFormik } from "formik";

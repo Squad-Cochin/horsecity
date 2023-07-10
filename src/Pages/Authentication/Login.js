@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import React, { useEffect } from "react";
-import logo from "../../assets/images/logo.png";
+import logo from "../../assets/images/black-logo.png";
 // import { loginAPI }  from '../../helpers/AuthType/apiRoutes';
 // import logodark from "../../assets/images/logo-dark.png";
 

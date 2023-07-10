@@ -332,7 +332,7 @@ console.log("Add list",add_list);
             </div>
 
             {/* Add Modal */}
-            <Modal isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
+            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
                 <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ?  'Add service provider' : 'Edit service provider' }</ModalHeader>
                 <form className="tablelist-form"
                        onSubmit={(e) => {
@@ -344,8 +344,8 @@ console.log("Add list",add_list);
 
          
                     <ModalBody>
-                      {sprovider?.map((item)=>(  
-                        <div key={item?.id}>
+                      {sprovider?.map((item, index)=>(  
+                        <div key={index}>
                         {/* <div className="mb-3" id="modal-id" style={{ display: "none" }}>
                             <label htmlFor="id-field" className="form-label">ID</label>
                             <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
