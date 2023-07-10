@@ -10,13 +10,10 @@ import { qetEnquiriesData } from "../../../helpers/AuthType/apiRoutes";
 
 import { enquiriesData } from '../../../CommonData/Data';
 
-const ListEnquiriesTable = () => 
-{
-    function toggleStatus(button, enquiryId) 
-    {
+const ListEnquiriesTable = () => {
+    function toggleStatus(button, enquiryId) {
         var currentStatus = button.innerText.trim();
-        if (currentStatus === 'ACTIVE') 
-        {
+        if (currentStatus === 'ACTIVE') {
             button.innerText = 'INACTIVE';
             button.classList.remove('btn-success');
             button.classList.add('btn-danger');
@@ -24,31 +21,36 @@ const ListEnquiriesTable = () =>
             // Find the corresponding customer by ID
             const enquiry = enquiriesData.find((e) => e.id === enquiryId);
             console.log("Enquiry", enquiry);
-            if (enquiry) 
-            {
+            if (enquiry) {
                 console.log('Came here');
                 enquiry.status = 'INACTIVE';
                 console.log("Enquiry", enquiry);
             }
         }
-        else if (currentStatus === 'INACTIVE')
-        {
+        else if (currentStatus === 'INACTIVE') {
             button.innerText = 'ACTIVE';
             button.classList.remove('btn-danger');
             button.classList.add('btn-success');
 
             // Find the corresponding customer by ID
             const enquiry = enquiriesData.find((e) => e.id === enquiryId);
-            if (enquiry)
-            {
+            if (enquiry) {
                 enquiry.status = 'ACTIVE';
             }
         }
     }
 
     const [modal_list, setmodal_list] = useState(false);
-    const [ enquiries, setEnquiries ] = useState([])
-    function tog_list() {
+    const [enquiries, setEnquiries] = useState([])
+    const [add_list, setAdd_list] = useState(false);
+    const [enquirie, setEnquirie] = useState([])
+    function tog_list(param, productId) {
+        if (param === 'ADD') {
+            setAdd_list(!add_list);
+        }
+        const data = enquiries?.find((item) => item?.id === productId)
+        setEnquirie([data]);
+
         setmodal_list(!modal_list);
     }
 
@@ -56,9 +58,9 @@ const ListEnquiriesTable = () =>
     function tog_delete() {
         setmodal_delete(!modal_delete);
     }
-    useEffect(()=>{
+    useEffect(() => {
         setEnquiries(qetEnquiriesData());
-    },[])
+    }, [])
 
     useEffect(() => {
 
@@ -87,7 +89,7 @@ const ListEnquiriesTable = () =>
         <React.Fragment>
             <div className="page-content">
                 <Container fluid>
-                    <Breadcrumbs title = "Tables" breadcrumbItem = "Enquiries" />
+                    <Breadcrumbs title="Tables" breadcrumbItem="Enquiries" />
 
                     <Row>
                         <Col lg={12}>
@@ -101,7 +103,7 @@ const ListEnquiriesTable = () =>
                                         <Row className="g-4 mb-3">
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
-                                                    <Button color="success" className="add-btn" onClick={() => tog_list()} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
+                                                    <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
                                                     <Button color="soft-danger"
                                                     // onClick="deleteMultiple()"
                                                     ><i className="ri-delete-bin-2-line"></i></Button>
@@ -145,57 +147,57 @@ const ListEnquiriesTable = () =>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {enquiries.map((item) => ( 
-                                                        <tr key = {item.id}>   
-                                                        <th scope="row">
-                                                            <div className="form-check">
-                                                                <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
-                                                            </div>
-                                                        </th>
-                                                        <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
-                                                        <td className="customer_name">{item.cName}</td>
-                                                        <td className="customer_email">{item.cEmail}</td>
-                                                        <td className="customer_username">{item.cUser_name}</td>
-                                                        <td className="contact_no">{item.cPhone}</td>
-                                                        {/* <td className="vehicle_requested">BMW</td> */}
-                                                        <td className="service_provider">{item.vService_provider}</td>
-                                                        <td className="vehicle_number">{item.vVvehicle_number}</td>
-                                                        <td className="vehicle_maker">{item.vMake}</td>
-                                                        <td className="pickup_location">{item.pickup_location}</td>
-                                                        <td className="drop_location">{item.drop_location}</td>
-                                                        <td className="total_horse">{item.no_of_horse}</td>
-                                                        <td className="description">{item.description}</td>
-                                                        <td className="created_date">{item.created_at}</td>
-                                                        <td className="updated_date">{item.updated_at}</td>
-                                                        {/* <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td> */}
-                                                        
-                                                        <div>
-                                                            <div className="d-flex gap-2">
-                                                                <div className="status">
-                                                                    <button className="btn btn-sm btn-success status-item-btn"
-                                                                        data-bs-toggle="modal" data-bs-target="#showModal"
-                                                                        onClick={(event) => toggleStatus(event.target, item.id)}>
-                                                                        {item.status}
-                                                                    </button>
+                                                    {enquiries.map((item) => (
+                                                        <tr key={item.id}>
+                                                            <th scope="row">
+                                                                <div className="form-check">
+                                                                    <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
+                                                                </div>
+                                                            </th>
+                                                            <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
+                                                            <td className="customer_name">{item.cName}</td>
+                                                            <td className="customer_email">{item.cEmail}</td>
+                                                            <td className="customer_username">{item.cUser_name}</td>
+                                                            <td className="contact_no">{item.cPhone}</td>
+                                                            {/* <td className="vehicle_requested">BMW</td> */}
+                                                            <td className="service_provider">{item.vService_provider}</td>
+                                                            <td className="vehicle_number">{item.vVvehicle_number}</td>
+                                                            <td className="vehicle_maker">{item.vMake}</td>
+                                                            <td className="pickup_location">{item.pickup_location}</td>
+                                                            <td className="drop_location">{item.drop_location}</td>
+                                                            <td className="total_horse">{item.no_of_horse}</td>
+                                                            <td className="description">{item.description}</td>
+                                                            <td className="created_date">{item.created_at}</td>
+                                                            <td className="updated_date">{item.updated_at}</td>
+                                                            {/* <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td> */}
+
+                                                            <div>
+                                                                <div className="d-flex gap-2">
+                                                                    <div className="status">
+                                                                        <button className="btn btn-sm btn-success status-item-btn"
+                                                                            data-bs-toggle="modal" data-bs-target="#showModal"
+                                                                            onClick={(event) => toggleStatus(event.target, item.id)}>
+                                                                            {item.status}
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
 
 
-                                                        <td>
-                                                            <div className="d-flex gap-2">
-                                                                <div className="edit">
-                                                                    <button className="btn btn-sm btn-success edit-item-btn"
-                                                                        data-bs-toggle="modal" data-bs-target="#showModal">Edit</button>
+                                                            <td>
+                                                                <div className="d-flex gap-2">
+                                                                    <div className="edit">
+                                                                        <button className="btn btn-sm btn-success edit-item-btn" onClick={() => tog_list('EDIT', item.id)}
+                                                                            data-bs-toggle="modal" data-bs-target="#showModal">Edit</button>
+                                                                    </div>
+                                                                    <div className="remove">
+                                                                        <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
+                                                                    </div>
                                                                 </div>
-                                                                <div className="remove">
-                                                                    <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
+                                                            </td>
 
 
-                                                    </tr>
+                                                        </tr>
                                                     ))}
                                                 </tbody>
                                             </table>
@@ -234,64 +236,67 @@ const ListEnquiriesTable = () =>
             </div>
 
             {/* Add Modal */}
-            <Modal isOpen={modal_list} toggle={() => { tog_list(); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Add Enquiries </ModalHeader>
+            <Modal isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ? 'Add Enquirie' : 'Edit Enquirie'}</ModalHeader>
                 <form className="tablelist-form">
                     <ModalBody>
-
-                        <div className="mb-3" id="modal-id" style={{ display: "none" }}>
+                        {enquirie?.map((item, index) => (
+                            <div key={index}>
+                                {/* <div className="mb-3" id="modal-id" style={{ display: "none" }}>
                             <label htmlFor="id-field" className="form-label">ID</label>
                             <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
-                        </div>
+                        </div> */}
+                                <div className="mb-3">
+                                    <label htmlFor="customer_name-field" className="form-label">Customer Name</label>
+                                    <input type="text" id="customer_name-field" className="form-control" defaultValue={!add_list ? item?.cName : ''} placeholder="Enter Customer Name" required />
+                                </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="customer_name-field" className="form-label">Customer Name</label>
-                            <input type="text" id="customer_name-field" className="form-control" placeholder="Enter Customer Name" required />
-                        </div>
+                                <div className="mb-3">
+                                    <label htmlFor="customer_username-field" className="form-label">Customer Username</label>
+                                    <input type="username" id="customer_username-field" className="form-control" defaultValue={!add_list ? item?.cUser_name : ''} placeholder="Enter Customer Username" required />
+                                </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="customer_username-field" className="form-label">Customer Username</label>
-                            <input type="username" id="customer_username-field" className="form-control" placeholder="Enter Customer Username" required />
-                        </div>
+                                <div className="mb-3">
+                                    <label htmlFor="vehicle-field" className="form-label">Desired Vehicle Number</label>
+                                    <input type="text" id="vehicle-field" className="form-control" defaultValue={!add_list ? item?.vVvehicle_number : ''} placeholder="Enter Desired Vehicle Number" required />
+                                </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="vehicle-field" className="form-label">Desired Vehicle Number</label>
-                            <input type="text" id="vehicle-field" className="form-control" placeholder="Enter Desired Vehicle Number" required />
-                        </div>
+                                <div className="mb-3">
+                                    <label htmlFor="contact_no-field" className="form-label">Contact Number</label>
+                                    <input type="text" id="contact_no-field" className="form-control" defaultValue={!add_list ? item?.cPhone : ''} placeholder="Enter Contact Number" required />
+                                </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="contact_no-field" className="form-label">Contact Number</label>
-                            <input type="text" id="contact_no-field" className="form-control" placeholder="Enter Contact Number" required />
-                        </div>
+                                <div className="mb-3">
+                                    <label htmlFor="pickup_location-field" className="form-label">Pick-Up Location</label>
+                                    <input type="text" id="pickup_location-field" className="form-control" defaultValue={!add_list ? item?.pickup_location : ''} placeholder="Enter Pick-Up Location" required />
+                                </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="pickup_location-field" className="form-label">Pick-Up Location</label>
-                            <input type="text" id="pickup_location-field" className="form-control" placeholder="Enter Pick-Up Location" required />
-                        </div>
+                                <div className="mb-3">
+                                    <label htmlFor="drop_location-field" className="form-label">Drop Location</label>
+                                    <input type="text" id="drop_location-field" className="form-control" defaultValue={!add_list ? item?.drop_location : ''} placeholder="Enter Drop Location" required />
+                                </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="drop_location-field" className="form-label">Drop Location</label>
-                            <input type="text" id="drop_location-field" className="form-control" placeholder="Enter Drop Location" required />
-                        </div>
-                        <div className="mb-3">
-                            <label htmlFor="drop_location-field" className="form-label">Number Of Horses</label>
-                            <select id="drop_location-field" className="form-control" required>
-                                {Array.from({ length: 50 }, (_, index) => (
-                                    <option key={index + 1} value={index + 1}>{index + 1}</option>
-                                ))}
-                            </select>
-                        </div>
+                                <div className="mb-3">
+                                    <label htmlFor="drop_location-field" className="form-label">Number Of Horses</label>
+                                    <select id="drop_location-field" className="form-control" defaultValue={!add_list ? item?.no_of_horse : ''} required>
+                                        {Array.from({ length: 50 }, (_, index) => (
+                                            <option key={index + 1} value={index + 1}>{index + 1}</option>
+                                        ))}
+                                    </select>
+                                </div>
 
 
-                        <div className="mb-3">
-                            <label htmlFor="description-field" className="form-label">Description</label>
-                            <input type="text" id="description-field" className="form-control" placeholder="Description" required />
-                        </div>                     
+                                <div className="mb-3">
+                                    <label htmlFor="description-field" className="form-label">Description</label>
+                                    <input type="text" id="description-field" className="form-control" defaultValue={!add_list ? item?.description : ''} placeholder="Description" required />
+                                </div>
+                            </div>
+                        ))}
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() => setmodal_list(false)}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">Add Enquiry</button>
+                            <button type="button" className="btn btn-light" onClick={() => { setmodal_list(false); setAdd_list(false); }}>Close</button>
+                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ? 'Add enquiries' : 'Update enquiries'}</button>
                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>
