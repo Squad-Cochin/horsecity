@@ -9,18 +9,8 @@ import { APIClient } from "../api_helper";
 
 
 
-const loginAPI = async (userdata) => {
-    try {
-        console.log(userdata)
-        const data = await axios.post(`${url.LOGIN_URL}`, userdata);
-        console.log(data);
-    }
-    catch(error){
-        console.log("err",error);
-    }
-  }
 
-  export {loginAPI};
+
   
   /** get service provider details */
   export  function getSPAllData(){

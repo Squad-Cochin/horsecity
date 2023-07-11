@@ -15,7 +15,7 @@ import Flatpickr from "react-flatpickr";
 // import avatar5 from "../../assets/images/users/avatar-5.jpg";
 
 //Import Drivers
-import { getLanguages } from '../../helpers/AuthType/apiRoutes'
+import { getLanguages } from '../../helpers/ApiRoutes/authApiRoutes'
 const LanguageDeatails = () => {
 
     const [ modal_list, setmodal_list] = useState(false);

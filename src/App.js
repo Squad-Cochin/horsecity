@@ -5,7 +5,7 @@ import Routes from "./Routes/index";
 import './assets/scss/theme.scss';
 
 // Fake Backend 
-import fakeBackend from "./helpers/AuthType/apiRoutes";
+import fakeBackend from "./helpers/ApiRoutes/authApiRoutes";
 
 // Activating fake backend
 fakeBackend();

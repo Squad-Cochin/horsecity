@@ -18,7 +18,7 @@ import Flatpickr from "react-flatpickr";
 // import avatar5 from "../../assets/images/users/avatar-5.jpg";
 
 //Get vehicles data
-import { getVehiclesData } from '../../../helpers/AuthType/apiRoutes'
+import { getVehiclesData } from '../../../helpers/ApiRoutes/authApiRoutes'
 
 // Define the toggleStatus function outside the component
 import { Vehicles } from '../../../CommonData/Data';

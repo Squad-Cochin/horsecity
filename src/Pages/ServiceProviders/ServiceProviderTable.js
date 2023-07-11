@@ -19,7 +19,7 @@ import { useFormik } from "formik";
 // import avatar5 from "../../assets/images/users/avatar-5.jpg";
 
 //Import get Api
-import { getSPAllData } from '../../helpers/AuthType/apiRoutes'
+import { getSPAllData } from '../../helpers/ApiRoutes/authApiRoutes'
 const ListTables = () => 
 {
 
@@ -62,14 +62,15 @@ const ListTables = () =>
     const [ add_list, setAdd_list ] = useState(false);
     const [sproviders, setSproviders] = useState([]);
     const [sprovider, setSprovider] = useState([]);
+
     function tog_list(param,productId) {
         if(param === 'ADD'){
             setAdd_list(!add_list);
         }
         const data = sproviders?.find((item)=>item?.id === productId)
         setSprovider([data]);
-
         setmodal_list(!modal_list);
+
     }
     
     const initialValues = {
@@ -82,17 +83,22 @@ const ListTables = () =>
         emergency_contact_no: !add_list ? sprovider[0]?.emergency_contact_no : '',
         contact_address: !add_list ? sprovider[0]?.contact_address : '',
         certification_or_license_no: !add_list ? sprovider[0]?.certification_or_license_no : '',
-        certification_or_license_img: !add_list ? sprovider[0]?.certification_or_license_img : '',
+        certification_or_license_img:  '',
       };
       
-      
-
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
                 console.log(values);
+                if(add_list){
+                    //add new
+                    console.log("add new");
+                }else{
+                    //update previes one
+                    console.log("update previues one ");
+                }
     
         }
       });
@@ -165,7 +171,7 @@ const ListTables = () =>
     //  const handleProviderNameChange = (e) =>{
     //     console.log(e);
     // }
-console.log("Add list",add_list);
+
     return (
         <React.Fragment>
             <div className="page-content">
@@ -497,6 +503,8 @@ console.log("Add list",add_list);
                         id="certificateNumber-field"
                         name="certification_or_license_img"
                         className="form-control"
+                        value={validation.values.certification_or_license_img}
+                        onChange={validation.handleChange}
                         placeholder="Upload Certificate image"
                         required
                         />

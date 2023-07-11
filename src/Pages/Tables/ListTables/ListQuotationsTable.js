@@ -9,7 +9,7 @@ import Flatpickr from "react-flatpickr";
 
 import { quotationData } from '../../../CommonData/Data';
 
-import { getQuotationData } from "../../../helpers/AuthType/apiRoutes";
+import { getQuotationData } from "../../../helpers/ApiRoutes/authApiRoutes";
 
 const ListQuotationsTable = () => 
 {

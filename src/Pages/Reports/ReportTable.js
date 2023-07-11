@@ -15,7 +15,7 @@ import Flatpickr from "react-flatpickr";
 // import avatar5 from "../../assets/images/users/avatar-5.jpg";
 
 //Import monthly reports
-import { getMonthlyReports } from '../../helpers/AuthType/apiRoutes'
+import { getMonthlyReports } from '../../helpers/ApiRoutes/authApiRoutes'
 const MonthlyReportsList  = () => {
 
     const [ modal_list, setmodal_list] = useState(false);

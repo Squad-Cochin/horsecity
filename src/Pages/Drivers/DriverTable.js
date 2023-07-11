@@ -15,7 +15,7 @@ import Flatpickr from "react-flatpickr";
 // import avatar5 from "../../assets/images/users/avatar-5.jpg";
 
 //Import Drivers
-import { getDriversData } from '../../helpers/AuthType/apiRoutes'
+import { getDriversData } from '../../helpers/ApiRoutes/authApiRoutes'
 import { Drivers } from '../../CommonData/Data';
 
 const ListTables = () => {

@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import List from 'list.js';
 // Import Flatepicker
 // import Flatpickr from "react-flatpickr";
-import { qetEnquiriesData } from "../../../helpers/AuthType/apiRoutes";
+import { qetEnquiriesData } from "../../../helpers/ApiRoutes/authApiRoutes";
 
 import { enquiriesData } from '../../../CommonData/Data';
 

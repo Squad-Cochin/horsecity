@@ -15,7 +15,7 @@ import Flatpickr from "react-flatpickr";
 // import avatar5 from "../../../assets/images/users/avatar-5.jpg";
 
 //Get all customers data
-import { getCustomersData } from '../../../helpers/AuthType/apiRoutes'
+import { getCustomersData } from '../../../helpers/ApiRoutes/authApiRoutes'
 
 // Define the toggleStatus function outside the component
 import { Customers } from '../../../CommonData/Data';

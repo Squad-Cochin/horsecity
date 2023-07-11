@@ -15,7 +15,7 @@ import Flatpickr from "react-flatpickr";
 // import avatar5 from "../../assets/images/users/avatar-5.jpg";
 
 //Import Drivers
-import { getTaxations } from '../../helpers/AuthType/apiRoutes'
+import { getTaxations } from '../../helpers/ApiRoutes/authApiRoutes'
 const TaxationDeatails = () => {
 
     const [ modal_list, setmodal_list] = useState(false);
