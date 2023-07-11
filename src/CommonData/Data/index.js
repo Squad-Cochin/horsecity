@@ -17,7 +17,8 @@ import { enquiriesData } from "./enquiriesPageData";
 import { Reports } from "./reports";
 import { Languages } from "./languages";
 import { Discounts } from "./discounts";
-import { Taxations } from "./taxtions"
+import { Taxations } from "./taxtions";
+import { Accounts } from "./Accounts";
 export {
   LatestTransationData,
   OrderStatusData,
@@ -36,5 +37,6 @@ export {
   Reports,
   Languages,
   Discounts,
-  Taxations
+  Taxations,
+  Accounts
 };

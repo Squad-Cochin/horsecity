@@ -60,6 +60,12 @@ const SidebarData = [
         url: "/monthly-reports",
     },
     {
+        label: "Accounts",
+        icon: "mdi mdi-cash-multiple",
+        isHasArrow: true,
+        url: "/accounts",
+    },
+    {
         label: "Application Setting",
         icon: "mdi mdi-cogs",
         subItem: [

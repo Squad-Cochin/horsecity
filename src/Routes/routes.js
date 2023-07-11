@@ -27,6 +27,9 @@ import TripDeatails from "../Pages/TripDetails/TripDetailTable";
 //Import monthly reports
 import MonthlyReports  from "../Pages/Reports/ReportTable";
 
+//Import Accounts
+import Accounts  from "../Pages/Accounts/AccountsList";
+
 //Languages
 import Language from "../Pages/Languages/ListLanguage";
 import SettingPage from "../Pages/Settings/settings";
@@ -147,8 +150,12 @@ const authProtectedRoutes = [
 
   //Trip Deatails
   { path: "/trip-deatails", component: <TripDeatails /> },
+
   //Monthly reports
   { path: "/monthly-reports", component: <MonthlyReports /> },
+
+  //Accounts
+  { path: "/accounts", component: <Accounts /> },
 
   //Language
   { path: "/languages", component: <Language /> },   

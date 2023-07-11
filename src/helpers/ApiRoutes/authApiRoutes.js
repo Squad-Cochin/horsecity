@@ -4,14 +4,22 @@ import * as url from "../url_helper";
 import MockAdapter from "axios-mock-adapter";
 // import * as url from "../url_helper";
 import accessToken from "../jwt-token-access/accessToken";
-import { calenderDefaultCategories, events, serviceProviders, Drivers, Customers, Vehicles ,TripDetails, quotationData, enquiriesData, Reports, Languages, Discounts, Taxations} from "../../CommonData/Data";
+import { calenderDefaultCategories, events, serviceProviders, Drivers, Customers, Vehicles ,TripDetails, quotationData, enquiriesData, Reports, Languages, Discounts, Accounts, Taxations} from "../../CommonData/Data";
 import { APIClient } from "../api_helper";
 
 
+  /**Add new service provider */
+  export async function updateDiscounts(value){
+    try {
+        console.log("api", value)
+        // const { data } = await axios.post(`${url.POST_SP_ADD_URL}`);
+        // return { data };
+    } catch (error) {
+        return { error : "Faild !"}
+    }
+}
 
 
-
-  
   /** get service provider details */
   export  function getSPAllData(){
     // try {
@@ -104,6 +112,15 @@ import { APIClient } from "../api_helper";
     }
     return null ;
   }
+
+  //Get all Accounts
+  export function getAccounts(){
+    if(Accounts){
+      return Accounts ;
+    }
+    return null ;
+  }
+
 // import * as url from "./url_helper";
                                         
 const getDemoData = () => APIClient.get(url.LOGIN_URL);
