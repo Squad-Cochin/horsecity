@@ -235,7 +235,7 @@ const LanguageDeatails = () => {
             </div>
 
             {/* Add Modal */}
-            <Modal isOpen={modal_list} toggle={() => { tog_list(); }} centered >
+            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(); }} centered >
                 <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Add Driver </ModalHeader>
                 <form className="tablelist-form">
                     <ModalBody>
