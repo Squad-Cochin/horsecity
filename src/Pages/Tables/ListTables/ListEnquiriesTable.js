@@ -4,10 +4,12 @@ import Breadcrumbs from "../../../components/Common/Breadcrumb";
 // import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
+import { useFormik } from "formik";
 // Import Flatepicker
 // import Flatpickr from "react-flatpickr";
 import { qetEnquiriesData } from "../../../helpers/ApiRoutes/authApiRoutes";
-
+import { addNewEnquirie } from '../../../helpers/ApiRoutes/addApiRoutes';
+import { updateEnquirie } from '../../../helpers/ApiRoutes/editApiRoutes';
 import { enquiriesData } from '../../../CommonData/Data';
 
 const ListEnquiriesTable = () => {
@@ -44,15 +46,54 @@ const ListEnquiriesTable = () => {
     const [enquiries, setEnquiries] = useState([])
     const [add_list, setAdd_list] = useState(false);
     const [enquirie, setEnquirie] = useState([])
-    function tog_list(param, productId) {
-        if (param === 'ADD') {
+
+
+    function tog_list(param,productId) {
+        if(param === 'ADD'){
             setAdd_list(!add_list);
         }
-        const data = enquiries?.find((item) => item?.id === productId)
+        const data = enquiries?.find((item)=>item?.id === productId)
         setEnquirie([data]);
-
         setmodal_list(!modal_list);
+
     }
+    
+    const initialValues = {
+        name: !add_list ? enquirie[0]?.name : '',
+        email: !add_list ? enquirie[0]?.email : '',
+        username: !add_list ? enquirie[0]?.user_name : '',
+        role: !add_list ? enquirie[0]?.role_name : '',
+        contact_person: !add_list ? enquirie[0]?.contact_person : '',
+        contact_no: !add_list ? enquirie[0]?.contact_no : '',
+        emergency_contact_no: !add_list ? enquirie[0]?.emergency_contact_no : '',
+        contact_address: !add_list ? enquirie[0]?.contact_address : '',
+        certification_or_license_no: !add_list ? enquirie[0]?.certification_or_license_no : '',
+        certification_or_license_img: '',
+      };
+
+      const validation = useFormik({
+        // enableReinitialize : use this flag when initial values needs to be changed
+        enableReinitialize: true,
+        initialValues,
+        onSubmit: (values) => {
+                console.log(values);
+                if(add_list){
+                    //add new
+                    console.log("add new");
+                    addNewEnquirie(values);
+                    setAdd_list(false);
+                    setmodal_list(false);
+                }else{
+                    //update previes one
+                    console.log("update previues one ");
+                    updateEnquirie(values);
+                    setAdd_list(false);
+                    setmodal_list(false);
+                 
+                }
+    
+        }
+      });
 
     const [modal_delete, setmodal_delete] = useState(false);
     function tog_delete() {
@@ -187,7 +228,7 @@ const ListEnquiriesTable = () => {
                                                             <td>
                                                                 <div className="d-flex gap-2">
                                                                     <div className="edit">
-                                                                        <button className="btn btn-sm btn-success edit-item-btn" onClick={() => tog_list('EDIT', item.id)}
+                                                                        <button className="btn btn-sm btn-success edit-item-btn"onClick={() => tog_list('EDIT',item.id)}
                                                                             data-bs-toggle="modal" data-bs-target="#showModal">Edit</button>
                                                                     </div>
                                                                     <div className="remove">

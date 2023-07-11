@@ -41,3 +41,44 @@ export async function updateTaxation(){
       return { error : "Faild !"}
   }
 }
+
+/**Update previous customer */
+export async function updateCustomer(data){
+  try {
+      // const { data } = await axios.put(`${url.POST_SP_EDIT_URL}`);
+      // return { data };
+  } catch (error) {
+      return { error : "Faild !"}
+  }
+}
+
+/**Update previous vehicle */
+export async function updateVehicle(data){
+  try {
+      // const { data } = await axios.put(`${url.POST_SP_EDIT_URL}`);
+      // return { data };
+  } catch (error) {
+      return { error : "Faild !"}
+  }
+}
+
+
+/**Update previous driver */
+export async function updateDriver(data){
+  try {
+      // const { data } = await axios.put(`${url.POST_SP_EDIT_URL}`);
+      // return { data };
+  } catch (error) {
+      return { error : "Faild !"}
+  }
+}
+
+/**Update previous driver */
+export async function updateEnquirie(data){
+  try {
+      // const { data } = await axios.put(`${url.POST_SP_EDIT_URL}`);
+      // return { data };
+  } catch (error) {
+      return { error : "Faild !"}
+  }
+}
