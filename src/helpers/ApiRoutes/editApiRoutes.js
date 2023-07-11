@@ -82,3 +82,15 @@ export async function updateEnquirie(data){
       return { error : "Faild !"}
   }
 }
+
+
+
+/**Update previous report */
+export async function updateMonthlyReport(data){
+  try {
+      // const { data } = await axios.put(`${url.POST_SP_EDIT_URL}`);
+      // return { data };
+  } catch (error) {
+      return { error : "Faild !"}
+  }
+}

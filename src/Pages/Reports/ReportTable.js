@@ -16,13 +16,63 @@ import Flatpickr from "react-flatpickr";
 
 //Import monthly reports
 import { getMonthlyReports } from '../../helpers/ApiRoutes/authApiRoutes'
+import { Vehicles } from '../../CommonData/Data';
+import { addNewMonthlyReport } from '../../helpers/ApiRoutes/addApiRoutes';
+import { updateMonthlyReport } from '../../helpers/ApiRoutes/editApiRoutes';
+import { useFormik } from "formik";
 const MonthlyReportsList  = () => {
 
     const [ modal_list, setmodal_list] = useState(false);
+    //For controlling Add and Edit
+    const [ add_list, setAdd_list ] = useState(false);
     const [ reports, setReports] = useState([])
-    function tog_list() {
+    const [ report, setReport] = useState([])
+    function tog_list(param,productId) {
+        if(param === 'ADD'){
+            setAdd_list(!add_list);
+        }
+        const data = reports?.find((item)=>item?.id === productId)
+        setReport([data]);
         setmodal_list(!modal_list);
+
     }
+    
+    const initialValues = {
+        month: !add_list ? reports[0]?.month : '',
+        total_bookings: !add_list ? reports[0]?.total_bookings : '',
+        canceled  : !add_list ? reports[0]?.canceled : '',
+        break_down_reassign: !add_list ? reports[0]?.break_down_reassign : '',
+        amount_achived: !add_list ? reports[0]?.amount_achived : '',
+
+      };
+      
+      // Later in your code, when setting the initial state
+  
+      
+      
+    const validation = useFormik({
+        // enableReinitialize : use this flag when initial values needs to be changed
+        enableReinitialize: true,
+        initialValues,
+        onSubmit: (values) => {
+                console.log(values);
+                if(add_list){
+                    //add new
+                    console.log("add new");
+                    addNewMonthlyReport(values);
+                    setAdd_list(false);
+                    setmodal_list(false);
+                }else{
+                    //update previes one
+                    console.log("update previues one ");
+                    updateMonthlyReport(values);
+                    setAdd_list(false);
+                    setmodal_list(false);
+                 
+                }
+    
+        }
+      });
 
     const [modal_delete, setmodal_delete] = useState(false);
     function tog_delete() {
@@ -103,7 +153,7 @@ const MonthlyReportsList  = () => {
                                         <Row className="g-4 mb-3">
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
-                                                    <Button color="success" className="add-btn" onClick={() => tog_list()} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
+                                                    <Button color="success" className="add-btn"onClick={() => tog_list('ADD')} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
                                                     <Button color="soft-danger"
                                                     // onClick="deleteMultiple()"
                                                     ><i className="ri-delete-bin-2-line"></i></Button>
@@ -155,7 +205,7 @@ const MonthlyReportsList  = () => {
                                                         <td>
                                                             <div className="d-flex gap-2">
                                                                 <div className="edit">
-                                                                    <button className="btn btn-sm btn-success edit-item-btn"
+                                                                    <button className="btn btn-sm btn-success edit-item-btn" onClick={() => tog_list('EDIT',item.id)}
                                                                         data-bs-toggle="modal" data-bs-target="#showModal">Edit</button>
                                                                 </div>
                                                                 <div className="remove">
@@ -223,54 +273,86 @@ const MonthlyReportsList  = () => {
             </div>
 
             {/* Add Modal */}
-            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Add Driver </ModalHeader>
-                <form className="tablelist-form">
+            <Modal className="extra-width" isOpen={modal_list}  toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ?  'Add monthly report' : 'Edit monthly report' } </ModalHeader>
+                <form className="tablelist-form"
+                   onSubmit={validation.handleSubmit}>
                     <ModalBody>
-                        <div className="mb-3" id="modal-id" style={{ display: "none" }}>
-                            <label htmlFor="id-field" className="form-label">ID</label>
-                            <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
-                        </div>
+                    <div className="mb-3">
+                    <label htmlFor="month-field" className="form-label">Month</label>
+                    <input
+                        type="text"
+                        id="month-field"
+                        className="form-control"
+                        name="month"
+                        value={validation.values.month || ""}
+                        onChange={validation.handleChange}
+                        placeholder="Enter Month"
+                        required
+                    />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="customername-field" className="form-label">Name</label>
-                            <input type="text" id="customername-field" className="form-control" placeholder="Enter Name" required />
-                        </div>
+                    <div className="mb-3">
+                    <label htmlFor="total_bookings-field" className="form-label">Total Bookings</label>
+                    <input
+                        type="number"
+                        id="total_bookings-field"
+                        className="form-control"
+                        name="total_bookings"
+                        value={validation.values.total_bookings || ""}
+                        onChange={validation.handleChange}
+                        placeholder="Enter Total Bookings"
+                        required
+                    />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="email-field" className="form-label">Email</label>
-                            <input type="email" id="email-field" className="form-control" placeholder="Enter Email" required />
-                        </div>
+                    <div className="mb-3">
+                    <label htmlFor="canceled-field" className="form-label">Canceled</label>
+                    <input
+                        type="number"
+                        id="canceled-field"
+                        className="form-control"
+                        name="canceled"
+                        value={validation.values.canceled || ""}
+                        onChange={validation.handleChange}
+                        placeholder="Enter Canceled"
+                        required
+                    />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="phone-field" className="form-label">Phone</label>
-                            <input type="text" id="phone-field" className="form-control" placeholder="Enter Phone no." required />
-                        </div>
+                    <div className="mb-3">
+                    <label htmlFor="break_down_reassign-field" className="form-label">Break Down Reassign</label>
+                    <input
+                        type="number"
+                        id="break_down_reassign-field"
+                        className="form-control"
+                        name="break_down_reassign"
+                        value={validation.values.break_down_reassign || ""}
+                        onChange={validation.handleChange}
+                        placeholder="Enter Break Down Reassign"
+                        required
+                    />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="date-field" className="form-label">Joining Date</label>
-                            <Flatpickr
-                                className="form-control"
-                                options={{
-                                    dateFormat: "d M, Y"
-                                }}
-                                placeholder="Select Date"
-                            />
-                        </div>
+                    <div className="mb-3">
+                    <label htmlFor="amount_achived-field" className="form-label">Amount Achieved</label>
+                    <input
+                        type="number"
+                        id="amount_achived-field"
+                        className="form-control"
+                        name="amount_achived"
+                        value={validation.values.amount_achived || ""}
+                        onChange={validation.handleChange}
+                        placeholder="Enter Amount Achieved"
+                        required
+                    />
+                    </div>
 
-                        <div>
-                            <label htmlFor="status-field" className="form-label">Status</label>
-                            <select className="form-control" data-trigger name="status-field" id="status-field" >
-                                <option value="">Status</option>
-                                <option value="Active">Active</option>
-                                <option value="Block">Block</option>
-                            </select>
-                        </div>
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() => setmodal_list(false)}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">Add Customer</button>
+                            <button type="button" className="btn btn-light" onClick={() =>{ setmodal_list(false); setAdd_list(false);}}>Close</button>
+                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ?  'Add reports' : 'Update reports' }</button>
                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>

@@ -52,7 +52,7 @@ const ListVehiclesTable = () => {
         breadth: !add_list ? vehicle[0]?.breadth : '',
         height: !add_list ? vehicle[0]?.height : '',
         max_no_of_horse: !add_list ? vehicle[0]?.max_no_of_horse : '',
-        air_conditioner: !add_list ? vehicle[0]?.air_conditioner : 'YES',
+        air_conditioner: !add_list ? vehicle[0]?.air_conditioner : '',
         temperature_manageable: !add_list ? vehicle[0]?.temp_manageable : '',
         vehicle_image: '',
         vehicle_registration_number: !add_list ? vehicle[0]?.registration_no : '',
@@ -409,14 +409,13 @@ const ListVehiclesTable = () => {
                                 required
                             />
                             </div>
-
                             <div className="mb-3">
-                            <label htmlFor="vehicle_model-field" className="form-label">Vehicle Model</label>
+                            <label htmlFor="modal-field" className="form-label">Vehicle Model</label>
                             <input
                                 type="text"
-                                id="vehicle_model-field"
+                                id="modal-field"
+                                name='models' // Updated the name attribute to 'models'
                                 className="form-control"
-                                name='modals'
                                 value={validation.values.models || ""}
                                 onChange={validation.handleChange}
                                 placeholder="Enter Vehicle Model"
@@ -424,7 +423,7 @@ const ListVehiclesTable = () => {
                             />
                             </div>
 
-                            <div className="mb-3">
+                    <div className="mb-3">
                             <label htmlFor="vehicle_color-field" className="form-label">Vehicle Color</label>
                             <input
                                 type="text"
@@ -497,32 +496,39 @@ const ListVehiclesTable = () => {
                             </div>
 
                             <div className="mb-3">
-                            <label className="form-label">Air Conditioner</label>
-                            <div className="form-check">
-                                <input
-                                type="radio"
-                                id="air_conditioner-yes"
-                                name="air_conditioner"
-                                className="form-check-input"
-                                value={validation.values.air_conditioner || ""}
-                                onChange={validation.handleChange}
-                                required
-                                />
-                                <label htmlFor="air_conditioner-yes" className="form-check-label">YES</label>
-                            </div>
-                            <div className="form-check">
-                                <input
-                                type="radio"
-                                id="air_conditioner-no"
-                                name="air_conditioner"
-                                className="form-check-input"
-                                value={validation.values.air_conditioner || ""}
-                                onChange={validation.handleChange}
-                                required
-                                />
-                                <label htmlFor="air_conditioner-no" className="form-check-label">NO</label>
-                            </div>
-                            </div>
+  <label className="form-label">Air Conditioner</label>
+  <div className="form-check">
+    <input
+      type="radio"
+      id="air_conditioner-yes"
+      name="air_conditioner"
+      className="form-check-input"
+      value="YES"
+      checked={validation.values.air_conditioner === 'YES'}
+      onChange={validation.handleChange}
+      required
+    />
+    <label htmlFor="air_conditioner-yes" className="form-check-label">YES</label>
+  </div>
+  <div className="form-check">
+    <input
+      type="radio"
+      id="air_conditioner-no"
+      name="air_conditioner"
+      className="form-check-input"
+      value="NO"
+      checked={validation.values.air_conditioner === 'NO'}
+      onChange={validation.handleChange}
+      required
+    />
+    <label htmlFor="air_conditioner-no" className="form-check-label">NO</label>
+  </div>
+</div>
+
+
+  
+  
+
 
                             <div className="mb-3">
                             <label className="form-label">Temperature Manageable</label>
@@ -532,7 +538,8 @@ const ListVehiclesTable = () => {
                                 id="temperature_manageable-yes"
                                 name="temperature_manageable"
                                 className="form-check-input"
-                                value={validation.values.temperature_manageable || "YES"}
+                                value={"YES"}
+                                checked = {validation.values.temperature_manageable === 'YES'}
                                 onChange={validation.handleChange}
                                 required
                                 />
@@ -545,7 +552,8 @@ const ListVehiclesTable = () => {
                                 name="temperature_manageable"
                                 className="form-check-input"
                                
-                                value={validation.values.temperature_manageable || "NO"}
+                                value={"NO"}
+                                checked = {validation.values.temperature_manageable === 'NO'}
                                 onChange={validation.handleChange}
                                 required
                                 />
@@ -587,7 +595,8 @@ const ListVehiclesTable = () => {
                                 id="gcc_travel_allowed-yes"
                                 name="gcc_travel_allowed"
                                 className="form-check-input"
-                                value={validation.values.gcc_travel_allowed || "YES"}
+                                value = "YES"
+                                checked={validation.values.gcc_travel_allowed == "YES"}
                                 onChange={validation.handleChange}
                                 required
                                 />
@@ -599,7 +608,8 @@ const ListVehiclesTable = () => {
                                 id="gcc_travel_allowed-no"
                                 name="gcc_travel_allowed"
                                 className="form-check-input"
-                                value={validation.values.gcc_travel_allowed || "NO"}
+                                value = "NO"
+                                checked={validation.values.gcc_travel_allowed === "NO"}
                                 onChange={validation.handleChange}
                                 required
                                 />
@@ -615,7 +625,8 @@ const ListVehiclesTable = () => {
                                 id="insurance_covered-yes"
                                 name="insurance_covered"
                                 className="form-check-input"
-                                value={validation.values.insurance_covered || "YES"}
+                                value = "YES"
+                                checked={validation.values.insurance_covered === "YES"}
                                 onChange={validation.handleChange}
                                 required
                                 />
@@ -626,7 +637,8 @@ const ListVehiclesTable = () => {
                                 type="radio"
                                 id="insurance_covered-no"
                                 name="insurance_covered"
-                                value={validation.values.insurance_covered || "NO"}
+                                value='NO'
+                                checked={validation.values.insurance_covered === "NO"}
                                 onChange={validation.handleChange}
                                 className="form-check-input"
                                 required
@@ -701,7 +713,8 @@ const ListVehiclesTable = () => {
                                 id="vehicle_type-private"
                                 name="vehicle_type"
                                 className="form-check-input"
-                                value={validation.values.vehicle_type || "PRIVATE"}
+                                value ="PRIVATE"
+                                checked={validation.values.vehicle_type == "PRIVATE"}
                                 onChange={validation.handleChange}
                                 required
                                 />
@@ -713,8 +726,8 @@ const ListVehiclesTable = () => {
                                 id="vehicle_type-commercial"
                                 name="vehicle_type"
                                 className="form-check-input"
-                                value={validation.values.vehicle_type || "COMMERCIAL"}
-                                onChange={validation.handleChange}
+                                value ="COMMERCIAL"
+                                checked={validation.values.vehicle_type == "COMMERCIAL"}
                                 required
                                 />
                                 <label htmlFor="vehicle_type-commercial" className="form-check-label">COMMERCIAL</label>
@@ -769,7 +782,7 @@ const ListVehiclesTable = () => {
                                 <option value="Block">Block</option>
                             </select>
                         </div> */}
-                     
+       
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
