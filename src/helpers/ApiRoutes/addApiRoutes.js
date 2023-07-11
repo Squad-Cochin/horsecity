@@ -43,4 +43,42 @@ import * as url from "../url_helper";
     }
   }
 
-  
+    /**Add new Customer */
+    export async function addNewCustomer(data){
+        try {
+            // const { data } = await axios.post(`${url.POST_SP_ADD_URL}`);
+            // return { data };
+        } catch (error) {
+            return { error : "Faild !"}
+        }
+      }
+    
+    /**Add new vehicle */
+    export async function addNewVehicle(data){
+        try {
+            // const { data } = await axios.post(`${url.POST_SP_ADD_URL}`);
+            // return { data };
+        } catch (error) {
+            return { error : "Faild !"}
+        }
+      }   
+      
+    /**Add new driver */
+    export async function addNewDriver(data){
+        try {
+            // const { data } = await axios.post(`${url.POST_SP_ADD_URL}`);
+            // return { data };
+        } catch (error) {
+            return { error : "Faild !"}
+        }
+      }   
+          /**Add new driver */
+    export async function addNewEnquirie(data){
+        try {
+            // const { data } = await axios.post(`${url.POST_SP_ADD_URL}`);
+            // return { data };
+        } catch (error) {
+            return { error : "Faild !"}
+        }
+      }   
+      

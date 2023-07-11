@@ -19,69 +19,121 @@ import Flatpickr from "react-flatpickr";
 
 //Get vehicles data
 import { getVehiclesData } from '../../../helpers/ApiRoutes/authApiRoutes'
-
+import { addNewVehicle } from '../../../helpers/ApiRoutes/addApiRoutes';
+import { updateVehicle } from '../../../helpers/ApiRoutes/editApiRoutes';
+import { useFormik } from "formik";
 // Define the toggleStatus function outside the component
 import { Vehicles } from '../../../CommonData/Data';
 
 
 const ListVehiclesTable = () => {
-    const [ vehicles ,setVehicles ] =useState([]);
+    const [vehicles, setVehicles] = useState([]);
     const [modal_list, setmodal_list] = useState(false);
-    const [ add_list, setAdd_list ] = useState(false);
+    const [add_list, setAdd_list] = useState(false);
     const [vehicle, setVehicle] = useState([]);
-    function tog_list(param,productId) {
-        if(param === 'ADD'){
+    const [modal_delete, setmodal_delete] = useState(false);
+
+    function tog_list(param, productId) {
+        if (param === 'ADD') {
             setAdd_list(!add_list);
         }
-        const data = vehicles?.find((item)=>item?.id === productId)
+        const data = vehicles?.find((item) => item?.id === productId)
         setVehicle([data]);
-
         setmodal_list(!modal_list);
-    }
 
-    const [modal_delete, setmodal_delete] = useState(false);
+    }
+    const initialValues = {
+        service_provider: !add_list ? vehicle[0]?.service_provider : '',
+        vehicle_number: !add_list ? vehicle[0]?.vehicle_number : '',
+        make: !add_list ? vehicle[0]?.make : '',
+        models: !add_list ? vehicle[0]?.models : '',
+        color: !add_list ? vehicle[0]?.color : '',
+        length: !add_list ? vehicle[0]?.length : '',
+        breadth: !add_list ? vehicle[0]?.breadth : '',
+        height: !add_list ? vehicle[0]?.height : '',
+        max_no_of_horse: !add_list ? vehicle[0]?.max_no_of_horse : '',
+        air_conditioner: !add_list ? vehicle[0]?.air_conditioner : 'YES',
+        temperature_manageable: !add_list ? vehicle[0]?.temp_manageable : '',
+        vehicle_image: '',
+        vehicle_registration_number: !add_list ? vehicle[0]?.registration_no : '',
+        gcc_travel_allowed: !add_list ? vehicle[0]?.gcc_travel_allowed : '',
+        insurance_covered: !add_list ? vehicle[0]?.insurance_covered : '',
+        insurance_date: !add_list ? vehicle[0]?.insurance_date : '',
+        insurance_policy_no: !add_list ? vehicle[0]?.insurance_policy_no : '',
+        insurance_policy_provider: !add_list ? vehicle[0]?.insurance_provider : '',
+        insurance_expiry_date: !add_list ? vehicle[0]?.insurance_expiration_date : '',
+        vehicle_type: !add_list ? vehicle[0]?.vehicle_type : '',
+        vehicle_registration_date: !add_list ? vehicle[0]?.vehicle_registration_date : '',
+        vehicle_expiration_date: !add_list ? vehicle[0]?.vehicle_expiration_date : '',
+    };
+
+    // Later in your code, when setting the initial state
+
+
+
+    const validation = useFormik({
+        // enableReinitialize : use this flag when initial values needs to be changed
+        enableReinitialize: true,
+        initialValues,
+        onSubmit: (values) => {
+            console.log(values);
+            if (add_list) {
+                //add new
+                console.log("add new");
+                addNewVehicle(values);
+                setAdd_list(false);
+                setmodal_list(false);
+            } else {
+                //update previes one
+                console.log("update previues one ");
+                updateVehicle(values);
+                setAdd_list(false);
+                setmodal_list(false);
+
+            }
+
+        }
+    });
+
+
     function tog_delete() {
         setmodal_delete(!modal_delete);
     }
-    useEffect(()=>{
-       let getvehicles = getVehiclesData();
-       setVehicles(getvehicles);
-    },[])
+    useEffect(() => {
+        let getvehicles = getVehiclesData();
+        setVehicles(getvehicles);
+    }, [])
 
 
-    function toggleStatus(button, vehiclesId) 
-    {
+    function toggleStatus(button, vehiclesId) {
         var currentStatus = button.innerText.trim();
 
         if (currentStatus === 'ACTIVE') {
-        button.innerText = 'INACTIVE';
-        button.classList.remove('btn-success');
-        button.classList.add('btn-danger');
+            button.innerText = 'INACTIVE';
+            button.classList.remove('btn-success');
+            button.classList.add('btn-danger');
 
-        // Find the corresponding customer by ID
-        const vehicle = Vehicles.find((v) => v.id === vehiclesId);
-        console.log("Vehicle", vehicle);
-        if (vehicle) 
-        {
-            console.log('Came here');
-            vehicle.status = 'INACTIVE';
-            console.log("Customer", vehicle);
+            // Find the corresponding customer by ID
+            const vehicle = Vehicles.find((v) => v.id === vehiclesId);
+            console.log("Vehicle", vehicle);
+            if (vehicle) {
+                console.log('Came here');
+                vehicle.status = 'INACTIVE';
+                console.log("Customer", vehicle);
+            }
+        }
+        else if (currentStatus === 'INACTIVE') {
+            button.innerText = 'ACTIVE';
+            button.classList.remove('btn-danger');
+            button.classList.add('btn-success');
+
+            // Find the corresponding customer by ID
+            const vehicle = Vehicles.find((v) => v.id === vehiclesId);
+            if (vehicle) {
+                vehicle.status = 'ACTIVE';
+            }
         }
     }
-    else if (currentStatus === 'INACTIVE')
-    {
-        button.innerText = 'ACTIVE';
-        button.classList.remove('btn-danger');
-        button.classList.add('btn-success');
-
-        // Find the corresponding customer by ID
-        const vehicle = Vehicles.find((v) => v.id === vehiclesId);
-        if (vehicle)
-        {
-            vehicle.status = 'ACTIVE';
-        }
-    }
-}
 
 
     useEffect(() => {
@@ -155,7 +207,7 @@ const ListVehiclesTable = () => {
                                         <Row className="g-4 mb-3">
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
-                                                    <Button color="success" className="add-btn"  onClick={() => tog_list('ADD')} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
+                                                    <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
                                                     <Button color="soft-danger"
                                                     // onClick="deleteMultiple()"
                                                     ><i className="ri-delete-bin-2-line"></i></Button>
@@ -209,71 +261,71 @@ const ListVehiclesTable = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                   {    vehicles.map((item)=>(
+                                                    {vehicles.map((item) => (
 
-                                           
-                                                    <tr  key={item.id}> 
-                                                        <th scope="row">
-                                                            <div className="form-check">
-                                                                <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
-                                                            </div>
-                                                        </th>
-                                                        <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
-                                                        <td className="name">{item.service_provider}</td>
-                                                        <td className="vhnumber">{item.vehicle_number}</td>
-                                                        <td className="make">{item.make}</td>
-                                                        <td className="model">{item.models}</td>
-                                                        <td className="color">{item.color}</td>
-                                                        <td className="length">{item.length}</td>
-                                                        <td className="breadth">{item.breadth}</td>
-                                                        <td className="hight">{item.height}</td>
-                                                        <td className="capacity">{item.max_no_of_horse}</td>
-                                                        <td className="status">{item.air_conditioner}</td>
-                                                        <td className="phone">{item.temp_manageable}</td>
-                                                        {/* <td className="date">{item.image}</td> */}
-                                                        <td className="email">{item.insurance_cover}</td>
-                                                        {/* <td className="email">{item.insurance_cover}</td> */}
-                                                        <td className="phone">{item.insurance_date}</td>
-                                                        <td className="date">{item.registration_no}</td>
-                                                        <td className="phone">{item.gcc_travel_allowed}</td>
-                                                        <td className="date">{item.insurance_policy_no}</td>
-                                                        <td className="date">{item.insurance_provider}</td>
-                                                        <td className="phone">{item.insurance_expiration_date}</td>
-                                                        <td className="date">{item.safety_certificate}</td>
-                                                        <td className="date">{item.vehicle_type}</td>
-                                                        <td className="phone">{item.vehicle_registration_date}</td>
-                                                        <td className="date">{item.vehicle_expiration_date}</td>
-                                                        <td className="date">{item.created_at}</td>
-                                                        {/* <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td> */}
 
-                                                        <div>
-                                                            <div className="d-flex gap-2">
-                                                                <div className="status">
-                                                                    <button className="btn btn-sm btn-success status-item-btn"
-                                                                        data-bs-toggle="modal" data-bs-target="#showModal"
-                                                                        onClick={(event) => toggleStatus(event.target, item.id)}>
-                                                                        {item.status}
-                                                                    </button>
+                                                        <tr key={item.id}>
+                                                            <th scope="row">
+                                                                <div className="form-check">
+                                                                    <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
+                                                                </div>
+                                                            </th>
+                                                            <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
+                                                            <td className="name">{item.service_provider}</td>
+                                                            <td className="vhnumber">{item.vehicle_number}</td>
+                                                            <td className="make">{item.make}</td>
+                                                            <td className="model">{item.models}</td>
+                                                            <td className="color">{item.color}</td>
+                                                            <td className="length">{item.length}</td>
+                                                            <td className="breadth">{item.breadth}</td>
+                                                            <td className="hight">{item.height}</td>
+                                                            <td className="capacity">{item.max_no_of_horse}</td>
+                                                            <td className="status">{item.air_conditioner}</td>
+                                                            <td className="phone">{item.temp_manageable}</td>
+                                                            {/* <td className="date">{item.image}</td> */}
+                                                            <td className="email">{item.insurance_cover}</td>
+                                                            {/* <td className="email">{item.insurance_cover}</td> */}
+                                                            <td className="phone">{item.insurance_date}</td>
+                                                            <td className="date">{item.registration_no}</td>
+                                                            <td className="phone">{item.gcc_travel_allowed}</td>
+                                                            <td className="date">{item.insurance_policy_no}</td>
+                                                            <td className="date">{item.insurance_provider}</td>
+                                                            <td className="phone">{item.insurance_expiration_date}</td>
+                                                            <td className="date">{item.safety_certificate}</td>
+                                                            <td className="date">{item.vehicle_type}</td>
+                                                            <td className="phone">{item.vehicle_registration_date}</td>
+                                                            <td className="date">{item.vehicle_expiration_date}</td>
+                                                            <td className="date">{item.created_at}</td>
+                                                            {/* <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td> */}
+
+                                                            <div>
+                                                                <div className="d-flex gap-2">
+                                                                    <div className="status">
+                                                                        <button className="btn btn-sm btn-success status-item-btn"
+                                                                            data-bs-toggle="modal" data-bs-target="#showModal"
+                                                                            onClick={(event) => toggleStatus(event.target, item.id)}>
+                                                                            {item.status}
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
 
-                                                        <td>
-                                                            <div className="d-flex gap-2">
-                                                                <div className="edit">
-                                                                    <button className="btn btn-sm btn-success edit-item-btn"
-                                                                        data-bs-toggle="modal" data-bs-target="#showModal" onClick={() => tog_list('EDIT',item.id)}>Edit</button>
+                                                            <td>
+                                                                <div className="d-flex gap-2">
+                                                                    <div className="edit">
+                                                                        <button className="btn btn-sm btn-success edit-item-btn"
+                                                                            data-bs-toggle="modal" data-bs-target="#showModal" onClick={() => tog_list('EDIT', item.id)}>Edit</button>
+                                                                    </div>
+                                                                    <div className="remove">
+                                                                        <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
+                                                                    </div>
                                                                 </div>
-                                                                <div className="remove">
-                                                                    <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
+                                                            </td>
+                                                        </tr>
 
-))
-}   
-                                                  
+                                                    ))
+                                                    }
+
                                                 </tbody>
                                             </table>
                                             <div className="noresult" style={{ display: "none" }}>
@@ -309,217 +361,396 @@ const ListVehiclesTable = () => {
             </div>
 
             {/* Add Modal */}
-            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel"toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}> {add_list ? 'Add Vehicle' : 'Edit Vehicle'} </ModalHeader>
-                <form className="tablelist-form">
+            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}> {add_list ? 'Add Vehicle' : 'Edit Vehicle'} </ModalHeader>
+                <form className="tablelist-form"
+                onSubmit={validation.handleSubmit}>
                     <ModalBody>
-                    {vehicle?.map((item,index)=>(  
-                        <div key={index}>       
-                        {/* <div className="mb-3" id="modal-id" style={{ display: "none" }}>
-                            <label htmlFor="id-field" className="form-label">ID</label>
-                            <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
-                        </div> */}
+              
 
-                 
-                    <div className="mb-3">
-                        <label htmlFor="vehiclename-field" className="form-label">Name</label>
-                        <input type="text" id="vehiclename-field" className="form-control" defaultValue={!add_list ? item?.service_provider : ''} placeholder="Enter Vehicle Name" required />
-                    </div>
-
-                    <div className="mb-3">
-                        <label htmlFor="vehicle_number-field" className="form-label">Vehicle Number</label>
-                        <input type="text" id="vehicle_number-field" className="form-control" defaultValue={!add_list ? item?.vehicle_number : ''} placeholder="Enter Vehicle Number" required />
-                    </div>
-
-                    <div className="mb-3">
-                        <label htmlFor="vehicle_company-field" className="form-label">Vehicle Company</label>
-                        <input type="text" id="vehicle_company-field" className="form-control" defaultValue={!add_list ? item?.make : ''} placeholder="Enter Vehicle Company" required />
-                    </div>
-                    <div className="mb-3">
-                        <label htmlFor="vehicle_model-field" className="form-label">Vehicle Model</label>
-                        <input type="text" id="vehicle_model-field" className="form-control" defaultValue={!add_list ? item?.models : ''} placeholder="Enter Vehicle Model" required />
-                    </div>
-
-             
-                <div className="mb-3">
-                        <label htmlFor="vehicle_model-field" className="form-label">Vehicle Color</label>
-                        <input type="text" id="vehicle_model-field" className="form-control" defaultValue={!add_list ? item?.color : ''} placeholder="Enter Vehicle Color" required />
-                    </div>
-
-                    <div className="mb-3">
-                        <label htmlFor="vehicle_length-field" className="form-label">Vehicle Length(cm)</label>
-                        <input type="text" id="vehicle_length-field" className="form-control" defaultValue={!add_list ? item?.length : ''} placeholder="Enter Vehicle Length In (cm)" required />
-                    </div>
-
-                    <div className="mb-3">
-        <label htmlFor="vehicle_breadth-field" className="form-label">Vehicle Breadth(cm)</label>
-        <input type="text" id="vehicle_breadth-field" className="form-control" defaultValue={!add_list ? item?.breadth : ''} placeholder="Enter Vehicle Breadth In (cm)" required />
-      </div>
-
-      <div className="mb-3">
-        <label htmlFor="vehicle_height-field" className="form-label">Vehicle Height(cm)</label>
-        <input type="text" id="vehicle_height-field" className="form-control" defaultValue={!add_list ? item?.height : ''} placeholder="Enter Vehicle Height in (cm)" required />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="max_no_of_horses-field" className="form-label">Max No Of Horses</label>
-        <select id="max_no_of_horses-field" className="form-control" defaultValue={!add_list ? item?.max_no_of_horse : ''} required>
-          {Array.from({ length: 10 }, (_, index) => (
-            <option key={index + 1} value={index + 1}>{index + 1}</option>
-          ))}
-        </select>
-      </div>
-
-                        {/* <div className="mb-3">
-                            <label htmlFor="air_conditioner-field" className="form-label">Air Conditioner</label>
-                            <input type="text" id="air_conditioner-field" className="form-control" placeholder="Air Conditioner" required />
-                        </div> */}
-
-                        {/* <div className="mb-3">
-                        <label htmlFor="air_conditioner-field" className="form-label">Air Conditioner</label>
-                        <div className="form-check">
-                            <div>
-                            <input type="checkbox" id="air_conditioner-yes" className="form-check-input" required />
-                            <label htmlFor="air_conditioner-yes" className="form-check-label">YES</label>
+                            <div className="mb-3">
+                            <label htmlFor="serviceprovider-field" className="form-label">Service Provider</label>
+                            <input
+                                type="text"
+                                id="serviceprovider-field"
+                                className="form-control"
+                                name='service_provider'
+                                value={validation.values.service_provider || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Vehicle Name"
+                                required
+                            />
                             </div>
-                            <div>
-                            <input type="checkbox" id="air_conditioner-no" className="form-check-input" required />
-                            <label htmlFor="air_conditioner-no" className="form-check-label">NO</label>
+
+                            <div className="mb-3">
+                            <label htmlFor="vehicle_number-field" className="form-label">Vehicle Number</label>
+                            <input
+                                type="text"
+                                id="vehicle_number-field"
+                                className="form-control"
+                                name='vehicle_number'
+                                value={validation.values.vehicle_number || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Vehicle Number"
+                                required
+                            />
                             </div>
-                        </div>
-                        </div> */}
 
-<div className="mb-3">
-        <label className="form-label">Air Conditioner</label>
-        <div className="form-check">
-          <input type="radio" id="air_conditioner-yes" name="air_conditioner" className="form-check-input" value="YES" defaultChecked={!add_list || item?.air_conditioner === 'YES'} required />
-          <label htmlFor="air_conditioner-yes" className="form-check-label">YES</label>
-        </div>
-        <div className="form-check">
-          <input type="radio" id="air_conditioner-no" name="air_conditioner" className="form-check-input" value="NO" defaultChecked={!add_list || item?.air_conditioner === 'NO'} required />
-          <label htmlFor="air_conditioner-no" className="form-check-label">NO</label>
-        </div>
-      </div>
+                            <div className="mb-3">
+                            <label htmlFor="vehicle_company-field" className="form-label">Vehicle Company</label>
+                            <input
+                                type="text"
+                                id="vehicle_company-field"
+                                name='make'
+                                className="form-control"
+                                value={validation.values.make || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Vehicle Company"
+                                required
+                            />
+                            </div>
 
+                            <div className="mb-3">
+                            <label htmlFor="vehicle_model-field" className="form-label">Vehicle Model</label>
+                            <input
+                                type="text"
+                                id="vehicle_model-field"
+                                className="form-control"
+                                name='modals'
+                                value={validation.values.models || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Vehicle Model"
+                                required
+                            />
+                            </div>
 
-      <div className="mb-3">
-        <label className="form-label">Temperature Manageable</label>
-        <div className="form-check">
-          <input type="radio" id="temperature_manageable-yes" name="temperature_manageable" className="form-check-input" value="YES" defaultChecked={!add_list || item?.temp_manageable === 'YES'} required />
-          <label htmlFor="temperature_manageable-yes" className="form-check-label">YES</label>
-        </div>
-        <div className="form-check">
-          <input type="radio" id="temperature_manageable-no" name="temperature_manageable" className="form-check-input" value="NO" defaultChecked={!add_list || item?.temp_manageable === 'NO'} required />
-          <label htmlFor="temperature_manageable-no" className="form-check-label">NO</label>
-        </div>
-      </div>
-      <div className="mb-3">
-        <label htmlFor="vehicle_image-field" className="form-label">Vehicle Image</label>
-        <input type="file" id="vehicle_image-field" className="form-control" placeholder="Upload Vehicle Image" required />
-      </div>
-      <div className="mb-3">
-        <label htmlFor="vehicle_registration_number-field" className="form-label">Vehicle Registration Number</label>
-        <input type="text" id="vehicle_registration_number-field" className="form-control" defaultValue={!add_list ? item?.registration_no : ''} placeholder="Enter Vehicle Registration Number" required />
-      </div>
-      <div className="mb-3">
-        <label className="form-label">GCC Travel Allowed</label>
-        <div className="form-check">
-          <input type="radio" id="gcc_travel_allowed-yes" name="gcc_travel_allowed" className="form-check-input" value="YES" defaultChecked={!add_list || item?.gcc_travel_allowed === 'YES'} required />
-          <label htmlFor="gcc_travel_allowed-yes" className="form-check-label">YES</label>
-        </div>
-        <div className="form-check">
-          <input type="radio" id="gcc_travel_allowed-no" name="gcc_travel_allowed" className="form-check-input" value="NO" defaultChecked={!add_list || item?.gcc_travel_allowed === 'NO'} required />
-          <label htmlFor="gcc_travel_allowed-no" className="form-check-label">NO</label>
-        </div>
-      </div>
+                            <div className="mb-3">
+                            <label htmlFor="vehicle_color-field" className="form-label">Vehicle Color</label>
+                            <input
+                                type="text"
+                                id="vehicle_color-field"
+                                className="form-control"
+                                name='color'
+                                value={validation.values.color || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Vehicle Color"
+                                required
+                            />
+                            </div>
 
-                        <div className="mb-3">
-                        <label className="form-label">Insurance Coverered</label>
-                        <div className="form-check">
-                            <input type="radio" id="insurance_covered-yes" name="insurance_covered" className="form-check-input" value="yes" required />
-                            <label htmlFor="insurance_covered-yes" className="form-check-label">YES</label>
-                        </div>
-                        <div className="form-check">
-                            <input type="radio" id="insurance_covered-no" name="insurance_covered" className="form-check-input" value="no" required />
-                            <label htmlFor="insurance_covered-no" className="form-check-label">NO</label>
-                        </div>
-                        </div>
+                            <div className="mb-3">
+                            <label htmlFor="vehicle_length-field" className="form-label">Vehicle Length (cm)</label>
+                            <input
+                                type="text"
+                                id="vehicle_length-field"
+                                className="form-control"
+                                name='length'
+                                value={validation.values.length || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Vehicle Length In (cm)"
+                                required
+                            />
+                            </div>
 
-                        <div className="mb-3">
+                            <div className="mb-3">
+                            <label htmlFor="vehicle_breadth-field" className="form-label">Vehicle Breadth (cm)</label>
+                            <input
+                                type="text"
+                                id="vehicle_breadth-field"
+                                className="form-control"
+                                name='breadth'
+                                value={validation.values.breadth || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Vehicle Breadth In (cm)"
+                                required
+                            />
+                            </div>
+
+                            <div className="mb-3">
+                            <label htmlFor="vehicle_height-field" className="form-label">Vehicle Height (cm)</label>
+                            <input
+                                type="text"
+                                id="vehicle_height-field"
+                                className="form-control"
+                                name='height'
+                                value={validation.values.height || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Vehicle Height in (cm)"
+                                required
+                            />
+                            </div>
+
+                            <div className="mb-3">
+                            <label htmlFor="max_no_of_horses-field" className="form-label">Max No Of Horses</label>
+                            <select
+                                id="max_no_of_horses-field"
+                                className="form-control"
+                                name='max_no_of_horse'
+                                value={validation.values.max_no_of_horse || ""}
+                                onChange={validation.handleChange}
+                                required
+                            >
+                                {Array.from({ length: 10 }, (_, index) => (
+                                <option key={index + 1} value={index + 1}>{index + 1}</option>
+                                ))}
+                            </select>
+                            </div>
+
+                            <div className="mb-3">
+                            <label className="form-label">Air Conditioner</label>
+                            <div className="form-check">
+                                <input
+                                type="radio"
+                                id="air_conditioner-yes"
+                                name="air_conditioner"
+                                className="form-check-input"
+                                value={validation.values.air_conditioner || ""}
+                                onChange={validation.handleChange}
+                                required
+                                />
+                                <label htmlFor="air_conditioner-yes" className="form-check-label">YES</label>
+                            </div>
+                            <div className="form-check">
+                                <input
+                                type="radio"
+                                id="air_conditioner-no"
+                                name="air_conditioner"
+                                className="form-check-input"
+                                value={validation.values.air_conditioner || ""}
+                                onChange={validation.handleChange}
+                                required
+                                />
+                                <label htmlFor="air_conditioner-no" className="form-check-label">NO</label>
+                            </div>
+                            </div>
+
+                            <div className="mb-3">
+                            <label className="form-label">Temperature Manageable</label>
+                            <div className="form-check">
+                                <input
+                                type="radio"
+                                id="temperature_manageable-yes"
+                                name="temperature_manageable"
+                                className="form-check-input"
+                                value={validation.values.temperature_manageable || "YES"}
+                                onChange={validation.handleChange}
+                                required
+                                />
+                                <label htmlFor="temperature_manageable-yes" className="form-check-label">YES</label>
+                            </div>
+                            <div className="form-check">
+                                <input
+                                type="radio"
+                                id="temperature_manageable-no"
+                                name="temperature_manageable"
+                                className="form-check-input"
+                               
+                                value={validation.values.temperature_manageable || "NO"}
+                                onChange={validation.handleChange}
+                                required
+                                />
+                                <label htmlFor="temperature_manageable-no" className="form-check-label">NO</label>
+                            </div>
+                            </div>
+
+                            <div className="mb-3">
+                            <label htmlFor="vehicle_image-field" className="form-label">Vehicle Image</label>
+                            <input
+                                type="file"
+                                name='vehicle_image'
+                                id="vehicle_image-field"
+                                className="form-control"
+                                placeholder="Upload Vehicle Image"
+                                required
+                            />
+                            </div>
+
+                            <div className="mb-3">
+                            <label htmlFor="vehicle_registration_number-field" className="form-label">Vehicle Registration Number</label>
+                            <input
+                                type="text"
+                                id="vehicle_registration_number-field"
+                                className="form-control"
+                                name='vehicle_registration_number'
+                                value={validation.values.vehicle_registration_number || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Vehicle Registration Number"
+                                required
+                            />
+                            </div>
+
+                            <div className="mb-3">
+                            <label className="form-label">GCC Travel Allowed</label>
+                            <div className="form-check">
+                                <input
+                                type="radio"
+                                id="gcc_travel_allowed-yes"
+                                name="gcc_travel_allowed"
+                                className="form-check-input"
+                                value={validation.values.gcc_travel_allowed || "YES"}
+                                onChange={validation.handleChange}
+                                required
+                                />
+                                <label htmlFor="gcc_travel_allowed-yes" className="form-check-label">YES</label>
+                            </div>
+                            <div className="form-check">
+                                <input
+                                type="radio"
+                                id="gcc_travel_allowed-no"
+                                name="gcc_travel_allowed"
+                                className="form-check-input"
+                                value={validation.values.gcc_travel_allowed || "NO"}
+                                onChange={validation.handleChange}
+                                required
+                                />
+                                <label htmlFor="gcc_travel_allowed-no" className="form-check-label">NO</label>
+                            </div>
+                            </div>
+
+                            <div className="mb-3">
+                            <label className="form-label">Insurance Covered</label>
+                            <div className="form-check">
+                                <input
+                                type="radio"
+                                id="insurance_covered-yes"
+                                name="insurance_covered"
+                                className="form-check-input"
+                                value={validation.values.insurance_covered || "YES"}
+                                onChange={validation.handleChange}
+                                required
+                                />
+                                <label htmlFor="insurance_covered-yes" className="form-check-label">YES</label>
+                            </div>
+                            <div className="form-check">
+                                <input
+                                type="radio"
+                                id="insurance_covered-no"
+                                name="insurance_covered"
+                                value={validation.values.insurance_covered || "NO"}
+                                onChange={validation.handleChange}
+                                className="form-check-input"
+                                required
+                                />
+                                <label htmlFor="insurance_covered-no" className="form-check-label">NO</label>
+                            </div>
+                            </div>
+
+                            <div className="mb-3">
                             <label htmlFor="insurance_date-field" className="form-label">Insurance Date</label>
                             <Flatpickr
-                            className="form-control"
-                            options={{
+                                className="form-control"
+                                options={{
                                 dateFormat: "d M, Y"
-                            }}
-                            defaultValue={!add_list ? item?.insurance_date : ''}
-                            placeholder="Select Insurance Date"
+                                }}
+                                name='insurance_date'
+                                value={validation.values.insurance_date || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Select Insurance Date"
                             />
-                        </div>
+                            </div>
+
+                            <div className="mb-3">
+                            <label htmlFor="insurance_policy_no-field" className="form-label">Insurance Policy Number</label>
+                            <input
+                                type="text"
+                                id="insurance_policy_no-field"
+                                className="form-control"
+                                name='insurance_policy_no'
+                                value={validation.values.insurance_policy_no || ""}
+                                onChange={validation.handleChange}
+                               
+                                placeholder="Enter Insurance Policy Number"
+                                required
+                            />
+                            </div>
+
+                            <div className="mb-3">
+                            <label htmlFor="insurance_policy_provider-field" className="form-label">Insurance Policy Provider</label>
+                            <input
+                                type="text"
+                                id="insurance_policy_provider-field"
+                                className="form-control"
+                                name='insurance_policy_provider'
+                                value={validation.values.insurance_policy_provider || ""}
+                                onChange={validation.handleChange}
+                             
+                                placeholder="Enter Insurance Policy Provider"
+                                required
+                            />
+                            </div>
+
+                            <div className="mb-3">
+                            <label htmlFor="insurance_expiry_date-field" className="form-label">Insurance Expiry Date</label>
+                            <Flatpickr
+                                className="form-control"
+                                options={{
+                                dateFormat: "d M, Y"
+                                }}
+                                name='insurance_expiry_date'
+                                value={validation.values.insurance_expiry_date || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Select Insurance Expiry Date"
+                            />
+                            </div>
+
+                            <div className="mb-3">
+                            <label className="form-label">Vehicle Type</label>
+                            <div className="form-check">
+                                <input
+                                type="radio"
+                                id="vehicle_type-private"
+                                name="vehicle_type"
+                                className="form-check-input"
+                                value={validation.values.vehicle_type || "PRIVATE"}
+                                onChange={validation.handleChange}
+                                required
+                                />
+                                <label htmlFor="vehicle_type-private" className="form-check-label">PRIVATE</label>
+                            </div>
+                            <div className="form-check">
+                                <input
+                                type="radio"
+                                id="vehicle_type-commercial"
+                                name="vehicle_type"
+                                className="form-check-input"
+                                value={validation.values.vehicle_type || "COMMERCIAL"}
+                                onChange={validation.handleChange}
+                                required
+                                />
+                                <label htmlFor="vehicle_type-commercial" className="form-check-label">COMMERCIAL</label>
+                            </div>
+                            </div>
+
+                            <div className="mb-3">
+                            <label htmlFor="vehicle_registration_date-field" className="form-label">Vehicle Registration Date</label>
+                            <Flatpickr
+                                className="form-control"
+                                options={{
+                                dateFormat: "d M, Y"
+                                }}
+                                name='vehicle_registration_date'
+                                value={validation.values.vehicle_registration_date || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Select Vehicle Registration Date"
+                            />
+                            </div>
+
+                            <div className="mb-3">
+                            <label htmlFor="vehicle_expiration_date-field" className="form-label">Vehicle Expiration Date</label>
+                            <Flatpickr
+                                className="form-control"
+                                options={{
+                                dateFormat: "d M, Y"
+                                }}
+                                name='vehicle_expiration_date'
+                                value={validation.values.vehicle_expiration_date || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Select Vehicle Expiration Date"
+                            />
+                            </div>
 
 
-                  
-      <div className="mb-3">
-        <label htmlFor="insurance_policy_no-field" className="form-label">Insurance Policy Number</label>
-        <input type="text" id="insurance_policy_no-field" className="form-control" defaultValue={!add_list ? item?.insurance_policy_no : ''} placeholder="Enter Insurance Policy Number" required />
-      </div>
-
-      <div className="mb-3">
-        <label htmlFor="insurance_policy_provider-field" className="form-label">Insurance Policy Provider</label>
-        <input type="text" id="insurance_policy_provider-field" className="form-control" defaultValue={!add_list ? item?.insurance_provider : ''} placeholder="Enter Insurance Policy Provider" required />
-      </div>
-
-      <div className="mb-3">
-        <label htmlFor="insurance_expiry_date-field" className="form-label">Insurance Expiry Date</label>
-        <Flatpickr
-          className="form-control"
-          options={{
-            dateFormat: "d M, Y"
-          }}
-          defaultValue={!add_list ? item?.insurance_expiration_date : ''}
-          placeholder="Select Insurance Expiry Date"
-        />
-      </div>
-
-
-      <div className="mb-3">
-        <label className="form-label">Vehicle Type</label>
-        <div className="form-check">
-          <input type="radio" id="vehicle_type-private" name="vehicle_type" className="form-check-input" value="PRIVATE" defaultChecked={!add_list || item?.vehicle_type === 'PRIVATE'} required />
-          <label htmlFor="vehicle_type-private" className="form-check-label">PRIVATE</label>
-        </div>
-        <div className="form-check">
-          <input type="radio" id="vehicle_type-commercial" name="vehicle_type" className="form-check-input" value="COMMERCIAL" defaultChecked={!add_list || item?.vehicle_type === 'COMMERCIAL'} required />
-          <label htmlFor="vehicle_type-commercial" className="form-check-label">COMMERCIAL</label>
-        </div>
-      </div>
-
-
-      <div className="mb-3">
-        <label htmlFor="vehicle_registration_date-field" className="form-label">Vehicle Registration Date</label>
-        <Flatpickr
-          className="form-control"
-          options={{
-            dateFormat: "d M, Y"
-          }}
-          defaultValue={!add_list ? item?.vehicle_registration_date : ''}
-          placeholder="Select Vehicle Registration Date"
-        />
-      </div>
-
-                 
-      <div className="mb-3">
-        <label htmlFor="vehicle_expiration_date-field" className="form-label">Vehicle Expiration Date</label>
-        <Flatpickr
-          className="form-control"
-          options={{
-            dateFormat: "d M, Y"
-          }}
-          defaultValue={!add_list ? item?.vehicle_expiration_date : ''}
-          placeholder="Select Vehicle Expiration Date"
-        />
-      </div>
-
-                        {/* <div className="mb-3">
+                                {/* <div className="mb-3">
                             <label htmlFor="date-field" className="form-label">Joining Date</label>
                             <Flatpickr
                                 className="form-control"
@@ -538,14 +769,12 @@ const ListVehiclesTable = () => {
                                 <option value="Block">Block</option>
                             </select>
                         </div> */}
-                     </div>
-                        ))}
-
+                     
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() =>{ setmodal_list(false); setAdd_list(false);}}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ?  'Add Vehicle' : 'Update vehicle' }</button>
+                            <button type="button" className="btn btn-light" onClick={() => { setmodal_list(false); setAdd_list(false); }}>Close</button>
+                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ? 'Add Vehicle' : 'Update vehicle'}</button>
                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>

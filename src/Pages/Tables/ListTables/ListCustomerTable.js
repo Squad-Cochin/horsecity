@@ -20,39 +20,9 @@ import { getCustomersData } from '../../../helpers/ApiRoutes/authApiRoutes'
 // Define the toggleStatus function outside the component
 import { Customers } from '../../../CommonData/Data';
 
-function toggleStatus(button, customerId) 
-{
-  var currentStatus = button.innerText.trim();
-
-  if (currentStatus === 'ACTIVE') {
-    button.innerText = 'INACTIVE';
-    button.classList.remove('btn-success');
-    button.classList.add('btn-danger');
-
-    // Find the corresponding customer by ID
-    const customer = Customers.find((c) => c.id === customerId);
-    console.log("Customer", customer);
-    if (customer) 
-    {
-      console.log('Came here');
-      customer.status = 'INACTIVE';
-      console.log("Customer", customer);
-    }
-  } else if (currentStatus === 'INACTIVE') {
-    button.innerText = 'ACTIVE';
-    button.classList.remove('btn-danger');
-    button.classList.add('btn-success');
-
-    // Find the corresponding customer by ID
-    const customer = Customers.find((c) => c.id === customerId);
-    if (customer) {
-      customer.status = 'ACTIVE';
-    }
-  }
-}
-
-
-
+import { addNewCustomer } from '../../../helpers/ApiRoutes/addApiRoutes';
+import { updateCustomer } from '../../../helpers/ApiRoutes/editApiRoutes';
+import { useFormik } from "formik";
 
 const ListCustomerTable = () => {
 
@@ -60,15 +30,90 @@ const ListCustomerTable = () => {
     const [ customer , setCustomer] = useState([]);
     const [modal_list, setmodal_list] = useState(false);
     const [ add_list, setAdd_list ] = useState(false);
+
+
     function tog_list(param,productId) {
         if(param === 'ADD'){
             setAdd_list(!add_list);
         }
         const data = customers?.find((item)=>item?.id === productId)
         setCustomer([data]);
-
         setmodal_list(!modal_list);
+
     }
+
+    const initialValues = {
+        name: !add_list ? customer[0]?.name : '',
+        email: !add_list ? customer[0]?.email : '',
+        username: !add_list ? customer[0]?.user_name : '',
+        phone: !add_list ? customer[0]?.phone : '',
+        date_of_birth: !add_list ? customer[0]?.date_of_birth : '',
+        id_proof_no: !add_list ? customer[0]?.id_proof_no : '',
+        id_proof_img: '',
+    };
+      
+      // Later in your code, when setting the initial state
+  
+      
+      
+    const validation = useFormik({
+        // enableReinitialize : use this flag when initial values needs to be changed
+        enableReinitialize: true,
+        initialValues,
+        onSubmit: (values) => {
+                console.log(values);
+                if(add_list){
+                    //add new
+                    console.log("add new");
+                    addNewCustomer(values);
+                    setAdd_list(false);
+                    setmodal_list(false);
+                }else{
+                    //update previes one
+                    console.log("update previues one ");
+                    updateCustomer(values);
+                    setAdd_list(false);
+                    setmodal_list(false);
+                 
+                }
+    
+        }
+      });
+
+        //CHANGE STATUS  
+        function toggleStatus(button, customerId) 
+        {
+        var currentStatus = button.innerText.trim();
+
+        if (currentStatus === 'ACTIVE') {
+            button.innerText = 'INACTIVE';
+            button.classList.remove('btn-success');
+            button.classList.add('btn-danger');
+
+            // Find the corresponding customer by ID
+            const customer = Customers.find((c) => c.id === customerId);
+            console.log("Customer", customer);
+            if (customer) 
+            {
+            console.log('Came here');
+            customer.status = 'INACTIVE';
+            console.log("Customer", customer);
+            }
+        } else if (currentStatus === 'INACTIVE') {
+            button.innerText = 'ACTIVE';
+            button.classList.remove('btn-danger');
+            button.classList.add('btn-success');
+
+            // Find the corresponding customer by ID
+            const customer = Customers.find((c) => c.id === customerId);
+            if (customer) {
+            customer.status = 'ACTIVE';
+            }
+        }
+        }
+
+
+
 
     const [modal_delete, setmodal_delete] = useState(false);
     function tog_delete() {
@@ -151,7 +196,7 @@ const ListCustomerTable = () => {
                                         <Row className="g-4 mb-3">
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
-                                                    <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
+                                                    <Button color="success" className="add-btn"  onClick={() => tog_list('ADD')}  id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
                                                     <Button color="soft-danger"
                                                     // onClick="deleteMultiple()"
                                                     ><i className="ri-delete-bin-2-line"></i></Button>
@@ -204,7 +249,7 @@ const ListCustomerTable = () => {
                                                         <td className="username">{item.user_name}</td>
                                                         <td className="contact_no">{item.phone}</td>
                                                         <td className="date_of_birth">{item.date_of_birth}</td>
-                                                        <td className="id_proof">{item.id_proof}</td>
+                                                        <td className="id_proof">{item.id_proof_no}</td>
                                                         <td className="status">{item.email_verified}</td>
                                                         <td className="registered_date">{item.created_at}</td>
                                                         {/* <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td> */}
@@ -600,71 +645,109 @@ const ListCustomerTable = () => {
             {/* Add Modal */}
             <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
                 <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ?  'Add Customer' : 'Edit Customer' } </ModalHeader>
-                <form className="tablelist-form">
+                <form className="tablelist-form"
+                 onSubmit={validation.handleSubmit}>
                     <ModalBody>
-                    {customer?.map((item,index)=>(  
-                        <div key={index}>
-                        {/* <div className="mb-3" id="modal-id" style={{ display: "none" }}>
-                            <label htmlFor="id-field" className="form-label">ID</label>
-                            <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
-                        </div> */}
+                   
+                    <div className="mb-3">
+                    <label htmlFor="customername-field" className="form-label">Name</label>
+                    <input
+                        type="text"
+                        name='name'
+                        id="customername-field"
+                        className="form-control"
+                        value={validation.values.name || ""}
+                        onChange={validation.handleChange}
+                        placeholder="Enter Name"
+                        required
+                    />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="customername-field" className="form-label">Name </label>
-                            <input type="text" id="customername-field" className="form-control" defaultValue={!add_list ? item?.name : ''}    placeholder="Enter Name" required />
-                        </div>
+                    <div className="mb-3">
+                    <label htmlFor="email-field" className="form-label">Email</label>
+                    <input
+                        type="email"
+                        name='email'
+                        id="email-field"
+                        value={validation.values.email || ""}
+                        onChange={validation.handleChange}
+                        className="form-control"
+                        placeholder="Enter Email"
+                        required
+                    />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="email-field" className="form-label">Email</label>
-                            <input type="email" id="email-field" className="form-control" defaultValue={!add_list ? item?.email : ''} placeholder="Enter Email" required />
-                        </div>
+                    <div className="mb-3">
+                    <label htmlFor="username-field" className="form-label">Username</label>
+                    <input
+                        type="text"
+                        name='username'
+                        id="username-field"
+                        value={validation.values.username || ""}
+                        onChange={validation.handleChange}
+                        className="form-control"
+                        placeholder="Enter Username"
+                        required
+                    />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="username-field" className="form-label">Username</label>
-                            <input type="username" id="username-field" className="form-control" defaultValue={!add_list ? item?.username : ''} placeholder="Enter Username" required />
-                        </div>
+                    <div className="mb-3">
+                    <label htmlFor="contact_no-field" className="form-label">Contact Number</label>
+                    <input
+                        type="text"
+                        name='phone'
+                        id="contact_no-field"
+                        value={validation.values.phone || ""}
+                        onChange={validation.handleChange}
+                        className="form-control"
+                        placeholder="Enter Contact Number"
+                        required
+                    />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="contact_no-field" className="form-label">Contact Number</label>
-                            <input type="text" id="contact_no-field" className="form-control" defaultValue={!add_list ? item?.phone : ''}  placeholder="Enter Contact Number" required />
-                        </div>
-                     
-                        <div className="mb-3">
-                            <label htmlFor="date_of_birth-field" className="form-label">Date Of Birth</label>
-                            <Flatpickr
-                            className="form-control"
-                            options={{
-                                dateFormat: "d M, Y"
-                            }}
-                            defaultValue={!add_list ? item?.date_of_birth : ''}
-                            placeholder="Select Date"
-                            />
-                        </div>
-              
+                    <div className="mb-3">
+                    <label htmlFor="date_of_birth-field" className="form-label">Date Of Birth</label>
+                    <Flatpickr
+                        className="form-control"
+                        name='date_of_birth'
+                        options={{
+                        dateFormat: "d M, Y"
+                        }}
+                        value={validation.values.date_of_birth || ""}
+                        onChange={validation.handleChange}
+                        placeholder="Select Date"
+                    />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="contact_no-field" className="form-label">Id Proof Number</label>
-                            <input type="text" id="contact_no-field" className="form-control" defaultValue={!add_list ? item?.id_proof : ''} placeholder="Enter Contact Number" required />
-                        </div>
+                    <div className="mb-3">
+                    <label htmlFor="id_proof_no-field" className="form-label">Id Proof Number</label>
+                    <input
+                        type="text"
+                        id="id_proof_no-field"
+                        name='id_proof_no'
+                        className="form-control"
+                        value={validation.values.id_proof_no || ""}
+                        onChange={validation.handleChange}
+                        placeholder="Enter Id Proof Number"
+                        required
+                    />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="contact_no-field" className="form-label">Id Proof Image</label>
-                            <input type="file" id="contact_no-field" className="form-control" placeholder="Enter Contact Number" required />
-                        </div>
+                    <div className="mb-3">
+                    <label htmlFor="id_proof_img-field" className="form-label">Id Proof Image</label>
+                    <input
+                        type="file"
+                        name='id_proof_img'
+                        id="id_proof_img-field"
+                        className="form-control"
+                        // value={validation.values.id_proof_img || ""}
+                        // onChange={validation.handleChange}
+                        placeholder="Enter Id Proof Image"
+         
+                    />
+                    </div>
 
-                        {/* <div className="mb-3">
-                        <label htmlFor="id_proof-field" className="form-label">Id Proof</label>
-                        <div className="text-center">
-                            <input type="text" id="id_proof-field" className="form-control mb-2" placeholder="Enter Id Proof" required />
-                            <div>
-                            <span className="me-2">OR</span>
-                            </div>
-                            <input type="file" className="form-control" accept="image/*" />
-                        </div>
-                        </div>    
-                                             */}
-                        </div>
-                        ))}
+                      
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">

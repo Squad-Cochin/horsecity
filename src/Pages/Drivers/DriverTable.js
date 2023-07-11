@@ -17,15 +17,15 @@ import Flatpickr from "react-flatpickr";
 //Import Drivers
 import { getDriversData } from '../../helpers/ApiRoutes/authApiRoutes'
 import { Drivers } from '../../CommonData/Data';
-
+import { addNewDriver } from '../../helpers/ApiRoutes/addApiRoutes';
+import { updateDriver } from '../../helpers/ApiRoutes/editApiRoutes';
+import { useFormik } from "formik";
 const ListTables = () => {
 
-    function toggleStatus(button, driverID) 
-    {
+    function toggleStatus(button, driverID) {
         var currentStatus = button.innerText.trim();
 
-        if (currentStatus === 'ACTIVE') 
-        {
+        if (currentStatus === 'ACTIVE') {
             button.innerText = 'INACTIVE';
             button.classList.remove('btn-success');
             button.classList.add('btn-danger');
@@ -33,51 +33,89 @@ const ListTables = () => {
             // Find the corresponding customer by ID
             const driver = Drivers.find((d) => d.id === driverID);
             console.log("Driver", driver);
-            if (driver) 
-            {
-            console.log('Came here');
-            driver.status = 'INACTIVE';
-            console.log("Driver", driver);
+            if (driver) {
+                console.log('Came here');
+                driver.status = 'INACTIVE';
+                console.log("Driver", driver);
             }
-        } 
-        else if (currentStatus === 'INACTIVE')
-        {
+        }
+        else if (currentStatus === 'INACTIVE') {
             button.innerText = 'ACTIVE';
             button.classList.remove('btn-danger');
             button.classList.add('btn-success');
 
             // Find the corresponding customer by ID
             const driver = Drivers.find((d) => d.id === driverID);
-            if (driver) 
-            {
+            if (driver) {
                 driver.status = 'ACTIVE';
             }
         }
     }
 
 
-    const [ modal_list, setmodal_list] = useState(false);
-    const [ drivers, setDrivers] = useState([]);
-    const [ driver, setDriver] = useState([]);
-    const [ add_list, setAdd_list ] = useState(false);
-    function tog_list(param,productId) {
-        if(param === 'ADD'){
+    const [modal_list, setmodal_list] = useState(false);
+    const [drivers, setDrivers] = useState([]);
+    const [driver, setDriver] = useState([]);
+    const [add_list, setAdd_list] = useState(false);
+
+    function tog_list(param, productId) {
+        if (param === 'ADD') {
             setAdd_list(!add_list);
         }
-        const data = drivers?.find((item)=>item?.id === productId)
+        const data = drivers?.find((item) => item?.id === productId)
         setDriver([data]);
-
         setmodal_list(!modal_list);
+
     }
+
+    const initialValues = {
+        name: !add_list ? driver[0]?.name : '',
+        email: !add_list ? driver[0]?.email : '',
+        contact_no: !add_list ? driver[0]?.contact_no : '',
+        emergency_contact_no: !add_list ? driver[0]?.emergency_contact_no : '',
+        date_of_birth: !add_list ? driver[0]?.date_of_birth : '',
+        profile_image: !add_list ? driver[0]?.profile_image : '',
+        licence_no: !add_list ? driver[0]?.licence_no : '',
+        licence_img: !add_list ? driver[0]?.licence_img : '',
+        description: !add_list ? driver[0]?.description : ''
+    };
+
+    // Later in your code, when setting the initial state
+
+
+
+    const validation = useFormik({
+        // enableReinitialize : use this flag when initial values needs to be changed
+        enableReinitialize: true,
+        initialValues,
+        onSubmit: (values) => {
+            console.log(values);
+            if (add_list) {
+                //add new
+                console.log("add new");
+                addNewDriver(values);
+                setAdd_list(false);
+                setmodal_list(false);
+            } else {
+                //update previes one
+                console.log("update previues one ");
+                updateDriver(values);
+                setAdd_list(false);
+                setmodal_list(false);
+
+            }
+
+        }
+    });
 
     const [modal_delete, setmodal_delete] = useState(false);
     function tog_delete() {
         setmodal_delete(!modal_delete);
     }
-    useEffect(()=>{
-    let getDrivers = getDriversData();
-    setDrivers(getDrivers)
-    },[])
+    useEffect(() => {
+        let getDrivers = getDriversData();
+        setDrivers(getDrivers)
+    }, [])
     useEffect(() => {
 
         // const attroptions = {
@@ -149,7 +187,7 @@ const ListTables = () => {
                                         <Row className="g-4 mb-3">
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
-                                                    <Button color="success" className="add-btn" onClick={() => tog_list()} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
+                                                    <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
                                                     <Button color="soft-danger"
                                                     // onClick="deleteMultiple()"
                                                     ><i className="ri-delete-bin-2-line"></i></Button>
@@ -189,55 +227,55 @@ const ListTables = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {drivers.map((item)=>(
+                                                    {drivers.map((item) => (
 
-                                        
-                                                    <tr key={item.id}> 
-                                                        <th scope="row">
-                                                            <div className="form-check">
-                                                                <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
-                                                            </div>
-                                                        </th>
-                                                        <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
-                                                        <td className="customer_name">{item.name}</td>
-                                                        {/* <td className="email">{item.profile_image}</td> */}
-                                                        <td className="phone">{item.email}</td>
-                                                        <td className="phone">{item.contact_no}</td>
-                                                        <td className="phone">{item.emergency_contact_no}</td>
-                                                        <td className="date">{item.date_of_birth}</td>
-                                                        <td className="licence_no">{item.licence_no}</td>
-                                                        {/* <td className="licence_IMG">{item.licence_img}</td> */}
-                                                        <td className="name">{item.description}</td>
-                                                        <td className="date">{item.created_at}</td>
-                                                        {/* <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td> */}
-                                                        
-                                                        <div>
-                                                            <div className="d-flex gap-2">
-                                                                <div className="status">
-                                                                    <button className="btn btn-sm btn-success status-item-btn"
-                                                                        data-bs-toggle="modal" data-bs-target="#showModal"
-                                                                        onClick={(event) => toggleStatus(event.target, item.id)}>
-                                                                        {item.status}
-                                                                    </button>
+
+                                                        <tr key={item.id}>
+                                                            <th scope="row">
+                                                                <div className="form-check">
+                                                                    <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
+                                                                </div>
+                                                            </th>
+                                                            <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
+                                                            <td className="customer_name">{item.name}</td>
+                                                            {/* <td className="email">{item.profile_image}</td> */}
+                                                            <td className="phone">{item.email}</td>
+                                                            <td className="phone">{item.contact_no}</td>
+                                                            <td className="phone">{item.emergency_contact_no}</td>
+                                                            <td className="date">{item.date_of_birth}</td>
+                                                            <td className="licence_no">{item.licence_no}</td>
+                                                            {/* <td className="licence_IMG">{item.licence_img}</td> */}
+                                                            <td className="name">{item.description}</td>
+                                                            <td className="date">{item.created_at}</td>
+                                                            {/* <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td> */}
+
+                                                            <div>
+                                                                <div className="d-flex gap-2">
+                                                                    <div className="status">
+                                                                        <button className="btn btn-sm btn-success status-item-btn"
+                                                                            data-bs-toggle="modal" data-bs-target="#showModal"
+                                                                            onClick={(event) => toggleStatus(event.target, item.id)}>
+                                                                            {item.status}
+                                                                        </button>
+                                                                    </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
-                                                        
-                                                        
-                                                        <td>
-                                                            <div className="d-flex gap-2">
-                                                                <div className="edit">
-                                                                    <button className="btn btn-sm btn-success edit-item-btn"
-                                                                        data-bs-toggle="modal" data-bs-target="#showModal" onClick={() => tog_list('EDIT',item.id)}>Edit</button>
+
+
+                                                            <td>
+                                                                <div className="d-flex gap-2">
+                                                                    <div className="edit">
+                                                                        <button className="btn btn-sm btn-success edit-item-btn"
+                                                                            data-bs-toggle="modal" data-bs-target="#showModal" onClick={() => tog_list('EDIT', item.id)}>Edit</button>
+                                                                    </div>
+                                                                    <div className="remove">
+                                                                        <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
+                                                                    </div>
                                                                 </div>
-                                                                <div className="remove">
-                                                                    <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                 ))}
-                                                
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+
                                                 </tbody>
                                             </table>
                                             <div className="noresult" style={{ display: "none" }}>
@@ -290,76 +328,92 @@ const ListTables = () => {
                        
                     </Row> */}
 
-                
+
                 </Container>
             </div>
 
             {/* Add Modal */}
-            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel"  toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}>{!add_list ?  'Add Driver' : 'Edit Driver' } </ModalHeader>
-                <form className="tablelist-form">
+            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ? 'Add Driver' : 'Edit Driver'} </ModalHeader>
+                <form className="tablelist-form"
+                 onSubmit={validation.handleSubmit}>
                     <ModalBody>
-                    {driver?.map((item,index)=>(  
-                        <div key={index}>
+
                         {/* <div className="mb-3" id="modal-id" style={{ display: "none" }}>
                             <label htmlFor="id-field" className="form-label">ID</label>
                             <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
                         </div> */}
 
                         <div className="mb-3">
-                            <label htmlFor="customername-field" className="form-label">Name</label>
-                            <input type="text" id="customername-field" className="form-control" defaultValue={!add_list ? item?.name : ''}  placeholder="Enter Name" required />
+                            <label htmlFor="driver-field" className="form-label">Name</label>
+                            <input type="text" id="driver-field" className="form-control"  name='name'      value={validation.values.name || ""}
+                             onChange={validation.handleChange}  placeholder="Enter Name" required />
                         </div>
 
                         <div className="mb-3">
                             <label htmlFor="email-field" className="form-label">Email</label>
-                            <input type="email" id="email-field" className="form-control" defaultValue={!add_list ? item?.email : ''}  placeholder="Enter Email" required />
+                            <input type="email" id="email-field" className="form-control" name='email'   value={validation.values.email || ""}
+                             onChange={validation.handleChange}  placeholder="Enter Email" required />
                         </div>
 
                         <div className="mb-3">
                             <label htmlFor="contactNumber-field" className="form-label">Contact Number</label>
-                            <input type="text" id="contactNumber" className="form-control" defaultValue={!add_list ? item?.contact_no  : ''}  placeholder="Enter Contact Number" required />
+                            <input type="text" id="contactNumber" className="form-control" name='contact_no'   value={validation.values.contact_no || ""}
+                             onChange={validation.handleChange} placeholder="Enter Contact Number" required />
                         </div>
 
                         <div className="mb-3">
                             <label htmlFor="emergencyContactNumber" className="form-label">Emergency Contact Number</label>
-                            <input type="text" id="emergencyContactNumber" className="form-control" defaultValue={!add_list ? item?.emergency_contct_no  : ''} placeholder="Enter Emergency Contact Number" required />
+                            <input type="text" id="emergencyContactNumber" className="form-control" name='emergency_contact_no'   value={validation.values.emergency_contact_no || ""}
+                             onChange={validation.handleChange} placeholder="Enter Emergency Contact Number" required />
                         </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="dateOfBirth-field" className="form-label">Date Of Birth</label>
-                            <Flatpickr
-                                className="form-control"
-                                options={{
-                                    dateFormat: "d M, Y"
-                                }}
-                                defaultValue={!add_list ? item?.date_of_birth   : ''}
-                                placeholder="Select Date"
-                            />
-                        </div>
+                        
+                     <div className="mb-3">
+                    <label htmlFor="date_of_birth-field" className="form-label">Date Of Birth</label>
+                    <Flatpickr
+                        className="form-control"
+                        name='date_of_birth'
+                        options={{
+                        dateFormat: "d M, Y"
+                        }}
+                        value={validation.values.date_of_birth || ""}
+                        onChange={validation.handleChange}
+                        placeholder="Select Date"
+                    />
+                    </div>
 
                         <div className="mb-3">
                             <label htmlFor="profileImage" className="form-label">Profile Image</label>
-                            <input type="file" id="profileImage" className="form-control" placeholder="Ender Profile Image" required />
+                            <input type="file" id="profileImage" className="form-control"   name='profile_image'   
+                                // value={validation.values.profile_image || ""}
+                                // onChange={validation.handleChange} 
+                                placeholder="Ender Profile Image" required />
                         </div>
 
                         <div className="mb-3">
                             <label htmlFor="idNumber" className="form-label">Licensce Number</label>
-                            <input type="text" id="idNumber" className="form-control"      defaultValue={!add_list ? item?.licence_no    : ''}placeholder="Enter Licensce Number" required />
+                            <input type="text" id="idNumber" className="form-control"       name='licence_no'   
+                                value={validation.values.licence_no || ""}
+                                onChange={validation.handleChange} 
+                                placeholder="Enter Licensce Number" required />
                         </div>
 
                         <div className="mb-3">
                             <label htmlFor="idProofImage" className="form-label">Licensce Image</label>
-                            <input type="file" id="idProofImage" className="form-control" placeholder="Ender Licensce Image" required />
+                            <input type="file" id="idProofImage" className="form-control" name='licence_img' placeholder="Ender Licensce Image" required />
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="idProofImage" className="form-label">Description: </label>
+                            <input type="text" id="idProofImage" className="form-control" name='description' placeholder="Enter Discription"      value={validation.values.description || ""}
+                                onChange={validation.handleChange}  required />
                         </div>
 
-                        </div>
-                        ))}
+
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() =>{ setmodal_list(false); setAdd_list(false);}} >Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ?  'Add Customer' : 'Update Customer' }</button>
+                            <button type="button" className="btn btn-light" onClick={() => { setmodal_list(false); setAdd_list(false); }} >Close</button>
+                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ? 'Add Customer' : 'Update Customer'}</button>
                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>
