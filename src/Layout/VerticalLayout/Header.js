@@ -24,6 +24,7 @@ import ProfileMenu from "../../components/Common/TopbarDropdown/ProfileMenu";
 // import AppsDropdown from "../../components/Common/TopbarDropdown/AppsDropdown";
 
 const Header = (props) => {
+
   const [search, setsearch] = useState(false);
 
   function toggleFullscreen() {
@@ -80,7 +81,7 @@ const Header = (props) => {
 
               <Link to="/" className="logo logo-light">
                 <span className="logo-sm">
-                  <img src={logo} alt="logo-sm-light" height="60" />
+                <img src={!props.logo?"undefined":logo} alt="logo-sm-dark" height="22" />
                 </span>
                 <span className="logo-lg">
                   <img src={logo} alt="logo-light" height="60" />
