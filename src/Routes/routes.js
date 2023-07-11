@@ -126,6 +126,8 @@ import GoogleMap from "../Pages/Maps/GoogleMap";
 
 //Profile page
 import Profile from "../Pages/ProfilePage";
+import InvoiceDetails from "../Pages/Invoices/InvoicesList";
+
 
 const authProtectedRoutes = [
   //dashboard
@@ -141,6 +143,7 @@ const authProtectedRoutes = [
   { path: "/inbox", component: <Inbox /> },
   { path: "/read-email", component: <ReadEmail /> },
   { path: "/compose-email", component: <EmailCompose /> },
+
 // **************************
   //ServiceProvider
   { path: "/service-providers", component: <ServiceProviders /> },
@@ -232,6 +235,8 @@ const authProtectedRoutes = [
   { path: "/maps-google", component: <GoogleMap /> },
 
 
+  // Invoice Page
+  { path : "/invoices", component : <InvoiceDetails />},
 
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name

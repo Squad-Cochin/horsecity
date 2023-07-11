@@ -1,4 +1,4 @@
-import {
+import { 
   LatestTransationData,
   OrderStatusData,
   OverViewData,
@@ -19,6 +19,8 @@ import { Languages } from "./languages";
 import { Discounts } from "./discounts";
 import { Taxations } from "./taxtions";
 import { Accounts } from "./Accounts";
+import { Invoices } from "./Invoices";
+
 export {
   LatestTransationData,
   OrderStatusData,
@@ -38,5 +40,6 @@ export {
   Languages,
   Discounts,
   Taxations,
-  Accounts
+  Accounts,
+  Invoices
 };

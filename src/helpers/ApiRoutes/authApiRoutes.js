@@ -4,7 +4,7 @@ import * as url from "../url_helper";
 import MockAdapter from "axios-mock-adapter";
 // import * as url from "../url_helper";
 import accessToken from "../jwt-token-access/accessToken";
-import { calenderDefaultCategories, events, serviceProviders, Drivers, Customers, Vehicles ,TripDetails, quotationData, enquiriesData, Reports, Languages, Discounts, Accounts, Taxations} from "../../CommonData/Data";
+import { calenderDefaultCategories, events, serviceProviders, Drivers, Customers, Vehicles ,TripDetails, quotationData, enquiriesData, Reports, Languages, Discounts, Accounts, Taxations, Invoices} from "../../CommonData/Data";
 import { APIClient } from "../api_helper";
 
 
@@ -93,6 +93,14 @@ import { APIClient } from "../api_helper";
   //Get all languages
   export function getLanguages(){
     if(Languages){
+      return Languages ;
+    }
+    return null ;
+  }
+
+  //Get all Invoices
+  export function getInvoice(){
+    if(Invoices){
       return Languages ;
     }
     return null ;

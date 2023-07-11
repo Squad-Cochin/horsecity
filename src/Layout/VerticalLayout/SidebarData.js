@@ -64,6 +64,12 @@ const SidebarData = [
         icon: "mdi mdi-cash-multiple",
         isHasArrow: true,
         url: "/accounts",
+    },    
+    {
+        label: "Invoice",
+        icon: "mdi mdi-cash-usd",
+        isHasArrow: true,
+        url: "/invoices",
     },
     {
         label: "Application Setting",
@@ -73,8 +79,6 @@ const SidebarData = [
             { sublabel: "Discounts", link: "/discount-list" },
             { sublabel: "Taxations", link: "/taxation-list" },
             { sublabel: "Settings", link: "/setting-page" },
-            // { sublabel: "Read Email", link: "/read-email" },
-            // { sublabel: "Email Compose", link: "/compose-email" },
         ],
     },
     // {
