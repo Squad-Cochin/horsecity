@@ -6,7 +6,8 @@ import { Link } from 'react-router-dom';
 import List from 'list.js';
 
 import { serviceProviders } from '../../CommonData/Data/serviceProvider';
-
+import { addNewProvider } from '../../helpers/ApiRoutes/addApiRoutes';
+import { updateSProvider } from '../../helpers/ApiRoutes/editApiRoutes';
 import { useFormik } from "formik";
 // Import Flatepicker
 // import Flatpickr from "react-flatpickr";
@@ -22,7 +23,10 @@ import { useFormik } from "formik";
 import { getSPAllData } from '../../helpers/ApiRoutes/authApiRoutes'
 const ListTables = () => 
 {
-
+    const [modal_list, setmodal_list] = useState(false);
+    const [ add_list, setAdd_list ] = useState(false);
+    const [sproviders, setSproviders] = useState([]);
+    const [sprovider, setSprovider] = useState([]);
 
     function toggleStatus(button, serviceProviderId)
     {
@@ -56,13 +60,6 @@ const ListTables = () =>
         }
     }
 
-
-
-    const [modal_list, setmodal_list] = useState(false);
-    const [ add_list, setAdd_list ] = useState(false);
-    const [sproviders, setSproviders] = useState([]);
-    const [sprovider, setSprovider] = useState([]);
-
     function tog_list(param,productId) {
         if(param === 'ADD'){
             setAdd_list(!add_list);
@@ -83,8 +80,12 @@ const ListTables = () =>
         emergency_contact_no: !add_list ? sprovider[0]?.emergency_contact_no : '',
         contact_address: !add_list ? sprovider[0]?.contact_address : '',
         certification_or_license_no: !add_list ? sprovider[0]?.certification_or_license_no : '',
-        certification_or_license_img:  '',
+        certification_or_license_img: '',
       };
+      
+      // Later in your code, when setting the initial state
+  
+      
       
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
@@ -95,14 +96,21 @@ const ListTables = () =>
                 if(add_list){
                     //add new
                     console.log("add new");
+                    addNewProvider(values);
+                    setAdd_list(false);
+                    setmodal_list(false);
                 }else{
                     //update previes one
                     console.log("update previues one ");
+                    updateSProvider(values);
+                    setAdd_list(false);
+                    setmodal_list(false);
+                 
                 }
     
         }
       });
-
+console.log("add_list",add_list);
     const [modal_delete, setmodal_delete] = useState(false);
     function tog_delete() {
         setmodal_delete(!modal_delete);
@@ -357,7 +365,7 @@ const ListTables = () =>
                         name="name"
                         id="providerName-field"
                         className="form-control"
-                        value={validation.values.name}
+                        value={validation.values.name || ""}
                         onChange={validation.handleChange}
                         placeholder="Enter Provider Name"
                         required
@@ -372,7 +380,7 @@ const ListTables = () =>
                         name="email"
                         id="email-field"
                         className="form-control"
-                        value={validation.values.email}
+                        value={validation.values.email || ""}
                         onChange={validation.handleChange}
                         placeholder="Enter Email"
                         required
@@ -387,7 +395,7 @@ const ListTables = () =>
                         id="userName-field"
                         name="username"
                         className="form-control"
-                        value={validation.values.username}
+                        value={validation.values.username || ""}
                         onChange={validation.handleChange}
                         placeholder="Enter User Name"
                         required
@@ -402,7 +410,7 @@ const ListTables = () =>
                         data-trigger
                         name="role"
                         id="status-field"
-                        value={validation.values.role}
+                        value={validation.values.role || ""}
                         onChange={validation.handleChange}
                         >
                         {!add_list ? (
@@ -428,7 +436,7 @@ const ListTables = () =>
                         id="contactPerson-field"
                         className="form-control"
                         name="contact_person"
-                        value={validation.values.contact_person}
+                        value={validation.values.contact_person || ""}
                         onChange={validation.handleChange}
                         placeholder="Enter Person Name"
                         required
@@ -443,7 +451,7 @@ const ListTables = () =>
                         id="phone-field"
                         className="form-control"
                         name="contact_no"
-                        value={validation.values.contact_no}
+                        value={validation.values.contact_no || ""}
                         onChange={validation.handleChange}
                         placeholder="Enter Phone No."
                         required
@@ -458,7 +466,7 @@ const ListTables = () =>
                         id="emergencyPhone-field"
                         name="emergency_contact_no"
                         className="form-control"
-                        value={validation.values.emergency_contact_no}
+                        value={validation.values.emergency_contact_no || ""}
                         onChange={validation.handleChange}
                         placeholder="Enter Emergency Phone No."
                         required
@@ -473,7 +481,7 @@ const ListTables = () =>
                         id="contactAddress-field"
                         name="contact_address"
                         className="form-control"
-                        value={validation.values.contact_address}
+                        value={validation.values.contact_address || ""}
                         onChange={validation.handleChange}
                         placeholder="Enter Contact Address"
                         required
@@ -487,7 +495,7 @@ const ListTables = () =>
                         type="text"
                         id="certificateNumber-field"
                         name="certification_or_license_no"
-                        value={validation.values.certification_or_license_no}
+                        value={validation.values.certification_or_license_no || ""}
                         onChange={validation.handleChange}
                         className="form-control"
                         placeholder="Enter Certificate Number"
@@ -503,8 +511,8 @@ const ListTables = () =>
                         id="certificateNumber-field"
                         name="certification_or_license_img"
                         className="form-control"
-                        value={validation.values.certification_or_license_img}
-                        onChange={validation.handleChange}
+                        // value={validation.values.certification_or_license_img || ""}
+                        // onChange={validation.handleChange}
                         placeholder="Upload Certificate image"
                         required
                         />

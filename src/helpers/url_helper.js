@@ -12,10 +12,17 @@ const token = "/horsecity661809"
 export const LOGIN_URL = apiBaseUrl + token + "/login"
 export const RECOVER_PWD_URL = apiBaseUrl + token + "/recoveryPassword"
 export const CHANGE_PASSWORD_URL = apiBaseUrl + token + "/changePassword"
-export const GET_SP_ALL_DATA_URL = apiBaseUrl + token + "/get-all-provider-data"
+
 /**NEW */
 export const RECOVER_PASSWORD = "/fake-recover-password";
 export const POST_FAKE_CHANGE_PWD = "/post-fake-change-password";
+
+/**SERVICE PROVIDER */
+export const GET_SP_ALL_DATA_URL = apiBaseUrl + token + "/get-all-provider-data"
+export const POST_SP_ADD_URL = apiBaseUrl + token + "/add-new"
+export const POST_SP_EDIT_URL = apiBaseUrl + token + "/edit:id"
+
+
 
 export const POST_FAKE_LOGIN = "/post-fake-login";
 export const POST_FAKE_JWT_LOGIN = "/post-jwt-login";
