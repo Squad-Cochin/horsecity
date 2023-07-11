@@ -16,15 +16,56 @@ import Flatpickr from "react-flatpickr";
 
 //Import Drivers
 import { getTaxations } from '../../helpers/ApiRoutes/authApiRoutes'
+import { addNewTaxation } from '../../helpers/ApiRoutes/addApiRoutes';
+import { updateTaxation } from '../../helpers/ApiRoutes/editApiRoutes';
+import { useFormik } from "formik";
 const TaxationDeatails = () => {
 
     const [ modal_list, setmodal_list] = useState(false);
-    const [ taxations, setTaxations] = useState([])
-    function tog_list() {
-        setmodal_list(!modal_list);
-    }
-
+    const [ taxations, setTaxations] = useState([]);
+    const [ taxation, setTaxation] = useState([]);
+    const [ add_list, setAdd_list ] = useState(false);
     const [modal_delete, setmodal_delete] = useState(false);
+    function tog_list(param,productId) {
+        if(param === 'ADD'){
+            setAdd_list(!add_list);
+        }
+        const data = taxations?.find((item)=>item?.id === productId)
+        setTaxation([data]);
+        setmodal_list(!modal_list);
+
+
+          
+          // Later in your code, when setting the initial state
+    }
+    const initialValues = {
+        name : !add_list ? taxation[0]?.name : '',
+        type : !add_list ? taxation[0]?.type : '',
+        value : !add_list ? taxation[0]?.value : '',
+      };
+    const validation = useFormik({
+        // enableReinitialize : use this flag when initial values needs to be changed
+        enableReinitialize: true,
+        initialValues,
+        onSubmit: (values) => {
+                console.log(values);
+                if(add_list){
+                    //add new
+                    console.log("add new");
+                    addNewTaxation(values);
+                    setAdd_list(false);
+                    setmodal_list(false);
+                }else{
+                    //update previes one
+                    console.log("update previues one ");
+                    updateTaxation(values);
+                    setAdd_list(false);
+                    setmodal_list(false);
+                 
+                }
+    
+        }
+      });
     function tog_delete() {
         setmodal_delete(!modal_delete);
     }
@@ -103,9 +144,9 @@ const TaxationDeatails = () => {
                                         <Row className="g-4 mb-3">
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
-                                                    <Button color="success" className="add-btn" onClick={() => tog_list()} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
+                                                    <Button color="success" className="add-btn" onClick={() => tog_list('ADD')}  id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
                                                     <Button color="soft-danger"
-                                                    onClick="deleteMultiple()"
+                                                    // onClick="deleteMultiple()"
                                                     ><i className="ri-delete-bin-2-line"></i></Button>
                                                 </div>
                                             </Col>
@@ -158,6 +199,7 @@ const TaxationDeatails = () => {
                                                         className="btn btn-sm btn-success edit-item-btn"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#showModal"
+                                                        onClick={() => tog_list('EDIT',item.id)}
                                                     >
                                                         Edit
                                                     </button>
@@ -234,31 +276,58 @@ const TaxationDeatails = () => {
             </div>
 
             {/* Add Modal */}
-            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Add Driver </ModalHeader>
-                <form className="tablelist-form">
+            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}  centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ?  'Add taxation' : 'Edit taxation' } </ModalHeader>
+                <form className="tablelist-form"
+                 onSubmit={validation.handleSubmit}>
                     <ModalBody>
-                        <div className="mb-3" id="modal-id" style={{ display: "none" }}>
-                            <label htmlFor="id-field" className="form-label">ID</label>
-                            <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
-                        </div>
+                    {/* Tax Name */}
+                    <div className="mb-3">
+                        <label htmlFor="tax-field" className="form-label">Name</label>
+                        <input
+                        type="text"
+                        id="tax-field"
+                        className="form-control"
+                        name="name"
+                        placeholder="Enter Tax Name"
+                        value={validation.values.name || ""}
+                        onChange={validation.handleChange}
+                        required
+                        />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="customername-field" className="form-label">Name</label>
-                            <input type="text" id="customername-field" className="form-control" placeholder="Enter Name" required />
-                        </div>
+                    {/* Tax Type */}
+                    <div className="mb-3">
+                        <label htmlFor="taxtype-field" className="form-label">Tax Type</label>
+                        <input
+                        type="text"
+                        id="taxtype-field"
+                        className="form-control"
+                        name="type"
+                        placeholder="Enter Tax Type"
+                        value={validation.values.type || ""}
+                        onChange={validation.handleChange}
+                        required
+                        />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="email-field" className="form-label">Email</label>
-                            <input type="email" id="email-field" className="form-control" placeholder="Enter Email" required />
-                        </div>
+                    {/* Tax Value */}
+                    <div className="mb-3">
+                        <label htmlFor="value-field" className="form-label">Value</label>
+                        <input
+                        type="text"
+                        id="value-field"
+                        className="form-control"
+                        name="value"
+                        value={validation.values.value || ""}
+                        onChange={validation.handleChange}
+                        placeholder="Enter Value"
+                        required
+                        />
+                    </div>
 
-                        <div className="mb-3">
-                            <label htmlFor="phone-field" className="form-label">Phone</label>
-                            <input type="text" id="phone-field" className="form-control" placeholder="Enter Phone no." required />
-                        </div>
 
-                        <div className="mb-3">
+                        {/* <div className="mb-3">
                             <label htmlFor="date-field" className="form-label">Joining Date</label>
                             <Flatpickr
                                 className="form-control"
@@ -267,21 +336,13 @@ const TaxationDeatails = () => {
                                 }}
                                 placeholder="Select Date"
                             />
-                        </div>
+                        </div> */}
 
-                        <div>
-                            <label htmlFor="status-field" className="form-label">Status</label>
-                            <select className="form-control" data-trigger name="status-field" id="status-field" >
-                                <option value="">Status</option>
-                                <option value="Active">Active</option>
-                                <option value="Block">Block</option>
-                            </select>
-                        </div>
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() => setmodal_list(false)}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">Add Customer</button>
+                            <button type="button" className="btn btn-light" onClick={() =>{ setmodal_list(false); setAdd_list(false);}}>Close</button>
+                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ?  'Add taxation' : 'Update taxation' }</button>
                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>

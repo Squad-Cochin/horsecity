@@ -15,15 +15,58 @@ import Flatpickr from "react-flatpickr";
 // import avatar4 from "../../assets/images/users/avatar-4.jpg";
 // import avatar5 from "../../assets/images/users/avatar-5.jpg";
 
-//Import Drivers
+//Import discounts
 import { getDiscounts } from '../../helpers/ApiRoutes/authApiRoutes'
+import { addNewDiscounts } from '../../helpers/ApiRoutes/addApiRoutes';
+import { updateDiscounts } from '../../helpers/ApiRoutes/editApiRoutes';
+import { useFormik } from "formik";
 const DiscountsDeatails = () => {
 
     const [ modal_list, setmodal_list] = useState(false);
     const [ discounts, setDiscounts] = useState([])
-    function tog_list() {
+    const [ add_list, setAdd_list ] = useState(false);
+    const [ discount, setDiscount] = useState([])
+    function tog_list(param,productId) {
+        if(param === 'ADD'){
+            setAdd_list(!add_list);
+        }
+        const data = discounts?.find((item)=>item?.id === productId)
+        setDiscount([data]);
         setmodal_list(!modal_list);
+
     }
+    const initialValues = {
+        name : !add_list ? discount[0]?.name : '',
+        rate : !add_list ? discount[0]?.rate : '',
+     };
+      
+      // Later in your code, when setting the initial state
+  
+      
+      
+    const validation = useFormik({
+        // enableReinitialize : use this flag when initial values needs to be changed
+        enableReinitialize: true,
+        initialValues,
+        onSubmit: (values) => {
+                console.log(values);
+                if(add_list){
+                    //add new
+                    console.log("add new");
+                    addNewDiscounts(values);
+                    setAdd_list(false);
+                    setmodal_list(false);
+                }else{
+                    //update previes one
+                    console.log("update previues one ");
+                    updateDiscounts(values);
+                    setAdd_list(false);
+                    setmodal_list(false);
+                 
+                }
+    
+        }
+      });
 
     const [modal_delete, setmodal_delete] = useState(false);
     function tog_delete() {
@@ -103,9 +146,9 @@ Discounts             <Row>
                                         <Row className="g-4 mb-3">
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
-                                                    <Button color="success" className="add-btn" onClick={() => tog_list()} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
+                                                    <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
                                                     <Button color="soft-danger"
-                                                    onClick="deleteMultiple()"
+                                                    // onClick="deleteMultiple()"
                                                     ><i className="ri-delete-bin-2-line"></i></Button>
                                                 </div>
                                             </Col>
@@ -160,6 +203,7 @@ Discounts             <Row>
                                                         className="btn btn-sm btn-success edit-item-btn"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#showModal"
+                                                        onClick={() => tog_list('EDIT',item.id)}
                                                     >
                                                         Edit
                                                     </button>
@@ -235,54 +279,32 @@ Discounts             <Row>
             </div>
 
             {/* Add Modal */}
-            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Add Driver </ModalHeader>
-                <form className="tablelist-form">
+            <Modal className="extra-width" isOpen={modal_list}  toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}  centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT');  }}>{add_list ?  'Add discount' : 'Edit discount' }</ModalHeader>
+                <form className="tablelist-form"
+                 onSubmit={validation.handleSubmit}>
                     <ModalBody>
-                        <div className="mb-3" id="modal-id" style={{ display: "none" }}>
+                        {/* <div className="mb-3" id="modal-id" style={{ display: "none" }}>
                             <label htmlFor="id-field" className="form-label">ID</label>
                             <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
+                        </div> */}
+
+                        <div className="mb-3">
+                            <label htmlFor="taxationname-field" className="form-label">Name</label>
+                            <input type="text" id="taxationname-field" name='name' className="form-control" placeholder="Enter Name"    value={validation.values.name || ""}
+                             onChange={validation.handleChange} required />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="customername-field" className="form-label">Name</label>
-                            <input type="text" id="customername-field" className="form-control" placeholder="Enter Name" required />
+                            <label htmlFor="rate-field" className="form-label">Rate (%)</label>
+                            <input type="text" id="rate-field" name='rate' className="form-control" placeholder="Enter Rate"    value={validation.values.rate || ""}
+                            onChange={validation.handleChange}   required />
                         </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="email-field" className="form-label">Email</label>
-                            <input type="email" id="email-field" className="form-control" placeholder="Enter Email" required />
-                        </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="phone-field" className="form-label">Phone</label>
-                            <input type="text" id="phone-field" className="form-control" placeholder="Enter Phone no." required />
-                        </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="date-field" className="form-label">Joining Date</label>
-                            <Flatpickr
-                                className="form-control"
-                                options={{
-                                    dateFormat: "d M, Y"
-                                }}
-                                placeholder="Select Date"
-                            />
-                        </div>
-
-                        <div>
-                            <label htmlFor="status-field" className="form-label">Status</label>
-                            <select className="form-control" data-trigger name="status-field" id="status-field" >
-                                <option value="">Status</option>
-                                <option value="Active">Active</option>
-                                <option value="Block">Block</option>
-                            </select>
-                        </div>
-                    </ModalBody>
+                </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() => setmodal_list(false)}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">Add Customer</button>
+                            <button type="button" className="btn btn-light" onClick={() =>{ setmodal_list(false); setAdd_list(false);}}>Close</button>
+                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ?  'Add discount' : 'Update discount' }</button>
                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>
