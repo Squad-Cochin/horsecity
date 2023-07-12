@@ -67,7 +67,7 @@ const InvoiceDetails = () => {
                                             <table className="table align-middle table-nowrap" id="Table">
                                                 <thead className="table-light">
                                                     <tr>
-                                                        <th className="index" data-sort="index">#</th>
+                                                        <th className="index" data-sort="index">Sr.No</th>
                                                         <th className="sort" data-sort="customer_name">Customer Name</th>
                                                         <th className="sort" data-sort="service_provider_name">Service Provider Name</th>
                                                         <th className="sort" data-sort="quotation_id">Quotation Id</th>
@@ -78,10 +78,7 @@ const InvoiceDetails = () => {
                                                 <tbody className="list form-check-all">
                                                     {Invoices.map((item, index) => (
                                                         <tr key={item.id}>
-                                                                  <th scope="row">
-                                                        {index + 1}
-
-                                                        </th>
+                                                            <td className="index text-center">{index + 1}</td>
                                                             <td className="customer_name">{item.customer_name}</td>
                                                             <td className="service_provider_name">{item.service_provider_name}</td>
                                                             <td className="quotation_id">{item.quotation_id}</td>
@@ -171,14 +168,14 @@ const InvoiceDetails = () => {
                                                     </thead>
                                                     <tbody>
                                                         <tr>
-                                                            <td className="tm_width_3 text-center">1 </td>
+                                                            <td className="tm_width_3 text-center">1</td>
                                                             <td className="tm_width_4 text-center">Vehicle 1, Driver 1</td>
                                                             <td className="tm_width_2 text-center">AED 350</td>
                                                             <td className="tm_width_1 text-center">1</td>
                                                             <td className="tm_width_2 text-center">AED 350</td>
                                                         </tr>
                                                         <tr>
-                                                            <td className="tm_width_3 text-center">2.</td>
+                                                            <td className="tm_width_3 text-center">2</td>
                                                             <td className="tm_width_4 text-center">Vehicle 2, Driver 2</td>
                                                             <td className="tm_width_2 text-center">AED 600</td>
                                                             <td className="tm_width_1 text-center">1</td>
@@ -192,7 +189,7 @@ const InvoiceDetails = () => {
                                                             <td className="tm_width_2 text-center">AED 400</td>
                                                         </tr>
                                                         <tr>
-                                                            <td className="tm_width_3 text-center">4.</td>
+                                                            <td className="tm_width_3 text-center">4</td>
                                                             <td className="tm_width_4 text-center">Vehicle 4, Driver 4</td>
                                                             <td className="tm_width_2 text-center">AED 100</td>
                                                             <td className="tm_width_1 text-center">3</td>
@@ -227,6 +224,13 @@ const InvoiceDetails = () => {
                                             </table>
                                         </div>
                                     </div>
+                                </div>
+                                <div class="tm_padd_15_20 tm_round_border">
+                                    <p class="tm_mb5"><b class="tm_primary_color">Terms & Conditions:</b></p>
+                                    <ul class="tm_m0 tm_note_list">
+                                        <li>All claims relating to quantity or shipping errors shall be waived by Buyer unless made in writing to Seller within thirty (30) days after delivery of goods to the address stated.</li>
+                                        <li>Delivery dates are not guaranteed and Seller has no liability for damages that may be incurred due to any delay in shipment of goods hereunder. Taxes are excluded unless otherwise stated.</li>
+                                    </ul>
                                 </div>
                             </div>
                         </div>
