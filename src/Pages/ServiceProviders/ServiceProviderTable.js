@@ -7,6 +7,7 @@ import List from 'list.js';
 
 import { serviceProviders } from '../../CommonData/Data/serviceProvider';
 import { addNewProvider } from '../../helpers/ApiRoutes/addApiRoutes';
+import { removeProvider } from '../../helpers/ApiRoutes//removeApiRoutes';
 import { updateSProvider } from '../../helpers/ApiRoutes/editApiRoutes';
 import { useFormik } from "formik";
 // Import Flatepicker
@@ -24,9 +25,21 @@ import { getSPAllData } from '../../helpers/ApiRoutes/authApiRoutes'
 const ListTables = () => 
 {
     const [modal_list, setmodal_list] = useState(false);
+    const [view_modal, setView_modal] = useState(false);
     const [ add_list, setAdd_list ] = useState(false);
     const [sproviders, setSproviders] = useState([]);
     const [sprovider, setSprovider] = useState([]);
+    const [certificateChanged, setcertificateChanged] = useState(false);
+    const [updateImage, setUpdateImage] = useState("")
+    const [certificatePreview, setcertificatePreview] = useState(null);
+
+    const handleCertificateLogoChange = (event) => 
+    {
+      const file = event.target.files[0];
+      setUpdateImage(file)
+      setcertificatePreview(URL.createObjectURL(file));
+    };
+
 
     function toggleStatus(button, serviceProviderId)
     {
@@ -67,7 +80,18 @@ const ListTables = () =>
         const data = sproviders?.find((item)=>item?.id === productId)
         setSprovider([data]);
         setmodal_list(!modal_list);
+        setcertificatePreview(null)
+    }
 
+    function tog_view(productId) {
+        const data = sproviders?.find((item)=>item?.id === productId)
+        setSprovider([data]);
+        setView_modal(!view_modal);
+
+    }
+
+    function remove_data(id){
+        removeProvider(id)
     }
     
     const initialValues = {
@@ -80,37 +104,37 @@ const ListTables = () =>
         emergency_contact_no: !add_list ? sprovider[0]?.emergency_contact_no : '',
         contact_address: !add_list ? sprovider[0]?.contact_address : '',
         certification_or_license_no: !add_list ? sprovider[0]?.certification_or_license_no : '',
-        certification_or_license_img: '',
+        certificate_image : !add_list ? sprovider[0]?.certificate_image : '',
       };
       
       // Later in your code, when setting the initial state
   
-      
-      
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
-                console.log(values);
-                if(add_list){
-                    //add new
-                    console.log("add new");
-                    addNewProvider(values);
-                    setAdd_list(false);
-                    setmodal_list(false);
-                }else{
-                    //update previes one
-                    console.log("update previues one ");
-                    updateSProvider(values);
-                    setAdd_list(false);
-                    setmodal_list(false);
-                 
-                }
-    
+            values.certificate_image = updateImage;
+            if(add_list){
+                //add new
+                console.log("add new");
+                addNewProvider(values);
+                setAdd_list(false);
+                setmodal_list(false);
+                setcertificatePreview(null);
+                initialValues.certificate_image = '';
+            }else{
+                //update previes one
+                console.log("update previues one ");
+                console.log(values)
+                updateSProvider(values);
+                setAdd_list(false);
+                setmodal_list(false);
+                setcertificatePreview(null);
+                initialValues.certificate_image = '';
+            }
         }
       });
-console.log("add_list",add_list);
     const [modal_delete, setmodal_delete] = useState(false);
     function tog_delete() {
         setmodal_delete(!modal_delete);
@@ -175,6 +199,26 @@ console.log("add_list",add_list);
     });
 
 
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        const form = event.target;
+        if (form.checkValidity()) {
+          // Perform form submission logic here
+          
+          // Update the logo image in the header if certificatePreview is set
+          if (certificatePreview) {
+            // Assuming you have a function to update the logo image in the header component
+            // Replace "updateHeaderLogo" with the actual function name and pass the certificatePreview as a parameter
+            // updateHeaderLogo(certificatePreview);
+            setcertificateChanged(true);
+          }
+    
+          console.log('Form submitted');
+        } else {
+          form.reportValidity();
+        }
+      };
+
     
     //  const handleProviderNameChange = (e) =>{
     //     console.log(e);
@@ -199,44 +243,44 @@ console.log("add_list",add_list);
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
                                                     <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
-                                                    <Button color="soft-danger"
+                                                    {/* <Button color="soft-danger"
                                                     // onClick="deleteMultiple()"
-                                                    ><i className="ri-delete-bin-2-line"></i></Button>
+                                                    ><i className="ri-delete-bin-2-line"></i></Button> */}
                                                 </div>
                                             </Col>
-                                            <Col className="col-sm">
+                                            {/* <Col className="col-sm">
                                                 <div className="d-flex justify-content-sm-end">
                                                     <div className="search-box ms-2">
                                                         <input type="text" className="form-control search" placeholder="Search..." />
                                                         <i className="ri-search-line search-icon"></i>
                                                     </div>
                                                 </div>
-                                            </Col>
+                                            </Col> */}
                                         </Row>
 
                                         <div className="table-responsive table-card mt-3 mb-1">
                                             <table className="table align-middle table-nowrap" id="customerTable">
                                                 <thead className="table-light">
                                                     <tr>
-                                                        <th scope="col" style={{ width: "50px" }}>
+                                                        {/* <th scope="col" style={{ width: "50px" }}>
                                                             <div className="form-check">
                                                                 <input className="form-check-input" type="checkbox" id="checkAll" value="option" />
                                                             </div>
-                                                        </th>
+                                                        </th> */}
                                                         <th className="sort" data-sort="sprovider_name">Name</th>
                                                         <th className="sort" data-sort="email">Email</th>
-                                                        <th className="sort" data-sort="username">User Name</th>
+                                                        {/* <th className="sort" data-sort="username">User Name</th> */}
                                                         <th className="sort" data-sort="username">Role</th>
                                                         <th className="sort" data-sort="contactperson">Contact Person</th>
-                                                        <th className="sort" data-sort="idproof">Id Proof</th>
+                                                        {/* <th className="sort" data-sort="idproof">Id Proof</th> */}
                                                         <th className="sort" data-sort="phone">Contact Number</th>
-                                                        <th className="sort" data-sort="customer_address">Contact Address</th>
-                                                        <th className="sort" data-sort="phone">Emergency Contact Number</th>
+                                                        {/* <th className="sort" data-sort="customer_address">Contact Address</th> */}
+                                                        {/* <th className="sort" data-sort="phone">Emergency Contact Number</th> */}
                                                         {/* <th className="sort" data-sort="certification">Certification or license image</th> */}
-                                                        <th className="sort" data-sort="license no">License Number</th>
+                                                        {/* <th className="sort" data-sort="license no">License Number</th> */}
 
-                                                        <th className="sort" data-sort="date">Created At</th>
-                                                        <th className="sort" data-sort="date">Expiry At</th>
+                                                        {/* <th className="sort" data-sort="date">Created At</th> */}
+                                                        {/* <th className="sort" data-sort="date">Expiry At</th> */}
                                                         <th className="sort" data-sort="status">Status</th>
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>
@@ -244,25 +288,25 @@ console.log("add_list",add_list);
                                                 <tbody className="list form-check-all">
                                                     {sproviders.map((value) => (
                                                         <tr key={value?.id}>
-                                                            <th scope="row">
+                                                            {/* <th scope="row">
                                                                 <div className="form-check">
                                                                     <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
                                                                 </div>
-                                                            </th>
+                                                            </th> */}
                                                             <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
                                                             <td className="name">{value.name}</td>
                                                             <td className="email">{value.email}</td>
-                                                            <td className="name">{value.user_name}</td>
-                                                            <td className="name">{value.role_name}</td>
-                                                            <td className="name">{value.contact_person}</td>
-                                                            <td className="idproof">{value.id_proof}</td>
+                                                            {/* <td className="name">{value.user_name}</td> */}
+                                                            <td className="role">{value.role_name}</td>
+                                                            <td className="contact_person">{value.contact_person}</td>
+                                                            {/* <td className="idproof">{value.id_proof}</td> */}
                                                             <td className="phone">{value.contact_no}</td>
-                                                            <td className="address">{value.contact_address}</td>
-                                                            <td className="phone">{value.emergency_contact_no}</td>
+                                                            {/* <td className="address">{value.contact_address}</td> */}
+                                                            {/* <td className="emergency_phone">{value.emergency_contact_no}</td> */}
                                                             {/* <td className="lisenceimage">{value.certification_or_license_img}</td> */}
-                                                            <td className="licenseno">{value.certification_or_license_no}</td>
-                                                            <td className="date">{value.created_at}</td>
-                                                            <td className="date">{value.expiry_at}</td>
+                                                            {/* <td className="licenseno">{value.certification_or_license_no}</td> */}
+                                                            {/* <td className="date">{value.created_at}</td> */}
+                                                            {/* <td className="date">{value.expiry_at}</td> */}
                                                             {/* <td className="status"><span className="badge badge-soft-success text-uppercase">{value.status}</span></td> */}
                                                             
                                                             <div>
@@ -280,11 +324,15 @@ console.log("add_list",add_list);
                                                             <td>
                                                                 <div className="d-flex gap-2">
                                                                     <div className="edit">
-                                                                        <button className="btn btn-sm btn-success edit-item-btn" onClick={() => tog_list('EDIT',value.id)}
+                                                                        <button className="btn btn-sm btn-success edit-item-btn" onClick={() => tog_view(value.id)}
+                                                                            data-bs-toggle="modal" data-bs-target="#showModal">View</button>
+                                                                    </div>
+                                                                    <div className="edit">
+                                                                        <button className="btn btn-sm btn-primary edit-item-btn" onClick={() => tog_list('EDIT',value.id)}
                                                                             data-bs-toggle="modal" data-bs-target="#showModal">Edit</button>
                                                                     </div>
                                                                     <div className="remove">
-                                                                        <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
+                                                                        <button className="btn btn-sm btn-danger remove-item-btn" onClick={() => remove_data(value.id)} data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
                                                                     </div>
                                                                 </div>
                                                             </td>
@@ -506,16 +554,33 @@ console.log("add_list",add_list);
                     {/* Certificate Image */}
                     <div className="mb-3">
                         <label htmlFor="certificateNumber-field" className="form-label">Certificate Image</label>
-                        <input
+                        <div className="col-md-10">
+                            {certificatePreview && (
+                              <div>
+                                <h5>Certificate Image Preview:</h5>
+                                <img src={certificatePreview} alt="Certificate Image Preview" style={{ maxWidth: '100px' }} />
+                              </div>
+                            )}
+                            {!certificateChanged && (
+                              <input
+                                className="form-control"
+                                name="certification_or_license_img"
+                                type="file"
+                                placeholder="Certificate Image"
+                                onChange={handleCertificateLogoChange}
+                              />
+                            )}
+                          </div>
+                        
+                        
+                        {/* <input
                         type="file"
                         id="certificateNumber-field"
                         name="certification_or_license_img"
                         className="form-control"
-                        // value={validation.values.certification_or_license_img || ""}
-                        // onChange={validation.handleChange}
                         placeholder="Upload Certificate image"
                         required
-                        />
+                        /> */}
                     </div>
 
                     {/* Continue> adding other fields in a similar pattern */}
@@ -526,8 +591,215 @@ console.log("add_list",add_list);
                       
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() =>{ setmodal_list(false); setAdd_list(false);}}>Close</button>
+                            <button type="button" className="btn btn-light" onClick={() =>{ setmodal_list(false); setAdd_list(false); setcertificatePreview(null)}}>Close</button>
                             <button type="submit" className="btn btn-success" id="add-btn">{add_list ?  'Add service provider' : 'Update service provider' }</button>
+                            {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
+                        </div>
+                    </ModalFooter>
+                </form>
+            </Modal>
+
+            {/* View Modal */}
+            <Modal className="extra-width" isOpen={view_modal} centered >
+            <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_view('view'); }}>View service provider</ModalHeader>
+                <form className="tablelist-form">
+                    <ModalBody>
+                {sprovider?.map((item, index) => (
+                    <div key={index}>
+                    {/* Provider Name */}
+                    <div className="mb-3">
+                        <label htmlFor="providerName-field" className="form-label">Provider Name</label>
+                        <input
+                        type="text"
+                        name="name"
+                        id="providerName-field"
+                        className="form-control"
+                        value={validation.values.name || ""}
+                        readOnly
+                        />
+                    </div>
+
+                    {/* Email */}
+                    <div className="mb-3">
+                        <label htmlFor="email-field" className="form-label">Email</label>
+                        <input
+                        type="email"
+                        name="email"
+                        id="email-field"
+                        className="form-control"
+                        value={validation.values.email || ""}
+                        readOnly
+                        />
+                    </div>
+
+                    {/* User Name */}
+                    <div className="mb-3">
+                        <label htmlFor="userName-field" className="form-label">User Name</label>
+                        <input
+                        type="text"
+                        id="userName-field"
+                        name="username"
+                        className="form-control"
+                        value={validation.values.username || ""}
+                        readOnly
+                        />
+                    </div>
+
+                    {/* Role */}
+                    <div className="mb-3">
+                        <label htmlFor="role-field" className="form-label">Role</label>
+                        <input
+                        type="text"
+                        id="role-field"
+                        name="role"
+                        className="form-control"
+                        value={validation.values.role || ""}
+                        readOnly
+                        />
+                    </div>
+
+                    {/* <div className="mb-3">
+                        <label htmlFor="status-field" className="form-label">Role</label>
+                        <select
+                        className="form-control"
+                        data-trigger
+                        name="role"
+                        id="status-field"
+                        value={validation.values.role || ""}
+                        readOnly
+                        >
+                        {!add_list ? (
+                            <>
+                            <option value="service provider">{item?.role_name}</option>
+                            <option value="super admin">super admin</option>
+                            </>
+                        ) : (
+                            <>
+                            <option value="">Select role</option>
+                            <option value="service provider">service provider</option>
+                            <option value="super admin">super admin</option>
+                            </>
+                        )}
+                        </select> */}
+                    {/* </div> */}
+
+                    {/* Contact Person */}
+                    <div className="mb-3">
+                        <label htmlFor="contactPerson-field" className="form-label">Contact Person</label>
+                        <input
+                        type="text"
+                        id="contactPerson-field"
+                        className="form-control"
+                        name="contact_person"
+                        value={validation.values.contact_person || ""}
+                        readOnly
+                        />
+                    </div>
+
+                    {/* Contact Number */}
+                    <div className="mb-3">
+                        <label htmlFor="phone-field" className="form-label">Contact Number</label>
+                        <input
+                        type="text"
+                        id="phone-field"
+                        className="form-control"
+                        name="contact_no"
+                        value={validation.values.contact_no || ""}
+                        readOnly
+                        />
+                    </div>
+
+                    {/* Emergency Contact Number */}
+                    <div className="mb-3">
+                        <label htmlFor="emergencyPhone-field" className="form-label">Emergency Contact Number</label>
+                        <input
+                        type="text"
+                        id="emergencyPhone-field"
+                        name="emergency_contact_no"
+                        className="form-control"
+                        value={validation.values.emergency_contact_no || ""}
+                        readOnly
+                        />
+                    </div>
+
+                    {/* Contact Address */}
+                    <div className="mb-3">
+                        <label htmlFor="contactAddress-field" className="form-label">Contact Address</label>
+                        <input
+                        type="text"
+                        id="contactAddress-field"
+                        name="contact_address"
+                        className="form-control"
+                        value={validation.values.contact_address || ""}
+                        readOnly
+                        />
+                    </div>
+
+                    {/* Certificate Number */}
+                    <div className="mb-3">
+                        <label htmlFor="certificateNumber-field" className="form-label">Licensce Number</label>
+                        <input
+                        type="text"
+                        id="certificateNumber-field"
+                        name="certification_or_license_no"
+                        className="form-control"
+                        value={validation.values.certification_or_license_no || ""}
+                        readOnly
+                        />
+                    </div>
+
+                    {/* certificate image */}
+                    <div className="mb-3">
+                        <label htmlFor="certificateImage-field" className="form-label">Licensce Image</label>
+                        <div>
+                            <img src={validation.values.certificate_image || ""} alt="License Image" style={{ maxWidth: '100px' }} />
+                        </div>
+                    </div>
+
+                    {/* Certificate Image */}
+                    {/* <div className="mb-3">
+                        <label htmlFor="certificateNumber-field" className="form-label">Certificate Image</label>
+                        <div className="col-md-10">
+                            {certificatePreview && (
+                              <div>
+                                <h5>Menu Logo Preview:</h5>
+                                <img src={certificatePreview} alt="Menu Logo Preview" style={{ maxWidth: '100px' }} />
+                              </div>
+                            )}
+                            {!certificateChanged && (
+                              <input
+                                className="form-control"
+                                type="file"
+                                placeholder="Upload Menu Logo Image"
+                                onChange={handleCertificateLogoChange}
+                                required
+                              />
+                            )}
+                          </div>
+                        
+                        
+                        <input
+                        type="file"
+                        id="certificateNumber-field"
+                        name="certification_or_license_img"
+                        className="form-control"
+                        // value={validation.values.certification_or_license_img || ""}
+                        // onChange={validation.handleChange}
+                        placeholder="Upload Certificate image"
+                        required
+                        />
+                    </div> */}
+
+                    {/* Continue> adding other fields in a similar pattern */}
+                    </div>
+                ))}
+                </ModalBody>
+
+                      
+                    <ModalFooter>
+                        <div className="hstack gap-2 justify-content-end">
+                            <button type="button" className="btn btn-light" onClick={() =>{ setView_modal(false);}}>Close</button>
+                            {/* <button type="submit" className="btn btn-success" id="add-btn">{add_list ?  'Add service provider' : 'Update service provider' }</button> */}
                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>

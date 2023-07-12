@@ -197,37 +197,37 @@ const ListCustomerTable = () => {
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
                                                     <Button color="success" className="add-btn"  onClick={() => tog_list('ADD')}  id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
-                                                    <Button color="soft-danger"
+                                                    {/* <Button color="soft-danger"
                                                     // onClick="deleteMultiple()"
-                                                    ><i className="ri-delete-bin-2-line"></i></Button>
+                                                    ><i className="ri-delete-bin-2-line"></i></Button> */}
                                                 </div>
                                             </Col>
-                                            <Col className="col-sm">
+                                            {/* <Col className="col-sm">
                                                 <div className="d-flex justify-content-sm-end">
                                                     <div className="search-box ms-2">
                                                         <input type="text" className="form-control search" placeholder="Search..." />
                                                         <i className="ri-search-line search-icon"></i>
                                                     </div>
                                                 </div>
-                                            </Col>
+                                            </Col> */}
                                         </Row>
 
                                         <div className="table-responsive table-card mt-3 mb-1">
                                             <table className="table align-middle table-nowrap" id="customerTable">
                                                 <thead className="table-light">
                                                     <tr>
-                                                        <th scope="col" style={{ width: "50px" }}>
+                                                        {/* <th scope="col" style={{ width: "50px" }}>
                                                             <div className="form-check">
                                                                 <input className="form-check-input" type="checkbox" id="checkAll" value="option" />
                                                             </div>
-                                                        </th>
+                                                        </th> */}
                                                         <th className="sort" data-sort="customer_name">Name</th>
                                                         <th className="sort" data-sort="email">Email</th>
                                                         <th className="sort" data-sort="username">User Name</th>
                                                         <th className="sort" data-sort="contact_no">Contact Number</th>
                                                         <th className="sort" data-sort="date_of_birth">Date Of Birth</th>
-                                                        <th className="sort" data-sort="id_proof">Id Proof</th>
-                                                        <th className="sort" data-sort="email_verified">Email Verified</th>
+                                                        <th className="sort" data-sort="id_proof">Id Proof Number</th>
+                                                        {/* <th className="sort" data-sort="email_verified">Email Verified</th> */}
                                                         <th className="sort" data-sort="registered_date">Registered Date</th>
                                                         <th className="sort" data-sort="status">Status</th>
                                                         <th className="sort" data-sort="action">Action</th>
@@ -238,11 +238,11 @@ const ListCustomerTable = () => {
 
                                                
                                                     <tr key={item.id}>
-                                                        <th scope="row">
+                                                        {/* <th scope="row">
                                                             <div className="form-check">
                                                                 <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
                                                             </div>
-                                                        </th>
+                                                        </th> */}
                                                         <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
                                                         <td className="customer_name">{item.name}</td>
                                                         <td className="email">{item.email}</td>
@@ -250,7 +250,7 @@ const ListCustomerTable = () => {
                                                         <td className="contact_no">{item.phone}</td>
                                                         <td className="date_of_birth">{item.date_of_birth}</td>
                                                         <td className="id_proof">{item.id_proof_no}</td>
-                                                        <td className="status">{item.email_verified}</td>
+                                                        {/* <td className="status">{item.email_verified}</td> */}
                                                         <td className="registered_date">{item.created_at}</td>
                                                         {/* <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td> */}
 
