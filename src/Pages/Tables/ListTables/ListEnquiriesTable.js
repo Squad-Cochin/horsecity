@@ -8,8 +8,8 @@ import { useFormik } from "formik";
 // Import Flatepicker
 // import Flatpickr from "react-flatpickr";
 import { qetEnquiriesData } from "../../../helpers/ApiRoutes/authApiRoutes";
-import { addNewEnquirie } from '../../../helpers/ApiRoutes/addApiRoutes';
-import { updateEnquirie } from '../../../helpers/ApiRoutes/editApiRoutes';
+
+
 import { enquiriesData } from '../../../CommonData/Data';
 
 const ListEnquiriesTable = () => {
@@ -44,56 +44,18 @@ const ListEnquiriesTable = () => {
 
     const [modal_list, setmodal_list] = useState(false);
     const [enquiries, setEnquiries] = useState([])
-    const [add_list, setAdd_list] = useState(false);
     const [enquirie, setEnquirie] = useState([])
 
+    function tog_list(param, productId) {
 
-    function tog_list(param,productId) {
-        if(param === 'ADD'){
-            setAdd_list(!add_list);
-        }
-        const data = enquiries?.find((item)=>item?.id === productId)
+        const data = enquiries?.find((item) => item?.id === productId)
         setEnquirie([data]);
         setmodal_list(!modal_list);
-
+        // setcertificatePreview(null)
     }
-    
-    const initialValues = {
-        name: !add_list ? enquirie[0]?.name : '',
-        email: !add_list ? enquirie[0]?.email : '',
-        username: !add_list ? enquirie[0]?.user_name : '',
-        role: !add_list ? enquirie[0]?.role_name : '',
-        contact_person: !add_list ? enquirie[0]?.contact_person : '',
-        contact_no: !add_list ? enquirie[0]?.contact_no : '',
-        emergency_contact_no: !add_list ? enquirie[0]?.emergency_contact_no : '',
-        contact_address: !add_list ? enquirie[0]?.contact_address : '',
-        certification_or_license_no: !add_list ? enquirie[0]?.certification_or_license_no : '',
-        certification_or_license_img: '',
-      };
 
-      const validation = useFormik({
-        // enableReinitialize : use this flag when initial values needs to be changed
-        enableReinitialize: true,
-        initialValues,
-        onSubmit: (values) => {
-                console.log(values);
-                if(add_list){
-                    //add new
-                    console.log("add new");
-                    addNewEnquirie(values);
-                    setAdd_list(false);
-                    setmodal_list(false);
-                }else{
-                    //update previes one
-                    console.log("update previues one ");
-                    updateEnquirie(values);
-                    setAdd_list(false);
-                    setmodal_list(false);
-                 
-                }
-    
-        }
-      });
+
+
 
     const [modal_delete, setmodal_delete] = useState(false);
     function tog_delete() {
@@ -143,105 +105,89 @@ const ListEnquiriesTable = () => {
                                     <div id="customerList">
                                         <Row className="g-4 mb-3">
                                             <Col className="col-sm-auto">
-                                                <div className="d-flex gap-1">
-                                                    <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
-                                                    <Button color="soft-danger"
-                                                    // onClick="deleteMultiple()"
-                                                    ><i className="ri-delete-bin-2-line"></i></Button>
-                                                </div>
+
                                             </Col>
-                                            <Col className="col-sm">
-                                                <div className="d-flex justify-content-sm-end">
-                                                    <div className="search-box ms-2">
-                                                        <input type="text" className="form-control search" placeholder="Search..." />
-                                                        <i className="ri-search-line search-icon"></i>
-                                                    </div>
-                                                </div>
-                                            </Col>
+
                                         </Row>
 
                                         <div className="table-responsive table-card mt-3 mb-1">
                                             <table className="table align-middle table-nowrap" id="customerTable">
                                                 <thead className="table-light">
                                                     <tr>
-                                                        <th scope="col" style={{ width: "50px" }}>
-                                                            <div className="form-check">
-                                                                <input className="form-check-input" type="checkbox" id="checkAll" value="option" />
-                                                            </div>
-                                                        </th>
-                                                        <th className="sort" data-sort="customer_name">Name</th>
-                                                        <th className="sort" data-sort="customer_email">Email</th>
-                                                        <th className="sort" data-sort="customer_username">User Name</th>
-                                                        <th className="sort" data-sort="contact_no">Contact Number</th>
+                                                        <th className="index" data-sort="index">#</th>
+                                                        <th className="sort" data-sort="customer_name">Customer Name</th>
+                                                        {/* <th className="sort" data-sort="customer_email">Customer Email</th> */}
+                                                        {/* <th className="sort" data-sort="customer_username">Customer User Name</th> */}
+                                                        {/* <th className="sort" data-sort="contact_no">Customer Contact Number</th> */}
                                                         {/* <th className="sort" data-sort="vehicle_requested">Vehicle Requested</th> */}
                                                         <th className="sort" data-sort="service_provider">Service Provider</th>
+                                                        <th className="sort" data-sort="driver">Driver</th>
                                                         <th className="sort" data-sort="vehicle_number">Vehicle Number</th>
-                                                        <th className="sort" data-sort="vehicle_maker">Maker</th>
+                                                        {/* <th className="sort" data-sort="vehicle_maker">Maker</th>
                                                         <th className="sort" data-sort="pickup_location">Pickup Location</th>
-                                                        <th className="sort" data-sort="drop_location">Drop Location</th>
+                                                        <th className="sort" data-sort="drop_location">Drop Location</th>*/}
                                                         <th className="sort" data-sort="total_horse">Number Of Horse</th>
-                                                        <th className="sort" data-sort="description">Description</th>
+                                                            {/*<th className="sort" data-sort="description">Description</th>
                                                         <th className="sort" data-sort="created_date">Created Date</th>
-                                                        <th className="sort" data-sort="updated_date">Update Date</th>
+                                                        <th className="sort" data-sort="updated_date">Update Date</th> */}
                                                         <th className="sort" data-sort="status">Status</th>
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {enquiries.map((item) => (
+                                                    {enquiries.map((item,index) => (
                                                         <tr key={item.id}>
-                                                            <th scope="row">
-                                                                <div className="form-check">
-                                                                    <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
-                                                                </div>
-                                                            </th>
-                                                            <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
+                                                    
+                                                           <td className="index">{index + 1}</td>
                                                             <td className="customer_name">{item.cName}</td>
-                                                            <td className="customer_email">{item.cEmail}</td>
-                                                            <td className="customer_username">{item.cUser_name}</td>
-                                                            <td className="contact_no">{item.cPhone}</td>
+                                                           {/*  <td className="customer_email">{item.cEmail}</td>
+                                                            <td className="customer_username">{item.cUser_name}</td> */}
+                                                            {/* <td className="contact_no">{item.cPhone}</td> */}
                                                             {/* <td className="vehicle_requested">BMW</td> */}
                                                             <td className="service_provider">{item.vService_provider}</td>
+                                                            <td className="driver">{item.driver}</td>
                                                             <td className="vehicle_number">{item.vVvehicle_number}</td>
-                                                            <td className="vehicle_maker">{item.vMake}</td>
+                                                            {/* <td className="vehicle_maker">{item.vMake}</td>
                                                             <td className="pickup_location">{item.pickup_location}</td>
-                                                            <td className="drop_location">{item.drop_location}</td>
+                                                            <td className="drop_location">{item.drop_location}</td>*/}
                                                             <td className="total_horse">{item.no_of_horse}</td>
-                                                            <td className="description">{item.description}</td>
+                                                              {/*<td className="description">{item.description}</td>
                                                             <td className="created_date">{item.created_at}</td>
-                                                            <td className="updated_date">{item.updated_at}</td>
-                                                            {/* <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td> */}
-
-                                                            <div>
-                                                                <div className="d-flex gap-2">
-                                                                    <div className="status">
-                                                                        <button className="btn btn-sm btn-success status-item-btn"
-                                                                            data-bs-toggle="modal" data-bs-target="#showModal"
-                                                                            onClick={(event) => toggleStatus(event.target, item.id)}>
-                                                                            {item.status}
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
-
-
-                                                            <td>
-                                                                <div className="d-flex gap-2">
-                                                                    <div className="edit">
-                                                                        <button className="btn btn-sm btn-success edit-item-btn"onClick={() => tog_list('EDIT',item.id)}
-                                                                            data-bs-toggle="modal" data-bs-target="#showModal">Edit</button>
-                                                                    </div>
-                                                                    <div className="remove">
-                                                                        <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
+                                                            <td className="updated_date">{item.updated_at}</td> */}
+                                                            <td className="status">
+                                                                <div>
+                                                                    <div className="d-flex gap-2">
+                                                                        <div className="status">
+                                                                            <button
+                                                                                className="btn btn-sm btn-success status-item-btn"
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#showModal"
+                                                                                onClick={(event) => toggleStatus(event.target, item.id)}
+                                                                            >
+                                                                                {item.status}
+                                                                            </button>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </td>
-
-
+                                                            <td>
+                                                                <div className="d-flex gap-2">
+                                                                    <div className="edit">
+                                                                        <button className="btn btn-sm btn-primary edit-item-btn" onClick={() => tog_list(item.id)}
+                                                                            data-bs-toggle="modal" data-bs-target="#showModal">View</button>
+                                                                    </div>
+                                                                    <div className="remove">
+                                                                        <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">
+                                                                            Remove
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
                                             </table>
+
 
 
 
@@ -275,74 +221,270 @@ const ListEnquiriesTable = () => {
                     </Row>
                 </Container>
             </div>
+            {/* View Modal */}
+            <  Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(); }} centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}>View Enquiry </ModalHeader>
+                <form className="tablelist-form"
+                >
+                                       <ModalBody>
+                                       {enquiries?.map((item, index) => (
+                        <div key={index}>
+                            {/* <div className="mb-3">
+                            <label htmlFor="customerName-field" className="form-label">Customer Name</label>
+                            <input
+                                type="text"
+                                name="cName"
+                                id="customerName-field"
+                                className="form-control"
+                                value={item.cName}
+                                readOnly
+                            />
+                            </div> */}
 
-            {/* Add Modal */}
-            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ? 'Add Enquirie' : 'Edit Enquirie'}</ModalHeader>
-                <form className="tablelist-form">
-                    <ModalBody>
-                        {enquirie?.map((item, index) => (
-                            <div key={index}>
-                                {/* <div className="mb-3" id="modal-id" style={{ display: "none" }}>
-                            <label htmlFor="id-field" className="form-label">ID</label>
-                            <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
-                        </div> */}
-                                <div className="mb-3">
-                                    <label htmlFor="customer_name-field" className="form-label">Customer Name</label>
-                                    <input type="text" id="customer_name-field" className="form-control" defaultValue={!add_list ? item?.cName : ''} placeholder="Enter Customer Name" required />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="customer_username-field" className="form-label">Customer Username</label>
-                                    <input type="username" id="customer_username-field" className="form-control" defaultValue={!add_list ? item?.cUser_name : ''} placeholder="Enter Customer Username" required />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="vehicle-field" className="form-label">Desired Vehicle Number</label>
-                                    <input type="text" id="vehicle-field" className="form-control" defaultValue={!add_list ? item?.vVvehicle_number : ''} placeholder="Enter Desired Vehicle Number" required />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="contact_no-field" className="form-label">Contact Number</label>
-                                    <input type="text" id="contact_no-field" className="form-control" defaultValue={!add_list ? item?.cPhone : ''} placeholder="Enter Contact Number" required />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="pickup_location-field" className="form-label">Pick-Up Location</label>
-                                    <input type="text" id="pickup_location-field" className="form-control" defaultValue={!add_list ? item?.pickup_location : ''} placeholder="Enter Pick-Up Location" required />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="drop_location-field" className="form-label">Drop Location</label>
-                                    <input type="text" id="drop_location-field" className="form-control" defaultValue={!add_list ? item?.drop_location : ''} placeholder="Enter Drop Location" required />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="drop_location-field" className="form-label">Number Of Horses</label>
-                                    <select id="drop_location-field" className="form-control" defaultValue={!add_list ? item?.no_of_horse : ''} required>
-                                        {Array.from({ length: 50 }, (_, index) => (
-                                            <option key={index + 1} value={index + 1}>{index + 1}</option>
-                                        ))}
-                                    </select>
-                                </div>
-
-
-                                <div className="mb-3">
-                                    <label htmlFor="description-field" className="form-label">Description</label>
-                                    <input type="text" id="description-field" className="form-control" defaultValue={!add_list ? item?.description : ''} placeholder="Description" required />
-                                </div>
+                            <div className="mb-3">
+                            <label htmlFor="customerEmail-field" className="form-label">Customer Email</label>
+                            <input
+                                type="text"
+                                name="cEmail"
+                                id="customerEmail-field"
+                                className="form-control"
+                                value={item.cEmail}
+                                readOnly
+                            />
                             </div>
+
+                            <div className="mb-3">
+                            <label htmlFor="customerUsername-field" className="form-label">Customer Username</label>
+                            <input
+                                type="text"
+                                name="cUser_name"
+                                id="customerUsername-field"
+                                className="form-control"
+                                value={item.cUser_name}
+                                readOnly
+                            />
+                            </div>
+
+                            <div className="mb-3">
+                            <label htmlFor="customerPhone-field" className="form-label">Customer Contact Number</label>
+                            <input
+                                type="text"
+                                name="cPhone"
+                                id="customerPhone-field"
+                                className="form-control"
+                                value={item.cPhone}
+                                readOnly
+                            />
+                            </div>
+
+                            <div className="mb-3">
+                            <label htmlFor="customerIdProofno-field" className="form-label">Customer ID Proof Number</label>
+                            <input
+                                type="text"
+                                name="cId_proof_no"
+                                id="customerIdProofno-field"
+                                className="form-control"
+                                value={item.cId_proof_no}
+                                readOnly
+                            />
+                            </div>
+
+                            <div className="mb-3">
+                            <label htmlFor="cStatus-field" className="form-label">Customer Status</label>
+                            <input
+                                type="text"
+                                name="cStatus"
+                                id="cStatus-field"
+                                className="form-control"
+                                value={item.cStatus}
+                                readOnly
+                            />
+                            </div>
+
+                            <div className="mb-3">
+                            <label htmlFor="cCreated_at-field" className="form-label">Customer Created At</label>
+                            <input
+                                type="text"
+                                name="cCreated_at"
+                                id="cCreated_at-field"
+                                className="form-control"
+                                value={item.cCreated_at}
+                                readOnly
+                            />
+                            </div>
+
+                            {/* <div className="mb-3">
+                            <label htmlFor="driverId-field" className="form-label">Driver ID</label>
+                            <input
+                                type="text"
+                                name="driver_id"
+                                id="driverId-field"
+                                className="form-control"
+                                value={item.driver_id}
+                                readOnly
+                            />
+                            </div> */}
+{/* 
+                            <div className="mb-3">
+                            <label htmlFor="driver-field" className="form-label">Driver</label>
+                            <input
+                                type="text"
+                                name="driver"
+                                id="driver-field"
+                                className="form-control"
+                                value={item.driver}
+                                readOnly
+                            />
+                            </div> */}
+
+                            {/* <div className="mb-3">
+                            <label htmlFor="vId-field" className="form-label">Vehicle ID</label>
+                            <input
+                                type="text"
+                                name="vId"
+                                id="vId-field"
+                                className="form-control"
+                                value={item.vId}
+                                readOnly
+                            />
+                            </div> */}
+{/* 
+                            <div className="mb-3">
+                            <label htmlFor="vService_provider-field" className="form-label">Vehicle Service Provider</label>
+                            <input
+                                type="text"
+                                name="vService_provider"
+                                id="vService_provider-field"
+                                className="form-control"
+                                value={item.vService_provider}
+                                readOnly
+                            />
+                            </div> */}
+
+                            {/* <div className="mb-3">
+                            <label htmlFor="vVehicle_number-field" className="form-label">Vehicle Number</label>
+                            <input
+                                type="text"
+                                name="vVehicle_number"
+                                id="vVehicle_number-field"
+                                className="form-control"
+                                value={item.vVehicle_number}
+                                readOnly
+                            />
+                            </div> */}
+
+                            <div className="mb-3">
+                            <label htmlFor="vMake-field" className="form-label">Vehicle Make</label>
+                            <input
+                                type="text"
+                                name="vMake"
+                                id="vMake-field"
+                                className="form-control"
+                                value={item.vMake}
+                                readOnly
+                            />
+                            </div>
+
+                            <div className="mb-3">
+                            <label htmlFor="pickup_location-field" className="form-label">Pickup Location</label>
+                            <input
+                                type="text"
+                                name="pickup_location"
+                                id="pickup_location-field"
+                                className="form-control"
+                                value={item.pickup_location}
+                                readOnly
+                            />
+                            </div>
+
+                            <div className="mb-3">
+                            <label htmlFor="drop_location-field" className="form-label">Drop Location</label>
+                            <input
+                                type="text"
+                                name="drop_location"
+                                id="drop_location-field"
+                                className="form-control"
+                                value={item.drop_location}
+                                readOnly
+                            />
+                            </div>
+
+                            {/* <div className="mb-3">
+                            <label htmlFor="no_of_horse-field" className="form-label">Number of Horses</label>
+                            <input
+                                type="text"
+                                name="no_of_horse"
+                                id="no_of_horse-field"
+                                className="form-control"
+                                value={item.no_of_horse}
+                                readOnly
+                            />
+                            </div> */}
+
+                            <div className="mb-3">
+                            <label htmlFor="description-field" className="form-label">Description</label>
+                            <input
+                                type="text"
+                                name="description"
+                                id="description-field"
+                                className="form-control"
+                                value={item.description}
+                                readOnly
+                            />
+                            </div>
+
+                            {/* <div className="mb-3">
+                            <label htmlFor="status-field" className="form-label">Status</label>
+                            <input
+                                type="text"
+                                name="status"
+                                id="status-field"
+                                className="form-control"
+                                value={item.status}
+                                readOnly
+                            />
+                            </div> */}
+
+                            {/* <div className="mb-3">
+                            <label htmlFor="created_at-field" className="form-label">Created At</label>
+                            <input
+                                type="text"
+                                name="created_at"
+                                id="created_at-field"
+                                className="form-control"
+                                value={item.created_at}
+                                readOnly
+                            />
+                            </div> */}
+{/* 
+                            <div className="mb-3">
+                            <label htmlFor="updated_at-field" className="form-label">Updated At</label>
+                            <input
+                                type="text"
+                                name="updated_at"
+                                id="updated_at-field"
+                                className="form-control"
+                                value={item.updated_at}
+                                readOnly
+                            />
+                            </div> */}
+
+                            {/* Continue adding other fields */}
+                        </div>
                         ))}
+
+
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() => { setmodal_list(false); setAdd_list(false); }}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ? 'Add enquiries' : 'Update enquiries'}</button>
+                            <button type="button" className="btn btn-light" onClick={() => { setmodal_list(false); }}>Close</button>
                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>
                 </form>
             </Modal>
+
+
 
             {/* Remove Modal */}
             <Modal isOpen={modal_delete} toggle={() => { tog_delete(); }} className="modal fade zoomIn" id="deleteRecordModal" centered >

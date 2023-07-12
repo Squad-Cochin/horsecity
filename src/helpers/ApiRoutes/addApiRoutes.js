@@ -72,16 +72,7 @@ import * as url from "../url_helper";
             return { error : "Faild !"}
         }
       }   
-          /**Add new driver */
-    export async function addNewEnquirie(data){
-        try {
-            // const { data } = await axios.post(`${url.POST_SP_ADD_URL}`);
-            // return { data };
-        } catch (error) {
-            return { error : "Faild !"}
-        }
-      }   
-      
+
 
      /**Add new monthly report */
     export async function addNewMonthlyReport(data){
@@ -92,4 +83,12 @@ import * as url from "../url_helper";
             return { error : "Faild !"}
         }
       }   
-      
+           /**Add new quataion */
+    export async function addNewQuataion(data){
+        try {
+            // const { data } = await axios.post(`${url.POST_SP_ADD_URL}`);
+            // return { data };
+        } catch (error) {
+            return { error : "Faild !"}
+        }
+      }  

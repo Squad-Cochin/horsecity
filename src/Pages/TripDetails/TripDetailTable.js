@@ -16,13 +16,55 @@ import Flatpickr from "react-flatpickr";
 
 //Import Drivers
 import { getTripDeatails } from '../../helpers/ApiRoutes/authApiRoutes'
+
+import { updatTripData} from '../../helpers/ApiRoutes/editApiRoutes';
+import { useFormik } from "formik";
 const TripDeatails = () => {
 
     const [ modal_list, setmodal_list] = useState(false);
+    const [ tripDatas, setTripDatas] = useState([]);
     const [ tripData, setTripData] = useState([])
-    function tog_list() {
+    function tog_list(productId) {
+
+        const data = tripDatas?.find((item)=>item?.id === productId)
+        setTripData([data]);
         setmodal_list(!modal_list);
+
     }
+    const initialValues = {
+        service_provider:  tripData[0]?.service_provider || '',
+        vehicle_number: tripData[0]?.vehicle_number || '',
+        start_location:  tripData[0]?.start_location || '',
+        end_location:  tripData[0]?.end_location || '',
+        booking_date:  tripData[0]?.booking_date || '',
+        quotation_date:  tripData[0]?.quotation_date || '',
+        trip_date:  tripData[0]?.trip_date || '',
+        amount: tripData[0]?.amount || '',
+        payment_status:  tripData[0]?.payment_status || '',
+        trip_status :  tripData[0]?.trip_status || '',
+      };
+      
+      // Later in your code, when setting the initial state
+  
+      
+      
+    const validation = useFormik({
+        // enableReinitialize : use this flag when initial values needs to be changed
+        enableReinitialize: true,
+        initialValues,
+        onSubmit: (values) => {
+                console.log(values);
+        
+                    //update previes one
+                    console.log("update previues one ");
+                    updatTripData(values);
+           
+                    setmodal_list(false);
+                 
+                
+    
+        }
+      });
 
     const [modal_delete, setmodal_delete] = useState(false);
     function tog_delete() {
@@ -30,7 +72,7 @@ const TripDeatails = () => {
     }
     useEffect(()=>{
     // let TripDeatails = getTripDeatails();
-    setTripData(getTripDeatails)
+    setTripDatas(getTripDeatails)
     },[])
     useEffect(() => {
 
@@ -120,69 +162,76 @@ const TripDeatails = () => {
                                         </Row>
 
                                         <div className="table-responsive table-card mt-3 mb-1">
-                                            <table className="table align-middle table-nowrap" id="customerTable">
-                                                <thead className="table-light">
-                                                    <tr>
-                                                        <th scope="col" style={{ width: "50px" }}>
-                                                            <div className="form-check">
-                                                                <input className="form-check-input" type="checkbox" id="checkAll" value="option" />
-                                                            </div>
-                                                        </th>
-                                                        <th className="sort" data-sort="service-provider">Service Provider</th>
-                                                        <th className="sort" data-sort="vehicle-number">Vehicle Number</th>
-                                                        <th className="sort" data-sort="start-location">Start Location</th>
-                                                        {/* <th className="sort" data-sort="image">Image</th> */}
-                                                        <th className="sort" data-sort="end-location">End Location</th>
-                                                      
-                                                        <th className="sort" data-sort="booking-date">Booking Date</th>
-                                                        <th className="sort" data-sort="quotation-date">Quotation Date</th>
-                                                        <th className="sort" data-sort="trip-date">Trip Date</th>
-                                                        {/* <th className="sort" data-sort="licence_img">Licence image  </th> */}
-                                                        <th className="sort" data-sort="amount">Amount</th>
-                                                        <th className="sort" data-sort="payment-status">Trip Status</th>
-                                                        <th className="sort" data-sort="trip-status">Trip Status</th>
-                                                  
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="list form-check-all">
-                                                    {tripData.map((item)=>(
-
-                                        
-                                                    <tr key={item.id}> 
-                                                        <th scope="row">
-                                                            <div className="form-check">
-                                                                <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
-                                                            </div>
-                                                        </th>
-                                                        <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
-                                                        <td className="service-provider">{item.service_provider}</td>
-                                                        <td className="vehicle-number">{item.vehicle_number}</td>
-                                                        <td className="start-lication">{item.start_location}</td>
-                                                        {/* <td className="email">{item.profile_image}</td> */}
-                                                        <td className="end-location">{item.end_location}</td>
-                                                        <td className="booking-date">{item.booking_date}</td>
-                                                        <td className="quotation-date">{item.quotation_date}</td>
-                                                        <td className="trip-date">{item.trip_date}</td>
-                                                        <td className="amount">{item.amount}</td>
-                                                        {/* <td className="licence_IMG">{item.licence_img}</td> */}
-                                                        <td className="payment-status"><span className="badge badge-soft-success text-uppercase">{item.payment_status}</span></td>
-                                                        <td className="trip-status"><span className="badge badge-soft-success text-uppercase">{item.trip_status}</span></td>
-                                                        <td>
-                                                            <div className="d-flex gap-2">
-                                                                <div className="edit">
-                                                                    <button className="btn btn-sm btn-success edit-item-btn"
-                                                                        data-bs-toggle="modal" data-bs-target="#showModal">Edit</button>
-                                                                </div>
-                                                                <div className="remove">
-                                                                    <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                 ))}
-                                                
-                                                </tbody>
+                                        <table className="table align-middle table-nowrap" id="customerTable">
+                                            <thead className="table-light">
+                                                <tr>
+                                                <th scope="col" style={{ width: "50px" }}>
+                                                    <div className="form-check">
+                                                    <input className="form-check-input" type="checkbox" id="checkAll" value="option" />
+                                                    </div>
+                                                </th>
+                                                <th className="sort" data-sort="service-provider">Service Provider</th>
+                                                <th className="sort" data-sort="vehicle-number">Vehicle Number</th>
+                                                <th className="sort" data-sort="start-location">Start Location</th>
+                                                {/* <th className="sort" data-sort="image">Image</th> */}
+                                                <th className="sort" data-sort="end-location">End Location</th>
+                                                <th className="sort" data-sort="booking-date">Booking Date</th>
+                                                <th className="sort" data-sort="quotation-date">Quotation Date</th>
+                                                <th className="sort" data-sort="trip-date">Trip Date</th>
+                                                {/* <th className="sort" data-sort="licence_img">Licence image</th> */}
+                                                <th className="sort" data-sort="amount">Amount</th>
+                                                <th className="sort" data-sort="payment-status">Payment Status</th>
+                                                <th className="sort" data-sort="trip-status">Trip Status</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className="list form-check-all">
+                                                {tripDatas.map((item, index) => (
+                                                <tr key={index}>
+                                                    <td>
+                                                    <div className="form-check">
+                                                        <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
+                                                    </div>
+                                                    </td>
+                                                    <td className="service-provider">{item.service_provider}</td>
+                                                    <td className="vehicle-number">{item.vehicle_number}</td>
+                                                    <td className="start-location">{item.start_location}</td>
+                                                    {/* <td className="email">{item.profile_image}</td> */}
+                                                    <td className="end-location">{item.end_location}</td>
+                                                    <td className="booking-date">{item.booking_date}</td>
+                                                    <td className="quotation-date">{item.quotation_date}</td>
+                                                    <td className="trip-date">{item.trip_date}</td>
+                                                    {/* <td className="licence_IMG">{item.licence_img}</td> */}
+                                                    <td className="amount">{item.amount}</td>
+                                                    <td className="payment-status">
+                                                    <span className="badge badge-soft-success text-uppercase">{item.payment_status}</span>
+                                                    </td>
+                                                    <td className="trip-status">
+                                                    <span className="badge badge-soft-success text-uppercase">{item.trip_status}</span>
+                                                    </td>
+                                                    <td>
+                                                    <div className="d-flex gap-2">
+                                                        <div className="edit">
+                                                        <button
+                                                            className="btn btn-sm btn-success edit-item-btn"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#showModal"
+                                                            onClick={() => tog_list(item.id)}
+                                                        >
+                                                            Edit
+                                                        </button>
+                                                        </div>
+                                                        <div className="remove">
+                                                        <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">
+                                                            Remove
+                                                        </button>
+                                                        </div>
+                                                    </div>
+                                                    </td>
+                                                </tr>
+                                                ))}
+                                            </tbody>
                                             </table>
+
                                             <div className="noresult" style={{ display: "none" }}>
                                                 <div className="text-center">
                                                     <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
@@ -239,53 +288,170 @@ const TripDeatails = () => {
 
             {/* Add Modal */}
             <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Add Driver </ModalHeader>
-                <form className="tablelist-form">
-                    <ModalBody>
-                        <div className="mb-3" id="modal-id" style={{ display: "none" }}>
-                            <label htmlFor="id-field" className="form-label">ID</label>
-                            <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
-                        </div>
-
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Edit Trip Deatails </ModalHeader>
+                <form className="tablelist-form"
+                onSubmit={validation.handleSubmit}>
+                    <ModalBody   >
+                      {/* Provider Name */}
                         <div className="mb-3">
-                            <label htmlFor="customername-field" className="form-label">Name</label>
-                            <input type="text" id="customername-field" className="form-control" placeholder="Enter Name" required />
+                        <label htmlFor="providerName-field" className="form-label">Provider Name</label>
+                        <input
+                            type="text"
+                            name="service_provider"
+                            id="providerName-field"
+                            className="form-control"
+                            value={validation.values.service_provider || ""}
+                            onChange={validation.handleChange}
+                            placeholder="Enter Provider Name"
+                            required
+                        />
                         </div>
 
+                        {/* Vehicle Number */}
                         <div className="mb-3">
-                            <label htmlFor="email-field" className="form-label">Email</label>
-                            <input type="email" id="email-field" className="form-control" placeholder="Enter Email" required />
+                        <label htmlFor="vehicleNumber-field" className="form-label">Vehicle Number</label>
+                        <input
+                            type="text"
+                            name="vehicle_number"
+                            id="vehicleNumber-field"
+                            className="form-control"
+                            value={validation.values.vehicle_number || ""}
+                            onChange={validation.handleChange}
+                            placeholder="Enter Vehicle Number"
+                            required
+                        />
                         </div>
 
+                        {/* Start Location */}
                         <div className="mb-3">
-                            <label htmlFor="phone-field" className="form-label">Phone</label>
-                            <input type="text" id="phone-field" className="form-control" placeholder="Enter Phone no." required />
+                        <label htmlFor="startLocation-field" className="form-label">Start Location</label>
+                        <input
+                            type="text"
+                            name="start_location"
+                            id="startLocation-field"
+                            className="form-control"
+                            value={validation.values.start_location || ""}
+                            onChange={validation.handleChange}
+                            placeholder="Enter Start Location"
+                            required
+                        />
                         </div>
 
+                        {/* End Location */}
                         <div className="mb-3">
-                            <label htmlFor="date-field" className="form-label">Joining Date</label>
-                            <Flatpickr
-                                className="form-control"
-                                options={{
-                                    dateFormat: "d M, Y"
-                                }}
-                                placeholder="Select Date"
-                            />
+                        <label htmlFor="endLocation-field" className="form-label">End Location</label>
+                        <input
+                            type="text"
+                            name="end_location"
+                            id="endLocation-field"
+                            className="form-control"
+                            value={validation.values.end_location || ""}
+                            onChange={validation.handleChange}
+                            placeholder="Enter End Location"
+                            required
+                        />
+                        </div>
+                       {/* Booking Date */}
+                    <div className="mb-3">
+                    <label htmlFor="bookingDate-field" className="form-label">Booking Date</label>
+                    <Flatpickr
+                        className="form-control"
+                        id="bookingDate-field"
+                        name="booking_date"
+                        options={{
+                        dateFormat: "d M, Y"
+                        }}
+                        value={validation.values.booking_date || ""}
+                        onChange={validation.handleChange}
+                        placeholder="Select Date"
+                        required
+                    />
+                    </div>
+
+                        {/* Quotation Date */}
+                        <div className="mb-3">
+                        <label htmlFor="quotationDate-field" className="form-label">Quotation Date</label>
+                        <Flatpickr
+                        className="form-control"
+                        id="bookingDate-field"
+                        name="booking_date"
+                        options={{
+                        dateFormat: "d M, Y"
+                        }}
+                        value={validation.values.quotation_date || ""}
+                        onChange={validation.handleChange}
+                        placeholder="Select Date"
+                        required
+                    />
                         </div>
 
-                        <div>
-                            <label htmlFor="status-field" className="form-label">Status</label>
-                            <select className="form-control" data-trigger name="status-field" id="status-field" >
-                                <option value="">Status</option>
-                                <option value="Active">Active</option>
-                                <option value="Block">Block</option>
-                            </select>
+                        {/* Trip Date */}
+                        <div className="mb-3">
+                        <label htmlFor="tripDate-field" className="form-label">Trip Date</label>
+                        <Flatpickr
+                        className="form-control"
+                        id="tripDate-field"
+                        name="booking_date"
+                        options={{
+                        dateFormat: "d M, Y"
+                        }}
+                        value={validation.values.trip_date || ""}
+                            onChange={validation.handleChange}
+                        placeholder="Select Date"
+                        required
+                    />
                         </div>
+
+                        {/* Amount */}
+                        <div className="mb-3">
+                        <label htmlFor="amount-field" className="form-label">Amount</label>
+                        <input
+                            type="text"
+                            name="amount"
+                            id="amount-field"
+                            className="form-control"
+                            value={validation.values.amount || ""}
+                            onChange={validation.handleChange}
+                            placeholder="Enter Amount"
+                            required
+                        />
+                        </div>
+
+                        {/* Payment Status */}
+                        <div className="mb-3">
+                        <label htmlFor="paymentStatus-field" className="form-label">Payment Status</label>
+                        <input
+                            type="text"
+                            name="payment_status"
+                            id="paymentStatus-field"
+                            className="form-control"
+                            value={validation.values.payment_status || ""}
+                            onChange={validation.handleChange}
+                            placeholder="Enter Payment Status"
+                            required
+                        />
+                        </div>
+
+                        {/* Trip Status */}
+                        <div className="mb-3">
+                        <label htmlFor="tripStatus-field" className="form-label">Trip Status</label>
+                        <input
+                            type="text"
+                            name="trip_status"
+                            id="tripStatus-field"
+                            className="form-control"
+                            value={validation.values.trip_status || ""}
+                            onChange={validation.handleChange}
+                            placeholder="Enter Trip Status"
+                            required
+                        />
+                        </div>
+
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
                             <button type="button" className="btn btn-light" onClick={() => setmodal_list(false)}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">Add Customer</button>
+                            <button type="submit" className="btn btn-success" id="add-btn">Update Trip Deatails</button>
                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>
