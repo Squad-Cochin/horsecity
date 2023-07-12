@@ -20,6 +20,7 @@ import { getCustomersData } from '../../../helpers/ApiRoutes/authApiRoutes'
 // Define the toggleStatus function outside the component
 import { Customers } from '../../../CommonData/Data';
 
+import { removeCustomer } from '../../../helpers/ApiRoutes/removeApiRoutes';
 import { addNewCustomer } from '../../../helpers/ApiRoutes/addApiRoutes';
 import { updateCustomer } from '../../../helpers/ApiRoutes/editApiRoutes';
 import { useFormik } from "formik";
@@ -30,6 +31,17 @@ const ListCustomerTable = () => {
     const [ customer , setCustomer] = useState([]);
     const [modal_list, setmodal_list] = useState(false);
     const [ add_list, setAdd_list ] = useState(false);
+    const [view_modal, setView_modal] = useState(false);
+    const [idProofChanged, setIdProofChanged] = useState(false);
+    const [updateImage, setUpdateImage] = useState("");
+    const [idProofPreview, setIdProofPreview] = useState(null);
+
+    const handleIdProofImageChange = (event) => 
+    {
+      const file = event.target.files[0];
+      setUpdateImage(file)
+      setIdProofPreview(URL.createObjectURL(file));
+    };
 
 
     function tog_list(param,productId) {
@@ -39,7 +51,19 @@ const ListCustomerTable = () => {
         const data = customers?.find((item)=>item?.id === productId)
         setCustomer([data]);
         setmodal_list(!modal_list);
+        setIdProofPreview(null)
 
+    }
+
+    function tog_view(productId) {
+        const data = customers?.find((item)=>item?.id === productId)
+        setCustomer([data]);
+        setView_modal(!view_modal);
+
+    }
+
+    function remove_data(id){
+        removeCustomer(id)
     }
 
     const initialValues = {
@@ -49,19 +73,17 @@ const ListCustomerTable = () => {
         phone: !add_list ? customer[0]?.phone : '',
         date_of_birth: !add_list ? customer[0]?.date_of_birth : '',
         id_proof_no: !add_list ? customer[0]?.id_proof_no : '',
-        id_proof_img: '',
+        id_proof_image : !add_list ? customer[0]?.id_proof_image : '',
     };
       
       // Later in your code, when setting the initial state
-  
-      
-      
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
                 console.log(values);
+                values.id_proof_image = updateImage;
                 if(add_list){
                     //add new
                     console.log("add new");
@@ -221,20 +243,21 @@ const ListCustomerTable = () => {
                                                                 <input className="form-check-input" type="checkbox" id="checkAll" value="option" />
                                                             </div>
                                                         </th> */}
-                                                        <th className="sort" data-sort="customer_name">Name</th>
-                                                        <th className="sort" data-sort="email">Email</th>
-                                                        <th className="sort" data-sort="username">User Name</th>
-                                                        <th className="sort" data-sort="contact_no">Contact Number</th>
-                                                        <th className="sort" data-sort="date_of_birth">Date Of Birth</th>
-                                                        <th className="sort" data-sort="id_proof">Id Proof Number</th>
+                                                        <th className="index" data-sort="customer_name">#</th>
+                                                        <th className="customer_name" data-sort="customer_name">Name</th>
+                                                        <th className="email" data-sort="email">Email</th>
+                                                        {/* <th className="username" data-sort="username">User Name</th> */}
+                                                        <th className="contact_no" data-sort="contact_no">Contact Number</th>
+                                                        {/* <th className="date_of_birth" data-sort="date_of_birth">Date Of Birth</th> */}
+                                                        {/* <th className="id_proof" data-sort="id_proof">Id Proof Number</th> */}
                                                         {/* <th className="sort" data-sort="email_verified">Email Verified</th> */}
-                                                        <th className="sort" data-sort="registered_date">Registered Date</th>
-                                                        <th className="sort" data-sort="status">Status</th>
-                                                        <th className="sort" data-sort="action">Action</th>
+                                                        <th className="registered_date" data-sort="registered_date">Registered Date</th>
+                                                        <th className="status" data-sort="status">Status</th>
+                                                        <th className="action" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    { customers.map((item)=>(
+                                                    { customers.map((item, index)=>(
 
                                                
                                                     <tr key={item.id}>
@@ -243,13 +266,14 @@ const ListCustomerTable = () => {
                                                                 <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
                                                             </div>
                                                         </th> */}
+                                                        <td className="index">{index + 1}</td>
                                                         <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
                                                         <td className="customer_name">{item.name}</td>
                                                         <td className="email">{item.email}</td>
-                                                        <td className="username">{item.user_name}</td>
+                                                        {/* <td className="username">{item.user_name}</td> */}
                                                         <td className="contact_no">{item.phone}</td>
-                                                        <td className="date_of_birth">{item.date_of_birth}</td>
-                                                        <td className="id_proof">{item.id_proof_no}</td>
+                                                        {/* <td className="date_of_birth">{item.date_of_birth}</td> */}
+                                                        {/* <td className="id_proof">{item.id_proof_no}</td> */}
                                                         {/* <td className="status">{item.email_verified}</td> */}
                                                         <td className="registered_date">{item.created_at}</td>
                                                         {/* <td className="status"><span className="badge badge-soft-success text-uppercase">{item.status}</span></td> */}
@@ -292,12 +316,16 @@ const ListCustomerTable = () => {
 
                                                         <td>
                                                             <div className="d-flex gap-2">
+                                                                <div className="view">
+                                                                    <button className="btn btn-sm btn-success edit-item-btn" onClick={() => tog_view(item.id)}
+                                                                        data-bs-toggle="modal" data-bs-target="#showModal">View</button>
+                                                                </div>
                                                                 <div className="edit">
-                                                                    <button className="btn btn-sm btn-success edit-item-btn" onClick={() => tog_list('EDIT',item.id)}
+                                                                    <button className="btn btn-sm btn-primary edit-item-btn" onClick={() => tog_list('EDIT',item.id)}
                                                                         data-bs-toggle="modal" data-bs-target="#showModal">Edit</button>
                                                                 </div>
                                                                 <div className="remove">
-                                                                    <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
+                                                                <button className="btn btn-sm btn-danger remove-item-btn" onClick={() => remove_data(item.id)} data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
                                                                 </div>
                                                             </div>
                                                         </td>
@@ -733,20 +761,127 @@ const ListCustomerTable = () => {
                     />
                     </div>
 
+                    {/* Certificate Image */}
                     <div className="mb-3">
-                    <label htmlFor="id_proof_img-field" className="form-label">Id Proof Image</label>
+                        <label htmlFor="id_proof-field" className="form-label">Id Proof Image</label>
+                        <div className="col-md-10">
+                            {idProofPreview && (
+                              <div>
+                                <h5>Id Proof Preview:</h5>
+                                <img src={idProofPreview} alt="Id Proof Preview" style={{ maxWidth: '100px' }} />
+                              </div>
+                            )}
+                            {!idProofChanged && (
+                              <input
+                                className="form-control"
+                                name="certification_or_license_img"
+                                type="file"
+                                placeholder="Certificate Image"
+                                onChange={handleIdProofImageChange}
+                              />
+                            )}
+                          </div>
+                    </div>
+
+
+                      
+                    </ModalBody>
+                    <ModalFooter>
+                        <div className="hstack gap-2 justify-content-end">
+                            <button type="button" className="btn btn-light" onClick={() =>{ setmodal_list(false); setAdd_list(false);}}>Close</button>
+                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ?  'Add Customer' : 'Update Customer' }
+                            </button>
+                        </div>
+                    </ModalFooter>
+                </form>
+            </Modal>
+
+            {/* View Modal */}
+            <Modal className="extra-width" isOpen={view_modal} >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel"toggle={() => { tog_view('view'); }}>View Customer</ModalHeader>
+                <form className="tablelist-form"
+                 onSubmit={validation.handleSubmit}>
+                    <ModalBody>
+                   
+                    <div className="mb-3">
+                    <label htmlFor="customername-field" className="form-label">Name</label>
                     <input
-                        type="file"
-                        name='id_proof_img'
-                        id="id_proof_img-field"
+                        type="text"
+                        name='name'
+                        id="customername-field"
                         className="form-control"
-                        // value={validation.values.id_proof_img || ""}
-                        // onChange={validation.handleChange}
-                        placeholder="Enter Id Proof Image"
-         
+                        value={validation.values.name || ""}
+                        readOnly
                     />
                     </div>
 
+                    <div className="mb-3">
+                    <label htmlFor="email-field" className="form-label">Email</label>
+                    <input
+                        type="email"
+                        name='email'
+                        id="email-field"
+                        value={validation.values.email || ""}
+                        className="form-control"
+                        readOnly
+                    />
+                    </div>
+
+                    <div className="mb-3">
+                    <label htmlFor="username-field" className="form-label">Username</label>
+                    <input
+                        type="text"
+                        name='username'
+                        id="username-field"
+                        value={validation.values.username || ""}
+                        className="form-control"
+                        readOnly
+                    />
+                    </div>
+
+                    <div className="mb-3">
+                    <label htmlFor="contact_no-field" className="form-label">Contact Number</label>
+                    <input
+                        type="text"
+                        name='phone'
+                        id="contact_no-field"
+                        value={validation.values.phone || ""}
+                        className="form-control"
+                        readOnly
+                    />
+                    </div>
+
+                    <div className="mb-3">
+                    <label htmlFor="date_of_birth-field" className="form-label">Date Of Birth</label>
+                    <input
+                        type="text"
+                        id="date_of_birth-field"
+                        name='date_of_birth'
+                        className="form-control"
+                        value={validation.values.date_of_birth || ""}
+                        readOnly
+                    />
+                    </div>
+
+                    <div className="mb-3">
+                    <label htmlFor="id_proof_no-field" className="form-label">Id Proof Number</label>
+                    <input
+                        type="text"
+                        id="id_proof_no-field"
+                        name='id_proof_no'
+                        className="form-control"
+                        value={validation.values.id_proof_no || ""}
+                        readOnly
+                    />
+                    </div>
+
+                    {/* certificate image */}
+                    <div className="mb-3">
+                        <label htmlFor="id_proof_image-field" className="form-label">Id Proof Image</label>
+                        <div>
+                            <img src={validation.values.id_proof_image || ""} alt="id_proof Image" style={{ maxWidth: '100px' }} />
+                        </div>
+                    </div>
                       
                     </ModalBody>
                     <ModalFooter>

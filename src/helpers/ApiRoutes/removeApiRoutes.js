@@ -9,3 +9,12 @@ export async function removeProvider(provider_id){
         return { error : "Faild !"}
     }
 }
+
+/**Remove service provider */
+export async function removeCustomer(customer_id){
+    try {
+        alert(`Customer ${customer_id} Dlt req reached.`)
+    } catch (error) {
+        return { error : "Faild !"}
+    }
+}

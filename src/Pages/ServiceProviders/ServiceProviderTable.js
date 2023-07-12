@@ -7,7 +7,7 @@ import List from 'list.js';
 
 import { serviceProviders } from '../../CommonData/Data/serviceProvider';
 import { addNewProvider } from '../../helpers/ApiRoutes/addApiRoutes';
-import { removeProvider } from '../../helpers/ApiRoutes//removeApiRoutes';
+import { removeProvider } from '../../helpers/ApiRoutes/removeApiRoutes';
 import { updateSProvider } from '../../helpers/ApiRoutes/editApiRoutes';
 import { useFormik } from "formik";
 // Import Flatepicker
@@ -267,13 +267,14 @@ const ListTables = () =>
                                                                 <input className="form-check-input" type="checkbox" id="checkAll" value="option" />
                                                             </div>
                                                         </th> */}
-                                                        <th className="sort" data-sort="sprovider_name">Name</th>
-                                                        <th className="sort" data-sort="email">Email</th>
+                                                        <th className="index" data-sort="index">#</th>
+                                                        <th className="sprovider_name" data-sort="sprovider_name">Name</th>
+                                                        <th className="email" data-sort="email">Email</th>
                                                         {/* <th className="sort" data-sort="username">User Name</th> */}
-                                                        <th className="sort" data-sort="username">Role</th>
-                                                        <th className="sort" data-sort="contactperson">Contact Person</th>
+                                                        <th className="username" data-sort="username">Role</th>
+                                                        <th className="contactperson" data-sort="contactperson">Contact Person</th>
                                                         {/* <th className="sort" data-sort="idproof">Id Proof</th> */}
-                                                        <th className="sort" data-sort="phone">Contact Number</th>
+                                                        <th className="phone" data-sort="phone">Contact Number</th>
                                                         {/* <th className="sort" data-sort="customer_address">Contact Address</th> */}
                                                         {/* <th className="sort" data-sort="phone">Emergency Contact Number</th> */}
                                                         {/* <th className="sort" data-sort="certification">Certification or license image</th> */}
@@ -281,18 +282,19 @@ const ListTables = () =>
 
                                                         {/* <th className="sort" data-sort="date">Created At</th> */}
                                                         {/* <th className="sort" data-sort="date">Expiry At</th> */}
-                                                        <th className="sort" data-sort="status">Status</th>
-                                                        <th className="sort" data-sort="action">Action</th>
+                                                        <th className="status" data-sort="status">Status</th>
+                                                        <th className="action" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {sproviders.map((value) => (
+                                                    {sproviders.map((value, index) => (
                                                         <tr key={value?.id}>
                                                             {/* <th scope="row">
                                                                 <div className="form-check">
                                                                     <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
                                                                 </div>
                                                             </th> */}
+                                                            <td className="index">{index + 1}</td>
                                                             <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
                                                             <td className="name">{value.name}</td>
                                                             <td className="email">{value.email}</td>
