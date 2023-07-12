@@ -29,12 +29,12 @@ const ListCustomerTable = () => {
 
     const [ customers , setCustomers] = useState([]);
     const [ customer , setCustomer] = useState([]);
-    const [modal_list, setmodal_list] = useState(false);
+    const [ modal_list, setmodal_list] = useState(false);
     const [ add_list, setAdd_list ] = useState(false);
-    const [view_modal, setView_modal] = useState(false);
-    const [idProofChanged, setIdProofChanged] = useState(false);
-    const [updateImage, setUpdateImage] = useState("");
-    const [idProofPreview, setIdProofPreview] = useState(null);
+    const [ view_modal, setView_modal] = useState(false);
+    const [ idProofChanged, setIdProofChanged] = useState(false);
+    const [ updateImage, setUpdateImage] = useState("");
+    const [ idProofPreview, setIdProofPreview] = useState(null);
 
     const handleIdProofImageChange = (event) => 
     {
@@ -886,9 +886,9 @@ const ListCustomerTable = () => {
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() =>{ setmodal_list(false); setAdd_list(false);}}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ?  'Add Customer' : 'Update Customer' }
-                            </button>
+                            <button type="button" className="btn btn-light" onClick={() =>{ setView_modal(false);}}>Close</button>
+                            {/* <button type="submit" className="btn btn-success" id="add-btn">{add_list ?  'Add service provider' : 'Update service provider' }</button> */}
+                            {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>
                 </form>
