@@ -1,5 +1,262 @@
-@media (min-width: 768px) {
+@media (min-width: 768px) 
+{
     .extra-width{
         min-width: 750px;
     }
+
+    .tm_container {
+        max-width: 880px;
+        // padding: 30px 15px;
+        margin-left: auto;
+        margin-right: auto;
+        position: relative;
+    }
+
+    .tm_invoice_wrap {
+        position: relative;
+    }
+
+    .tm_invoice_in {
+        position: relative;
+        z-index: 100;
+    }
+
+    .tm_invoice_seperator 
+    {
+        height: 18px;
+        border-radius: 1.6em;
+        -webkit-box-flex: 1;
+        -ms-flex: 1;
+        flex: 1;
+        margin-right: 20px;
+    }
+
+    p {
+        display: block;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+    }
+
+    
+    
+    p, div {
+        margin-top: 0;
+        margin-bottom: 0;
+        line-height: 1.5em;
+    }
+
+    div {
+        display: block;
+    }
+
+
+    .tm_gray_bg {
+        background: #c9c9cae5;
+    }
+
+    body, html {
+        color: #666;
+        font-family: 'Inter', sans-serif;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: 1.6em;
+        overflow-x: hidden;
+        background-color: #f5f6fa;
+    }
+
+    .tm_align_center {
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+    }
+
+    .tm_invoice.tm_style1 .tm_invoice_info_list {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+    }
+
+    .tm_width_3 {
+        width: 25%;
+    }
+
+    .tm_width_2 {
+        width: 16.66666667%;
+    }
+
+    .tm_width_1 {
+        width: 8.33333333%;
+    }
+
+    .tm_invoice_footer {
+        -webkit-box-orient: vertical;
+        -webkit-box-direction: reverse;
+        // -ms-flex-direction: column-reverse;
+        flex-direction: column-reverse;
+    }
+
+    .tm_invoice_footer .tm_left_footer {
+        // width: 58%;
+        // padding: 10px 15px;
+        -webkit-box-flex: 0;
+        // -ms-flex: none;
+        flex: none;
+    }
+
+        
+
+    .tm_invoice.tm_style1 .tm_invoice_info {
+        display: -webkit-box;
+        display: -ms-flexbox;
+        display: flex;
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+        -webkit-box-pack: justify;
+        -ms-flex-pack: justify;
+        justify-content: space-between;
+    }
+
+    .tm_invoice.tm_style1 .tm_invoice_head {
+        display: flex;
+        -webkit-box-pack: justify;
+        justify-content: space-between;
+    }
+
+    .tm_mb10 {
+        margin-bottom: 10px;
+    }
+
+    .tm_align_center {
+        -webkit-box-align: center;
+        -ms-flex-align: center;
+        align-items: center;
+    }
+
+    .tm_mb20 {
+        margin-bottom: 20px;
+    }
+    
+    *, ::after, ::before {
+        // -webkit-box-sizing: border-box;
+        box-sizing: border-box;
+    }
+
+    div {
+        display: block;
+    }
+    
+    .tm_mb2 {
+        margin-bottom: 2px;
+    }
+
+    .tm_m0 {
+        margin: 0px;
+    }
+
+    .tm_invoice .tm_right_footer {
+        width: 100%;
+    }
+
+    p {
+        display: block;
+        margin-block-start: 1em;
+        margin-block-end: 1em;
+        margin-inline-start: 0px;
+        margin-inline-end: 0px;
+    }
+
+    .tm_primary_color {
+        color: #111;
+    }
+
+    .tm_border_none {
+        border: none !important;
+    }
+
+    b, strong {
+        font-weight: bold;
+    }
+
+    .tm_invoice_head {
+        display: flex;
+        justify-content: space-between;
+    }
+    
+    .tm_invoice_section {
+        flex-basis: 50%;
+    }
+    
+    .tm_invoice_to {
+        text-align: left;
+    }
+    
+    .tm_pay_to {
+        text-align: right;
+        padding-left: 20px; /* Add left padding for spacing */
+    }
+
+    .tm_invoice_head {
+        width: 100%;
+        flex-basis: 100%;
+         
+    }
+
+    .tm_table_responsive {
+        overflow-x: auto;
+    }
+
+    .tm_round_border {
+        border: 1px solid #dbdfea;
+        overflow: hidden;
+        border-radius: 6px;
+    }
+
+    .tm_mb30 {
+        margin-bottom: 30px;
+    }
+
+    th {
+        padding: 10px 15px;
+        line-height: 1.55em;
+    }
+
+    th {
+        text-align: left;
+    }
+
+    .tm_primary_color {
+        color: #111;
+    }
+
+    .tm_width_4 {
+        width: 33.33333333%;
+    }
+
+    table {
+        width: 100%;
+        caption-side: bottom;
+        border-collapse: collapse;
+    }
+    
+    .tm_table_wrapper {
+        clear: both;
+        margin-top: 20px;
+    }
+
+    .tm_clearfix {
+        clear: both;
+    }
+
+
+    
+    
+    
+      
+
+
+
+
 }
