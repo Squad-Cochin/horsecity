@@ -294,7 +294,10 @@ const ListTables = () =>
                                                                     <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
                                                                 </div>
                                                             </th> */}
-                                                            <td className="index">{index + 1}</td>
+                                                               <th scope="row">
+                                                        {index + 1}
+
+                                                        </th>
                                                             <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
                                                             <td className="name">{value.name}</td>
                                                             <td className="email">{value.email}</td>

@@ -251,7 +251,45 @@
     }
 
 
-    
+    .tm_card {
+        background-color: #f7f7f7;
+        border-radius: 4px;
+        padding: 20px;
+        margin-bottom: 20px;
+        
+        .tm_card_header {
+          font-weight: bold;
+          font-size: 18px;
+          margin-bottom: 10px;
+        }
+        
+        .tm_card_content {
+          .tm_card_item {
+            display: flex;
+            margin-bottom: 10px;
+            
+            .tm_card_label {
+              font-weight: bold;
+              margin-right: 10px;
+            }
+          }
+        }
+        
+        .tm_card_footer {
+          margin-top: 20px;
+          
+          .tm_card_footer_item {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            
+            .tm_card_footer_label {
+              font-weight: bold;
+            }
+          }
+        }
+      }
+      
     
     
       

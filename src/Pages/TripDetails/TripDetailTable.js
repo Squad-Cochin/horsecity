@@ -142,34 +142,16 @@ const TripDeatails = () => {
 
                                 <CardBody>
                                     <div id="customerList">
-                                        <Row className="g-4 mb-3">
-                                            <Col className="col-sm-auto">
-                                                <div className="d-flex gap-1">
-                                                    {/* <Button color="success" className="add-btn" onClick={() => tog_list()} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button> */}
-                                                    <Button color="soft-danger"
-                                                    // onClick="deleteMultiple()"
-                                                    ><i className="ri-delete-bin-2-line"></i></Button>
-                                                </div>
-                                            </Col>
-                                            <Col className="col-sm">
-                                                <div className="d-flex justify-content-sm-end">
-                                                    <div className="search-box ms-2">
-                                                        <input type="text" className="form-control search" placeholder="Search..." />
-                                                        <i className="ri-search-line search-icon"></i>
-                                                    </div>
-                                                </div>
-                                            </Col>
-                                        </Row>
+                                        {/* <Row className="g-4 mb-3">
+                                  
+                               
+                                        </Row> */}
 
                                         <div className="table-responsive table-card mt-3 mb-1">
                                         <table className="table align-middle table-nowrap" id="customerTable">
                                             <thead className="table-light">
                                                 <tr>
-                                                <th scope="col" style={{ width: "50px" }}>
-                                                    <div className="form-check">
-                                                    <input className="form-check-input" type="checkbox" id="checkAll" value="option" />
-                                                    </div>
-                                                </th>
+                                                <th className="index" data-sort="index">#</th>
                                                 <th className="sort" data-sort="service-provider">Service Provider</th>
                                                 <th className="sort" data-sort="vehicle-number">Vehicle Number</th>
                                                 <th className="sort" data-sort="start-location">Start Location</th>
@@ -187,11 +169,8 @@ const TripDeatails = () => {
                                             <tbody className="list form-check-all">
                                                 {tripDatas.map((item, index) => (
                                                 <tr key={index}>
-                                                    <td>
-                                                    <div className="form-check">
-                                                        <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
-                                                    </div>
-                                                    </td>
+                                                      <td className="index">{index + 1}</td>
+                                                  
                                                     <td className="service-provider">{item.service_provider}</td>
                                                     <td className="vehicle-number">{item.vehicle_number}</td>
                                                     <td className="start-location">{item.start_location}</td>

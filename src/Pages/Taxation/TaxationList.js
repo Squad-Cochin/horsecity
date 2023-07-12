@@ -145,30 +145,17 @@ const TaxationDeatails = () => {
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
                                                     <Button color="success" className="add-btn" onClick={() => tog_list('ADD')}  id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
-                                                    <Button color="soft-danger"
-                                                    // onClick="deleteMultiple()"
-                                                    ><i className="ri-delete-bin-2-line"></i></Button>
+                                              
                                                 </div>
                                             </Col>
-                                            <Col className="col-sm">
-                                                <div className="d-flex justify-content-sm-end">
-                                                    <div className="search-box ms-2">
-                                                        <input type="text" className="form-control search" placeholder="Search..." />
-                                                        <i className="ri-search-line search-icon"></i>
-                                                    </div>
-                                                </div>
-                                            </Col>
+                              
                                         </Row>
 
                                         <div className="table-responsive table-card mt-3 mb-1">
                                         <table className="table align-middle table-nowrap" id="customerTable">
                                         <thead className="table-light">
                                             <tr>
-                                            <th scope="col" style={{ width: "50px" }}>
-                                                <div className="form-check">
-                                                <input className="form-check-input" type="checkbox" id="checkAll" value="option" />
-                                                </div>
-                                            </th>
+                                            <th className="index" data-sort="index">#</th>
                                             <th className="sort" data-sort="name">Name</th>
                                             <th className="sort" data-sort="type">Type</th>
                                             <th className="sort" data-sort="value">Value</th>
@@ -178,13 +165,9 @@ const TaxationDeatails = () => {
                                             </tr>
                                         </thead>
                                         <tbody className="list form-check-all">
-                                            {taxations.map((item) => (
+                                            {taxations.map((item,index) => (
                                             <tr key={item.id}>
-                                                <th scope="row">
-                                                <div className="form-check">
-                                                    <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
-                                                </div>
-                                                </th>
+                                                <th scope="row">   {index + 1} </th>
                                                 <td className="name">{item.name}</td>
                                                 <td className="type">{item.type}</td>
                                                 <td className="value">{item.value}</td>

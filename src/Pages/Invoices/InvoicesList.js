@@ -67,7 +67,7 @@ const InvoiceDetails = () => {
                                             <table className="table align-middle table-nowrap" id="Table">
                                                 <thead className="table-light">
                                                     <tr>
-                                                        <th className="index" data-sort="index">Sr.No</th>
+                                                        <th className="index" data-sort="index">#</th>
                                                         <th className="sort" data-sort="customer_name">Customer Name</th>
                                                         <th className="sort" data-sort="service_provider_name">Service Provider Name</th>
                                                         <th className="sort" data-sort="quotation_id">Quotation Id</th>
@@ -78,7 +78,10 @@ const InvoiceDetails = () => {
                                                 <tbody className="list form-check-all">
                                                     {Invoices.map((item, index) => (
                                                         <tr key={item.id}>
-                                                            <td className="index text-center">{index + 1}</td>
+                                                                  <th scope="row">
+                                                        {index + 1}
+
+                                                        </th>
                                                             <td className="customer_name">{item.customer_name}</td>
                                                             <td className="service_provider_name">{item.service_provider_name}</td>
                                                             <td className="quotation_id">{item.quotation_id}</td>

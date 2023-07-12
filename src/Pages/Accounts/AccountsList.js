@@ -154,7 +154,9 @@ const Accounts = () => {
                                                 <div className="form-check">
                                                 <input className="form-check-input" type="checkbox" id="checkAll" value="option" />
                                                 </div>
+
                                             </th> */}
+                                             <th className="index" data-sort="index">#</th>
                                             <th className="sort" data-sort="cName">Customer Name</th>
                                             <th className="sort" data-sort="sName">Service Provider Name</th>
                                             <th className="sort" data-sort="quatationId">Quotation Id</th>
@@ -168,13 +170,17 @@ const Accounts = () => {
                                             </tr>
                                         </thead>
                                         <tbody className="list form-check-all">
-                                            {accounts.map((item) => (
+                                            {accounts.map((item,index) => (
                                             <tr key={item.id}>
                                                 {/* <th scope="row">
                                                 <div className="form-check">
                                                     <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
                                                 </div>
                                                 </th> */}
+                                                       <th scope="row">
+                                                        {index + 1}
+
+                                                        </th>
                                                 <td className="cName">{item.customer_name}</td>
                                                 <td className="sName">{item.service_provider_name}</td>
                                                 <td className="quatationId">{item.quotation_id}</td>

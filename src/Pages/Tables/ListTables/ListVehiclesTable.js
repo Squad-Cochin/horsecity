@@ -204,7 +204,7 @@ const ListVehiclesTable = () => {
         <React.Fragment>
             <div className="page-content">
                 <Container fluid>
-                    <Breadcrumbs title="Tables" breadcrumbItem="Vechiles" />
+                    <Breadcrumbs title="Tables" breadcrumbItem="Vehicles" />
 
                     <Row>
                         <Col lg={12}>
@@ -283,7 +283,10 @@ const ListVehiclesTable = () => {
                                                                 </div>
                                                             </th> */}
                                                             <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
-                                                            <td className="index">{index + 1}</td>
+                                                            <th scope="row">
+                                                        {index + 1}
+
+                                                        </th>
                                                             <td className="name">{item.service_provider}</td>
                                                             <td className="vhnumber">{item.vehicle_number}</td>
                                                             <td className="make">{item.make}</td>

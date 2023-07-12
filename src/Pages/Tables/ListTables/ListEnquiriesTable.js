@@ -138,7 +138,10 @@ const ListEnquiriesTable = () => {
                                                     {enquiries.map((item,index) => (
                                                         <tr key={item.id}>
                                                     
-                                                           <td className="index">{index + 1}</td>
+                                                    <th scope="row">
+                                                        {index + 1}
+
+                                                        </th>
                                                             <td className="customer_name">{item.cName}</td>
                                                            {/*  <td className="customer_email">{item.cEmail}</td>
                                                             <td className="customer_username">{item.cUser_name}</td> */}
