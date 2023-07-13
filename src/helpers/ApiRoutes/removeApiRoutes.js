@@ -37,3 +37,11 @@ export async function removeVehicleImage(vehicle_id,image_id){
         return { error : "Faild !"}
     }
 }
+/**Remove Driver provider */
+export async function removeDriver(driver_id){
+    try {
+        alert(`Driver ${driver_id} Dlt req reached.`)
+    } catch (error) {
+        return { error : "Faild !"}
+    }
+}

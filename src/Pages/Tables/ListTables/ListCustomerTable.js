@@ -35,6 +35,8 @@ const ListCustomerTable = () => {
     const [ idProofChanged, setIdProofChanged] = useState(false);
     const [ updateImage, setUpdateImage] = useState("");
     const [ idProofPreview, setIdProofPreview] = useState(null);
+    const [modal_delete, setmodal_delete] = useState(false);
+
 
     const handleIdProofImageChange = (event) => 
     {
@@ -52,7 +54,6 @@ const ListCustomerTable = () => {
         setCustomer([data]);
         setmodal_list(!modal_list);
         setIdProofPreview(null)
-
     }
 
     function tog_view(productId) {
@@ -121,7 +122,9 @@ const ListCustomerTable = () => {
             customer.status = 'INACTIVE';
             console.log("Customer", customer);
             }
-        } else if (currentStatus === 'INACTIVE') {
+        } 
+        else if (currentStatus === 'INACTIVE') 
+        {
             button.innerText = 'ACTIVE';
             button.classList.remove('btn-danger');
             button.classList.add('btn-success');
@@ -132,12 +135,8 @@ const ListCustomerTable = () => {
             customer.status = 'ACTIVE';
             }
         }
-        }
-
-
-
-
-    const [modal_delete, setmodal_delete] = useState(false);
+    }
+    
     function tog_delete() {
         setmodal_delete(!modal_delete);
     }
@@ -252,14 +251,12 @@ const ListCustomerTable = () => {
                                                         {/* <th className="id_proof" data-sort="id_proof">Id Proof Number</th> */}
                                                         {/* <th className="sort" data-sort="email_verified">Email Verified</th> */}
                                                         <th className="registered_date" data-sort="registered_date">Registered Date</th>
-                                                        <th className="status" data-sort="status">Status</th>
+                                                        {/* <th className="status" data-sort="status">Status</th> */}
                                                         <th className="action" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    { customers.map((item, index)=>(
-
-                                               
+                                                    { customers.map((item, index)=>(                                               
                                                     <tr key={item.id}>
                                                         {/* <th scope="row">
                                                             <div className="form-check">
@@ -268,7 +265,6 @@ const ListCustomerTable = () => {
                                                         </th> */}
                                                            <th scope="row">
                                                         {index + 1}
-
                                                         </th>
                                                         <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
                                                         <td className="customer_name">{item.name}</td>
@@ -302,7 +298,7 @@ const ListCustomerTable = () => {
                                                     </div>
                                                     </div> */}
 
-                                                    <div>
+                                                    {/* <div>
                                                         <div className="d-flex gap-2">
                                                             <div className="status">
                                                                 <button className="btn btn-sm btn-success status-item-btn"
@@ -312,11 +308,8 @@ const ListCustomerTable = () => {
                                                                 </button>
                                                             </div>
                                                         </div>
-                                                    </div>
-
-
-
-
+                                                    </div> */}
+                                                    
                                                         <td>
                                                             <div className="d-flex gap-2">
                                                                 <div className="view">
@@ -333,8 +326,7 @@ const ListCustomerTable = () => {
                                                             </div>
                                                         </td>
                                                     </tr>
-                                                    ))}
-                                            
+                                                    ))}                                            
                                                 </tbody>
                                             </table>
                                             <div className="noresult" style={{ display: "none" }}>
@@ -343,7 +335,7 @@ const ListCustomerTable = () => {
                                                         colors="primary:#121331,secondary:#08a88a" style={{ width: "75px", height: "75px" }}>
                                                     </lord-icon>
                                                     <h5 className="mt-2">Sorry! No Result Found</h5>
-                                                    <p className="text-muted mb-0">We've searched more than 150+ Orders We did not find any
+                                                    <p className="text-muted mb-0">We've searched more than 150+ Customer We did not find any
                                                         orders for you search.</p>
                                                 </div>
                                             </div>

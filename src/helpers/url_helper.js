@@ -3,10 +3,31 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
 
 //LOGIN
 
-export const API_BASE_URL = "http://192.168.200.88:8080";
 
-const apiBaseUrl = "http://192.168.200.88:8080";
-// const apiBaseUrl = "http://localhost:8080";
+
+/**
+ * The below one is Hari's Computer Details
+ */
+// export const API_BASE_URL = "http://192.168.200.88:8080";
+// const apiBaseUrl = "http://192.168.200.211:8080";
+
+/**
+ * The below one is Shaheer's Computer Details
+ */
+// export const API_BASE_URL = "http://192.168.200.211:8080";
+// const apiBaseUrl = "http://192.168.200.211:8080";
+
+/**
+ * The below one is Saurabh's Computer Details
+ */
+// export const API_BASE_URL = "http://192.168.200.130:8080";
+// const apiBaseUrl = "http://192.168.200.130:8080";
+
+
+// export const API_BASE_URL = "http://192.168.200.88:8080";
+// const apiBaseUrl = "http://192.168.200.88:8080";
+
+const apiBaseUrl = "http://localhost:8080";
 const token = "/horsecity661809"
 
 export const LOGIN_URL = apiBaseUrl + token + "/login"

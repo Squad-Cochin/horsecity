@@ -12,10 +12,13 @@ import { qetEnquiriesData } from "../../../helpers/ApiRoutes/authApiRoutes";
 
 import { enquiriesData } from '../../../CommonData/Data';
 
-const ListEnquiriesTable = () => {
-    function toggleStatus(button, enquiryId) {
+const ListEnquiriesTable = () => 
+{
+    function toggleStatus(button, enquiryId) 
+    {
         var currentStatus = button.innerText.trim();
-        if (currentStatus === 'ACTIVE') {
+        if(currentStatus === 'ACTIVE') 
+        {
             button.innerText = 'INACTIVE';
             button.classList.remove('btn-success');
             button.classList.add('btn-danger');
@@ -23,28 +26,38 @@ const ListEnquiriesTable = () => {
             // Find the corresponding customer by ID
             const enquiry = enquiriesData.find((e) => e.id === enquiryId);
             console.log("Enquiry", enquiry);
-            if (enquiry) {
+            if (enquiry)
+            {
                 console.log('Came here');
                 enquiry.status = 'INACTIVE';
                 console.log("Enquiry", enquiry);
             }
         }
-        else if (currentStatus === 'INACTIVE') {
+        else if (currentStatus === 'INACTIVE')
+        {
             button.innerText = 'ACTIVE';
             button.classList.remove('btn-danger');
             button.classList.add('btn-success');
 
             // Find the corresponding customer by ID
             const enquiry = enquiriesData.find((e) => e.id === enquiryId);
-            if (enquiry) {
+            if (enquiry)
+            {
                 enquiry.status = 'ACTIVE';
             }
         }
     }
 
     const [modal_list, setmodal_list] = useState(false);
-    const [enquiries, setEnquiries] = useState([])
-    const [enquirie, setEnquirie] = useState([])
+    const [enquiries, setEnquiries] = useState([]);
+    const [modal, setModal] = useState(false);
+    const [selectedImage, setSelectedImage] = useState('');
+  
+    const toggleModal = (imageURL) => {
+      setSelectedImage(imageURL);
+      setModal(!modal);
+    };
+    const [enquirie, setEnquirie] = useState([]);
 
     function tog_list(param, productId) {
 
@@ -116,21 +129,23 @@ const ListEnquiriesTable = () => {
                                                     <tr>
                                                         <th className="index" data-sort="index">#</th>
                                                         <th className="sort" data-sort="customer_name">Customer Name</th>
-                                                        {/* <th className="sort" data-sort="customer_email">Customer Email</th> */}
+                                                        <th className="sort" data-sort="customer_email">Customer Email</th>
                                                         {/* <th className="sort" data-sort="customer_username">Customer User Name</th> */}
-                                                        {/* <th className="sort" data-sort="contact_no">Customer Contact Number</th> */}
+                                                        <th className="sort" data-sort="contact_no">Contact Number</th>
                                                         {/* <th className="sort" data-sort="vehicle_requested">Vehicle Requested</th> */}
-                                                        <th className="sort" data-sort="service_provider">Service Provider</th>
-                                                        <th className="sort" data-sort="driver">Driver</th>
-                                                        <th className="sort" data-sort="vehicle_number">Vehicle Number</th>
+                                                        {/* <th className="sort" data-sort="service_provider">Service Provider</th> */}
+                                                        {/* <th className="sort" data-sort="driver">Driver</th> */}
+                                                        {/* <th className="sort" data-sort="vehicle_number">Vehicle Number</th> */}
                                                         {/* <th className="sort" data-sort="vehicle_maker">Maker</th>
                                                         <th className="sort" data-sort="pickup_location">Pickup Location</th>
                                                         <th className="sort" data-sort="drop_location">Drop Location</th>*/}
-                                                        <th className="sort" data-sort="total_horse">Number Of Horse</th>
-                                                            {/*<th className="sort" data-sort="description">Description</th>
-                                                        <th className="sort" data-sort="created_date">Created Date</th>
-                                                        <th className="sort" data-sort="updated_date">Update Date</th> */}
-                                                        <th className="sort" data-sort="status">Status</th>
+                                                        <th className="sort" data-sort="total_horse">Horses</th>
+                                                        <th className="sort" data-sort="description">Description</th>
+                                                        {/* <th className="sort" data-sort="created_date">Created Date</th> */}
+                                                        {/* <th className="sort" data-sort="updated_date">Update Date</th> */}
+                                                        {/* <th className="sort" data-sort="status">Status</th> */}
+                                                        <th className="sort" data-sort="vehicle_requested">Vehicle Requested</th>
+                                                        <th className="sort" data-sort="vehicle_images">Vehicle Image</th>
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
@@ -143,21 +158,31 @@ const ListEnquiriesTable = () => {
 
                                                         </th>
                                                             <td className="customer_name">{item.cName}</td>
-                                                           {/*  <td className="customer_email">{item.cEmail}</td>
-                                                            <td className="customer_username">{item.cUser_name}</td> */}
-                                                            {/* <td className="contact_no">{item.cPhone}</td> */}
+                                                            <td className="customer_email">{item.cEmail}</td>
+                                                            {/* <td className="customer_username">{item.cUser_name}</td>  */}
+                                                            <td className="contact_no">{item.cPhone}</td>
                                                             {/* <td className="vehicle_requested">BMW</td> */}
-                                                            <td className="service_provider">{item.vService_provider}</td>
-                                                            <td className="driver">{item.driver}</td>
-                                                            <td className="vehicle_number">{item.vVvehicle_number}</td>
+                                                            {/* <td className="service_provider">{item.vService_provider}</td> */}
+                                                            {/* <td className="driver">{item.driver}</td> */}
+                                                            {/* <td className="vehicle_number">{item.vVvehicle_number}</td> */}
                                                             {/* <td className="vehicle_maker">{item.vMake}</td>
                                                             <td className="pickup_location">{item.pickup_location}</td>
                                                             <td className="drop_location">{item.drop_location}</td>*/}
-                                                            <td className="total_horse">{item.no_of_horse}</td>
-                                                              {/*<td className="description">{item.description}</td>
-                                                            <td className="created_date">{item.created_at}</td>
-                                                            <td className="updated_date">{item.updated_at}</td> */}
-                                                            <td className="status">
+                                                            <td className="total_horse text-center">{item.no_of_horse}</td>
+                                                            <td className="description">{item.description}</td>
+                                                            {/* <td className="created_date">{item.created_at}</td> */}
+                                                            {/* <td className="vehicle_images">{item.vVehicle_Image}</td> */}
+                                                            <td className="vehicle_images text-center">
+                                                                {/* <img src={item.vVehicle_Image} alt="Vehicle Image" style={{ width: '100px', height: '100px' }} /> */}
+                                                                <img
+                                                                    src={item.vVehicle_Image}
+                                                                    alt="Vehicle Image"
+                                                                    style={{ width: '50px', height: '50px', cursor: 'pointer' }}
+                                                                    onClick={() => toggleModal(item.vVehicle_Image)}
+                                                                />
+                                                            </td>
+                                                            {/* <td className="updated_date">{item.updated_at}</td> */}
+                                                            {/* <td className="status">
                                                                 <div>
                                                                     <div className="d-flex gap-2">
                                                                         <div className="status">
@@ -172,25 +197,24 @@ const ListEnquiriesTable = () => {
                                                                         </div>
                                                                     </div>
                                                                 </div>
-                                                            </td>
+                                                            </td> */}
                                                             <td>
                                                                 <div className="d-flex gap-2">
                                                                     <div className="edit">
                                                                         <button className="btn btn-sm btn-primary edit-item-btn" onClick={() => tog_list(item.id)}
                                                                             data-bs-toggle="modal" data-bs-target="#showModal">View</button>
                                                                     </div>
-                                                                    <div className="remove">
+                                                                    {/* <div className="remove">
                                                                         <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">
                                                                             Remove
                                                                         </button>
-                                                                    </div>
+                                                                    </div> */}
                                                                 </div>
                                                             </td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
                                             </table>
-
 
 
 
@@ -224,6 +248,13 @@ const ListEnquiriesTable = () => {
                     </Row>
                 </Container>
             </div>
+            <Modal isOpen={modal} toggle={toggleModal}>
+                <ModalHeader toggle={toggleModal}>Image Preview</ModalHeader>
+                <ModalBody>
+                <img src={selectedImage} alt="Vehicle Image" style={{ width: '100%', maxHeight: '500px' }} />
+                </ModalBody>
+                {/* ...additional modal content or buttons... */}
+            </Modal>
             {/* View Modal */}
             <  Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(); }} centered >
                 <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}>View Enquiry </ModalHeader>

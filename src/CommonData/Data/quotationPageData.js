@@ -36,7 +36,7 @@ const quotationData = [
 
 
     {
-        id : 	'Q002',
+        id : 'Q002',
         enquiry_id : 4,
         cName : "Shubham Singh",
         cEmail : "ss@gmail.com",

@@ -24,6 +24,8 @@ import Logo from "../../../assets/images/black-logo.png"
 import { getQuotationData } from "../../../helpers/ApiRoutes/authApiRoutes";
 import { addNewQuataion } from "../../../helpers/ApiRoutes/addApiRoutes";
 import { useFormik } from "formik";
+
+
 const ListQuotationsTable = () => {
   const [modal_list, setmodal_list] = useState(false);
   const [view_modal, setView_modal] = useState(false);
@@ -768,7 +770,8 @@ const ListQuotationsTable = () => {
         </ModalHeader>
         <form className="tablelist-form">
         <ModalBody>
-                {quotaion?.map((item, index) => (
+                {quotaion?.map((item, index) => 
+                (
                     <div key={index} className="tm_container">
                     <div className="tm_invoice_wrap">
                         <div className="tm_invoice tm_style1" id="tm_download_section">
