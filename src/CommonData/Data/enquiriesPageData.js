@@ -28,9 +28,9 @@ const enquiriesData = [
     {
       id: 2,
       cId: 1,
-      cName: "Saurabh Mishra",
-      cEmail: "sp832156@gmail.com",
-      cUser_name: "Saura1998",
+      cName: "Rahul Patil",
+      cEmail: "sp@gmail.com",
+      cUser_name: "SP1998",
       cPhone: "1234567897",
       cDate_of_birth: "1997/11/06",
       cId_proof_no: "865121584650",

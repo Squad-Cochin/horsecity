@@ -12,8 +12,11 @@ import { Invoices } from '../../CommonData/Data/Invoices';
 import { getInvoice } from '../../helpers/ApiRoutes/authApiRoutes';
 
 const InvoiceDetails = () => {
+
+  const [ add_list, setAdd_list ] = useState(false);
   const [modal_list, setmodal_list] = useState(false);
   const [view_modal, setView_modal] = useState(false);
+  const [modal, setModal] = useState(false);
   const [invoices, setInvoices] = useState([]);
   const [invoice, setInvoice] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
@@ -62,6 +65,10 @@ const InvoiceDetails = () => {
     handleCloseModal();
   };
 
+  const toggleModal = () => {
+    setModal(!modal);
+  };
+
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -85,7 +92,6 @@ const InvoiceDetails = () => {
       if (invoice) {
         console.log("Came here");
         invoice.status = "INACTIVE";
-        console.log("Invoice", invoice);
       }
     } else if (currentStatus === "INACTIVE") {
       button.innerText = "ACTIVE";
@@ -155,9 +161,11 @@ const InvoiceDetails = () => {
                         <thead className="table-light">
                           <tr>
                             <th className="index" data-sort="index">#</th>
-                            <th className="sort" data-sort="customer_name">Customer Name</th>
-                            <th className="sort" data-sort="service_provider_name">Service Provider Name</th>
+                            <th className="sort" data-sort="invoice_number">Invoice Number</th>
                             <th className="sort" data-sort="quotation_id">Quotation Id</th>
+                            <th className="sort" data-sort="customer_name">Customer Name</th>
+                            <th className="sort" data-sort="customer_email">Customer Email</th>
+                            {/* <th className="sort" data-sort="service_provider_name">Service Provider Name</th> */}
                             <th className="sort" data-sort="view_invoice">View Invoice</th>
                             <th className="sort" data-sort="send_email">Send Email</th>
                           </tr>
@@ -166,9 +174,12 @@ const InvoiceDetails = () => {
                           {Invoices.map((item, index) => (
                             <tr key={item}>
                               <td className="index text-center">{index + 1}</td> 
-                              <td className="customer_name">{item.customer_name}</td>
-                              <td className="service_provider_name">{item.service_provider_name}</td>
+                              <td className="invoice_number">{item.iId}</td>
                               <td className="quotation_id">{item.quotation_id}</td>
+                              <td className="customer_name">{item.customer_name}</td>
+                              <td className="customer_email">{item.customer_email}</td>
+                              {/* <td className="service_provider_name">{item.service_provider_name}</td> */}
+                              {/* <td className="quotation_id">{item.quotation_id}</td> */}
                               <td className="view_invoice">
                                 <button type="button" className="btn btn-success" id="add-btn" onClick={() => tog_view(item.id)}>
                                   View Invoice
@@ -240,7 +251,7 @@ const InvoiceDetails = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="tm_table tm_style1 tm_mb30">
+                  <div className="tm_table tm_style1 tm_mb3">
                     <div className="tm_round_border">
                       <div className="tm_table_responsive">
                         <table>
@@ -310,26 +321,89 @@ const InvoiceDetails = () => {
                     </div>
                   </div>
                 </div>
-                <div className="tm_padd_15_20 tm_round_border">
-                  <p className="tm_mb5"><b className="tm_primary_color">Terms & Conditions:</b></p>
+                <Button color="primary"
+                 style={{ marginBottom: '1rem' }} onClick={toggleModal}> Enter Amount </Button>
+                {/* <Button color="secondary" style={{ marginBottom: '1rem' }}>Enter Amount</Button>     */}
+                <div className="tm_padd_15_20 no-padding tm_round_border .tm_table_responsive">
+                  <p className="tm_mb5"><b className="tm_primary_color"></b></p>
+                  {/* <Button color="secondary">Enter Amount</Button> */}
+                  {/* <Button color="secondary" style={{ marginBottom: '1rem' }}>Enter Amount</Button> */}
+                  <table>
+                          <thead>
+                            <tr>
+                              <th className="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center">#</th>
+                              <th className="tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center" style={{ width: '30%' }}>Recieved Money</th>
+                              <th className="tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center" style={{ width: '30%' }}>Received Date</th>
+                              <th className="tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center" style={{ width: '10%' }}>Remaining Amount</th>
+
+                              {/* <th className="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg tm_text_right text-center">Total</th> */}
+                            </tr>
+                          </thead>
+                          <tbody>
+                            <tr>
+                              <td className="tm_width_3 text-center">1</td>
+                              {/* <td className="tm_width_4 text-center">Vehicle 1, Driver 1</td> */}
+                              <td className="tm_width_2 text-center">300 AED</td>
+                              <td className="tm_width_1 text-center">2023/07/09</td>
+                              <td className="tm_width_2 text-center">1000 AED</td>
+                            </tr>
+                            <tr>
+                              <td className="tm_width_3 text-center">2</td>
+                              {/* <td className="tm_width_4 text-center">Vehicle 2, Driver 2</td> */}
+                              <td className="tm_width_2 text-center">1000 AED</td>
+                              <td className="tm_width_1 text-center">2023/07/14</td>
+                              <td className="tm_width_2 text-center">0 AED</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                  {/* <ul className="tm_m0 tm_note_list">
+                    <li></li>
+                    <li></li>
+                  </ul> */}
+                </div>  
+                {/* <div className="tm_padd_15_20 tm_round_border">
+                  <p className="tm_mb5"><b className="tm_primary_color">Terms & Conditions</b></p>
                   <ul className="tm_m0 tm_note_list">
                     <li>All claims relating to quantity or shipping errors shall be waived by Buyer unless made in writing to Seller within thirty (30) days after delivery of goods to the address stated.</li>
                     <li>Delivery dates are not guaranteed and Seller has no liability for damages that may be incurred due to any delay in shipment of goods hereunder. Taxes are excluded unless otherwise stated.</li>
                   </ul>
-                </div>
+                </div> */}
               </div>
             </div>
           ))}
         </ModalBody>
         <ModalFooter>
             {/* <Button color="secondary" onClick={handleCloseInvoiceModal}>Close</Button> */}
-            {/* <Button color="secondary" onClick={handleCloseInvoiceModal}>Close</Button> */}
+            {/* <Button color="secondary" onClick={handle
+            InvoiceModal}>Close</Button> */}
                 <Button color="primary">
                     <a href={Pdf} download style={{ color: 'white', textDecoration: 'none' }}>
                         Download PDF
                     </a>
                 </Button>
         </ModalFooter>
+
+        <Modal className="extra-width" isOpen={modal} toggle={toggleModal}>
+        {/* <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered > */}
+          {/* <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={toggleModal}>Enter Amount</ModalHeader> */}
+          <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={toggleModal}>Enter Amount</ModalHeader>
+            <form className="tablelist-form" onSubmit={validation.handleSubmit}>
+              <ModalBody>
+                <div className="mb-3">
+                  <label htmlFor="total_amount-field" className="form-label">Total Invoice Amount</label>
+                    <input type="text" className="form-control mb-3" placeholder="1300" /> 
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="total_amount-field" className="form-label">Received Amount</label>
+                  <input type="text" name='totalinvoiceamount' id = 'total_amount-field' className="form-control" placeholder="Enter Received Amount" required/>
+                </div>
+              </ModalBody>
+            </form>
+        <ModalFooter>
+          <Button color="primary" onClick={toggleModal}>Save</Button>
+          <Button color="secondary" onClick={toggleModal}>Cancel</Button>
+        </ModalFooter>
+      </Modal>
 
       </Modal>
 

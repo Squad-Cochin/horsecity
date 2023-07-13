@@ -6,12 +6,14 @@ const Invoices =
         iDate : "2023/05/23",
         customer_name: "Sherif",
         companName : "Horse Tansportation",
-        customerAddress : {
+        customerAddress :
+        {
             Plot_No : "78",
             Road_Number : "National Highway",
             Area : "Cochin"
         },
-        companyAddress : {
+        companyAddress :
+        {
             Plot_No : "25",
             Road_Number : "NH7",
             Area : "Koratty"
@@ -35,7 +37,7 @@ const Invoices =
         id : 2,
         iId: "I100002",
         iDate : "2023/01/23",
-        customer_name: "Sharif",
+        customer_name: "Toushif",
         companName : "Horse Tansportation",
         customerAddress : {
             Plot_No : "89",
@@ -49,7 +51,7 @@ const Invoices =
         },
         cusCountry : "India",
         comCountry : "India",
-        customer_email : "Sharif@gmail.com",
+        customer_email : "Toushif@gmail.com",
         com_email : "abc@horsecity.com",
         iSubTotal : "1578",
         iTaxRate : "12",
