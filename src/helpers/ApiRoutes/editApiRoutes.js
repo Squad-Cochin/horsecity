@@ -97,3 +97,14 @@ export async function updatTripData(data){
       return { error : "Faild !"}
   }
 }
+
+/**Update quataion  */
+export async function updatQuataion(data){
+  try {
+      // const { data } = await axios.put(`${url.POST_SP_EDIT_URL}`);
+      // return { data };
+  } catch (error) {
+      return { error : "Faild !"}
+  }
+}
+
