@@ -132,20 +132,19 @@ const ListEnquiriesTable = () =>
                                                         <th className="sort" data-sort="customer_email">Customer Email</th>
                                                         {/* <th className="sort" data-sort="customer_username">Customer User Name</th> */}
                                                         <th className="sort" data-sort="contact_no">Contact Number</th>
-                                                        {/* <th className="sort" data-sort="vehicle_requested">Vehicle Requested</th> */}
                                                         {/* <th className="sort" data-sort="service_provider">Service Provider</th> */}
                                                         {/* <th className="sort" data-sort="driver">Driver</th> */}
                                                         {/* <th className="sort" data-sort="vehicle_number">Vehicle Number</th> */}
                                                         {/* <th className="sort" data-sort="vehicle_maker">Maker</th>
                                                         <th className="sort" data-sort="pickup_location">Pickup Location</th>
                                                         <th className="sort" data-sort="drop_location">Drop Location</th>*/}
-                                                        <th className="sort" data-sort="total_horse">Horses</th>
+                                                        {/* <th className="sort" data-sort="total_horse">Horses</th> */}
                                                         <th className="sort" data-sort="description">Description</th>
-                                                        {/* <th className="sort" data-sort="created_date">Created Date</th> */}
+                                                        <th className="sort" data-sort="created_date">Created Date</th>
                                                         {/* <th className="sort" data-sort="updated_date">Update Date</th> */}
                                                         {/* <th className="sort" data-sort="status">Status</th> */}
-                                                        <th className="sort" data-sort="vehicle_requested">Vehicle Requested</th>
-                                                        <th className="sort" data-sort="vehicle_images">Vehicle Image</th>
+                                                        {/* <th className="sort" data-sort="vehicle_requested">Vehicle Requested</th> */}
+                                                        {/* <th className="sort" data-sort="vehicle_images">Vehicle Image</th> */}
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
@@ -165,22 +164,22 @@ const ListEnquiriesTable = () =>
                                                             {/* <td className="service_provider">{item.vService_provider}</td> */}
                                                             {/* <td className="driver">{item.driver}</td> */}
                                                             {/* <td className="vehicle_number">{item.vVvehicle_number}</td> */}
-                                                            {/* <td className="vehicle_maker">{item.vMake}</td>
-                                                            <td className="pickup_location">{item.pickup_location}</td>
-                                                            <td className="drop_location">{item.drop_location}</td>*/}
-                                                            <td className="total_horse text-center">{item.no_of_horse}</td>
+                                                            {/* // <td className="pickup_location">{item.pickup_location}</td> */}
+                                                            {/* // <td className="drop_location">{item.drop_location}</td> */}
+                                                            {/* <td className="total_horse text-center">{item.no_of_horse}</td> */}
                                                             <td className="description">{item.description}</td>
-                                                            {/* <td className="created_date">{item.created_at}</td> */}
+                                                            {/* <td className="vehicle_maker">{item.vMake}</td> */}
+                                                            <td className="created_date">{item.created_at}</td>
                                                             {/* <td className="vehicle_images">{item.vVehicle_Image}</td> */}
-                                                            <td className="vehicle_images text-center">
+                                                            {/* <td className="vehicle_images text-center">
                                                                 {/* <img src={item.vVehicle_Image} alt="Vehicle Image" style={{ width: '100px', height: '100px' }} /> */}
-                                                                <img
+                                                                {/* <img
                                                                     src={item.vVehicle_Image}
                                                                     alt="Vehicle Image"
                                                                     style={{ width: '50px', height: '50px', cursor: 'pointer' }}
                                                                     onClick={() => toggleModal(item.vVehicle_Image)}
-                                                                />
-                                                            </td>
+                                                                /> */}
+                                                            {/* </td> */}
                                                             {/* <td className="updated_date">{item.updated_at}</td> */}
                                                             {/* <td className="status">
                                                                 <div>
@@ -256,12 +255,11 @@ const ListEnquiriesTable = () =>
                 {/* ...additional modal content or buttons... */}
             </Modal>
             {/* View Modal */}
-            <  Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(); }} centered >
+            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(); }} centered >
                 <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}>View Enquiry </ModalHeader>
-                <form className="tablelist-form"
-                >
-                                       <ModalBody>
-                                       {enquiries?.map((item, index) => (
+                <form className="tablelist-form">
+            <ModalBody>
+                                    {enquiries?.map((item, index) => (
                         <div key={index}>
                             {/* <div className="mb-3">
                             <label htmlFor="customerName-field" className="form-label">Customer Name</label>

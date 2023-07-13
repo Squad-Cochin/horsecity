@@ -309,7 +309,6 @@ const ListCustomerTable = () => {
                                                             </div>
                                                         </div>
                                                     </div> */}
-                                                    
                                                         <td>
                                                             <div className="d-flex gap-2">
                                                                 <div className="view">
