@@ -2,14 +2,14 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+import { Button, Card, CardBody, CardHeader, Col, Container, Modal, Form, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../../components/Common/Breadcrumb";
 // import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
 // Import Flatepicker
 import Flatpickr from "react-flatpickr";
-
+import {useNavigate} from "react-router-dom"
 // Import Images
 // import avatar1 from "../../assets/images/users/avatar-1.jpg";
 // import avatar2 from "../../assets/images/users/avatar-2.jpg";
@@ -25,15 +25,21 @@ import { updateVehicle } from '../../../helpers/ApiRoutes/editApiRoutes';
 import { useFormik } from "formik";
 // Define the toggleStatus function outside the component
 import { Vehicles } from '../../../CommonData/Data';
+import vehicle1 from '../../../assets/images/vehicle13.jpg';
+import vehicle2 from '../../../assets/images/vehicle2.jpg'
+import vehicle3 from '../../../assets/images/vehicle1.jpg'
 
 
 const ListVehiclesTable = () => {
     const [vehicles, setVehicles] = useState([]);
     const [modal_list, setmodal_list] = useState(false);
+    const [gallery_modal, setGallery_modal] = useState(false);
     const [add_list, setAdd_list] = useState(false);
     const [vehicle, setVehicle] = useState([]);
     const [modal_delete, setmodal_delete] = useState(false);
     const [view_modal, setView_modal] = useState(false);
+
+    const navigate = useNavigate();
 
     function tog_list(param, productId) {
         if (param === 'ADD') {
@@ -46,11 +52,20 @@ const ListVehiclesTable = () => {
     }
 
     function tog_view(productId) {
-        const data = vehicles?.find((item)=>item?.id === productId)
+        const data = vehicles?.find((item) => item?.id === productId)
         setVehicle([data]);
         setView_modal(!view_modal);
 
     }
+    /**Image  Gallery */
+    function image_gallery(productId) {
+
+        setGallery_modal(!gallery_modal);
+    }
+
+    const [images, setImages] = useState();
+
+
 
     const initialValues = {
         service_provider: !add_list ? vehicle[0]?.service_provider : '',
@@ -103,7 +118,7 @@ const ListVehiclesTable = () => {
         }
     });
 
-    function remove_data(id){
+    function remove_data(id) {
         removeVehicle(id)
     }
 
@@ -145,6 +160,29 @@ const ListVehiclesTable = () => {
             }
         }
     }
+    const vehicle_name = "Toyota Camry";
+    const uploadImage = (e) => {
+        const file = e.target.files[0];
+
+    
+            setImages(URL.createObjectURL(file))
+            // setImages([...images, reader.result]);
+      
+        // reader.readAsDataURL(file);
+    };
+
+    const deleteImage = (imageName) => {
+        const updatedImages = images.filter((image) => image !== imageName);
+        setImages(updatedImages);
+    };
+
+    const toggleGalleryModal = (productId) => {
+        const data = vehicles?.find((item) => item?.id === productId)
+        console.log(data.images);
+
+        setVehicle([data]);
+        setGallery_modal(!gallery_modal);
+    };
 
 
     useEffect(() => {
@@ -284,9 +322,9 @@ const ListVehiclesTable = () => {
                                                             </th> */}
                                                             <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
                                                             <th scope="row">
-                                                        {index + 1}
+                                                                {index + 1}
 
-                                                        </th>
+                                                            </th>
                                                             <td className="name">{item.service_provider}</td>
                                                             <td className="vhnumber">{item.vehicle_number}</td>
                                                             <td className="make">{item.make}</td>
@@ -336,6 +374,11 @@ const ListVehiclesTable = () => {
                                                                         <button className="btn btn-sm btn-success edit-item-btn"
                                                                             data-bs-toggle="modal" data-bs-target="#showModal" onClick={() => tog_list('EDIT', item.id)}>Edit</button>
                                                                     </div>
+                                                                    <div className="edit">
+                                                                        <button className="btn btn-sm btn-success edit-item-btn"
+                                                                            data-bs-toggle="modal" data-bs-target="#showModal" onClick={()=>navigate(`/image-gallery/${item.id}`)}>View Images</button>
+                                                                    </div>
+
                                                                     <div className="remove">
                                                                         <button className="btn btn-sm btn-danger remove-item-btn" onClick={() => remove_data(item.id)} data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
                                                                     </div>
@@ -384,11 +427,11 @@ const ListVehiclesTable = () => {
             <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
                 <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}> {add_list ? 'Add Vehicle' : 'Edit Vehicle'} </ModalHeader>
                 <form className="tablelist-form"
-                onSubmit={validation.handleSubmit}>
+                    onSubmit={validation.handleSubmit}>
                     <ModalBody>
-              
 
-                            <div className="mb-3">
+
+                        <div className="mb-3">
                             <label htmlFor="serviceprovider-field" className="form-label">Service Provider</label>
                             <input
                                 type="text"
@@ -400,9 +443,9 @@ const ListVehiclesTable = () => {
                                 placeholder="Enter Vehicle Name"
                                 required
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_number-field" className="form-label">Vehicle Number</label>
                             <input
                                 type="text"
@@ -414,9 +457,9 @@ const ListVehiclesTable = () => {
                                 placeholder="Enter Vehicle Number"
                                 required
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_company-field" className="form-label">Vehicle Company</label>
                             <input
                                 type="text"
@@ -428,8 +471,8 @@ const ListVehiclesTable = () => {
                                 placeholder="Enter Vehicle Company"
                                 required
                             />
-                            </div>
-                            <div className="mb-3">
+                        </div>
+                        <div className="mb-3">
                             <label htmlFor="modal-field" className="form-label">Vehicle Model</label>
                             <input
                                 type="text"
@@ -441,9 +484,9 @@ const ListVehiclesTable = () => {
                                 placeholder="Enter Vehicle Model"
                                 required
                             />
-                            </div>
+                        </div>
 
-                    <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_color-field" className="form-label">Vehicle Color</label>
                             <input
                                 type="text"
@@ -455,9 +498,9 @@ const ListVehiclesTable = () => {
                                 placeholder="Enter Vehicle Color"
                                 required
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_length-field" className="form-label">Vehicle Length (cm)</label>
                             <input
                                 type="text"
@@ -469,9 +512,9 @@ const ListVehiclesTable = () => {
                                 placeholder="Enter Vehicle Length In (cm)"
                                 required
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_breadth-field" className="form-label">Vehicle Breadth (cm)</label>
                             <input
                                 type="text"
@@ -483,9 +526,9 @@ const ListVehiclesTable = () => {
                                 placeholder="Enter Vehicle Breadth In (cm)"
                                 required
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_height-field" className="form-label">Vehicle Height (cm)</label>
                             <input
                                 type="text"
@@ -497,9 +540,9 @@ const ListVehiclesTable = () => {
                                 placeholder="Enter Vehicle Height in (cm)"
                                 required
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="max_no_of_horses-field" className="form-label">Max No Of Horses</label>
                             <select
                                 id="max_no_of_horses-field"
@@ -510,78 +553,78 @@ const ListVehiclesTable = () => {
                                 required
                             >
                                 {Array.from({ length: 10 }, (_, index) => (
-                                <option key={index + 1} value={index + 1}>{index + 1}</option>
+                                    <option key={index + 1} value={index + 1}>{index + 1}</option>
                                 ))}
                             </select>
+                        </div>
+
+                        <div className="mb-3">
+                            <label className="form-label">Air Conditioner</label>
+                            <div className="form-check">
+                                <input
+                                    type="radio"
+                                    id="air_conditioner-yes"
+                                    name="air_conditioner"
+                                    className="form-check-input"
+                                    value="YES"
+                                    checked={validation.values.air_conditioner === 'YES'}
+                                    onChange={validation.handleChange}
+                                    required
+                                />
+                                <label htmlFor="air_conditioner-yes" className="form-check-label">YES</label>
                             </div>
-
-                            <div className="mb-3">
-  <label className="form-label">Air Conditioner</label>
-  <div className="form-check">
-    <input
-      type="radio"
-      id="air_conditioner-yes"
-      name="air_conditioner"
-      className="form-check-input"
-      value="YES"
-      checked={validation.values.air_conditioner === 'YES'}
-      onChange={validation.handleChange}
-      required
-    />
-    <label htmlFor="air_conditioner-yes" className="form-check-label">YES</label>
-  </div>
-  <div className="form-check">
-    <input
-      type="radio"
-      id="air_conditioner-no"
-      name="air_conditioner"
-      className="form-check-input"
-      value="NO"
-      checked={validation.values.air_conditioner === 'NO'}
-      onChange={validation.handleChange}
-      required
-    />
-    <label htmlFor="air_conditioner-no" className="form-check-label">NO</label>
-  </div>
-</div>
+                            <div className="form-check">
+                                <input
+                                    type="radio"
+                                    id="air_conditioner-no"
+                                    name="air_conditioner"
+                                    className="form-check-input"
+                                    value="NO"
+                                    checked={validation.values.air_conditioner === 'NO'}
+                                    onChange={validation.handleChange}
+                                    required
+                                />
+                                <label htmlFor="air_conditioner-no" className="form-check-label">NO</label>
+                            </div>
+                        </div>
 
 
-  
-  
 
 
-                            <div className="mb-3">
+
+
+                        <div className="mb-3">
                             <label className="form-label">Temperature Manageable</label>
                             <div className="form-check">
                                 <input
-                                type="radio"
-                                id="temperature_manageable-yes"
-                                name="temperature_manageable"
-                                className="form-check-input"
-                                value={"YES"}
-                                checked = {validation.values.temperature_manageable === 'YES'}
-                                onChange={validation.handleChange}
-                                required
+                                    type="radio"
+                                    id="temperature_manageable-yes"
+                                    name="temperature_manageable"
+                                    className="form-check-input"
+                                    value={"YES"}
+                                    checked={validation.values.temperature_manageable === 'YES'}
+                                    onChange={validation.handleChange}
+                                    required
                                 />
                                 <label htmlFor="temperature_manageable-yes" className="form-check-label">YES</label>
                             </div>
                             <div className="form-check">
                                 <input
-                                type="radio"
-                                id="temperature_manageable-no"
-                                name="temperature_manageable"
-                                className="form-check-input"
-                               
-                                value={"NO"}
-                                checked = {validation.values.temperature_manageable === 'NO'}
-                                onChange={validation.handleChange}
-                                required
+                                    type="radio"
+                                    id="temperature_manageable-no"
+                                    name="temperature_manageable"
+                                    className="form-check-input"
+
+                                    value={"NO"}
+                                    checked={validation.values.temperature_manageable === 'NO'}
+                                    onChange={validation.handleChange}
+                                    required
                                 />
                                 <label htmlFor="temperature_manageable-no" className="form-check-label">NO</label>
                             </div>
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_image-field" className="form-label">Vehicle Image</label>
                             <input
                                 type="file"
@@ -591,9 +634,9 @@ const ListVehiclesTable = () => {
                                 placeholder="Upload Vehicle Image"
                                 required
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_registration_number-field" className="form-label">Vehicle Registration Number</label>
                             <input
                                 type="text"
@@ -605,83 +648,83 @@ const ListVehiclesTable = () => {
                                 placeholder="Enter Vehicle Registration Number"
                                 required
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label className="form-label">GCC Travel Allowed</label>
                             <div className="form-check">
                                 <input
-                                type="radio"
-                                id="gcc_travel_allowed-yes"
-                                name="gcc_travel_allowed"
-                                className="form-check-input"
-                                value = "YES"
-                                checked={validation.values.gcc_travel_allowed == "YES"}
-                                onChange={validation.handleChange}
-                                required
+                                    type="radio"
+                                    id="gcc_travel_allowed-yes"
+                                    name="gcc_travel_allowed"
+                                    className="form-check-input"
+                                    value="YES"
+                                    checked={validation.values.gcc_travel_allowed == "YES"}
+                                    onChange={validation.handleChange}
+                                    required
                                 />
                                 <label htmlFor="gcc_travel_allowed-yes" className="form-check-label">YES</label>
                             </div>
                             <div className="form-check">
                                 <input
-                                type="radio"
-                                id="gcc_travel_allowed-no"
-                                name="gcc_travel_allowed"
-                                className="form-check-input"
-                                value = "NO"
-                                checked={validation.values.gcc_travel_allowed === "NO"}
-                                onChange={validation.handleChange}
-                                required
+                                    type="radio"
+                                    id="gcc_travel_allowed-no"
+                                    name="gcc_travel_allowed"
+                                    className="form-check-input"
+                                    value="NO"
+                                    checked={validation.values.gcc_travel_allowed === "NO"}
+                                    onChange={validation.handleChange}
+                                    required
                                 />
                                 <label htmlFor="gcc_travel_allowed-no" className="form-check-label">NO</label>
                             </div>
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label className="form-label">Insurance Covered</label>
                             <div className="form-check">
                                 <input
-                                type="radio"
-                                id="insurance_covered-yes"
-                                name="insurance_covered"
-                                className="form-check-input"
-                                value = "YES"
-                                checked={validation.values.insurance_covered === "YES"}
-                                onChange={validation.handleChange}
-                                required
+                                    type="radio"
+                                    id="insurance_covered-yes"
+                                    name="insurance_covered"
+                                    className="form-check-input"
+                                    value="YES"
+                                    checked={validation.values.insurance_covered === "YES"}
+                                    onChange={validation.handleChange}
+                                    required
                                 />
                                 <label htmlFor="insurance_covered-yes" className="form-check-label">YES</label>
                             </div>
                             <div className="form-check">
                                 <input
-                                type="radio"
-                                id="insurance_covered-no"
-                                name="insurance_covered"
-                                value='NO'
-                                checked={validation.values.insurance_covered === "NO"}
-                                onChange={validation.handleChange}
-                                className="form-check-input"
-                                required
+                                    type="radio"
+                                    id="insurance_covered-no"
+                                    name="insurance_covered"
+                                    value='NO'
+                                    checked={validation.values.insurance_covered === "NO"}
+                                    onChange={validation.handleChange}
+                                    className="form-check-input"
+                                    required
                                 />
                                 <label htmlFor="insurance_covered-no" className="form-check-label">NO</label>
                             </div>
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="insurance_date-field" className="form-label">Insurance Date</label>
                             <Flatpickr
                                 className="form-control"
                                 options={{
-                                dateFormat: "d M, Y"
+                                    dateFormat: "d M, Y"
                                 }}
                                 name='insurance_date'
                                 value={validation.values.insurance_date || ""}
                                 onChange={validation.handleChange}
                                 placeholder="Select Insurance Date"
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="insurance_policy_no-field" className="form-label">Insurance Policy Number</label>
                             <input
                                 type="text"
@@ -690,13 +733,13 @@ const ListVehiclesTable = () => {
                                 name='insurance_policy_no'
                                 value={validation.values.insurance_policy_no || ""}
                                 onChange={validation.handleChange}
-                               
+
                                 placeholder="Enter Insurance Policy Number"
                                 required
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="insurance_policy_provider-field" className="form-label">Insurance Policy Provider</label>
                             <input
                                 type="text"
@@ -705,85 +748,85 @@ const ListVehiclesTable = () => {
                                 name='insurance_policy_provider'
                                 value={validation.values.insurance_policy_provider || ""}
                                 onChange={validation.handleChange}
-                             
+
                                 placeholder="Enter Insurance Policy Provider"
                                 required
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="insurance_expiry_date-field" className="form-label">Insurance Expiry Date</label>
                             <Flatpickr
                                 className="form-control"
                                 options={{
-                                dateFormat: "d M, Y"
+                                    dateFormat: "d M, Y"
                                 }}
                                 name='insurance_expiry_date'
                                 value={validation.values.insurance_expiry_date || ""}
                                 onChange={validation.handleChange}
                                 placeholder="Select Insurance Expiry Date"
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label className="form-label">Vehicle Type</label>
                             <div className="form-check">
                                 <input
-                                type="radio"
-                                id="vehicle_type-private"
-                                name="vehicle_type"
-                                className="form-check-input"
-                                value ="PRIVATE"
-                                checked={validation.values.vehicle_type == "PRIVATE"}
-                                onChange={validation.handleChange}
-                                required
+                                    type="radio"
+                                    id="vehicle_type-private"
+                                    name="vehicle_type"
+                                    className="form-check-input"
+                                    value="PRIVATE"
+                                    checked={validation.values.vehicle_type == "PRIVATE"}
+                                    onChange={validation.handleChange}
+                                    required
                                 />
                                 <label htmlFor="vehicle_type-private" className="form-check-label">PRIVATE</label>
                             </div>
                             <div className="form-check">
                                 <input
-                                type="radio"
-                                id="vehicle_type-commercial"
-                                name="vehicle_type"
-                                className="form-check-input"
-                                value ="COMMERCIAL"
-                                checked={validation.values.vehicle_type == "COMMERCIAL"}
-                                required
+                                    type="radio"
+                                    id="vehicle_type-commercial"
+                                    name="vehicle_type"
+                                    className="form-check-input"
+                                    value="COMMERCIAL"
+                                    checked={validation.values.vehicle_type == "COMMERCIAL"}
+                                    required
                                 />
                                 <label htmlFor="vehicle_type-commercial" className="form-check-label">COMMERCIAL</label>
                             </div>
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_registration_date-field" className="form-label">Vehicle Registration Date</label>
                             <Flatpickr
                                 className="form-control"
                                 options={{
-                                dateFormat: "d M, Y"
+                                    dateFormat: "d M, Y"
                                 }}
                                 name='vehicle_registration_date'
                                 value={validation.values.vehicle_registration_date || ""}
                                 onChange={validation.handleChange}
                                 placeholder="Select Vehicle Registration Date"
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_expiration_date-field" className="form-label">Vehicle Expiration Date</label>
                             <Flatpickr
                                 className="form-control"
                                 options={{
-                                dateFormat: "d M, Y"
+                                    dateFormat: "d M, Y"
                                 }}
                                 name='vehicle_expiration_date'
                                 value={validation.values.vehicle_expiration_date || ""}
                                 onChange={validation.handleChange}
                                 placeholder="Select Vehicle Expiration Date"
                             />
-                            </div>
+                        </div>
 
 
-                                {/* <div className="mb-3">
+                        {/* <div className="mb-3">
                             <label htmlFor="date-field" className="form-label">Joining Date</label>
                             <Flatpickr
                                 className="form-control"
@@ -802,7 +845,7 @@ const ListVehiclesTable = () => {
                                 <option value="Block">Block</option>
                             </select>
                         </div> */}
-       
+
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
@@ -814,13 +857,13 @@ const ListVehiclesTable = () => {
                 </form>
             </Modal>
 
-             {/* View Modal */}
-             <Modal className="extra-width" isOpen={view_modal}>
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_view('view'); }}> View Vehicles</ModalHeader>
+            {/* View Modal */}
+            <Modal className="extra-width" isOpen={view_modal}>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel"  toggle={() =>{ setView_modal(false)}}> View Vehicles</ModalHeader>
                 <form className="tablelist-form"
-                onSubmit={validation.handleSubmit}>
+                    onSubmit={validation.handleSubmit}>
                     <ModalBody>
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="serviceprovider-field" className="form-label">Service Provider</label>
                             <input
                                 type="text"
@@ -830,9 +873,9 @@ const ListVehiclesTable = () => {
                                 value={validation.values.service_provider || ""}
                                 readOnly
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_number-field" className="form-label">Vehicle Number</label>
                             <input
                                 type="text"
@@ -842,9 +885,9 @@ const ListVehiclesTable = () => {
                                 value={validation.values.vehicle_number || ""}
                                 readOnly
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_company-field" className="form-label">Vehicle Company</label>
                             <input
                                 type="text"
@@ -854,8 +897,8 @@ const ListVehiclesTable = () => {
                                 value={validation.values.make || ""}
                                 readOnly
                             />
-                            </div>
-                            <div className="mb-3">
+                        </div>
+                        <div className="mb-3">
                             <label htmlFor="modal-field" className="form-label">Vehicle Model</label>
                             <input
                                 type="text"
@@ -865,11 +908,11 @@ const ListVehiclesTable = () => {
                                 value={validation.values.models || ""}
                                 readOnly
                             />
-                            </div>
+                        </div>
 
                         <div className="mb-3">
                             <label htmlFor="vehicle_color-field" className="form-label">Vehicle Color</label>
-                            
+
                             <div className="col-md-10">
                                 <input
                                     className="form-control form-control-color mw-100"
@@ -878,9 +921,9 @@ const ListVehiclesTable = () => {
                                     id="example-color-input"
                                 />
                             </div>
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_length-field" className="form-label">Vehicle Length (cm)</label>
                             <input
                                 type="text"
@@ -890,9 +933,9 @@ const ListVehiclesTable = () => {
                                 value={validation.values.length || ""}
                                 readOnly
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_breadth-field" className="form-label">Vehicle Breadth (cm)</label>
                             <input
                                 type="text"
@@ -902,9 +945,9 @@ const ListVehiclesTable = () => {
                                 value={validation.values.breadth || ""}
                                 readOnly
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_height-field" className="form-label">Vehicle Height (cm)</label>
                             <input
                                 type="text"
@@ -914,9 +957,9 @@ const ListVehiclesTable = () => {
                                 value={validation.values.height || ""}
                                 readOnly
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="max_no_of_horses-field" className="form-label">Max No Of Horses</label>
                             <input
                                 type="text"
@@ -926,12 +969,12 @@ const ListVehiclesTable = () => {
                                 value={validation.values.max_no_of_horse || ""}
                                 readOnly
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
-                                <label className="form-label">Air Conditioner</label>
-                                <div className="form-check">
-                                    <input
+                        <div className="mb-3">
+                            <label className="form-label">Air Conditioner</label>
+                            <div className="form-check">
+                                <input
                                     type="radio"
                                     id="air_conditioner-yes"
                                     name="air_conditioner"
@@ -939,11 +982,11 @@ const ListVehiclesTable = () => {
                                     value="YES"
                                     checked={validation.values.air_conditioner === 'YES'}
                                     disabled
-                                    />
-                                    <label htmlFor="air_conditioner-yes" className="form-check-label">YES</label>
-                                </div>
-                                <div className="form-check">
-                                    <input
+                                />
+                                <label htmlFor="air_conditioner-yes" className="form-check-label">YES</label>
+                            </div>
+                            <div className="form-check">
+                                <input
                                     type="radio"
                                     id="air_conditioner-no"
                                     name="air_conditioner"
@@ -951,39 +994,39 @@ const ListVehiclesTable = () => {
                                     value="NO"
                                     checked={validation.values.air_conditioner === 'NO'}
                                     disabled
-                                    />
-                                    <label htmlFor="air_conditioner-no" className="form-check-label">NO</label>
-                                </div>
+                                />
+                                <label htmlFor="air_conditioner-no" className="form-check-label">NO</label>
                             </div>
-                            <div className="mb-3">
+                        </div>
+                        <div className="mb-3">
                             <label className="form-label">Temperature Manageable</label>
                             <div className="form-check">
                                 <input
-                                type="radio"
-                                id="temperature_manageable-yes"
-                                name="temperature_manageable"
-                                className="form-check-input"
-                                value={"YES"}
-                                checked = {validation.values.temperature_manageable === 'YES'}
-                                disabled
+                                    type="radio"
+                                    id="temperature_manageable-yes"
+                                    name="temperature_manageable"
+                                    className="form-check-input"
+                                    value={"YES"}
+                                    checked={validation.values.temperature_manageable === 'YES'}
+                                    disabled
                                 />
                                 <label htmlFor="temperature_manageable-yes" className="form-check-label">YES</label>
                             </div>
                             <div className="form-check">
                                 <input
-                                type="radio"
-                                id="temperature_manageable-no"
-                                name="temperature_manageable"
-                                className="form-check-input"
-                                value={"NO"}
-                                checked = {validation.values.temperature_manageable === 'NO'}
-                                disabled
+                                    type="radio"
+                                    id="temperature_manageable-no"
+                                    name="temperature_manageable"
+                                    className="form-check-input"
+                                    value={"NO"}
+                                    checked={validation.values.temperature_manageable === 'NO'}
+                                    disabled
                                 />
                                 <label htmlFor="temperature_manageable-no" className="form-check-label">NO</label>
                             </div>
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_image-field" className="form-label">Vehicle Image</label>
                             <input
                                 type="file"
@@ -993,9 +1036,9 @@ const ListVehiclesTable = () => {
                                 placeholder="Upload Vehicle Image"
                                 required
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_registration_number-field" className="form-label">Vehicle Registration Number</label>
                             <input
                                 type="text"
@@ -1005,65 +1048,65 @@ const ListVehiclesTable = () => {
                                 value={validation.values.vehicle_registration_number || ""}
                                 readOnly
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label className="form-label">GCC Travel Allowed</label>
                             <div className="form-check">
                                 <input
-                                type="radio"
-                                id="gcc_travel_allowed-yes"
-                                name="gcc_travel_allowed"
-                                className="form-check-input"
-                                value = "YES"
-                                checked={validation.values.gcc_travel_allowed == "YES"}
-                                disabled
+                                    type="radio"
+                                    id="gcc_travel_allowed-yes"
+                                    name="gcc_travel_allowed"
+                                    className="form-check-input"
+                                    value="YES"
+                                    checked={validation.values.gcc_travel_allowed == "YES"}
+                                    disabled
                                 />
                                 <label htmlFor="gcc_travel_allowed-yes" className="form-check-label">YES</label>
                             </div>
                             <div className="form-check">
                                 <input
-                                type="radio"
-                                id="gcc_travel_allowed-no"
-                                name="gcc_travel_allowed"
-                                className="form-check-input"
-                                value = "NO"
-                                checked={validation.values.gcc_travel_allowed === "NO"}
-                                disabled
+                                    type="radio"
+                                    id="gcc_travel_allowed-no"
+                                    name="gcc_travel_allowed"
+                                    className="form-check-input"
+                                    value="NO"
+                                    checked={validation.values.gcc_travel_allowed === "NO"}
+                                    disabled
                                 />
                                 <label htmlFor="gcc_travel_allowed-no" className="form-check-label">NO</label>
                             </div>
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label className="form-label">Insurance Covered</label>
                             <div className="form-check">
                                 <input
-                                type="radio"
-                                id="insurance_covered-yes"
-                                name="insurance_covered"
-                                className="form-check-input"
-                                value = "YES"
-                                checked={validation.values.insurance_cover === "YES"}
-                                disabled
+                                    type="radio"
+                                    id="insurance_covered-yes"
+                                    name="insurance_covered"
+                                    className="form-check-input"
+                                    value="YES"
+                                    checked={validation.values.insurance_cover === "YES"}
+                                    disabled
                                 />
                                 <label htmlFor="insurance_covered-yes" className="form-check-label">YES</label>
                             </div>
                             <div className="form-check">
                                 <input
-                                type="radio"
-                                id="insurance_covered-no"
-                                name="insurance_covered"
-                                className="form-check-input"
-                                value = "NO"
-                                checked={validation.values.insurance_cover === "NO"}
-                                disabled
+                                    type="radio"
+                                    id="insurance_covered-no"
+                                    name="insurance_covered"
+                                    className="form-check-input"
+                                    value="NO"
+                                    checked={validation.values.insurance_cover === "NO"}
+                                    disabled
                                 />
                                 <label htmlFor="insurance_covered-no" className="form-check-label">NO</label>
                             </div>
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="insurance_date-field" className="form-label">Insurance Date</label>
                             <input
                                 type="text"
@@ -1073,9 +1116,9 @@ const ListVehiclesTable = () => {
                                 value={validation.values.insurance_date || ""}
                                 readOnly
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="insurance_policy_no-field" className="form-label">Insurance Policy Number</label>
                             <input
                                 type="text"
@@ -1085,9 +1128,9 @@ const ListVehiclesTable = () => {
                                 value={validation.values.insurance_policy_no || ""}
                                 readOnly
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="insurance_policy_provider-field" className="form-label">Insurance Policy Provider</label>
                             <input
                                 type="text"
@@ -1097,9 +1140,9 @@ const ListVehiclesTable = () => {
                                 value={validation.values.insurance_policy_provider || ""}
                                 readOnly
                             />
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="insurance_expiry_date-field" className="form-label">Insurance Expiry Date</label>
                             <input
                                 type="text"
@@ -1109,7 +1152,7 @@ const ListVehiclesTable = () => {
                                 value={validation.values.insurance_expiry_date || ""}
                                 readOnly
                             />
-                            
+
                             {/* <Flatpickr
                                 className="form-control"
                                 options={{
@@ -1120,37 +1163,37 @@ const ListVehiclesTable = () => {
                                 onChange={validation.handleChange}
                                 placeholder="Select Insurance Expiry Date"
                             /> */}
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label className="form-label">Vehicle Type</label>
                             <div className="form-check">
                                 <input
-                                type="radio"
-                                id="vehicle_type-private"
-                                name="vehicle_type"
-                                className="form-check-input"
-                                value ="PRIVATE"
-                                checked={validation.values.vehicle_type == "PRIVATE"}
-                                disabled
+                                    type="radio"
+                                    id="vehicle_type-private"
+                                    name="vehicle_type"
+                                    className="form-check-input"
+                                    value="PRIVATE"
+                                    checked={validation.values.vehicle_type == "PRIVATE"}
+                                    disabled
                                 />
                                 <label htmlFor="vehicle_type-private" className="form-check-label">PRIVATE</label>
                             </div>
                             <div className="form-check">
                                 <input
-                                type="radio"
-                                id="vehicle_type-commercial"
-                                name="vehicle_type"
-                                className="form-check-input"
-                                value ="COMMERCIAL"
-                                checked={validation.values.vehicle_type == "COMMERCIAL"}
-                                disabled
+                                    type="radio"
+                                    id="vehicle_type-commercial"
+                                    name="vehicle_type"
+                                    className="form-check-input"
+                                    value="COMMERCIAL"
+                                    checked={validation.values.vehicle_type == "COMMERCIAL"}
+                                    disabled
                                 />
                                 <label htmlFor="vehicle_type-commercial" className="form-check-label">COMMERCIAL</label>
                             </div>
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_registration_date-field" className="form-label">Vehicle Registration Date</label>
                             <input
                                 type="text"
@@ -1160,7 +1203,7 @@ const ListVehiclesTable = () => {
                                 value={validation.values.vehicle_registration_date || ""}
                                 readOnly
                             />
-                            
+
                             {/* <Flatpickr
                                 className="form-control"
                                 options={{
@@ -1171,9 +1214,9 @@ const ListVehiclesTable = () => {
                                 onChange={validation.handleChange}
                                 placeholder="Select Vehicle Registration Date"
                             /> */}
-                            </div>
+                        </div>
 
-                            <div className="mb-3">
+                        <div className="mb-3">
                             <label htmlFor="vehicle_expiration_date-field" className="form-label">Vehicle Expiration Date</label>
                             <input
                                 type="text"
@@ -1183,12 +1226,12 @@ const ListVehiclesTable = () => {
                                 value={validation.values.vehicle_expiration_date || ""}
                                 readOnly
                             />
-                            
-                            </div>
 
-                            <div className="mb-3">
-                            <label htmlFor="vechile_images-field" className="form-label">Vehicles Images</label>
-                            {console.log(validation.values.vehicle_images)}
+                        </div>
+
+                        {/* <div className="mb-3">
+                            <label htmlFor="vechile_images-field" className="form-label">Vehicles Images</label> */}
+              
                             {/* {validation.values.vehicle_images.map((item, index) => (
                                 <div key={index}>
                                     <img src={item || ""} alt="vechile Image" style={{ maxWidth: '100px' }} />
@@ -1202,10 +1245,10 @@ const ListVehiclesTable = () => {
                                 value={validation.values.insurance_policy_provider || ""}
                                 readOnly
                             /> */}
-                            </div>
+                        {/* </div> */}
 
 
-                                {/* <div className="mb-3">
+                        {/* <div className="mb-3">
                             <label htmlFor="date-field" className="form-label">Joining Date</label>
                             <Flatpickr
                                 className="form-control"
@@ -1224,11 +1267,11 @@ const ListVehiclesTable = () => {
                                 <option value="Block">Block</option>
                             </select>
                         </div> */}
-       
+
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() =>{ setView_modal(false);}}>Close</button>
+                            <button type="button" className="btn btn-light" onClick={() => { setView_modal(false); }}>Close</button>
                             {/* <button type="submit" className="btn btn-success" id="add-btn">{add_list ?  'Add service provider' : 'Update service provider' }</button> */}
                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
@@ -1236,6 +1279,8 @@ const ListVehiclesTable = () => {
                 </form>
             </Modal>
 
+
+          
 
             {/* Remove Modal */}
             <Modal isOpen={modal_delete} toggle={() => { tog_delete(); }} className="modal fade zoomIn" id="deleteRecordModal" centered >
@@ -1257,6 +1302,43 @@ const ListVehiclesTable = () => {
                     </div>
                 </ModalBody>
             </Modal>
+
+{/* 
+            <Modal className="extra-width" isOpen={gallery_modal} toggle={() =>{ setGallery_modal(false);}}>
+                <ModalHeader className="bg-light p-3" toggle={() =>{ setGallery_modal(false);}}>View Vehicle Gallery</ModalHeader>
+
+                <ModalBody>
+  {vehicle.map((item, index) => (
+    <div key={index}>
+      <div className="vehicle-details">
+        <h3>{item.make}</h3>
+        <h3>{item.models}</h3>
+      </div>
+      <div className="static-images">
+        <div className="image-container">
+          {item.images.map((imageItem, imageIndex) => (
+            <div key={imageIndex} className="image-item">
+              <img src={imageItem.url} alt={`Static Image ${imageIndex + 1}`} />
+              <button className="delete-button">Delete</button>
+            </div>
+          ))}
+          {images && <img src={images} alt="Static Image 3" />}
+        </div>
+      </div>
+    </div>
+  ))}
+  <input type="file" accept="image/png, image/jpeg" onChange={uploadImage} />
+</ModalBody>
+
+
+                <ModalFooter>
+                    <div className="hstack gap-2 justify-content-end">
+                        <button type="button" className="btn btn-light" onClick={() =>{ setGallery_modal(false);}}>Close</button>
+                    </div>
+                </ModalFooter>
+            </Modal> */}
+
+
         </React.Fragment>
     );
 };

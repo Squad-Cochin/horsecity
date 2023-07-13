@@ -27,3 +27,13 @@ export async function removeVehicle(vehicle_id){
         return { error : "Faild !"}
     }
 }
+
+/**Remove service provider */
+export async function removeVehicleImage(vehicle_id,image_id){
+    try {
+
+        alert(`vehicle ${vehicle_id} image ${image_id} Dlt req reached.`)
+    } catch (error) {
+        return { error : "Faild !"}
+    }
+}

@@ -105,7 +105,7 @@ import FormWizard from "../Pages/Forms/FormWizard";
 import BasicTable from "../Pages/Tables/BasicTable.js";
 import ListJs from "../Pages/ServiceProviders/ServiceProviderTable";
 import DataTable from "../Pages/Tables/DataTables/DataTables";
-
+import ImageGallery from "..//Pages/Tables/ListTables/ListVehicleImages"
 
 // Import Charts
 import ApexCharts from "../Pages/Charts/ApexCharts";
@@ -159,6 +159,8 @@ const authProtectedRoutes = [
 
   //Accounts
   { path: "/accounts", component: <Accounts /> },
+  /**Image gallery */
+    { path: "/image-gallery/:id", component: <ImageGallery /> },
 
   //Language
   { path: "/languages", component: <Language /> },   

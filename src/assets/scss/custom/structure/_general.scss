@@ -378,7 +378,31 @@
 
       }
 
-
+      .vehicle-details {
+        margin-bottom: 20px;
+      
+        h3 {
+          margin: 0;
+        }
+      }
+      
+      .image-size {
+        width: 50px; /* Adjust the width as needed */
+        height: 50px; /* Adjust the height as needed */
+        object-fit: cover; /* Adjust the object-fit property as needed */
+      }
+      
+      .uploaded-images {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+      
+        img {
+          width: 100%;
+          height: auto;
+        }
+      }
+      
     
     
     
