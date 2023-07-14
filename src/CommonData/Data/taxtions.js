@@ -13,7 +13,7 @@ const Taxations = [
       id: "2",
       name: "VAT",
       type:"FLAT",
-      value: "4%",
+      value: "4 AED",
       status: "ACTIVE",
       created_at: "2023-01-01",
     },
