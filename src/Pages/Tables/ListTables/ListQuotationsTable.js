@@ -33,6 +33,9 @@ const ListQuotationsTable = () => {
   const [quotaions, setQuotaions] = useState([]);
   const [quotaion, setQuotaion] = useState([]);
   const [add_list, setAdd_list] = useState(false);
+  const [ enquires, setEnquires] = useState([]);
+  // const [ enquiry_data, setEnquery_data] = useState({})
+  // const [ enquiry, setEnquiry ] = useState("");
   // function toggleStatus(button, quotationID) {
   //   var currentStatus = button.innerText.trim();
   //   if (currentStatus === "ACTIVE") {
@@ -60,18 +63,22 @@ const ListQuotationsTable = () => {
   //     }
   //   }
   // }
-
+  
   const initialValues = {
     cName: !add_list ? quotaions[0]?.cName : "",
     cEmail: !add_list ? quotaions[0]?.cEmail : "",
     cUser_name: !add_list ? quotaions[0]?.cUser_name : "",
     cPhone: !add_list ? quotaions[0]?.cPhone : "",
     cId_proof_no: !add_list ? quotaions[0]?.cId_proof_no : "",
+    enquiry_id: !add_list ? enquires[0]?.enquiry_id : "",
+    driver : !add_list ? enquires[0]?.driver : "",
+    driver_cost : !add_list ? enquires[0]?.driver_cost : "",
     enquiry_date: !add_list ? quotaions[0]?.enquiry_date : "",
     enquiry_updated_date: !add_list ? quotaions[0]?.enquiry_updated_date : "",
-    service_provider: !add_list ? quotaions[0]?.service_provider : "",
+    service_provider: !add_list ? quotaions[0]?.Service_provider : "",
     Vehicle_number: !add_list ? quotaions[0]?.Vehicle_number : "",
     Vehicle_Make: !add_list ? quotaions[0]?.Vehicle_Make : "",
+    vehicle_cost : !add_list ? enquires[0]?.vehicle_cost : "",
     trip_type: !add_list ? quotaions[0]?.trip_type : "",
     pickup_location: !add_list ? quotaions[0]?.pickup_location : "",
     pickup_country: !add_list ? quotaions[0]?.pickup_country : "",
@@ -97,6 +104,22 @@ const ListQuotationsTable = () => {
     status: !add_list ? quotaions[0]?.status : "",
     created_at: !add_list ? quotaions[0]?.created_at : "",
   };
+
+  const enquiry_details = (val) => {
+    const data = enquires ?.find((item) => item?.id === val);
+    if(data && data !== undefined){
+      validation.values.service_provider = data.service_provider;
+      validation.values.Vehicle_number = data.vehicle_number;
+      validation.values.driver = data.driver;
+      validation.values.pickup_location = data.pickup_location;
+      validation.values.pickup_date = data.pickup_date;
+      validation.values.drop_location = data.drop_location;
+      validation.values.drop_date = data.drop_date;
+      validation.values.no_of_horse = data.no_of_horse;
+      validation.values.trip_type = data.trip_type;
+    }
+    
+  }
 
   // Later in your code, when setting the initial state
 
@@ -153,7 +176,9 @@ const ListQuotationsTable = () => {
   }
 
   useEffect(() => {
-    setQuotaions(getQuotationData());
+    let quatationData = getQuotationData();
+    setQuotaions(quatationData.quotations);
+    setEnquires(quatationData.enquires);
   }, []);
 
   useEffect(() => {
@@ -231,6 +256,9 @@ const ListQuotationsTable = () => {
                             <th className="sort" data-sort="email">
                               Customer Email
                             </th>
+                            <th className="sort" data-sort="status">
+                              Status
+                            </th>
                             <th className="sort" data-sort="action">
                               Actions
                             </th>
@@ -244,15 +272,31 @@ const ListQuotationsTable = () => {
                               <td className="enquiryId">{item?.enquiry_id}</td>
                               <td className="customer_name">{item?.cName}</td>
                               <td className="customer_email">{item?.cEmail}</td>
+                              <td className="status">{item?.status}</td>
                               <td>
                                 <div className="d-flex gap-2">
-                                  <button
-                                    className="btn btn-sm btn-success edit-item-btn"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#showModal"
-                                  >
-                                    Send Email
-                                  </button>
+
+                                <div className="edit">
+                                    <button
+                                      className="btn btn-sm btn-success edit-item-btn"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#showModal"
+                                      onClick={() => tog_view(item?.id)}
+                                    >
+                                      View
+                                    </button>
+                                  </div>
+
+                                  <div className="edit">
+                                    <button
+                                      className="btn btn-sm btn-success edit-item-btn"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#showModal"
+                                      onClick={() => quat_list(item?.id)}
+                                    >
+                                      Quot List
+                                    </button>
+                                  </div>
 
                                   <div className="edit">
                                     <button
@@ -264,27 +308,14 @@ const ListQuotationsTable = () => {
                                       Edit
                                     </button>
                                   </div>
-                      
-                                  <div className="edit">
-                                    <button
-                                      className="btn btn-sm btn-primary edit-item-btn"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#showModal"
-                                      onClick={() => tog_view(item?.id)}
-                                    >
-                                      View
-                                    </button>
-                                  </div>
-                                  <div className="edit">
-                                    <button
-                                      className="btn btn-sm btn-primary edit-item-btn"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#showModal"
-                                      onClick={() => quat_list(item?.id)}
-                                    >
-                                      Quot List
-                                    </button>
-                                  </div>
+
+                                  <button
+                                    className="btn btn-sm btn-success edit-item-btn"
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#showModal"
+                                  >
+                                    Send Email
+                                  </button>
 
                                   <button
                                     className="btn btn-sm btn-danger remove-item-btn"
@@ -362,7 +393,7 @@ const ListQuotationsTable = () => {
             {/* {quotaion?.map((item, index) => (
                     <div key={index}> */}
 
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <label htmlFor="customerName-field" className="form-label">
                 Customer Name
               </label>
@@ -461,7 +492,49 @@ const ListQuotationsTable = () => {
                 onBlur={validation.handleBlur}
                 required
               />
-            </div>
+            </div> */}
+
+            {add_list ?
+            <div className="mb-3">
+              <label htmlFor="trip-type-field" className="form-label">
+                Enquiry Id
+              </label>
+              <select
+                data-trigger
+                name="enquiry_id"
+                id="trip-type-field"
+                className="form-control"
+                value={validation.values.enquiry_id || ""}
+                onSelect={enquiry_details(validation.values.enquiry_id)}
+                onChange={validation.handleChange}
+                onBlur={validation.handleBlur}
+                required
+              >
+                <option value="">Select Enquiry Id</option>
+              {enquires.map((item) => (
+                <option value={item.id}>{item.id}</option>
+              ))}
+              </select>
+            </div> : null}
+
+            {/* {!add_list ? */}
+            <div className="mb-3">
+            <label htmlFor="service-provider-field" className="form-label">
+              Service Provider
+            </label>
+            <input
+              type="text"
+              name="service_provider"
+              id="service-provider-field"
+              className="form-control"
+              value={validation.values.service_provider || ""}
+              placeholder="Enter Service Provider Name"
+              onChange={validation.handleChange}
+              onBlur={validation.handleBlur}
+              required
+            />
+          </div>
+          {/* : null} */}
 
             <div className="mb-3">
               <label htmlFor="vehicle-number-field" className="form-label">
@@ -481,16 +554,16 @@ const ListQuotationsTable = () => {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="Vehicle-Make-field" className="form-label">
-                Vehicle Company
+              <label htmlFor="Driver-field" className="form-label">
+                Driver
               </label>
               <input
                 type="text"
-                name="Vehicle_Make"
-                id="Vehicle-Make-field"
+                name="Driver"
+                id="Driver-field"
                 className="form-control"
-                value={validation.values.Vehicle_Make || ""}
-                placeholder="Enter Vehicle Company"
+                value={validation.values.driver || ""}
+                placeholder="Enter Driver Name"
                 onChange={validation.handleChange}
                 onBlur={validation.handleBlur}
                 required
@@ -517,7 +590,7 @@ const ListQuotationsTable = () => {
               </select>
             </div>
 
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <label htmlFor="pickup-country-field" className="form-label">
                 Pickup Country
               </label>
@@ -536,7 +609,7 @@ const ListQuotationsTable = () => {
                 <option value="Dubai">Dubai</option>
                 <option value="Sharjah">Sharjah</option>
               </select>
-            </div>
+            </div> */}
 
             <div className="mb-3">
               <label htmlFor="pickup-location-field" className="form-label">
@@ -574,14 +647,13 @@ const ListQuotationsTable = () => {
                 required
               />
             </div>
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <label
                 htmlFor="pickup-time-input"
                 className="col-md-2 col-form-label"
               >
                 Pickup Time
               </label>
-              <div className="col-md-10">
                 <input
                   className="form-control"
                   name="pickup_time"
@@ -591,9 +663,8 @@ const ListQuotationsTable = () => {
                   onChange={validation.handleChange}
                   onBlur={validation.handleBlur}
                 />
-              </div>
-            </div>
-            <div className="mb-3">
+            </div> */}
+            {/* <div className="mb-3">
               <label htmlFor="drop-country-field" className="form-label">
                 Drop Country
               </label>
@@ -612,7 +683,7 @@ const ListQuotationsTable = () => {
                 <option value="Dubai">Dubai</option>
                 <option value="Sharjah">Sharjah</option>
               </select>
-            </div>
+            </div> */}
 
             <div className="mb-3">
               <label htmlFor="drop-location-field" className="form-label">
@@ -650,14 +721,13 @@ const ListQuotationsTable = () => {
               />
             </div>
 
-            <div className="mb-3">
+            {/* <div className="mb-3">
               <label
                 htmlFor="drop-time-input"
                 className="col-md-2 col-form-label"
               >
                 Drop Time
               </label>
-              <div className="col-md-10">
                 <input
                   className="form-control"
                   name="drop_time"
@@ -667,8 +737,7 @@ const ListQuotationsTable = () => {
                   onChange={validation.handleChange}
                   onBlur={validation.handleBlur}
                 />
-              </div>
-            </div>
+            </div> */}
 
             <div className="mb-3">
               <label htmlFor="no_of_horses-field" className="form-label">
@@ -798,6 +867,40 @@ const ListQuotationsTable = () => {
                   NO
                 </label>
               </div>
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="driver_cost-field" className="form-label">
+                Driver Cost
+              </label>
+              <input
+                type="text"
+                name="driver_cost"
+                id="driver_cost-field"
+                className="form-control"
+                value={validation.values.driver_cost || ""}
+                placeholder="Enter Driver Cost"
+                onChange={validation.handleChange}
+                onBlur={validation.handleBlur}
+                required
+              />
+            </div>
+
+            <div className="mb-3">
+              <label htmlFor="Vehicle_cost-field" className="form-label">
+                Vehicle Cost
+              </label>
+              <input
+                type="text"
+                name="Vehicle_cost"
+                id="Vehicle_cost-field"
+                className="form-control"
+                value={validation.values.vehicle_cost || ""}
+                placeholder="Enter Driver Cost"
+                onChange={validation.handleChange}
+                onBlur={validation.handleBlur}
+                required
+              />
             </div>
 
             <div className="mb-3">
@@ -1006,7 +1109,7 @@ const ListQuotationsTable = () => {
                         <tbody className="list form-check-all">
                           <tr>
                             {/* <td className="index text-center">{index + 1}</td> */}
-                            <td className="customer_name">Q0012</td>
+                            <td className="customer_name">Q00{index + 1}</td>
                             <td className="service_provider_name">Private</td>
                             <td className="quotation_id">Dubai</td>
                             <td className="quotation_id">Abu Dhabi</td>
@@ -1017,7 +1120,7 @@ const ListQuotationsTable = () => {
                           </tr>
                           <tr>
                             {/* <td className="index text-center">{index + 1}</td> */}
-                            <td className="customer_name">Q0013</td>
+                            <td className="customer_name">Q00{index + 1}</td>
                             <td className="service_provider_name">Sharing</td>
                             <td className="quotation_id">Sharjah</td>
                             <td className="quotation_id">Dubai</td>
@@ -1028,7 +1131,7 @@ const ListQuotationsTable = () => {
                           </tr>
                           <tr>
                             {/* <td className="index text-center">{index + 1}</td> */}
-                            <td className="customer_name">Q0014</td>
+                            <td className="customer_name">Q00{index + 1}</td>
                             <td className="service_provider_name">Private</td>
                             <td className="quotation_id">Abu Dhabi</td>
                             <td className="quotation_id">Sharjah</td>

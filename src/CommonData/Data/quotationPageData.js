@@ -1,4 +1,5 @@
-const quotationData = [
+const quotationData = {
+    quotations : [
     {   
         id : 	'Q001',
         enquiry_id : 1,
@@ -14,7 +15,7 @@ const quotationData = [
         sMake : "Volvo Truck",
         trate: 5,
         drate: 5,
-        trip_type: "PRIVATE",
+        trip_type: "sharing",
         pickup_location: "Buj Khalifa",
         pickup_country: "Dubai",
         pickup_date: "2023-07-25 10:16:26",
@@ -29,7 +30,7 @@ const quotationData = [
         tax_amount: "120",
         discount_amount: "140",
         final_amount: "1468",
-        status: "ACTIVE",
+        status: "Up_Comming",
         created_at: "2023-07-06 10:16:26",
         updated_at: "2023-07-06 10:16:26"
     },
@@ -50,7 +51,7 @@ const quotationData = [
         sMake : "Eicher Truck",
         trate: 18,
         drate: 18,
-        trip_type: "PUBLIC",
+        trip_type: "sharing",
         pickup_location: "Neo City",
         pickup_country: "Saudi Arabia",
         pickup_date: "2023-08-19 03:11:45",
@@ -65,11 +66,44 @@ const quotationData = [
         tax_amount: "126",
         discount_amount: "987",
         final_amount: "10000",
-        status: "ACTIVE",
+        status: "Cancled",
         created_at: "2023-06-02 09:11:37",
         updated_at: "2023-07-04 22:09:42"
     }
-  ];
+  ],
+  enquires : [
+    {
+        id: "E001",
+        customer : "Saurabh Pande",
+        service_provider : "Hariprasad",
+        driver : "John",
+        driver_cost : 100,
+        vehicle_number : "MH01 GH 1475",
+        vehicle_cost : 1000,
+        pickup_location : "Buj Khalifa",
+        pickup_date: "2023-08-19 03:11:45",
+        drop_location : "Museam of feature",
+        drop_date: "2023-09-05 22:34:22",
+        trip_type: "private",
+        no_of_horse : 3
+    },
+    {
+        id: "E002",
+        customer : "Rahul",
+        service_provider : "Nithil",
+        driver : "shaha",
+        driver_cost : 200,
+        Vehicle_number : "MH01 GH 1400",
+        Vehicle_cost : 1400,
+        pickup_location : "Buj Khalifa",
+        pickup_date: "2023-08-19 03:11:45",
+        drop_location : "Museam of feature",
+        drop_date: "2023-09-05 22:34:22",
+        trip_type: "sharing",
+        no_of_horse : 3
+    }
+  ]
+};
   
   export { quotationData  };
 
