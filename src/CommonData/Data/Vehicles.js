@@ -13,9 +13,22 @@ const  Vehicles =
             max_no_of_horse: 2,
             air_conditioner: "YES",
             temp_manageable: "YES",
-            images: [{id:1,
-              url : 'https://media.istockphoto.com/id/157182475/photo/horse-transport-norway.jpg?s=612x612&w=0&k=20&c=RR8uB0QvokbQBSsHJSpnahDEJCUmMgBlnKPUl1EE7E0='},
-               {id:2,url:'https://media.istockphoto.com/id/157182475/photo/horse-transport-norway.jpg?s=612x612&w=0&k=20&c=RR8uB0QvokbQBSsHJSpnahDEJCUmMgBlnKPUl1EE7E0='},{id :3 ,url : 'https://media.istockphoto.com/id/157182475/photo/horse-transport-norway.jpg?s=612x612&w=0&k=20&c=RR8uB0QvokbQBSsHJSpnahDEJCUmMgBlnKPUl1EE7E0='}],
+            images: [
+                      {
+                        id : 1,
+                        url : 'https://media.istockphoto.com/id/157182475/photo/horse-transport-norway.jpg?s=612x612&w=0&k=20&c=RR8uB0QvokbQBSsHJSpnahDEJCUmMgBlnKPUl1EE7E0=',
+                        title : 'Classic Vintage Convertible',
+                        updated_at : '2023/06/14',
+                        status : "ACTIVE"
+                      },
+                      {
+                        id  : 2,
+                        url : 'https://static1.bigstockphoto.com/5/5/3/large1500/355046840.jpg',
+                        title : 'Urban Explorer SUV',
+                        updated_at : '2023/07/08',
+                        status : "ACTIVE"
+                      },
+                    ],
             registration_no: "ksbhciewsbc.322536",
             gcc_travel_allowed: "YES",
             insurance_cover: "YES",
@@ -45,10 +58,23 @@ const  Vehicles =
             max_no_of_horse: 1,
             air_conditioner: "YES",
             temp_manageable: "NO",
-            images: [{id:1,
-            url : 'https://media.istockphoto.com/id/157182475/photo/horse-transport-norway.jpg?s=612x612&w=0&k=20&c=RR8uB0QvokbQBSsHJSpnahDEJCUmMgBlnKPUl1EE7E0=',
-          title : 'Classic Vintage Convertible'},
-             {id:2,url:'https://static1.bigstockphoto.com/5/5/3/large1500/355046840.jpg',title : 'Urban Explorer SUV'}],
+            images: 
+                    [
+                      {
+                        id : 1,
+                        url : 'https://media.istockphoto.com/id/157182475/photo/horse-transport-norway.jpg?s=612x612&w=0&k=20&c=RR8uB0QvokbQBSsHJSpnahDEJCUmMgBlnKPUl1EE7E0=',
+                        title : 'Classic Vintage Convertible',
+                        updated_at : '2023/06/14',
+                        status : "ACTIVE"
+                      },
+                      {
+                        id : 2,
+                        url : 'https://static1.bigstockphoto.com/5/5/3/large1500/355046840.jpg',
+                        title : 'Urban Explorer SUV',
+                        updated_at : '2023/06/14',
+                        status : "ACTIVE"
+                      }
+                    ],
             registration_no: "dxb-56789",
             gcc_travel_allowed: "YES",
             insurance_cover: "YES",

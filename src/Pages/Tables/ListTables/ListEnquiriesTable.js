@@ -792,17 +792,16 @@ const ListEnquiriesTable = () =>
                             <div key={index}>
                                 <div className="mb-3">
                                 <label htmlFor="customerName-field" className="form-label">Customer Name</label>
-<input
-type="text"
-name="cName"
-id="customerName-field"
-className="form-control"
-value={item.cName}
-readOnly
-/>
-</div>
-{/* console.log('qwer', enquirie); */}
-
+                                <input
+                                    type="text"
+                                    name="cName"
+                                    id="customerName-field"
+                                    className="form-control"
+                                    value={item.cName}
+                                    readOnly
+                                    />
+                                </div>
+                                {/* console.log('qwer', enquirie); */}
                                 <div className="mb-3">
                                     <label htmlFor="customerEmail-field" className="form-label">Customer Email</label>
                                     <input

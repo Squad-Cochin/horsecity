@@ -58,10 +58,10 @@ const Invoices =
         iTaxAmount: "170",
         iDiscountRate : "10",
         iDiscountAmount: "178",
-        iFinalAmount: "1300",
+        iFinalAmount: "1960",
         service_provider_name:"Sasha",
         quotation_id: "Q002",
         link : 'https://invoma.vercel.app/general_1.html'        
     }
-];
+]; 
 export { Invoices } ;

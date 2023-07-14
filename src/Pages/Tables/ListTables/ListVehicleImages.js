@@ -7,6 +7,8 @@ import { useFormik } from "formik";
 import { useParams } from 'react-router-dom';
 import { getVehiclesData } from '../../../helpers/ApiRoutes/authApiRoutes'
 import { removeVehicleImage } from '../../../helpers/ApiRoutes/removeApiRoutes';
+
+
 const ListVehicleImages = () => {
 
     const [vhImages, setVhImages] = useState([]);
@@ -18,13 +20,13 @@ const ListVehicleImages = () => {
 
     useEffect(() => {
         if (id) {
-            console.log("Id",id);
+            // console.log("Id",id);
             let vehicleId = 2;
             let getvehicles = getVehiclesData();
-            const data = getvehicles?.find((item) => item?.id === vehicleId);
+            const data = getvehicles?.find((item) => item?.id === parseInt(id));
             setVehicle(data);
             setVhImages(data?.images);
-            console.log("data", data);
+            // console.log("data", data);
         }
 
     }, [])
@@ -34,6 +36,34 @@ const ListVehicleImages = () => {
 
     };
 
+    function toggleStatus(button, vehiclesId) {
+        var currentStatus = button.innerText.trim();
+        let getvehicles = getVehiclesData();
+        if (currentStatus === 'ACTIVE') {
+            button.innerText = 'INACTIVE';
+            button.classList.remove('btn-success');
+            button.classList.add('btn-danger');            
+            // Find the corresponding customer by ID
+            const vehicle = getvehicles.find((v) => v.id === vehiclesId);
+            console.log("Vehicle", vehicle);
+            if (vehicle) {
+                console.log('Came here');
+                vehicle.status = 'INACTIVE';
+                console.log("Customer", vehicle);
+            }
+        }
+        else if (currentStatus === 'INACTIVE') {
+            button.innerText = 'ACTIVE';
+            button.classList.remove('btn-danger');
+            button.classList.add('btn-success');
+            // Find the corresponding customer by ID
+            const vehicle = getvehicles.find((v) => v.id === vehiclesId);
+            if (vehicle) {
+                vehicle.status = 'ACTIVE';
+            }
+        }
+    }
+
     // Later in your code, when setting the initial state
 
     const validation = useFormik({
@@ -42,7 +72,7 @@ const ListVehicleImages = () => {
         initialValues,
         onSubmit: (values) => {
             values.file = updateImage;
-            console.log(values);
+            // console.log(values);
             setmodal_list(false);
             initialValues.image_title = '';
             initialValues.file = '';
@@ -53,6 +83,16 @@ const ListVehicleImages = () => {
     function tog_list() {
         setmodal_list(!modal_list);
     }
+
+    // function previous_page() {
+    //     console.log('Previous Page');
+    //     setmodal_list(!modal_list);
+    // }
+
+    const previousPage = () => {
+        window.history.back(); // Go back to the previous page
+      };
+
     function remove_data(vehicle_id, image_id) {
         removeVehicleImage(vehicle_id, image_id)
     }
@@ -76,6 +116,19 @@ const ListVehicleImages = () => {
                         <Row className="g-4 mb-3">
                             <Col className="col-sm-auto">
                                 <div className="d-flex gap-1">
+
+                                    <Button color="primary" className="add-btn" onClick={previousPage} id="previous-btn">
+                                        <i className="ri-arrow-left-line align-bottom me-1"></i> Vehicle List
+                                    </Button>
+
+                                    <Button color="success" className="add-btn" onClick={() => tog_list()} id="create-btn">
+                                        <i className="ri-add-line align-bottom me-1"></i>{" "}
+                                        Add
+                                    </Button>
+
+                                </div>
+
+                                {/* <div className="d-flex gap-1">
                                     <Button
                                         color="success"
                                         className="add-btn"
@@ -83,52 +136,53 @@ const ListVehicleImages = () => {
                                         id="create-btn"
                                     >
                                         <i className="ri-add-line align-bottom me-1"></i>{" "}
-                                        Add
+                                        Bacn
                                     </Button>
-                                </div>
+                                </div> */}
+
+
+                                
                             </Col>
                         </Row>
 
                         <div className="table-responsive table-card mt-3 mb-1">
-                            <table
-                                className="table align-middle table-nowrap"
-                                id="customerTable"
-                            >
+                            <table className="table align-middle table-nowrap" id="customerTable" >
                                 <thead className="table-light">
                                     <tr>
-                                        <th className="index" data-sort="index">
-                                            #
-                                        </th>
-                                        <th className="sort" data-sort="quatationId">
-                                            Image
-                                        </th>
-                                        <th className="sort" data-sort="enquiryId">
-                                            Title
-                                        </th>
-                                        <th className="sort" data-sort="action">
-                                            Actions
-                                        </th>
+                                        <th className="index" data-sort="index"> # </th>
+                                        <th className="sort" data-sort="vehicleimage"> Image </th>
+                                        <th className="sort" data-sort="vehicletitle"> Title </th>
+                                        <th className="sort" data-sort="created_at"> Created At </th>
+                                        <th className="sort" data-sort="status"> Status </th>
+                                        <th className="sort" data-sort="action"> Actions </th>
                                     </tr>
                                 </thead>
                                 <tbody className="list form-check-all">
                                     {vhImages.map((imageItem, index) => (
                                         <tr key={index}>
                                             <th scope="row">{index + 1}</th>
-                                            <td className="quatationId">
-                                                <img
-                                                    src={imageItem?.url}
-                                                    alt={`Static Image ${index + 1}`}
-                                                    className="image-size"
-                                                />
+                                            <td className="vehicleimage">
+                                                <img src={imageItem?.url} alt={`Static Image ${index + 1}`} className="image-size" />
                                             </td>
-                                            <td className="enquiryId">{imageItem?.title}</td>
+                                            <td className="vehicletitle">{imageItem?.title}</td>
+                                            <td className="created_at">{imageItem?.updated_at}</td>
+                                            {/* <td className="status">{imageItem?.status}</td> */}
+                                            <td className='status'>
+                                            <div>
+                                                                <div className="d-flex gap-2">
+                                                                    <div className="status">
+                                                                        <button className="btn btn-sm btn-success status-item-btn"
+                                                                            data-bs-toggle="modal" data-bs-target="#showModal"
+                                                                            onClick={(event) => toggleStatus(event.target, imageItem.id)}>
+                                                                            {imageItem.status}
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                            </td>
                                             <td>
                                                 <div className="d-flex gap-2">
-                                                    <button
-                                                        className="btn btn-sm btn-danger remove-item-btn"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#deleteRecordModal" onClick={() => remove_data(2, imageItem?.id)}
-                                                    >
+                                                    <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal" onClick={() => remove_data(2, imageItem?.id)}>
                                                         Remove
                                                     </button>
                                                 </div>
