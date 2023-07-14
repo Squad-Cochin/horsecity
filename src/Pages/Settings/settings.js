@@ -1,7 +1,10 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Card, CardBody, Col, Row, Container } from "reactstrap";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import Header from '../../Layout/VerticalLayout/Header';
+import { getSettingsPageData } from '../../helpers/ApiRoutes/authApiRoutes'
+import { updatSettigsData} from '../../helpers/ApiRoutes/editApiRoutes';
+import { useFormik } from "formik";
 const SettingPage = () => 
 {
     const [faviconPreview, setFaviconPreview] = useState(null);
@@ -9,8 +12,43 @@ const SettingPage = () =>
     const [loginPageBackgroundPreview, setloginPageBackgroundPreview] = useState(null);
     const [menuLogoPreview, setMenuLogoPreview] = useState(null);
     const [logoChanged, setLogoChanged] = useState(false);
+    const [settings_data, setSetting_data] =useState([]);
 
 
+
+    useEffect(()=>{
+      setSetting_data(getSettingsPageData())
+    },[])
+          //  console.log("TT",settings_data);
+    const initialValues = {
+      companyTitle: settings_data[0]?.title || '',
+      contactAddress: settings_data[0]?.contactAddress || '',
+      companyEmail: settings_data[0]?.email || '',
+      phoneNumber: settings_data[0]?.phoneNumber || '',
+      countryCode: settings_data[0]?.countryCode || '',
+      menuLogo: settings_data[0]?.menuLogo || '',
+      loginPage: settings_data[0]?.loginPage || '',
+      favicon: settings_data[0]?.favicon || '',
+      loginPageBackgroundImage: settings_data[0]?.loginPageBackgroundImage || '',
+      language: settings_data[0]?.language || '',
+      currency: settings_data[0]?.currency || '',
+      invoicePrefix: settings_data[0]?.invoicePrefix || '',
+      quotationPrefix: settings_data[0]?.quotationPrefix || '',
+      licenseNumber: settings_data[0]?.licenseNumber || '',
+    };
+
+    const validation = useFormik({
+      // enableReinitialize : use this flag when initial values needs to be changed
+      enableReinitialize: true,
+      initialValues,
+      onSubmit: (values) => {
+                   console.log(values);    
+                  //update previes one
+                  console.log("update previues one ");
+                  updatSettigsData(values);
+      }
+    });
+    
     const handleLoginPageBackgroundChange = (event) => {
       const file = event.target.files[0];
       setloginPageBackgroundPreview(URL.createObjectURL(file));
@@ -26,6 +64,7 @@ const SettingPage = () =>
     };
     const handleFaviconChange = (event) => {
       const file = event.target.files[0];
+      console.log(file);
       setFaviconPreview(URL.createObjectURL(file));
     };
     const countryCodes = 
@@ -100,12 +139,14 @@ const SettingPage = () =>
               <Col>
                 <Card>
                   <CardBody>
-                    <form onSubmit={handleSubmit}>                      
+                    {/* <form onSubmit={handleSubmit}>                       */}
+                    <form   onSubmit={validation.handleSubmit}>
                       {/* Company Title */}
                       <Row className="mb-3">
                         <label htmlFor="example-text-input" className="col-md-2 col-form-label"> Company Title <span style={{ color: 'red' }}>*</span> </label>
                           <div className="col-md-10">
-                            <input className="form-control" type="text" placeholder="Enter Company Title" name="companyTitle" required />
+                            <input className="form-control" type="text"  placeholder="Enter Company Title" name="companyTitle"          value={validation.values.companyTitle || ""}
+                            onChange={validation.handleChange} required />
                           </div>
                       </Row>
                     {/* Menu title */}
@@ -114,6 +155,9 @@ const SettingPage = () =>
                         <div className="col-md-10">
                           <input
                             className="form-control"
+                            name='contactAddress'
+                            value={validation.values.contactAddress || ""}
+                            onChange={validation.handleChange}
                             type="search"
                             placeholder="Enter the Company Address" //defaultValue="How do I shoot web"
                             required
@@ -124,7 +168,9 @@ const SettingPage = () =>
                     <Row className="mb-3">
                       <label htmlFor="example-email-input" className="col-md-2 col-form-label" > Email <span style={{ color: 'red' }}>*</span> </label>
                       <div className="col-md-10">
-                        <input className="form-control" type="email" placeholder="Enter the Company Email" //   defaultValue="bootstrap@example.com" 
+                        <input className="form-control" type="email" placeholder="Enter the Company Email" name='companyEmail'
+                            value={validation.values.companyEmail || ""}
+                            onChange={validation.handleChange} 
                         required />
                       </div>
                     </Row>
@@ -132,13 +178,16 @@ const SettingPage = () =>
                     <Row className="mb-3">
                       <label htmlFor="example-tel-input" className="col-md-2 col-form-label" > Phone Number <span style={{ color: 'red' }}>*</span> </label>
                       <div className="col-md-10">
-                        <input className="form-control" type="tel" placeholder="Enter the Company Phone Number" required />
+                        <input className="form-control" type="tel" placeholder="Enter the Company Phone Number" name='phoneNumber'
+                            value={validation.values.phoneNumber     || ""}
+                            onChange={validation.handleChange}  required />
                       </div>
                     </Row>
                     {/* Country Code */}
                     <div className="row mb-3">
                       <label htmlFor="country-code-select" className="col-md-2 col-form-label"> Country Code <span style={{ color: 'red' }}>*</span> </label>
-                        <div className="col-md-10"> <select id="country-code-select" className="form-select">
+                        <div className="col-md-10"> <select id="country-code-select" className="form-select" name='countryCode'   value={validation.values.countryCode || ""}
+                            onChange={validation.handleChange} >
                             {countryCodes.map((item) => ( <option key={item.code} value={item.code}> {`${item.country} (${item.code})`} </option> ))} </select>
                         </div>
                     </div>
@@ -156,7 +205,10 @@ const SettingPage = () =>
                             {!logoChanged && (
                               <input
                                 className="form-control"
+                                name='menuLogo'
                                 type="file"
+                                value={validation.values.menuLogo || ""}
+                                // onChange={validation.handleChange} 
                                 placeholder="Upload Menu Logo Image"
                                 onChange={handleMenuLogoChange}
                                 required
@@ -176,6 +228,9 @@ const SettingPage = () =>
                             <input
                               className="form-control"
                               type="file"
+                              name='loginPage'
+                              value={validation.values.loginPage || ""}
+                              // onChange={validation.handleChange} 
                               placeholder="Upload Menu Logo Image"
                               onChange={handleloginPageLogoPreview}
                               required
@@ -196,6 +251,9 @@ const SettingPage = () =>
                             <input
                               className="form-control"
                               type="file"
+                              name='favicon'
+                              value={validation.values.favicon || ""}
+                              // onChange={validation.handleChange} 
                               placeholder="Upload Favicon Image"
                               onChange={handleFaviconChange}
                               required
@@ -216,7 +274,10 @@ const SettingPage = () =>
                             <input
                               className="form-control"
                               type="file"
+                              name='loginPageBackgroundImage'
                               placeholder="Upload Favicon Image"
+                              value={validation.values.loginPageBackgroundImage || ""}
+                              // onChange={validation.handleChange} 
                               onChange={handleLoginPageBackgroundChange}
                               required
                             />
@@ -227,7 +288,8 @@ const SettingPage = () =>
                               Language <span style={{ color: 'red' }}>*</span>
                           </label>
                           <div className="col-md-10">
-                              <select id="country-code-select" className="form-select">
+                              <select id="country-code-select" className="form-select" name='language'   value={validation.values.language || ""}
+                              onChange={validation.handleChange} >
                                 {languageCodes.map((item) => ( <option key={item.code} value={item.code}> {`${item.language}`} </option> ))}
                               </select>
                           </div>
@@ -237,7 +299,8 @@ const SettingPage = () =>
                         Currency <span style={{ color: 'red' }}>*</span>
                     </label>
                     <div className="col-md-10">
-                        <select id="country-code-select" className="form-select">
+                        <select id="country-code-select" className="form-select" name='currency'  value={validation.values.currency || ""}
+                              onChange={validation.handleChange} >
                         {currencies.map((item) => (
                             <option key={item.code} value={item.code}>
                             {`${item.currency}`}
@@ -249,21 +312,24 @@ const SettingPage = () =>
                     <Row className="mb-3">
                       <label htmlFor="example-tel-input" className="col-md-2 col-form-label" > Invoice Prefix <span style={{ color: 'red' }}>*</span> </label>
                       <div className="col-md-10">
-                        <input className="form-control" type="text" placeholder="Enter Invoice Prefix" required />
+                        <input className="form-control" type="text" name='invoicePrefix' placeholder="Enter Invoice Prefix" value={validation.values.invoicePrefix || ""}
+                              onChange={validation.handleChange}  required />
                       </div>
                     </Row>
                     <Row className="mb-3">
                       <label htmlFor="example-tel-input" className="col-md-2 col-form-label" > Quotation Prefix <span style={{ color: 'red' }}>*</span> </label>
-                        <div className="col-md-10"> <input className="form-control" type="text" placeholder="Enter Quotation Prefix" required /> </div>
+                        <div className="col-md-10"> <input className="form-control" type="text" name='quotationPrefix' placeholder="Enter Quotation Prefix" value={validation.values.quotationPrefix || ""}
+                              onChange={validation.handleChange} required /> </div>
                     </Row>
                     <Row className="mb-3">
                       <label htmlFor="example-tel-input" className="col-md-2 col-form-label" > Licensce Number <span style={{ color: 'red' }}>*</span> </label>
                       <div className="col-md-10"> 
-                        <input className="form-control" type="text" placeholder="Enter Licence Number" required / >
+                        <input className="form-control" type="text" name='licenseNumber' value={validation.values.licenseNumber || ""}
+                              onChange={validation.handleChange} placeholder="Enter Licence Number" required / >
                       </div>
                     </Row>
                       <div className="d-flex justify-content-end gap-2">
-                        <button type="Edit" className="btn btn-success" id="add-btn"> Edit  </button>
+                        {/* <button type="Edit" className="btn btn-success" id="add-btn"> Edit  </button> */}
                         <button type="submit" className="btn btn-success" id="add-btn"> Submit </button>
                       </div>
                     </form>

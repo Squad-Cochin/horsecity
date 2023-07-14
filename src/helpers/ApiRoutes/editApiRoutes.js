@@ -108,3 +108,12 @@ export async function updatQuataion(data){
   }
 }
 
+export async function updatSettigsData(data){
+  try {
+      // const { data } = await axios.put(`${url.POST_SP_EDIT_URL}`);
+      // return { data };
+  } catch (error) {
+      return { error : "Faild !"}
+  }
+}
+
