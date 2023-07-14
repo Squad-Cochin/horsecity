@@ -37,7 +37,7 @@ const Layout = props => {
     leftSideBarTheme: state.Layout.leftSideBarTheme,
   }));
 
-  const [headerLogo, setHeaderLogo] = useState("white-logo.png");
+  // const [headerLogo, setHeaderLogo] = useState("white-logo.png");
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   const toggleMenuCallback = () => {

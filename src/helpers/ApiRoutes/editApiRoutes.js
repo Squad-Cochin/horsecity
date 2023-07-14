@@ -1,6 +1,6 @@
 // import axios from "axios";
-import axios from "axios";
-import * as url from "../url_helper";
+// import axios from "axios";
+// import * as url from "../url_helper";
 
 /**Update previous service provider */
 export async function updateSProvider(){

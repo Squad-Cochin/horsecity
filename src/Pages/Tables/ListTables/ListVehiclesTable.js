@@ -2,7 +2,8 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, Modal, Form, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+// Form,
+import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../../components/Common/Breadcrumb";
 // import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
@@ -25,15 +26,15 @@ import { updateVehicle } from '../../../helpers/ApiRoutes/editApiRoutes';
 import { useFormik } from "formik";
 // Define the toggleStatus function outside the component
 import { Vehicles } from '../../../CommonData/Data';
-import vehicle1 from '../../../assets/images/vehicle13.jpg';
-import vehicle2 from '../../../assets/images/vehicle2.jpg'
-import vehicle3 from '../../../assets/images/vehicle1.jpg'
+// import vehicle1 from '../../../assets/images/vehicle13.jpg';
+// import vehicle2 from '../../../assets/images/vehicle2.jpg'
+// import vehicle3 from '../../../assets/images/vehicle1.jpg'
 
 
 const ListVehiclesTable = () => {
     const [vehicles, setVehicles] = useState([]);
     const [modal_list, setmodal_list] = useState(false);
-    const [gallery_modal, setGallery_modal] = useState(false);
+    // const [gallery_modal, setGallery_modal] = useState(false);
     const [add_list, setAdd_list] = useState(false);
     const [vehicle, setVehicle] = useState([]);
     const [modal_delete, setmodal_delete] = useState(false);
@@ -58,12 +59,12 @@ const ListVehiclesTable = () => {
 
     }
     /**Image  Gallery */
-    function image_gallery(productId) {
+    // function image_gallery(productId) {
 
-        setGallery_modal(!gallery_modal);
-    }
+    //     setGallery_modal(!gallery_modal);
+    // }
 
-    const [images, setImages] = useState();
+    // const [images, setImages] = useState();
 
 
 
@@ -160,29 +161,29 @@ const ListVehiclesTable = () => {
             }
         }
     }
-    const vehicle_name = "Toyota Camry";
-    const uploadImage = (e) => {
-        const file = e.target.files[0];
+    // const vehicle_name = "Toyota Camry";
+    // const uploadImage = (e) => {
+    //     const file = e.target.files[0];
 
     
-            setImages(URL.createObjectURL(file))
-            // setImages([...images, reader.result]);
+    //         setImages(URL.createObjectURL(file))
+    //         // setImages([...images, reader.result]);
       
-        // reader.readAsDataURL(file);
-    };
+    //     // reader.readAsDataURL(file);
+    // };
 
-    const deleteImage = (imageName) => {
-        const updatedImages = images.filter((image) => image !== imageName);
-        setImages(updatedImages);
-    };
+    // const deleteImage = (imageName) => {
+    //     const updatedImages = images.filter((image) => image !== imageName);
+    //     setImages(updatedImages);
+    // };
 
-    const toggleGalleryModal = (productId) => {
-        const data = vehicles?.find((item) => item?.id === productId)
-        console.log(data.images);
+    // const toggleGalleryModal = (productId) => {
+    //     const data = vehicles?.find((item) => item?.id === productId)
+    //     console.log(data.images);
 
-        setVehicle([data]);
-        setGallery_modal(!gallery_modal);
-    };
+    //     setVehicle([data]);
+    //     setGallery_modal(!gallery_modal);
+    // };
 
 
     useEffect(() => {
@@ -659,7 +660,7 @@ const ListVehiclesTable = () => {
                                     name="gcc_travel_allowed"
                                     className="form-check-input"
                                     value="YES"
-                                    checked={validation.values.gcc_travel_allowed == "YES"}
+                                    checked={validation.values.gcc_travel_allowed === "YES"}
                                     onChange={validation.handleChange}
                                     required
                                 />
@@ -777,7 +778,7 @@ const ListVehiclesTable = () => {
                                     name="vehicle_type"
                                     className="form-check-input"
                                     value="PRIVATE"
-                                    checked={validation.values.vehicle_type == "PRIVATE"}
+                                    checked={validation.values.vehicle_type === "PRIVATE"}
                                     onChange={validation.handleChange}
                                     required
                                 />
@@ -790,7 +791,7 @@ const ListVehiclesTable = () => {
                                     name="vehicle_type"
                                     className="form-check-input"
                                     value="COMMERCIAL"
-                                    checked={validation.values.vehicle_type == "COMMERCIAL"}
+                                    checked={validation.values.vehicle_type === "COMMERCIAL"}
                                     required
                                 />
                                 <label htmlFor="vehicle_type-commercial" className="form-check-label">COMMERCIAL</label>
@@ -1059,7 +1060,7 @@ const ListVehiclesTable = () => {
                                     name="gcc_travel_allowed"
                                     className="form-check-input"
                                     value="YES"
-                                    checked={validation.values.gcc_travel_allowed == "YES"}
+                                    checked={validation.values.gcc_travel_allowed === "YES"}
                                     disabled
                                 />
                                 <label htmlFor="gcc_travel_allowed-yes" className="form-check-label">YES</label>
@@ -1174,7 +1175,7 @@ const ListVehiclesTable = () => {
                                     name="vehicle_type"
                                     className="form-check-input"
                                     value="PRIVATE"
-                                    checked={validation.values.vehicle_type == "PRIVATE"}
+                                    checked={validation.values.vehicle_type === "PRIVATE"}
                                     disabled
                                 />
                                 <label htmlFor="vehicle_type-private" className="form-check-label">PRIVATE</label>
@@ -1186,7 +1187,7 @@ const ListVehiclesTable = () => {
                                     name="vehicle_type"
                                     className="form-check-input"
                                     value="COMMERCIAL"
-                                    checked={validation.values.vehicle_type == "COMMERCIAL"}
+                                    checked={validation.values.vehicle_type === "COMMERCIAL"}
                                     disabled
                                 />
                                 <label htmlFor="vehicle_type-commercial" className="form-check-label">COMMERCIAL</label>

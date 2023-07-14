@@ -5,7 +5,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { Link } from 'react-router-dom';
 import List from 'list.js';
 // Import Flatepicker
-import Flatpickr from "react-flatpickr";
+// import Flatpickr from "react-flatpickr";
 
 // Import Images
 // import avatar1 from "../../assets/images/users/avatar-1.jpg";

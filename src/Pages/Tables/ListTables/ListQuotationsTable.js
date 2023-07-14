@@ -33,33 +33,33 @@ const ListQuotationsTable = () => {
   const [quotaions, setQuotaions] = useState([]);
   const [quotaion, setQuotaion] = useState([]);
   const [add_list, setAdd_list] = useState(false);
-  function toggleStatus(button, quotationID) {
-    var currentStatus = button.innerText.trim();
-    if (currentStatus === "ACTIVE") {
-      button.innerText = "INACTIVE";
-      button.classList.remove("btn-success");
-      button.classList.add("btn-danger");
+  // function toggleStatus(button, quotationID) {
+  //   var currentStatus = button.innerText.trim();
+  //   if (currentStatus === "ACTIVE") {
+  //     button.innerText = "INACTIVE";
+  //     button.classList.remove("btn-success");
+  //     button.classList.add("btn-danger");
 
-      // Find the corresponding customer by ID
-      const quotation = quotaions.find((q) => q.id === quotationID);
-      console.log("Quotation:", quotation);
-      if (quotation) {
-        console.log("Came here");
-        quotation.status = "INACTIVE";
-        console.log("Quotation", quotation);
-      }
-    } else if (currentStatus === "INACTIVE") {
-      button.innerText = "ACTIVE";
-      button.classList.remove("btn-danger");
-      button.classList.add("btn-success");
+  //     // Find the corresponding customer by ID
+  //     const quotation = quotaions.find((q) => q.id === quotationID);
+  //     console.log("Quotation:", quotation);
+  //     if (quotation) {
+  //       console.log("Came here");
+  //       quotation.status = "INACTIVE";
+  //       console.log("Quotation", quotation);
+  //     }
+  //   } else if (currentStatus === "INACTIVE") {
+  //     button.innerText = "ACTIVE";
+  //     button.classList.remove("btn-danger");
+  //     button.classList.add("btn-success");
 
-      // Find the corresponding customer by ID
-      const quotation = quotaions.find((q) => q.id === quotationID);
-      if (quotation) {
-        quotation.status = "ACTIVE";
-      }
-    }
-  }
+  //     // Find the corresponding customer by ID
+  //     const quotation = quotaions.find((q) => q.id === quotationID);
+  //     if (quotation) {
+  //       quotation.status = "ACTIVE";
+  //     }
+  //   }
+  // }
 
   const initialValues = {
     cName: !add_list ? quotaions[0]?.cName : "",

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+// Button
+import { Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 // import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
 // Import Flatepicker
-import Flatpickr from "react-flatpickr";
+// import Flatpickr from "react-flatpickr";
 
 import { useFormik } from "formik";
 
@@ -32,9 +33,9 @@ const Accounts = () => {
     }
 
     const [modal_delete, setmodal_delete] = useState(false);
-    function tog_delete() {
-        setmodal_delete(!modal_delete);
-    }
+    // function tog_delete() {
+    //     setmodal_delete(!modal_delete);
+    // }
 
     const initialValues = {
         customer_name: account[0]?.customer_name ,

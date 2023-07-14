@@ -578,7 +578,7 @@ import Breadcrumbs from "../../../components/Common/Breadcrumb";
 // import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
-import { useFormik } from "formik";
+// import { useFormik } from "formik";
 // Import Flatepicker
 // import Flatpickr 
 import { qetEnquiriesData } from "../../../helpers/ApiRoutes/authApiRoutes";
@@ -597,37 +597,37 @@ const ListEnquiriesTable = () =>
     const [modal_delete, setmodal_delete] = useState(false);
 
 
-    function toggleStatus(button, enquiryId) 
-    {
-        var currentStatus = button.innerText.trim();
-        if(currentStatus === 'ACTIVE') 
-        {
-            button.innerText = 'INACTIVE';
-            button.classList.remove('btn-success');
-            button.classList.add('btn-danger');
-            const enquiry = enquiriesData.find((e) => e.id === enquiryId);
-            // console.log("Enquiry", enquiry);
-            if (enquiry)
-            {
-                console.log('Came here');
-                enquiry.status = 'INACTIVE';
-                console.log("Enquiry", enquiry);
-            }
-        }
-        else if (currentStatus === 'INACTIVE')
-        {
-            button.innerText = 'ACTIVE';
-            button.classList.remove('btn-danger');
-            button.classList.add('btn-success');
+    // function toggleStatus(button, enquiryId) 
+    // {
+    //     var currentStatus = button.innerText.trim();
+    //     if(currentStatus === 'ACTIVE') 
+    //     {
+    //         button.innerText = 'INACTIVE';
+    //         button.classList.remove('btn-success');
+    //         button.classList.add('btn-danger');
+    //         const enquiry = enquiriesData.find((e) => e.id === enquiryId);
+    //         // console.log("Enquiry", enquiry);
+    //         if (enquiry)
+    //         {
+    //             console.log('Came here');
+    //             enquiry.status = 'INACTIVE';
+    //             console.log("Enquiry", enquiry);
+    //         }
+    //     }
+    //     else if (currentStatus === 'INACTIVE')
+    //     {
+    //         button.innerText = 'ACTIVE';
+    //         button.classList.remove('btn-danger');
+    //         button.classList.add('btn-success');
 
-            // Find the corresponding customer by ID
-            const enquiry = enquiriesData.find((e) => e.id === enquiryId);
-            if (enquiry)
-            {
-                enquiry.status = 'ACTIVE';
-            }
-        }
-    }
+    //         // Find the corresponding customer by ID
+    //         const enquiry = enquiriesData.find((e) => e.id === enquiryId);
+    //         if (enquiry)
+    //         {
+    //             enquiry.status = 'ACTIVE';
+    //         }
+    //     }
+    // }
     // function tog_view(productId)
     // {
     //     console.log('Product Id', productId);
@@ -654,13 +654,13 @@ const ListEnquiriesTable = () =>
         // setSelectedImage();
         setModal(!modal);
     };
-    function tog_list(productId) {
-        console.log('Product Id', productId);
-        const data = enquiries?.find((item) => item?.id == productId);
-        console.log("Data", data);
-        setEnquirie(data); // Remove the array brackets
-        setmodal_list(!modal_list);
-      }
+    // function tog_list(productId) {
+    //     console.log('Product Id', productId);
+    //     const data = enquiries?.find((item) => item?.id == productId);
+    //     console.log("Data", data);
+    //     setEnquirie(data); // Remove the array brackets
+    //     setmodal_list(!modal_list);
+    //   }
     function tog_delete()
     {
         setmodal_delete(!modal_delete);
