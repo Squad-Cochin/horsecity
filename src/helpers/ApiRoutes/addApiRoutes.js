@@ -86,6 +86,7 @@
            /**Add new quataion */
     export async function addNewQuataion(data){
         try {
+            console.log("qut", data)
             // const { data } = await axios.post(`${url.POST_SP_ADD_URL}`);
             // return { data };
         } catch (error) {
