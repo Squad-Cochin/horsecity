@@ -195,8 +195,8 @@ const DiscountsDeatails = () => {
                                                         <th className="sort" data-sort="name">Name</th>
                                                         <th className="sort" data-sort="type">Type</th>
                                                         <th className="sort" data-sort="abbreviation">Rate</th>
-
                                                         <th className="sort" data-sort="date">Created At</th>
+                                                        <th className="sort" data-sort="status">status</th>
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
@@ -213,8 +213,7 @@ const DiscountsDeatails = () => {
 
                                                             <td className="created_at">{item.created_at}</td>
                                                             <td>
-                                                                <div className="d-flex gap-2">
-                                                                    <div>
+                                                            <div>
                                                                         <div className="d-flex gap-2">
                                                                             <div className="status">
                                                                                 <button className="btn btn-sm btn-success status-item-btn"
@@ -225,6 +224,10 @@ const DiscountsDeatails = () => {
                                                                             </div>
                                                                         </div>
                                                                     </div>
+                                                            </td>
+                                                            <td>
+                                                                <div className="d-flex gap-2">
+                                              
                                                                     <div className="edit">
                                                                         <button
                                                                             className="btn btn-sm btn-success edit-item-btn"

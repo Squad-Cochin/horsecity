@@ -20,9 +20,8 @@ import { Discounts } from "./discounts";
 import { Taxations } from "./taxtions";
 import { Accounts } from "./Accounts";
 import { Invoices } from "./Invoices";
+import { settings } from "./settingsPage";
 import { Ledger } from "./ledger";
-
-
 export {
   LatestTransationData,
   OrderStatusData,
@@ -44,5 +43,6 @@ export {
   Taxations,
   Accounts,
   Invoices,
+  settings,
   Ledger
 };

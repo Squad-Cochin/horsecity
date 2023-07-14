@@ -4,7 +4,7 @@ import * as url from "../url_helper";
 import MockAdapter from "axios-mock-adapter";
 // import * as url from "../url_helper";
 import accessToken from "../jwt-token-access/accessToken";
-import { calenderDefaultCategories, events, serviceProviders, Drivers, Customers, Vehicles ,TripDetails, quotationData, enquiriesData, Reports, Languages, Discounts, Accounts, Taxations, Invoices, Ledger} from "../../CommonData/Data";
+import { calenderDefaultCategories, events, serviceProviders, Drivers, Customers, Vehicles ,TripDetails, quotationData, enquiriesData, Reports, Languages, Discounts, Accounts, Taxations, Invoices,Ledger, settings} from "../../CommonData/Data";
 import { APIClient } from "../api_helper";
 
 
@@ -38,14 +38,6 @@ import { APIClient } from "../api_helper";
 
     if(Drivers){
           return Drivers ;
-    }
-    return null ;
-  }
-
-  export function getLedgerData(){
-
-    if(Ledger){
-          return Ledger ;
     }
     return null ;
   }
@@ -136,6 +128,22 @@ import { APIClient } from "../api_helper";
     }
     return null ;
   }
+
+    //Get all Accounts
+    export function getSettingsPageData(){
+      if(settings){
+        return settings ;
+      }
+      return null ;
+    }
+
+    export function getLedgerData(){
+      if(Ledger){
+        return Ledger ;
+      }
+      return null ;
+    }
+
 
 // import * as url from "./url_helper";
                                         
