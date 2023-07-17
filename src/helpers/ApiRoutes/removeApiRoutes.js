@@ -2,7 +2,7 @@
 
 
 /**Remove service provider */
-export async function removeProvider(provider_id){
+export async function removeSProvider(provider_id){
     try {
         alert(`Service provider ${provider_id} delete request reached.`)
     } catch (error) {
