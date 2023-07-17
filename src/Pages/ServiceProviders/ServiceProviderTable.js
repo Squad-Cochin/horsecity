@@ -543,7 +543,7 @@ const ListTables = () =>
 
                     {/* Certificate Number */}
                     <div className="mb-3">
-                        <label htmlFor="certificateNumber-field" className="form-label">Certificate Number</label>
+                        <label htmlFor="certificateNumber-field" className="form-label">Licensce Number</label>
                         <input
                         type="text"
                         id="certificateNumber-field"
@@ -551,19 +551,19 @@ const ListTables = () =>
                         value={validation.values.certification_or_license_no || ""}
                         onChange={validation.handleChange}
                         className="form-control"
-                        placeholder="Enter Certificate Number"
+                        placeholder="Enter Licensce Number"
                         required
                         />
                     </div>
 
                     {/* Certificate Image */}
                     <div className="mb-3">
-                        <label htmlFor="certificateNumber-field" className="form-label">Certificate Image</label>
+                        <label htmlFor="certificateNumber-field" className="form-label">Licensce Image</label>
                         <div className="col-md-10">
                             {certificatePreview && (
                               <div>
-                                <h5>Certificate Image Preview:</h5>
-                                <img src={certificatePreview} alt="Certificate Image Preview" style={{ maxWidth: '100px' }} />
+                                <h5>Licensce Image Preview:</h5>
+                                <img src={certificatePreview} alt="Licensce Image Preview" style={{ maxWidth: '100px' }} />
                               </div>
                             )}
                             {!certificateChanged && (
@@ -571,7 +571,7 @@ const ListTables = () =>
                                 className="form-control"
                                 name="certification_or_license_img"
                                 type="file"
-                                placeholder="Certificate Image"
+                                placeholder="Licensce Image"
                                 onChange={handleCertificateLogoChange}
                               />
                             )}

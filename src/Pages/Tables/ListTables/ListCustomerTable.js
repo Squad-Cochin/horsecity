@@ -251,7 +251,7 @@ const ListCustomerTable = () => {
                                                         {/* <th className="id_proof" data-sort="id_proof">Id Proof Number</th> */}
                                                         {/* <th className="sort" data-sort="email_verified">Email Verified</th> */}
                                                         <th className="registered_date" data-sort="registered_date">Registered Date</th>
-                                                        {/* <th className="status" data-sort="status">Status</th> */}
+                                                        <th className="status" data-sort="status">Status</th>
                                                         <th className="action" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
@@ -286,7 +286,7 @@ const ListCustomerTable = () => {
                                                             </div>
                                                         </td> */}
 
-                                                    {/* <div>
+                                                    <div>
                                                     <div className="d-flex gap-2">
                                                         <div className="status">
                                                         <button className="btn btn-sm btn-success status-item-btn"
@@ -296,7 +296,7 @@ const ListCustomerTable = () => {
                                                         </button>
                                                         </div>
                                                     </div>
-                                                    </div> */}
+                                                    </div>
 
                                                     {/* <div>
                                                         <div className="d-flex gap-2">

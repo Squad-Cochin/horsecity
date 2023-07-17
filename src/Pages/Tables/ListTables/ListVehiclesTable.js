@@ -291,7 +291,7 @@ const ListVehiclesTable = () => {
                                                         <th className="sort" data-sort="date">Length(cm)</th>
                                                         <th className="sort" data-sort="phone">Breadth(cm)</th>
                                                         <th className="sort" data-sort="licence_img">Height(cm)</th> */}
-                                                        <th className="sort" data-sort="description ">Max Number of Horse</th>
+                                                        <th className="sort" data-sort="description ">Number of Horse</th>
                                                         {/* <th className="sort" data-sort="date"> Air Conditioner</th>
                                                         <th className="sort" data-sort="date"> Temperature Manageable</th> */}
                                                         {/* <th className="sort" data-sort="date"> Image</th> */}
@@ -544,7 +544,7 @@ const ListVehiclesTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="max_no_of_horses-field" className="form-label">Max No Of Horses</label>
+                            <label htmlFor="max_no_of_horses-field" className="form-label">No Of Horses</label>
                             <select
                                 id="max_no_of_horses-field"
                                 className="form-control"
@@ -778,11 +778,11 @@ const ListVehiclesTable = () => {
                                     name="vehicle_type"
                                     className="form-check-input"
                                     value="PRIVATE"
-                                    checked={validation.values.vehicle_type === "PRIVATE"}
+                                    checked={validation.values.vehicle_type === "SHARING"}
                                     onChange={validation.handleChange}
                                     required
                                 />
-                                <label htmlFor="vehicle_type-private" className="form-check-label">PRIVATE</label>
+                                <label htmlFor="vehicle_type-private" className="form-check-label">SHARING</label>
                             </div>
                             <div className="form-check">
                                 <input
@@ -791,10 +791,10 @@ const ListVehiclesTable = () => {
                                     name="vehicle_type"
                                     className="form-check-input"
                                     value="COMMERCIAL"
-                                    checked={validation.values.vehicle_type === "COMMERCIAL"}
+                                    checked={validation.values.vehicle_type === "PUBLIC"}
                                     required
                                 />
-                                <label htmlFor="vehicle_type-commercial" className="form-check-label">COMMERCIAL</label>
+                                <label htmlFor="vehicle_type-commercial" className="form-check-label">PUBLIC</label>
                             </div>
                         </div>
 
@@ -1186,11 +1186,11 @@ const ListVehiclesTable = () => {
                                     id="vehicle_type-commercial"
                                     name="vehicle_type"
                                     className="form-check-input"
-                                    value="COMMERCIAL"
-                                    checked={validation.values.vehicle_type === "COMMERCIAL"}
+                                    value="GCC"
+                                    checked={validation.values.vehicle_type === "GCC"}
                                     disabled
                                 />
-                                <label htmlFor="vehicle_type-commercial" className="form-check-label">COMMERCIAL</label>
+                                <label htmlFor="vehicle_type-commercial" className="form-check-label">GCC</label>
                             </div>
                         </div>
 

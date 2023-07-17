@@ -26,7 +26,7 @@ const InvoiceDetails = () =>
     const [subjectValue, setSubjectValue] = useState('');
     const [bodyValue, setBodyValue] = useState('');
     const invoiceRef = useRef(null); // Reference to the invoice section for PDF generation
-    const [modalInvoiceOpen, setModalInvoiceOpen] = useState(false);
+    // const [modalInvoiceOpen, setModalInvoiceOpen] = useState(false);
 
     useEffect(() => {
       setInvoices(getInvoice());
