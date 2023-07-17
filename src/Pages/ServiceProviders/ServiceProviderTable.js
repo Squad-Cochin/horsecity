@@ -41,13 +41,13 @@ const ListTables = () => {
         name: !add_list ? sprovider[0]?.name : '',
         email: !add_list ? sprovider[0]?.email : '',
         username: !add_list ? sprovider[0]?.user_name : '',
-        role: !add_list ? sprovider[0]?.role_name : '',
+        role_name: !add_list ? sprovider[0]?.role_name : '',
         contact_person: !add_list ? sprovider[0]?.contact_person : '',
         contact_no: !add_list ? sprovider[0]?.contact_no : '',
         emergency_contact_no: !add_list ? sprovider[0]?.emergency_contact_no : '',
         contact_address: !add_list ? sprovider[0]?.contact_address : '',
-        license_no: !add_list ? sprovider[0]?.license_no : '',
-        licence_image: !add_list ? sprovider[0]?.licence_image : '',
+        certification_or_license_no: !add_list ? sprovider[0]?.certification_or_license_no : '',
+        certification_or_license_image: !add_list ? sprovider[0]?.certification_or_license_image : '',
     };
 
     const validation = useFormik({
@@ -55,7 +55,7 @@ const ListTables = () => {
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
-            values.licence_image = updateImage;
+            values.certification_or_license_image = updateImage;
             if (add_list) {
                  //add new SProvider
                 console.log("add new");
@@ -118,7 +118,7 @@ const ListTables = () => {
         const data = sproviders?.find((item) => item?.id === productId)
         setSprovider([data]);
         setmodal_list(!modal_list);
-        setLicenscePreview(data.licence_image);
+        setLicenscePreview(data.certification_or_license_image);
     }
 
     /**This function toggles the view modal for displaying details
@@ -304,9 +304,9 @@ const ListTables = () => {
                                     <select
                                         className="form-control"
                                         data-trigger
-                                        name="role"
+                                        name="role_name"
                                         id="status-field"
-                                        value={validation.values.role || ""}
+                                        value={validation.values.role_name || ""}
                                         onChange={validation.handleChange}
                                     >
                                         {!add_list ? (
@@ -385,8 +385,8 @@ const ListTables = () => {
                                     <input
                                         type="text"
                                         id="certificateNumber-field"
-                                        name="license_no"
-                                        value={validation.values.license_no || ""}
+                                        name="certification_or_license_no"
+                                        value={validation.values.certification_or_license_no || ""}
                                         onChange={validation.handleChange}
                                         className="form-control"
                                         placeholder="Enter Licensce Number"
@@ -475,9 +475,9 @@ const ListTables = () => {
                                     <input
                                         type="text"
                                         id="role-field"
-                                        name="role"
+                                        name="role_name"
                                         className="form-control"
-                                        value={validation.values.role || ""}
+                                        value={validation.values.role_name || ""}
                                         readOnly
                                     />
                                 </div>
@@ -537,9 +537,9 @@ const ListTables = () => {
                                     <input
                                         type="text"
                                         id="licensceNumber-field"
-                                        name="license_no"
+                                        name="certification_or_license_no"
                                         className="form-control"
-                                        value={validation.values.license_no || ""}
+                                        value={validation.values.certification_or_license_no || ""}
                                         readOnly
                                     />
                                 </div>
@@ -548,7 +548,7 @@ const ListTables = () => {
                                 <div className="mb-3">
                                     <label htmlFor="certificateImage-field" className="form-label">Licensce Image</label>
                                     <div>
-                                        <img src={validation.values.licence_image || ""} alt="License Image" style={{ maxWidth: '100px' }} />
+                                        <img src={validation.values.certification_or_license_image || ""} alt="License Image" style={{ maxWidth: '100px' }} />
                                     </div>
                                 </div>
                             </div>

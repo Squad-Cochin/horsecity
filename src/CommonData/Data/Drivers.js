@@ -12,8 +12,7 @@ const Drivers = [
       status: "ACTIVE",
       description: "Experienced driver with a clean driving record",
       created_at: "2023-01-01",
-      updated_at: "2023-06-30",
-      deleted_at: "",
+
     },
     {
       id: "2",
@@ -28,8 +27,6 @@ const Drivers = [
       status: "ACTIVE",
       description: "Professional driver specializing in long-distance trips",
       created_at: "2023-01-01",
-      updated_at: "2023-06-30",
-      deleted_at: "",
     },
   ];
   

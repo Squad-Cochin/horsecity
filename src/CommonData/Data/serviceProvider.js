@@ -9,8 +9,8 @@ const serviceProviders = [
         contact_no: "9876543210",
         emergency_contact_no: "1234567890",
         contact_address: "456 Elm Street",
-        license_no: "54321",
-        licence_image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU-KAkcysGNYJOZU2lnztAxhXJoxI3KCep284ojEDcQl5yjW4KXUpPXub45CMqCTClhh0&usqp=CAU",
+        certification_or_license_no: "54321",
+        certification_or_license_image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU-KAkcysGNYJOZU2lnztAxhXJoxI3KCep284ojEDcQl5yjW4KXUpPXub45CMqCTClhh0&usqp=CAU",
         status: "ACTIVE",
       },
     {
@@ -23,8 +23,8 @@ const serviceProviders = [
         contact_no: "987654321",
         emergency_contact_no: "123456789",
         contact_address: "789 Park Avenue",
-        license_no: "ABC98765",
-        licence_image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU-KAkcysGNYJOZU2lnztAxhXJoxI3KCep284ojEDcQl5yjW4KXUpPXub45CMqCTClhh0&usqp=CAU",
+        certification_or_license_no: "ABC98765",
+        certification_or_license_image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU-KAkcysGNYJOZU2lnztAxhXJoxI3KCep284ojEDcQl5yjW4KXUpPXub45CMqCTClhh0&usqp=CAU",
         status: "ACTIVE",
     },
   ];

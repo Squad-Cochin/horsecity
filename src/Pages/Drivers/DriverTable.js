@@ -42,8 +42,8 @@ const ListTables = () =>
     const [view_modal, setView_modal] = useState(false); // Boolean to control view modal visibility
     const [profileImagePreview, setProfileImagePreview] = useState(false); // Boolean to control profile image preview visibility
     const [licenceImagePreview, setLicenceImagePreview] = useState(false); // Boolean to control license image preview visibility
-    const [profileImageChanged, setProfileImageChanged] = useState(false); // Boolean to track if profile image has changed
-    const [licenceImageChanged, setLicenceImageChanged] = useState(false); // Boolean to track if license image has changed
+   
+   
 
     // Define a function to handle the profile image change event
     const handleProfileImageChange = (event) => 
@@ -408,7 +408,7 @@ const ListTables = () =>
                                         <img src={profileImagePreview} alt="Profile Preview" style={{ maxWidth: '100px' }} />
                                     </div>
                                 )}
-                                {!profileImageChanged && (
+                   
                                 <input
                                     className="form-control"
                                     name="profile_image"
@@ -416,7 +416,7 @@ const ListTables = () =>
                                     placeholder="Profile Image"
                                     onChange={handleProfileImageChange}
                                 />
-                                )}
+                     
                             </div>
                         </div>
 
@@ -438,7 +438,7 @@ const ListTables = () =>
                                         <img src={licenceImagePreview} alt="Licence Preview" style={{ maxWidth: '100px' }} />
                                     </div>
                                 )}
-                                {!licenceImageChanged && (
+                      
                                 <input
                                     className="form-control"
                                     name="licence_image"
@@ -446,7 +446,7 @@ const ListTables = () =>
                                     placeholder="Profile Image"
                                     onChange={handleLicenceImageChange}
                                 />
-                                )}
+                      
                             </div>
                         </div>
 
@@ -470,7 +470,7 @@ const ListTables = () =>
             </Modal>
 
             {/* This is the view button model. We will get all the details of a particular driver */}
-            <Modal className="extra-width" isOpen={view_modal} >
+            <Modal className="extra-width" isOpen={view_modal} toggle={() => { tog_view('view'); }} >
                 {/* The below line is for the heading of pop up of view driver */}
                 <ModalHeader className="bg-light p-3" id="exampleModalLabel"toggle={() => { tog_view('view'); }}>View Driver</ModalHeader>
                 <form className="tablelist-form"
