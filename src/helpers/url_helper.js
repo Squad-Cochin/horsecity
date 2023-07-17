@@ -1,10 +1,6 @@
 //REGISTER
 export const POST_FAKE_REGISTER = "/post-fake-register";
 
-//LOGIN
-
-
-
 /**
  * The below one is Hari's Computer Details
  */
@@ -23,9 +19,9 @@ const apiBaseUrl = "http://192.168.200.211:8080";
 // export const API_BASE_URL = "http://192.168.200.130:8080";
 // const apiBaseUrl = "http://192.168.200.130:8080";
 
-
-// export const API_BASE_URL = "http://192.168.200.88:8080";
-// const apiBaseUrl = "http://192.168.200.88:8080";
+/**
+ * The below one is own Computer Details
+ */
 
 // const apiBaseUrl = "http://localhost:8080";
 // export const API_BASE_URL = "http://localhost:8080";
