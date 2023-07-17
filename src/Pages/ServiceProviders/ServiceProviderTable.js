@@ -46,8 +46,8 @@ const ListTables = () => {
         contact_no: !add_list ? sprovider[0]?.contact_no : '',
         emergency_contact_no: !add_list ? sprovider[0]?.emergency_contact_no : '',
         contact_address: !add_list ? sprovider[0]?.contact_address : '',
-        certification_or_license_no: !add_list ? sprovider[0]?.certification_or_license_no : '',
-        certification_or_license_image: !add_list ? sprovider[0]?.certification_or_license_image : '',
+        licence_no: !add_list ? sprovider[0]?.licence_no : '',
+        licence_image: !add_list ? sprovider[0]?.licence_image : '',
     };
 
     const validation = useFormik({
@@ -55,7 +55,7 @@ const ListTables = () => {
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
-            values.certification_or_license_image = updateImage;
+            values.licence_image = updateImage;
             if (add_list) {
                  //add new SProvider
                 console.log("add new");
@@ -118,7 +118,7 @@ const ListTables = () => {
         const data = sproviders?.find((item) => item?.id === productId)
         setSprovider([data]);
         setmodal_list(!modal_list);
-        setLicenscePreview(data.certification_or_license_image);
+        setLicenscePreview(data?.licence_image);
     }
 
     /**This function toggles the view modal for displaying details
@@ -316,7 +316,7 @@ const ListTables = () => {
                                             </>
                                         ) : (
                                             <>
-                                                <option value="">Select role</option>
+                                                <option value="">Select Role</option>
                                                 <option value="service provider">service provider</option>
                                                 <option value="super admin">super admin</option>
                                             </>
@@ -347,7 +347,7 @@ const ListTables = () => {
                                         name="contact_no"
                                         value={validation.values.contact_no || ""}
                                         onChange={validation.handleChange}
-                                        placeholder="Enter Phone No."
+                                        placeholder="Enter Phone No"
                                         required
                                     />
                                 </div>
@@ -381,21 +381,21 @@ const ListTables = () => {
                                 </div>
                                 {/* Certificate Number */}
                                 <div className="mb-3">
-                                    <label htmlFor="certificateNumber-field" className="form-label">Licensce Number</label>
+                                    <label htmlFor="LicenceNumber-field" className="form-label">Licence Number</label>
                                     <input
                                         type="text"
-                                        id="certificateNumber-field"
-                                        name="certification_or_license_no"
-                                        value={validation.values.certification_or_license_no || ""}
+                                        id="LicenceNumber-field"
+                                        name="licence_no"
+                                        value={validation.values.licence_no || ""}
                                         onChange={validation.handleChange}
                                         className="form-control"
-                                        placeholder="Enter Licensce Number"
+                                        placeholder="Enter Licence Number"
                                         required
                                     />
                                 </div>
                                 {/* Certificate Image */}
                                 <div className="mb-3">
-                                    <label htmlFor="certificateNumber-field" className="form-label">Licensce Image</label>
+                                    <label htmlFor="LicenseImage-field" className="form-label">Licence Image</label>
                                     <div className="col-md-10">
                                         {licenscePreview && (
                                             <div>
@@ -404,9 +404,9 @@ const ListTables = () => {
                                         )}
                                             <input
                                                 className="form-control"
-                                                name="certification_or_license_img"
+                                                name="licence_image"
                                                 type="file"
-                                                placeholder="Licensce Image"
+                                                placeholder="Licence Image"
                                                 onChange={handleLicensceImageChange}
                                             />
                                     </div>
@@ -533,22 +533,22 @@ const ListTables = () => {
 
                                 {/* Certificate Number */}
                                 <div className="mb-3">
-                                    <label htmlFor="licensceNumber-field" className="form-label">Licensce Number</label>
+                                    <label htmlFor="licensceNumber-field" className="form-label">Licence Number</label>
                                     <input
                                         type="text"
                                         id="licensceNumber-field"
-                                        name="certification_or_license_no"
+                                        name="licence_no"
                                         className="form-control"
-                                        value={validation.values.certification_or_license_no || ""}
+                                        value={validation.values.licence_no || ""}
                                         readOnly
                                     />
                                 </div>
 
                                 {/* certificate image */}
                                 <div className="mb-3">
-                                    <label htmlFor="certificateImage-field" className="form-label">Licensce Image</label>
+                                    <label htmlFor="LicenceImage-field" className="form-label">Licence Image</label>
                                     <div>
-                                        <img src={validation.values.certification_or_license_image || ""} alt="License Image" style={{ maxWidth: '100px' }} />
+                                        <img src={validation.values.licence_image || ""} alt="Licence Image" style={{ maxWidth: '100px' }} />
                                     </div>
                                 </div>
                             </div>

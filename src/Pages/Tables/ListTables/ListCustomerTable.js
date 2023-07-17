@@ -93,7 +93,7 @@ const ListCustomerTable = () => {
         const data = customers?.find((item) => item?.id === productId)
         setCustomer([data]);
         setmodal_list(!modal_list);
-        setIdProofPreview(data.id_proof_image)
+        setIdProofPreview(data?.id_proof_image)
     }
 
     /**This function toggles the view modal for displaying details

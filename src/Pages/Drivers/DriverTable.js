@@ -422,7 +422,7 @@ const ListTables = () =>
 
                         {/* The Below element is adding the licence number of the driver */}
                         <div className="mb-3">
-                            <label htmlFor="idNumber" className="form-label">Licensce Number</label>
+                            <label htmlFor="idNumber" className="form-label">Licence Number</label>
                             <input type="text" id="idNumber" className="form-control" name='licence_no'   
                                 value={validation.values.licence_no || ""}
                                 onChange={validation.handleChange} 
