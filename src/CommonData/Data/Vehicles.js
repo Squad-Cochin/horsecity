@@ -10,7 +10,7 @@ const  Vehicles =
             length: 124,
             breadth: 154,
             height: 172,
-            max_no_of_horse: 2,
+            no_of_horse: 2,
             air_conditioner: "YES",
             temp_manageable: "YES",
             images: [
@@ -55,7 +55,7 @@ const  Vehicles =
             length: 150,
             breadth: 160,
             height: 170,
-            max_no_of_horse: 1,
+            no_of_horse: 1,
             air_conditioner: "YES",
             temp_manageable: "NO",
             images: 
@@ -83,7 +83,7 @@ const  Vehicles =
             insurance_provider: "XYZ Insurance",
             insurance_expiration_date: "2024-07-06",
             safety_certificate: "def456pqr",
-            vehicle_type: "PUBLIC",
+            vehicle_type: "SHAREING",
             vehicle_registration_date: "2023-07-06",
             vehicle_expiration_date: "2024-07-06",
             status: "ACTIVE",
