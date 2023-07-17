@@ -289,9 +289,9 @@ const ListVehiclesTable = () => {
                                                         <th className="sort" data-sort="email">Make</th>
                                                         {/* <th className="sort" data-sort="phone">Models</th>
                                                         <th className="sort" data-sort="phone">Color</th>
-                                                        <th className="sort" data-sort="date">Length(cm)</th>
-                                                        <th className="sort" data-sort="phone">Breadth(cm)</th>
-                                                        <th className="sort" data-sort="licence_img">Height(cm)</th> */}
+                                                        <th className="sort" data-sort="date">Length(feet)</th>
+                                                        <th className="sort" data-sort="phone">Breadth(feet)</th>
+                                                        <th className="sort" data-sort="licence_img">Height(feet)</th> */}
                                                         <th className="sort" data-sort="no_of_horse">Number of Horse</th>
                                                         {/* <th className="sort" data-sort="date"> Air Conditioner</th>
                                                         <th className="sort" data-sort="date"> Temperature Manageable</th> */}
@@ -500,7 +500,7 @@ const ListVehiclesTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="vehicle_length-field" className="form-label">Vehicle Length (cm)</label>
+                            <label htmlFor="vehicle_length-field" className="form-label">Vehicle Length (feet)</label>
                             <input
                                 type="text"
                                 id="vehicle_length-field"
@@ -508,13 +508,13 @@ const ListVehiclesTable = () => {
                                 name='length'
                                 value={validation.values.length || ""}
                                 onChange={validation.handleChange}
-                                placeholder="Enter Vehicle Length In (cm)"
+                                placeholder="Enter Vehicle Length In (feet)"
                                 required
                             />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="vehicle_breadth-field" className="form-label">Vehicle Breadth (cm)</label>
+                            <label htmlFor="vehicle_breadth-field" className="form-label">Vehicle Breadth (feet)</label>
                             <input
                                 type="text"
                                 id="vehicle_breadth-field"
@@ -522,13 +522,13 @@ const ListVehiclesTable = () => {
                                 name='breadth'
                                 value={validation.values.breadth || ""}
                                 onChange={validation.handleChange}
-                                placeholder="Enter Vehicle Breadth In (cm)"
+                                placeholder="Enter Vehicle Breadth In (feet)"
                                 required
                             />
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="vehicle_height-field" className="form-label">Vehicle Height (cm)</label>
+                            <label htmlFor="vehicle_height-field" className="form-label">Vehicle Height (feet)</label>
                             <input
                                 type="text"
                                 id="vehicle_height-field"
@@ -536,7 +536,7 @@ const ListVehiclesTable = () => {
                                 name='height'
                                 value={validation.values.height || ""}
                                 onChange={validation.handleChange}
-                                placeholder="Enter Vehicle Height in (cm)"
+                                placeholder="Enter Vehicle Height in (feet)"
                                 required
                             />
                         </div>
