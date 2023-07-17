@@ -1,147 +1,146 @@
+/////////////////////////////////////////////////////////////////////////////////////////////
+//      The design of the vehicles images overall functionalities are coded in this file   //
+//      The file contain the view all images of a particular vehicle data model            //
+//      The object and functionalities are written in this file.                           //
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+
+// Importing the react component
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
-// import SimpleBar from 'simplebar-react';
+import { Button, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
+
+// The code you provided imports the useFormik hook from the "formik" library. The useFormik hook is a custom hook provided by Formik, which is a popular form library for React.
 import { useFormik } from "formik";
 import { useParams } from 'react-router-dom';
+
+//The purpose of the Breadcrumbs component is to display a breadcrumb navigation element. 
+import Breadcrumbs from "../../../components/Common/Breadcrumb";
+
+//Import Vehicle image data
 import { getVehiclesData } from '../../../helpers/ApiRoutes/authApiRoutes'
+//Import remove vehicle image data
 import { removeVehicleImage } from '../../../helpers/ApiRoutes/removeApiRoutes';
 
+// The name of the ListVehicleImages function. Which will be executed and used all over program. This funtion is having all the code
+const ListVehicleImages = () => 
+{
+    const [vhImages, setVhImages] = useState([]); // State variable to store vehicle images
+    const [vehicle, setVehicle] = useState({}); // State variable to store a single vehicle
+    const [image_view, setImageView] = useState(); // State variable to store the image view
+    const [modal_list, setmodal_list] = useState(false); // State variable to control list modal visibility
+    const [updateImage, setUpdateImage] = useState(""); // State variable to store the updated image
 
-const ListVehicleImages = () => {
-
-    const [vhImages, setVhImages] = useState([]);
-    const [vehicle , setVehicle] =useState({})
-    const [image_view, setImageView] = useState()
-    const [modal_list, setmodal_list] = useState(false);
-    const [updateImage, setUpdateImage] = useState("")
-    const { id } = useParams();
+    const { id } = useParams(); // Retrieve the 'id' parameter from the URL using the 'useParams' hook
+    let title = `${vehicle?.make} ${vehicle?.models}`; // Generate a title using the 'make' and 'models' properties of the 'vehicle' object
 
     useEffect(() => {
-        if (id) {
-            // console.log("Id",id);
-            let vehicleId = 2;
-            let getvehicles = getVehiclesData();
-            const data = getvehicles?.find((item) => item?.id === parseInt(id));
-            setVehicle(data);
-            setVhImages(data?.images);
-            // console.log("data", data);
-        }
+    if (id) {
+        let getvehicles = getVehiclesData();
+        const data = getvehicles?.find((item) => item?.id === parseInt(id));
+        setVehicle(data); // Set the 'vehicle' state to the found vehicle data
+        setVhImages(data?.images); // Set the 'vhImages' state to the vehicle images
+    }
+    }, []);
 
-    }, [])
-    const initialValues = {
+    // The intial values of the variables
+    const initialValues = 
+    {
         image_title: '',
         file: '',
-
     };
 
-    function toggleStatus(button, vehiclesId) {
+    // The below function is the Status button
+    function toggleStatus(button, vehiclesId) 
+    {
         var currentStatus = button.innerText.trim();
         let getvehicles = getVehiclesData();
-        if (currentStatus === 'ACTIVE') {
+        if (currentStatus === 'ACTIVE') 
+        {
             button.innerText = 'INACTIVE';
             button.classList.remove('btn-success');
-            button.classList.add('btn-danger');            
-            // Find the corresponding customer by ID
+            button.classList.add('btn-danger');
+            // Find the corresponding vehicle by ID
             const vehicle = getvehicles.find((v) => v.id === vehiclesId);
-            console.log("Vehicle", vehicle);
-            if (vehicle) {
-                console.log('Came here');
+            if (vehicle) 
+            {
                 vehicle.status = 'INACTIVE';
-                console.log("Customer", vehicle);
             }
         }
-        else if (currentStatus === 'INACTIVE') {
+        else if (currentStatus === 'INACTIVE')
+        {
             button.innerText = 'ACTIVE';
             button.classList.remove('btn-danger');
             button.classList.add('btn-success');
-            // Find the corresponding customer by ID
+            // Find the corresponding vehicle by ID
             const vehicle = getvehicles.find((v) => v.id === vehiclesId);
-            if (vehicle) {
+            if (vehicle) 
+            {
                 vehicle.status = 'ACTIVE';
             }
-        }
+        }   
     }
 
-    // Later in your code, when setting the initial state
-
-    const validation = useFormik({
-        // enableReinitialize : use this flag when initial values needs to be changed
-        enableReinitialize: true,
-        initialValues,
-        onSubmit: (values) => {
-            values.file = updateImage;
-            // console.log(values);
-            setmodal_list(false);
-            initialValues.image_title = '';
-            initialValues.file = '';
-
-        }
-    });
-
-    function tog_list() {
+    // The below function is showing the data. 
+    function tog_list() 
+    {
         setmodal_list(!modal_list);
     }
-
-    // function previous_page() {
-    //     console.log('Previous Page');
-    //     setmodal_list(!modal_list);
-    // }
-
-    const previousPage = () => {
+    
+    // The below function is for going to the previous page
+    const previousPage = () => 
+    {
         window.history.back(); // Go back to the previous page
-      };
-
-    function remove_data(vehicle_id, image_id) {
-        removeVehicleImage(vehicle_id, image_id)
+    };
+    
+    // The below function is for removing the vehicle image
+    function remove_data(vehicle_id, image_id)
+    {
+        removeVehicleImage(vehicle_id, image_id);
     }
-    const handleCertificateLogoChange = (event) => {
+    
+    // The below function is for chnaing the vehicle image
+    const handleVehicleImageChange = (event) => 
+    {
         const file = event.target.files[0];
-        setUpdateImage(file)
+        setUpdateImage(file);
         setImageView(URL.createObjectURL(file));
     };
 
-    let title = `${vehicle?.make} ${vehicle?.models}`
+    const validation = useFormik
+    ({
+        enableReinitialize: true, // Flag to enable reinitialization of initial values
+        initialValues, // Initial values for the form
+        onSubmit: (values) =>
+        {
+          values.file = updateImage; // Assign the updated image file to the 'file' field in form values
+          setmodal_list(false); // Set 'modal_list' state to false, closing the modal
+          initialValues.image_title = ''; // Reset the 'image_title' field in initial values
+          initialValues.file = ''; // Reset the 'file' field in initial values
+        },
+    });
 
-
-    return (
-     
+    return (     
         <React.Fragment>
-               {id > 0 ? (
+        {id > 0 ? (
             <div className="page-content">
                 <Container fluid>
+                    {/* Header of the Page */}
                     <Breadcrumbs title="Tables" breadcrumbItem={title} />
                     <div id="customerList">
                         <Row className="g-4 mb-3">
                             <Col className="col-sm-auto">
                                 <div className="d-flex gap-1">
-
+                                    {/* The below button is going back to vehicle list page */}
                                     <Button color="primary" className="add-btn" onClick={previousPage} id="previous-btn">
                                         <i className="ri-arrow-left-line align-bottom me-1"></i> Vehicle List
                                     </Button>
-
+                                     {/* The below button is for add the vehicle */}
                                     <Button color="success" className="add-btn" onClick={() => tog_list()} id="create-btn">
                                         <i className="ri-add-line align-bottom me-1"></i>{" "}
                                         Add
                                     </Button>
-
-                                </div>
-
-                                {/* <div className="d-flex gap-1">
-                                    <Button
-                                        color="success"
-                                        className="add-btn"
-                                        onClick={() => tog_list()}
-                                        id="create-btn"
-                                    >
-                                        <i className="ri-add-line align-bottom me-1"></i>{" "}
-                                        Bacn
-                                    </Button>
-                                </div> */}
-
-
-                                
+                                </div>  
                             </Col>
                         </Row>
 
@@ -149,6 +148,7 @@ const ListVehicleImages = () => {
                             <table className="table align-middle table-nowrap" id="customerTable" >
                                 <thead className="table-light">
                                     <tr>
+                                        {/* This are the columns and column heading in the vehicle page */}
                                         <th className="index" data-sort="index"> # </th>
                                         <th className="sort" data-sort="vehicleimage"> Image </th>
                                         <th className="sort" data-sort="vehicletitle"> Title </th>
@@ -158,28 +158,28 @@ const ListVehicleImages = () => {
                                     </tr>
                                 </thead>
                                 <tbody className="list form-check-all">
+                                    {/* The data we will be getting to showcase on vehicle page is
+                                    from a object. We will map and show them one by one. The below function will be used this */}
+                                    {/* 'getVehiclesData' is having all the enquiry data. */}
+                                    {/* Index is the number of the data. i.e Serial number */}
                                     {vhImages.map((imageItem, index) => (
                                         <tr key={index}>
+                                            {/* Below we are intialize the enquiry data */}
                                             <th scope="row">{index + 1}</th>
-                                            <td className="vehicleimage">
-                                                <img src={imageItem?.url} alt={`Static Image ${index + 1}`} className="image-size" />
-                                            </td>
+                                            <td className="vehicleimage"> <img src={imageItem?.url} alt={`Static Image ${index + 1}`} className="image-size" /> </td>
                                             <td className="vehicletitle">{imageItem?.title}</td>
                                             <td className="created_at">{imageItem?.updated_at}</td>
-                                            {/* <td className="status">{imageItem?.status}</td> */}
+                                            {/* This is the place from where we are calling the status button and function */}
                                             <td className='status'>
-                                            <div>
-                                                                <div className="d-flex gap-2">
-                                                                    <div className="status">
-                                                                        <button className="btn btn-sm btn-success status-item-btn"
-                                                                            data-bs-toggle="modal" data-bs-target="#showModal"
-                                                                            onClick={(event) => toggleStatus(event.target, imageItem.id)}>
-                                                                            {imageItem.status}
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                <div>
+                                                    <div className="d-flex gap-2">
+                                                        <div className="status">
+                                                            <button className="btn btn-sm btn-success status-item-btn" data-bs-toggle="modal" data-bs-target="#showModal" onClick={(event) => toggleStatus(event.target, imageItem.id)}> {imageItem.status} </button>
+                                                        </div>
+                                                    </div>
+                                                </div>
                                             </td>
+                                            {/* This is the place from where we are calling the Remove button and function */}
                                             <td>
                                                 <div className="d-flex gap-2">
                                                     <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal" onClick={() => remove_data(2, imageItem?.id)}>
@@ -187,12 +187,13 @@ const ListVehicleImages = () => {
                                                     </button>
                                                 </div>
                                             </td>
+
                                         </tr>
                                     ))}
                                 </tbody>
-
                             </table>
 
+                            {/* If there are no data to show, then thic line of code will be executed */}
                             <div className="noresult" style={{ display: "none" }}>
                                 <div className="text-center">
                                     <lord-icon
@@ -209,50 +210,35 @@ const ListVehicleImages = () => {
                                 </div>
                             </div>
                         </div>
-
+                        {/* the below is having the code of the pagination of the page.
+                            The previous and next button are also in side this function */}
                         <div className="d-flex justify-content-end">
                             <div className="pagination-wrap hstack gap-2">
-                                <Link
-                                    className="page-item pagination-prev disabled"
-                                    to="#"
-                                >
-                                    Previous
-                                </Link>
+                                <Link className="page-item pagination-prev disabled"to="#"> Previous </Link>
                                 <ul className="pagination customers-pagination mb-0"></ul>
-                                <Link className="page-item pagination-next" to="#">
-                                    Next
-                                </Link>
+                                <Link className="page-item pagination-next" to="#"> Next </Link>
                             </div>
                         </div>
-                    </div>
 
+                    </div>
                 </Container>
             </div>
             ) : null}
-            {/* Add Modal */}
-            <Modal
-                className="extra-width"
-                isOpen={modal_list}
-                toggle={() => {
-                    tog_list();
-                }}
-                centered
-            >
-                <ModalHeader
-                    className="bg-light p-3"
-                    id="exampleModalLabel"
-                    toggle={() => {
-                        tog_list();
-                    }}
-                >
+
+            {/* Add vehicle image Modal */}
+            {/* The below line is for the heading of pop up of edit or add vehicle image */}
+            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(); }}centered>
+                {/* The below line is for the heading of pop up of edit and add driver */}
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }} >
                     Add Image
                 </ModalHeader>
                 <form className="tablelist-form" onSubmit={validation.handleSubmit}>
                     <ModalBody>
+                        
+                        {/* The Below element is adding the title of the image of the vehicle. It will be taken when it is uploaded */}
+                        {/* Done by Shaheer */}
                         <div className="mb-3">
-                            <label htmlFor="customerName-field" className="form-label">
-                                Image Title
-                            </label>
+                            <label htmlFor="customerName-field" className="form-label"> Image Title </label>
                             <input
                                 type="text"
                                 name="image_title"
@@ -265,65 +251,47 @@ const ListVehicleImages = () => {
                                 required
                             />
                         </div>
-
-                        {/* Certificate Image */}
+                        {/* The Below element is uploading the image of the vehicle. */}
                         <div className="mb-3">
-                            <label htmlFor="certificateNumber-field" className="form-label">Add Image</label>
+                            <label htmlFor="vehicleimage-field" className="form-label">Add Image</label>
                             <div className="col-md-10">
-
                                 <div>
-
-                                    {image_view && <img src={image_view} alt="Certificate Image Preview" style={{ maxWidth: '100px' }} />}
+                                    {image_view && <img src={image_view} alt="Vehicle Image Preview" style={{ maxWidth: '100px' }} />}
                                 </div>
-
-
                                 <input
                                     className="form-control"
-                                    name="certification_or_license_img"
+                                    name="vehicle_image"
                                     type="file"
-                                    placeholder="Certificate Image"
-                                    onChange={handleCertificateLogoChange}
+                                    placeholder="Vehicle Image"
+                                    onChange={handleVehicleImageChange}
                                 />
-
                             </div>
-
-
-                            {/* <input
-                        type="file"
-                        id="certificateNumber-field"
-                        name="certification_or_license_img"
-                        className="form-control"
-                        placeholder="Upload Certificate image"
-                        required
-                        /> */}
                         </div>
-                    </ModalBody>
-                    <ModalFooter>
+                    </ModalBody> {/* Here all the element will be done*/}
+                    <ModalFooter> {/* All the buttons are add from the footer */}
+                        {/* Close Button */}
                         <div className="hstack gap-2 justify-content-end">
                             <button
                                 type="button"
                                 className="btn btn-light"
-                                onClick={() => {
+                                onClick={() =>
+                                {
                                     setmodal_list(false);
                                 }}
                             >
                                 Close
                             </button>
+                            
+                            {/* Add image Button */}
                             <button type="submit" className="btn btn-success" id="add-btn">
                                 Add Image
                             </button>
-                            {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>
                 </form>
             </Modal>
-
-
-
-
-        </React.Fragment>
-   
+        </React.Fragment>   
     );
 };
 
-export default ListVehicleImages;
+export default ListVehicleImages; // Export the list vehicle function function.

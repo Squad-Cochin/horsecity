@@ -1,676 +1,31 @@
-// import React, { useState, useEffect } from 'react';
-// import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
-// import Breadcrumbs from "../../../components/Common/Breadcrumb";
-// // import SimpleBar from 'simplebar-react';
-// import { Link } from 'react-router-dom';
-// import List from 'list.js';
-// import { useFormik } from "formik";
-// // Import Flatepicker
-// // import Flatpickr from "react-flatpickr";
-// import { qetEnquiriesData } from "../../../helpers/ApiRoutes/authApiRoutes";
-// import { enquiriesData } from '../../../CommonData/Data';
+/////////////////////////////////////////////////////////////////////////////////////////////
+//      The design of the enquiries overall functionalities are coded in this file         //
+//      The file contain the View all enquiry model, View particular enquiry data model    //
+//       The object and functionalities are written in this file.                          //
+/////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// const ListEnquiriesTable = () => 
-// {
-//     const [modal_list, setmodal_list] = useState(false);
-//     const [view_modal, setView_modal] = useState(false);
-//     const [enquirie, setEnquirie] = useState(null);
-//     // const [enquirie, setEnquirie] = useState([]);
-//     const [enquiries, setEnquiries] = useState([]);
-//     const [modal, setModal] = useState(false);
-//     const [selectedImage, setSelectedImage] = useState('');
-//     const [modal_delete, setmodal_delete] = useState(false);
-
-
-//     function toggleStatus(button, enquiryId) 
-//     {
-//         var currentStatus = button.innerText.trim();
-//         if(currentStatus === 'ACTIVE') 
-//         {
-//             button.innerText = 'INACTIVE';
-//             button.classList.remove('btn-success');
-//             button.classList.add('btn-danger');
-
-//             // Find the corresponding customer by ID
-//             const enquiry = enquiriesData.find((e) => e.id === enquiryId);
-//             console.log("Enquiry", enquiry);
-//             if (enquiry)
-//             {
-//                 console.log('Came here');
-//                 enquiry.status = 'INACTIVE';
-//                 console.log("Enquiry", enquiry);
-//             }
-//         }
-//         else if (currentStatus === 'INACTIVE')
-//         {
-//             button.innerText = 'ACTIVE';
-//             button.classList.remove('btn-danger');
-//             button.classList.add('btn-success');
-
-//             // Find the corresponding customer by ID
-//             const enquiry = enquiriesData.find((e) => e.id === enquiryId);
-//             if (enquiry)
-//             {
-//                 enquiry.status = 'ACTIVE';
-//             }
-//         }
-//     }
-
-//     function tog_view(productId)
-//     {
-//         console.log('Product Id', productId);
-//         const data = enquiries?.find((item)=>item?.id === productId);
-//         console.log(data);
-//         setEnquirie([data]);
-//         setView_modal(!view_modal);
-//         setmodal_list(!modal_list);
-//     }
-
-   
-  
-//     const toggleModal = (imageURL) => 
-//     {
-//         setSelectedImage(imageURL);
-//         setModal(!modal);
-//     };
-    
-
-//     function tog_list(productId) {
-//         console.log('Product Id', productId);
-//         const data = enquiries?.find((item) => item?.id == productId);
-//         console.log("Data", data);
-//         setEnquirie(data); // Remove the array brackets
-//         setmodal_list(!modal_list);
-//       }
-      
-
-    
-//     function tog_delete()
-//     {
-//         setmodal_delete(!modal_delete);
-//     }
-    
-//     useEffect(() => 
-//     {
-//         setEnquiries(qetEnquiriesData());
-//     }, [])
-
-//     useEffect(() => 
-//     {
-//         // Existing List
-//         const existOptionsList =
-//         {
-//             valueNames: ['contact-name', 'contact-message']
-//         };
-
-//         new List('contact-existing-list', existOptionsList);
-
-//         // Fuzzy Search list
-//         new List('fuzzysearch-list',
-//         {
-//             valueNames: ['name']
-//         });
-
-//         // pagination list
-
-//         new List('pagination-list',
-//         {
-//             valueNames: ['pagi-list'],
-//             page: 3,
-//             pagination: true
-//         });
-//     });
-
-//     return (
-//         <React.Fragment>
-//             <div className="page-content">
-//                 <Container fluid>
-//                     <Breadcrumbs title="Tables" breadcrumbItem="Enquiries" />
-//                     <Row>
-//                         <Col lg={12}>
-//                             <Card>
-//                                 <CardHeader>
-//                                     <h4 className="card-title mb-0">Add, Edit & Remove</h4>
-//                                 </CardHeader>
-
-//                                 <CardBody>
-//                                     <div id="customerList">
-//                                         <Row className="g-4 mb-3">
-//                                             <Col className="col-sm-auto">
-//                                             </Col>
-//                                         </Row>
-//                                         <div className="table-responsive table-card mt-3 mb-1">
-//                                             <table className="table align-middle table-nowrap" id="customerTable">
-//                                                 <thead className="table-light">
-//                                                     <tr>
-//                                                         <th className="index" data-sort="index">#</th>
-//                                                         <th className="sort" data-sort="customer_name">Customer Name</th>
-//                                                         <th className="sort" data-sort="customer_email">Customer Email</th>
-//                                                         {/* <th className="sort" data-sort="customer_username">Customer User Name</th> */}
-//                                                         <th className="sort" data-sort="contact_no">Contact Number</th>
-//                                                         {/* <th className="sort" data-sort="service_provider">Service Provider</th> */}
-//                                                         {/* <th className="sort" data-sort="driver">Driver</th> */}
-//                                                         {/* <th className="sort" data-sort="vehicle_number">Vehicle Number</th> */}
-//                                                         {/* <th className="sort" data-sort="vehicle_maker">Maker</th>
-//                                                         <th className="sort" data-sort="pickup_location">Pickup Location</th>
-//                                                         <th className="sort" data-sort="drop_location">Drop Location</th>*/}
-//                                                         {/* <th className="sort" data-sort="total_horse">Horses</th> */}
-//                                                         <th className="sort" data-sort="description">Description</th>
-//                                                         <th className="sort" data-sort="created_date">Created Date</th>
-//                                                         {/* <th className="sort" data-sort="updated_date">Update Date</th> */}
-//                                                         {/* <th className="sort" data-sort="status">Status</th> */}
-//                                                         {/* <th className="sort" data-sort="vehicle_requested">Vehicle Requested</th> */}
-//                                                         {/* <th className="sort" data-sort="vehicle_images">Vehicle Image</th> */}
-//                                                         <th className="sort" data-sort="action">Action</th>
-//                                                     </tr>
-//                                                 </thead>
-//                                                 <tbody className="list form-check-all">
-//                                                     {enquiries.map((item,index) => (
-//                                                         <tr key={item.id}>
-//                                                             <th scope="row"> 
-//                                                                 {index + 1}
-//                                                             </th>
-//                                                             <td className="customer_name">{item.cName}</td>
-//                                                             <td className="customer_email">{item.cEmail}</td>
-//                                                             {/* <td className="customer_username">{item.cUser_name}</td>  */}
-//                                                             <td className="contact_no">{item.cPhone}</td>
-//                                                             {/* <td className="vehicle_requested">BMW</td> */}
-//                                                             {/* <td className="service_provider">{item.vService_provider}</td> */}
-//                                                             {/* <td className="driver">{item.driver}</td> */}
-//                                                             {/* <td className="vehicle_number">{item.vVvehicle_number}</td> */}
-//                                                             {/* // <td className="pickup_location">{item.pickup_location}</td> */}
-//                                                             {/* // <td className="drop_location">{item.drop_location}</td> */}
-//                                                             {/* <td className="total_horse text-center">{item.no_of_horse}</td> */}
-//                                                             <td className="description">{item.description}</td>
-//                                                             {/* <td className="vehicle_maker">{item.vMake}</td> */}
-//                                                             <td className="created_date">{item.created_at}</td>
-//                                                             {/* <td className="vehicle_images">{item.vVehicle_Image}</td> */}
-//                                                             {/* <td className="vehicle_images text-center">
-//                                                                 {/* <img src={item.vVehicle_Image} alt="Vehicle Image" style={{ width: '100px', height: '100px' }} /> */}
-//                                                                 {/* <img
-//                                                                     src={item.vVehicle_Image}
-//                                                                     alt="Vehicle Image"
-//                                                                     style={{ width: '50px', height: '50px', cursor: 'pointer' }}
-//                                                                     onClick={() => toggleModal(item.vVehicle_Image)}
-//                                                                 /> */}
-//                                                             {/* </td> */}
-//                                                             {/* <td className="updated_date">{item.updated_at}</td> */}
-//                                                             {/* <td className="status">
-//                                                                 <div>
-//                                                                     <div className="d-flex gap-2">
-//                                                                         <div className="status">
-//                                                                             <button
-//                                                                                 className="btn btn-sm btn-success status-item-btn"
-//                                                                                 data-bs-toggle="modal"
-//                                                                                 data-bs-target="#showModal"
-//                                                                                 onClick={(event) => toggleStatus(event.target, item.id)}
-//                                                                             >
-//                                                                                 {item.status}
-//                                                                             </button>
-//                                                                         </div>
-//                                                                     </div>
-//                                                                 </div>
-//                                                             </td> */}
-//                                                             <td>
-//                                                                 <div className="d-flex gap-2">
-//                                                                     <div className="edit">
-//                                                                         <button className="btn btn-sm btn-primary edit-item-btn" onClick={() => tog_view(item.id)}
-//                                                                             data-bs-toggle="modal" data-bs-target="#showModal">
-//                                                                                 View
-//                                                                         </button>
-//                                                                     </div>
-//                                                                     {/* <div className="remove">
-//                                                                         <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">
-//                                                                             Remove
-//                                                                         </button>
-//                                                                     </div> */}
-//                                                                 </div>
-//                                                             </td>
-//                                                         </tr>
-//                                                     ))}
-//                                                 </tbody>
-//                                             </table>
-//                                             <div className="noresult" style={{ display: "none" }}>
-//                                                 <div className="text-center">
-//                                                     <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-//                                                         colors="primary:#121331,secondary:#08a88a" style={{ width: "75px", height: "75px" }}>
-//                                                     </lord-icon>
-//                                                     <h5 className="mt-2">Sorry! No Result Found</h5>
-//                                                     <p className="text-muted mb-0">We've searched more than 150+ Orders We did not find any
-//                                                         orders for you search.</p>
-//                                                 </div>
-//                                             </div>
-//                                         </div>
-
-//                                         <div className="d-flex justify-content-end">
-//                                             <div className="pagination-wrap hstack gap-2">
-//                                                 <Link className="page-item pagination-prev disabled" to="#">
-//                                                     Previous
-//                                                 </Link>
-//                                                 <ul className="pagination customers-pagination mb-0"></ul>
-//                                                 <Link className="page-item pagination-next" to="#">
-//                                                     Next
-//                                                 </Link>
-//                                             </div>
-//                                         </div>
-//                                     </div>
-//                                 </CardBody>
-//                             </Card>
-//                         </Col>
-//                     </Row>
-//                 </Container>
-//             </div>
-//             <Modal isOpen={modal} toggle={toggleModal}>
-//                 <ModalHeader toggle={toggleModal}>Image Preview</ModalHeader>
-//                 <ModalBody>
-//                 <img src={selectedImage} alt="Vehicle Image" style={{ width: '100%', maxHeight: '500px' }} />
-//                 </ModalBody>
-//             </Modal>
-
-//             {/* View Modal */}
-//             <Modal className="extra-width" isOpen={view_modal} centered >
-//                 <ModalHeader className="bg-light p-3" id="exampleModalLabel"toggle={() => { tog_view('view'); }}>
-//                     View Enquiry
-//                 </ModalHeader>
-//                 <form className="tablelist-form">
-//                     <ModalBody>
-//                         {enquirie?.map((item, index) => (
-//                             <div key={index}>
-//                             {/* <div className="mb-3">
-//                             <label htmlFor="customerName-field" className="form-label">Customer Name</label>
-//                             <input
-//                                 type="text"
-//                                 name="cName"
-//                                 id="customerName-field"
-//                                 className="form-control"
-//                                 value={item.cName}
-//                                 readOnly
-//                             />
-//                             </div> */}
-//                             console.log({item.cEmail})
-//                                 <div className="mb-3">
-//                                     <label htmlFor="customerEmail-field" className="form-label">Customer Email</label>
-//                                     <input
-//                                         type="text"
-//                                         name="cEmail"
-//                                         id="customerEmail-field"
-//                                         className="form-control"
-//                                         value={item.cEmail}
-//                                         readOnly
-//                                     />
-//                                 </div>
-                                
-//                                 <div className="mb-3">
-//                                     <label htmlFor="customerUsername-field" className="form-label">Customer Username</label>
-//                                     <input
-//                                         type="text"
-//                                         name="cUser_name"
-//                                         id="customerUsername-field"
-//                                         className="form-control"
-//                                         value={item.cUser_name}
-//                                         readOnly
-//                                     />
-//                                 </div>
-
-//                                 <div className="mb-3">
-//                                     <label htmlFor="customerPhone-field" className="form-label">Customer Contact Number</label>
-//                                     <input
-//                                         type="text"
-//                                         name="cPhone"
-//                                         id="customerPhone-field"
-//                                         className="form-control"
-//                                         value={item.cPhone}
-//                                         readOnly
-//                                     />
-//                                 </div>
-
-//                                 <div className="mb-3">
-//                                     <label htmlFor="customerIdProofno-field" className="form-label">Customer ID Proof Number</label>
-//                                     <input
-//                                         type="text"
-//                                         name="cId_proof_no"
-//                                         id="customerIdProofno-field"
-//                                         className="form-control"
-//                                         value={item.cId_proof_no}
-//                                         readOnly
-//                                     />
-//                                 </div>
-
-//                                 <div className="mb-3">
-//                                     <label htmlFor="cStatus-field" className="form-label">Customer Status</label>
-//                                     <input
-//                                         type="text"
-//                                         name="cStatus"
-//                                         id="cStatus-field"
-//                                         className="form-control"
-//                                         value={item.cStatus}
-//                                         readOnly
-//                                     />
-//                                 </div>
-
-//                             <div className="mb-3">
-//                             <label htmlFor="cCreated_at-field" className="form-label">Customer Created At</label>
-//                             <input
-//                                 type="text"
-//                                 name="cCreated_at"
-//                                 id="cCreated_at-field"
-//                                 className="form-control"
-//                                 value={item.cCreated_at}
-//                                 readOnly
-//                             />
-//                             </div>
-
-//                             {/* <div className="mb-3">
-//                             <label htmlFor="driverId-field" className="form-label">Driver ID</label>
-//                             <input
-//                                 type="text"
-//                                 name="driver_id"
-//                                 id="driverId-field"
-//                                 className="form-control"
-//                                 value={item.driver_id}
-//                                 readOnly
-//                             />
-//                             </div> */}
-// {/* 
-//                             <div className="mb-3">
-//                             <label htmlFor="driver-field" className="form-label">Driver</label>
-//                             <input
-//                                 type="text"
-//                                 name="driver"
-//                                 id="driver-field"
-//                                 className="form-control"
-//                                 value={item.driver}
-//                                 readOnly
-//                             />
-//                             </div> */}
-
-//                             {/* <div className="mb-3">
-//                             <label htmlFor="vId-field" className="form-label">Vehicle ID</label>
-//                             <input
-//                                 type="text"
-//                                 name="vId"
-//                                 id="vId-field"
-//                                 className="form-control"
-//                                 value={item.vId}
-//                                 readOnly
-//                             />
-//                             </div> */}
-// {/* 
-//                             <div className="mb-3">
-//                             <label htmlFor="vService_provider-field" className="form-label">Vehicle Service Provider</label>
-//                             <input
-//                                 type="text"
-//                                 name="vService_provider"
-//                                 id="vService_provider-field"
-//                                 className="form-control"
-//                                 value={item.vService_provider}
-//                                 readOnly
-//                             />
-//                             </div> */}
-
-//                             {/* <div className="mb-3">
-//                             <label htmlFor="vVehicle_number-field" className="form-label">Vehicle Number</label>
-//                             <input
-//                                 type="text"
-//                                 name="vVehicle_number"
-//                                 id="vVehicle_number-field"
-//                                 className="form-control"
-//                                 value={item.vVehicle_number}
-//                                 readOnly
-//                             />
-//                             </div> */}
-
-//                             <div className="mb-3">
-//                             <label htmlFor="vMake-field" className="form-label">Vehicle Make</label>
-//                             <input
-//                                 type="text"
-//                                 name="vMake"
-//                                 id="vMake-field"
-//                                 className="form-control"
-//                                 value={item.vMake}
-//                                 readOnly
-//                             />
-//                             </div>
-
-//                             <div className="mb-3">
-//                             <label htmlFor="pickup_location-field" className="form-label">Pickup Location</label>
-//                             <input
-//                                 type="text"
-//                                 name="pickup_location"
-//                                 id="pickup_location-field"
-//                                 className="form-control"
-//                                 value={item.pickup_location}
-//                                 readOnly
-//                             />
-//                             </div>
-
-//                             <div className="mb-3">
-//                             <label htmlFor="drop_location-field" className="form-label">Drop Location</label>
-//                             <input
-//                                 type="text"
-//                                 name="drop_location"
-//                                 id="drop_location-field"
-//                                 className="form-control"
-//                                 value={item.drop_location}
-//                                 readOnly
-//                             />
-//                             </div>
-
-//                             {/* <div className="mb-3">
-//                             <label htmlFor="no_of_horse-field" className="form-label">Number of Horses</label>
-//                             <input
-//                                 type="text"
-//                                 name="no_of_horse"
-//                                 id="no_of_horse-field"
-//                                 className="form-control"
-//                                 value={item.no_of_horse}
-//                                 readOnly
-//                             />
-//                             </div> */}
-
-//                             <div className="mb-3">
-//                             <label htmlFor="description-field" className="form-label">Description</label>
-//                             <input
-//                                 type="text"
-//                                 name="description"
-//                                 id="description-field"
-//                                 className="form-control"
-//                                 value={item.description}
-//                                 readOnly
-//                             />
-//                             </div>
-
-//                             {/* Requested Vehicel */}
-
-//                             {/* Profile image */}
-//                             <div className="mb-3">
-//                                 <label htmlFor="profile_image-field" className="form-label">Profile Image</label>
-//                                 <div>
-//                                     <img src={item.vVehicle_Image || ""} alt="id_proof Image" style={{ maxWidth: '100px' }} />
-//                                 </div>
-//                             </div>
-
-//                             {/* <div className="mb-3">
-//                             <label htmlFor="status-field" className="form-label">Status</label>
-//                             <input
-//                                 type="text"
-//                                 name="status"
-//                                 id="status-field"
-//                                 className="form-control"
-//                                 value={item.status}
-//                                 readOnly
-//                             />
-//                             </div> */}
-
-//                             {/* <div className="mb-3">
-//                             <label htmlFor="created_at-field" className="form-label">Created At</label>
-//                             <input
-//                                 type="text"
-//                                 name="created_at"
-//                                 id="created_at-field"
-//                                 className="form-control"
-//                                 value={item.created_at}
-//                                 readOnly
-//                             />
-//                             </div> */}
-//                         {/* 
-//                             <div className="mb-3">
-//                             <label htmlFor="updated_at-field" className="form-label">Updated At</label>
-//                             <input
-//                                 type="text"
-//                                 name="updated_at"
-//                                 id="updated_at-field"
-//                                 className="form-control"
-//                                 value={item.updated_at}
-//                                 readOnly
-//                             />
-//                             </div> */}
-
-//                             {/* Continue adding other fields */}
-//                         </div>
-//                         ))}
-
-
-//                     </ModalBody>
-//                     <ModalFooter>
-//                         <div className="hstack gap-2 justify-content-end">
-//                             <button type="button" className="btn btn-light" onClick={() => { setView_modal(false); }}>Close</button>
-//                             {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
-//                         </div>
-//                     </ModalFooter>
-
-//                 </form>
-//             </Modal>
-
-
-
-//             {/* Remove Modal */}
-//             <Modal isOpen={modal_delete} toggle={() => { tog_delete(); }} className="modal fade zoomIn" id="deleteRecordModal" centered >
-//                 <div className="modal-header">
-//                     <Button type="button" onClick={() => setmodal_delete(false)} className="btn-close" aria-label="Close"> </Button>
-//                 </div>
-//                 <ModalBody>
-//                     <div className="mt-2 text-center">
-//                         <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
-//                             colors="primary:#f7b84b,secondary:#f06548" style={{ width: "100px", height: "100px" }}></lord-icon>
-//                         <div className="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-//                             <h4>Are you Sure ?</h4>
-//                             <p className="text-muted mx-4 mb-0">Are you Sure You want to Remove this Record ?</p>
-//                         </div>
-//                     </div>
-//                     <div className="d-flex gap-2 justify-content-center mt-4 mb-2">
-//                         <button type="button" className="btn w-sm btn-light" onClick={() => setmodal_delete(false)}>Close</button>
-//                         <button type="button" className="btn w-sm btn-danger " id="delete-record">Yes, Delete It!</button>
-//                     </div>
-//                 </ModalBody>
-//             </Modal>
-//         </React.Fragment>
-//     );
-// };
-
-// export default ListEnquiriesTable;
-
-
+// Importing the react component
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
-// import SimpleBar from 'simplebar-react';
+import { Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
-// import { useFormik } from "formik";
-// Import Flatepicker
-// import Flatpickr 
+
+// Importing the Enquiry Data 
 import { getEnquiriesData } from "../../../helpers/ApiRoutes/authApiRoutes";
-// import { enquiriesData } from '../../../CommonData/Data';
 
+//The purpose of the Breadcrumbs component is to display a breadcrumb navigation element. 
+import Breadcrumbs from "../../../components/Common/Breadcrumb";
 
+// The name of the function. Which will be executed and used all over program. This funtion is having all the code
 const ListEnquiriesTable = () => 
 {
-    // const [modal_list, setmodal_list] = useState(false);
     const [view_modal, setView_modal] = useState(false);
     const [enquirie, setEnquirie] = useState(null);
-    // const [enquirie, setEnquirie] = useState([]);
     const [enquiries, setEnquiries] = useState([]);
     const [modal, setModal] = useState(false);
-    const [selectedImage, setSelectedImage] = useState('');
-    const [modal_delete, setmodal_delete] = useState(false);
-
-
-    // function toggleStatus(button, enquiryId) 
-    // {
-    //     var currentStatus = button.innerText.trim();
-    //     if(currentStatus === 'ACTIVE') 
-    //     {
-    //         button.innerText = 'INACTIVE';
-    //         button.classList.remove('btn-success');
-    //         button.classList.add('btn-danger');
-    //         const enquiry = enquiriesData.find((e) => e.id === enquiryId);
-    //         // console.log("Enquiry", enquiry);
-    //         if (enquiry)
-    //         {
-    //             console.log('Came here');
-    //             enquiry.status = 'INACTIVE';
-    //             console.log("Enquiry", enquiry);
-    //         }
-    //     }
-    //     else if (currentStatus === 'INACTIVE')
-    //     {
-    //         button.innerText = 'ACTIVE';
-    //         button.classList.remove('btn-danger');
-    //         button.classList.add('btn-success');
-
-    //         // Find the corresponding customer by ID
-    //         const enquiry = enquiriesData.find((e) => e.id === enquiryId);
-    //         if (enquiry)
-    //         {
-    //             enquiry.status = 'ACTIVE';
-    //         }
-    //     }
-    // }
-    // function tog_view(productId)
-    // {
-    //     console.log('Product Id', productId);
-    //     const data = enquiries?.find((item)=>item?.id === productId);
-    //     console.log(data);
-    //     setEnquirie([data]);
-    //     setView_modal(!view_modal);
-    //     // setmodal_list(!modal_list);
-    // }
-
-    function tog_view(productId) {
-        console.log('Product Id', productId);
-        const data = enquiries?.find((item) => item?.id === productId);
-        console.log(data);
-        setEnquirie([data]);
-        setView_modal(prevState => !prevState);
-        // setmodal_list(!modal_list);
-      }
-
-    //   console.log('enquiries:', enquiries); // Add console log here
-      
-    const toggleModal = () => 
-    {
-        // setSelectedImage();
-        setModal(!modal);
-    };
-    // function tog_list(productId) {
-    //     console.log('Product Id', productId);
-    //     const data = enquiries?.find((item) => item?.id == productId);
-    //     console.log("Data", data);
-    //     setEnquirie(data); // Remove the array brackets
-    //     setmodal_list(!modal_list);
-    //   }
-    function tog_delete()
-    {
-        setmodal_delete(!modal_delete);
-    }
-    
-    useEffect(() => 
-    {
-        setEnquiries(getEnquiriesData());
-    }, [])
-
+    const [selectedImage, setSelectedImage] = useState('')
+    // the useEffect hook is used to perform some initialization logic when the component mounts.
     useEffect(() => 
     {
         const existOptionsList =
@@ -690,10 +45,40 @@ const ListEnquiriesTable = () =>
         });
     });
 
+    //  The useEffect hook is used to perform some initialization logic when the component mounts
+
+    useEffect(() => 
+    {
+        setEnquiries(getEnquiriesData());
+    }, []);
+
+    /**
+     * The below function is for the view buttone. It will be used for getting the details of the particular enquiry.
+     */
+
+    function tog_view(productId)
+    {
+        const data = enquiries?.find((item) => item?.id === productId);
+        setEnquirie([data]);
+        setView_modal(prevState => !prevState);
+    }
+
+    /**
+     * This function is typically used in a React component and is responsible for toggling the value of a state variable, modal, by calling the setModal function.
+     */
+
+    const toggleModal = () => 
+    {
+        setModal(!modal);
+    };    
+
+
+    // the execution of all the object and element are written inside the return. Whenever this file will be called only the code inside the return written will be returned
     return (
         <React.Fragment>
             <div className="page-content">
                 <Container fluid>
+                    {/* Header of the Page */}
                     <Breadcrumbs title="Tables" breadcrumbItem="Enquiries" />
                     <Row>
                         <Col lg={12}>
@@ -712,6 +97,7 @@ const ListEnquiriesTable = () =>
                                             <table className="table align-middle table-nowrap" id="customerTable">
                                                 <thead className="table-light">
                                                     <tr>
+                                                        {/* This are the columns and column heading in the enquiry page */}
                                                         <th className="index" data-sort="index">#</th>
                                                         <th className="sort" data-sort="customer_name">Customer Name</th>
                                                         <th className="sort" data-sort="customer_email">Customer Email</th>
@@ -722,16 +108,21 @@ const ListEnquiriesTable = () =>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
+                                                    {/* The data we will be getting to showcase on enquiry page is
+                                                    from a object. We will map and show them one by one. The below function will be used this */}
+                                                    {/* 'enquiries' is having all the enquiry data. */}
+                                                    {/* Index is the number of the data. i.e Serial number */}
                                                     {enquiries.map((item,index) => (
                                                         <tr key={item.id}>
-                                                            <th scope="row"> 
-                                                                {index + 1}
-                                                            </th>
-                                                            <td className="customer_name">{item.cName}</td>
-                                                            <td className="customer_email">{item.cEmail}</td>
-                                                            <td className="contact_no">{item.cPhone}</td>
-                                                            <td className="description">{item.description}</td>
-                                                            <td className="created_date">{item.created_at}</td>
+                                                        {/* Below we are intialize the enquiry data */}
+                                                            <th scope="row"> {index + 1} </th> {/* // Serial Number */}
+                                                            <td className="customer_name">{item.cName}</td> {/* Customer name */}
+                                                            <td className="customer_email">{item.cEmail}</td> {/* Customer Email */}
+                                                            <td className="contact_no">{item.cPhone}</td> {/* Customer Phone */}
+                                                            <td className="description">{item.description}</td> {/* Enquiry Description */}
+                                                            <td className="created_date">{item.created_at}</td> {/* Enquiry Time */}
+                                                            {/* This is the place from where we are calling he view button and function. Which is used to show
+                                                            particular enquiry data fully. */}
                                                             <td>
                                                                 <div className="d-flex gap-2">
                                                                     <div className="edit">
@@ -746,6 +137,8 @@ const ListEnquiriesTable = () =>
                                                     ))}
                                                 </tbody>
                                             </table>
+
+                                            {/* The below the message when there is not data to showcase on the page */}
                                             <div className="noresult" style={{ display: "none" }}>
                                                 <div className="text-center">
                                                     <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
@@ -757,15 +150,13 @@ const ListEnquiriesTable = () =>
                                                 </div>
                                             </div>
                                         </div>
+                                        {/* the below is having the code of the pagination of the page.
+                                        The previous and next button are also in side this function */}
                                         <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">
-                                                <Link className="page-item pagination-prev disabled" to="#">
-                                                    Previous
-                                                </Link>
+                                                <Link className="page-item pagination-prev disabled" to="#">Previous</Link>
                                                 <ul className="pagination customers-pagination mb-0"></ul>
-                                                <Link className="page-item pagination-next" to="#">
-                                                    Next
-                                                </Link>
+                                                <Link className="page-item pagination-next" to="#"> Next</Link>
                                             </div>
                                         </div>
                                     </div>
@@ -776,20 +167,20 @@ const ListEnquiriesTable = () =>
                 </Container>
             </div>
             <Modal isOpen={modal} toggle={toggleModal}>
-                {/* <ModalHeader toggle={toggleModal}>Image Preview</ModalHeader> */}
                 <ModalBody>
-                <img src={selectedImage} alt="Vehicle Image" style={{ width: '100%', maxHeight: '500px' }} />
+                    <img src={selectedImage} alt="Vehicle Image" style={{ width: '100%', maxHeight: '500px' }} />
                 </ModalBody>
             </Modal>
 
-            {/* View Modal */}
+            {/* View Modal function code*/}
             <Modal className="extra-width" isOpen={view_modal} centered >
             <ModalHeader toggle={() => setView_modal(false)}>View Enquiry</ModalHeader>
-            {/* <ModalHeader toggle={() => {tog_view('view');}}>View Enquiry</ModalHeader> */}
                 <form className="tablelist-form">
                     <ModalBody>
                     {enquirie && enquirie.length > 0 && enquirie.map((item, index) => (
                             <div key={index}>
+                                {/* The below element is for the customer name feild in the view button.
+                                Which is for details of particular enquiry detail */}
                                 <div className="mb-3">
                                 <label htmlFor="customerName-field" className="form-label">Customer Name</label>
                                 <input
@@ -801,18 +192,8 @@ const ListEnquiriesTable = () =>
                                     readOnly
                                     />
                                 </div>
-                                {/* console.log('qwer', enquirie); */}
-                                {/* <div className="mb-3">
-                                    <label htmlFor="customerEmail-field" className="form-label">Customer Email</label>
-                                    <input
-                                        type="text"
-                                        name="cEmail"
-                                        id="customerEmail-field"
-                                        className="form-control"
-                                        value={item.cEmail}
-                                        readOnly
-                                    />
-                                </div> */}
+                                {/* The below element is for the customer contact number feild in the view button.
+                                Which is for details of particular enquiry detail */}
                                 <div className="mb-3">
                                     <label htmlFor="customerPhone-field" className="form-label">Customer Contact Number</label>
                                     <input
@@ -823,7 +204,9 @@ const ListEnquiriesTable = () =>
                                         value={item.cPhone}
                                         readOnly
                                     />
-                                </div>                                
+                                </div>
+                                {/* The below element is for the service provider name feild in the view button.
+                                Which is for details of particular enquiry detail */}                                
                                 <div className="mb-3">
                                     <label htmlFor="service_provider-field" className="form-label">Service Provider Name</label>
                                     <input
@@ -835,119 +218,68 @@ const ListEnquiriesTable = () =>
                                         readOnly
                                     />
                                 </div>
-                                {/* <div className="mb-3">
-                                    <label htmlFor="customerIdProofno-field" className="form-label">Customer ID Proof Number</label>
+                                {/* The below element is for the vehicle number feild in the view button.
+                                Which is for details of particular enquiry detail */}
+                                <div className="mb-3">
+                                    <label htmlFor="vNumber-field" className="form-label">Vehicle Number</label>
                                     <input
                                         type="text"
-                                        name="cId_proof_no"
-                                        id="customerIdProofno-field"
+                                        name="vNumber"
+                                        id="vNumber-field"
                                         className="form-control"
-                                        value={item.cId_proof_no}
+                                        value={item.vVvehicle_number}
                                         readOnly
                                     />
-                                </div> */}
-                                {/* <div className="mb-3">
-                                    <label htmlFor="cStatus-field" className="form-label">Customer Status</label>
-                                    <input
-                                        type="text"
-                                        name="cStatus"
-                                        id="cStatus-field"
-                                        className="form-control"
-                                        value={item.cStatus}
-                                        readOnly
-                                    />
-                                </div> */}
-                            {/* <div className="mb-3">
-                            <label htmlFor="cCreated_at-field" className="form-label">Customer Created At</label>
-                            <input
-                                type="text"
-                                name="cCreated_at"
-                                id="cCreated_at-field"
-                                className="form-control"
-                                value={item.cCreated_at}
-                                readOnly
-                            />
-                            </div> */}
-                            <div className="mb-3">
-                            <label htmlFor="vNumber-field" className="form-label">Vehicle Number</label>
-                            <input
-                                type="text"
-                                name="vNumber"
-                                id="vNumber-field"
-                                className="form-control"
-                                value={item.vVvehicle_number}
-                                readOnly
-                            />
-                            </div>
-                            <div className="mb-3">
-                            <label htmlFor="pickup_location-field" className="form-label">Pickup Location</label>
-                            <input
-                                type="text"
-                                name="pickup_location"
-                                id="pickup_location-field"
-                                className="form-control"
-                                value={item.pickup_location}
-                                readOnly
-                            />
-                            </div>
-                            <div className="mb-3">
-                            <label htmlFor="drop_location-field" className="form-label">Drop Location</label>
-                            <input
-                                type="text"
-                                name="drop_location"
-                                id="drop_location-field"
-                                className="form-control"
-                                value={item.drop_location}
-                                readOnly
-                            />
-                            </div>
-                            <div className="mb-3">
-                            <label htmlFor="description-field" className="form-label">Description</label>
-                            <input
-                                type="text"
-                                name="description"
-                                id="description-field"
-                                className="form-control"
-                                value={item.description}
-                                readOnly
-                            />
-                            </div>
-                            {/* <div className="mb-3">
-                                <label htmlFor="profile_image-field" className="form-label">Profile Image</label>
-                                <div>
-                                    <img src={item.vVehicle_Image || ""} alt="id_proof Image" style={{ maxWidth: '100px' }} />
                                 </div>
-                            </div> */}
-                        </div>
+                                {/* The below element is for the pickup location feild in the view button.
+                                Which is for details of particular enquiry detail */}
+                                <div className="mb-3">
+                                    <label htmlFor="pickup_location-field" className="form-label">Pickup Location</label>
+                                    <input
+                                        type="text"
+                                        name="pickup_location"
+                                        id="pickup_location-field"
+                                        className="form-control"
+                                        value={item.pickup_location}
+                                        readOnly
+                                    />
+                                </div>
+                                {/* The below element is for the drop location feild in the view button.
+                                Which is for details of particular enquiry detail */}
+                                <div className="mb-3">
+                                    <label htmlFor="drop_location-field" className="form-label">Drop Location</label>
+                                    <input
+                                        type="text"
+                                        name="drop_location"
+                                        id="drop_location-field"
+                                        className="form-control"
+                                        value={item.drop_location}
+                                        readOnly
+                                    />
+                                </div>
+                                {/* The below element is for the description feild in the view button.
+                                Which is for details of particular enquiry detail */}
+                                <div className="mb-3">
+                                    <label htmlFor="description-field" className="form-label">Description</label>
+                                    <input
+                                        type="text"
+                                        name="description"
+                                        id="description-field"
+                                        className="form-control"
+                                        value={item.description}
+                                        readOnly
+                                    />
+                                </div>
+                            </div>
                         ))}
-                    </ModalBody>
+                    </ModalBody> {/* Here all the element will be done*/}
+                    {/* All the buttons are add from the footer */}
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
                             <button type="button" className="btn btn-light" onClick={() => { setView_modal(false); }}>Close</button>
-                            {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>
                 </form>
-            </Modal>
-            {/* Remove Modal */}
-            <Modal isOpen={modal_delete} toggle={() => { tog_delete(); }} className="modal fade zoomIn" id="deleteRecordModal" centered >
-                <div className="modal-header">
-                    <Button type="button" onClick={() => setmodal_delete(false)} className="btn-close" aria-label="Close"> </Button>
-                </div>
-                <ModalBody>
-                    <div className="mt-2 text-center">
-                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
-                            colors="primary:#f7b84b,secondary:#f06548" style={{ width: "100px", height: "100px" }}></lord-icon>
-                        <div className="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                            <h4>Are you Sure ?</h4>
-                            <p className="text-muted mx-4 mb-0">Are you Sure You want to Remove this Record ?</p>
-                        </div>
-                    </div>
-                    <div className="d-flex gap-2 justify-content-center mt-4 mb-2">
-                        <button type="button" className="btn w-sm btn-light" onClick={() => setmodal_delete(false)}>Close</button>
-                        <button type="button" className="btn w-sm btn-danger " id="delete-record">Yes, Delete It!</button>
-                    </div>
-                </ModalBody>
             </Modal>
         </React.Fragment>
     );
