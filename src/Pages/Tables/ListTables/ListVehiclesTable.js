@@ -11,6 +11,7 @@ import List from 'list.js';
 // Import Flatepicker
 import Flatpickr from "react-flatpickr";
 import {useNavigate} from "react-router-dom"
+
 // Import Images
 // import avatar1 from "../../assets/images/users/avatar-1.jpg";
 // import avatar2 from "../../assets/images/users/avatar-2.jpg";
@@ -77,7 +78,7 @@ const ListVehiclesTable = () => {
         length: !add_list ? vehicle[0]?.length : '',
         breadth: !add_list ? vehicle[0]?.breadth : '',
         height: !add_list ? vehicle[0]?.height : '',
-        max_no_of_horse: !add_list ? vehicle[0]?.max_no_of_horse : '',
+        no_of_horse: !add_list ? vehicle[0]?.no_of_horse : '',
         air_conditioner: !add_list ? vehicle[0]?.air_conditioner : '',
         temperature_manageable: !add_list ? vehicle[0]?.temp_manageable : '',
         vehicle_images: !add_list ? vehicle[0]?.images : [],
@@ -291,7 +292,7 @@ const ListVehiclesTable = () => {
                                                         <th className="sort" data-sort="date">Length(cm)</th>
                                                         <th className="sort" data-sort="phone">Breadth(cm)</th>
                                                         <th className="sort" data-sort="licence_img">Height(cm)</th> */}
-                                                        <th className="sort" data-sort="description ">Number of Horse</th>
+                                                        <th className="sort" data-sort="no_of_horse">Number of Horse</th>
                                                         {/* <th className="sort" data-sort="date"> Air Conditioner</th>
                                                         <th className="sort" data-sort="date"> Temperature Manageable</th> */}
                                                         {/* <th className="sort" data-sort="date"> Image</th> */}
@@ -334,7 +335,7 @@ const ListVehiclesTable = () => {
                                                             <td className="length">{item.length}</td>
                                                             <td className="breadth">{item.breadth}</td>
                                                             <td className="hight">{item.height}</td> */}
-                                                            <td className="capacity">{item.max_no_of_horse}</td>
+                                                            <td className="no_of_horse text-center">{item.no_of_horse}</td>
                                                             {/* <td className="status">{item.air_conditioner}</td>
                                                             <td className="phone">{item.temp_manageable}</td> */}
                                                             {/* <td className="date">{item.image}</td> */}
@@ -420,7 +421,6 @@ const ListVehiclesTable = () => {
                             </Card>
                         </Col>
                     </Row>
-
                 </Container>
             </div>
 
@@ -430,8 +430,6 @@ const ListVehiclesTable = () => {
                 <form className="tablelist-form"
                     onSubmit={validation.handleSubmit}>
                     <ModalBody>
-
-
                         <div className="mb-3">
                             <label htmlFor="serviceprovider-field" className="form-label">Service Provider</label>
                             <input
@@ -544,12 +542,12 @@ const ListVehiclesTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="max_no_of_horses-field" className="form-label">No Of Horses</label>
+                            <label htmlFor="no_of_horses-field" className="form-label">Number Of Horses</label>
                             <select
-                                id="max_no_of_horses-field"
+                                id="no_of_horses-field"
                                 className="form-control"
-                                name='max_no_of_horse'
-                                value={validation.values.max_no_of_horse || ""}
+                                name=''
+                                value={validation.values.no_of_horse || ""}
                                 onChange={validation.handleChange}
                                 required
                             >
@@ -588,11 +586,6 @@ const ListVehiclesTable = () => {
                                 <label htmlFor="air_conditioner-no" className="form-check-label">NO</label>
                             </div>
                         </div>
-
-
-
-
-
 
                         <div className="mb-3">
                             <label className="form-label">Temperature Manageable</label>
@@ -925,7 +918,7 @@ const ListVehiclesTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="vehicle_length-field" className="form-label">Vehicle Length (cm)</label>
+                            <label htmlFor="vehicle_length-field" className="form-label">Vehicle Length (feet)</label>
                             <input
                                 type="text"
                                 id="vehicle_length-field"
@@ -937,7 +930,7 @@ const ListVehiclesTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="vehicle_breadth-field" className="form-label">Vehicle Breadth (cm)</label>
+                            <label htmlFor="vehicle_breadth-field" className="form-label">Vehicle Breadth (feet)</label>
                             <input
                                 type="text"
                                 id="vehicle_breadth-field"
@@ -949,7 +942,7 @@ const ListVehiclesTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="vehicle_height-field" className="form-label">Vehicle Height (cm)</label>
+                            <label htmlFor="vehicle_height-field" className="form-label">Vehicle Height (feet)</label>
                             <input
                                 type="text"
                                 id="vehicle_height-field"
@@ -961,13 +954,13 @@ const ListVehiclesTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="max_no_of_horses-field" className="form-label">Max No Of Horses</label>
+                            <label htmlFor="no_of_horses-field" className="form-label">Number Of Horses</label>
                             <input
                                 type="text"
-                                id="max_no_horse-field"
+                                id="no_horse-field"
                                 className="form-control"
-                                name='max_no_of_horse'
-                                value={validation.values.max_no_of_horse || ""}
+                                name='no_of_horse'
+                                value={validation.values.no_of_horse || ""}
                                 readOnly
                             />
                         </div>
@@ -1027,6 +1020,13 @@ const ListVehiclesTable = () => {
                             </div>
                         </div>
 
+                        {/* <div className="mb-3">
+                            <label htmlFor="profile_image-field" className="form-label">Profile Image</label>
+                            <div>
+                                <img src={item.vVehicle_Image || ""} alt="id_proof Image" style={{ maxWidth: '100px' }} />
+                            </div>
+                        </div> */}
+
                         <div className="mb-3">
                             <label htmlFor="vehicle_image-field" className="form-label">Vehicle Image</label>
                             <input
@@ -1038,6 +1038,21 @@ const ListVehiclesTable = () => {
                                 required
                             />
                         </div>
+
+                        {/* <div className="mb-3">
+                            <label htmlFor="vehicle_image-field" className="form-label">Vehicle Image</label>
+                            <input
+                                type="file"
+                                name="vehicle_image"
+                                id="vehicle_image-field"
+                                className="form-control"
+                                placeholder="Upload Vehicle Image"
+                                required
+                                disabled
+                            />
+                            <div id="image-preview"></div>
+                        </div> */}
+
 
                         <div className="mb-3">
                             <label htmlFor="vehicle_registration_number-field" className="form-label">Vehicle Registration Number</label>
@@ -1183,14 +1198,26 @@ const ListVehiclesTable = () => {
                             <div className="form-check">
                                 <input
                                     type="radio"
-                                    id="vehicle_type-commercial"
+                                    id="vehicle_type-gcc"
                                     name="vehicle_type"
                                     className="form-check-input"
                                     value="GCC"
                                     checked={validation.values.vehicle_type === "GCC"}
                                     disabled
                                 />
-                                <label htmlFor="vehicle_type-commercial" className="form-check-label">GCC</label>
+                                <label htmlFor="vehicle_type-gcc" className="form-check-label">GCC</label>
+                            </div>
+                            <div className="form-check">
+                                <input
+                                    type="radio"
+                                    id="vehicle_type-sharing"
+                                    name="vehicle_type"
+                                    className="form-check-input"
+                                    value="SHARING"
+                                    checked={validation.values.vehicle_type === "SHARING"}
+                                    disabled
+                                />
+                                <label htmlFor="vehicle_type-sharing" className="form-check-label">SHARING</label>
                             </div>
                         </div>
 
@@ -1278,10 +1305,7 @@ const ListVehiclesTable = () => {
                         </div>
                     </ModalFooter>
                 </form>
-            </Modal>
-
-
-          
+            </Modal>          
 
             {/* Remove Modal */}
             <Modal isOpen={modal_delete} toggle={() => { tog_delete(); }} className="modal fade zoomIn" id="deleteRecordModal" centered >
@@ -1304,42 +1328,39 @@ const ListVehiclesTable = () => {
                 </ModalBody>
             </Modal>
 
-{/* 
+            {/* 
             <Modal className="extra-width" isOpen={gallery_modal} toggle={() =>{ setGallery_modal(false);}}>
                 <ModalHeader className="bg-light p-3" toggle={() =>{ setGallery_modal(false);}}>View Vehicle Gallery</ModalHeader>
-
                 <ModalBody>
-  {vehicle.map((item, index) => (
-    <div key={index}>
-      <div className="vehicle-details">
-        <h3>{item.make}</h3>
-        <h3>{item.models}</h3>
-      </div>
-      <div className="static-images">
-        <div className="image-container">
-          {item.images.map((imageItem, imageIndex) => (
-            <div key={imageIndex} className="image-item">
-              <img src={imageItem.url} alt={`Static Image ${imageIndex + 1}`} />
-              <button className="delete-button">Delete</button>
-            </div>
-          ))}
-          {images && <img src={images} alt="Static Image 3" />}
-        </div>
-      </div>
-    </div>
-  ))}
-  <input type="file" accept="image/png, image/jpeg" onChange={uploadImage} />
-</ModalBody>
-
-
+                    {vehicle.map((item, index) => (
+                        <div key={index}>
+                            <div className="vehicle-details">
+                                <h3>{item.make}</h3>
+                                <h3>{item.models}</h3>
+                            </div>
+                            <div className="static-images">
+                                <div className="image-container">
+                                    {item.images.map((imageItem, imageIndex) => (
+                                        <div key={imageIndex} className="image-item">
+                                            <img src={imageItem.url} alt={`Static Image ${imageIndex + 1}`} />
+                                            <button className="delete-button">Delete</button>
+                                        </div>
+                                    ))}
+                                    {
+                                        images && <img src={images} alt="Static Image 3" />
+                                    }
+                                </div>
+                            </div>
+                        </div>
+                    ))}
+                    <input type="file" accept="image/png, image/jpeg" onChange={uploadImage} />
+                </ModalBody>
                 <ModalFooter>
                     <div className="hstack gap-2 justify-content-end">
                         <button type="button" className="btn btn-light" onClick={() =>{ setGallery_modal(false);}}>Close</button>
                     </div>
                 </ModalFooter>
             </Modal> */}
-
-
         </React.Fragment>
     );
 };

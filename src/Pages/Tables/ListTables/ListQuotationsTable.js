@@ -110,7 +110,7 @@ const ListQuotationsTable = () => {
     if(data && data !== undefined){
       validation.values.service_provider = data.service_provider;
       validation.values.Vehicle_number = data.vehicle_number;
-      validation.values.driver = data.driver;
+      // validation.values.driver = data.driver;
       validation.values.pickup_location = data.pickup_location;
       validation.values.pickup_date = data.pickup_date;
       validation.values.drop_location = data.drop_location;
@@ -173,6 +173,34 @@ const ListQuotationsTable = () => {
   const [modal_delete, setmodal_delete] = useState(false);
   function tog_delete() {
     setmodal_delete(!modal_delete);
+  }
+
+  
+  function toggleStatus(button, quatationId) {
+    var currentStatus = button.innerText.trim();
+
+    if (currentStatus === 'ACTIVE') {
+        button.innerText = 'INACTIVE';
+        button.classList.remove('btn-success');
+        button.classList.add('btn-danger');
+
+        // Find the corresponding customer by ID
+        const quataion = quotaions.find((q) => q.id === quatationId);
+        if (quataion) {
+            quataion.status = 'INACTIVE';
+        }
+    }
+    else if (currentStatus === 'INACTIVE') {
+        button.innerText = 'ACTIVE';
+        button.classList.remove('btn-danger');
+        button.classList.add('btn-success');
+
+        // Find the corresponding customer by ID
+        const quataion = quotaions.find((q) => q.id === quatationId);
+        if (quataion) {
+          quataion.status = 'ACTIVE';
+        }
+    }
   }
 
   useEffect(() => {
@@ -272,7 +300,17 @@ const ListQuotationsTable = () => {
                               <td className="enquiryId">{item?.enquiry_id}</td>
                               <td className="customer_name">{item?.cName}</td>
                               <td className="customer_email">{item?.cEmail}</td>
-                              <td className="status">{item?.status}</td>
+                              <div>
+                                  <div className="d-flex gap-2">
+                                      <div className="status">
+                                          <button className="btn btn-sm btn-success status-item-btn"
+                                              data-bs-toggle="modal" data-bs-target="#showModal"
+                                              onClick={(event) => toggleStatus(event.target, item.id)}>
+                                              {item?.status}
+                                          </button>
+                                      </div>
+                                  </div>
+                              </div>
                               <td>
                                 <div className="d-flex gap-2">
 
@@ -547,23 +585,6 @@ const ListQuotationsTable = () => {
                 className="form-control"
                 value={validation.values.Vehicle_number || ""}
                 placeholder="Enter Vehicle Number"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="Driver-field" className="form-label">
-                Driver
-              </label>
-              <input
-                type="text"
-                name="Driver"
-                id="Driver-field"
-                className="form-control"
-                value={validation.values.driver || ""}
-                placeholder="Enter Driver Name"
                 onChange={validation.handleChange}
                 onBlur={validation.handleBlur}
                 required
@@ -870,6 +891,23 @@ const ListQuotationsTable = () => {
             </div>
 
             <div className="mb-3">
+              <label htmlFor="driver-field" className="form-label">
+                Driver Name
+              </label>
+              <input
+                type="text"
+                name="driver"
+                id="driver_cost-field"
+                className="form-control"
+                value={validation.values.driver || ""}
+                placeholder="Enter Driver Name"
+                onChange={validation.handleChange}
+                onBlur={validation.handleBlur}
+                required
+              />
+            </div>
+            
+            <div className="mb-3">
               <label htmlFor="driver_cost-field" className="form-label">
                 Driver Cost
               </label>
@@ -896,7 +934,7 @@ const ListQuotationsTable = () => {
                 id="Vehicle_cost-field"
                 className="form-control"
                 value={validation.values.vehicle_cost || ""}
-                placeholder="Enter Driver Cost"
+                placeholder="Enter Vehicle Cost"
                 onChange={validation.handleChange}
                 onBlur={validation.handleBlur}
                 required

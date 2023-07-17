@@ -30,7 +30,7 @@ const quotationData = {
         tax_amount: "120",
         discount_amount: "140",
         final_amount: "1468",
-        status: "Up_Comming",
+        status: "ACTIVE",
         created_at: "2023-07-06 10:16:26",
         updated_at: "2023-07-06 10:16:26"
     },
@@ -66,7 +66,7 @@ const quotationData = {
         tax_amount: "126",
         discount_amount: "987",
         final_amount: "10000",
-        status: "Cancled",
+        status: "INACTIVE",
         created_at: "2023-06-02 09:11:37",
         updated_at: "2023-07-04 22:09:42"
     }
@@ -84,7 +84,7 @@ const quotationData = {
         pickup_date: "2023-08-19 03:11:45",
         drop_location : "Museam of feature",
         drop_date: "2023-09-05 22:34:22",
-        trip_type: "private",
+        trip_type: "PRIVATE",
         no_of_horse : 3
     },
     {
@@ -93,13 +93,13 @@ const quotationData = {
         service_provider : "Nithil",
         driver : "shaha",
         driver_cost : 200,
-        Vehicle_number : "MH01 GH 1400",
+        vehicle_number : "MH01 GH 1400",
         Vehicle_cost : 1400,
         pickup_location : "Buj Khalifa",
         pickup_date: "2023-08-19 03:11:45",
         drop_location : "Museam of feature",
         drop_date: "2023-09-05 22:34:22",
-        trip_type: "sharing",
+        trip_type: "SHARING",
         no_of_horse : 3
     }
   ]
