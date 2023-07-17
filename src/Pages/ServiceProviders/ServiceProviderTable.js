@@ -80,7 +80,7 @@ const ListTables = () =>
         const data = sproviders?.find((item)=>item?.id === productId)
         setSprovider([data]);
         setmodal_list(!modal_list);
-        setcertificatePreview(null)
+        setcertificatePreview(data.licence_image);
     }
 
     function tog_view(productId) {
@@ -104,7 +104,7 @@ const ListTables = () =>
         emergency_contact_no: !add_list ? sprovider[0]?.emergency_contact_no : '',
         contact_address: !add_list ? sprovider[0]?.contact_address : '',
         certification_or_license_no: !add_list ? sprovider[0]?.certification_or_license_no : '',
-        certificate_image : !add_list ? sprovider[0]?.certificate_image : '',
+        licence_image : !add_list ? sprovider[0]?.licence_image : '',
       };
       
       // Later in your code, when setting the initial state
@@ -114,15 +114,15 @@ const ListTables = () =>
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
-            values.certificate_image = updateImage;
+            values.licence_image = updateImage;
             if(add_list){
                 //add new
                 console.log("add new");
                 addNewProvider(values);
                 setAdd_list(false);
                 setmodal_list(false);
-                setcertificatePreview(null);
-                initialValues.certificate_image = '';
+                // setcertificatePreview(null);
+                // initialValues.certificate_image = '';
             }else{
                 //update previes one
                 console.log("update previues one ");
@@ -130,8 +130,8 @@ const ListTables = () =>
                 updateSProvider(values);
                 setAdd_list(false);
                 setmodal_list(false);
-                setcertificatePreview(null);
-                initialValues.certificate_image = '';
+                // setcertificatePreview(null);
+                // initialValues.certificate_image = '';
             }
         }
       });
@@ -402,8 +402,8 @@ const ListTables = () =>
             </div>
 
             {/* Add Modal */}
-            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ?  'Add service provider' : 'Edit service provider' }</ModalHeader>
+            <Modal className="extra-width" isOpen={modal_list} toggle={() => { setmodal_list(false); setAdd_list(false); ; setcertificatePreview(null) }} centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); setAdd_list(false); ; setcertificatePreview(null) }}>{add_list ?  'Add service provider' : 'Edit service provider' }</ModalHeader>
                 <form className="tablelist-form"
                     onSubmit={validation.handleSubmit}>
       
@@ -562,7 +562,7 @@ const ListTables = () =>
                         <div className="col-md-10">
                             {certificatePreview && (
                               <div>
-                                <h5>Licensce Image Preview:</h5>
+                                {/* <h5>Licensce Image Preview:</h5> */}
                                 <img src={certificatePreview} alt="Licensce Image Preview" style={{ maxWidth: '100px' }} />
                               </div>
                             )}
@@ -757,7 +757,7 @@ const ListTables = () =>
                     <div className="mb-3">
                         <label htmlFor="certificateImage-field" className="form-label">Licensce Image</label>
                         <div>
-                            <img src={validation.values.certificate_image || ""} alt="License Image" style={{ maxWidth: '100px' }} />
+                            <img src={validation.values.licence_image || ""} alt="License Image" style={{ maxWidth: '100px' }} />
                         </div>
                     </div>
 

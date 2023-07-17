@@ -48,12 +48,15 @@ const ListCustomerTable = () => {
 
     function tog_list(param,productId) {
         if(param === 'ADD'){
+
             setAdd_list(!add_list);
         }
         const data = customers?.find((item)=>item?.id === productId)
         setCustomer([data]);
+ 
         setmodal_list(!modal_list);
-        setIdProofPreview(null)
+        setIdProofPreview(data.id_proof_image)
+     
     }
 
     function tog_view(productId) {
@@ -665,8 +668,8 @@ const ListCustomerTable = () => {
             </div>
 
             {/* Add Modal */}
-            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ?  'Add Customer' : 'Edit Customer' } </ModalHeader>
+            <Modal className="extra-width" isOpen={modal_list} toggle={() => { setmodal_list(false); setAdd_list(false); setIdProofPreview(null) }} centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); setAdd_list(false); setIdProofPreview(null) }}>{add_list ?  'Add Customer' : 'Edit Customer' } </ModalHeader>
                 <form className="tablelist-form"
                  onSubmit={validation.handleSubmit}>
                     <ModalBody>
@@ -761,7 +764,7 @@ const ListCustomerTable = () => {
                         <div className="col-md-10">
                             {idProofPreview && (
                               <div>
-                                <h5>Id Proof Preview:</h5>
+                                {/* <h5>Id Proof Preview:</h5> */}
                                 <img src={idProofPreview} alt="Id Proof Preview" style={{ maxWidth: '100px' }} />
                               </div>
                             )}
@@ -782,7 +785,7 @@ const ListCustomerTable = () => {
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() =>{ setmodal_list(false); setAdd_list(false);}}>Close</button>
+                            <button type="button" className="btn btn-light" onClick={() =>{ setmodal_list(false); setAdd_list(false); setIdProofPreview(null)}}>Close</button>
                             <button type="submit" className="btn btn-success" id="add-btn">{add_list ?  'Add Customer' : 'Update Customer' }
                             </button>
                         </div>
