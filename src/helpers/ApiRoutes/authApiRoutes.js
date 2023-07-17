@@ -75,7 +75,7 @@ import { APIClient } from "../api_helper";
   }
 
   //Get enguiries
-  export function qetEnquiriesData(){
+  export function getEnquiriesData(){
     if(enquiriesData){
       return enquiriesData
     }

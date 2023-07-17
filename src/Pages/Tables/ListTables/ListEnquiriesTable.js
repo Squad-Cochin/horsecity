@@ -581,13 +581,13 @@ import List from 'list.js';
 // import { useFormik } from "formik";
 // Import Flatepicker
 // import Flatpickr 
-import { qetEnquiriesData } from "../../../helpers/ApiRoutes/authApiRoutes";
-import { enquiriesData } from '../../../CommonData/Data';
+import { getEnquiriesData } from "../../../helpers/ApiRoutes/authApiRoutes";
+// import { enquiriesData } from '../../../CommonData/Data';
 
 
 const ListEnquiriesTable = () => 
 {
-    const [modal_list, setmodal_list] = useState(false);
+    // const [modal_list, setmodal_list] = useState(false);
     const [view_modal, setView_modal] = useState(false);
     const [enquirie, setEnquirie] = useState(null);
     // const [enquirie, setEnquirie] = useState([]);
@@ -668,7 +668,7 @@ const ListEnquiriesTable = () =>
     
     useEffect(() => 
     {
-        setEnquiries(qetEnquiriesData());
+        setEnquiries(getEnquiriesData());
     }, [])
 
     useEffect(() => 
@@ -699,7 +699,7 @@ const ListEnquiriesTable = () =>
                         <Col lg={12}>
                             <Card>
                                 <CardHeader>
-                                    <h4 className="card-title mb-0">Add, Edit & Remove</h4>
+                                    <h4 className="card-title mb-0">View</h4>
                                 </CardHeader>
 
                                 <CardBody>
@@ -717,7 +717,7 @@ const ListEnquiriesTable = () =>
                                                         <th className="sort" data-sort="customer_email">Customer Email</th>
                                                         <th className="sort" data-sort="contact_no">Contact Number</th>
                                                         <th className="sort" data-sort="description">Description</th>
-                                                        <th className="sort" data-sort="created_date">Created Date</th>
+                                                        <th className="sort" data-sort="created_date">Created At</th>
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
@@ -802,7 +802,7 @@ const ListEnquiriesTable = () =>
                                     />
                                 </div>
                                 {/* console.log('qwer', enquirie); */}
-                                <div className="mb-3">
+                                {/* <div className="mb-3">
                                     <label htmlFor="customerEmail-field" className="form-label">Customer Email</label>
                                     <input
                                         type="text"
@@ -812,18 +812,7 @@ const ListEnquiriesTable = () =>
                                         value={item.cEmail}
                                         readOnly
                                     />
-                                </div>                                
-                                <div className="mb-3">
-                                    <label htmlFor="customerUsername-field" className="form-label">Customer Username</label>
-                                    <input
-                                        type="text"
-                                        name="cUser_name"
-                                        id="customerUsername-field"
-                                        className="form-control"
-                                        value={item.cUser_name}
-                                        readOnly
-                                    />
-                                </div>
+                                </div> */}
                                 <div className="mb-3">
                                     <label htmlFor="customerPhone-field" className="form-label">Customer Contact Number</label>
                                     <input
@@ -834,8 +823,19 @@ const ListEnquiriesTable = () =>
                                         value={item.cPhone}
                                         readOnly
                                     />
-                                </div>
+                                </div>                                
                                 <div className="mb-3">
+                                    <label htmlFor="service_provider-field" className="form-label">Service Provider Name</label>
+                                    <input
+                                        type="text"
+                                        name="service_provider"
+                                        id="service_provider-field"
+                                        className="form-control"
+                                        value={item.vService_provider}
+                                        readOnly
+                                    />
+                                </div>
+                                {/* <div className="mb-3">
                                     <label htmlFor="customerIdProofno-field" className="form-label">Customer ID Proof Number</label>
                                     <input
                                         type="text"
@@ -845,8 +845,8 @@ const ListEnquiriesTable = () =>
                                         value={item.cId_proof_no}
                                         readOnly
                                     />
-                                </div>
-                                <div className="mb-3">
+                                </div> */}
+                                {/* <div className="mb-3">
                                     <label htmlFor="cStatus-field" className="form-label">Customer Status</label>
                                     <input
                                         type="text"
@@ -856,8 +856,8 @@ const ListEnquiriesTable = () =>
                                         value={item.cStatus}
                                         readOnly
                                     />
-                                </div>
-                            <div className="mb-3">
+                                </div> */}
+                            {/* <div className="mb-3">
                             <label htmlFor="cCreated_at-field" className="form-label">Customer Created At</label>
                             <input
                                 type="text"
@@ -867,15 +867,15 @@ const ListEnquiriesTable = () =>
                                 value={item.cCreated_at}
                                 readOnly
                             />
-                            </div>
+                            </div> */}
                             <div className="mb-3">
-                            <label htmlFor="vMake-field" className="form-label">Vehicle Make</label>
+                            <label htmlFor="vNumber-field" className="form-label">Vehicle Number</label>
                             <input
                                 type="text"
-                                name="vMake"
-                                id="vMake-field"
+                                name="vNumber"
+                                id="vNumber-field"
                                 className="form-control"
-                                value={item.vMake}
+                                value={item.vVvehicle_number}
                                 readOnly
                             />
                             </div>
@@ -912,12 +912,12 @@ const ListEnquiriesTable = () =>
                                 readOnly
                             />
                             </div>
-                            <div className="mb-3">
+                            {/* <div className="mb-3">
                                 <label htmlFor="profile_image-field" className="form-label">Profile Image</label>
                                 <div>
                                     <img src={item.vVehicle_Image || ""} alt="id_proof Image" style={{ maxWidth: '100px' }} />
                                 </div>
-                            </div>
+                            </div> */}
                         </div>
                         ))}
                     </ModalBody>
