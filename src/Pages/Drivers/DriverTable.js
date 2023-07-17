@@ -58,18 +58,20 @@ const ListTables = () => {
       setUpdateImage(file)
       setLicenceImagePreview(URL.createObjectURL(file));
     };  
-
+  
 
 
     function tog_list(param, productId) {
         if (param === 'ADD') {
+            setProfileImagePreview(null);
+            setLicenceImagePreview(null);
             setAdd_list(!add_list);
         }
         const data = drivers?.find((item) => item?.id === productId)
         setDriver([data]);
         setmodal_list(!modal_list);
-        setProfileImagePreview(null);
-        setLicenceImagePreview(null);
+        setProfileImagePreview(data.profile_image);
+        setLicenceImagePreview(data.licence_img);
     }
 
     function tog_view(productId) {
@@ -410,7 +412,7 @@ const ListTables = () => {
                             <div className="col-md-10">
                                 {profileImagePreview &&(
                                     <div>
-                                        <h5>Id Proof Preview:</h5>
+                                        {/* <h5>Id Proof Preview:</h5> */}
                                         <img src={profileImagePreview} alt="Profile Preview" style={{ maxWidth: '100px' }} />
                                     </div>
                                 )}
@@ -446,7 +448,7 @@ const ListTables = () => {
                             <div className="col-md-10">
                                 {licenceImagePreview &&(
                                     <div>
-                                        <h5>Licence Preview:</h5>
+                                        {/* <h5>Licence Preview:</h5> */}
                                         <img src={licenceImagePreview} alt="Licence Preview" style={{ maxWidth: '100px' }} />
                                     </div>
                                 )}

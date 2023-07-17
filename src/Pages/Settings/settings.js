@@ -17,8 +17,14 @@ const SettingPage = () =>
 
 
     useEffect(()=>{
-      setSetting_data(getSettingsPageData())
-    },[])
+      setSetting_data(getSettingsPageData());
+      setloginPageBackgroundPreview(settings_data[0]?.loginPageBackgroundImage);
+      setLoginPageLogoPreview(settings_data[0]?.loginPage);
+      setMenuLogoPreview(settings_data[0]?.menuLogo);
+      setFaviconPreview(settings_data[0]?.favicon);
+
+    },[settings_data])
+
           //  console.log("TT",settings_data);
     const initialValues = {
       companyTitle: settings_data[0]?.title || '',
@@ -36,7 +42,7 @@ const SettingPage = () =>
       quotationPrefix: settings_data[0]?.quotationPrefix || '',
       licenseNumber: settings_data[0]?.licenseNumber || '',
     };
-
+    console.log(settings_data[0]?.loginPageBackgroundImage);
     const validation = useFormik({
       // enableReinitialize : use this flag when initial values needs to be changed
       enableReinitialize: true,
@@ -207,7 +213,7 @@ const SettingPage = () =>
                                 className="form-control"
                                 name='menuLogo'
                                 type="file"
-                                value={validation.values.menuLogo || ""}
+                                // value={validation.values.menuLogo || ""}
                                 // onChange={validation.handleChange} 
                                 placeholder="Upload Menu Logo Image"
                                 onChange={handleMenuLogoChange}
@@ -229,7 +235,7 @@ const SettingPage = () =>
                               className="form-control"
                               type="file"
                               name='loginPage'
-                              value={validation.values.loginPage || ""}
+                              // value={validation.values.loginPage || ""}
                               // onChange={validation.handleChange} 
                               placeholder="Upload Menu Logo Image"
                               onChange={handleloginPageLogoPreview}
@@ -252,7 +258,7 @@ const SettingPage = () =>
                               className="form-control"
                               type="file"
                               name='favicon'
-                              value={validation.values.favicon || ""}
+                              // value={validation.values.favicon || ""}
                               // onChange={validation.handleChange} 
                               placeholder="Upload Favicon Image"
                               onChange={handleFaviconChange}
@@ -266,6 +272,7 @@ const SettingPage = () =>
                           </label>
                           <div className="col-md-10">
                             {loginPageBackgroundPreview && (
+                              
                               <div>
                                 <h5>Login Page Background Image Preview:</h5>
                                 <img src={loginPageBackgroundPreview} alt="Login Background Preview" style={{ maxWidth: '100px' }} />
@@ -276,7 +283,7 @@ const SettingPage = () =>
                               type="file"
                               name='loginPageBackgroundImage'
                               placeholder="Upload Favicon Image"
-                              value={validation.values.loginPageBackgroundImage || ""}
+                              // value={validation.values.loginPageBackgroundImage || ""}
                               // onChange={validation.handleChange} 
                               onChange={handleLoginPageBackgroundChange}
                               required
