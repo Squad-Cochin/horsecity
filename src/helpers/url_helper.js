@@ -10,8 +10,8 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
 /**
  * The below one is Shaheer's Computer Details
  */
-export const API_BASE_URL = "http://192.168.200.211:8080";
-const apiBaseUrl = "http://192.168.200.211:8080";
+// export const API_BASE_URL = "http://192.168.200.211:8080";
+// const apiBaseUrl = "http://192.168.200.211:8080";
 
 /**
  * The below one is Saurabh's Computer Details
@@ -23,8 +23,8 @@ const apiBaseUrl = "http://192.168.200.211:8080";
  * The below one is own Computer Details
  */
 
-// const apiBaseUrl = "http://localhost:8080";
-// export const API_BASE_URL = "http://localhost:8080";
+const apiBaseUrl = "http://localhost:8000";
+export const API_BASE_URL = "http://localhost:8000";
 
 const token = "/horsecity661809"
 
@@ -37,7 +37,7 @@ export const RECOVER_PASSWORD = "/fake-recover-password";
 export const POST_FAKE_CHANGE_PWD = "/post-fake-change-password";
 
 /**SERVICE PROVIDER */
-export const GET_SP_ALL_DATA_URL = apiBaseUrl + token + "/get-all-provider-data"
+export const GET_SP_ALL_DATA_URL = apiBaseUrl + token + "/get-all/serviceproviders"
 export const POST_SP_ADD_URL = apiBaseUrl + token + "/add-new"
 export const POST_SP_EDIT_URL = apiBaseUrl + token + "/edit:id"
 

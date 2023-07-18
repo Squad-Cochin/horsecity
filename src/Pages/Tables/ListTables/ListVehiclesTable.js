@@ -382,7 +382,7 @@ const ListVehiclesTable = () =>
                         <div className="mb-3">
                             <label htmlFor="vehicle_color-field" className="form-label">Vehicle Color</label>
                             <input
-                                type="text"
+                                type="color"
                                 id="vehicle_color-field"
                                 className="form-control"
                                 name='color'

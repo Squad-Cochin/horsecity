@@ -19,21 +19,32 @@ import { useFormik } from "formik";
 import { addNewProvider } from '../../helpers/ApiRoutes/addApiRoutes';  //For adding new service providers
 import { removeSProvider } from '../../helpers/ApiRoutes/removeApiRoutes'; //For removing service providers
 import { updateSProvider } from '../../helpers/ApiRoutes/editApiRoutes'; //For updating  service providers
-import { getSPAllData } from '../../helpers/ApiRoutes/authApiRoutes';  //For getting all service providers
+import { getSPAllData } from '../../helpers/ApiRoutes/getApiRoutes';  //For getting all service providers
+import config from '../../config';
+
 
 const ListTables = () => {
     const [modal_list, setmodal_list] = useState(false); /**Using for showing ADD & EDIT modal */
     const [view_modal, setView_modal] = useState(false); /**Using for showing VIEW modal */
     const [add_list, setAdd_list] = useState(false); /**Using for controlling ADD & EDIT modal */
     const [sproviders, setSproviders] = useState([]); /**Using for storing All service providers */
-    const [sprovider, setSprovider] = useState([]);  /**Using for storing All particul  service providers based of thair ID */
+    const [sprovider, setSprovider] = useState([]);  /**Using for storing All particul  service providers based of there ID */
     const [updateImage, setUpdateImage] = useState("") /**Using for storing licensce image file */
     const [licenscePreview, setLicenscePreview] = useState(null);  /**Using for storing licensce image URL*/
+    const [ pageNumber, setPageNumber ] = useState(1);
+    const [ numberOfData, setNumberOfData ] = useState(0);
+    const pageLimit = config.pageLimit;
 
     /**This hook is used to fetch service provider data */
     useEffect(() => {
-        let getSPdata = getSPAllData()
-        setSproviders(getSPdata);
+        async function getAll(){
+            let getSPdata = await getSPAllData(1)
+            console.log(getSPdata.serviceProviders)
+            console.log(getSPdata.totalCount)
+            setSproviders(getSPdata.serviceProviders);
+            setNumberOfData(getSPdata.totalCount);
+        }
+        getAll()
     }, [])
 
     /**This object sets the initial values for the form fields managed by formik */
@@ -41,6 +52,7 @@ const ListTables = () => {
         name: !add_list ? sprovider[0]?.name : '',
         email: !add_list ? sprovider[0]?.email : '',
         username: !add_list ? sprovider[0]?.user_name : '',
+        password: !add_list ? sprovider[0]?.password : '',
         role_name: !add_list ? sprovider[0]?.role_name : '',
         contact_person: !add_list ? sprovider[0]?.contact_person : '',
         contact_no: !add_list ? sprovider[0]?.contact_no : '',
@@ -50,6 +62,7 @@ const ListTables = () => {
         licence_image: !add_list ? sprovider[0]?.licence_image : '',
     };
 
+    // validation function
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
@@ -135,6 +148,13 @@ const ListTables = () => {
         removeSProvider(id)
     }
 
+    async function getAllData(page) {
+        console.log("pp",page)
+        let getSPdataNext = await getSPAllData(page);
+        console.log("gg",getSPdataNext)
+        setSproviders(getSPdataNext.serviceProviders);
+        setPageNumber(page);
+    }
 
     return (
         <React.Fragment>
@@ -164,7 +184,6 @@ const ListTables = () => {
                                             <th className="index" data-sort="index">#</th>
                                             <th className="sprovider_name" data-sort="sprovider_name">Name</th>
                                             <th className="email" data-sort="email">Email</th>
-                                            <th className="username" data-sort="username">Role</th>
                                             <th className="contactperson" data-sort="contactperson">Contact Person</th>
                                             <th className="phone" data-sort="phone">Contact Number</th>
                                             <th className="status" data-sort="status">Status</th>
@@ -174,10 +193,9 @@ const ListTables = () => {
                                         <tbody className="list form-check-all">
                                             {sproviders.map((value, index) => (
                                             <tr key={value?.id}>
-                                                <th scope="row">{index + 1}</th>
+                                                <th scope="row">{(index + 1) + (pageNumber - 1 * pageLimit)}</th>
                                                 <td className="name">{value.name}</td>
                                                 <td className="email">{value.email}</td>
-                                                <td className="role">{value.role_name}</td>
                                                 <td className="contact_person">{value.contact_person}</td>
                                                 <td className="phone">{value.contact_no}</td>
                                                 <td className="status">
@@ -231,13 +249,20 @@ const ListTables = () => {
                                         </div>
                                         <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">
-                                                <Link className="page-item pagination-prev disabled" to="#">
-                                                    Previous
-                                                </Link>
+                                                {pageNumber > 1 ?
+                                                    <Link 
+                                                        className="page-item pagination-prev disabled" 
+                                                        onClick={()=> getAllData(pageNumber - 1)}
+                                                    >
+                                                        Previous
+                                                    </Link>
+                                                : null }
                                                 <ul className="pagination listjs-pagination mb-0"></ul>
-                                                <Link className="page-item pagination-next" to="#">
-                                                    Next
-                                                </Link>
+                                                {numberOfData > pageLimit * pageNumber ? 
+                                                    <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}>
+                                                        Next
+                                                    </Link> 
+                                                : null }
                                             </div>
                                         </div>
                                     </div>
@@ -298,6 +323,21 @@ const ListTables = () => {
                                         required
                                     />
                                 </div>
+                                {/* Password */}
+                                {add_list ?
+                                <div className="mb-3">
+                                    <label htmlFor="userName-field" className="form-label">Password</label>
+                                    <input
+                                        type="password"
+                                        id="password-field"
+                                        name="password"
+                                        className="form-control"
+                                        value={validation.values.password || ""}
+                                        onChange={validation.handleChange}
+                                        placeholder="Enter User Password"
+                                        required
+                                    />
+                                </div>: null}
                                 {/* Role */}
                                 <div className="mb-3">
                                     <label htmlFor="status-field" className="form-label">Role</label>
@@ -399,7 +439,7 @@ const ListTables = () => {
                                     <div className="col-md-10">
                                         {licenscePreview && (
                                             <div>
-                                                <img src={licenscePreview} alt="Licensce Image Preview" style={{ maxWidth: '100px' }} />
+                                                <img src={licenscePreview} alt="Licensce Preview" style={{ maxWidth: '100px' }} />
                                             </div>
                                         )}
                                             <input
@@ -548,7 +588,7 @@ const ListTables = () => {
                                 <div className="mb-3">
                                     <label htmlFor="LicenceImage-field" className="form-label">Licence Image</label>
                                     <div>
-                                        <img src={validation.values.licence_image || ""} alt="Licence Image" style={{ maxWidth: '100px' }} />
+                                        <img src={validation.values.licence_image || ""} alt="Licence Preview" style={{ maxWidth: '100px' }} />
                                     </div>
                                 </div>
                             </div>

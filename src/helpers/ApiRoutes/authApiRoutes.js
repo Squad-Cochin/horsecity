@@ -4,7 +4,7 @@ import * as url from "../url_helper";
 import MockAdapter from "axios-mock-adapter";
 // import * as url from "../url_helper";
 import accessToken from "../jwt-token-access/accessToken";
-import { calenderDefaultCategories, events, serviceProviders, Drivers, Customers, Vehicles ,TripDetails, quotationData, enquiriesData, Reports, Languages, Discounts, Accounts, Taxations, Invoices,Ledger, settings} from "../../CommonData/Data";
+import { calenderDefaultCategories, events, Drivers, Customers, Vehicles ,TripDetails, quotationData, enquiriesData, Reports, Languages, Discounts, Accounts, Taxations, Invoices,Ledger, settings} from "../../CommonData/Data";
 import { APIClient } from "../api_helper";
 
 
@@ -20,19 +20,7 @@ import { APIClient } from "../api_helper";
 }
 
 
-  /** get service provider details */
-  export  function getSPAllData(){
-    // try {
-    //     const { data } = await axios.get(`${url.GET_SP_ALL_DATA_URL}`);
-    //     return { data };
-    // } catch (error) {
-    //     return { error : "Password doesn't Match...!"}
-    // }
-    if(serviceProviders){
-        return serviceProviders ;
-    }
-    return null ;
-  }
+
 
   export function getDriversData(){
 

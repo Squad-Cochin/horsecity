@@ -1,4 +1,5 @@
-const serviceProviders = [
+const serviceProviders = {
+  data : [
     {
         id: 1,
         name: "John Doe",
@@ -27,5 +28,7 @@ const serviceProviders = [
         licence_image : "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTU-KAkcysGNYJOZU2lnztAxhXJoxI3KCep284ojEDcQl5yjW4KXUpPXub45CMqCTClhh0&usqp=CAU",
         status: "ACTIVE",
     },
-  ];
+  ],
+  numberOfData : 22
+}
 export { serviceProviders }

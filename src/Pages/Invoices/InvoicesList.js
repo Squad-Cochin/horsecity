@@ -8,28 +8,27 @@ import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, M
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import Logo from "../../assets/images/black-logo.png";
 import { Invoices } from '../../CommonData/Data/Invoices';
-import { getInvoice, getLedgerData } from '../../helpers/ApiRoutes/authApiRoutes';
+// import { getInvoice, getLedgerData } from '../../helpers/ApiRoutes/authApiRoutes';
+import { getLedgerData } from '../../helpers/ApiRoutes/authApiRoutes';
 import html2canvas from 'html2canvas';
 
 const InvoiceDetails = () =>
 {
-    // const [ add_list, setAdd_list ] = useState(false);
     const [ ledger, setLedger] = useState([])
     const [ ledg, setLedg] = useState([]);
-    const [modal_list, setmodal_list] = useState(false);
+    // const [modal_list, setmodal_list] = useState(false);
     const [view_modal, setView_modal] = useState(false);
     const [modal, setModal] = useState(false);
-    const [invoices, setInvoices] = useState([]);
+    // const [invoices, setInvoices] = useState([]);
     const [invoice, setInvoice] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [toValue, setToValue] = useState('');
     const [subjectValue, setSubjectValue] = useState('');
     const [bodyValue, setBodyValue] = useState('');
     const invoiceRef = useRef(null); // Reference to the invoice section for PDF generation
-    // const [modalInvoiceOpen, setModalInvoiceOpen] = useState(false);
 
     useEffect(() => {
-      setInvoices(getInvoice());
+      // setInvoices(getInvoice());
       setLedger(getLedgerData());
     }, []);
 
@@ -83,41 +82,9 @@ const InvoiceDetails = () =>
     enableReinitialize: true,
     initialValues,
     onSubmit: (values) => {
-      // console.log(values);
-      setmodal_list(false);
+      // setmodal_list(false);
     },
   });
-
-  function toggleStatus(button, invoiceID) 
-  {
-    var currentStatus = button.innerText.trim();
-    if (currentStatus === "ACTIVE")
-    {
-      button.innerText = "INACTIVE";
-      button.classList.remove("btn-success");
-      button.classList.add("btn-danger");
-      // Find the corresponding customer by ID
-      const invoice = invoices.find((i) => i.id === invoiceID);
-      // console.log("Quotation:", invoice);
-      if (invoice)
-      {
-        // console.log("Came here");
-        invoice.status = "INACTIVE";
-      }
-    }
-    else if (currentStatus === "INACTIVE")
-    {
-      button.innerText = "ACTIVE";
-      button.classList.remove("btn-danger");
-      button.classList.add("btn-success");
-      // Find the corresponding customer by ID
-      const invoice = invoices.find((i) => i.id === invoiceID);
-      if (invoice)
-      {
-        invoice.status = "ACTIVE";
-      }
-    }
-  }
 
   const handleDownloadPDF = () =>
   {
@@ -136,11 +103,6 @@ const InvoiceDetails = () =>
       });
     }
   };
-  function tog_list()
-  {
-    setmodal_list(!modal_list);
-  }
-
 
   function tog_view(productId)
   {
@@ -203,7 +165,7 @@ const InvoiceDetails = () =>
                           </thead>
                           <tbody className="list form-check-all">
                             {Invoices.map((item, index) => (
-                              <tr key={item}>
+                              <tr key={index}>
                                 <td className="index text-center">{index + 1}</td> 
                                 <td className="invoice_number">{item.iId}</td>
                                 <td className="quotation_id">{item.quotation_id}</td>
@@ -359,7 +321,7 @@ const InvoiceDetails = () =>
                           </thead>
                           <tbody>
                             {ledg.map((item, index) => (
-                              <tr key = {item}>
+                              <tr key = {index}>
                                 <td className="tm_width_3 text-center">{index + 1}</td>
                                 {/* <td className="tm_width_4 text-center">Vehicle 1, Driver 1</td> */}
                                 <td className="tm_width_2 text-center">{item.recievedMoney} AED</td>
