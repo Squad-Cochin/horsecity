@@ -20,9 +20,34 @@ const addingSpecifiedDaysToCurrentDate = (plus) =>
     return formattedDateTime;
 };  
 
+const getFormattedUTCTime = (utcOffset) => 
+{
+    const currentDate = new Date();
+    const utcTime = currentDate.getTime() + (currentDate.getTimezoneOffset() * 60000);
+  
+    // Parse offset string in format "+hh:mm" or "-hh:mm"
+    const offsetParts = utcOffset.split(':');
+    const offsetSign = (offsetParts[0][0] === '-') ? -1 : 1;
+    const offsetHours = parseInt(offsetParts[0].slice(1), 10);
+    const offsetMinutes = parseInt(offsetParts[1], 10);
+    const offsetMilliseconds = (offsetHours * 3600000) + (offsetMinutes * 60000);
+    const targetTime = utcTime + (offsetSign * offsetMilliseconds);
+    
+    const targetDate = new Date(targetTime);
+    const year = targetDate.getUTCFullYear();
+    const month = (targetDate.getUTCMonth() + 1).toString().padStart(2, '0');
+    const day = targetDate.getUTCDate().toString().padStart(2, '0');
+    const hours = targetDate.getUTCHours().toString().padStart(2, '0');
+    const minutes = targetDate.getUTCMinutes().toString().padStart(2, '0');
+    const seconds = targetDate.getUTCSeconds().toString().padStart(2, '0');
+  
+    return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+  }
+
 const timeexportfunction = 
 {
-    addingSpecifiedDaysToCurrentDate
+    addingSpecifiedDaysToCurrentDate,
+    getFormattedUTCTime
 }
 
-module.exports= timeexportfunction;
+module.exports = timeexportfunction;

@@ -11,10 +11,10 @@ CREATE TABLE application_tokens
     token VARCHAR(55),
     type ENUM('MOBILE','WEB','PWA'),
     status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    token_generated_date DATETIME DEFAULT CURRENT_TIMESTAMP,
+    token_generated_date DATETIME ,
     token_expiry_date DATETIME DEFAULT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL 
 );
 
 CREATE TABLE currencies 
@@ -23,8 +23,8 @@ CREATE TABLE currencies
     name VARCHAR(50) NOT NULL,
     abbreviation CHAR(5) NOT NULL,
     status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL
 );
 
@@ -35,9 +35,9 @@ CREATE TABLE languages
     file VARCHAR(50) NOT NULL,
     abbreviation CHAR(5) NOT NULL,
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    deleted_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
+    deleted_at DATETIME DEFAULT NULL 
 );
 
 CREATE TABLE taxations
@@ -47,9 +47,9 @@ CREATE TABLE taxations
     name CHAR(50) NOT NULL,
     value DECIMAL(5,2) NOT NULL, 
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
-    deleted_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
+    deleted_at DATETIME DEFAULT NULL 
 );
 
 CREATE TABLE application_settings
@@ -79,8 +79,8 @@ CREATE TABLE roles
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     name VARCHAR(30),
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL
 );
 
@@ -89,8 +89,8 @@ CREATE TABLE modules
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     name VARCHAR(30),
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL
 );
 
@@ -111,7 +111,7 @@ CREATE TABLE customers
     email VARCHAR(150) UNIQUE,
     user_name VARCHAR(100) UNIQUE,
     password VARCHAR(255) NOT NULL,
-    phone VARCHAR(12) NOT NULL,
+    contact_no VARCHAR(12) NOT NULL,
     date_of_birth VARCHAR(15) NOT NULL,
     id_proof_no VARCHAR(100) NOT NULL,
     id_proof_image VARCHAR(255) NOT NULL,
@@ -119,8 +119,8 @@ CREATE TABLE customers
     phone_verified ENUM('TRUE', 'FALSE'),
     email_verified ENUM('TRUE', 'FALSE'),
     expiry_at DATETIME,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL
 );
 
@@ -144,8 +144,8 @@ CREATE TABLE service_providers
     email_verified ENUM('TRUE', 'FALSE'),
     expiry_at DATETIME,
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL 
 );
 
@@ -155,8 +155,8 @@ CREATE TABLE password_policies
     name VARCHAR(150) NOT NULL,
     value VARCHAR(100) NOT NULL,
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL
 );
 
@@ -198,7 +198,7 @@ CREATE TABLE logs
     subject VARCHAR(155) NOT NULL,
     message VARCHAR(255) NOT NULL,
     receiver VARCHAR(150) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+    created_at DATETIME 
 );
 
 CREATE TABLE templates
@@ -210,8 +210,8 @@ CREATE TABLE templates
     template VARCHAR(155) NOT NULL,
     type ENUM('SMS','EMAIL'),
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL
 );
 
@@ -228,9 +228,9 @@ CREATE TABLE otp_stores
     delivery_method ENUM('EMAIL', 'SMS'),
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
     otp_used_status ENUM ('USED', 'NOT USED'),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
+    created_at DATETIME ,
     expired_at DATETIME ,
-    updated_at DATETIME NULL ON UPDATE CURRENT_TIMESTAMP 
+    updated_at DATETIME NULL  
 );
 
 CREATE TABLE vehicles
@@ -261,8 +261,8 @@ CREATE TABLE vehicles
     vehicle_registration_date DATETIME,
     vehicle_exipration_date DATETIME,
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL
 );
 
@@ -271,8 +271,8 @@ CREATE TABLE payment_types
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     name VARCHAR(155) NOT NULL,
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL   
 );
 
@@ -286,8 +286,8 @@ CREATE TABLE calculate_amount_types
     base_value DECIMAL(5,2) NOT NULL,
     base_amount DECIMAL(5,2) NOT NULL,    
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL   
 );
 
@@ -297,8 +297,8 @@ CREATE TABLE discount_types
     name ENUM('PERCENTAGE', 'FLAT'),
     rate DECIMAL(6,2) NOT NULL,
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL   
 );
 
@@ -315,8 +315,8 @@ CREATE TABLE drivers
     licence_img VARCHAR(255) NOT NULL UNIQUE,
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
     description VARCHAR(255),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL   
 );
 
@@ -339,8 +339,8 @@ CREATE TABLE enquiries
     no_of_horse INT(3) NOT NULL,
     description VARCHAR(255) NOT NULL,
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL   
 );
 
@@ -372,8 +372,8 @@ CREATE TABLE quotations
     discount_amount DECIMAL(4,2) NOT NULL, 
     final_amount DECIMAL(4,2) NOT NULL,
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL   
 );
 
@@ -391,8 +391,8 @@ CREATE TABLE horse_details
     horse_color VARCHAR(50),
     horse_height DECIMAL(2,2),
     horse_weight DECIMAL(4,2) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL
 );
 
@@ -426,8 +426,8 @@ CREATE TABLE bookings
     tax_amount DECIMAL(4,2) NOT NULL,
     discount_amount DECIMAL(4,2) NOT NULL, 
     final_amount DECIMAL(4,2) NOT NULL,
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL   
 );
 
@@ -445,8 +445,8 @@ CREATE TABLE invoices
     discount_amount DECIMAL(4,2) NOT NULL, 
     final_amount DECIMAL(4,2) NOT NULL,
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL   
 );
 
@@ -465,8 +465,8 @@ CREATE TABLE payments
     FOREIGN KEY(payment_type_id) REFERENCES payment_types(id),
     paid_amount DECIMAL(4,2) NOT NULL,
     status ENUM ('PAID', 'PENDING', 'REFUND'),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL   
 );
 
@@ -500,8 +500,8 @@ CREATE TABLE vehicles_breakouts
     amount_remained DECIMAL(5,2) NOT NULL,
     remark VARCHAR(255) NOT NULL,
     status ENUM ('PENDING', 'APPROVED', 'REJECTED'),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL   
 );
 
@@ -523,8 +523,8 @@ CREATE TABLE reviews
     FOREIGN KEY(service_provider_id) REFERENCES service_providers(id),
     service_provider_rating INT(2),
     service_provider_description VARCHAR(255),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL 
 );
 
 CREATE TABLE bookings_logs
@@ -535,12 +535,12 @@ CREATE TABLE bookings_logs
     booking_id INT(11),
     FOREIGN KEY(booking_id) REFERENCES bookings(id),
     booking_status ENUM('CONFIRM', 'PENDING', 'CANCELED', 'COMPLETED', 'ONGOING'),
-    created_at DATETIME DEFAULT CURRENT_TIMESTAMP,
-    updated_at DATETIME DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL,
     deleted_at DATETIME DEFAULT NULL   
 );
 
-CREATE TABLE vehciles_transportation
+CREATE TABLE vehicles_transportation
 (
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     vehicle_id INT(11),

@@ -37,3 +37,65 @@ exports.userDataOnUsername = (tablename, username) =>
         });
     });
 }
+
+exports.userDataOnID = (tablename, Id) =>
+{
+    return new Promise((resolve, reject) => 
+    {
+        let selQuery = `SELECT * FROM ${tablename} WHERE ${tablename}.${Id} = '${Id}' `;
+        con.query(selQuery, (err, result) =>
+        {
+            if (err)
+            {
+                console.log('Error while executing the query:', err);
+                reject(err);
+            }
+            else
+            {
+                if (result.length > 0)
+                {
+                    resolve(result);
+                }
+                else
+                {
+                    resolve([]);
+                }       
+            }
+        });
+    });
+}
+
+
+exports.getAllDataOfDriverAndCustomer = (tablename) =>
+{
+    try
+    {
+        return new Promise((resolve, reject) => 
+        {
+            let selQuery = `SELECT cd.name, cd.email, cd.contact_no, cd.created_at, cd.status FROM ${tablename} cd WHERE cd.deleted_at = 'NULL'`;
+            con.query(selQuery, (err, result) =>
+            {
+                // console.log('result', result);
+                if (err)
+                {
+                    // console.log('Error while executing the query:', err);
+                    reject(err);
+                }
+                if (result.length > 0)
+                {
+                    // console.log('Data present and fetched');
+                    resolve(result);
+                }
+                else
+                {
+                    // console.log('Query executed but data not present in the table.');
+                    resolve([]);
+                }                
+            });
+        });        
+    }
+    catch(error)
+    {
+        console.log('Error from the commonfetching.js file from the utils > helper folder. In the function "getAllDataOfDriverAndCustomer". Which is designed to fetch all the data of customer and driver through the same function');        
+    }
+}
