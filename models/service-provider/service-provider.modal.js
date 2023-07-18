@@ -56,7 +56,6 @@ exports.addNewServiceProviders = (requestBody,file) =>
          
         con.query(insQuery,async(err,data)=>{
             if(!err){
-                console.log("succeess");
                 resolve(true)
             }
         })

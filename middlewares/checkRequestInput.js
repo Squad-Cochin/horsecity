@@ -11,13 +11,7 @@ exports.checkInputEnteredOrNot = (req, res, next) =>
         }
     };
 
-    const files = (attachment) =>
-    {
-        if (!attachment) 
-        {
-            console.log('File is not attache');
-        }
-    }
+
 
 
   
