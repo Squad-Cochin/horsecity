@@ -30,8 +30,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true })); // Comment: Adds middleware to parse URL-encoded form data.
 app.use('/', express.static(__dirname + '/public'))
 
-require('./routes/auth.route')(app); // Comment: Imports the route handlers for barrier tokens and associates them with the Express application.
+// require('./routes/auth.route')(app); // Comment: Imports the route handlers for barrier tokens and associates them with the Express application.
 require('./routes/customers/customer.route')(app);
 require('./routes/drivers/driver.route')(app);
- 
+require('./routes/serviceProvider/serviceProvider.route')(app); 
 module.exports = app; // making the app variable for export
