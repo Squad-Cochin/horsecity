@@ -42,7 +42,7 @@ exports.userDataOnID = (tablename, Id) =>
 {
     return new Promise((resolve, reject) => 
     {
-        let selQuery = `SELECT * FROM ${tablename} WHERE ${tablename}.${Id} = '${Id}' `;
+        let selQuery = `SELECT * FROM ${tablename} WHERE ${tablename}.id = '${Id}' `;
         con.query(selQuery, (err, result) =>
         {
             if (err)

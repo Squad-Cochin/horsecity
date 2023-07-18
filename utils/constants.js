@@ -26,7 +26,8 @@ module.exports =
         },
         driver :
         {
-            licence : "D:/Horsecity2/horsecity-Backend/horsecity/Attachements/Drivers/Licence/"
+            licence : "D:/Horsecity2/horsecity-Backend/horsecity/Attachements/Drivers/Licence/",
+            profilephoto : "D:/Horsecity2/horsecity-Backend/horsecity/Attachements/Drivers/ProfilePhoto/"
         }
     },
 
@@ -37,7 +38,13 @@ module.exports =
         getAll : "Data Fetched Sucessfully",
         getOne : "Particular Data Fetched Successfully",
         insert : "Data inserted succesfully",
-        errorInsert : "Error while inserting data"
+        errorInsert : "Error while inserting data",
+        statusinactive : "status changed to INACTIVE",
+        statusactive : "status changed to ACTIVE",
+        statuserror : "Error while updating the status",
+        statusChanged : "Status Changed",
+        removesuccess : "Data Removed",
+        removeerror : "Error While removing"
     },
 
     timeOffSet :

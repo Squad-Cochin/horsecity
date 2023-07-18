@@ -109,3 +109,57 @@ exports.addCustomer = async (req, res, next) =>
         });
     }
 };
+
+
+exports.updateStatus= async (req, res) =>
+{
+    const customers = await customer.updatestatus(req.params.id);
+    // console.log(customers);
+    if(customers.length === 0)
+    {
+        console.log('No Customer data present and status is not updated');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.getAll
+        });
+    }
+    else
+    {
+        console.log('Customer Status updated successfully');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.statusChanged
+        });
+    }
+}
+
+
+exports.removeCustomer = async (req, res) =>
+{
+    const customers = await customer.removecustomer(req.params.id);
+    // console.log(customers);
+    if(customers.length === 0)
+    {
+        console.log('No Customer data present and remove is not done');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.removeerror
+        });
+    }
+    else
+    {
+        console.log('Customer is removed');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.removesuccess
+        });
+    }
+}

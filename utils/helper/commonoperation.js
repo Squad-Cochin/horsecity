@@ -103,4 +103,118 @@ exports.fileUpload = (attachments, path) =>
 }
 
 
+exports.updateUserStatus = (tablename, Id) =>
+{
+    return new Promise((resolve, reject) => 
+    {
+        let selQuery = `SELECT * FROM ${tablename} WHERE ${tablename}.id = '${Id}' `;
+        con.query(selQuery, (err, result) =>
+        {
+            if (err)
+            {
+                console.log('Error while executing the query:', err);
+                reject(err);
+            }
+            else
+            {
+                if (result.length > 0)
+                {
+                    if(result[0].status === constant.status.active)
+                    {
+                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.inactive}', t.updated_at = '${timeCalculate.getFormattedUTCTime(constant.timeOffSet.UAE)}' WHERE t.id = '${Id}' `;
+                        con.query(UpdateQuery, (err, result) => // executing the above query 
+                        {
+                            if(result.length != 0) // if ticket updated then if block
+                            {
+                                console.log('Status Changed to INACTIVE');
+                                resolve(result);
+                            }
+                        }); 
+                    }
+                    else
+                    {
+                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.active}'WHERE t.id = '${Id}' `;
+                        con.query(UpdateQuery, (err, result) => // executing the above query 
+                        {
+                            if(result.length != 0) // if ticket updated then if block
+                            {
+                                console.log('Status Changed to ACTIVE');
+                                resolve(result);
+                            }
+                        });
+                    }
+                }
+                else
+                {
+                    resolve([]);
+                }       
+            }
+        });
+    });
+}
+
+exports.removeUser = (tablename, Id) =>
+{
+    return new Promise((resolve, reject) => 
+    {
+        let selQuery = `SELECT * FROM ${tablename} WHERE ${tablename}.id = '${Id}' `;
+        con.query(selQuery, (err, result) =>
+        {
+            if (err)
+            {
+                console.log('Error while executing the query:', err);
+                reject(err);
+            }
+            else
+            {
+                if (result.length > 0)
+                {
+                    if(result[0].status === constant.status.active)
+                    {
+                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.inactive}', t.deleted_at = '${timeCalculate.getFormattedUTCTime(constant.timeOffSet.UAE)}' WHERE t.id = '${Id}' `;
+                        con.query(UpdateQuery, (err, result) => // executing the above query 
+                        {
+                            if(result.length != 0) // if ticket updated then if block
+                            {
+                                console.log('Status Changed to INACTIVE and User is Removed');
+                                resolve(result);
+                            }
+                        }); 
+                    }
+                    
+                    if(result[0].status === constant.status.inactive)
+                    {
+                        let UpdateQuery = `UPDATE ${tablename} t SET t.deleted_at = '${timeCalculate.getFormattedUTCTime(constant.timeOffSet.UAE)}' WHERE t.id = '${Id}' `;
+                        con.query(UpdateQuery, (err, result) => // executing the above query 
+                        {
+                            if(result.length != 0) // if ticket updated then if block
+                            {
+                                console.log('Status is already INACTIVE and User is Removed');
+                                resolve(result);
+                            }
+                        });
+                    }
+                    // else
+                    // {
+                    //     let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.active}'WHERE t.id = '${Id}' `;
+                    //     con.query(UpdateQuery, (err, result) => // executing the above query 
+                    //     {
+                    //         if(result.length != 0) // if ticket updated then if block
+                    //         {
+                    //             console.log('Status Changed to ACTIVE');
+                    //             resolve(result);
+                    //         }
+                    //     });
+                    // }
+                }
+                else
+                {
+                    resolve([]);
+                }       
+            }
+        });
+    });
+}
+
+
 // require('../../Attachements/Customers/IdProof/')

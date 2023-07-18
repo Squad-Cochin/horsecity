@@ -40,7 +40,7 @@ module.exports = class customers
         try
         {
             const data = await commonfetching.userDataOnID(constants.tableName.customers, Id);
-            console.log('Data', data);
+            // console.log('Data', data);
             if(data.length === 0)
             {
                 return data
@@ -85,8 +85,81 @@ module.exports = class customers
         {
             console.log('Error from the customer.model.js file from the models > customers folders. In the static function "addcustomer". Which is designed to add particular data of the customers.');            
         }
-
     };
+
+
+    static async updatestatus(Id)
+    {
+        try
+        {
+            const data = await commonoperation.updateUserStatus(constants.tableName.customers, Id);
+            // console.log('Data', data);
+            if(data.length === 0)
+            {
+                return data
+            }
+            else
+            {
+                return data;
+            }            
+        }
+        catch (error)
+        {
+            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getone". Which is designed to fetch particular data of the customers.');            
+        }
+    };
+
+    static async removecustomer(Id)
+    {
+        try
+        {
+            const data = await commonoperation.removeUser(constants.tableName.customers, Id);
+            // console.log('Data', data);
+            if(data.length === 0)
+            {
+                return data
+            }
+            else
+            {
+                return data;
+            }            
+        }
+        catch (error)
+        {
+            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getone". Which is designed to fetch particular data of the customers.');            
+        }
+    };
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     
