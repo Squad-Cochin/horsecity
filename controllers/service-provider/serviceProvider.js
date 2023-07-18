@@ -21,15 +21,14 @@ exports.getAllServiceProviders = async(req,res)=>
 /**For add new service provider  */
 exports.addNewServiceProvider = async(req,res)=>
 {
-    let addNewProvider = await serviceProvider.addNewServiceProviders(req.body);
+    let addNewProvider = await serviceProvider.addNewServiceProviders(req.body,req.files.licence_image);
     console.log("addNew",addNewProvider);
-//    if(addNewProvider){
-//     return res.status(200).send
-//     ({
-//         code: 200,
-//         success: true,
-//         message: "Successfully fetched service providers",
-//         data : getAllSProviders
-//     });
-//    }
+   if(addNewProvider){
+    return res.status(200).send
+    ({
+        code: 200,
+        success: true,
+        message: "Successfully added service providers",
+    });
+   }
 }

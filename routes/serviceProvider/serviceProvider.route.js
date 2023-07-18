@@ -8,5 +8,5 @@ module.exports = function(app)
     // app.post(`/${process.env.apiToken}/recoveryPassword`,verifyBody.emailvalidation, authcontroller.resetPasswordUsingEmail);  
 
     app.post(`/${process.env.apiToken}/get-all/serviceproviders`,spcontroller.getAllServiceProviders); 
-
+    app.post(`/${process.env.apiToken}/add-new/serviceprovider`,verifyBody.emailValidation,verifyBody.usernamevalidation,verifyBody.nameAvailable,verifyBody.contactPersonAvailable,verifyBody.contactAddressAvailable,verifyBody.passwordValidation,verifyBody.licenceImageAvailable,verifyBody.validateUAEMobileNumber,verifyBody.validateUAELicenseNumber,spcontroller.addNewServiceProvider); 
 }

@@ -27,6 +27,10 @@ module.exports =
         driver :
         {
             licence : "D:/Horsecity2/horsecity-Backend/horsecity/Attachements/Drivers/Licence/"
+        },
+        serviceProvider :
+        {
+            licenceImage : "F:/Horsecity/node-dev/Attachements/serviceProvider/licenceImage/"
         }
     },
 

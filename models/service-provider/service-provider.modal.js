@@ -1,5 +1,8 @@
 const con = require("../../configs/db.configs"); 
 const timeCalculate = require('../../utils/helper/date'); // This variable will have the date file data.
+const commonoperation = require('../../utils/helper/commonoperation');
+const constants = require('../../utils/constants');
+const time = require('../../utils/helper/date');
 exports.getAllServiceProviders = (requestBody) =>
 {
     return new Promise((resolve, reject) =>
@@ -10,7 +13,7 @@ exports.getAllServiceProviders = (requestBody) =>
        
             const offset = (page - 1) * limit; 
 
-            const selQuery = `SELECT sp.id, sp.name, sp.email, sp.contact_person, sp.contact_no
+            const selQuery = `SELECT sp.id, sp.name, sp.email, sp.contact_person, sp.contact_no, sp.status
             FROM service_providers AS sp
             WHERE sp.deleted_at IS NULL
             LIMIT ${+limit} OFFSET ${+offset}`;
@@ -38,16 +41,19 @@ exports.getAllServiceProviders = (requestBody) =>
 }
 
 
-exports.addNewServiceProviders = (requestBody) =>
+exports.addNewServiceProviders = (requestBody,file) =>
 {
-    return new Promise((resolve, reject) =>
+    return new Promise(async(resolve, reject) =>
     {
         try
-        {       
-        const {name,email,user_name,contact_person,contact_no,emergency_contact_no,contact_address,licence_no,licence_image} = requestBody ;
+        {  
+       
+        let uploadAttachment = await commonoperation.fileUpload(file, constants.attachmentLocation.serviceProvider.licenceImage);
+        const {name,email,user_name,password,contact_person,contact_no,emergency_contact_no,contact_address,licence_no} = requestBody ;
 
-        let insQuery = `INSERT INTO service_providers(name, email, user_name, contact_person, contact_no, contact_address, emergency_contact_no, licence_image, licence_no, expiry_at) 
-        VALUES ('${name}', '${email}', '${user_name}', '${contact_person}', '${contact_no}', '${contact_address}', '${emergency_contact_no}', '${process.env.EMERGENCY_CONTACT_NO}', 'image.jpg', '${licence_no}','${timeCalculate.addingSpecifiedDaysToCurrentDate(constant.password.expiry_after)}')`; 
+        let insQuery = `INSERT INTO ${constants.tableName.service_providers} (name, email, user_name, password, contact_person, contact_no, contact_address, emergency_contact_no, licence_image, licence_no, expiry_at, created_at)
+        VALUES ('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_person}', '${contact_no}', '${contact_address}', '${emergency_contact_no}', '${uploadAttachment}', '${licence_no}', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+         
         con.query(insQuery,async(err,data)=>{
             if(!err){
                 console.log("succeess");
@@ -58,7 +64,7 @@ exports.addNewServiceProviders = (requestBody) =>
             console.log('Error while adding service providers', err);
         }
 
-
+  
     })    
    
 }
