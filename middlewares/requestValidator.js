@@ -44,6 +44,33 @@ module.exports.emailvalidation = async (req, res, next) =>
     }
 };
 
+/***Username validation */
+exports.usernamevalidation = (req ,res, next) =>
+{
+    const { username } = req.body;
+    let selQuery = `SELECT * FROM service_providers WHERE username = ${username}`;
+    con.query(selQuery, (err, result) =>
+    {
+        //console.log(result);
+        if(result)
+        {
+                 //console.log('here');
+                next();
+        }
+        else
+        {
+            return res.status(400).send
+            ({
+                code : 400,
+                success: false,
+                message: "Invalid username"
+            });
+        }
+    });
+
+}
+
+
 /**
  * Middleware to check if the username is available.
  */

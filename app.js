@@ -11,7 +11,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 
 // Importing the express library
-const express = require('express');
+const express = require('express');  
 const app = express(); // Assigning the app variable with the export functionalities
 const path = require('path');
 const cors = require('cors') 
