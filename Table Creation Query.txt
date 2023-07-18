@@ -308,7 +308,7 @@ CREATE TABLE drivers
     name VARCHAR(155) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
     contact_no VARCHAR(12) UNIQUE NOT NULL,
-    emergency_contct_no VARCHAR(12) UNIQUE NOT NULL,
+    emergency_contact_no VARCHAR(12) UNIQUE NOT NULL,
     date_of_birth DATETIME NOT NULL,
     profile_image VARCHAR(255),
     licence_no VARCHAR(100) NOT NULL UNIQUE,

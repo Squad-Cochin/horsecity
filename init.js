@@ -28,7 +28,7 @@ module.exports = async function()
                 new Promise(async (resolve, reject)=> 
                 {  
                     let insQuery = `INSERT INTO ${constant.tableName.service_providers}(name, email, user_name, password, contact_person, id_proof, contact_no, contact_address, emergency_contact_no, licence_image, licence_no, phone_verified, email_verified, expiry_at) VALUES ('${process.env.NAME}', '${process.env.EMAIL}', '${process.env.SPUSERNAME}', SHA2('${process.env.PASSWORD}', 256), '${process.env.CONTACT_PERSON}', '${process.env.IDPROOF}', '${process.env.CONTACT_NO}', '${process.env.CONTACT_ADDRESS}', '${process.env.EMERGENCY_CONTACT_NO}', '${process.env.CERTIFICATION_OR_LICENSE_IMG}', '${process.env.CERTIFICATION_OR_LICENSE_NO}', 'TRUE', 'TRUE', '${timeCalculate.addingSpecifiedDaysToCurrentDate(constant.password.expiry_after)}')`; 
-                    console.log(insQuery);
+                    // console.log(insQuery);
                     con.query(insQuery, (err, result1)=> // Executing the above query
                     {
                         if(result1) // if inserion happend correctly then if block

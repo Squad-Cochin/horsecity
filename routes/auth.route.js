@@ -5,15 +5,15 @@ const verifyBody = require(`../middlewares/requestValidator`); // Importing the 
 module.exports = function(app)
 {
     // The below route is for login of service provider user.
-    app.post(`/${process.env.apiToken}/login`, verifyBody.usernameAvailable, verifyBody.passwordValidation2, authcontroller.serviceProviderLogin);
+    app.post(`/${process.env.apiToken}/login`, verifyBody.usernamevalidation, verifyBody.passwordValidation2, authcontroller.serviceProviderLogin);
     
     // app.post(`/${process.env.apiToken}/login`, (req, res)=>{ console.log("Came here"); });
     
       // The below route is for changing the password of the service provider user.
-    app.post(`/${process.env.apiToken}/changePassword`, verifyBody.usernameAvailable, verifyBody.passwordValidation, verifyBody.newpassword, verifyBody.confirmnewpassword, verifyBody.passwordsimilarity, authcontroller.serviceProviderChangePassword); 
+    app.post(`/${process.env.apiToken}/changePassword`, verifyBody.usernamevalidation, verifyBody.passwordValidation, verifyBody.newpassword, verifyBody.confirmnewpassword, verifyBody.passwordsimilarity, authcontroller.serviceProviderChangePassword); 
     
     // The below route is for logout of the service provider user. 
-    app.post(`/${process.env.apiToken}/logout`, verifyBody.usernameAvailable, verifyBody.passwordValidation, authcontroller.serviceProviderLogout); 
+    app.post(`/${process.env.apiToken}/logout`, verifyBody.usernamevalidation, verifyBody.passwordValidation, authcontroller.serviceProviderLogout); 
 
     // app.post(`/${process.env.apiToken}/recoveryPassword`,verifyBody.emailvalidation, authcontroller.resetPasswordUsingEmail);  
 

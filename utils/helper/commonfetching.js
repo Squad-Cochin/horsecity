@@ -66,13 +66,18 @@ exports.userDataOnID = (tablename, Id) =>
 }
 
 
-exports.getAllDataOfDriverAndCustomer = (tablename) =>
+exports.getAllDataOfDriverAndCustomer = (tablename, pageNumber, pageSize) =>
 {
     try
     {
         return new Promise((resolve, reject) => 
         {
-            let selQuery = `SELECT cd.name, cd.email, cd.contact_no, cd.created_at, cd.status FROM ${tablename} cd WHERE cd.deleted_at = 'NULL'`;
+            // Calculate the offset based on the page number and page size
+            const offset = (pageNumber - 1) * pageSize;
+
+            // let selQuery = `SELECT cd.name, cd.email, cd.contact_no, cd.created_at, cd.status FROM ${tablename} cd WHERE cd.deleted_at = 'NULL'`;
+            let selQuery = `SELECT cd.name, cd.email, cd.contact_no, cd.created_at, cd.status FROM ${tablename} cd WHERE cd.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
+            console.log(selQuery);
             con.query(selQuery, (err, result) =>
             {
                 // console.log('result', result);

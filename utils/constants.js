@@ -18,12 +18,26 @@ module.exports =
         expiry_after : 90, // Days after which the token will expire
     },
 
+    attachmentLocation :
+    {
+        customer : 
+        {
+            idProof : "D:/Horsecity2/horsecity-Backend/horsecity/Attachements/Customers/IdProof/"
+        },
+        driver :
+        {
+            licence : "D:/Horsecity2/horsecity-Backend/horsecity/Attachements/Drivers/Licence/"
+        }
+    },
+
 
 
     responseMessage :
     {
         getAll : "Data Fetched Sucessfully",
-        getOne : "Particular Data Fetched Successfully"
+        getOne : "Particular Data Fetched Successfully",
+        insert : "Data inserted succesfully",
+        errorInsert : "Error while inserting data"
     },
 
     timeOffSet :

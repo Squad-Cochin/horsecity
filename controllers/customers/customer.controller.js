@@ -14,7 +14,7 @@ const customer = require('../../models/customers/customer.model');
 
 exports.getAll= async (req, res) =>
 {
-    const customers = await customer.getall();
+    const customers = await customer.getall(req.body.pageNumber, req.body.pageSize);
     // console.log(customers);
     if(customers.length === 0)
     {
@@ -85,7 +85,27 @@ exports.getOne= async (req, res) =>
 }
 
 
-exports.addCustomer = async (req, res) =>
+exports.addCustomer = async (req, res, next) =>
 {
-    const customers = await customer.getone();
+    const customers = await customer.addcustomer(req.body.name, req.body.email, req.body.user_name, req.body.password, req.body.contact_no, req.body.date_of_birth, req.body.id_proof_no, req.files.id_proof_image);
+    if(customers === 'err')
+    {
+        console.log('Error while inserting the customer data ');
+        res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.errorInsert,
+        });
+    }
+    else
+    {
+        console.log('Customer data inserted successfully');
+        res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.insert,
+        });
+    }
 };
