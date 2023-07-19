@@ -6,7 +6,7 @@
 
 import React, { useState, useEffect } from 'react';
 //IMPORTED FROM REACT BOOTSTRAP
-import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 /**Navigation UI element */
@@ -18,7 +18,7 @@ import { useFormik } from "formik";
 /**IMPORTED APIs */
 import { addNewProvider } from '../../helpers/ApiRoutes/addApiRoutes';  //For adding new service providers
 import { removeSProvider } from '../../helpers/ApiRoutes/removeApiRoutes'; //For removing service providers
-import { updateSProvider } from '../../helpers/ApiRoutes/editApiRoutes'; //For updating  service providers
+import { updateSProvider , updateSPStatus } from '../../helpers/ApiRoutes/editApiRoutes'; //For updating  service providers
 import { getSPAllData } from '../../helpers/ApiRoutes/getApiRoutes';  //For getting all service providers
 import config from '../../config';
 
@@ -33,17 +33,11 @@ const ListTables = () => {
     const [licenscePreview, setLicenscePreview] = useState(null);  /**Using for storing licensce image URL*/
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
+    const [ errors, setErrors ] = useState("")
     const pageLimit = config.pageLimit;
 
     /**This hook is used to fetch service provider data */
     useEffect(() => {
-        async function getAll(){
-            let getSPdata = await getSPAllData(1)
-            console.log(getSPdata.serviceProviders)
-            console.log(getSPdata.totalCount)
-            setSproviders(getSPdata.serviceProviders);
-            setNumberOfData(getSPdata.totalCount);
-        }
         getAll()
     }, [])
 
@@ -51,7 +45,7 @@ const ListTables = () => {
     const initialValues = {
         name: !add_list ? sprovider[0]?.name : '',
         email: !add_list ? sprovider[0]?.email : '',
-        username: !add_list ? sprovider[0]?.user_name : '',
+        user_name: !add_list ? sprovider[0]?.user_name : '',
         password: !add_list ? sprovider[0]?.password : '',
         role_name: !add_list ? sprovider[0]?.role_name : '',
         contact_person: !add_list ? sprovider[0]?.contact_person : '',
@@ -70,11 +64,7 @@ const ListTables = () => {
         onSubmit: (values) => {
             values.licence_image = updateImage;
             if (add_list) {
-                 //add new SProvider
-                console.log("add new");
-                addNewProvider(values);
-                setAdd_list(false);
-                setmodal_list(false);
+                addProvider(values)
             } else {
                 //update previes SProvider
                 console.log("update previues one ");
@@ -85,6 +75,21 @@ const ListTables = () => {
             }
         }
     });
+
+    // Add service provider
+    async function addProvider(val){
+        let addSP = await addNewProvider(val);
+        console.log("spr", addSP)
+        if(addSP.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAll()
+        }else{
+            setErrors("")
+            setErrors(addSP.message)
+        }
+    }
 
     /**This function is an event handler that triggers when the user
      *  selects a file for the license image */
@@ -97,25 +102,20 @@ const ListTables = () => {
     /**Function for changing service provider status */
     function toggleStatus(button, serviceProviderId) {
         var currentStatus = button.innerText.trim();
+        const service_provider = sproviders.find((s) => s.id === serviceProviderId);
+        updateSPStatus(service_provider.id)
         if (currentStatus === 'ACTIVE') {
             button.innerText = 'INACTIVE';
             button.classList.remove('btn-success');
             button.classList.add('btn-danger');
-            // Find the corresponding customer by ID
-            const service_provider = sproviders.find((s) => s.id === serviceProviderId);
-            console.log("Service Provider ", service_provider);
             if (service_provider) {
-                console.log('Came here');
                 service_provider.status = 'INACTIVE';
-                console.log("Service Provider", service_provider);
             }
         }
         else if (currentStatus === 'INACTIVE') {
             button.innerText = 'ACTIVE';
             button.classList.remove('btn-danger');
             button.classList.add('btn-success');
-            // Find the corresponding customer by ID
-            const service_provider = sproviders.find((s) => s.id === serviceProviderId);
             if (service_provider) {
                 service_provider.status = 'ACTIVE';
             }
@@ -146,6 +146,8 @@ const ListTables = () => {
     /**This function is used to remove a service provider*/
     function remove_data(id) {
         removeSProvider(id)
+        getAll()
+
     }
 
     async function getAllData(page) {
@@ -154,6 +156,14 @@ const ListTables = () => {
         console.log("gg",getSPdataNext)
         setSproviders(getSPdataNext.serviceProviders);
         setPageNumber(page);
+    }
+
+    async function getAll(){
+        let getSPdata = await getSPAllData(1)
+        console.log(getSPdata.serviceProviders)
+        console.log(getSPdata.totalCount)
+        setSproviders(getSPdata.serviceProviders);
+        setNumberOfData(getSPdata.totalCount);
     }
 
     return (
@@ -193,20 +203,31 @@ const ListTables = () => {
                                         <tbody className="list form-check-all">
                                             {sproviders.map((value, index) => (
                                             <tr key={value?.id}>
-                                                <th scope="row">{(index + 1) + (pageNumber - 1 * pageLimit)}</th>
+                                                <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                 <td className="name">{value.name}</td>
                                                 <td className="email">{value.email}</td>
                                                 <td className="contact_person">{value.contact_person}</td>
                                                 <td className="phone">{value.contact_no}</td>
                                                 <td className="status">
-                                                <button
-                                                    className="btn btn-sm btn-success status-item-btn"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#showModal"
-                                                    onClick={(event) => toggleStatus(event.target, value.id)}
-                                                >
-                                                    {value.status}
-                                                </button>
+                                                    {value.status === "ACTIVE" ?
+                                                        <button
+                                                            className="btn btn-sm btn-success status-item-btn"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#showModal"
+                                                            onClick={(event) => toggleStatus(event.target, value.id)}
+                                                        >
+                                                            {value.status}
+                                                        </button> :
+                                                        <button
+                                                            className="btn btn-sm btn-danger status-item-btn"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#showModal"
+                                                            onClick={(event) => toggleStatus(event.target, value.id)}
+                                                        >
+                                                            {value.status}
+                                                        </button>
+
+                                                    }
                                                 </td>
                                                 <td>
                                                 <div className="d-flex gap-2">
@@ -233,7 +254,7 @@ const ListTables = () => {
                                                     <div className="remove">
                                                     <button
                                                         className="btn btn-sm btn-danger remove-item-btn"
-                                                        onClick={() => remove_data(value.id)}
+                                                        onClick={() => remove_data(value?.id)}
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#deleteRecordModal"
                                                     >
@@ -279,6 +300,7 @@ const ListTables = () => {
                 <form className="tablelist-form"
                     onSubmit={validation.handleSubmit}>
                     <ModalBody>
+                        {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
                         {sprovider?.map((item, index) => (
                             <div key={index}>
                                 {/* Provider Name */}
@@ -315,9 +337,9 @@ const ListTables = () => {
                                     <input
                                         type="text"
                                         id="userName-field"
-                                        name="username"
+                                        name="user_name"
                                         className="form-control"
-                                        value={validation.values.username || ""}
+                                        value={validation.values.user_name || ""}
                                         onChange={validation.handleChange}
                                         placeholder="Enter User Name"
                                         required
@@ -504,7 +526,7 @@ const ListTables = () => {
                                         id="userName-field"
                                         name="username"
                                         className="form-control"
-                                        value={validation.values.username || ""}
+                                        value={validation.values.user_name || ""}
                                         readOnly
                                     />
                                 </div>

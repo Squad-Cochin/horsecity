@@ -1,6 +1,6 @@
-// import axios from "axios";
-// import axios from "axios";
-// import * as url from "../url_helper";
+
+import axios from "axios";
+import * as url from "../url_helper";
 
 /**Update previous service provider */
 export async function updateSProvider(){
@@ -114,6 +114,16 @@ export async function updatSettigsData(data){
       // return { data };
   } catch (error) {
       return { error : "Faild !"}
+  }
+}
+
+export async function updateSPStatus(id){
+  try{
+    const { data } = await axios.put(`${url.PUT_SP_UPDATE_STATUS}/${id}`);
+    console.log("data",data)
+    return data;
+  } catch (error) {
+    return { error : "Faild !"}
   }
 }
 
