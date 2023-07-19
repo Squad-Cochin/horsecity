@@ -14,4 +14,6 @@ module.exports = function(app)
     app.put(`/${process.env.apiToken}/update/serviceprovider/:id`, spcontroller.updateStatus);
        /**For removing service provider  */
     app.put(`/${process.env.apiToken}/remove/serviceprovider/:id`, spcontroller.removeServiceProvider);
+    // Below route is for getting data of any particular service provider
+    app.get(`/${process.env.apiToken}/getOne/serviceprovider/:id`, spcontroller.getOneServiceProvider);
 }

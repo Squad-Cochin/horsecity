@@ -134,7 +134,6 @@ CREATE TABLE service_providers
     contact_person VARCHAR(255) NOT NULL,
     role_id INT(11),
     FOREIGN KEY(role_id) REFERENCES roles(id),
-    id_proof VARCHAR(50) NOT NULL,
     contact_no VARCHAR(12) NOT NULL,
     contact_address VARCHAR(255) NOT NULL,
     emergency_contact_no VARCHAR(12) NOT NULL,

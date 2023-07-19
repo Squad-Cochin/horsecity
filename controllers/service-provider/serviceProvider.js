@@ -90,3 +90,27 @@ exports.removeServiceProvider = async(req,res)=>
         });
     }
 }
+
+
+exports.getOneServiceProvider = async(req,res)=>
+{
+    let getOneSProvider = await serviceProvider.getOneServiceProvider(req.params.id);
+    console.log(getOneSProvider);
+   if(getOneSProvider?.serviceProvider == 'NotFound'){
+    return res.status(200).send
+    ({
+        code: 400,
+        success: false,
+        message: constants.responseMessage.getOneErr,
+
+    });
+   }else{
+    return res.status(200).send
+    ({
+        code: 200,
+        success: false,
+        message: constants.responseMessage.getOne,
+        data : getOneSProvider
+    });
+   }
+}

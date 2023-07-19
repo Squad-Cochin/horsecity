@@ -67,3 +67,31 @@ exports.addNewServiceProviders = (requestBody,file) =>
     })    
    
 }
+
+
+
+exports.getOneServiceProvider = (id) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {       
+            const selQuery = `SELECT sp.id, sp.name, sp.email, sp.user_name, sp.contact_person, sp.contact_no, sp.contact_address, sp.emergency_contact_no, sp.licence_no, sp.licence_image
+            FROM ${constants.tableName.service_providers} AS sp
+            WHERE sp.id = '${id}'`
+
+            con.query(selQuery,async(err,data)=>{
+                if(data?.length != 0){
+                    resolve({serviceProvider : data})
+                }else{
+                    resolve({serviceProvider : "NotFound"})
+                }
+            })
+        }catch(err){
+            console.log('Error while getting one  service providers', err);
+        }
+
+
+    })    
+   
+}
