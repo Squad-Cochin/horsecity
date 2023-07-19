@@ -344,16 +344,11 @@ exports.nameAvailable = async (req,res,next) =>
             message: "Name is required"
         });
     }else{
-        if (hasOnlyNonSpaces(name)){
-            return res.status(200).send
-            ({
-                code: 200,
-                status: false,
-                message: "Name contain space. It is not allowed."
-            });
-        }else{
+
+     
+     
                 next();
-        } 
+        
     }
 };
 exports.contactPersonAvailable = async (req,res,next) =>
@@ -367,16 +362,9 @@ exports.contactPersonAvailable = async (req,res,next) =>
             message: "Contact person is required"
         });
     }else{
-        if (hasOnlyNonSpaces(contact_person)){
-            return res.status(200).send
-            ({
-                code: 200,
-                status: false,
-                message: "Contact Person contain space. It is not allowed."
-            });
-        }else{
+ 
                 next();
-        } 
+        
     }
 };
 
@@ -393,16 +381,9 @@ exports.contactAddressAvailable = async (req,res,next) =>
             message: "Contact Address is required"
         });
     }else{
-        if (hasOnlyNonSpaces(contact_address)){
-            return res.status(200).send
-            ({
-                code: 200,
-                status: false,
-                message: "Contact Address contain space. It is not allowed."
-            });
-        }else{
+
                 next();
-        } 
+        
     }
 };
 exports.birthdateValidation = async (req, res, next) => {
