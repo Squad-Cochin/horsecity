@@ -444,7 +444,7 @@ const ListVehiclesTable = () =>
                             <select
                                 id="no_of_horses-field"
                                 className="form-control"
-                                name=''
+                                name='no_of_horse'
                                 value={validation.values.no_of_horse || ""}
                                 onChange={validation.handleChange}
                                 required
@@ -467,6 +467,7 @@ const ListVehiclesTable = () =>
                                     value="YES"
                                     checked={validation.values.air_conditioner === 'YES'}
                                     onChange={validation.handleChange}
+                                    onBlur={validation.handleBlur}
                                     required
                                 />
                                 <label htmlFor="air_conditioner-yes" className="form-check-label">YES</label>
@@ -480,6 +481,7 @@ const ListVehiclesTable = () =>
                                     value="NO"
                                     checked={validation.values.air_conditioner === 'NO'}
                                     onChange={validation.handleChange}
+                                    onBlur={validation.handleBlur}
                                     required
                                 />
                                 <label htmlFor="air_conditioner-no" className="form-check-label">NO</label>
@@ -496,7 +498,7 @@ const ListVehiclesTable = () =>
                                     name="temperature_manageable"
                                     className="form-check-input"
                                     value={"YES"}
-                                    checked={validation.values.temperature_manageable === 'YES'}
+                                    // checked={validation.values.temperature_manageable === 'YES'}
                                     onChange={validation.handleChange}
                                     required
                                 />
@@ -510,7 +512,7 @@ const ListVehiclesTable = () =>
                                     className="form-check-input"
 
                                     value={"NO"}
-                                    checked={validation.values.temperature_manageable === 'NO'}
+                                    // checked={validation.values.temperature_manageable === 'NO'}
                                     onChange={validation.handleChange}
                                     required
                                 />
@@ -519,7 +521,7 @@ const ListVehiclesTable = () =>
                         </div>
 
                         {/* The below element is for uploading the images of the vehicle. */} 
-                        <div className="mb-3">
+                        {/* <div className="mb-3">
                             <label htmlFor="vehicle_image-field" className="form-label">Vehicle Image</label>
                             <input
                                 type="file"
@@ -529,7 +531,7 @@ const ListVehiclesTable = () =>
                                 placeholder="Upload Vehicle Image"
                                 required
                             />
-                        </div>
+                        </div> */}
 
                         {/* The below element is for adding the registration number of the vehicle. */} 
                         <div className="mb-3">
@@ -556,7 +558,7 @@ const ListVehiclesTable = () =>
                                     name="gcc_travel_allowed"
                                     className="form-check-input"
                                     value="YES"
-                                    checked={validation.values.gcc_travel_allowed === "YES"}
+                                    // checked={validation.values.gcc_travel_allowed === "YES"}
                                     onChange={validation.handleChange}
                                     required
                                 />
@@ -569,7 +571,7 @@ const ListVehiclesTable = () =>
                                     name="gcc_travel_allowed"
                                     className="form-check-input"
                                     value="NO"
-                                    checked={validation.values.gcc_travel_allowed === "NO"}
+                                    // checked={validation.values.gcc_travel_allowed === "NO"}
                                     onChange={validation.handleChange}
                                     required
                                 />
@@ -587,7 +589,7 @@ const ListVehiclesTable = () =>
                                     name="insurance_covered"
                                     className="form-check-input"
                                     value="YES"
-                                    checked={validation.values.insurance_covered === "YES"}
+                                    // checked={validation.values.insurance_covered === "YES"}
                                     onChange={validation.handleChange}
                                     required
                                 />
@@ -599,7 +601,7 @@ const ListVehiclesTable = () =>
                                     id="insurance_covered-no"
                                     name="insurance_covered"
                                     value='NO'
-                                    checked={validation.values.insurance_covered === "NO"}
+                                    // checked={validation.values.insurance_covered === "NO"}
                                     onChange={validation.handleChange}
                                     className="form-check-input"
                                     required
@@ -680,8 +682,10 @@ const ListVehiclesTable = () =>
                                     name="vehicle_type"
                                     className="form-check-input"
                                     value="PRIVATE"
-                                    checked={validation.values.vehicle_type === "PRIVATE"}
-                                    disabled
+                                    // checked={validation.values.vehicle_type === "PRIVATE"}
+                                    onChange={validation.handleChange}
+                                    onBlur={validation.handleBlur}
+                                    required
                                 />
                                 <label htmlFor="vehicle_type-private" className="form-check-label">PRIVATE</label>
                             </div>
@@ -692,8 +696,10 @@ const ListVehiclesTable = () =>
                                     name="vehicle_type"
                                     className="form-check-input"
                                     value="GCC"
-                                    checked={validation.values.vehicle_type === "GCC"}
-                                    disabled
+                                    // checked={validation.values.vehicle_type === "GCC"}
+                                    onChange={validation.handleChange}
+                                    onBlur={validation.handleBlur}
+                                    required
                                 />
                                 <label htmlFor="vehicle_type-gcc" className="form-check-label">GCC</label>
                             </div>
@@ -704,8 +710,10 @@ const ListVehiclesTable = () =>
                                     name="vehicle_type"
                                     className="form-check-input"
                                     value="SHARING"
-                                    checked={validation.values.vehicle_type === "SHARING"}
-                                    disabled
+                                    // checked={validation.values.vehicle_type === "SHARING"}
+                                    onChange={validation.handleChange}
+                                    onBlur={validation.handleBlur}
+                                    required
                                 />
                                 <label htmlFor="vehicle_type-sharing" className="form-check-label">SHARING</label>
                             </div>

@@ -56,6 +56,7 @@
     /**Add new vehicle */
     export async function addNewVehicle(data){
         try {
+            console.log("vech",data)
             // const { data } = await axios.post(`${url.POST_SP_ADD_URL}`);
             // return { data };
         } catch (error) {
