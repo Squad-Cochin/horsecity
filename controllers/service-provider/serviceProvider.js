@@ -65,6 +65,7 @@ exports.updateStatus = async(req,res)=>
 
     const sprovider = await commonoperation.updateUserStatus(constants.tableName.service_providers,req.params.id);
     // console.log("addNew",data);
+    console.log("status",sprovider);
     if(sprovider.length === 0)
     {
 
