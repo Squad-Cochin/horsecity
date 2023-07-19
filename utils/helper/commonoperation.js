@@ -60,7 +60,7 @@ exports.changePasswordOfUser = (tablename, username, password) =>
 };
 
 exports.fileUpload = (attachments, path) =>
-{
+{ 
     // console.log(attachments);
     return new Promise((resolve, reject) =>
     {

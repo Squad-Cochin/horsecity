@@ -22,6 +22,7 @@ exports.getAllServiceProviders = async(req,res)=>
 /**For add new service provider  */
 exports.addNewServiceProvider = async(req,res)=>
 {
+    console.log("1",req.body);
     let addNewProvider = await serviceProvider.addNewServiceProviders(req.body,req.files.licence_image);
     console.log("addNew",addNewProvider);
    if(addNewProvider){
@@ -38,7 +39,7 @@ exports.addNewServiceProvider = async(req,res)=>
 exports.updateServiceProvider = async(req,res)=>
 {
     let updateSProvider = await serviceProvider.updateServiceProvider(req.body,req.files.licence_image,req.params.id);
-    console.log("addNew",updateSProvider);
+
    if(updateSProvider.serviceProvider == 'SUCCESS'){
     return res.status(200).send
     ({

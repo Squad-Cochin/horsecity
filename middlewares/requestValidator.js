@@ -86,7 +86,7 @@ exports.usernamevalidation = (req, res, next) => {
 exports.emailValidation = async (req, res, next) => {
     const { email } = req.body;
     const requestMethod = req.method;
-
+    
     if (!email) {
         return res.status(200).send
             ({
@@ -143,6 +143,7 @@ exports.emailValidation = async (req, res, next) => {
                         });
                     }
                     else {
+                        console.log("email is done");
                         next();
                     }
                 });
@@ -317,8 +318,8 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
             });
     } else {
 
-        if(validateUAEMobileNumber(emergency_contact_no)){
-            if(validateUAEMobileNumber(contact_no)){
+        // if(validateUAEMobileNumber(emergency_contact_no)){
+        //     if(validateUAEMobileNumber(contact_no)){
                 try {
                     if(requestMethod == 'POST'){
                     let verifyPhoneNumbereQuery = `SELECT * FROM service_providers WHERE contact_no = '${contact_no}'`;
@@ -366,23 +367,23 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                 } catch (err) {
                     console.log("Error while validating phone number in the database");
                 }
-            }else{
-                res.status(200).json
-                ({  
-                    code : 400 ,
-                    success : false,
-                    message: "Invalid Contact number",   // Or error message
-                });
-            }   
+        //     }else{
+        //         res.status(200).json
+        //         ({  
+        //             code : 400 ,
+        //             success : false,
+        //             message: "Invalid Contact number",   // Or error message
+        //         });
+        //     }   
     
-        }else{
-            res.status(200).json
-            ({  
-                code : 400 ,
-                success : false,
-                message: "Invalid Emergency contact number",   // Or error message
-            });
-        }
+        // }else{
+        //     res.status(200).json
+        //     ({  
+        //         code : 400 ,
+        //         success : false,
+        //         message: "Invalid Emergency contact number",   // Or error message
+        //     });
+        // }
 
        
     }
@@ -394,7 +395,7 @@ exports.passwordValidation = async (req, res, next) => {
     if (!password) {
         return res.status(200).send
             ({
-                code: 200,
+                code: 400,
                 success: false ,
                 message: "Password is required"
             });
@@ -403,7 +404,7 @@ exports.passwordValidation = async (req, res, next) => {
         if (hasOnlyNonSpaces(password) === true) {
             return res.status(200).send
                 ({
-                    code: 200,
+                    code: 400,
                     status: false,
                     message: "Password contain space. It is not allowed."
                 });
@@ -422,13 +423,14 @@ exports.passwordValidation = async (req, res, next) => {
 
                     if (isValidPassword(password)) {
                         //console.log('here');
+                        console.log("password validation done");
                         next();
                     }
                     else {
                         return res.status(200).json
                             ({
                                 success: false,
-                                code: 200,
+                                code: 400,
                                 message: "Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character",
                             });
                     }
@@ -450,6 +452,7 @@ exports.licenceImageAvailable = async (req, res, next) =>{
             message: "License Image is required"
         });
     } else {
+        console.log("licence image");
         next();
     }
 }
@@ -466,7 +469,7 @@ exports.nameAvailable = async (req,res,next) =>
         });
     }else{
 
-     
+     console.log("name done");
      
                 next();
         
@@ -483,6 +486,7 @@ exports.contactPersonAvailable = async (req,res,next) =>
             message: "Contact person is required"
         });
     }else{
+        console.log("contact person done");
  
                 next();
         
@@ -502,11 +506,79 @@ exports.contactAddressAvailable = async (req,res,next) =>
             message: "Contact Address is required"
         });
     }else{
-
+console.log("address done");
                 next();
         
     }
 };
+
+
+exports.idProofNumber = (req,res, next) =>
+
+{
+
+    if(!req.body.id_proof_no)
+
+    {
+
+        return res.status(200).send
+
+        ({
+
+            code: 200,
+
+            success: false,
+
+            message: "Id Proof Number is required"
+
+        });
+
+    }
+
+    else
+
+    {
+
+        next();
+
+    }
+
+}
+
+
+
+
+exports.name = (req,res, next) =>
+
+{
+
+    if(!req.body.name)
+
+    {
+
+        return res.status(200).send
+
+        ({
+
+            code: 200,
+
+            success: false,
+
+            message: "Name is required"
+
+        });
+
+    }
+
+    else
+
+    {
+
+        next();
+
+    }
+
+}
 exports.birthdateValidation = async (req, res, next) => {
 
     /**
@@ -975,26 +1047,26 @@ function hasOnlyNonSpaces(str) {
 
 
 
-exports.passwordValidation = async (req, res, next) => {
+// exports.passwordValidation = async (req, res, next) => {
 
 
-    const password = await req.body.password; // Assigning the user entered password to password variable
+//     const password = await req.body.password; // Assigning the user entered password to password variable
 
-    const isValidPassword = (password) => {
-        // This is regex or regular expression for verifying the password validation
-        const regex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*[-\#\$\.\%\&\*])(?=.*[a-zA-Z]).{8,16}$/;
-        return regex.test(password); // Use the test() method to check if the password matches the regex pattern
-    };
+//     const isValidPassword = (password) => {
+//         // This is regex or regular expression for verifying the password validation
+//         const regex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*[-\#\$\.\%\&\*])(?=.*[a-zA-Z]).{8,16}$/;
+//         return regex.test(password); // Use the test() method to check if the password matches the regex pattern
+//     };
 
-    if (isValidPassword(password)) {
-        next();
-    }
-    else {
-        return res.status(200).json
-            ({
-                status: false,
-                code: 200,
-                message: "Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character",
-            });
-    }
-}; 
+//     if (isValidPassword(password)) {
+//         next();
+//     }
+//     else {
+//         return res.status(200).json
+//             ({
+//                 status: false,
+//                 code: 200,
+//                 message: "Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character",
+//             });
+//     }
+// }; 

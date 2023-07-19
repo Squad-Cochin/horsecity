@@ -40,5 +40,5 @@ require('./routes/customers/customer.route')(app);
 require('./routes/drivers/driver.route')(app);
 require('./routes/serviceProvider/serviceProvider.route')(app); 
 require('./routes/vehicles/vehicle.route')(app)
-
+require('./routes/applicationSettings/settings/settings')(app)
 module.exports = app; // making the app variable for export
