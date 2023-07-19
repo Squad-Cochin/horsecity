@@ -39,5 +39,6 @@ app.use('/', express.static(__dirname + '/Attachements'))
 require('./routes/customers/customer.route')(app);
 require('./routes/drivers/driver.route')(app);
 require('./routes/serviceProvider/serviceProvider.route')(app); 
+require('./routes/vehicles/vehicle.route')(app)
 
 module.exports = app; // making the app variable for export

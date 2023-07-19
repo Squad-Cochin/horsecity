@@ -60,7 +60,8 @@ CREATE TABLE application_settings
     email VARCHAR(150) UNIQUE,
     phone VARCHAR(12),
     country_code VARCHAR(5),
-    logo VARCHAR(50),
+    loginpage_logo VARCHAR(50),
+    loginpage_bg_image VARCHAR(50),
     favicon VARCHAR(50),
     language_id INT(11),
     currency_id INT(11),
@@ -251,7 +252,7 @@ CREATE TABLE vehicles
     registration_no VARCHAR(150) UNIQUE NOT NULL,
     gcc_travel_allowed ENUM ('YES', 'NO'),
     insurance_cover ENUM ('YES', 'NO'),
-    insurace_date DATETIME,
+    insurance_date DATETIME,
     insurance_policy_no VARCHAR(255) UNIQUE NOT NULL,
     insurance_provider VARCHAR(255) NOT NULL,
     insurance_expiration_date DATETIME,
@@ -317,6 +318,18 @@ CREATE TABLE drivers
     created_at DATETIME ,
     updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL   
+);
+
+CREATE TABLE vehicle_images
+(
+    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    vehicle_id INT NOT NULL,
+    FOREIGN KEY(vehicle_id) REFERENCES vehicles(id),
+    image VARCHAR(155) NOT NULL,
+    title VARCHAR(155),
+    status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
+    uploaded_at DATETIME,
+    updated_at DATETIME DEFAULT NULL
 );
 
 CREATE TABLE enquiries

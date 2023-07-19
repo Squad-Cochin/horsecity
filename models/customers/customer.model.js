@@ -68,7 +68,7 @@ module.exports = class customers
                 console.log(insQuery);
                 con.query(insQuery, (err, result) =>
                 {
-                    console.log(result);
+                    // console.log(result);
                     if(result.affectedRows > 0)
                     {
                         console.log('Customer data added successfully');
@@ -87,18 +87,16 @@ module.exports = class customers
         }
     };
 
-    static async editcustomer(id, name, email, user_name, contact_no, date_of_birth, id_proof_no, files)
+    static async editcustomer(id, name, email, user_name, contact_no, date_of_birth, id_proof_no, id_proof_image)
     {
         try
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let presentData = await commonfetching.userDataOnID(constants.tableName.customers, id);
-                console.log(presentData);
-                let uploadAttachment = await commonoperation.fileUpload(files, constants.attachmentLocation.customer.idProof);
+                let uploadAttachment = await commonoperation.fileUpload(id_proof_image, constants.attachmentLocation.customer.idProof);
                 // console.log(uploadAttachment);
-                let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = ${name}, c.email = ${email}, c.user_name = ${user_name}, c.contact_no = ${contact_no}, c.date_of_birth = ${date_of_birth}, c.id_proof_no = ${id_proof_no}, c.id_proof_image = ${uploadAttachment}, c.updated_at = ${time.getFormattedUTCTime(constants.timeOffSet.UAE)} WHERE c.id = '${id}'`;
-                console.log(upQuery);
+                let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${user_name}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.id_proof_image = '${uploadAttachment}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
+                // console.log(upQuery);
                 con.query(upQuery, (err, result) =>
                 {
                     // console.log(result);

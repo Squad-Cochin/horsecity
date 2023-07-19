@@ -121,8 +121,24 @@ URL : http://192.168.200.130:8000/horsecity661809/edit/customer/:id
 
 Req object : Customer id in params
 
+Request Body :-
+
+name:Saurabh
+email:sp832154@gmail.com
+user_name:Saurbh@1234
+contact_no:8421168035
+date_of_birth:1997/06/11
+id_proof_no:1432791225125
+id_proof_image : Fileupload
+
 
 Res Object : 
+
+{
+    "code": 200,
+    "status": true,
+    "message": "Data updated successfully"
+}
 
 
 ==========================================================================================================================
@@ -243,9 +259,25 @@ Res Object :
 --------------------------------------------------------------------------------------------------------------------------
 
 Purpose of the URL : Edit driver (PUT)
-URL : http://192.168.200.130:8000/horsecity661809/update/driver/:id
+URL : http://192.168.200.130:8000/horsecity661809/edit/driver/:id
 
-Req object :
+Req object : Driver id in the params
 
+Req body :
+name:Saurabh
+email:sp832154@gmail.com
+contact_no:8421168035
+date_of_birth:1997/06/11
+emergency_contact_no:9823036123
+licence_no:1234567891
+description:I am a good boy
+profile_image : File upload
+licence_img : File upload
 
 Res Object : 
+
+{
+    "code": 200,
+    "status": true,
+    "message": "Data updated successfully"
+}

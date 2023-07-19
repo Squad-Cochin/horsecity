@@ -10,8 +10,8 @@ module.exports =
 {  
     status  :
     {
-        active : "ACTIVE",
-        inactive : "INACTIVE",
+        active : `ACTIVE`,
+        inactive : `INACTIVE`,
     },
 
     password :
@@ -23,80 +23,82 @@ module.exports =
     {
         customer : 
         {
-            idProof : "D:/Horsecity2/horsecity-Backend/horsecity/Attachements/Customers/IdProofs/"
+            idProof : `${__dirname}../../Attachements/Customers/IdProofs/`
         },
         driver :
         {
-            licence : "D:/Horsecity2/horsecity-Backend/horsecity/Attachements/Drivers/Licence/",
-            profilephoto : "D:/Horsecity2/horsecity-Backend/horsecity/Attachements/Drivers/ProfilePhoto/"
+            licence : `${__dirname}../../Attachements/Drivers/Licence/`,
+            profilephoto : `${__dirname}../../Attachements/Drivers/ProfilePhoto/`
         },
         serviceProvider :
         {
-            licenceImage : "f:/Horsecity/node-dev/Attachements/serviceProvider/licenceImage/"
+            licenceImage : `${__dirname}../../Attachements/serviceProvider/licenceImage/`
         }
     },
 
     responseMessage :
     {
-        getAll : "Data Fetched Sucessfully",
-        getOne : "Particular data fetched Successfully",
-        getOneErr : "Particular data fetched failed",
-        insert : "Data inserted succesfully",
-        errorInsert : "Error while inserting data",
-        statusinactive : "status changed to INACTIVE",
-        statusactive : "status changed to ACTIVE",
-        statuserror : "Error while updating the status",
-        statusChanged : "Status Changed",
-        removesuccess : "Data Removed",
-        removeerror : "Error While removing",
-        edit : "Data edit successfully",
-        erroredit : "Error while editing the edit"
+        getAll : `Data Fetched Sucessfully`,
+        getOne : `Particular data fetched Successfully`,
+        getOneErr : `Particular data fetched failed`,
+        insert : `Data inserted succesfully`,
+        errorInsert : `Error while inserting data`,
+        statusinactive : `status changed to INACTIVE`,
+        statusactive : `status changed to ACTIVE`,
+        statuserror : `Error while updating the status`,
+        statusChanged : `Status Changed`,
+        removesuccess : `Data Removed`,
+        removeerror : `Error While removing`,
+        edit : `Data updated successfully`,
+        erroredit : `Error while updating the data`,
+        vehiclesuccess : `Vehicles data added successfully`,
+        vehicleerror : `Error while adding the vehicles data`
     },
 
     timeOffSet :
     {
-        BAHRAIN : "+03:00",
-        KUWAIT : "+03:00",
-        OMAN : "+04:00",
-        QATAR : "+03:00",
-        SAUDIARABIA : "+03:00",
-        UAE : "+04:00",
-        INDIA : "+05:30"
+        BAHRAIN : `+03:00`,
+        KUWAIT : `+03:00`,
+        OMAN : `+04:00`,
+        QATAR : `+03:00`,
+        SAUDIARABIA : `+03:00`,
+        UAE : `+04:00`,
+        INDIA : `+05:30`
     },
     
     tableName :
     {
-        application_settings : "application_settings",
-        application_tokens : "application_tokens",
-        bookings : "bookings",
-        bookings_logs : "bookings_logs",
-        calculate_amount_types : "calculate_amount_types",
-        currencies : "currencies",
-        customers : "customers",
-        customer_logs : "customer_logs",
-        discount_types : "discount_types",
-        enquiries : "enquiries",
-        drivers : "drivers",
-        horse_details : "horse_details",
-        invoices : "invoices",
-        languages : "languages",
-        modules : "modules",
-        logs : "logs",
-        otp_stores : "otp_stores",
-        password_policies : "password_policies",
-        payments : "payments",
-        payment_types : "payment_types",
-        permissions : "permissions",
-        quotations : "quotations",
-        reviews : "reviews",
-        roles : "roles",
-        service_providers : "service_providers",
-        service_provider_logs : "service_provider_logs",
-        taxations : "taxations",
-        templates : "templates",
-        vehciles_transportation : "vehciles_transportation",
-        vehicles : "vehicles",
-        vehicles_breakouts : "vehicles_breakout"
+        application_settings : `application_settings`,
+        application_tokens : `application_tokens`,
+        bookings : `bookings`,
+        bookings_logs : `bookings_logs`,
+        calculate_amount_types : `calculate_amount_types`,
+        currencies : `currencies`,
+        customers : `customers`,
+        customer_logs : `customer_logs`,
+        discount_types : `discount_types`,
+        enquiries : `enquiries`,
+        drivers : `drivers`,
+        horse_details : `horse_details`,
+        invoices : `invoices`,
+        languages : `languages`,
+        modules : `modules`,
+        logs : `logs`,
+        otp_stores : `otp_stores`,
+        password_policies : `password_policies`,
+        payments : `payments`,
+        payment_types : `payment_types`,
+        permissions : `permissions`,
+        quotations : `quotations`,
+        reviews : `reviews`,
+        roles : `roles`,
+        service_providers : `service_providers`,
+        service_provider_logs : `service_provider_logs`,
+        taxations : `taxations`,
+        templates : `templates`,
+        vehciles_transportation : `vehciles_transportation`,
+        vehicles : `vehicles`,
+        vehicles_breakouts : `vehicles_breakout`
     }
   
 }

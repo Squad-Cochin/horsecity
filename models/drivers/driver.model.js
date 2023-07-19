@@ -142,7 +142,7 @@ module.exports = class drivers
                 console.log(uploadprofile_image);
                 let uploadlicence_img = await commonoperation.fileUpload(licence_img, constants.attachmentLocation.driver.licence);
                 console.log(uploadprofile_image);
-                let upQuery = `UPDATE ${constants.tableName.drivers} d SET d.name = ${name}, d.email = ${email}, d.contact_no = ${contact_no}, d.emergency_contact_no = ${emergency_contact_no}, d.date_of_birth = ${date_of_birth}, d.licence_no = ${licence_no}, d.description = ${description}, d.licence_img  = ${uploadlicence_img}, d.id_proof_image = ${uploadprofile_image}, d.updated_at = ${time.getFormattedUTCTime(constants.timeOffSet.UAE)} WHERE d.id = '${id}'`;
+                let upQuery = `UPDATE ${constants.tableName.drivers} d SET d.name = '${name}', d.email = '${email}', d.contact_no = '${contact_no}', d.emergency_contact_no = '${emergency_contact_no}', d.date_of_birth = '${date_of_birth}', d.licence_no = '${licence_no}', d.description = '${description}', d.licence_img  = '${uploadlicence_img}', d.profile_image = '${uploadprofile_image}', d.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE d.id = '${id}'`;
                 console.log(upQuery);
                 con.query(upQuery, (err, result) =>
                 {
