@@ -38,7 +38,7 @@ exports.userDataOnUsername = (tablename, username) =>
     });
 }
 
-exports.userDataOnID = (tablename, Id) =>
+exports.tableDataOnId = (tablename, Id) =>
 {
     return new Promise((resolve, reject) => 
     {
@@ -48,7 +48,7 @@ exports.userDataOnID = (tablename, Id) =>
             if (err)
             {
                 console.log('Error while executing the query:', err);
-                reject(err);
+                resolve('err');
             }
             else
             {

@@ -281,3 +281,206 @@ Res Object :
     "status": true,
     "message": "Data updated successfully"
 }
+
+
+=================================================================================================================
+Purpose of the URL : Add Vehicle (POST) (ADD button)
+URL : http://192.168.200.130:8000/horsecity661809/addNew/vehicle
+
+Req object : 
+serviceProviderId:1
+vehicle_number:MH01 GH 1457
+make:BMW
+model:X7
+color:Black
+length:5.6
+breadth:5.6
+height:5.6
+max_no_of_horse:2
+insurance_cover:YES
+insurance_date:2022-05-06
+insurance_policy_no:cncmsoldmescdms
+insurance_provider:nkjcnekswcne
+vehicle_registration_date:2023-07-06
+vehicle_exipration_date:2024-07-06
+vehicle_type:PRIVATE
+insurance_expiration_date:2024-07-06
+gcc_travel_allowed:YES
+registration_no:ksbhciewsbc.322536
+temp_manageable:YES
+air_conditioner:YES
+safety_certicate : File upload
+
+
+Res Object : 
+{
+    "code": 200,
+    "status": true,
+    "message": "Vehicles data added successfully"
+}
+
+------------------------------------------------------------------------------------------------------------------
+Purpose of the URL : Get All Vehicles (GET)
+URL : http://192.168.200.130:8000/horsecity661809/getAll/vehicles
+
+Req object : 
+{
+    "pageNumber" : "1",
+    "pageSize" : "3"
+}
+
+Response Object :
+{
+    "code": 200,
+    "status": true,
+    "message": "Data Fetched Sucessfully",
+    "data": {
+        "totalCount": 1,
+        "vehicles": [
+            {
+                "name": "Admin",
+                "vehicle_number": "MH01 GH 1457",
+                "make": "BMW",
+                "max_no_of_horse": 2,
+                "status": "ACTIVE"
+            }
+        ]
+    }
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+Purpose of the URL : Update Status (PUT) (Status Button)
+URL : http://192.168.200.130:8000/horsecity661809/updateStatus/vehicle/:id
+
+Req object : Vehicle id in the params
+
+Response Object :
+{
+    "code": 200,
+    "status": true,
+    "message": "Status Changed"
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+Purpose of the URL : Get data on Particular Vehicle (View Button) (PUT)
+URL : http://192.168.200.130:8000/horsecity661809/getOne/vehicle/:id
+
+Req object : Vehicle id in the params
+
+Response Object :
+{
+    "code": 200,
+    "status": true,
+    "message": "Data Fetched Sucessfully",
+    "data": {
+        "totalCount": 1,
+        "vehicles": [
+            {
+                "id": 8,
+                "service_provider_id": 1,
+                "vehicle_number": "MH01 GH 1457",
+                "make": "BMW",
+                "model": "X7",
+                "color": "Black",
+                "length": "5.60",
+                "breadth": "5.60",
+                "height": "5.60",
+                "max_no_of_horse": 2,
+                "air_conditioner": "YES",
+                "temp_manageable": "YES",
+                "registration_no": "ksbhciewsbc.322536",
+                "gcc_travel_allowed": "YES",
+                "insurance_cover": "YES",
+                "insurance_date": "2022-05-05T18:30:00.000Z",
+                "insurance_policy_no": "cncmsoldmescdms",
+                "insurance_provider": "nkjcnekswcne",
+                "insurance_expiration_date": "2024-07-05T18:30:00.000Z",
+                "safety_certicate": "308772_a.png",
+                "vehicle_type": "PRIVATE",
+                "vehicle_registration_date": "2023-07-05T18:30:00.000Z",
+                "vehicle_exipration_date": "2024-07-05T18:30:00.000Z",
+                "status": "INACTIVE",
+                "created_at": "2023-07-19T03:41:43.000Z",
+                "updated_at": "2023-07-19T04:40:34.000Z",
+                "deleted_at": null
+            }
+        ]
+    }
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+Purpose of the URL : View all image of a particular vehicle (View Images) (GET)
+URL : http://192.168.200.130:8000/horsecity661809/getAllImages/vehicle/:id
+
+Req object : Vehicle id in the params
+
+Response Object :
+{
+    "code": 200,
+    "status": true,
+    "message": "No images are there for this vehicle now",
+    "data": []
+}
+
+------------------------------------------------------------------------------------------------------------------
+
+Purpose of the URL : Removing a particular vehicle (Remove Button) (GET)
+URL : http://192.168.200.130:8000/horsecity661809/removeVehicle/:id
+
+Req object : Vehicle id in the params
+
+Response Object :
+{
+    "code": 200,
+    "status": true,
+    "message": "Data Removed"
+}   "data": []
+
+------------------------------------------------------------------------------------------------------------------
+Purpose of the URL : Editing the present Vehicle Data (Remove Button) (GET)
+URL : http://192.168.200.130:8000/horsecity661809/updateData/vehicle/:id
+
+Req object : Vehicle id in the params
+
+Request Body :
+
+
+serviceProviderId:1
+vehicle_number:MH01 GH 1457
+make:BMW
+model:X7
+color:Black
+length:5.6
+breadth:10.6
+height:5.6
+max_no_of_horse:2
+insurance_cover:YES
+insurance_date:2022-05-06
+insurance_policy_no:cncmsoldmescdms
+insurance_provider:nkjcnekswcne
+vehicle_registration_date:2023-07-06
+vehicle_exipration_date:2024-07-06
+vehicle_type:PRIVATE
+insurance_expiration_date:2024-07-06
+gcc_travel_allowed:YES
+registration_no:ksbhciewsbc.322536
+temp_manageable:YES
+air_conditioner:YES
+safety_certicate : File upload
+
+Response Object :
+
+   {
+    "code": 200,
+    "status": true,
+    "message": "Data updated successfully"
+}
+
+
+
+
+
+

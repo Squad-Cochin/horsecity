@@ -8,8 +8,10 @@ module.exports = function(app)
     // app.post(`/${process.env.apiToken}/recoveryPassword`,verifyBody.emailvalidation, authcontroller.resetPasswordUsingEmail);  
     /**For geting all service provider  */
     app.post(`/${process.env.apiToken}/getAll/serviceproviders`,spcontroller.getAllServiceProviders); 
+    
     /**For adding new service provider  */
     app.post(`/${process.env.apiToken}/add/serviceprovider`,verifyBody.emailValidation,verifyBody.usernamevalidation,verifyBody.nameAvailable,verifyBody.contactPersonAvailable,verifyBody.contactAddressAvailable,verifyBody.passwordValidation,verifyBody.licenceImageAvailable,verifyBody.validateUAEMobileNumber,verifyBody.validateUAELicenseNumber,spcontroller.addNewServiceProvider);
+
     app.put(`/${process.env.apiToken}/update/serviceprovider/:id`,verifyBody.emailValidation,verifyBody.usernamevalidation,verifyBody.nameAvailable,verifyBody.contactPersonAvailable,verifyBody.contactAddressAvailable,verifyBody.passwordValidation,verifyBody.licenceImageAvailable,verifyBody.validateUAEMobileNumber,verifyBody.validateUAELicenseNumber,spcontroller.updateServiceProvider);
        /**For changing status service provider  */ 
     app.put(`/${process.env.apiToken}/update-status/serviceprovider/:id`, spcontroller.updateStatus);

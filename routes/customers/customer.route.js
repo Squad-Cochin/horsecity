@@ -1,4 +1,6 @@
 const customerController = require('../../controllers/customers/customer.controller');
+const verifyBody = require(`../../middlewares/requestValidator`); // Importing the requestValidator file data 
+
 
 module.exports = function(app)
 {
@@ -9,7 +11,15 @@ module.exports = function(app)
     app.get(`/${process.env.apiToken}/getOne/customer/:id`, customerController.getOne);
 
     // Below route is for adding the customer data
-    app.post(`/${process.env.apiToken}/add/customer`, customerController.addCustomer);
+    app.post(`/${process.env.apiToken}/add/customer`,
+    verifyBody.name, 
+    verifyBody.emailValidation,
+    verifyBody.usernamevalidation,
+    verifyBody.validateUAEMobileNumber,
+    verifyBody.birthdateValidation,
+    verifyBody.idProofNumber,
+    customerController.addCustomer
+    );
 
     // Below route is for removing the customer
     app.put(`/${process.env.apiToken}/remove/customer/:id`, customerController.removeCustomer);
@@ -18,7 +28,14 @@ module.exports = function(app)
     app.put(`/${process.env.apiToken}/update/customer/:id`, customerController.updateStatus);
 
     // Below route is for editing the customer data
-    app.put(`/${process.env.apiToken}/edit/customer/:id`, customerController.editCustomer);
+    app.put(`/${process.env.apiToken}/edit/customer/:id`,
+    verifyBody.name,
+    verifyBody.emailValidation,
+    verifyBody.usernamevalidation,
+    verifyBody.validateUAEMobileNumber,
+    verifyBody.birthdateValidation,
+    verifyBody.idProofNumber,
+    customerController.editCustomer);
 
 
 

@@ -23,12 +23,4 @@ module.exports = (app) =>
 
     // The below route is for removing or deleting the particular vehicle data.
     app.put(`/${process.env.apiToken}/removeVehicle/:id`, vehicleController.removeVehicle);
-
-
-
-
-
-
-
-
 };

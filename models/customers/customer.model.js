@@ -39,7 +39,7 @@ module.exports = class customers
     {
         try
         {
-            const data = await commonfetching.userDataOnID(constants.tableName.customers, Id);
+            const data = await commonfetching.tableDataOnId(constants.tableName.customers, Id);
             // console.log('Data', data);
             if(data.length === 0)
             {

@@ -33,12 +33,17 @@ module.exports =
         serviceProvider :
         {
             licenceImage : `${__dirname}../../Attachements/serviceProvider/licenceImage/`
+        },
+        vehicle :
+        {
+            scertificate : `${__dirname}../../Attachements/Vehicles/scertificate/`
         }
     },
 
     responseMessage :
     {
         getAll : `Data Fetched Sucessfully`,
+        getAllErr : `Error while fetching all the data`,
         getOne : `Particular data fetched Successfully`,
         getOneErr : `Particular data fetched failed`,
         insert : `Data inserted succesfully`,
@@ -52,7 +57,10 @@ module.exports =
         edit : `Data updated successfully`,
         erroredit : `Error while updating the data`,
         vehiclesuccess : `Vehicles data added successfully`,
-        vehicleerror : `Error while adding the vehicles data`
+        vehicleerror : `Error while adding the vehicles data`,
+        universalError: `Internal server error`,
+        vehicleImgerror : "No images are there for this vehicle now",
+        vehicleImgSuccess : "Images fetched succesfully"
     },
 
     timeOffSet :
@@ -98,7 +106,8 @@ module.exports =
         templates : `templates`,
         vehciles_transportation : `vehciles_transportation`,
         vehicles : `vehicles`,
-        vehicles_breakouts : `vehicles_breakout`
+        vehicles_breakouts : `vehicles_breakout`,
+        vehicles_images : `vehicles_images`
     }
   
 }

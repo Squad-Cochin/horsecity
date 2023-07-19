@@ -1,4 +1,5 @@
 const driverController = require('../../controllers/drivers/driver.controller');
+const verifyBody = require(`../../middlewares/requestValidator`); // Importing the requestValidator file data 
 
 
 module.exports = function(app)
@@ -10,7 +11,14 @@ module.exports = function(app)
     app.get(`/${process.env.apiToken}/getOne/driver/:id`, driverController.getOne);
 
     // Below route is for adding the driver data
-    app.post(`/${process.env.apiToken}/add/driver`, driverController.addDriver);
+    app.post(`/${process.env.apiToken}/add/driver`,
+    verifyBody.name, 
+    verifyBody.emailValidation,
+    verifyBody.usernamevalidation,
+    verifyBody.validateUAEMobileNumber,
+    verifyBody.birthdateValidation,
+    verifyBody.idProofNumber, 
+    driverController.addDriver);
 
     // Below route is for updating the customer status
     app.put(`/${process.env.apiToken}/update/driver/:id`, driverController.updateStatus);
@@ -19,6 +27,13 @@ module.exports = function(app)
     app.put(`/${process.env.apiToken}/remove/driver/:id`, driverController.removeDriver);
 
     // Below route is for editing the driver data
-    app.put(`/${process.env.apiToken}/edit/driver/:id`, driverController.editDriver);
+    app.put(`/${process.env.apiToken}/edit/driver/:id`,
+    verifyBody.name, 
+    verifyBody.emailValidation,
+    verifyBody.usernamevalidation,
+    verifyBody.validateUAEMobileNumber,
+    verifyBody.birthdateValidation,
+    verifyBody.idProofNumber,
+    driverController.editDriver);
     
 }

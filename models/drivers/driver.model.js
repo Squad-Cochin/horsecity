@@ -39,7 +39,7 @@ module.exports = class drivers
     {
         try
         {
-            const data = await commonfetching.userDataOnID(constants.tableName.drivers, Id);
+            const data = await commonfetching.tableDataOnId(constants.tableName.drivers, Id);
             // console.log('Data', data);
             if(data.length === 0)
             {

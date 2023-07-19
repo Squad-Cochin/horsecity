@@ -16,9 +16,7 @@ const vehicle = require('../../models/vehicles/vehicle.model');
 
 exports.addNew = async (req, res, next) =>
 {  
-    console.log('Came Here');
     const vehicles = await vehicle.addnew(req.body.serviceProviderId, req.body.vehicle_number, req.body.make, req.body.model, req.body.color, req.body.length, req.body.breadth, req.body.height, req.body.max_no_of_horse, req.body.air_conditioner, req.body.temp_manageable, req.body.registration_no, req.body.gcc_travel_allowed, req.body.insurance_cover, req.body.insurance_date, req.body.insurance_policy_no, req.body.insurance_provider, req.body.insurance_expiration_date, req.files.safety_certicate, req.body.vehicle_type, req.body.vehicle_registration_date, req.body.vehicle_exipration_date);
-    console.log(vehicles);
     if(vehicles === 'err')
     {
         console.log('Error while inserting the vehicles data ');
@@ -43,27 +41,224 @@ exports.addNew = async (req, res, next) =>
 
 exports.getAll = async (req, res, next) =>
 {
-    const vehicles = await vehicle.getall()
+    const vehicles = await vehicle.getall(req.body.pageNumber, req.body.pageSize)
+    // console.log(vehicles);
+    if(vehicles === 'err')
+    {
+        // console.log(`Error while fetching all the vehicles ${vehicles}`);
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.universalError,
+            data : 
+                {
+                    totalCount : vehicles.length,
+                    vehicles : vehicles
+                }
+        });
+    }
+    else if(vehicles.length == 0)
+    {
+        console.log('No vehicles data present');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.getAllErr,
+            data : 
+                {
+                    totalCount : vehicles.length,
+                    vehicles : vehicles
+                }
+        });
+
+    }
+    else
+    {
+        console.log('All vehicle data fetched successfully ');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.getAll,
+            data : 
+                {
+                    totalCount : vehicles.length,
+                    vehicles : vehicles
+                }
+        });
+
+    }
 }
 
 exports.updateStatus = async (req, res, next) =>
 {
-    const vehicles = await vehicle.updatestatus()
+    const vehicles = await vehicle.updatestatus(req.params.id);
+    if(vehicles === 'nodata')
+    {
+        console.log('No vehicles data on this Id from controller');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.getOneErr,
+            data : []
+        });
+    }
+    else if(vehicles === 'err')
+    {
+        console.log('Error');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.universalError,
+            data : []
+        });
+    }
+    else
+    {
+        console.log('Vehicle Status updated successfully');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.statusChanged
+        });
+
+    }
+
 }
 
 exports.getOne = async (req, res, next) =>
 {
-    const vehicles = await vehicle.getone()
+    const vehicles = await vehicle.getone(req.params.id)
+    // console.log(vehicles);
+    if(vehicles.length === 'nodata')
+    {
+        console.log('No vehicle data present');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.getOneErr,
+            data : []
+        });
+    }
+    else if(vehicles === 'err')
+    {
+        console.log('Error');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.universalError,
+            data : []
+        });
+    }
+    else
+    {
+        console.log('Particular Vehicles data fetched successfully');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.getAll,
+            data : 
+                {
+                    totalCount : vehicles.length,
+                    vehicles : vehicles
+                }
+        });
+    }
+    
 }
 exports.updateData = async (req, res, next) =>
 {
-    const vehicles = await vehicle.updatedata()
+    const vehicles = await vehicle.updatedata(req.params.id, req.body.serviceProviderId, req.body.vehicle_number, req.body.make, req.body.model, req.body.color, req.body.length, req.body.breadth, req.body.height, req.body.max_no_of_horse, req.body.air_conditioner, req.body.temp_manageable, req.body.registration_no, req.body.gcc_travel_allowed, req.body.insurance_cover, req.body.insurance_date, req.body.insurance_policy_no, req.body.insurance_provider, req.body.insurance_expiration_date, req.body.vehicle_type, req.body.vehicle_registration_date, req.body.vehicle_exipration_date, req.files.safety_certicate);
+
+    if(vehicles === 'err')
+    {
+        console.log('Error while editing the vehicle data ');
+        res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.erroredit,
+        });
+    }
+    else
+    {
+        console.log('Vehicle data edited successfully');
+        res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.edit,
+        });
+    }
 }
 exports.getAllImages = async (req, res, next) =>
 {
-    const vehicles = await vehicle.getallimages()
+    const vehicles = await vehicle.getallimages(req.params.id);
+    if(vehicles === 'err')
+    {
+        console.log('Error');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.universalError,
+            data : []
+        });
+    }
+    else if(vehicles.length === 0)
+    {
+        console.log('No images are there for this vehicle now');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.vehicleImgerror,
+            data : []
+        });
+    }
+    else
+    {
+        console.log(`Images fetched successfuly for this particular image`);
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.vehicleImgSuccess,
+            data : vehicles
+        });
+    }
 }
 exports.removeVehicle = async (req, res, next) =>
 {
-    const vehicles = await vehicle.removevehicle()
+    const vehicles = await vehicle.removevehicle(req.params.id);
+    // console.log(vehicles);
+    if(vehicles.length === 0)
+    {
+        console.log('No vehicles data present and remove is not done');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.removeerror
+        });
+    }
+    else
+    {
+        console.log('Vehicle is removed');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.removesuccess
+        });
+    }
+
 }
