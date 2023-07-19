@@ -7,7 +7,7 @@ const con = require("../configs/db.configs");  // importing the database details
 /***Username validation */
 exports.usernamevalidation = (req, res, next) => {
     const { user_name } = req.body;
-
+    const requestMethod = req.method;
     if (!user_name) {
         return res.status(200).send
             ({
@@ -25,6 +25,7 @@ exports.usernamevalidation = (req, res, next) => {
                 });
         } else {
             try {
+                if(requestMethod == 'POST'){
                 let selQuery = `SELECT * FROM service_providers WHERE user_name = '${user_name}'`;
                 con.query(selQuery, (err, result) => {
                     console.log(result);
@@ -40,6 +41,9 @@ exports.usernamevalidation = (req, res, next) => {
                         next();
                     }
                 });
+            }else if(requestMethod == 'PUT'){
+                next();
+         } 
 
             } catch (err) {
                 console.log("Error while checking username in the database");
@@ -52,6 +56,8 @@ exports.usernamevalidation = (req, res, next) => {
 /**This middle ware for email validation */
 exports.emailValidation = async (req, res, next) => {
     const { email } = req.body;
+    const requestMethod = req.method;
+
     if (!email) {
         return res.status(200).send
             ({
@@ -96,7 +102,7 @@ exports.emailValidation = async (req, res, next) => {
         {
             try {
 
-
+             if(requestMethod == 'POST'){
                 let selQuery = `SELECT * FROM service_providers WHERE email = '${email}' `;
                 con.query(selQuery, (err, result) => {
                     //console.log(result);
@@ -111,6 +117,10 @@ exports.emailValidation = async (req, res, next) => {
                         next();
                     }
                 });
+             }else if(requestMethod == 'PUT'){
+                    next();
+             }  
+               
 
             } catch (err) {
                 console.log("Error while checking email in the database");
@@ -133,6 +143,7 @@ exports.emailValidation = async (req, res, next) => {
 
 exports.validateUAELicenseNumber = async (req, res, next) => {
     const { licence_no } = req.body;
+    const requestMethod = req.method;
     if (!licence_no) {
         return res.status(400).send
             ({
@@ -153,7 +164,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
     } else {
         if(validateUAELicenseNumber(licence_no)){
             try {
-
+                if(requestMethod == 'POST'){
                 let verifyLicenceQuery = `SELECT * FROM service_providers WHERE licence_no = '${licence_no}'`;
                 con.query(verifyLicenceQuery, (err, result) => {
                     //console.log(result);
@@ -168,6 +179,9 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                         next();
                     }
                 });
+            }else if(requestMethod == 'PUT'){
+                next();
+         }  
     
             } catch (err) {
                 console.log("Error while checking email in the database");
@@ -188,6 +202,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
 
 exports.validateUAEMobileNumber = async (req, res, next) => {
     const { contact_no, emergency_contact_no } = req.body;
+    const requestMethod = req.method;
     if (!contact_no) {
         return res.status(400).send
             ({
@@ -226,7 +241,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
         if(validateUAEMobileNumber(emergency_contact_no)){
             if(validateUAEMobileNumber(contact_no)){
                 try {
-
+                    if(requestMethod == 'POST'){
                     let verifyPhoneNumbereQuery = `SELECT * FROM service_providers WHERE contact_no = '${contact_no}'`;
                     con.query(verifyPhoneNumbereQuery, (err, result) => {
                         //console.log(result);
@@ -241,7 +256,9 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                             next();
                         }
                     });
-        
+                }else if(requestMethod == 'PUT'){
+                    next();
+             }  
                 } catch (err) {
                     console.log("Error while checking email in the database");
                 }

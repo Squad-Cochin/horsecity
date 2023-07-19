@@ -34,6 +34,28 @@ exports.addNewServiceProvider = async(req,res)=>
    }
 }
 
+/**For update service provider  */
+exports.updateServiceProvider = async(req,res)=>
+{
+    let updateSProvider = await serviceProvider.updateServiceProvider(req.body,req.files.licence_image,req.params.id);
+    console.log("addNew",updateSProvider);
+   if(updateSProvider.serviceProvider == 'SUCCESS'){
+    return res.status(200).send
+    ({
+        code: 200,
+        success: true,
+        message: constants.responseMessage.edit
+    });
+   }else{
+    return res.status(200).send
+    ({
+        code: 400,
+        success: false,
+        message: constants.responseMessage.erroredit
+    });
+
+   }
+}
 
 
 /**For add new service provider  */

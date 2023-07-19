@@ -68,6 +68,48 @@ exports.addNewServiceProviders = (requestBody,file) =>
    
 }
 
+exports.updateServiceProvider = (requestBody,file,id) =>
+{
+    return new Promise(async(resolve, reject) =>
+    {
+        try
+        {  
+       
+        let uploadAttachment = await commonoperation.fileUpload(file, constants.attachmentLocation.serviceProvider.licenceImage);
+        const {name,email,user_name,password,contact_person,contact_no,emergency_contact_no,contact_address,licence_no} = requestBody ;
+
+        let updateQuery = `UPDATE ${constants.tableName.service_providers} SET 
+        name = '${name}',
+        email = '${email}',
+        user_name = '${user_name}',
+        password = '${await commonoperation.changePasswordToSQLHashing(password)}',
+        contact_person = '${contact_person}',
+        contact_no = '${contact_no}',
+        contact_address = '${contact_address}',
+        emergency_contact_no = '${emergency_contact_no}',
+        licence_image = '${uploadAttachment}',
+        licence_no = '${licence_no}',
+        expiry_at = '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}',
+        updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+        WHERE id = '${id}'`;
+    
+         
+        con.query(updateQuery,async(err,data)=>{
+            if(data?.length != 0 ){
+                resolve({serviceProvider : "SUCCESS"})
+            }else{
+                resolve({serviceProvider : "FAILD"})
+            }
+        })
+        }catch(err){
+            console.log('Error while updating service providers', err);
+        }
+
+  
+    })    
+   
+}
+
 
 
 exports.getOneServiceProvider = (id) =>
