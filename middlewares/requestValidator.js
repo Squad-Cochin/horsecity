@@ -8,6 +8,7 @@ const con = require("../configs/db.configs");  // importing the database details
 exports.usernamevalidation = (req, res, next) => {
     const { user_name } = req.body;
     const requestMethod = req.method;
+    console.log(user_name);
     if (!user_name) {
         return res.status(200).send
             ({
@@ -24,13 +25,15 @@ exports.usernamevalidation = (req, res, next) => {
                     message: "Username contain space. It is not allowed."
                 });
         } else {
-            try {
+         
                 if(requestMethod == 'POST'){
+
+                    try {
                 let selQuery = `SELECT * FROM service_providers WHERE user_name = '${user_name}'`;
                 con.query(selQuery, (err, result) => {
                     console.log(result);
                     if (result.length != 0) {
-                        return res.status(400).send
+                        return res.status(200).send
                             ({
                                 code: 400,
                                 success: false,
@@ -41,13 +44,39 @@ exports.usernamevalidation = (req, res, next) => {
                         next();
                     }
                 });
-            }else if(requestMethod == 'PUT'){
-                next();
-         } 
-
             } catch (err) {
                 console.log("Error while checking username in the database");
             }
+            }else if(requestMethod == 'PUT'){
+                let id = req.params.id
+                let selQuery = `SELECT user_name FROM service_providers WHERE id = '${id}';`;
+                con.query(selQuery, (err, result) => {      
+                        if(result[0]?.user_name == user_name){
+                              
+                                next();
+                        }else{
+               
+                            let selQuery = `SELECT * FROM service_providers WHERE user_name = '${user_name}'`;
+                            con.query(selQuery, (err, result) => {
+                        
+                                if (result.length != 0) {
+                                    return res.status(200).send
+                                        ({
+                                            code: 400,
+                                            success: false,
+                                            message: "Username allredy in the database"
+                                        });
+                                }
+                                else {
+                                    next();
+                                }
+                            });
+                        }
+             
+                });
+         } 
+
+     
         }
     }
 
@@ -107,7 +136,7 @@ exports.emailValidation = async (req, res, next) => {
                 con.query(selQuery, (err, result) => {
                     //console.log(result);
                     if (result.length != 0) {
-                        return res.status(400).send({
+                        return res.status(200).send({
                             code: 400,
                             status: false,
                             message: "This Email already exists in the database"
@@ -118,16 +147,41 @@ exports.emailValidation = async (req, res, next) => {
                     }
                 });
              }else if(requestMethod == 'PUT'){
-                    next();
+                let id = req.params.id
+                let selQuery = `SELECT email FROM service_providers WHERE id = '${id}';`;
+                con.query(selQuery, (err, result) => {      
+                        if(result[0]?.email == email){
+                              
+                                next();
+                        }else{
+               
+                            let selQuery = `SELECT * FROM service_providers WHERE email = '${email}'`;
+                            con.query(selQuery, (err, result) => {
+                        
+                                if (result.length != 0) {
+                                    return res.status(200).send
+                                        ({
+                                            code: 400,
+                                            success: false,
+                                            message: "Email allredy in the database"
+                                        });
+                                }
+                                else {
+                                    next();
+                                }
+                            });
+                        }
+             
+                });
              }  
                
 
             } catch (err) {
-                console.log("Error while checking email in the database");
+                console.log("Error while Validating email in the database");
             }
         }
         else {
-            res.status(400).json
+            res.status(200).json
                 ({  
                     code : 400 ,
                     success : false,
@@ -145,7 +199,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
     const { licence_no } = req.body;
     const requestMethod = req.method;
     if (!licence_no) {
-        return res.status(400).send
+        return res.status(200).send
             ({
                 code: 400,
                 status: false,
@@ -154,7 +208,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
     }
 
     if (hasOnlyNonSpaces(licence_no)) {
-        return res.status(400).send
+        return res.status(200).send
             ({
                 code: 400,
                 status: false,
@@ -169,7 +223,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                 con.query(verifyLicenceQuery, (err, result) => {
                     //console.log(result);
                     if (result.length != 0) {
-                        return res.status(400).send({
+                        return res.status(200).send({
                             code: 400,
                             status: false,
                             message: "This Licence Number already exists in the database"
@@ -180,14 +234,39 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                     }
                 });
             }else if(requestMethod == 'PUT'){
-                next();
+                let id = req.params.id
+                let selQuery = `SELECT licence_no FROM service_providers WHERE id = '${id}';`;
+                con.query(selQuery, (err, result) => {      
+                        if(result[0]?.licence_no == licence_no){
+                              
+                                next();
+                        }else{
+               
+                            let selQuery = `SELECT * FROM service_providers WHERE licence_no = '${licence_no}'`;
+                            con.query(selQuery, (err, result) => {
+                        
+                                if (result.length != 0) {
+                                    return res.status(200).send
+                                        ({
+                                            code: 400,
+                                            success: false,
+                                            message: "This Licence Number already exists in the database"
+                                        });
+                                }
+                                else {
+                                    next();
+                                }
+                            });
+                        }
+             
+                });
          }  
     
             } catch (err) {
-                console.log("Error while checking email in the database");
+                console.log("Error whilevalidating licence number in the database");
             }
         }else{
-            res.status(400).json
+            res.status(200).json
             ({  
                 code : 400 ,
                 success : false,
@@ -204,7 +283,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
     const { contact_no, emergency_contact_no } = req.body;
     const requestMethod = req.method;
     if (!contact_no) {
-        return res.status(400).send
+        return res.status(200).send
             ({
                 code: 400,
                 status: false,
@@ -212,7 +291,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
             });
     }
     if (!emergency_contact_no) {
-        return res.status(400).send
+        return res.status(200).send
             ({
                 code: 400,
                 status: false,
@@ -220,7 +299,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
             });
     }
     if (hasOnlyNonSpaces(emergency_contact_no)) {
-        return res.status(400).send
+        return res.status(200).send
             ({
                 code: 400,
                 status: false,
@@ -229,7 +308,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
             });
     }
     if (hasOnlyNonSpaces(contact_no)) {
-        return res.status(400).send
+        return res.status(200).send
             ({
                 code: 400,
                 status: false,
@@ -246,7 +325,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                     con.query(verifyPhoneNumbereQuery, (err, result) => {
                         //console.log(result);
                         if (result.length != 0) {
-                            return res.status(400).send({
+                            return res.status(200).send({
                                 code: 400,
                                 status: false,
                                 message: "This Phone  Number already exists in the database"
@@ -257,13 +336,38 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                         }
                     });
                 }else if(requestMethod == 'PUT'){
-                    next();
+                    let id = req.params.id
+                    let selQuery = `SELECT contact_no FROM service_providers WHERE id = '${id}';`;
+                    con.query(selQuery, (err, result) => {      
+                            if(result[0]?.contact_no == contact_no){
+                                  
+                                    next();
+                            }else{
+                   
+                                let selQuery = `SELECT * FROM service_providers WHERE contact_no = '${contact_no}'`;
+                                con.query(selQuery, (err, result) => {
+                            
+                                    if (result.length != 0) {
+                                        return res.status(200).send
+                                            ({
+                                                code: 400,
+                                                success: false,
+                                                message: "This Phone  Number already exists in the database"
+                                            });
+                                    }
+                                    else {
+                                        next();
+                                    }
+                                });
+                            }
+                 
+                    });
              }  
                 } catch (err) {
-                    console.log("Error while checking email in the database");
+                    console.log("Error while validating phone number in the database");
                 }
             }else{
-                res.status(400).json
+                res.status(200).json
                 ({  
                     code : 400 ,
                     success : false,
@@ -272,7 +376,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
             }   
     
         }else{
-            res.status(400).json
+            res.status(200).json
             ({  
                 code : 400 ,
                 success : false,
@@ -340,8 +444,8 @@ exports.passwordValidation = async (req, res, next) => {
 exports.licenceImageAvailable = async (req, res, next) =>{
 
     if (!req.files?.licence_image) {
-        return res.status(400).send({
-            code: 400,
+        return res.status(200).send({
+            code: 200,
             success: false,
             message: "License Image is required"
         });
