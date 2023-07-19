@@ -110,6 +110,31 @@ exports.addCustomer = async (req, res, next) =>
     }
 };
 
+exports.editCustomer = async (req, res, next) =>
+{
+    const customers = await customer.editcustomer(req.params.id, req.body.name, req.body.email, req.body.user_name, req.body.contact_no, req.body.date_of_birth, req.body.id_proof_no, req.files.id_proof_image);
+    if(customers === 'err')
+    {
+        console.log('Error while editing the customer data ');
+        res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.erroredit,
+        });
+    }
+    else
+    {
+        console.log('Customer data edited successfully');
+        res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.edit,
+        });
+    }
+};
+
 
 exports.updateStatus= async (req, res) =>
 {

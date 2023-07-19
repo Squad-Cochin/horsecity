@@ -17,6 +17,9 @@ module.exports = function(app)
     // Below route is for updating the customer status
     app.put(`/${process.env.apiToken}/update/customer/:id`, customerController.updateStatus);
 
+    // Below route is for editing the customer data
+    app.put(`/${process.env.apiToken}/edit/customer/:id`, customerController.editCustomer);
+
 
 
     

@@ -87,6 +87,41 @@ module.exports = class customers
         }
     };
 
+    static async editcustomer(id, name, email, user_name, contact_no, date_of_birth, id_proof_no, files)
+    {
+        try
+        {
+            return await new Promise(async(resolve, reject)=>
+            {
+                let presentData = await commonfetching.userDataOnID(constants.tableName.customers, id);
+                console.log(presentData);
+                let uploadAttachment = await commonoperation.fileUpload(files, constants.attachmentLocation.customer.idProof);
+                // console.log(uploadAttachment);
+                let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = ${name}, c.email = ${email}, c.user_name = ${user_name}, c.contact_no = ${contact_no}, c.date_of_birth = ${date_of_birth}, c.id_proof_no = ${id_proof_no}, c.id_proof_image = ${uploadAttachment}, c.updated_at = ${time.getFormattedUTCTime(constants.timeOffSet.UAE)} WHERE c.id = '${id}'`;
+                console.log(upQuery);
+                con.query(upQuery, (err, result) =>
+                {
+                    // console.log(result);
+                    if(result.affectedRows > 0)
+                    {
+                        console.log('Customer data updated successfully');
+                        resolve(result);
+                    }
+                    else
+                    {
+                        resolve('err')
+                    }
+                });                
+            });            
+        }
+        catch (error)
+        {
+            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "editcustomer". Which is designed to edit particular data of the customer.');            
+        }
+    };
+
+
+
 
     static async updatestatus(Id)
     {

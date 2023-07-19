@@ -17,5 +17,8 @@ module.exports = function(app)
 
     // Below route is for removing the customer
     app.put(`/${process.env.apiToken}/remove/driver/:id`, driverController.removeDriver);
+
+    // Below route is for editing the driver data
+    app.put(`/${process.env.apiToken}/edit/driver/:id`, driverController.editDriver);
     
 }

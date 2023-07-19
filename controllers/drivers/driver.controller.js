@@ -14,7 +14,7 @@ const driver = require('../../models/drivers/driver.model');
 
 exports.getAll = async (req, res) =>
 {
-    const drivers = await driver.getall();
+    const drivers = await driver.getall(req.body.pageNumber, req.body.pageSize);
     // console.log(drivers);
     if(drivers.length == 0)
     {
@@ -162,3 +162,28 @@ exports.removeDriver = async (req, res) =>
         });
     }
 }
+
+exports.editDriver = async (req, res, next) =>
+{
+    const drivers = await driver.editdriver(req.params.id, req.body.name, req.body.email, req.body.contact_no, req.body.emergency_contact_no, req.body.date_of_birth, req.body.licence_no, req.body.description, req.files.profile_image, req.files.licence_img);
+    if(drivers === 'err')
+    {
+        console.log('Error while editing the driver data ');
+        res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.erroredit,
+        });
+    }
+    else
+    {
+        console.log('Drivers data edited successfully');
+        res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.edit,
+        });
+    }
+};

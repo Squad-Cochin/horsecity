@@ -13,6 +13,7 @@ module.exports =
         active : "ACTIVE",
         inactive : "INACTIVE",
     },
+
     password :
     { 
         expiry_after : 90, // Days after which the token will expire
@@ -22,24 +23,24 @@ module.exports =
     {
         customer : 
         {
-            idProof : "D:/Horsecity2/horsecity-Backend/horsecity/Attachements/Customers/IdProof/"
+            idProof : "D:/Horsecity2/horsecity-Backend/horsecity/Attachements/Customers/IdProofs/"
         },
         driver :
         {
-            licence : "D:/Horsecity2/horsecity-Backend/horsecity/Attachements/Drivers/Licence/"
+            licence : "D:/Horsecity2/horsecity-Backend/horsecity/Attachements/Drivers/Licence/",
+            profilephoto : "D:/Horsecity2/horsecity-Backend/horsecity/Attachements/Drivers/ProfilePhoto/"
         },
         serviceProvider :
         {
-            licenceImage : "F:/Horsecity/node-dev/Attachements/serviceProvider/licenceImage/"
+            licenceImage : "f:/Horsecity/node-dev/Attachements/serviceProvider/licenceImage/"
         }
     },
-
-
 
     responseMessage :
     {
         getAll : "Data Fetched Sucessfully",
-        getOne : "Particular Data Fetched Successfully",
+        getOne : "Particular data fetched Successfully",
+        getOneErr : "Particular data fetched failed",
         insert : "Data inserted succesfully",
         errorInsert : "Error while inserting data",
         statusinactive : "status changed to INACTIVE",
@@ -47,7 +48,9 @@ module.exports =
         statuserror : "Error while updating the status",
         statusChanged : "Status Changed",
         removesuccess : "Data Removed",
-        removeerror : "Error While removing"
+        removeerror : "Error While removing",
+        edit : "Data edit successfully",
+        erroredit : "Error while editing the edit"
     },
 
     timeOffSet :
@@ -60,6 +63,7 @@ module.exports =
         UAE : "+04:00",
         INDIA : "+05:30"
     },
+    
     tableName :
     {
         application_settings : "application_settings",
