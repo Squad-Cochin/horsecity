@@ -1,6 +1,7 @@
 const driverController = require('../../controllers/drivers/driver.controller');
 const verifyBody = require(`../../middlewares/requestValidator`); // Importing the requestValidator file data 
-
+const checkInput = require(`../../middlewares/checkRequestInput`);
+const constants = require('../../utils/constants');
 
 module.exports = function(app)
 {
@@ -12,12 +13,10 @@ module.exports = function(app)
 
     // Below route is for adding the driver data
     app.post(`/${process.env.apiToken}/add/driver`,
-    verifyBody.name, 
-    verifyBody.emailValidation,
-    verifyBody.usernamevalidation,
-    verifyBody.validateUAEMobileNumber,
-    verifyBody.birthdateValidation,
-    verifyBody.idProofNumber, 
+    checkInput.nameValidation,
+    checkInput.emailValidation(constants.tableName.drivers),
+    checkInput.contactNumberValidation(constants.tableName.drivers),
+    checkInput.dateOfBirthValidation, 
     driverController.addDriver);
 
     // Below route is for updating the customer status

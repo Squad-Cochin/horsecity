@@ -22,6 +22,7 @@ require('dotenv').config(); // Comment: Loads environment variables from a .env 
 
 const db = require("./configs/db.configs"); // Comment: Imports the configuration for the database.
 const init = require('./init');
+const constants = require('./utils/constants');
 
 
 init(); // Calling the init file. In this file we are having the first user details

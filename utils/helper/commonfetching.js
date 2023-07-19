@@ -77,7 +77,7 @@ exports.getAllDataOfDriverAndCustomer = (tablename, pageNumber, pageSize) =>
 
             // let selQuery = `SELECT cd.name, cd.email, cd.contact_no, cd.created_at, cd.status FROM ${tablename} cd WHERE cd.deleted_at = 'NULL'`;
             let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, cd.created_at, cd.status FROM ${tablename} cd WHERE cd.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
-            console.log(selQuery);
+            // console.log(selQuery);
             con.query(selQuery, (err, result) =>
             {
                 // console.log('result', result);
@@ -104,3 +104,104 @@ exports.getAllDataOfDriverAndCustomer = (tablename, pageNumber, pageSize) =>
         console.log('Error from the commonfetching.js file from the utils > helper folder. In the function "getAllDataOfDriverAndCustomer". Which is designed to fetch all the data of customer and driver through the same function');        
     }
 }
+
+
+exports.dataOnEmail = (tablename, email) =>
+{
+    try
+    {
+        return new Promise((resolve, reject) => 
+        {
+            let selQuery = `SELECT * FROM ${tablename} t WHERE t.email = '${email}' `;
+            con.query(selQuery, (err, result) =>
+            {
+                if(err)
+                {
+                    resolve('err');
+                }
+                else
+                {
+                    if (result.length > 0)
+                    {
+                        resolve(result);
+                    }
+                    else
+                    {
+                        resolve([]);
+                    }
+                }            
+            });
+        });       
+    }
+    catch(error)
+    {
+        console.log(`Error while fetching the table data on email`, error);        
+    }
+};
+
+exports.dataOnUsername = (tablename, username) =>
+{
+    try
+    {
+        return new Promise((resolve, reject) => 
+        {
+            let selQuery = `SELECT * FROM ${tablename} t WHERE t.user_name = '${username}' `;
+            con.query(selQuery, (err, result) =>
+            {
+                if(err)
+                {
+                    resolve('err');
+                }
+                else
+                {
+                    if (result.length > 0)
+                    {
+                        resolve(result);
+                    }
+                    else
+                    {
+                        resolve([]);
+                    }
+                }            
+            });
+        });       
+    }
+    catch(error)
+    {
+        console.log(`Error while fetching the table data on email`, error);        
+    }
+};
+
+
+exports.dataOnContactNumber = (tablename, contact_no) =>
+{
+    try
+    {
+        return new Promise((resolve, reject) => 
+        {
+            let selQuery = `SELECT * FROM ${tablename} t WHERE t.contact_no = '${contact_no}' `;
+            con.query(selQuery, (err, result) =>
+            {
+                if(err)
+                {
+                    resolve('err');
+                }
+                else
+                {
+                    if (result.length > 0)
+                    {
+                        resolve(result);
+                    }
+                    else
+                    {
+                        resolve([]);
+                    }
+                }            
+            });
+        });       
+    }
+    catch(error)
+    {
+        console.log(`Error while fetching the table data on email`, error);        
+    }
+};

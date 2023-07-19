@@ -65,7 +65,7 @@ module.exports = class customers
                 let uploadAttachment = await commonoperation.fileUpload(files, constants.attachmentLocation.customer.idProof);
                 console.log(uploadAttachment);
                 let insQuery = `INSERT INTO customers(name, email, user_name, password, contact_no, date_of_birth, id_proof_no, id_proof_image, phone_verified, email_verified, expiry_at, created_at) VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', '${id_proof_no}', '${uploadAttachment}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                console.log(insQuery);
+                // console.log(insQuery);
                 con.query(insQuery, (err, result) =>
                 {
                     // console.log(result);
@@ -100,7 +100,7 @@ module.exports = class customers
                 con.query(upQuery, (err, result) =>
                 {
                     // console.log(result);
-                    if(result.affectedRows > 0)
+                    if(result.length > 0)
                     {
                         console.log('Customer data updated successfully');
                         resolve(result);
