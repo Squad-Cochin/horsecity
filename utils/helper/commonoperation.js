@@ -224,7 +224,8 @@ exports.totalCount = async (tablename) =>
     {
         return new Promise((resolve, reject) => 
         {
-            let selQuery = `SELECT count(*) FROM ${tablename} sp WHERE sp.deleted_at IS NULL`;
+            let selQuery = `SELECT count(t.id) FROM ${tablename} t WHERE t.deleted_at IS NULL`;
+            // console.log('Query :', selQuery);
             con.query(selQuery, (err, result) =>
             {
                 if (err)

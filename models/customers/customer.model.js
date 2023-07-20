@@ -19,16 +19,16 @@ module.exports = class customers
         try
         {
             const data = await commonfetching.getAllDataOfDriverAndCustomer(constants.tableName.customers, pageNumber, pageSize);
-            console.log('Data', data);
-            // const count = await commonoperation.totalCount(constants.tableName.customers)
-            // console.log('Total Data', count);
+            // console.log('Data', data);
+            const count = await commonoperation.totalCount(constants.tableName.customers)
+            // console.log('Total Data', count[0]['count(t.id)']);
             if(data.length === 0)
             {
-                return data;
+                return ({totalCount : count[0]['count(t.id)'], customer : data});
             }
             else
             {
-                return data;
+                return ({totalCount : count[0]['count(t.id)'], customer : data});
             }            
         }
         catch(error)
@@ -67,7 +67,7 @@ module.exports = class customers
                 let uploadAttachment = await commonoperation.fileUploadTwo(files, constants.attachmentLocation.customer.idProof);
                 console.log(uploadAttachment);
                 let insQuery = `INSERT INTO customers(name, email, user_name, password, contact_no, date_of_birth, id_proof_no, id_proof_image, phone_verified, email_verified, expiry_at, created_at) VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', '${id_proof_no}', '${uploadAttachment}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                // console.log(insQuery);
+                console.log(insQuery);
                 con.query(insQuery, (err, result) =>
                 {
                     // console.log(result);

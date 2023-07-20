@@ -84,7 +84,7 @@ exports.getAllDataOfDriverAndCustomer = (tablename, pageNumber, pageSize) =>
             console.log(selQuery);
             con.query(selQuery, (err, result) =>
             {
-                console.log('result', result);
+                // console.log('result', result);
                 if (err)
                 {
                     // console.log('Error while executing the query:', err);
@@ -152,6 +152,7 @@ exports.dataOnUsername = (tablename, username) =>
             let selQuery = `SELECT * FROM ${tablename} t WHERE t.user_name = '${username}' `;
             con.query(selQuery, (err, result) =>
             {
+                // console.log(result);
                 if(err)
                 {
                     resolve('err');

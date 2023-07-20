@@ -154,7 +154,7 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
     }   
 };
 
-exports.usernameValidation = (tableName) => (req, res, next) =>
+exports.usernameValidation = (tableName) => async (req, res, next) =>
 {
     if (!req.body.userName) 
     {
@@ -190,7 +190,7 @@ exports.usernameValidation = (tableName) => (req, res, next) =>
             // }
             // else
             // {
-                let checkContactNumber = commonfetching.dataOnUsername(tableName, req.body.userName);
+                let checkContactNumber = await commonfetching.dataOnUsername(tableName, req.body.userName);
                 if(checkContactNumber === 'err')
                 {
                     return res.status(500).json
