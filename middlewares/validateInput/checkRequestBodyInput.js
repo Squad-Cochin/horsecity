@@ -190,6 +190,7 @@ exports.emailValidationWhileUpdate = (tableName) => async (req, res, next) =>
             }
             else
             {
+                console.log('table: ', tableName);
                 let checkEmail = await commonfetching.dataOnEmailUpdate(tableName,'email', req.body.email, req.params.id);
                 if(checkEmail === 'internalError')
                 {
@@ -520,7 +521,7 @@ exports.isValidEmergencyContactNumber =  (req, res, next) =>
                 ({
                     code: 200,
                     status: "failure",
-                    message: "Contact number is not in valid"
+                    message: "Emergency Contact number is not in valid"
                 });                                
             }
             else
@@ -617,12 +618,12 @@ exports.idProofValidation = async(req, res, next) =>
         }
         else if (checkIdProofNumber.length > 0)
         {
-            console.log('Some body already having this id proof number. It can be duplicate');
+            console.log('Some body already having this id proof number. It cannot be duplicate');
             return res.status(200).json
             ({
                 code : 400,
                 status: false,
-                error: 'Some body already having this id proof number. It can be duplicate'
+                error: 'Some body already having this id proof number. It cannot be duplicate'
             });    
         }
         else
@@ -699,7 +700,7 @@ exports.isValidDescription = (req, res, next) =>
     }    
 };
 
-exports.isValidLicenceNumber = (req, res, next) =>
+exports.isValidLicenceNumber = async (req, res, next) =>
 {
     if (!req.body.licence_no) 
     {
@@ -712,10 +713,84 @@ exports.isValidLicenceNumber = (req, res, next) =>
     }
     else
     {
-
-        next();
+        let checkIdProofNumber = await commonfetching.vehiclesMiddleware(constants.tableName.drivers, 'licence_no', req.body.licence_no); 
+        console.log('CheckIdProof : ',checkIdProofNumber);
+        if(checkIdProofNumber === 'err')
+        {
+            console.log('Internal Server Error');
+            return res.status(200).json
+            ({
+                code : 500,
+                status: false,
+                error: 'Internal server error while checking licence number in driver table' 
+            });            
+        }
+        else if (checkIdProofNumber.length > 0)
+        {
+            console.log('Some body already having this licence number. It cannot be duplicate');
+            return res.status(200).json
+            ({
+                code : 400,
+                status: false,
+                error: 'Some body already having this licence number. It cannot be duplicate'
+            });    
+        }
+        else
+        {
+            console.log('No one having this licence number');
+            next();
+        }
     }    
 };
+
+exports.isValidLicenceNumberWhileUpdate = async (req, res, next) =>
+{
+    if (!req.body.licence_no) 
+    {
+        return res.status(200).send
+        ({
+            code: 400,
+            status: false,
+            message: "Licence number is required for update time"
+        });
+    }
+    else
+    {
+        let checkLicenceNumber = await commonfetching.dataLicenceNumberOnUpdate(constants.tableName.drivers, req.body.licence_no, req.params.id); 
+        console.log('CheckIdProof : ',checkLicenceNumber);
+        if(checkLicenceNumber === 'internalError')
+        {
+            return res.status(200).json
+            ({
+                code : 500,
+                status : false,
+                error: 'Internal server error whit updating the licence number' 
+            });
+        }
+        
+        if(checkLicenceNumber === 'licencenumbernotavailable')
+                {
+                    return res.status(200).send
+                    ({
+                        code: 400,
+                        status: false,
+                        message: "This licence number already exists in the database. Someone is already registered with this licence number"
+                    });
+                }
+                
+                if(checkLicenceNumber === 'licencenumbernotchanged')
+                {
+                    next();
+                }
+
+                if(checkLicenceNumber === 'true')
+                {
+                    next();
+                } 
+    }    
+};
+
+
 
 exports.newpassword = async (req, res, next) => 
 {
@@ -945,3 +1020,57 @@ exports.isPageSizeEntered = (req, res, next) =>
     }
 }
 
+
+exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
+{
+    if(!req.files?.id_proof_image)
+    {
+        console.log('Id proof image is not uploaded');
+        return res.status(200).json
+        ({
+            code: 400,
+            success: false,
+            message: "Customer Id proof image is not uploaded"
+        });     
+    }
+    else
+    {
+        next();
+    }
+}
+
+exports.isDriverProfileImageSubmitted = (req, res, next) =>
+{
+    if(!req.files?.profile_image)
+    {
+        console.log('Driver profile image is not uploaded');
+        return res.status(200).json
+        ({
+            code: 400,
+            success: false,
+            message: "Driver profile image is not uploaded"
+        });     
+    }
+    else
+    {
+        next();
+    }
+}
+
+exports.isDriverLicenceImageSubmitted = (req, res, next) =>
+{
+    if(!req.files?.licence_img)
+    {
+        console.log('Driver licence image is not uploaded');
+        return res.status(200).json
+        ({
+            code: 400,
+            success: false,
+            message: "Driver licence image is not uploaded"
+        });     
+    }
+    else
+    {
+        next();
+    }
+}

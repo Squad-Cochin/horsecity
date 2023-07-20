@@ -70,21 +70,38 @@ module.exports = class customers
             {
                 let uploadAttachment = await commonoperation.fileUploadTwo(files, constants.attachmentLocation.customer.idProof);
                 console.log(uploadAttachment);
-                let insQuery = `INSERT INTO customers(name, email, user_name, password, contact_no, date_of_birth, id_proof_no, id_proof_image, phone_verified, email_verified, expiry_at, created_at) VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', '${id_proof_no}', '${uploadAttachment}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                console.log(insQuery);
-                con.query(insQuery, (err, result) =>
+                //INVALIDFORMAT,NOATTACHEMENT,ERR
+                if(uploadAttachment === 'INVALIDFORMAT')
                 {
-                    // console.log(result);
-                    if(result.affectedRows > 0)
+                    console.log('Going ');
+                    resolve('INVALIDFORMAT');
+                }
+                else if(uploadAttachment === 'ERR')
+                {
+                    resolve('err');
+                }
+                else if(uploadAttachment === 'NOATTACHEMENT')
+                {
+                    resolve('NOATTACHEMENT');
+                }
+                else
+                {
+                    let insQuery = `INSERT INTO customers(name, email, user_name, password, contact_no, date_of_birth, id_proof_no, id_proof_image, phone_verified, email_verified, expiry_at, created_at) VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', '${id_proof_no}', '${uploadAttachment}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                    console.log(insQuery);
+                    con.query(insQuery, (err, result) =>
                     {
-                        console.log('Customer data added successfully');
-                        resolve(result);
-                    }
-                    else
-                    {
-                        resolve('err')
-                    }
-                });                
+                        // console.log(result);
+                        if(result.affectedRows > 0)
+                        {
+                            console.log('Customer data added successfully');
+                            resolve(result);
+                        }
+                        else
+                        {
+                            resolve('err')
+                        }
+                    });
+                }                
             });            
         }
         catch (error)

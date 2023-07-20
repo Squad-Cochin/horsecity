@@ -70,7 +70,6 @@ exports.getOne= async (req, res, next) =>
 
 exports.addCustomer = async (req, res, next) =>
 {
-    console.log('Here came now');
     const customers = await customer.addcustomer
     ( 
         req.body.name,
@@ -82,7 +81,6 @@ exports.addCustomer = async (req, res, next) =>
         req.body.id_proof_no,
         req.files.id_proof_image
     );
-    console.log(customers);
     if (customers === 'err')
     {
         console.log('Error while inserting the customer data');
@@ -91,6 +89,36 @@ exports.addCustomer = async (req, res, next) =>
             code: 401,
             status: true,
             message: constant.responseMessage.errorInsert,
+        });
+    }
+    else if (customers === 'INVALIDFORMAT')
+    {
+        console.log('Invalid Format of file submit for upload');
+        res.status(200).send
+        ({
+            code : 401,
+            status : true,
+            message : "Invalid Format of file submit for upload",
+        });
+    }
+    else if(customers === 'ERR')
+    {
+        console.log('Internal server error while uploading the file for customer');
+        res.status(200).send
+        ({
+            code : 401,
+            status : true,
+            message : "Internal server error while uploading the file for customer",
+        });
+    }
+    else if(customers === 'NOATTACHEMENT')
+    {
+        console.log('No image uploaded for customer');
+        res.status(200).send
+        ({
+            code : 401,
+            status : true,
+            message : "No image uploaded for customer",
         });
     }
     else
@@ -114,13 +142,43 @@ exports.editCustomer = async (req, res, next) =>
     if(customers === 'err')
     {
         console.log('Error while editing the customer data');
-        res.send
+        res.status(200).send
         ({
             code : 401,
             status : true,
             message : constant.responseMessage.erroredit,
         });
     }
+    // if(customers === 'INVALIDFORMAT')
+    // {
+    //     console.log('Invalid Format of file submit for upload');
+    //     res.status(200).send
+    //     ({
+    //         code : 401,
+    //         status : true,
+    //         message : "Invalid Format of file submit for upload",
+    //     });
+    // }
+    // else if(customers === 'ERR')
+    // {
+    //     console.log('Internal server error while uploading the file for customer');
+    //     res.status(200).send
+    //     ({
+    //         code : 401,
+    //         status : true,
+    //         message : "Internal server error while uploading the file for customer",
+    //     });
+    // }
+    // else if(customers === 'NOATTACHEMENT')
+    // {
+    //     console.log('No image uploaded for customer');
+    //     res.status(200).send
+    //     ({
+    //         code : 401,
+    //         status : true,
+    //         message : "No image uploaded for customer",
+    //     });
+    // }
     else
     {
         console.log('Customer data edited successfully');

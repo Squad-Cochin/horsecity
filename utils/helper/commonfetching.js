@@ -258,7 +258,7 @@ exports.dataOnEmailUpdate = async(tableName, feildName, Value, id) =>
     {
         return await  new Promise(async (resolve, reject) =>
         {
-            let selQuery = `SELECT * FROM customers c WHERE c.id = '${id}' AND c.email = '${Value}'`;
+            let selQuery = `SELECT * FROM ${tableName} c WHERE c.id = '${id}' AND c.email = '${Value}'`;
             con.query(selQuery, async (err, result) =>
             {
                 if(err)
@@ -385,6 +385,50 @@ exports.dataOnContactNumberUpdate = async(tableName, Value, id) =>
     }
 };
 
+exports.dataLicenceNumberOnUpdate = async(tableName, Value, id) =>
+{
+    try
+    {
+        return await  new Promise(async (resolve, reject) =>
+        {
+            let selQuery = `SELECT * FROM ${tableName} c WHERE c.id = '${id}' AND c.licence_no = '${Value}'`;
+            con.query(selQuery, async (err, result) =>
+            {
+                if(err)
+                {
+                    console.log('Error in the dataOnUpdate');
+                    resolve('internalError')
+                }
+                
+                if(result.length > 0)
+                {
+                    console.log('I think licence number is not updating this time');
+                    resolve('licencenumbernotchanged');
+                }
+                else
+                {
+                    let checkwithOthers = await this.dataOnLicenceNo(tableName, Value);
+                    console.log(checkwithOthers);
+                    if(checkwithOthers.length > 0)
+                    {
+                        console.log('licence number cannot be used. It is already registered');
+                        resolve('licencenumbernotavailable');
+                    }
+                    else
+                    {
+                        console.log('No one has this licence number');
+                        resolve('true');
+                    }
+                }
+            });
+        });      
+    }
+    catch (error)
+    {
+        
+    }
+}; 
+
 exports.dataOnIdProofNumberUpdate = async(tableName, Value, id) =>
 {
     try
@@ -430,6 +474,8 @@ exports.dataOnIdProofNumberUpdate = async(tableName, Value, id) =>
 }; 
 
 
+
+
 exports.dataOnIdProof = (tablename, id_proof_no) =>
 {
     try
@@ -437,6 +483,40 @@ exports.dataOnIdProof = (tablename, id_proof_no) =>
         return new Promise((resolve, reject) => 
         {
             let selQuery = `SELECT * FROM ${tablename} t WHERE t.id_proof_no = '${id_proof_no}' `;
+            con.query(selQuery, (err, result) =>
+            {
+                if(err)
+                {
+                    resolve('err');
+                }
+                else
+                {
+                    if (result.length > 0)
+                    {
+                        resolve(result);
+                    }
+                    else
+                    {
+                        resolve([]);
+                    }
+                }            
+            });
+        });       
+    }
+    catch(error)
+    {
+        console.log(`Error while fetching the table data on email`, error);        
+    }
+};
+
+
+exports.dataOnLicenceNo = (tablename, licence_no) =>
+{
+    try
+    {
+        return new Promise((resolve, reject) => 
+        {
+            let selQuery = `SELECT * FROM ${tablename} t WHERE t.licence_no = '${licence_no}' `;
             con.query(selQuery, (err, result) =>
             {
                 if(err)

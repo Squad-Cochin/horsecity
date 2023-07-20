@@ -123,7 +123,8 @@ exports.updateUserStatus = (tablename, Id) =>
                 {
                     if(result[0].status === constant.status.active)
                     {
-                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.inactive}', t.updated_at = '${timeCalculate.getFormattedUTCTime(constant.timeOffSet.UAE)}' WHERE t.id = '${Id}' `;
+                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.inactive}', t.updated_at = '${timeCalculate.getFormattedUTCTime(constant.timeOffSet.UAE)}' WHERE t.id = '${Id}' AND t.deleted_at IS NULL`;
+                        console.log(UpdateQuery);
                         con.query(UpdateQuery, (err, result) => // executing the above query 
                         {
                             if(result.length != 0) // if ticket updated then if block
@@ -131,17 +132,26 @@ exports.updateUserStatus = (tablename, Id) =>
                                 console.log('Status Changed to INACTIVE');
                                 resolve(result);
                             }
+                            else
+                            {
+                                resolve('removed');
+                            }
                         }); 
                     }
                     else
                     {
-                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.active}'WHERE t.id = '${Id}' `;
+                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.active}'WHERE t.id = '${Id}' AND t.deleted_at IS NULL `;
+                        console.log(UpdateQuery);
                         con.query(UpdateQuery, (err, result) => // executing the above query 
                         {
                             if(result.length != 0) // if ticket updated then if block
                             {
                                 console.log('Status Changed to ACTIVE');
                                 resolve(result);
+                            }
+                            else
+                            {
+                                resolve('removed');
                             }
                         });
                     }
@@ -252,7 +262,7 @@ exports.totalCount = async (tablename) =>
     }
 }
 
-exports.fileUploadTwo= (attachments, path) =>
+exports.fileUploadTwo = async (attachments, path) =>
 { 
     // console.log(attachments);
     return new Promise((resolve, reject) =>

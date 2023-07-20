@@ -76,31 +76,65 @@ exports.getOne= async (req, res) =>
     }
 }
 
-exports.addDriver = async (req, res) =>
-{
-    const drivers = await driver.adddriver(req.body.name, req.body.email, req.body.contact_no, req.body.emergency_contact_no, req.body.date_of_birth, req.body.licence_no, req.body.description, req.files.profile_image, req.files.licence_img);
-    if(drivers === 'err')
-    {
-        console.log('Error while inserting the driver data ');
-        res.send
-        ({
-            code : 200,
-            status : true,
-            message : constant.responseMessage.errorInsert,
-        });
-    }
-    else
-    {
-        console.log('Driver data inserted successfully');
-        res.send
-        ({
-            code : 200,
-            status : true,
-            message : constant.responseMessage.insert,
-        });
-    }
-}
+// exports.addDriver = async (req, res, next) =>
+// {
+//     const drivers = await driver.adddriver(req.body.name, req.body.email, req.body.contact_no, req.body.emergency_contact_no, req.body.date_of_birth, req.body.licence_no, req.body.description, req.files.profile_image, req.files.licence_img);
+//     console.log(drivers);
+//     if(drivers === 'err')
+//     {
+//         console.log('Error while inserting the driver data ');
+//         return res.status(200).send
+//         ({
+//             code : 400,
+//             status : true,
+//             message : constant.responseMessage.errorInsert,
+//         });
+//     }
+//     if(drivers === 'true')
+//     {
+//         console.log('Driver data inserted successfully');
+//         return res.json
+//         ({
+//             code : 200,
+//             status : true,
+//             message : constant.responseMessage.insert,
+//         });
+//     }
+// }
 
+exports.addDriver = async (req, res, next) => {
+    
+      const drivers = await driver.adddriver(
+        req.body.name,
+        req.body.email,
+        req.body.contact_no,
+        req.body.emergency_contact_no,
+        req.body.date_of_birth,
+        req.body.licence_no,
+        req.body.description,
+        req.files.profile_image,
+        req.files.licence_img
+      );
+      console.log(drivers);
+      if (drivers === 'err') {
+        console.log('Error while inserting the driver data ');
+        return res.status(200).json({
+          code: 400,
+          status: true,
+          message: constant.responseMessage.errorInsert,
+        });
+      }
+      else
+      {
+        console.log('Driver data inserted successfully');
+        return res.json({
+          code: 200,
+          status: true,
+          message: constant.responseMessage.insert,
+        });
+      }
+  };
+  
 
 exports.updateStatus= async (req, res) =>
 {

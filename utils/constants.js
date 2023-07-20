@@ -30,7 +30,9 @@ module.exports =
         driver :
         {
             licence : `${__dirname}../../Attachements/Drivers/Licence/`,
-            profilephoto : `${__dirname}../../Attachements/Drivers/ProfilePhoto/`
+            fetchlicence :`/Drivers/Licence/`,
+            profilephoto : `${__dirname}../../Attachements/Drivers/ProfilePhoto/`,
+            fetchprofilephoto : `/Drivers/ProfilePhoto/`,
         },
         serviceProvider :
         {

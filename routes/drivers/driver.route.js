@@ -19,10 +19,12 @@ module.exports = function(app)
     checkInput.nameValidation,
     checkInput.emailValidation(constants.tableName.drivers),
     checkInput.contactNumberValidation(constants.tableName.drivers),
-    // checkInput.dateOfBirthValidation,
+    // // checkInput.dateOfBirthValidation,
     checkInput.isValidDescription,
     checkInput.isValidLicenceNumber,
-    checkInput.isValidEmergencyContactNumber,    
+    checkInput.isValidEmergencyContactNumber, 
+    checkInput.isDriverLicenceImageSubmitted,
+    checkInput.isDriverProfileImageSubmitted,
     driverController.addDriver
     );
 
@@ -33,14 +35,18 @@ module.exports = function(app)
     app.put(`/${process.env.apiToken}/remove/driver/:id`, isValidIdInTheParams(constants.tableName.drivers),  driverController.removeDriver);
 
     // Below route is for editing the driver data
-    app.put(`/${process.env.apiToken}/edit/driver/:id`, isValidIdInTheParams(constants.tableName.drivers), 
+    
+    
+    app.put(`/${process.env.apiToken}/edit/driver/:id`, 
+    isValidIdInTheParams(constants.tableName.drivers), 
     checkInput.nameValidation,
-    checkInput.emailValidation(constants.tableName.drivers),
-    checkInput.contactNumberValidation(constants.tableName.drivers),
-    checkInput.dateOfBirthValidation,
+    checkInput.emailValidationWhileUpdate(constants.tableName.drivers),
+    checkInput.contactNumberValidationWhileUpdate(constants.tableName.drivers),
+    checkInput.isValidEmergencyContactNumber,
+    // checkInput.dateOfBirthValidation,
+    checkInput.isValidLicenceNumberWhileUpdate,
     checkInput.isValidDescription,
-    checkInput.isValidLicenceNumber,
-    checkInput.isValidEmergencyContactNumber, 
-    driverController.editDriver);
+    driverController.editDriver
+    );
     
 }

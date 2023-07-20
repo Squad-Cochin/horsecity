@@ -13,7 +13,7 @@ module.exports = (app) =>
     checkInput.isPageSizeEntered,
     customerController.getAll);    
 
-    
+
     // Below route is for getting data of any particular customer
     app.get(`/${process.env.apiToken}/getOne/customer/:id`, 
     isValidIdInTheParams(constants.tableName.customers),
@@ -29,6 +29,7 @@ module.exports = (app) =>
     checkInput.contactNumberValidation(constants.tableName.customers),
     // checkInput.dateOfBirthValidation,
     checkInput.idProofValidation,
+    checkInput.isCustomerIdProofImageSubmitted,
     customerController.addCustomer
     );
 

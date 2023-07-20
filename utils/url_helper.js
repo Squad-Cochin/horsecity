@@ -6,7 +6,8 @@ const UPDATE_SERVICE_PROVIDER_URL = token + "/update/serviceprovider/"
 
 
 
-module.exports={
+module.exports=
+{
     UPDATE_SERVICE_PROVIDER_URL,
     UPDATE_SETTINGS_PAGE_URL
 }

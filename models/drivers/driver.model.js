@@ -47,6 +47,15 @@ module.exports = class drivers
             }
             else
             {
+                console.log('Came inside');
+                let driverProfileImage = data[0].profile_image;
+                data[0].profile_image = `${process.env.PORT_SP}${constants.attachmentLocation.driver.fetchprofilephoto}${driverProfileImage}`;
+                console.log("Driver profile image link: ", data[0].profile_image);
+
+                let driverlicenceImage = data[0].licence_img;
+                data[0].licence_img = `${process.env.PORT_SP}${constants.attachmentLocation.driver.fetchlicence}${driverlicenceImage}`;
+                console.log('Driver licence image link: ', data[0].licence_img);
+                
                 return data;
             }            
         }
@@ -95,7 +104,7 @@ module.exports = class drivers
         try
         {
             const data = await commonoperation.updateUserStatus(constants.tableName.drivers, Id);
-            // console.log('Data', data);
+            console.log('Data', data);
             if(data.length === 0)
             {
                 return data
