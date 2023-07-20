@@ -8,26 +8,32 @@ const commonoperation = require('../../../utils/helper/commonoperation');
 /**For gitting all data  */
 exports.updateSettings = async(req,res)=>
 {
-    let settingsPage = await settings.updateSettings(req.body,req.files,req.parms.id);
+
+    let settingsPage = await settings.updateSettings(req.body,req.files,req.params.id);
     console.log("new",settingsPage);
-    if(settingsPage.settingsPageData == 'NOTFOUND'){
+    if(settingsPage.status == 'INVALIDFORMAT'){
+        return res.status(400).send({
+            code: 400,
+            success: false,
+            message: constants.responseMessage.imageFormat
+        });
+        
+    }else if(settingsPage.status == 'FAILD'){
         return res.status(200).send
         ({
             code: 400,
             success: false,
-            message: constants.responseMessage.getOneErr
+            message: constants.responseMessage.erroredit,
          
         });
-       }else{
+    }else{
         return res.status(200).send
         ({
             code: 200,
             success: true,
-            message: constants.responseMessage.getOne,
-            data : settingsPage
-         
+            message: constants.responseMessage.edit,
         });
-       }
+    }
 }
 
 

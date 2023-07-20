@@ -67,7 +67,8 @@ exports.fileUpload = (attachments, path) =>
         if (!attachments)// || !attachments.file || !Array.isArray(attachments.file)) 
         {
             console.log('#### Invalid attachments parameter ####');
-            return;
+            resolve({message : 'INVALIDATTACHMENT'});
+      
         }
         else
         {
@@ -90,12 +91,14 @@ exports.fileUpload = (attachments, path) =>
                     else
                     {
                         console.log('File Uploaded');
+                        // resolve({message : 'INVALIDFORMAT'});
                         resolve(filename);
                     }
                 });                
             }
             else
             {
+                resolve({message : 'INVALIDFORMAT'});
                 console.log("Invalid Format");
             }
         }

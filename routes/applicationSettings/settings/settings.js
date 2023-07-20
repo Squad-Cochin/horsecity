@@ -8,5 +8,5 @@ module.exports = function(app)
     app.get(`/${process.env.apiToken}/getOne/settings/:id`, settings.getSettingsData);
 
     // Below route is for updating settings page data
-    app.put(`/${process.env.apiToken}/update/settings/:id`,verifyBody.emailValidation,verifyBody.usernamevalidation,verifyBody.nameAvailable,verifyBody.contactPersonAvailable,verifyBody.contactAddressAvailable,verifyBody.passwordValidation,verifyBody.licenceImageAvailable,verifyBody.validateUAEMobileNumber,verifyBody.validateUAELicenseNumber,settings.updateSettings);
+    app.put(`/${process.env.apiToken}/update/settings/:id`,verifyBody.appTitleAvailable,verifyBody.contactAddressAvailable,verifyBody.emailValidation,verifyBody.validateUAEMobileNumber,verifyBody.validateUAELicenseNumber,settings.updateSettings);
 }

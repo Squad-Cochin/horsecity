@@ -24,7 +24,8 @@ exports.getAllServiceProviders = (requestBody) =>
 
                 if(!err){
 
-                    const totalCountQuery = `SELECT count(*) FROM service_providers`
+                    const totalCountQuery = `SELECT count(*) FROM service_providers sp
+                                             WHERE sp.deleted_at IS NULL`
                     // resolve(result);
                     con.query(totalCountQuery,(err,result)=>{
                         if(!err){

@@ -132,7 +132,7 @@ exports.getOneServiceProvider = async(req,res)=>
     return res.status(200).send
     ({
         code: 200,
-        success: false,
+        success: true,
         message: constants.responseMessage.getOne,
         data : getOneSProvider
     });

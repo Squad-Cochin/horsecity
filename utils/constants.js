@@ -37,6 +37,10 @@ module.exports =
         vehicle :
         {
             scertificate : `${__dirname}../../Attachements/Vehicles/scertificate/`
+        },
+        applicationSettings :
+        {
+            settings : `${__dirname}../../Attachements/applicationSettings/settings/`
         }
     },
 
@@ -60,7 +64,8 @@ module.exports =
         vehicleerror : `Error while adding the vehicles data`,
         universalError: `Internal server error`,
         vehicleImgerror : "No images are there for this vehicle now",
-        vehicleImgSuccess : "Images fetched succesfully"
+        vehicleImgSuccess : "Images fetched succesfully",
+        imageFormat : 'Only PNG and JPG formats are allowed'
     },
 
     timeOffSet :

@@ -1,6 +1,6 @@
 const con = require("../configs/db.configs");  // importing the database details 
 
-
+const url = require("../utils/url_helper")
 
 
 
@@ -86,7 +86,9 @@ exports.usernamevalidation = (req, res, next) => {
 exports.emailValidation = async (req, res, next) => {
     const { email } = req.body;
     const requestMethod = req.method;
-    
+    const URL = req.url
+    console.log("url",URL);
+    console.log("url2",url.UPDATE_SETTINGS_PAGE_URL  + req.params?.id);
     if (!email) {
         return res.status(200).send
             ({
@@ -147,7 +149,7 @@ exports.emailValidation = async (req, res, next) => {
                         next();
                     }
                 });
-             }else if(requestMethod == 'PUT'){
+             }else if(requestMethod == 'PUT' && URL == url.UPDATE_SERVICE_PROVIDER_URL  + req.params?.id){
                 let id = req.params.id
                 let selQuery = `SELECT email FROM service_providers WHERE id = '${id}';`;
                 con.query(selQuery, (err, result) => {      
@@ -171,10 +173,12 @@ exports.emailValidation = async (req, res, next) => {
                                     next();
                                 }
                             });
-                        }
+                        } 
              
                 });
-             }  
+             }else if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL  + req.params?.id){
+                    next()
+             }
                
 
             } catch (err) {
@@ -197,44 +201,48 @@ exports.emailValidation = async (req, res, next) => {
 }
 
 exports.validateUAELicenseNumber = async (req, res, next) => {
-    const { licence_no } = req.body;
+
     const requestMethod = req.method;
-    if (!licence_no) {
-        return res.status(200).send
-            ({
-                code: 400,
-                status: false,
-                message: "Licence Number is required"
-            });
-    }
+    const URL = req.url
 
-    if (hasOnlyNonSpaces(licence_no)) {
-        return res.status(200).send
-            ({
-                code: 400,
-                status: false,
-                message: "Licence Number contain space. It is not allowed."
 
-            });
-    } else {
-        if(validateUAELicenseNumber(licence_no)){
+   
             try {
-                if(requestMethod == 'POST'){
-                let verifyLicenceQuery = `SELECT * FROM service_providers WHERE licence_no = '${licence_no}'`;
-                con.query(verifyLicenceQuery, (err, result) => {
-                    //console.log(result);
-                    if (result.length != 0) {
-                        return res.status(200).send({
-                            code: 400,
-                            status: false,
-                            message: "This Licence Number already exists in the database"
-                        });
+                if(requestMethod == 'POST' ||requestMethod == 'PUT' && URL == url.UPDATE_SERVICE_PROVIDER_URL  + req.params?.id){
+                    const { licence_no } = req.body;
+                    if (!licence_no) {
+                        return res.status(200).send
+                            ({
+                                code: 400,
+                                status: false,
+                                message: "Licence Number is required"
+                            });
                     }
-                    else {
-                        next();
-                    }
-                });
-            }else if(requestMethod == 'PUT'){
+                    if (hasOnlyNonSpaces(licence_no)) {
+                        return res.status(200).send
+                            ({
+                                code: 400,
+                                status: false,
+                                message: "Licence Number contain space. It is not allowed."
+                
+                            });
+                    } else if(validateUAELicenseNumber(licence_no)) {
+                            if(requestMethod == 'POST'){
+                            let verifyLicenceQuery = `SELECT * FROM service_providers WHERE licence_no = '${licence_no}'`;
+                            con.query(verifyLicenceQuery, (err, result) => {
+                                //console.log(result);
+                                if (result.length != 0) {
+                                    return res.status(200).send({
+                                        code: 400,
+                                        status: false,
+                                        message: "This Licence Number already exists in the database"
+                                    });
+                                }
+                                else {
+                                    next();
+                                }
+                            });
+            }else if(requestMethod == 'PUT' && URL == url.UPDATE_SERVICE_PROVIDER_URL  + req.params?.id){
                 let id = req.params.id
                 let selQuery = `SELECT licence_no FROM service_providers WHERE id = '${id}';`;
                 con.query(selQuery, (err, result) => {      
@@ -261,11 +269,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                         }
              
                 });
-         }  
-    
-            } catch (err) {
-                console.log("Error whilevalidating licence number in the database");
-            }
+         }
         }else{
             res.status(200).json
             ({  
@@ -273,54 +277,95 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                 success : false,
                 message: "Invalid Licence number",   // Or error message
             });
-        }
+        }}  
+        if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL  + req.params?.id){
+            const { licence_number} = req.body;
+    
+            
+            if(!licence_number){
+                return res.status(200).send
+                ({
+                    code: 400,
+                    status: false,
+                    message: "Licence number is required"
+                });
+            }else if(hasOnlyNonSpaces(licence_number)) {
+                return res.status(200).send
+                    ({
+                        code: 400,
+                        status: false,
+                        message: "Licence Number contain space. It is not allowed."
+        
+                    });
+            }else if(!validateUAELicenseNumber(licence_number)){
+                return res.status(200).send
+                ({
+                    code: 400,
+                    status: false,
+                    message: "Invalid licence  number."
+    
+                });
+            }else{
+                 next();
+            }
+      
+           }        
+    
+            } catch (err) {
+                console.log("Error whilevalidating licence number in the database");
+            }
+        
 
         
-    }
+    
 
 }
 
 exports.validateUAEMobileNumber = async (req, res, next) => {
     const { contact_no, emergency_contact_no } = req.body;
     const requestMethod = req.method;
-    if (!contact_no) {
-        return res.status(200).send
-            ({
-                code: 400,
-                status: false,
-                message: "Licence Number is required"
-            });
-    }
-    if (!emergency_contact_no) {
-        return res.status(200).send
-            ({
-                code: 400,
-                status: false,
-                message: "Emergency Contact Number  is required"
-            });
-    }
-    if (hasOnlyNonSpaces(emergency_contact_no)) {
-        return res.status(200).send
-            ({
-                code: 400,
-                status: false,
-                message: "Emergency Contact  Number contain space. It is not allowed."
-
-            });
-    }
-    if (hasOnlyNonSpaces(contact_no)) {
-        return res.status(200).send
-            ({
-                code: 400,
-                status: false,
-                message: "Contact Number contain space. It is not allowed."
-
-            });
-    } else {
+    const URL = req.url
+    
 
         // if(validateUAEMobileNumber(emergency_contact_no)){
         //     if(validateUAEMobileNumber(contact_no)){
                 try {
+                    if(requestMethod == 'POST' ||requestMethod == 'PUT' && URL == url.UPDATE_SERVICE_PROVIDER_URL  + req.params?.id){
+
+                        if (!contact_no  ) {
+                            return res.status(200).send
+                                ({
+                                    code: 400,
+                                    status: false,
+                                    message: "Phone Number is required"
+                                });
+                        }
+                        if (!emergency_contact_no) {
+                            return res.status(200).send
+                                ({
+                                    code: 400,
+                                    status: false,
+                                    message: "Emergency Contact Number  is required"
+                                });
+                        }
+                        if (hasOnlyNonSpaces(emergency_contact_no)) {
+                            return res.status(200).send
+                                ({
+                                    code: 400,
+                                    status: false,
+                                    message: "Emergency Contact  Number contain space. It is not allowed."
+                    
+                                });
+                        }
+                        if (hasOnlyNonSpaces(contact_no)) {
+                            return res.status(200).send
+                                ({
+                                    code: 400,
+                                    status: false,
+                                    message: "Contact Number contain space. It is not allowed."
+                    
+                                });
+                        } else {
                     if(requestMethod == 'POST'){
                     let verifyPhoneNumbereQuery = `SELECT * FROM service_providers WHERE contact_no = '${contact_no}'`;
                     con.query(verifyPhoneNumbereQuery, (err, result) => {
@@ -336,7 +381,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                             next();
                         }
                     });
-                }else if(requestMethod == 'PUT'){
+                }else if(requestMethod == 'PUT' && URL == url.UPDATE_SERVICE_PROVIDER_URL  + req.params?.id){
                     let id = req.params.id
                     let selQuery = `SELECT contact_no FROM service_providers WHERE id = '${id}';`;
                     con.query(selQuery, (err, result) => {      
@@ -363,7 +408,79 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                             }
                  
                     });
-             }  
+             }}}
+             
+             if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL  + req.params?.id){
+                const { language_id,currency_id,tax_id,phone, country_code,invoice_prefix,quotation_prefix} = req.body;
+                    if(!country_code){
+                        return res.status(200).send
+                        ({
+                            code: 400,
+                            status: false,
+                            message: "Cuntrey code is required"
+                        });
+                    }
+                    if(!language_id){
+                        return res.status(200).send
+                        ({
+                            code: 400,
+                            status: false,
+                            message: "Language id is required"
+                        });
+                    }
+                    if(!currency_id){
+                        return res.status(200).send
+                        ({
+                            code: 400,
+                            status: false,
+                            message: "Currency id  is required"
+                        });
+                    }
+                    if(!invoice_prefix){
+                        return res.status(200).send
+                        ({
+                            code: 400,
+                            status: false,
+                            message: "Invoice code is required"
+                        });
+                    }
+                    if(!quotation_prefix){
+                        return res.status(200).send
+                        ({
+                            code: 400,
+                            status: false,
+                            message: "Quotationx code is required"
+                        });
+                    }
+                    if(!tax_id){
+                        return res.status(200).send
+                        ({
+                            code: 400,
+                            status: false,
+                            message: "Tax id is required"
+                        });
+                    }
+
+                if (!phone  ) {
+                    return res.status(200).send
+                        ({
+                            code: 400,
+                            status: false,
+                            message: "Phone Number is required"
+                        });
+                }else if(!validateUAEMobileNumber(phone)){
+                    return res.status(200).send
+                    ({
+                        code: 400,
+                        status: false,
+                        message: "Invalid phone number."
+        
+                    });
+                }else{
+                     next();
+                }
+          
+               }    
                 } catch (err) {
                     console.log("Error while validating phone number in the database");
                 }
@@ -386,7 +503,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
         // }
 
        
-    }
+
 
 }
 /**This middle ware for using password validation */
@@ -459,21 +576,32 @@ exports.licenceImageAvailable = async (req, res, next) =>{
 
 exports.nameAvailable = async (req,res,next) =>
 {
-    const { name } = req.body ;
-    if (!name) 
-    {
-            return res.status(200).send({
-            code: 200,
+    const { name } = req.body;
+    if (!name) {
+        return res.status(200).send({
+            code: 400,
             success: false,
-            message: "Name is required"
+            message: 'Name is required'
         });
-    }else{
-
-     console.log("name done");
-     
-                next();
-        
+    } else {
+        next();
     }
+    
+};
+
+exports.appTitleAvailable = async (req,res,next) =>
+{
+    const { application_title } = req.body;
+    if ( !application_title) {
+        return res.status(200).send({
+            code: 400,
+            success: false,
+            message: 'Application Title is required'
+        });
+    } else {
+        next();
+    }
+    
 };
 exports.contactPersonAvailable = async (req,res,next) =>
 {
@@ -839,9 +967,11 @@ exports.passwordsimilarity = async (req, res, next) => {
 /** Licence number validation  */
 function validateUAELicenseNumber(licenseNumber) {
     // License number format: L-NN-NNNNNNN
-    const licenseRegex = /^[A-Z]-\d{2}-\d{7}$/;
+    const licenseNumberPattern = /^[A-Za-z]\d{8}$/;
 
-    return licenseRegex.test(licenseNumber);
+    // Check if the license number matches the specified format
+    return licenseNumberPattern.test(licenseNumber);
+  
 }
 
 const passwordValidation = async (req, res, next) => {
@@ -876,7 +1006,9 @@ function validateUAEMobileNumber(phoneNumber) {
 
 function hasOnlyNonSpaces(str) {
     if (str.includes(" ")) {
+        console.log("yes");
         return true;
+   
     }
     else {
         return false;
