@@ -12,11 +12,11 @@ const mysql = require('mysql2'); // Importing the mysql2 library functionalities
 var con = mysql.createConnection
 ({
     // host : "192.168.200.211",
-    host: "localhost",
+    host: "192.168.200.6",
     // port: 3306,
-    user: "root", 
-    password: "",
-    database: "horsecity"
+    user: "vsourz",
+    password: "vsourz",
+    database: "horscity"
 });
     
 con.connect(function async (err) 

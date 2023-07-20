@@ -80,13 +80,12 @@ exports.updateServiceProvider = (requestBody,file,id) =>
         {  
        
         let uploadAttachment = await commonoperation.fileUpload(file, constants.attachmentLocation.serviceProvider.licenceImage);
-        const {name,email,user_name,password,contact_person,contact_no,emergency_contact_no,contact_address,licence_no} = requestBody ;
+        const {name,email,user_name,contact_person,contact_no,emergency_contact_no,contact_address,licence_no} = requestBody ;
 
         let updateQuery = `UPDATE ${constants.tableName.service_providers} SET 
         name = '${name}',
         email = '${email}',
         user_name = '${user_name}',
-        password = '${await commonoperation.changePasswordToSQLHashing(password)}',
         contact_person = '${contact_person}',
         contact_no = '${contact_no}',
         contact_address = '${contact_address}',
