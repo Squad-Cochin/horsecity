@@ -43,7 +43,7 @@ exports.getAll= async (req, res) =>
 exports.getOne= async (req, res, next) =>
 {
     const customers = await customer.getone(req.params.id);
-    console.log(customers);
+    // console.log(customers);
     if(customers.length === 0)
     {
         console.log('No Customer data present');
@@ -52,11 +52,7 @@ exports.getOne= async (req, res, next) =>
             code : 404,
             status : true,
             message : constant.responseMessage.getAll,
-            data : 
-                {
-                    totalCount : customers.length,
-                    customers : customers
-                }
+            data : customers
         });
     }
     else
@@ -67,11 +63,7 @@ exports.getOne= async (req, res, next) =>
             code : 200,
             status : true,
             message : constant.responseMessage.getAll,
-            data : 
-                {
-                    totalCount : customers.length,
-                    customers : customers
-                }
+            data : customers
         });
     }
 }

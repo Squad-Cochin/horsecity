@@ -45,13 +45,14 @@ module.exports = class customers
             console.log('Data : ', data);
             if(data.length === 0)
             {
-                let idProofImage = data[0].id_proof_image;
-                data[0].id_proof_image = `${process.env.PORT_SP}${constants.attachmentLocation.customer.idProof}${idProofImage}`;
-                console.log("Link: ", data[0].id_proof_image);
-                // return data
+                return data
             }
             else
             {
+                console.log('Came inside');
+                let idProofImage = data[0].id_proof_image;
+                data[0].id_proof_image = `${process.env.PORT_SP}${constants.attachmentLocation.customer.idProof}${idProofImage}`;
+                console.log("Link: ", data[0].id_proof_image);
                 return data;
             }            
         }

@@ -45,7 +45,7 @@ exports.tableDataOnId = (tablename, Id) =>
         let selQuery = `SELECT * FROM ${tablename} WHERE ${tablename}.id = '${Id}' `;
         con.query(selQuery, (err, result) =>
         {
-            console.log('Result: ',result);
+            // console.log('Result: ',result);
             if (err)
             {
                 console.log('Error while executing the query:', err);
@@ -56,7 +56,7 @@ exports.tableDataOnId = (tablename, Id) =>
                 if (result.length > 0)
                 {
                     console.log('Visted');
-                    console.log(result);
+                    // console.log(result);
                     resolve(result);
                 }
                 else
