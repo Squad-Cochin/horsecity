@@ -9,7 +9,7 @@
 
 // Importing the inbuilt component
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+import {Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import List from 'list.js';
 import Flatpickr from "react-flatpickr";
 import {useNavigate} from "react-router-dom"
@@ -23,10 +23,11 @@ import Breadcrumbs from "../../../components/Common/Breadcrumb";
 
 //Get vehicles data
 import { removeVehicle } from '../../../helpers/ApiRoutes/removeApiRoutes';
-import { getVehiclesData } from '../../../helpers/ApiRoutes/authApiRoutes'
+import { getVehiclesData } from '../../../helpers/ApiRoutes/getApiRoutes'
 import { addNewVehicle } from '../../../helpers/ApiRoutes/addApiRoutes';
 import { updateVehicle } from '../../../helpers/ApiRoutes/editApiRoutes';
 import { Vehicles } from '../../../CommonData/Data';
+import config from '../../../config';
 
 // The name of the function is ListVehiclesTable. Which will be executed and used all over program. This funtion is having all the code
 const ListVehiclesTable = () => 
@@ -37,40 +38,43 @@ const ListVehiclesTable = () =>
     const [vehicle, setVehicle] = useState([]); // State variable to store a single vehicle
     const [modal_delete, setmodal_delete] = useState(false); // State variable to control delete modal visibility
     const [view_modal, setView_modal] = useState(false); // State variable to control view modal visibility
+    const [ pageNumber, setPageNumber ] = useState(1);
+    const [ numberOfData, setNumberOfData ] = useState(0);
+    const [ errors, setErrors ] = useState("")
+    const pageLimit = config.pageLimit;
 
     const navigate = useNavigate(); // Use the 'useNavigate' hook from React Router
 
+    // // Execute the code inside the useEffect hook when the component mounts
+    // useEffect(() => {
+    // // Existing List
+    // const existOptionsList = {
+    //     valueNames: ['contact-name', 'contact-message'],
+    // };
+    // new List('contact-existing-list', existOptionsList);
+    // // Initialize List.js with ID 'contact-existing-list' and options from 'existOptionsList'.
+    // // This creates a list with the ability to filter based on the values of 'contact-name' and 'contact-message'.
+
+    // // Fuzzy Search list
+    // new List('fuzzysearch-list', {
+    //     valueNames: ['name'],
+    // });
+    // // Initialize List.js with ID 'fuzzysearch-list' and options specifying that fuzzy search should be performed on 'name'.
+    // // This enables searching and filtering the list based on the values of 'name' using fuzzy search algorithm.
+
+    // // Pagination list
+    // new List('pagination-list', {
+    //     valueNames: ['pagi-list'],
+    //     page: 3,
+    //     pagination: true,
+    // });
+    // // Initialize List.js with ID 'pagination-list' and options specifying pagination.
+    // // This creates a paginated list where each page displays three items at a time.
+    // });
+
     // Execute the code inside the useEffect hook when the component mounts
     useEffect(() => {
-    // Existing List
-    const existOptionsList = {
-        valueNames: ['contact-name', 'contact-message'],
-    };
-    new List('contact-existing-list', existOptionsList);
-    // Initialize List.js with ID 'contact-existing-list' and options from 'existOptionsList'.
-    // This creates a list with the ability to filter based on the values of 'contact-name' and 'contact-message'.
-
-    // Fuzzy Search list
-    new List('fuzzysearch-list', {
-        valueNames: ['name'],
-    });
-    // Initialize List.js with ID 'fuzzysearch-list' and options specifying that fuzzy search should be performed on 'name'.
-    // This enables searching and filtering the list based on the values of 'name' using fuzzy search algorithm.
-
-    // Pagination list
-    new List('pagination-list', {
-        valueNames: ['pagi-list'],
-        page: 3,
-        pagination: true,
-    });
-    // Initialize List.js with ID 'pagination-list' and options specifying pagination.
-    // This creates a paginated list where each page displays three items at a time.
-    });
-
-    // Execute the code inside the useEffect hook when the component mounts
-    useEffect(() => {
-    let getvehicles = getVehiclesData(); // Get the vehicles data
-    setVehicles(getvehicles); // Set the 'vehicles' state with the retrieved data
+        getAllData(1)
     }, []);
 
     // The Below function is used when we are adding the vehicle
@@ -168,8 +172,10 @@ const ListVehiclesTable = () =>
         initialValues, // Initial values for the form
         onSubmit: (values) =>
         {
+            setmodal_list(false);
             if (add_list) 
-            {
+            {   
+                console.log("bbb",values)
                 // Add new vehicle
                 addNewVehicle(values); // Call the 'addNewVehicle' function with form values as a parameter
                 setAdd_list(false); // Reset 'add_list' state to false
@@ -184,6 +190,14 @@ const ListVehiclesTable = () =>
             }
         },
     });
+
+    // function for get data all Vechile data
+    async function getAllData(page) {
+        let getvehicles = await getVehiclesData(page || 1);
+        setVehicles(getvehicles?.vehicles);
+        setPageNumber(page);
+        setNumberOfData(getvehicles?.totalCount);
+    }
 
     // The execution of all the object and element are written inside the return. Whenever this file will be called only the code inside this return coded will be returned
     return (
@@ -320,6 +334,7 @@ const ListVehiclesTable = () =>
                 <form className="tablelist-form" onSubmit={validation.handleSubmit}>
                     <ModalBody>                        
                         {/* The below element is adding the name of the service provider. Whose vehicle is being added */}
+                        {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
                         <div className="mb-3">
                             <label htmlFor="serviceprovider-field" className="form-label">Service Provider</label>
                             <input
@@ -465,7 +480,7 @@ const ListVehiclesTable = () =>
                                     name="air_conditioner"
                                     className="form-check-input"
                                     value="YES"
-                                    checked={validation.values.air_conditioner === 'YES'}
+                                    // checked={validation.values.air_conditioner === 'YES'}
                                     onChange={validation.handleChange}
                                     onBlur={validation.handleBlur}
                                     required
@@ -479,7 +494,7 @@ const ListVehiclesTable = () =>
                                     name="air_conditioner"
                                     className="form-check-input"
                                     value="NO"
-                                    checked={validation.values.air_conditioner === 'NO'}
+                                    // checked={validation.values.air_conditioner === 'NO'}
                                     onChange={validation.handleChange}
                                     onBlur={validation.handleBlur}
                                     required
@@ -586,10 +601,10 @@ const ListVehiclesTable = () =>
                                 <input
                                     type="radio"
                                     id="insurance_covered-yes"
-                                    name="insurance_covered"
+                                    name="insurance_cover"
                                     className="form-check-input"
                                     value="YES"
-                                    // checked={validation.values.insurance_covered === "YES"}
+                                    // checked={validation.values.insurance_cover === "YES"}
                                     onChange={validation.handleChange}
                                     required
                                 />
@@ -599,9 +614,9 @@ const ListVehiclesTable = () =>
                                 <input
                                     type="radio"
                                     id="insurance_covered-no"
-                                    name="insurance_covered"
+                                    name="insurance_cover"
                                     value='NO'
-                                    // checked={validation.values.insurance_covered === "NO"}
+                                    // checked={validation.values.insurance_cover === "NO"}
                                     onChange={validation.handleChange}
                                     className="form-check-input"
                                     required
@@ -620,7 +635,7 @@ const ListVehiclesTable = () =>
                                 }}
                                 name='insurance_date'
                                 value={validation.values.insurance_date || ""}
-                                onChange={validation.handleChange}
+                                onChange={(dates) =>validation.setFieldValue('insurance_date', dates[0])}
                                 placeholder="Select Insurance Date"
                             />
                         </div>
@@ -667,7 +682,7 @@ const ListVehiclesTable = () =>
                                 }}
                                 name='insurance_expiry_date'
                                 value={validation.values.insurance_expiry_date || ""}
-                                onChange={validation.handleChange}
+                                onChange={(dates) =>validation.setFieldValue('insurance_expiry_date', dates[0])}
                                 placeholder="Select Insurance Expiry Date"
                             />
                         </div>
@@ -729,7 +744,7 @@ const ListVehiclesTable = () =>
                                 }}
                                 name='vehicle_registration_date'
                                 value={validation.values.vehicle_registration_date || ""}
-                                onChange={validation.handleChange}
+                                onChange={(dates) =>validation.setFieldValue('vehicle_registration_date', dates[0])}
                                 placeholder="Select Vehicle Registration Date"
                             />
                         </div>
@@ -744,7 +759,7 @@ const ListVehiclesTable = () =>
                                 }}
                                 name='vehicle_expiration_date'
                                 value={validation.values.vehicle_expiration_date || ""}
-                                onChange={validation.handleChange}
+                                onChange={(dates) =>validation.setFieldValue('vehicle_expiration_date', dates[0])}
                                 placeholder="Select Vehicle Expiration Date"
                             />
                         </div>

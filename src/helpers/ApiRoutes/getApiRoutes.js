@@ -31,7 +31,7 @@ export async function getSPAllData(pageNumber){
                 "serviceProvider": []
             }
         }
-        return errorObj
+        return errorObj.data
     }
 }
 
@@ -64,7 +64,7 @@ export async function getCustomersData(pageNumber){
                 "customers": []
             }
         }
-        return errorObj
+        return errorObj.data
     }
 }
 
@@ -76,3 +76,28 @@ export async function getSingleCustomerData(cId){
         return null
     }
 }
+
+export async function getVehiclesData(pageNumber){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = {
+            "page" : pageNumber,
+            "limit" : pageLimit
+        }
+        console.log(reqObj)
+        const { data } = await axios.post(`${url.GET_VEHICLES_ALL_DATA_URL}`,reqObj);
+        console.log("ddd",data)
+        return(data)
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data": {
+                "totalCount": 0,
+                "vehicles": []
+            }
+        }
+        return errorObj.data
+    }
+  }

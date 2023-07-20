@@ -50,11 +50,19 @@ export const PUT_SP_REMOVE = apiBaseUrl + token + "/remove/serviceprovider"
 
 /**CUSTOMER */
 export const GET_CUSTOMER_ALL_DATA_URL = apiBaseUrl + token + "/getAll/customers"
-export const GET_CUSTOMER_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/serviceprovider"
+export const GET_CUSTOMER_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/customer"
 export const POST_CUSTOMER_ADD_URL = apiBaseUrl + token + "/add/customer"
 export const PUT_CUSTOMER_UPDATE_STATUS = apiBaseUrl + token + "/update/customer"
-export const POST_CUSTOMER_EDIT_URL = apiBaseUrl + token + "/update/serviceprovider"
-export const PUT_CUSTOMER_REMOVE = apiBaseUrl + token + "/remove/serviceprovider"
+export const POST_CUSTOMER_EDIT_URL = apiBaseUrl + token + "/edit/customer"
+export const PUT_CUSTOMER_REMOVE = apiBaseUrl + token + "/remove/customer"
+
+/**VEHICLES */
+export const GET_VEHICLES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/vehicles"
+// export const GET_CUSTOMER_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/customer"
+// export const POST_CUSTOMER_ADD_URL = apiBaseUrl + token + "/add/customer"
+// export const PUT_CUSTOMER_UPDATE_STATUS = apiBaseUrl + token + "/update/customer"
+// export const POST_CUSTOMER_EDIT_URL = apiBaseUrl + token + "/edit/customer"
+// export const PUT_CUSTOMER_REMOVE = apiBaseUrl + token + "/remove/customer"
 
 // http://192.168.200.130:8000/horsecity661809/getAll/customers
 

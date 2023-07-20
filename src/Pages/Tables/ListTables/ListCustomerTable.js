@@ -130,14 +130,13 @@ const ListCustomerTable = () => {
     *  of a customer */
     async function tog_view(productId) {
         let singleCustomer = await getSingleCustomerData(productId)
-        console.log("ss",singleCustomer)
         setCustomer(singleCustomer)
         setView_modal(!view_modal);
     }
 
     /**This function is used to remove a service provider*/
     async function remove_data(id) {
-        let remove = await removeCustomer(id);
+        await removeCustomer(id);
         window.location.reload();
     }
 
@@ -164,7 +163,7 @@ const ListCustomerTable = () => {
         }
     }
 
-    // function for get data all service provider data
+    // function for get data all customer data
     async function getAllData(page) {
         let getCustomers = await getCustomersData(page || 1);
         console.log(getCustomers)

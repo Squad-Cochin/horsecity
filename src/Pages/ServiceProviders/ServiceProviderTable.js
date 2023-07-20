@@ -155,8 +155,8 @@ const ListTables = () => {
     }
 
     /**This function is used to remove a service provider*/
-    function remove_data(id) {
-        removeSProvider(id)
+    async function remove_data(id) {
+        await removeSProvider(id)
         window.location.reload();
     }
 
