@@ -7,7 +7,7 @@
 //                                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const auth = require('../models/auth.model'); // Impoting the auth models details
+const auth = require('../../models/auth/auth.model'); // Impoting the auth models details
 
 
 /**
@@ -30,7 +30,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 200,
-            message : "This username must be incorrect or no user is registered with this username",
+            message : "username not found",
         });
     }
     // If any unspecified or unencountered error came. Which is not as per you code thinking, then this else if block
@@ -160,10 +160,9 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
 exports.serviceProviderLogout = async(req, res)=>
 {
     // We are calling the function. Which will look for logout functionality. We are sending username and password because it is needed
-    let loginauth = await auth.serviceproviderchangepassword(req.body.userName, req.body.password);
-    
+    let loginauth = await auth.serviceproviderlogout(req.body.userName, req.body.password);    
     // If things are smoothly working, Then the below response will work 
-    if(loginauth)
+    if(loginauth === 'logoutdone')
     {
         console.log('Logout successfully done');
         res.status(200).send
@@ -171,19 +170,30 @@ exports.serviceProviderLogout = async(req, res)=>
             status : "success",
             code : 200,
             message : "Logout Done"
-        })
+        });
     }
     // If any unspecified or unencountered error came. Which is not as per you code thinking, then this else if block
-    else
+    if(loginauth ==='incorrectpassword')
     {
-        console.log('Error while logout');
+        console.log('Incorrect Password');
         res.status(200).send
         ({
-            status : "failure",
-            code : 200,
-            message : "Error while Logout"
-        });        
+            status : "success",
+            code : 400,
+            message : "Incorrect Password"
+        });
     }
+    if(loginauth === 'noserviceprovider')
+    {
+        console.log('Incorrect Service Provider Username');
+        res.status(200).send
+        ({
+            status : "success",
+            code : 400,
+            message : "Incorrect service provider username"
+        });
+    }    
+    
 }
 
 exports.resetPasswordUsingEmail = async(req, res, next)=>

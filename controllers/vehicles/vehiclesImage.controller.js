@@ -40,7 +40,7 @@ exports.addImages = async (req, res, next) =>
 
 exports.allImages = async (req, res, next) =>
 {
-    const vehicleImages = await vehicleImage.allimages(req.body.pageNumber, req.body.pageSize)
+    const vehicleImages = await vehicleImage.allimages(req.body.page, req.body.limit)
     if(vehicleImages === 'err')
     {
         console.log('Error while fetching the particular vehicle all images');
@@ -66,14 +66,53 @@ exports.allImages = async (req, res, next) =>
 
 exports.updateStatus = async (req, res, next) =>
 {
-    const vehicleImages = await vehicleImage.updatestatus() 
+    const vehicleImages = await vehicleImage.updatestatus(req.params.id)
+    if(vehicleImages.length === 0)
+    {
+        console.log('No image is updated');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.getAll
+        });
+    }
+    else
+    {
+        console.log('Vehicle images Status updated successfully');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.statusChanged
+        });
+    }
 
 };
 
 exports.removeImage = async (req, res, next) =>
 {
-    const vehicleImages = await vehicleImage.removeimage() 
-
+    const vehicleImages = await vehicleImage.removeimage(req.params.id);
+    if(vehicleImages.length === 0)
+    {
+        console.log('No vehicle image is removed');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.removeerror
+        });
+    }
+    else
+    {
+        console.log('Vehicle image is removed');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.removesuccess
+        });
+    }
 };
 
 

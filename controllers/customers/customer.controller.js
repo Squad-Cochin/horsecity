@@ -14,14 +14,16 @@ const customer = require('../../models/customers/customer.model');
 
 exports.getAll= async (req, res) =>
 {
-    const customers = await customer.getall(req.body.pageNumber, req.body.pageSize);
-    // console.log(customers);
+    console.log('Reached1 1');
+    const customers = await customer.getall(req.body.page, req.body.limit);
+    console.log('Reachde 2');
+    console.log(customers);
     if(customers.length === 0)
     {
         console.log('No Customer data present');
         return res.send
         ({
-            code : 200,
+            code : 404,
             status : true,
             message : constant.responseMessage.getAll,
             data : 
@@ -57,7 +59,7 @@ exports.getOne= async (req, res) =>
         console.log('No Customer data present');
         return res.send
         ({
-            code : 200,
+            code : 404,
             status : true,
             message : constant.responseMessage.getAll,
             data : 
@@ -104,7 +106,7 @@ exports.addCustomer = async (req, res, next) =>
         console.log('Error while inserting the customer data');
         return res.status(200).json
         ({
-            code: 200,
+            code: 401,
             status: true,
             message: constant.responseMessage.errorInsert,
         });
@@ -130,7 +132,7 @@ exports.editCustomer = async (req, res, next) =>
         console.log('Error while editing the customer data ');
         res.send
         ({
-            code : 200,
+            code : 401,
             status : true,
             message : constant.responseMessage.erroredit,
         });
@@ -157,9 +159,9 @@ exports.updateStatus= async (req, res) =>
         console.log('No Customer data present and status is not updated');
         return res.send
         ({
-            code : 200,
+            code : 400,
             status : true,
-            message : constant.responseMessage.getAll
+            message : constant.responseMessage.statuserror
         });
     }
     else
@@ -184,7 +186,7 @@ exports.removeCustomer = async (req, res) =>
         console.log('No Customer data present and remove is not done');
         return res.send
         ({
-            code : 200,
+            code : 400,
             status : true,
             message : constant.responseMessage.removeerror
         });

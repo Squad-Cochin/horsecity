@@ -7,8 +7,8 @@ module.exports = (app) =>
 {
     // The below route is for adding the new vehicle data.
     app.post(`/${process.env.apiToken}/addNew/vehicle`,
-    checkInput.isServiceProviderIdEntered,
-    checkInput.isValidVehicleNumberEntered,
+    checkInput.isServiceProviderIdEntered(constants.tableName.service_providers),
+    checkInput.isValidVehicleNumberEntered(constants.tableName.vehicles),
     checkInput.isManufacturerEntered,
     checkInput.isColorEntered,
     checkInput.isModelEntered,

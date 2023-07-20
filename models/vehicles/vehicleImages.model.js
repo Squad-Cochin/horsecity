@@ -72,14 +72,22 @@ module.exports = class vehicleImages
         {
             console.log('Error while fetching all the vehicle images. In the vehicleImage.model.js');  
         }
-
     }
 
-    static async updatestatus ()
+    static async updatestatus (Id)
     {
         try 
         {
-            
+            const data = await commonoperation.updateUserStatus(constants.tableName.vehicles_images, Id);
+            // console.log('Data', data);
+            if(data.length === 0)
+            {
+                return data
+            }
+            else
+            {
+                return data;
+            }            
         }
         catch (error)
         {
@@ -89,10 +97,20 @@ module.exports = class vehicleImages
     }
 
 
-    static async removeimage ()
+    static async removeimage (Id)
     {
         try 
         {
+            const data = await commonoperation.removeUser(constants.tableName.vehicles_images, Id);
+            // console.log('Data', data);
+            if(data.length === 0)
+            {
+                return data
+            }
+            else
+            {
+                return data;
+            }  
             
         }
         catch (error)

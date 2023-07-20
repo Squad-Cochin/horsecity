@@ -40,7 +40,8 @@ const getFormattedUTCTime = (utcOffset) =>
     const hours = targetDate.getUTCHours().toString().padStart(2, '0');
     const minutes = targetDate.getUTCMinutes().toString().padStart(2, '0');
     const seconds = targetDate.getUTCSeconds().toString().padStart(2, '0');
-  
+
+    // return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 

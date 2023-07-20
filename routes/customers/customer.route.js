@@ -1,13 +1,17 @@
 const customerController = require('../../controllers/customers/customer.controller');
 const checkInput = require(`../../middlewares/validateInput/checkRequestBodyInput`);
 const { isValidIdInTheParams } = require('../../middlewares/validateInput/checkRequestparams');
+const verifyBody = require('../../middlewares/requestValidator');
 
 const constants = require('../../utils/constants');
 
 module.exports = (app) =>
 {
     // Below route is for getting data of all the customers
-    app.get(`/${process.env.apiToken}/getAll/customers`, customerController.getAll);    
+    app.post(`/${process.env.apiToken}/getAll/customers`, 
+    checkInput.isPageNumberEntered,
+    checkInput.isPageSizeEntered,
+    customerController.getAll);    
     // Below route is for getting data of any particular customer
     app.get(`/${process.env.apiToken}/getOne/customer/:id`, isValidIdInTheParams(constants.tableName.customers),  isValidIdInTheParams, customerController.getOne);
     
@@ -17,8 +21,9 @@ module.exports = (app) =>
     checkInput.emailValidation(constants.tableName.customers),
     checkInput.usernameValidation(constants.tableName.customers),
     checkInput.passwordValidation,
+    // verifyBody.validateUAEMobileNumber,
     checkInput.contactNumberValidation(constants.tableName.customers),
-    checkInput.dateOfBirthValidation,
+    // checkInput.dateOfBirthValidation,
     checkInput.idProofValidation,
     customerController.addCustomer
     );

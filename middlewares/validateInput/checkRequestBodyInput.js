@@ -21,6 +21,7 @@ const isValidDateOfBirth = (DOB) =>
 
 const isValidUAENumber = (phoneNumber) =>
 {
+    console.log('Phone Number', phoneNumber);
     // Phone number format: +9715XXXXXXXX
     const phoneRegex = /^\+9715\d{8}$/;
     return phoneRegex.test(phoneNumber);
@@ -63,6 +64,34 @@ const isvalidEmail = (email) =>
         return false
     }
 };
+
+const validDatePassword = (password) =>
+{
+    let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
+    con.query(selQuery, (err, result) => 
+    {
+        //console.log(result); 
+        if (result)
+        {
+            if (isValidPassword(result[0].value, password) )
+            {
+                console.log("password validation done");
+                return 'validPassword'
+            }
+            else 
+            {
+                console.log('Invalid Password');
+                return 'invalidPassword'
+            }
+        }
+        else
+        {
+            console.log("Error while fetchig the regex from the password policies table");
+            return 'notfoundRegex';
+        }
+    });
+
+}
 
 exports.emailValidation = (tableName) => async (req, res, next) =>
 {
@@ -150,17 +179,17 @@ exports.usernameValidation = (tableName) => (req, res, next) =>
         else
         {
             // console.log(isValidUsername(req.body.userName));
-            if(isValidUsername(req.body.userName))
-            {
-                return res.status(200).send
-                ({
-                    code: 200,
-                    status: "failure",
-                    message: "username is not valid. It must consist atleat 8 letter and less than 16 letters"
-                });                                
-            }
-            else
-            {
+            // if(isValidUsername(req.body.userName))
+            // {
+            //     return res.status(200).send
+            //     ({
+            //         code: 200,
+            //         status: "failure",
+            //         message: "username is not valid. It must consist atleat 8 letter and less than 16 letters"
+            //     });                                
+            // }
+            // else
+            // {
                 let checkContactNumber = commonfetching.dataOnUsername(tableName, req.body.userName);
                 if(checkContactNumber === 'err')
                 {
@@ -180,67 +209,12 @@ exports.usernameValidation = (tableName) => (req, res, next) =>
                 }
                 else
                 {
-                    console.log('Here222');
                     next();
                 }
-            }
+            // }
         }
     }
 }
-
-exports.passwordValidation = (req, res, next) =>
-{
-    if (!req.body.password) 
-    {
-        return res.status(200).send
-        ({
-            code: 200,
-            status: false,
-            message: "Password is required"
-        });
-    }
-    else
-    {
-        if(hasOnlyNonSpaces(req.body.password) === true)
-        {
-            return res.status(200).send
-            ({
-                code: 200,
-                status: "failure",
-                message: "Password contain space. It is not allowed."
-            });
-        }
-        else
-        {
-            let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
-            con.query(selQuery, (err, result) => 
-            {
-                //console.log(result); 
-                if (result)
-                {
-                    if (isValidPassword(result[0].value, req.body.password)) 
-                    {
-                        console.log("password validation done");
-                        next();
-                    }
-                    else 
-                    {
-                        return res.status(200).json
-                        ({
-                            success: false,
-                            code: 400,
-                            message: "Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character(#, $, ?, /)",
-                        });
-                    }
-                }
-                else
-                {
-                    console.log("Error while fetchig the regex from the password policies table");
-                }
-            });
-        }
-    }
-};
 
 exports.contactNumberValidation = (tableName) => (req, res, next) =>
 {
@@ -248,7 +222,7 @@ exports.contactNumberValidation = (tableName) => (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Contact number is required"
         });
@@ -259,7 +233,7 @@ exports.contactNumberValidation = (tableName) => (req, res, next) =>
         {
             return res.status(200).send
             ({
-                code: 200,
+                code: 400,
                 status: "failure",
                 message: "Contact Number contain space. It is not allowed."
             });
@@ -271,7 +245,7 @@ exports.contactNumberValidation = (tableName) => (req, res, next) =>
             {
                 return res.status(200).send
                 ({
-                    code: 200,
+                    code: 400,
                     status: "failure",
                     message: "Contact number is not in valid"
                 });                                
@@ -297,7 +271,6 @@ exports.contactNumberValidation = (tableName) => (req, res, next) =>
                 }
                 else
                 {
-                    console.log('Here222');
                     next();
                 }
             }
@@ -383,7 +356,6 @@ exports.dateOfBirthValidation = (req, res, next) =>
             }
             else
             {
-                console.log('Here222');
                 next();
             }
         }
@@ -413,7 +385,7 @@ exports.idProofValidation = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Id proof number is required"
         });
@@ -430,7 +402,7 @@ exports.isValidDescription = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Description is required"
         });
@@ -447,7 +419,7 @@ exports.isValidLicenceNumber = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Licence number is required"
         });
@@ -458,54 +430,54 @@ exports.isValidLicenceNumber = (req, res, next) =>
     }    
 };
 
-exports.newpassword = async (req, res, next) => {
+exports.newpassword = async (req, res, next) => 
+{
     const password = await req.body.newpassword
-    if (!password) {
+    if (!password)
+    {
         return res.status(200).send
-            ({
-                code: 200,
+        ({
+                code: 400,
                 status: "failure",
                 message: "New password is required"
-            });
+        });
     }
-    else {
-        if (hasOnlyNonSpaces(password) === true) {
+    else
+    {
+        if (hasOnlyNonSpaces(password) === true)
+        {
             return res.status(200).send
-                ({
-                    code: 200,
-                    status: "failure",
-                    message: "New password contain space. It is not allowed."
-                });
+            ({
+                code: 400,
+                status: "failure",
+                message: "New password contain space. It is not allowed."
+            });
         }
-        else {
-            let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
-            con.query(selQuery, (err, result) => {
-                //console.log(result);
-                if (result) {
-                    const isValidPassword = (password) => {
-                        const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
-                        const regex = new RegExp(regexPattern);
-                        //console.log(regex);
-                        return regex.test(password); // Use the test() method to check if the password matches the regex pattern
-                    };
-
-                    if (isValidPassword(password)) {
-                        //console.log('here');
-                        next();
-                    }
-                    else {
-                        return res.status(200).json
-                            ({
-                                status: false,
-                                code: 200,
-                                message: "Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character",
-                            });
-                    }
-                }
-                else {
-                    //console.log("Error while fetchig the regex from the password policies table");
-                }
-            })
+        else
+        {
+            if(validDatePassword(password) === 'invalidPassword')
+            {
+                return res.status(200).json
+                ({
+                    success: false,
+                    code: 400,
+                    message: "Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character(#, $, ?, /)",
+                });
+            }
+            else if(password === 'notfoundRegex')
+            {
+                return res.status(200).json
+                ({
+                    code: 500,
+                    success: false,
+                    message: "Internal Server Error"
+                });
+            }   
+            else
+            {
+                console.log('Password Matched');
+                next();
+            }  
         }
     }
 }
@@ -517,7 +489,7 @@ exports.confirmnewpassword = async (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: "failure",
             message: "Confirm new password is required"
         });
@@ -528,7 +500,7 @@ exports.confirmnewpassword = async (req, res, next) =>
         {
             return res.status(200).send
             ({
-                code: 200,
+                code: 400,
                 status: "failure",
                 message: "Confirm new password contain space. It is not allowed."
             });
@@ -536,39 +508,29 @@ exports.confirmnewpassword = async (req, res, next) =>
         else
         {
             
-            let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
-            con.query(selQuery, (err, result) =>
+            if(validDatePassword(password) === 'invalidPassword')
             {
-                //console.log(result);
-                if (result)
-                {
-                    const isValidPassword = (password) =>
-                    {
-                        const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
-                        const regex = new RegExp(regexPattern);
-                        //console.log(regex);
-                        return regex.test(password); // Use the test() method to check if the password matches the regex pattern
-                    };
-                    if (isValidPassword(password))
-                    {
-                        //console.log('here');
-                        next();
-                    }
-                    else
-                    {
-                        return res.status(200).json
-                        ({
-                            status: false,
-                            code: 200,
-                            message: "Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character",
-                        });
-                    }
-                }
-                else
-                {
-                    //console.log("Error while fetchig the regex from the password policies table");
-                }
-            })
+                return res.status(200).json
+                ({
+                    success: false,
+                    code: 400,
+                    message: "Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character(#, $, ?, /)",
+                });
+            }
+            else if(password === 'notfoundRegex')
+            {
+                return res.status(200).json
+                ({
+                    code: 500,
+                    success: false,
+                    message: "Internal Server Error"
+                });
+            }   
+            else
+            {
+                console.log('Password Matched');
+                next();
+            }  
         }
     }
 }
@@ -577,7 +539,7 @@ exports.passwordsimilarity = async (req, res, next) => {
     if (req.body.confirmnewpassword !== req.body.newpassword) {
         return res.status(200).send
             ({
-                code: 200,
+                code: 400,
                 status: "failure",
                 message: "Both the new password are not similar"
             });
@@ -586,7 +548,7 @@ exports.passwordsimilarity = async (req, res, next) => {
         if (req.body.password === req.body.newpassword) {
             return res.status(200).send
                 ({
-                    code: 200,
+                    code: 400,
                     status: "failure",
                     message: "New password similar with old password. It is not allowed."
                 });
@@ -594,7 +556,7 @@ exports.passwordsimilarity = async (req, res, next) => {
         else if (req.body.confirmnewpassword === req.body.password) {
             return res.status(200).send
                 ({
-                    code: 200,
+                    code: 400,
                     status: "failure",
                     message: "Confirm new password similar with old password. It is not allowed."
 
@@ -603,6 +565,96 @@ exports.passwordsimilarity = async (req, res, next) => {
         else {
             next();
         }
+    }
+}
+
+exports.passwordValidation = async (req, res, next) =>
+{
+    let password = await req.body.password
+    if (!password) 
+    {
+        return res.status(200).send
+        ({
+            code: 400,
+            status: false,
+            message: "Password is required"
+        });
+    }
+    else
+    {
+        if(hasOnlyNonSpaces(password) === true)
+        {
+            return res.status(200).send
+            ({
+                code: 400,
+                status: "failure",
+                message: "Password contain space. It is not allowed."
+            });
+        }
+        else
+        {
+            if(validDatePassword(password) === 'invalidPassword')
+            {
+                return res.status(200).json
+                ({
+                    success: false,
+                    code: 400,
+                    message: "Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character(#, $, ?, /)",
+                });
+            }
+            else if(password === 'notfoundRegex')
+            {
+                return res.status(200).json
+                ({
+                    code: 500,
+                    success: false,
+                    message: "Internal Server Error"
+                });
+            }   
+            else
+            {
+                console.log('Password Matched');
+                next();
+            }      
+        }
+    }
+};
+
+
+
+exports.isPageNumberEntered = (req, res, next) =>
+{
+    if(!req.body.page)
+    {
+        console.log('Page number value is not entered');
+        return res.status(200).json
+        ({
+            code: 500,
+            success: false,
+            message: "Internal Server Error. Page Number value is nt entered"
+        });     
+    }
+    else
+    {
+        next();
+    }
+}
+
+exports.isPageSizeEntered = (req, res, next) =>
+{
+    if(!req.body.limit)
+    {
+        console.log('Page size is not entered');
+        return res.status(200).json
+        ({
+            code: 500,
+            success: false,
+            message: "Internal Server Error. Page size is not entered"
+        });     
+    }
+    else
+    {
+        next();
     }
 }
 

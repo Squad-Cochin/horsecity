@@ -1,7 +1,7 @@
 const constants = require("../../utils/constants");
 const commonfetching = require(`../../utils/helper/commonfetching`);
 
-exports.isServiceProviderIdEntered = (tableName) => (req, res, next) =>
+exports.isServiceProviderIdEntered = (tableName) =>async (req, res, next) =>
 {
     if (!req.body.serviceProviderId) 
     {
@@ -14,8 +14,7 @@ exports.isServiceProviderIdEntered = (tableName) => (req, res, next) =>
     }
     else
     {
-        const data = commonfetching.tableDataOnId(tableName, req.body.serviceProviderId)
-        console.log(data);
+        const data = await commonfetching.tableDataOnId(tableName, req.body.serviceProviderId)
         if(data === 'err' || !data)
         {
             return res.status(500).json
@@ -44,7 +43,7 @@ exports.isServiceProviderIdEntered = (tableName) => (req, res, next) =>
 }  
 
 
-exports.isValidVehicleNumberEntered = (tableName) => (req, res, next) =>
+exports.isValidVehicleNumberEntered = (tableName) => async (req, res, next) =>
 {
     if (!req.body.vehicle_number) 
     {
@@ -57,7 +56,7 @@ exports.isValidVehicleNumberEntered = (tableName) => (req, res, next) =>
     }
     else
     {
-        const data = commonfetching.tableDataOnId(tableName, req.body.vehicle_number)
+        const data = await commonfetching.tableDataOnId(tableName, req.body.vehicle_number)
         console.log(data);
         if(data === 'err' || !data)
         {
@@ -139,6 +138,7 @@ exports.isColorEntered = (req,res,next) =>
 exports.isLengthEntered = (req, res, next) => 
 {
     const length = req.body.length;
+    const numericLength = parseFloat(length);
     if (!length)
     {
         return res.status(200).send
@@ -148,22 +148,13 @@ exports.isLengthEntered = (req, res, next) =>
             message: "Vehicle length required",
         });
     }
-    else if (typeof length !== "number")
+    else if (typeof numericLength !== "number" || isNaN(numericLength) || !isFinite(numericLength)) 
     {
         return res.status(200).send
         ({
             code: 200,
             status: "failure",
             message: "Vehicle length must be a numeric value",
-        });
-    }
-    else if (isNaN(length)) 
-    {
-        return res.status(200).send
-        ({
-            code: 200,
-            status: "failure",
-            message: "Invalid vehicle length. Please provide a valid numeric value.",
         });
     }
     else if (length <= 0)
@@ -184,6 +175,7 @@ exports.isLengthEntered = (req, res, next) =>
 exports.isBreadthEntered = (req, res, next) => 
 {
     const breadth = req.body.breadth;
+    const numericLength = parseFloat(breadth);
     if (!breadth)
     {
         return res.status(200).send
@@ -193,22 +185,13 @@ exports.isBreadthEntered = (req, res, next) =>
             message: "Vehicle breadth required",
         });
     }
-    else if (typeof breadth !== "number")
+    else if (typeof numericLength !== "number" || isNaN(numericLength) || !isFinite(numericLength)) 
     {
         return res.status(200).send
         ({
             code: 200,
             status: "failure",
-            message: "Vehicle breadth must be a numeric value",
-        });
-    }
-    else if (isNaN(breadth)) 
-    {
-        return res.status(200).send
-        ({
-            code: 200,
-            status: "failure",
-            message: "Invalid vehicle breadth. Please provide a valid numeric value.",
+            message: "Vehicle length must be a numeric value",
         });
     }
     else if (breadth <= 0)
@@ -229,6 +212,7 @@ exports.isBreadthEntered = (req, res, next) =>
 exports.isheightEntered = (req, res, next) => 
 {
     const height = req.body.height;
+    const numericLength = parseFloat(height);
     if (!height)
     {
         return res.status(200).send
@@ -238,22 +222,13 @@ exports.isheightEntered = (req, res, next) =>
             message: "Vehicle height required",
         });
     }
-    else if (typeof height !== "number")
+    else if (typeof numericLength !== "number" || isNaN(numericLength) || !isFinite(numericLength)) 
     {
         return res.status(200).send
         ({
             code: 200,
             status: "failure",
-            message: "Vehicle height must be a numeric value",
-        });
-    }
-    else if (isNaN(height)) 
-    {
-        return res.status(200).send
-        ({
-            code: 200,
-            status: "failure",
-            message: "Invalid vehicle height. Please provide a valid numeric value.",
+            message: "Vehicle length must be a numeric value",
         });
     }
     else if (height <= 0)
@@ -273,6 +248,7 @@ exports.isheightEntered = (req, res, next) =>
   
 exports.isMaximumHorseCarryingCapicityEntered = (req,res,next) =>
 {
+    const numericLength = parseFloat(req.body.max_no_of_horse);
     if(!req.body.max_no_of_horse)
     {
         return res.status(200).send
@@ -282,7 +258,7 @@ exports.isMaximumHorseCarryingCapicityEntered = (req,res,next) =>
             message: "Vehicle maximum horse carrying capicity required"
         });        
     }
-    else if (typeof req.body.max_no_of_horse !== "number")
+    else if (typeof numericLength !== "number" || isNaN(numericLength) || !isFinite(numericLength)) 
     {
         return res.status(200).send
         ({
@@ -460,12 +436,8 @@ exports.isRegistrationNumberEntered = async (req, res, next) =>
         console.log('Registration numberd: ', data);
         if(!data || data === 'err')
         {
-            return res.status(500).json
-            ({
-                code : 200,
-                status : "failed",
-                error: 'Internal server error' 
-            });            
+            console.log(`Vehicle registration number doesn't exist`);
+            next();                        
         }
         else if(data.length > 0)
         {
@@ -478,9 +450,13 @@ exports.isRegistrationNumberEntered = async (req, res, next) =>
             });
         }
         else
-        {
-            console.log(`Vehicle registration number doesn't exist`);
-            next();           
+        {       
+            return res.status(500).json
+            ({
+                code : 200,
+                status : "failed",
+                error: 'Internal server error' 
+            });    
         }     
     }
 }
@@ -504,12 +480,8 @@ exports.isInsuranceNumberEntered = async (req, res, next) =>
         console.log('Insurance number: ', data);
         if(!data || data === 'err')
         {
-            return res.status(500).json
-            ({
-                code : 200,
-                status : "failed",
-                error: 'Internal server error' 
-            });            
+            console.log(`Vehicle registration number doesn't exist`);
+            next();            
         }
         else if(data.length > 0)
         {
@@ -523,8 +495,12 @@ exports.isInsuranceNumberEntered = async (req, res, next) =>
         }
         else
         {
-            console.log(`Vehicle Insurance cover number doesn't exist`);
-            next();           
+            return res.status(500).json
+            ({
+                code : 200,
+                status : "failed",
+                error: 'Internal server error' 
+            });           
         }     
     }
 }
@@ -548,31 +524,19 @@ exports.isValidInsuranceCoverDateEntered = (req, res, next) =>
     }
     else
     {
-        if(hasOnlyNonSpaces(req.body.date_of_birth) === true)
+        console.log(isValidDateEntered(req.body.insurance_date));
+        if(!isValidDateEntered(req.body.insurance_date))
         {
             return res.status(200).send
             ({
                 code: 200,
                 status: "failure",
-                message: "Insurance date contain space. It is not allowed. Format - DD/Month starting three Letters/YYYY"
-            });
+                message: "Insurance date is not in valid. The correct format is DD/Month starting three Letters/YYYY"
+            });                                
         }
         else
         {
-            console.log(isValidDateEntered(req.body.insurance_date));
-            if(!isValidDateEntered(req.body.insurance_date))
-            {
-                return res.status(200).send
-                ({
-                    code: 200,
-                    status: "failure",
-                    message: "Insurance date is not in valid. The correct format is DD/Month starting three Letters/YYYY"
-                });                                
-            }
-            else
-            {
-                next();
-            }
+            next();
         }
     }
 }
@@ -608,31 +572,19 @@ exports.isValidInsuranceExpirationDateEntered = (req, res, next) =>
     }
     else
     {
-        if(hasOnlyNonSpaces(req.body.insurance_expiration_date) === true)
+        console.log(isValidDateEntered(req.body.insurance_expiration_date));
+        if(!isValidDateEntered(req.body.insurance_expiration_date))
         {
             return res.status(200).send
             ({
                 code: 200,
                 status: "failure",
-                message: "Insurance expiry date contain space. It is not allowed. Format - DD/Month starting three Letters/YYYY"
-            });
+                message: "Insurance expiry date is not in valid. The correct format is DD/Month starting three Letters/YYYY"
+            });                                
         }
         else
         {
-            console.log(isValidDateEntered(req.body.insurance_expiration_date));
-            if(!isValidDateEntered(req.body.insurance_expiration_date))
-            {
-                return res.status(200).send
-                ({
-                    code: 200,
-                    status: "failure",
-                    message: "Insurance expiry date is not in valid. The correct format is DD/Month starting three Letters/YYYY"
-                });                                
-            }
-            else
-            {
-                next();
-            }
+            next();
         }
     }
 }
@@ -650,31 +602,19 @@ exports.isValidVehicleRegistrationDateEntered = (req, res, next) =>
     }
     else
     {
-        if(hasOnlyNonSpaces(req.body.vehicle_registration_date) === true)
+        console.log(isValidDateEntered(req.body.vehicle_registration_date));
+        if(!isValidDateEntered(req.body.vehicle_registration_date))
         {
             return res.status(200).send
             ({
                 code: 200,
                 status: "failure",
-                message: "Vehicle registration date contain space. It is not allowed. Format - DD/Month starting three Letters/YYYY"
-            });
+                message: "Vehicle registration date is not in valid. The correct format is DD/Month starting three Letters/YYYY"
+            });                                
         }
         else
         {
-            console.log(isValidDateEntered(req.body.vehicle_registration_date));
-            if(!isValidDateEntered(req.body.vehicle_registration_date))
-            {
-                return res.status(200).send
-                ({
-                    code: 200,
-                    status: "failure",
-                    message: "Vehicle registration date is not in valid. The correct format is DD/Month starting three Letters/YYYY"
-                });                                
-            }
-            else
-            {
-                next();
-            }
+            next();
         }
     }
 }
@@ -692,33 +632,22 @@ exports.isValidVehicleExpirationDateEntered = (req, res, next) =>
     }
     else
     {
-        if(hasOnlyNonSpaces(req.body.vehicle_exipration_date) === true)
+        console.log(isValidDateEntered(req.body.vehicle_exipration_date));
+        if(!isValidDateEntered(req.body.vehicle_exipration_date))
         {
             return res.status(200).send
             ({
                 code: 200,
                 status: "failure",
-                message: "Vehicle expiration date contain space. It is not allowed. Format - DD/Month starting three Letters/YYYY"
-            });
+                message: "Vehicle expiry date is not in valid. The correct format is DD/Month starting three Letters/YYYY"
+            });                                
         }
         else
         {
-            console.log(isValidDateEntered(req.body.vehicle_exipration_date));
-            if(!isValidDateEntered(req.body.vehicle_exipration_date))
-            {
-                return res.status(200).send
-                ({
-                    code: 200,
-                    status: "failure",
-                    message: "Vehicle expiry date is not in valid. The correct format is DD/Month starting three Letters/YYYY"
-                });                                
-            }
-            else
-            {
-                next();
-            }
+            next();
         }
     }
+    
 }
 
 exports.isValidVehicleTypeEntered = (req, res, next) =>
@@ -757,34 +686,9 @@ exports.isValidVehicleTypeEntered = (req, res, next) =>
             message: "Vehicle type input is wrong. Please enter one amoung these 3 (PRIVATE, GCC, SHARING)",
         }); 
     }
-
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+ 
 
 function hasOnlyNonSpaces(str) 
 {

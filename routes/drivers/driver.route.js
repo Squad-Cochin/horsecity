@@ -6,7 +6,10 @@ const constants = require('../../utils/constants');
 module.exports = function(app)
 {
     // Below route is for getting data of all the drivers
-    app.get(`/${process.env.apiToken}/getAll/drivers`, driverController.getAll);
+    app.post(`/${process.env.apiToken}/getAll/drivers`, 
+    checkInput.isPageNumberEntered,
+    checkInput.isPageSizeEntered,
+    driverController.getAll);
 
     // Below route is for getting data of any particular driver
     app.get(`/${process.env.apiToken}/getOne/driver/:id`, isValidIdInTheParams(constants.tableName.drivers),  driverController.getOne);

@@ -4,9 +4,10 @@
 //                                                                                     //
 /////////////////////////////////////////////////////////////////////////////////////////
 
-const constant = require('../utils/constants');
-const commonfetching = require('../utils/helper/commonfetching');
-const commonoperation = require('../utils/helper/commonoperation'); 
+const { resolve } = require('path');
+const constant = require('../../utils/constants');
+const commonfetching = require('../../utils/helper/commonfetching');
+const commonoperation = require('../../utils/helper/commonoperation'); 
 
 
 module.exports = class authentication
@@ -106,4 +107,27 @@ module.exports = class authentication
           throw error; // re-throw the error to be handled by the calling code
         }
     }
-}; 
+    
+
+    static async serviceproviderlogout(username, password) 
+    {
+        const userData = await commonfetching.userDataOnUsername('service_providers', username);
+        if (userData.length === 0) 
+            {
+                return 'noserviceprovider';
+            }
+            else
+            {
+                var passwordHashed = await commonoperation.changePasswordToSQLHashing(password);
+                if (userData[0].password !== passwordHashed)
+                {
+                    return 'incorrectpassword';
+                }
+                else
+                {
+                    console.log('Logout Done');
+                    return 'logoutdone'             
+                }   
+            }           
+        }
+    }

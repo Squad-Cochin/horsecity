@@ -440,7 +440,7 @@ Response Object :
 }   "data": []
 
 ------------------------------------------------------------------------------------------------------------------
-Purpose of the URL : Editing the present Vehicle Data (Remove Button) (GET)
+Purpose of the URL : Editing the present Vehicle Data (Remove Button) (PUT)
 URL : http://192.168.200.130:8000/horsecity661809/updateData/vehicle/:id
 
 Req object : Vehicle id in the params
@@ -479,8 +479,68 @@ Response Object :
     "message": "Data updated successfully"
 }
 
+==========================================================================================================================
+
+                                        Image Gallery Page
 
 
+Purpose of the URL : Removing a particular vehicle  image (PUT) (Remove Button)
+URL : http://192.168.200.130:8000/horsecity661809/removeImage/vehicle/image/:id
 
+Req object : particular vehicle image id in the params
 
+Response Object :
+{
+    "code": 200,
+    "status": true,
+    "message": "Data Removed"
+}   "data": []
 
+--------------------------------------------------------------------------------------------------------------------------
+
+Purpose of the URL : Getting all the images of a particular vehicle (GET) (View Images)
+URL : http://192.168.200.130:8000/horsecity661809/allImages/vehicle/:id
+
+Req object : particular vehicle image id in the params
+
+Response Object :
+{
+    "code": 200,
+    "status": true,
+    "message": "Data Fetched Sucessfully",
+    "data": []
+}
+
+--------------------------------------------------------------------------------------------------------------------------
+
+Purpose of the URL : updating status of a particular vehicle image  (PUT) (STATUS BUTTON)
+URL : http://192.168.200.130:8000/horsecity661809/updateStatus/vehicle/image/:id
+
+Req object : particular vehicle image id in the params
+
+Response Object :
+{
+    "code": 200,
+    "status": true,
+    "message": "Status Changed"
+}
+
+--------------------------------------------------------------------------------------------------------------------------
+Purpose of the URL : Adding OR UPLOADING new image to a particular vehicle  (POST) (ADD BUTTON)
+URL : http://192.168.200.130:8000/horsecity661809/addImage/vehicle/:id
+
+Req object : particular 'vehicle id' in the params
+
+Request Body :
+{
+    "title" : "HEllo",
+    "image" :  "File upload"
+}
+
+Response Object :
+{
+    "code": 200,
+    "status": true,
+    "message": "Status Changed"
+}
+---------------------------------------------------------------------------------------------------------------------------

@@ -37,7 +37,7 @@ exports.isValidIdInTheParams = (tableName) => async(req, res, next) =>
             ({
                 code: 400,
                 status: false,
-                message: "This id doesn't exists in the database"
+                message: "Params id not submitted or incorrect params id"
             });
         }
     }

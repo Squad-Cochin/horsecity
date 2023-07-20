@@ -19,7 +19,7 @@ module.exports = class customers
         try
         {
             const data = await commonfetching.getAllDataOfDriverAndCustomer(constants.tableName.customers, pageNumber, pageSize);
-            // console.log('Data', data);
+            console.log('Data', data);
             if(data.length === 0)
             {
                 return data
