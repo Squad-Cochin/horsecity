@@ -3,7 +3,7 @@ const timeCalculate = require('../../utils/helper/date'); // This variable will 
 const commonoperation = require('../../utils/helper/commonoperation');
 const constants = require('../../utils/constants');
 const time = require('../../utils/helper/date');
-
+require('dotenv').config()
 
 
 exports.getAllServiceProviders = (requestBody) =>
@@ -133,16 +133,20 @@ exports.getOneServiceProvider = (id) =>
     return new Promise((resolve, reject) =>
     {
         try
-        {       
+        {       console.log("hello");
             const selQuery = `SELECT sp.id, sp.name, sp.email, sp.user_name, sp.contact_person, sp.contact_no, sp.contact_address, sp.emergency_contact_no, sp.licence_no, sp.licence_image
             FROM ${constants.tableName.service_providers} AS sp
             WHERE sp.id = '${id}'`
 
             con.query(selQuery,async(err,data)=>{
                 if(data?.length != 0){
+                    console.log(data);
+                    let licenceImage = data[0].licence_image;
+                    data[0].licence_image = `${process.env.PORT_SH}${constants.attachmentLocation.serviceProvider.licenceImage}${licenceImage}`;
+                    
                     resolve({serviceProvider : data})
                 }else{
-                    resolve({serviceProvider : "NotFound"})
+                    resolve({serviceProvider : "NOTFOUND"})
                 }
             })
         }catch(err){

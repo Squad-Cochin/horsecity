@@ -40,22 +40,6 @@ exports.updateServiceProvider = async(req,res)=>
 {
     let updateSProvider = await serviceProvider.updateServiceProvider(req.body,req.files,req.params.id);
 
-//    if(updateSProvider.serviceProvider == 'SUCCESS'){
-//     return res.status(200).send
-//     ({
-//         code: 200,
-//         success: true,
-//         message: constants.responseMessage.edit
-//     });
-//    }else{
-//     return res.status(200).send
-//     ({
-//         code: 400,
-//         success: false,
-//         message: constants.responseMessage.erroredit
-//     });
-
-//    }
 
    if(updateSProvider.status == 'INVALIDFORMAT'){
     return res.status(400).send({
@@ -144,7 +128,7 @@ exports.getOneServiceProvider = async(req,res)=>
 {
     let getOneSProvider = await serviceProvider.getOneServiceProvider(req.params.id);
     console.log(getOneSProvider);
-   if(getOneSProvider?.serviceProvider == 'NotFound'){
+   if(getOneSProvider?.serviceProvider == 'NOTFOUND'){
     return res.status(200).send
     ({
         code: 400,

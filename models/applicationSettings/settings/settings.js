@@ -3,7 +3,7 @@ const time = require("../../../utils/helper/date");
 const commonfetching = require("../../../utils/helper/commonfetching");
 const commonoperation = require("../../../utils/helper/commonoperation");
 const con = require("../../../configs/db.configs");
-
+require('dotenv').config()
 module.exports = class settings {
   static async updateSettings(reqBody, files, id) {
     return new Promise(async (resolve, rejuct) => {
@@ -190,6 +190,14 @@ module.exports = class settings {
         con.query(selQuery, async (err, data) => {
           console.log(data);
           if (data?.length != 0) {
+            let logoImage = data[0].logo;
+            let loginpage_logo = data[0].loginpage_logo
+            let loginpage_bg_image = data[0].loginpage_bg_image
+            let favicon = data[0].favicon
+            data[0].logo = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings}${logoImage}`;
+            data[0].loginpage_logo = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings}${loginpage_logo}`;
+            data[0].loginpage_bg_image = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings}${loginpage_bg_image}`;
+            data[0].favicon = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings}${favicon}`;
             resolve({ settingsPageData: data });
           } else {
             resolve({ settingsPageData: "NOTFOUND" });

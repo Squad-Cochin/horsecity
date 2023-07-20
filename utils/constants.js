@@ -32,7 +32,7 @@ module.exports =
         },
         serviceProvider :
         {
-            licenceImage : `${__dirname}../../Attachements/serviceProvider/licenceImage/`
+            licenceImage : `/serviceProvider/licenceImage/`
         },
         vehicle :
         {
@@ -41,7 +41,7 @@ module.exports =
         },
         applicationSettings :
         {
-            settings : `${__dirname}../../Attachements/applicationSettings/settings/`
+            settings : `/applicationSettings/settings/`
         }
     },
 
