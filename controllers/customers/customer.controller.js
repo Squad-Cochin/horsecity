@@ -91,7 +91,7 @@ exports.addCustomer = async (req, res, next) =>
     ( 
         req.body.name,
         req.body.email,
-        req.body.user_name,
+        req.body.userName,
         req.body.password,
         req.body.contact_no,
         req.body.date_of_birth, 
@@ -124,7 +124,7 @@ exports.addCustomer = async (req, res, next) =>
 
 exports.editCustomer = async (req, res, next) =>
 {
-    const customers = await customer.editcustomer(req.params.id, req.body.name, req.body.email, req.body.user_name, req.body.contact_no, req.body.date_of_birth, req.body.id_proof_no, req.files.id_proof_image);
+    const customers = await customer.editcustomer(req.params.id, req.body.name, req.body.email, req.body.userName, req.body.contact_no, req.body.date_of_birth, req.body.id_proof_no, req.files.id_proof_image);
     if(customers === 'err')
     {
         console.log('Error while editing the customer data ');

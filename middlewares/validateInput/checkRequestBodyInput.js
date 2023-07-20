@@ -127,7 +127,7 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
 
 exports.usernameValidation = (tableName) => (req, res, next) =>
 {
-    if (!req.body.user_name) 
+    if (!req.body.userName) 
     {
         return res.status(200).send
         ({
@@ -138,7 +138,7 @@ exports.usernameValidation = (tableName) => (req, res, next) =>
     }
     else
     {
-        if(hasOnlyNonSpaces(req.body.user_name) === true)
+        if(hasOnlyNonSpaces(req.body.userName) === true)
         {
             return res.status(200).send
             ({
@@ -149,8 +149,8 @@ exports.usernameValidation = (tableName) => (req, res, next) =>
         }
         else
         {
-            // console.log(isValidUsername(req.body.user_name));
-            if(isValidUsername(req.body.user_name))
+            // console.log(isValidUsername(req.body.userName));
+            if(isValidUsername(req.body.userName))
             {
                 return res.status(200).send
                 ({
@@ -161,7 +161,7 @@ exports.usernameValidation = (tableName) => (req, res, next) =>
             }
             else
             {
-                let checkContactNumber = commonfetching.dataOnUsername(tableName, req.body.user_name);
+                let checkContactNumber = commonfetching.dataOnUsername(tableName, req.body.userName);
                 if(checkContactNumber === 'err')
                 {
                     return res.status(500).json
@@ -458,5 +458,151 @@ exports.isValidLicenceNumber = (req, res, next) =>
     }    
 };
 
+exports.newpassword = async (req, res, next) => {
+    const password = await req.body.newpassword
+    if (!password) {
+        return res.status(200).send
+            ({
+                code: 200,
+                status: "failure",
+                message: "New password is required"
+            });
+    }
+    else {
+        if (hasOnlyNonSpaces(password) === true) {
+            return res.status(200).send
+                ({
+                    code: 200,
+                    status: "failure",
+                    message: "New password contain space. It is not allowed."
+                });
+        }
+        else {
+            let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
+            con.query(selQuery, (err, result) => {
+                //console.log(result);
+                if (result) {
+                    const isValidPassword = (password) => {
+                        const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
+                        const regex = new RegExp(regexPattern);
+                        //console.log(regex);
+                        return regex.test(password); // Use the test() method to check if the password matches the regex pattern
+                    };
 
+                    if (isValidPassword(password)) {
+                        //console.log('here');
+                        next();
+                    }
+                    else {
+                        return res.status(200).json
+                            ({
+                                status: false,
+                                code: 200,
+                                message: "Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character",
+                            });
+                    }
+                }
+                else {
+                    //console.log("Error while fetchig the regex from the password policies table");
+                }
+            })
+        }
+    }
+}
+
+exports.confirmnewpassword = async (req, res, next) =>
+{
+    const password = await req.body.confirmnewpassword
+    if (!password)
+    {
+        return res.status(200).send
+        ({
+            code: 200,
+            status: "failure",
+            message: "Confirm new password is required"
+        });
+    }
+    else
+    {
+        if(hasOnlyNonSpaces(password) === true)
+        {
+            return res.status(200).send
+            ({
+                code: 200,
+                status: "failure",
+                message: "Confirm new password contain space. It is not allowed."
+            });
+        }
+        else
+        {
+            
+            let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
+            con.query(selQuery, (err, result) =>
+            {
+                //console.log(result);
+                if (result)
+                {
+                    const isValidPassword = (password) =>
+                    {
+                        const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
+                        const regex = new RegExp(regexPattern);
+                        //console.log(regex);
+                        return regex.test(password); // Use the test() method to check if the password matches the regex pattern
+                    };
+                    if (isValidPassword(password))
+                    {
+                        //console.log('here');
+                        next();
+                    }
+                    else
+                    {
+                        return res.status(200).json
+                        ({
+                            status: false,
+                            code: 200,
+                            message: "Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character",
+                        });
+                    }
+                }
+                else
+                {
+                    //console.log("Error while fetchig the regex from the password policies table");
+                }
+            })
+        }
+    }
+}
+
+exports.passwordsimilarity = async (req, res, next) => {
+    if (req.body.confirmnewpassword !== req.body.newpassword) {
+        return res.status(200).send
+            ({
+                code: 200,
+                status: "failure",
+                message: "Both the new password are not similar"
+            });
+    }
+    else {
+        if (req.body.password === req.body.newpassword) {
+            return res.status(200).send
+                ({
+                    code: 200,
+                    status: "failure",
+                    message: "New password similar with old password. It is not allowed."
+                });
+        }
+        else if (req.body.confirmnewpassword === req.body.password) {
+            return res.status(200).send
+                ({
+                    code: 200,
+                    status: "failure",
+                    message: "Confirm new password similar with old password. It is not allowed."
+
+                });
+        }
+        else {
+            next();
+        }
+    }
+}
 
