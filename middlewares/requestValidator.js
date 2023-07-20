@@ -1,4 +1,5 @@
 const con = require("../configs/db.configs");  // importing the database details 
+const constants = require("../utils/constants");
 
 const url = require("../utils/url_helper")
 
@@ -12,7 +13,7 @@ exports.usernamevalidation = (req, res, next) => {
     if (!user_name) {
         return res.status(200).send
             ({
-                code: 200,
+                code: 400,
                 success: false,
                 message: "Username is required"
             });
@@ -20,8 +21,8 @@ exports.usernamevalidation = (req, res, next) => {
         if (hasOnlyNonSpaces(user_name) === true) {
             return res.status(200).send
                 ({
-                    code: 200,
-                    status: "failure",
+                    code: 400,
+                    status: false,
                     message: "Username contain space. It is not allowed."
                 });
         } else {
@@ -620,7 +621,127 @@ exports.contactPersonAvailable = async (req,res,next) =>
         
     }
 };
+/**Taxation middle ware */
+exports.verifyTaxationBody = async(req,res,next) =>
+{
+    const method = req.method;
+    const {type,value,name} = req.body;
+    if(!name){
+        return res.status(200).send
+        ({
+            code: 400,
+            success: false,
+            message: "Name is required"
+        });
+    }else if(!type){
+        return res.status(200).send
+        ({
+            code: 400,
+            success: false,
+            message: "Type is required"
+        });
+    }else if(!value){
+        return res.status(200).send
+        ({
+            code: 400,
+            success: false,
+            message: "Value is required"
+        });
 
+    }
+
+    if(method == 'POST'){ 
+        try {
+            let selQuery = `SELECT * FROM ${constants.tableName.taxations} WHERE name = '${name}'`;
+            con.query(selQuery, (err, result) => {
+                console.log(result);
+                if (result.length != 0) {
+                    return res.status(200).send
+                        ({
+                            code: 400,
+                            success: false,
+                            message: "Name allredy in the database"
+                        });
+                }
+                else {
+                    let selQuery = `SELECT * FROM ${constants.tableName.taxations} WHERE type = '${type}'`;
+                    con.query(selQuery, (err, result) => {
+                        console.log(result);
+                        if (result.length != 0) {
+                            return res.status(200).send
+                                ({
+                                    code: 400,
+                                    success: false,
+                                    message: "Type allredy in the database"
+                                });
+                        }
+                        else {
+                                next();
+                        }
+                    });
+                }
+            });
+        } catch (err) {
+            console.log("Error while checking username in the database");
+        }
+        
+    }else if(method == 'PUT'){
+
+        let id = req.params.id
+        let selQuery = `SELECT name FROM ${constants.tableName.taxations} WHERE id = '${id}';`;
+        con.query(selQuery, async(err, result) => {      
+                if(result[0]?.name == name){
+                      
+                    let selQuery = `SELECT type FROM ${constants.tableName.taxations} WHERE id = '${id}';`;
+                    con.query(selQuery, async(err, result) => {      
+                            if(result[0]?.name == name){
+                                  
+                                    next();
+                            }else{
+                   
+                                let selQuery = `SELECT * FROM ${constants.tableName.taxations}  WHERE name = '${name}'`;
+                                con.query(selQuery, async(err, result) => {
+                            
+                                    if (result.length != 0) {
+                                        return res.status(200).send
+                                            ({
+                                                code: 400,
+                                                success: false,
+                                                message: "Name allredy in the database"
+                                            });
+                                    }
+                                    else {
+                                        next();
+                                    }
+                                });
+                            } 
+                 
+                    });
+                    /************************ */
+                }else{
+       
+                    let selQuery = `SELECT * FROM ${constants.tableName.taxations}  WHERE name = '${name}'`;
+                    con.query(selQuery, async(err, result) => {
+                
+                        if (result.length != 0) {
+                            return res.status(200).send
+                                ({
+                                    code: 400,
+                                    success: false,
+                                    message: "Name allredy in the database"
+                                });
+                        }
+                        else {
+                            next();
+                        }
+                    });
+                } 
+     
+        });
+
+    }
+
+}
 
 
 exports.contactAddressAvailable = async (req,res,next) =>
@@ -839,27 +960,27 @@ function validateUAELicenseNumber(licenseNumber) {
   
 }
 
-const passwordValidation = async (req, res, next) => {
-    const password = await req.body.password; // Assigning the user entered password to password variable
+// const passwordValidation = async (req, res, next) => {
+//     const password = await req.body.password; // Assigning the user entered password to password variable
 
-    const isValidPassword = (password) => {
-        // This is regex or regular expression for verifying the password validation
-        const regex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*[-\#\$\.\%\&\*])(?=.*[a-zA-Z]).{8,16}$/;
-        return regex.test(password); // Use the test() method to check if the password matches the regex pattern
-    };
+//     const isValidPassword = (password) => {
+//         // This is regex or regular expression for verifying the password validation
+//         const regex = /^(?=.*\d)(?=.*[a-zA-Z])(?=.*[A-Z])(?=.*[-\#\$\.\%\&\*])(?=.*[a-zA-Z]).{8,16}$/;
+//         return regex.test(password); // Use the test() method to check if the password matches the regex pattern
+//     };
 
-    if (isValidPassword(password)) {
-        next();
-    }
-    else {
-        return res.status(200).json
-            ({
-                status: false,
-                code: 200,
-                message: "Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character",
-            });
-    }
-};
+//     if (isValidPassword(password)) {
+//         next();
+//     }
+//     else {
+//         return res.status(200).json
+//             ({
+//                 status: false,
+//                 code: 200,
+//                 message: "Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character",
+//             });
+//     }
+// };
 
 
 function validateUAEMobileNumber(phoneNumber) {
