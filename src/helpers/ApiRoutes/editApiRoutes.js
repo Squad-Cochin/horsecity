@@ -58,10 +58,23 @@ export async function updateTaxation(){
 }
 
 /**Update previous customer */
-export async function updateCustomer(data){
+export async function updateCustomer(id,data){
   try {
-      // const { data } = await axios.put(`${url.POST_SP_EDIT_URL}`);
-      // return { data };
+    console.log(data)
+    const formData = new FormData();
+      // Append the object data to the FormData instance
+      for (const key in data) {
+          formData.append(key, data[key]);
+      }
+      // Send the form data as a POST request using Axios
+      const response = await axios.put(`${url.POST_CUSTOMER_EDIT_URL}/${id}`, formData, {
+          headers: {
+          'Content-Type': 'multipart/form-data'
+          }
+      });
+      console.log("response",response)
+      return response
+
   } catch (error) {
       return { error : "Faild !"}
   }

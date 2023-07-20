@@ -38,7 +38,6 @@ export async function getSPAllData(pageNumber){
 export async function getSPSingleData(spId){
     try {
         const { data } = await axios.get(`${url.GET_SP_SINGLE_DATA_URL}/${spId}`);
-        console.log("sps",data);
         return(data)
     } catch (error) {
         return null
@@ -53,6 +52,7 @@ export async function getCustomersData(pageNumber){
             "limit" : pageLimit
         }
         const { data } = await axios.post(`${url.GET_CUSTOMER_ALL_DATA_URL}`,reqObj);
+        console.log("ddd",data)
         return(data)
     } catch (error) {
         let errorObj =  {
@@ -68,10 +68,9 @@ export async function getCustomersData(pageNumber){
     }
 }
 
-export async function getSingleCustomerData(spId){
+export async function getSingleCustomerData(cId){
     try {
-        const { data } = await axios.get(`${url.GET_SP_SINGLE_DATA_URL}/${spId}`);
-        console.log("sps",data);
+        const { data } = await axios.get(`${url.GET_CUSTOMER_SINGLE_DATA_URL}/${cId}`);
         return(data)
     } catch (error) {
         return null

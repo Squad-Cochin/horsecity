@@ -72,9 +72,7 @@ const ListCustomerTable = () => {
             } else {
                 //update previes customer
                 console.log("update previues one ");
-                updateCustomer(values);
-                setAdd_list(false);
-                setmodal_list(false);
+                editCustomer(values)
             }
         }
     });
@@ -93,6 +91,20 @@ const ListCustomerTable = () => {
         }
     }
 
+    // Update customer
+    async function editCustomer(data){
+        let updatedCustomer = await updateCustomer(customer[0]?.id, data);
+        if(updatedCustomer.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+        }else{
+            setErrors("")
+            setErrors(updatedCustomer.message)
+        }
+    }
+
     /**This function is an event handler that triggers when the user
      *  selects a file for the idproof image */
     const handleIdProofImageChange = (event) => {
@@ -103,13 +115,13 @@ const ListCustomerTable = () => {
 
     /**This function is used to toggle the modal for adding/editing customers 
     * and set the selected customer */
-    function tog_list(param, productId) {
+    async function tog_list(param, productId) {
         if (param === 'ADD') {
             setAdd_list(!add_list);
         }else{
-            const data = customers?.find((item) => item?.id === productId)
-            setCustomer([data]);
-            setIdProofPreview(data?.id_proof_image)
+            let singleCustomer = await getSingleCustomerData(productId)
+            setCustomer(singleCustomer);
+            setIdProofPreview(singleCustomer[0]?.id_proof_image)
         }
         setmodal_list(!modal_list);
     }
@@ -118,13 +130,15 @@ const ListCustomerTable = () => {
     *  of a customer */
     async function tog_view(productId) {
         let singleCustomer = await getSingleCustomerData(productId)
-        setCustomer(singleCustomer.singleCustomer)
+        console.log("ss",singleCustomer)
+        setCustomer(singleCustomer)
         setView_modal(!view_modal);
     }
 
     /**This function is used to remove a service provider*/
-    function remove_data(id) {
-        removeCustomer(id)
+    async function remove_data(id) {
+        let remove = await removeCustomer(id);
+        window.location.reload();
     }
 
     /**Function for changing customers status */
@@ -154,7 +168,7 @@ const ListCustomerTable = () => {
     async function getAllData(page) {
         let getCustomers = await getCustomersData(page || 1);
         console.log(getCustomers)
-        setCustomers(getCustomers?.customers);
+        setCustomers(getCustomers?.customer);
         setPageNumber(page);
         setNumberOfData(getCustomers?.totalCount);
     }
@@ -441,7 +455,7 @@ const ListCustomerTable = () => {
 
             {/***************** View Modal *************/}
             <Modal className="extra-width" isOpen={view_modal} toggle={() => { tog_view('view'); }}>
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_view('view'); }}>View Customer</ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setView_modal(false);}}>View Customer</ModalHeader>
                 <form className="tablelist-form"
                     onSubmit={validation.handleSubmit}>
                     <ModalBody>

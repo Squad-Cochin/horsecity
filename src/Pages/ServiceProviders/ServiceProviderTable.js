@@ -612,7 +612,7 @@ const ListTables = () => {
                                 <div className="mb-3">
                                     <label htmlFor="LicenceImage-field" className="form-label">Licence Image</label>
                                     <div>
-                                        <img src={"http://192.168.200.130:8000/serviceProvider/licenceImage/"+validation.values.licence_image || ""} alt="Licence Preview" style={{ maxWidth: '100px' }} />
+                                        <img src={validation.values.licence_image || ""} alt="Licence Preview" style={{ maxWidth: '100px' }} />
                                     </div>
                                 </div>
                             </div>
