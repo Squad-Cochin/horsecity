@@ -218,6 +218,38 @@ exports.removeUser = (tablename, Id) =>
     });
 }
 
+exports.totalCount = async (tablename) =>
+{
+    try 
+    {
+        return new Promise((resolve, reject) => 
+        {
+            let selQuery = `SELECT count(*) FROM ${tablename} sp WHERE sp.deleted_at IS NULL`;
+            con.query(selQuery, (err, result) =>
+            {
+                if (err)
+                {
+                    // console.log('Error while executing the query:', err);
+                    reject(err);
+                }
+                if (result.length > 0)
+                {
+                    // console.log('Data present and fetched');
+                    resolve(result);
+                }
+                else
+                {
+                    // console.log('Query executed but data not present in the table.');
+                    resolve([]);
+                } 
+        
+            });
+        });      
+    }
+    catch (error)
+    {        
+    }
+}
 
 exports.fileUploadTwo= (attachments, path) =>
 { 

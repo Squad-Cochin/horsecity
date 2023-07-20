@@ -20,13 +20,15 @@ module.exports = class customers
         {
             const data = await commonfetching.getAllDataOfDriverAndCustomer(constants.tableName.customers, pageNumber, pageSize);
             console.log('Data', data);
+            const count = await commonoperation.totalCount(constants.tableName.customers)
+            console.log('Total Data', count);
             if(data.length === 0)
             {
-                return data
+                return ({data, count})
             }
             else
             {
-                return data;
+                return ({data, count})
             }            
         }
         catch(error)

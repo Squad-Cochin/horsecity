@@ -17,7 +17,7 @@ exports.getAll= async (req, res) =>
     console.log('Reached1 1');
     const customers = await customer.getall(req.body.page, req.body.limit);
     console.log('Reachde 2');
-    console.log(customers);
+    console.log("Customer :", customers);
     if(customers.length === 0)
     {
         console.log('No Customer data present');
@@ -28,8 +28,8 @@ exports.getAll= async (req, res) =>
             message : constant.responseMessage.getAll,
             data : 
                 {
-                    totalCount : customers.length,
-                    customers : customers
+                    totalCount : customers[1].count,
+                    customers : customers.data
                 }
         });
     }
