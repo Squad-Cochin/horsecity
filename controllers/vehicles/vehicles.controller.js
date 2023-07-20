@@ -17,6 +17,7 @@ const vehicle = require('../../models/vehicles/vehicle.model');
 exports.addNew = async (req, res, next) =>
 {  
     const vehicles = await vehicle.addnew(req.body.serviceProviderId, req.body.vehicle_number, req.body.make, req.body.model, req.body.color, req.body.length, req.body.breadth, req.body.height, req.body.max_no_of_horse, req.body.air_conditioner, req.body.temp_manageable, req.body.registration_no, req.body.gcc_travel_allowed, req.body.insurance_cover, req.body.insurance_date, req.body.insurance_policy_no, req.body.insurance_provider, req.body.insurance_expiration_date, req.files.safety_certicate, req.body.vehicle_type, req.body.vehicle_registration_date, req.body.vehicle_exipration_date);
+    
     if(vehicles === 'err')
     {
         console.log('Error while inserting the vehicles data ');

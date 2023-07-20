@@ -10,4 +10,6 @@
 
 
 const constant = require('../../utils/constants');
-const vehicle = require('../../models/vehicles/vehicle.model'); 
+const vehicle = require('../../models/vehicles/vehicle'); 
+
+exports.addImages

@@ -1,6 +1,5 @@
-const commonfetching = require(`../utils/helper/commonfetching`);
-const con = require(`../configs/db.configs`);
-const { tableName } = require("../utils/constants");
+const commonfetching = require(`../../utils/helper/commonfetching`);
+const con = require(`../../configs/db.configs`);
 
 function hasOnlyNonSpaces(str) 
 {
@@ -17,7 +16,7 @@ function hasOnlyNonSpaces(str)
 const isValidDateOfBirth = (DOB) =>  
 {
     // This is regex or regular expression for verify the Date or birth validation
-    return DOB.match(/^\d{4}[./-]\d{2}[./-]\d{2}$/); // REGEX or regurlar expression
+    return DOB.match(/^\d{2}\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s\d{4}$/); // REGEX or regurlar expression
 }
 
 const isValidUAENumber = (phoneNumber) =>
@@ -306,6 +305,48 @@ exports.contactNumberValidation = (tableName) => (req, res, next) =>
     }
 }
 
+exports.isValidEmergencyContactNumber =  (req, res, next) =>
+{
+    if (!req.body.emergency_contact_no) 
+    {
+        return res.status(200).send
+        ({
+            code: 200,
+            status: false,
+            message: "Emergency contact number is required"
+        });
+    }
+    else
+    {
+        if(hasOnlyNonSpaces(req.body.emergency_contact_no) === true)
+        {
+            return res.status(200).send
+            ({
+                code: 200,
+                status: "failure",
+                message: "Emergency contact number contain space. It is not allowed."
+            });
+        }
+        else
+        {
+            console.log(isValidUAENumber(req.body.contact_no));
+            if(!isValidUAENumber(req.body.contact_no))
+            {
+                return res.status(200).send
+                ({
+                    code: 200,
+                    status: "failure",
+                    message: "Contact number is not in valid"
+                });                                
+            }
+            else
+            {
+                next();
+            }
+        }
+    }
+}
+
 exports.dateOfBirthValidation = (req, res, next) =>
 {
     if (!req.body.date_of_birth) 
@@ -337,7 +378,7 @@ exports.dateOfBirthValidation = (req, res, next) =>
                 ({
                     code: 200,
                     status: "failure",
-                    message: "Date of birth is not in valid. The correct format is YYYY/MM/DD"
+                    message: "Date of birth is not in valid. The correct format is DD/Month starting three Letters/YYYY"
                 });                                
             }
             else
@@ -382,5 +423,40 @@ exports.idProofValidation = (req, res, next) =>
         next();
     }    
 };
+
+exports.isValidDescription = (req, res, next) =>
+{
+    if (!req.body.description) 
+    {
+        return res.status(200).send
+        ({
+            code: 200,
+            status: false,
+            message: "Description is required"
+        });
+    }
+    else
+    {
+        next();
+    }    
+};
+
+exports.isValidLicenceNumber = (req, res, next) =>
+{
+    if (!req.body.licence_no) 
+    {
+        return res.status(200).send
+        ({
+            code: 200,
+            status: false,
+            message: "Licence number is required"
+        });
+    }
+    else
+    {
+        next();
+    }    
+};
+
 
 

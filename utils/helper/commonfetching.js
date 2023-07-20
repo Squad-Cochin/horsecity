@@ -205,3 +205,37 @@ exports.dataOnContactNumber = (tablename, contact_no) =>
         console.log(`Error while fetching the table data on email`, error);        
     }
 };
+
+exports.vehiclesMiddleware = (tableName, feildName, Value) =>
+{
+    try
+    {
+        return new Promise((resolve, reject) => 
+        {
+            let selQuery = `SELECT * FROM ${tableName} t WHERE t.{feildName} = '${Value}' `;
+            con.query(selQuery, (err, result) =>
+            {
+                if(err)
+                {
+                    resolve('err');
+                }
+                else
+                {
+                    if (result.length > 0)
+                    {
+                        resolve(result);
+                    }
+                    else
+                    {
+                        resolve([]);
+                    }
+                }            
+            });
+        });        
+    }
+    catch (error)
+    {
+        console.log(`Error while vehicle middleware function in common fetching helper file `, error);       
+    }
+
+};
