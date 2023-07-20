@@ -24,9 +24,14 @@ export async function getSPAllData(pageNumber){
     } catch (error) {
         return null
     }
-// console.log("pp",pageNumber)
-// if(serviceProviders){
-//     return serviceProviders ;
-// }
-// return null ;
+}
+
+export async function getSPSingleData(spId){
+    try {
+        const { data } = await axios.get(`${url.GET_SP_SINGLE_DATA_URL}/${spId}`);
+        console.log("sps",data);
+        return(data)
+    } catch (error) {
+        return null
+    }
 }

@@ -6,32 +6,19 @@ import * as url from "../url_helper";
     /**Add new service provider */
     export async function addNewProvider(data){
         try {
-            const sendData = async () => {
-                try {
-                    const formData = new FormData();
-                    // Append the object data to the FormData instance
-                    for (const key in data) {
-                        formData.append(key, data[key]);
-                    }
-                    // Send the form data as a POST request using Axios
-                    const response = await axios.post(`${url.POST_SP_ADD_URL}`, formData, {
-                        headers: {
-                        'Content-Type': 'multipart/form-data'
-                        }
-                    });
-                    console.log("response",response)
-                    return response
-
-                // Handle the API response
-                } catch (error) {
-                    // Handle any errors
-                    console.error(error);
+            const formData = new FormData();
+            // Append the object data to the FormData instance
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+            // Send the form data as a POST request using Axios
+            const response = await axios.post(`${url.POST_SP_ADD_URL}`, formData, {
+                headers: {
+                'Content-Type': 'multipart/form-data'
                 }
-            };
-            
-            // Call the function to send the data
-            let responseData = await sendData();
-            return responseData
+            });
+            console.log("response",response)
+            return response
         } catch (error) {
             return { code : 500 , error : "Faild !"}
         }

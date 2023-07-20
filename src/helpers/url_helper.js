@@ -28,6 +28,10 @@ const apiBaseUrl = "http://192.168.200.211:8000";
 
 const token = "/horsecity661809"
 
+// image path
+
+export const IMAGE_PATH = "http://192.168.200.211:8000/serviceProvider/licenceImage/"
+
 export const LOGIN_URL = apiBaseUrl + token + "/login"
 export const RECOVER_PWD_URL = apiBaseUrl + token + "/recoveryPassword"
 export const CHANGE_PASSWORD_URL = apiBaseUrl + token + "/changePassword"
@@ -38,9 +42,10 @@ export const POST_FAKE_CHANGE_PWD = "/post-fake-change-password";
 
 /**SERVICE PROVIDER */
 export const GET_SP_ALL_DATA_URL = apiBaseUrl + token + "/getAll/serviceproviders"
+export const GET_SP_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/serviceprovider"
 export const POST_SP_ADD_URL = apiBaseUrl + token + "/add/serviceprovider"
 export const PUT_SP_UPDATE_STATUS = apiBaseUrl + token + "/update-status/serviceprovider"
-export const POST_SP_EDIT_URL = apiBaseUrl + token + "/edit:id"
+export const POST_SP_EDIT_URL = apiBaseUrl + token + "/update/serviceprovider"
 export const PUT_SP_REMOVE = apiBaseUrl + token + "/remove/serviceprovider"
 
 

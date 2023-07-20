@@ -19,7 +19,7 @@ import { useFormik } from "formik";
 import { addNewProvider } from '../../helpers/ApiRoutes/addApiRoutes';  //For adding new service providers
 import { removeSProvider } from '../../helpers/ApiRoutes/removeApiRoutes'; //For removing service providers
 import { updateSProvider , updateSPStatus } from '../../helpers/ApiRoutes/editApiRoutes'; //For updating  service providers
-import { getSPAllData } from '../../helpers/ApiRoutes/getApiRoutes';  //For getting all service providers
+import { getSPAllData, getSPSingleData } from '../../helpers/ApiRoutes/getApiRoutes';  //For getting all service providers
 import config from '../../config';
 
 
@@ -38,7 +38,7 @@ const ListTables = () => {
 
     /**This hook is used to fetch service provider data */
     useEffect(() => {
-        getAll()
+        getAllData(1)
     }, [])
 
     /**This object sets the initial values for the form fields managed by formik */
@@ -47,7 +47,7 @@ const ListTables = () => {
         email: !add_list ? sprovider[0]?.email : '',
         user_name: !add_list ? sprovider[0]?.user_name : '',
         password: !add_list ? sprovider[0]?.password : '',
-        role_name: !add_list ? sprovider[0]?.role_name : '',
+        // role_name: !add_list ? sprovider[0]?.role_name : '',
         contact_person: !add_list ? sprovider[0]?.contact_person : '',
         contact_no: !add_list ? sprovider[0]?.contact_no : '',
         emergency_contact_no: !add_list ? sprovider[0]?.emergency_contact_no : '',
@@ -69,9 +69,7 @@ const ListTables = () => {
                 //update previes SProvider
                 console.log("update previues one ");
                 console.log(values)
-                updateSProvider(values);
-                setAdd_list(false);
-                setmodal_list(false);
+                editProvider(values);
             }
         }
     });
@@ -79,15 +77,28 @@ const ListTables = () => {
     // Add service provider
     async function addProvider(val){
         let addSP = await addNewProvider(val);
-        console.log("spr", addSP)
         if(addSP.code === 200){
             setErrors("")
             setAdd_list(false);
             setmodal_list(false);
-            getAll()
+            getAllData(pageNumber)
         }else{
             setErrors("")
             setErrors(addSP.message)
+        }
+    }
+
+    // Update service provider
+    async function editProvider(data){
+        let updateSP = await updateSProvider(sprovider[0]?.id, data);
+        if(updateSP.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+        }else{
+            setErrors("")
+            setErrors(updateSP.message)
         }
     }
 
@@ -124,46 +135,37 @@ const ListTables = () => {
 
     /**This function is used to toggle the modal for adding/editing service providers 
      * and set the selected service provider */
-    function tog_list(param, productId) {
+    async function tog_list(param, productId) {
         if (param === 'ADD') {
             setAdd_list(!add_list);
+        }else{
+            let serviceProvider = await getSPSingleData(productId)
+            setSprovider(serviceProvider.serviceProvider)
+            setLicenscePreview(serviceProvider.serviceProvider[0]?.licence_image);
         }
-        const data = sproviders?.find((item) => item?.id === productId)
-        setSprovider([data]);
         setmodal_list(!modal_list);
-        setLicenscePreview(data?.licence_image);
     }
 
     /**This function toggles the view modal for displaying details
      *  of a service provider */
-    function tog_view(productId) {
-        const data = sproviders?.find((item) => item?.id === productId)
-        setSprovider([data]);
+    async function tog_view(productId) {
+        let serviceProvider = await getSPSingleData(productId)
+        setSprovider(serviceProvider.serviceProvider)
         setView_modal(!view_modal);
-
     }
 
     /**This function is used to remove a service provider*/
     function remove_data(id) {
         removeSProvider(id)
-        getAll()
-
+        window.location.reload();
     }
 
+    // function for get data all service provider data
     async function getAllData(page) {
-        console.log("pp",page)
-        let getSPdataNext = await getSPAllData(page);
-        console.log("gg",getSPdataNext)
+        let getSPdataNext = await getSPAllData(page || 1);
         setSproviders(getSPdataNext.serviceProviders);
         setPageNumber(page);
-    }
-
-    async function getAll(){
-        let getSPdata = await getSPAllData(1)
-        console.log(getSPdata.serviceProviders)
-        console.log(getSPdata.totalCount)
-        setSproviders(getSPdata.serviceProviders);
-        setNumberOfData(getSPdata.totalCount);
+        setNumberOfData(getSPdataNext.totalCount);
     }
 
     return (
@@ -361,7 +363,7 @@ const ListTables = () => {
                                     />
                                 </div>: null}
                                 {/* Role */}
-                                <div className="mb-3">
+                                {/* <div className="mb-3">
                                     <label htmlFor="status-field" className="form-label">Role</label>
                                     <select
                                         className="form-control"
@@ -384,7 +386,7 @@ const ListTables = () => {
                                             </>
                                         )}
                                     </select>
-                                </div>
+                                </div> */}
                                 {/* Contact Person */}
                                 <div className="mb-3">
                                     <label htmlFor="contactPerson-field" className="form-label">Contact Person</label>
@@ -487,7 +489,7 @@ const ListTables = () => {
 
             {/****************************  View Modal*************** */}
             <Modal className="extra-width" isOpen={view_modal} toggle={() => { tog_view('view'); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_view('view'); }}>View service provider</ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_view('view'); setView_modal(false);}}>View service provider</ModalHeader>
                 <form className="tablelist-form">
                     <ModalBody>
                         {sprovider?.map((item, index) => (
@@ -532,7 +534,7 @@ const ListTables = () => {
                                 </div>
 
                                 {/* Role */}
-                                <div className="mb-3">
+                                {/* <div className="mb-3">
                                     <label htmlFor="role-field" className="form-label">Role</label>
                                     <input
                                         type="text"
@@ -542,7 +544,7 @@ const ListTables = () => {
                                         value={validation.values.role_name || ""}
                                         readOnly
                                     />
-                                </div>
+                                </div> */}
                                 {/* Contact Person */}
                                 <div className="mb-3">
                                     <label htmlFor="contactPerson-field" className="form-label">Contact Person</label>
@@ -610,7 +612,7 @@ const ListTables = () => {
                                 <div className="mb-3">
                                     <label htmlFor="LicenceImage-field" className="form-label">Licence Image</label>
                                     <div>
-                                        <img src={validation.values.licence_image || ""} alt="Licence Preview" style={{ maxWidth: '100px' }} />
+                                        <img src={"http://192.168.200.211:8000/serviceProvider/licenceImage/"+validation.values.licence_image || ""} alt="Licence Preview" style={{ maxWidth: '100px' }} />
                                     </div>
                                 </div>
                             </div>
