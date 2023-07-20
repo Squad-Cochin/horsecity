@@ -10,9 +10,9 @@ module.exports = function(app)
     app.post(`/${process.env.apiToken}/getAll/serviceproviders`,spcontroller.getAllServiceProviders); 
     
     /**For adding new service provider  */
-    app.post(`/${process.env.apiToken}/add/serviceprovider`,verifyBody.emailValidation,verifyBody.usernamevalidation,verifyBody.nameAvailable,verifyBody.contactPersonAvailable,verifyBody.contactAddressAvailable,verifyBody.passwordValidation,verifyBody.licenceImageAvailable,verifyBody.validateUAEMobileNumber,verifyBody.validateUAELicenseNumber,spcontroller.addNewServiceProvider);
+    app.post(`/${process.env.apiToken}/add/serviceprovider`,verifyBody.nameAvailable,verifyBody.emailValidation,verifyBody.usernamevalidation,verifyBody.contactPersonAvailable,verifyBody.validateUAEMobileNumber,verifyBody.contactAddressAvailable,verifyBody.validateUAELicenseNumber,verifyBody.licenceImageAvailable,spcontroller.addNewServiceProvider);
 
-    app.put(`/${process.env.apiToken}/update/serviceprovider/:id`,verifyBody.emailValidation,verifyBody.usernamevalidation,verifyBody.nameAvailable,verifyBody.contactPersonAvailable,verifyBody.contactAddressAvailable,verifyBody.licenceImageAvailable,verifyBody.validateUAEMobileNumber,verifyBody.validateUAELicenseNumber,spcontroller.updateServiceProvider);
+    app.put(`/${process.env.apiToken}/update/serviceprovider/:id`,verifyBody.nameAvailable,verifyBody.emailValidation,verifyBody.usernamevalidation,verifyBody.contactPersonAvailable,verifyBody.validateUAEMobileNumber,verifyBody.contactAddressAvailable,verifyBody.validateUAELicenseNumber,spcontroller.updateServiceProvider);
        /**For changing status service provider  */ 
     app.put(`/${process.env.apiToken}/update-status/serviceprovider/:id`, spcontroller.updateStatus);
        /**For removing service provider  */
