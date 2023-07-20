@@ -28,8 +28,8 @@ exports.getAll= async (req, res) =>
             message : constant.responseMessage.getAll,
             data : 
                 {
-                    totalCount : customers[1].count,
-                    customers : customers.data
+                    totalCount : customers.length,
+                    customers : customers
                 }
         });
     }

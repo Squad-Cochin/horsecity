@@ -19,7 +19,7 @@ module.exports = function(app)
     checkInput.nameValidation,
     checkInput.emailValidation(constants.tableName.drivers),
     checkInput.contactNumberValidation(constants.tableName.drivers),
-    checkInput.dateOfBirthValidation,
+    // checkInput.dateOfBirthValidation,
     checkInput.isValidDescription,
     checkInput.isValidLicenceNumber,
     checkInput.isValidEmergencyContactNumber,    

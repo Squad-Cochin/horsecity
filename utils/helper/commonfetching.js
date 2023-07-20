@@ -77,12 +77,14 @@ exports.getAllDataOfDriverAndCustomer = (tablename, pageNumber, pageSize) =>
 
             // let selQuery = `SELECT cd.name, cd.email, cd.contact_no, cd.created_at, cd.status FROM  cd WHERE cd.deleted_at = 'NULL'`;
             // let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y'), cd. status FROM customers cd WHERE cd.deleted_at IS NULL LIMIT 10 OFFSET 0`;
-            let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, cd.status FROM ${tablename} cd WHERE cd.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
+            // let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, cd.status FROM ${tablename} cd WHERE cd.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
+
+            let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, cd.status FROM customers cd WHERE cd.deleted_at IS NULL LIMIT 5 OFFSET 0;`;
 
             console.log(selQuery);
             con.query(selQuery, (err, result) =>
             {
-                // console.log('result', result);
+                console.log('result', result);
                 if (err)
                 {
                     // console.log('Error while executing the query:', err);
