@@ -67,7 +67,7 @@ module.exports = class drivers
                 let uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.licence);
                 // console.log(uploadprofile_image);
                 let insQuery = `INSERT INTO ${constants.tableName.drivers}(name, email, contact_no, emergency_contact_no, date_of_birth, profile_image, licence_no , licence_img , description, created_at) VALUES('${name}', '${email}', '${contact_no}', '${emergency_contact_no}', '${date_of_birth}', '${uploadprofile_image}', '${licence_no}', '${uploadlicence_img}', '${description}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                // console.log(insQuery);
+                console.log(insQuery);
                 con.query(insQuery, (err, result) =>
                 {
                     // console.log(result);

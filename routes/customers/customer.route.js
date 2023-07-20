@@ -13,7 +13,9 @@ module.exports = (app) =>
     checkInput.isPageSizeEntered,
     customerController.getAll);    
     // Below route is for getting data of any particular customer
-    app.get(`/${process.env.apiToken}/getOne/customer/:id`, isValidIdInTheParams(constants.tableName.customers),  isValidIdInTheParams, customerController.getOne);
+    app.get(`/${process.env.apiToken}/getOne/customer/:id`, 
+    isValidIdInTheParams(constants.tableName.customers),
+    customerController.getOne);
     
     // Below route is for adding the customer data
     app.post(`/${process.env.apiToken}/add/customer`, 

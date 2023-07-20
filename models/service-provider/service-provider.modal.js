@@ -140,7 +140,7 @@ exports.getOneServiceProvider = (id) =>
 
             con.query(selQuery,async(err,data)=>{
                 if(data?.length != 0){
-                    console.log(data);
+                    console.log(data); 
                     let licenceImage = data[0].licence_image;
                     data[0].licence_image = `${process.env.PORT_SH}${constants.attachmentLocation.serviceProvider.licenceImage}${licenceImage}`;
                     

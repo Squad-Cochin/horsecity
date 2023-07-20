@@ -45,6 +45,7 @@ exports.tableDataOnId = (tablename, Id) =>
         let selQuery = `SELECT * FROM ${tablename} WHERE ${tablename}.id = '${Id}' `;
         con.query(selQuery, (err, result) =>
         {
+            console.log('Result: ',result);
             if (err)
             {
                 console.log('Error while executing the query:', err);
@@ -54,10 +55,13 @@ exports.tableDataOnId = (tablename, Id) =>
             {
                 if (result.length > 0)
                 {
+                    console.log('Visted');
+                    console.log(result);
                     resolve(result);
                 }
                 else
                 {
+                    console.log("Visted 2");
                     resolve([]);
                 }       
             }
@@ -79,7 +83,7 @@ exports.getAllDataOfDriverAndCustomer = (tablename, pageNumber, pageSize) =>
             // let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y'), cd. status FROM customers cd WHERE cd.deleted_at IS NULL LIMIT 10 OFFSET 0`;
             // let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, cd.status FROM ${tablename} cd WHERE cd.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
 
-            let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, cd.status FROM customers cd WHERE cd.deleted_at IS NULL LIMIT 5 OFFSET 0;`;
+            let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, cd.status FROM ${tablename} cd WHERE cd.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
 
             console.log(selQuery);
             con.query(selQuery, (err, result) =>
@@ -185,8 +189,10 @@ exports.dataOnContactNumber = (tablename, contact_no) =>
         return new Promise((resolve, reject) => 
         {
             let selQuery = `SELECT * FROM ${tablename} t WHERE t.contact_no = '${contact_no}' `;
+            console.log(selQuery);
             con.query(selQuery, (err, result) =>
             {
+                console.log(result);
                 if(err)
                 {
                     resolve('err');

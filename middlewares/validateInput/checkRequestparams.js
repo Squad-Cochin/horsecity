@@ -15,7 +15,7 @@ exports.isValidIdInTheParams = (tableName) => async(req, res, next) =>
     else
     {
         const data = await commonfetching.tableDataOnId(tableName, req.params.id);
-        console.log(data);
+        // console.log(data);
         if(data === 'err' || !data)
         {
             return res.status(500).json

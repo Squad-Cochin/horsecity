@@ -14,7 +14,7 @@ const driver = require('../../models/drivers/driver.model');
 
 exports.getAll = async (req, res) =>
 {
-    const drivers = await driver.getall(req.body.pageNumber, req.body.pageSize);
+    const drivers = await driver.getall(req.body.page, req.body.limit);
     // console.log(drivers);
     if(drivers.length == 0)
     {

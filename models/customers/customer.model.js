@@ -42,10 +42,13 @@ module.exports = class customers
         try
         {
             const data = await commonfetching.tableDataOnId(constants.tableName.customers, Id);
-            // console.log('Data', data);
+            console.log('Data : ', data);
             if(data.length === 0)
             {
-                return data
+                let idProofImage = data[0].id_proof_image;
+                data[0].id_proof_image = `${process.env.PORT_SP}${constants.attachmentLocation.customer.idProof}${idProofImage}`;
+                console.log("Link: ", data[0].id_proof_image);
+                // return data
             }
             else
             {

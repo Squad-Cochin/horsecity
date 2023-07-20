@@ -216,7 +216,7 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
     }
 }
 
-exports.contactNumberValidation = (tableName) => (req, res, next) =>
+exports.contactNumberValidation = (tableName) => async (req, res, next) =>
 {
     if (!req.body.contact_no) 
     {
@@ -252,7 +252,8 @@ exports.contactNumberValidation = (tableName) => (req, res, next) =>
             }
             else
             {
-                let checkContactNumber = commonfetching.dataOnContactNumber(tableName, req.body.contact_no);
+                let checkContactNumber = await commonfetching.dataOnContactNumber(tableName, req.body.contact_no);
+                console.log('Number Already Available :', checkContactNumber);
                 if(checkContactNumber === 'err')
                 {
                     return res.status(500).json
