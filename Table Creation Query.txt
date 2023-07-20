@@ -11,8 +11,8 @@ CREATE TABLE application_tokens
     token VARCHAR(55),
     type ENUM('MOBILE','WEB','PWA'),
     status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    token_generated_date DATE ,
-    token_expiry_date DATE DEFAULT NULL,
+    token_generated_date DATETIME ,
+    token_expiry_date DATETIME DEFAULT NULL,
     created_at DATETIME ,
     updated_at DATETIME DEFAULT NULL 
 );
@@ -121,7 +121,7 @@ CREATE TABLE customers
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
     phone_verified ENUM('TRUE', 'FALSE'),
     email_verified ENUM('TRUE', 'FALSE'),
-    expiry_at DATE,
+    expiry_at DATETIME,
     created_at DATETIME ,
     updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL
@@ -144,7 +144,7 @@ CREATE TABLE service_providers
     licence_image VARCHAR(255) NOT NULL UNIQUE,
     phone_verified ENUM('TRUE', 'FALSE'),
     email_verified ENUM('TRUE', 'FALSE'),
-    expiry_at DATE,
+    expiry_at DATETIME,
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
     created_at DATETIME ,
     updated_at DATETIME DEFAULT NULL ,
@@ -170,8 +170,8 @@ CREATE TABLE customer_logs
     ip_address VARCHAR(50) NOT NULL,
     device_information VARCHAR(255) NOT NULL,
     location VARCHAR(255) NOT NULL,
-    login_time DATE,
-    logout_time DATE,
+    login_time DATETIME,
+    logout_time DATETIME,
     duration TIME
 );
 
@@ -183,8 +183,8 @@ CREATE TABLE service_provider_logs
     ip_address VARCHAR(50) NOT NULL,
     device_information VARCHAR(255) NOT NULL,
     location VARCHAR(255) NOT NULL,
-    login_time DATE,
-    logout_time DATE,
+    login_time DATETIME,
+    logout_time DATETIME,
     duration TIME
 );
 
@@ -231,7 +231,7 @@ CREATE TABLE otp_stores
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
     otp_used_status ENUM ('USED', 'NOT USED'),
     created_at DATETIME ,
-    expired_at DATE ,
+    expired_at DATETIME ,
     updated_at DATETIME NULL  
 );
 
@@ -329,7 +329,7 @@ CREATE TABLE vehicles_images
     image VARCHAR(155) NOT NULL,
     title VARCHAR(155),
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    uploaded_at DATE,
+    uploaded_at DATETIME,
     updated_at DATETIME DEFAULT NULL,
     deleted_at DATETIME DEFAULT NULL
 );
@@ -374,10 +374,10 @@ CREATE TABLE quotations
     trip_type ENUM('PRIVATE','SHARING','GCC'),
     pickup_location VARCHAR(255) NOT NULL,
     pickup_country ENUM('BAHRAIN', 'KUWAIT', 'OMAN', 'QATAR', 'SAUDI ARABIA', 'UAE'),
-    pickup_date DATE,
+    pickup_date DATETIME,
     drop_location VARCHAR(255) NOT NULL,
     drop_country ENUM('BAHRAIN', 'KUWAIT', 'OMAN', 'QATAR', 'SAUDI ARABIA', 'UAE'),
-    drop_date DATE,   
+    drop_date DATETIME,   
     no_of_horse INT(3) NOT NULL,
     special_requirement VARCHAR(255),
     additional_service VARCHAR(255),
@@ -431,10 +431,10 @@ CREATE TABLE bookings
     booking_status ENUM ('PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED'),
     pickup_location VARCHAR(255) NOT NULL,
     pickup_country ENUM('BAHRAIN', 'KUWAIT', 'OMAN', 'QATAR', 'SAUDI ARABIA', 'UAE'),
-    pickup_date DATE,
+    pickup_date DATETIME,
     drop_location VARCHAR(255) NOT NULL,
     drop_country ENUM('BAHRAIN', 'KUWAIT', 'OMAN', 'QATAR', 'SAUDI ARABIA', 'UAE'),
-    drop_date DATE,
+    drop_date DATETIME,
     additional_services VARCHAR(255),
     confirmation_sent ENUM('YES','NO'),
     tax_amount DECIMAL(4,2) NOT NULL,
@@ -501,10 +501,10 @@ CREATE TABLE vehicles_breakouts
     trip_type ENUM('PRIVATE','SHARING','GCC'),
     pickup_location VARCHAR(255) NOT NULL,
     pickup_country ENUM('BAHRAIN', 'KUWAIT', 'OMAN', 'QATAR', 'SAUDI ARABIA', 'UAE'),
-    pickup_date DATE,
+    pickup_date DATETIME,
     drop_location VARCHAR(255) NOT NULL,
     drop_country ENUM('BAHRAIN', 'KUWAIT', 'OMAN', 'QATAR', 'SAUDI ARABIA', 'UAE'),
-    drop_date DATE,
+    drop_date DATETIME,
     trip_distance DECIMAL(5,2) NOT NULL,
     total_amount DECIMAL(5,2) NOT NULL,
     breakout_location VARCHAR(255) NOT NULL,
@@ -568,10 +568,10 @@ CREATE TABLE vehicles_transportation
     trip_type ENUM('PRIVATE','SHARING','GCC'),
     pickup_location VARCHAR(255) NOT NULL,
     pickup_country ENUM('BAHRAIN', 'KUWAIT', 'OMAN', 'QATAR', 'SAUDI ARABIA', 'UAE'),
-    pickup_date DATE,
+    pickup_date DATETIME,
     drop_location VARCHAR(255) NOT NULL,
     drop_country ENUM('BAHRAIN', 'KUWAIT', 'OMAN', 'QATAR', 'SAUDI ARABIA', 'UAE'),
-    drop_date DATE,
+    drop_date DATETIME,
     trip_distance DECIMAL(5,2) NOT NULL,
     status ENUM('COMPLETED', 'ONGOING', 'NOT COMPLETED')
 );

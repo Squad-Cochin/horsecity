@@ -62,7 +62,7 @@ module.exports = class customers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let uploadAttachment = await commonoperation.fileUpload(files, constants.attachmentLocation.customer.idProof);
+                let uploadAttachment = await commonoperation.fileUploadTwo(files, constants.attachmentLocation.customer.idProof);
                 console.log(uploadAttachment);
                 let insQuery = `INSERT INTO customers(name, email, user_name, password, contact_no, date_of_birth, id_proof_no, id_proof_image, phone_verified, email_verified, expiry_at, created_at) VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', '${id_proof_no}', '${uploadAttachment}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                 // console.log(insQuery);
@@ -93,7 +93,7 @@ module.exports = class customers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let uploadAttachment = await commonoperation.fileUpload(id_proof_image, constants.attachmentLocation.customer.idProof);
+                let uploadAttachment = await commonoperation.fileUploadTwo(id_proof_image, constants.attachmentLocation.customer.idProof);
                 // console.log(uploadAttachment);
                 let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${user_name}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.id_proof_image = '${uploadAttachment}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
                 // console.log(upQuery);

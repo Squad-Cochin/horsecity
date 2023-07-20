@@ -10,6 +10,71 @@
 
 
 const constant = require('../../utils/constants');
-const vehicle = require('../../models/vehicles/vehicle'); 
+const vehicleImage = require('../../models/vehicles/vehicleImages.model'); 
 
-exports.addImages
+exports.addImages = async (req, res, next) =>
+{
+    const vehicleImages = await vehicleImage.addimages(req.param.id, req.body.image, req.body.title);
+    if(vehicleImages === 'err')
+    {
+        console.log('Error while uploading the particular vehicle image');
+        res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.particularVehicleImageError,
+        });
+    }
+    else
+    {
+        console.log('Particular vehicle image uploaded successfully');
+        res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.particularVehicleImageSuccess,
+        });
+    }
+
+};
+
+exports.allImages = async (req, res, next) =>
+{
+    const vehicleImages = await vehicleImage.allimages(req.body.pageNumber, req.body.pageSize)
+    if(vehicleImages === 'err')
+    {
+        console.log('Error while fetching the particular vehicle all images');
+        res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.getAllErr,
+        });
+    }
+    else
+    {
+        console.log('Particular vehicle all the images fetched successfully');
+        res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.getAll,
+        });
+    }
+
+};
+
+exports.updateStatus = async (req, res, next) =>
+{
+    const vehicleImages = await vehicleImage.updatestatus() 
+
+};
+
+exports.removeImage = async (req, res, next) =>
+{
+    const vehicleImages = await vehicleImage.removeimage() 
+
+};
+
+
+

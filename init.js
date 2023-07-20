@@ -8,14 +8,14 @@
 const con = require('./configs/db.configs'); // Importing the con variable
 const timeCalculate = require('./utils/helper/date'); // This variable will have the date file data. It is used to add days to current date for expiration of token
 require('dotenv').config(); // Importing the dotenv library
-const constant = require('./utils/constants');
+const constants = require('./utils/constants');
 
 module.exports = async function() 
 {
     // making the connection with the database
     con.connect(function(err)
     {
-        let selQuery = `SELECT * FROM ${constant.tableName.service_providers} sp WHERE sp.user_name = '${process.env.SPUSERNAME}' OR sp.email = '${process.env.EMAIL}' OR sp.contact_no = '${process.env.CONTACT_NO}' `;
+        let selQuery = `SELECT * FROM ${constants.tableName.service_providers} sp WHERE sp.user_name = '${process.env.SPUSERNAME}' OR sp.email = '${process.env.EMAIL}' OR sp.contact_no = '${process.env.CONTACT_NO}' `;
         // console.log(selQuery);
         con.query(selQuery, function (err, result)  // Executing the above query
         {
@@ -27,13 +27,13 @@ module.exports = async function()
             {    
                 new Promise(async (resolve, reject)=> 
                 {  
-                    let insQuery = `INSERT INTO ${constant.tableName.service_providers}(name, email, user_name, password, contact_person, contact_no, contact_address, emergency_contact_no, licence_image, licence_no, phone_verified, email_verified, expiry_at) VALUES ('${process.env.NAME}', '${process.env.EMAIL}', '${process.env.SPUSERNAME}', SHA2('${process.env.PASSWORD}', 256), '${process.env.CONTACT_PERSON}', '${process.env.CONTACT_NO}', '${process.env.CONTACT_ADDRESS}', '${process.env.EMERGENCY_CONTACT_NO}', '${process.env.CERTIFICATION_OR_LICENSE_IMG}', '${process.env.CERTIFICATION_OR_LICENSE_NO}', 'TRUE', 'TRUE', '${timeCalculate.addingSpecifiedDaysToCurrentDate(constant.password.expiry_after)}')`; 
+                    let insQuery = `INSERT INTO ${constants.tableName.service_providers}(name, email, user_name, password, contact_person, contact_no, contact_address, emergency_contact_no, licence_image, licence_no, phone_verified, email_verified, expiry_at, created_at) VALUES ('${process.env.NAME}', '${process.env.EMAIL}', '${process.env.SPUSERNAME}', SHA2('${process.env.PASSWORD}', 256), '${process.env.CONTACT_PERSON}', '${process.env.CONTACT_NO}', '${process.env.CONTACT_ADDRESS}', '${process.env.EMERGENCY_CONTACT_NO}', '${process.env.CERTIFICATION_OR_LICENSE_IMG}', '${process.env.CERTIFICATION_OR_LICENSE_NO}', 'TRUE', 'TRUE', '${timeCalculate.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${timeCalculate.addingSpecifiedDaysToCurrentDate(constants.timeOffSet.UAE)}'                     )`; 
                     // console.log(insQuery);
                     con.query(insQuery, (err, result1)=> // Executing the above query
                     {
                         if(result1) // if inserion happend correctly then if block
                         {
-                            let insQueryPP = `INSERT INTO ${constant.tableName.password_policies}(name, value) VALUES ('${process.env.pname}', '${process.env.regex}')`;
+                            let insQueryPP = `INSERT INTO ${constants.tableName.password_policies}(name, value) VALUES ('${process.env.pname}', '${process.env.regex}')`;
                             // console.log(insQueryPP); 
                             con.query(insQueryPP, (err, result2)=> // Executing the above query
                             {

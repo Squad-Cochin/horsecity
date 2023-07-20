@@ -41,6 +41,5 @@ exports.isValidIdInTheParams = (tableName) => async(req, res, next) =>
             });
         }
     }
-
 };
 

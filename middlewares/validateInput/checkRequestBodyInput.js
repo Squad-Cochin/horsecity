@@ -149,8 +149,8 @@ exports.usernameValidation = (tableName) => (req, res, next) =>
         }
         else
         {
-            console.log(isValidUsername(req.body.user_name));
-            if(!isValidUsername(req.body.user_name))
+            // console.log(isValidUsername(req.body.user_name));
+            if(isValidUsername(req.body.user_name))
             {
                 return res.status(200).send
                 ({

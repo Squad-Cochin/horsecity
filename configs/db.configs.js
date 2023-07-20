@@ -12,11 +12,18 @@ const mysql = require('mysql2'); // Importing the mysql2 library functionalities
 var con = mysql.createConnection
 ({
     // host : "192.168.200.211",
-    host: "192.168.200.6",
+    // host: "192.168.200.6",
+    // // port: 3306,
+    // user: "vsourz",
+    // password: "vsourz",
+    // database: "horscity"
+
+    host: "localhost",
     // port: 3306,
-    user: "vsourz",
-    password: "vsourz",
-    database: "horscity"
+    user: "root",
+    password: "",
+    database: "horsecity"
+    
 });
     
 con.connect(function async (err) 
@@ -30,6 +37,6 @@ con.connect(function async (err)
         console.log("DB Connected !");
     }
 });
-
+ 
 // Exporting the con variable for using it anywhere in the programm
 module.exports = con;

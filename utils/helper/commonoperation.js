@@ -67,8 +67,7 @@ exports.fileUpload = (attachments, path) =>
         if (!attachments)// || !attachments.file || !Array.isArray(attachments.file)) 
         {
             console.log('#### Invalid attachments parameter ####');
-            resolve({message : 'INVALIDATTACHMENT'});
-      
+            resolve({message : 'INVALIDATTACHMENT'}); 
         }
         else
         {
@@ -220,4 +219,48 @@ exports.removeUser = (tablename, Id) =>
 }
 
 
-// require('../../Attachements/Customers/IdProof/')
+exports.fileUploadTwo= (attachments, path) =>
+{ 
+    // console.log(attachments);
+    return new Promise((resolve, reject) =>
+    {
+        if (!attachments)// || !attachments.file || !Array.isArray(attachments.file)) 
+        {
+            console.log('#### Invalid attachments parameter ####');
+            resolve('NOATTACHEMENT')
+        }
+        else
+        {
+            // let file = attachments;
+            // console.log(file);
+            let fileExtension = attachments.name.split('.').pop().toLowerCase(); // get the file extension
+            // console.log(fileExtension);
+            if (['png', 'jpg'].includes(fileExtension)) 
+            {
+                // let currentDate = new Date().toISOString().replace(/:/g, '-').replace(//./g, '-'); // generate current date and time
+                let randomNumber = Math.floor(Math.random() * 1000000); // generate random number
+                let filename = `${randomNumber}_${attachments.name}`; // use current date, random number and original file name to create a unique file name
+                attachments.mv(path +filename, (err) => 
+                // attachments.id_proof_image.mv('../../Attachements/Customers/IdProof/' +filename, (err) => 
+                {
+                    if(err)
+                    {
+                        console.log("Error occurred while storing the uploaded file in their respective location", err);
+                        resolve('ERR')
+                    }
+                    else
+                    {
+                        console.log('File Uploaded');
+                        // resolve({message : 'INVALIDFORMAT'});
+                        resolve(filename);
+                    }
+                });                
+            }
+            else
+            {
+                console.log("Invalid Format");
+                resolve('INVALIDFORMAT');
+            }
+        }
+    });
+}

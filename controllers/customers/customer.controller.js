@@ -94,7 +94,7 @@ exports.addCustomer = async (req, res, next) =>
         req.body.user_name,
         req.body.password,
         req.body.contact_no,
-        req.body.date_of_birth,
+        req.body.date_of_birth, 
         req.body.id_proof_no,
         req.files.id_proof_image
     );

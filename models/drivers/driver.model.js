@@ -62,9 +62,9 @@ module.exports = class drivers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let uploadprofile_image = await commonoperation.fileUpload(profile_image, constants.attachmentLocation.driver.profilephoto);
+                let uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.profilephoto);
                 // console.log(uploadprofile_image);
-                let uploadlicence_img = await commonoperation.fileUpload(licence_img, constants.attachmentLocation.driver.licence);
+                let uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.licence);
                 // console.log(uploadprofile_image);
                 let insQuery = `INSERT INTO ${constants.tableName.drivers}(name, email, contact_no, emergency_contact_no, date_of_birth, profile_image, licence_no , licence_img , description, created_at) VALUES('${name}', '${email}', '${contact_no}', '${emergency_contact_no}', '${date_of_birth}', '${uploadprofile_image}', '${licence_no}', '${uploadlicence_img}', '${description}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                 // console.log(insQuery);
@@ -138,9 +138,9 @@ module.exports = class drivers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let uploadprofile_image = await commonoperation.fileUpload(profile_image, constants.attachmentLocation.driver.profilephoto);
+                let uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.profilephoto);
                 console.log(uploadprofile_image);
-                let uploadlicence_img = await commonoperation.fileUpload(licence_img, constants.attachmentLocation.driver.licence);
+                let uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.licence);
                 console.log(uploadprofile_image);
                 let upQuery = `UPDATE ${constants.tableName.drivers} d SET d.name = '${name}', d.email = '${email}', d.contact_no = '${contact_no}', d.emergency_contact_no = '${emergency_contact_no}', d.date_of_birth = '${date_of_birth}', d.licence_no = '${licence_no}', d.description = '${description}', d.licence_img  = '${uploadlicence_img}', d.profile_image = '${uploadprofile_image}', d.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE d.id = '${id}'`;
                 console.log(upQuery);
