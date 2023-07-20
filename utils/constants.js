@@ -23,7 +23,9 @@ module.exports =
     {
         customer : 
         {
-            idProof : `${__dirname}../../Attachements/Customers/IdProofs/`
+            idProof : `${__dirname}../../Attachements/Customers/IdProofs/`,
+            fetchidProof : `/Customers/IdProofs/`,
+            
         },
         driver :
         {

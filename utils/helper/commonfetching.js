@@ -44,7 +44,7 @@ exports.tableDataOnId = (tablename, Id) =>
     {
         let selQuery = `SELECT * FROM ${tablename} WHERE ${tablename}.id = '${Id}' `;
         con.query(selQuery, (err, result) =>
-        {
+        { 
             // console.log('Result: ',result);
             if (err)
             {

@@ -51,7 +51,7 @@ module.exports = class customers
             {
                 console.log('Came inside');
                 let idProofImage = data[0].id_proof_image;
-                data[0].id_proof_image = `${process.env.PORT_SP}${constants.attachmentLocation.customer.idProof}${idProofImage}`;
+                data[0].id_proof_image = `${process.env.PORT_SP}${constants.attachmentLocation.customer.fetchidProof}${idProofImage}`;
                 console.log("Link: ", data[0].id_proof_image);
                 return data;
             }            
