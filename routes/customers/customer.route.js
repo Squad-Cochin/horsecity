@@ -12,6 +12,8 @@ module.exports = (app) =>
     checkInput.isPageNumberEntered,
     checkInput.isPageSizeEntered,
     customerController.getAll);    
+
+    
     // Below route is for getting data of any particular customer
     app.get(`/${process.env.apiToken}/getOne/customer/:id`, 
     isValidIdInTheParams(constants.tableName.customers),
@@ -41,12 +43,16 @@ module.exports = (app) =>
     app.put(`/${process.env.apiToken}/edit/customer/:id`, 
             isValidIdInTheParams(constants.tableName.customers), 
             checkInput.nameValidation,
-            checkInput.emailValidation(constants.tableName.customers),
-            checkInput.usernameValidation(constants.tableName.customers),
-            // checkInput.passwordValidation,
-            checkInput.contactNumberValidation(constants.tableName.customers),
-            // checkInput.dateOfBirthValidation,
-            checkInput.idProofValidation,
+            checkInput.emailValidationWhileUpdate(constants.tableName.customers),
+            checkInput.usernameValidationWhileUpdate(constants.tableName.customers),
+            // // checkInput.passwordValidation,
+            checkInput.contactNumberValidationWhileUpdate(constants.tableName.customers),
+            // // checkInput.dateOfBirthValidation,
+            checkInput.idProofValidationWhileUpdate,
+            // verifyBody.nameAvailable,
+            // verifyBody.emailValidation,
+            // verifyBody.usernamevalidation,
+            // verifyBody.validateUAEMobileNumber,
             customerController.editCustomer
            );    
 }

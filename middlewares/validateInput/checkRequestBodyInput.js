@@ -1,5 +1,6 @@
 const commonfetching = require(`../../utils/helper/commonfetching`);
 const con = require(`../../configs/db.configs`);
+const constants = require("../../utils/constants");
 
 function hasOnlyNonSpaces(str) 
 {
@@ -154,6 +155,74 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
     }   
 };
 
+exports.emailValidationWhileUpdate = (tableName) => async (req, res, next) =>
+{
+    if (!req.body.email) 
+    {
+        return res.status(200).send
+        ({
+            code: 200,
+            status: false,
+            message: "Email is required"
+        });
+    }
+    else
+    {
+        if(hasOnlyNonSpaces(req.body.email) === true)
+        {
+            return res.status(200).send
+            ({
+                code: 200,
+                status: "failure",
+                message: "Email contain space. It is not allowed."
+            });
+        }
+        else
+        {
+            if(isvalidEmail(req.body.email) != true)
+            {
+                return res.status(200).send
+                ({
+                    code: 200,
+                    status: "failure",
+                    message: "Email is not in correct format. Please check"
+                });                                
+            }
+            else
+            {
+                let checkEmail = await commonfetching.dataOnEmailUpdate(tableName,'email', req.body.email, req.params.id);
+                if(checkEmail === 'internalError')
+                {
+                    return res.status(500).json
+                    ({ 
+                        error: 'Internal server error' 
+                    });
+                }
+                
+                if(checkEmail === 'emailnotavailable')
+                {
+                    return res.status(200).send
+                    ({
+                        code: 400,
+                        status: false,
+                        message: "This Email already exists in the database. Someone is already registered with this email"
+                    });
+                }
+                
+                if(checkEmail === 'emailnotchanged')
+                {
+                    next();
+                }
+
+                if(checkEmail === 'true')
+                {
+                    next();
+                }
+            }
+        }
+    }   
+};
+
 exports.usernameValidation = (tableName) => async (req, res, next) =>
 {
     if (!req.body.userName) 
@@ -211,6 +280,76 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
                 {
                     next();
                 }
+            // }
+        }
+    }
+}
+
+exports.usernameValidationWhileUpdate = (tableName) => async (req, res, next) =>
+{
+    if (!req.body.userName) 
+    {
+        return res.status(200).send
+        ({
+            code: 200,
+            status: false,
+            message: "Username is required"
+        });
+    }
+    else
+    {
+        if(hasOnlyNonSpaces(req.body.userName) === true)
+        {
+            return res.status(200).send
+            ({
+                code: 200,
+                status: "failure",
+                message: "Username contain space. It is not allowed."
+            });
+        }
+        else
+        {
+            // console.log(isValidUsername(req.body.userName));
+            // if(isValidUsername(req.body.userName))
+            // {
+            //     return res.status(200).send
+            //     ({
+            //         code: 200,
+            //         status: "failure",
+            //         message: "username is not valid. It must consist atleat 8 letter and less than 16 letters"
+            //     });                                
+            // }
+            // else
+            // {
+
+                    let checkEmail = await commonfetching.dataOnUsernameUpdate(tableName, req.body.userName, req.params.id);
+                    if(checkEmail === 'internalError')
+                    {
+                        return res.status(500).json
+                        ({ 
+                            error: 'Internal server error' 
+                        });
+                    }
+                    
+                    if(checkEmail === 'usernamenotavailable')
+                    {
+                        return res.status(200).send
+                        ({
+                            code: 400,
+                            status: false,
+                            message: "This username already exists in the database. Someone is already registered with this username"
+                        });
+                    }
+                    
+                    if(checkEmail === 'usernamenotchanged')
+                    {
+                        next();
+                    }
+
+                    if(checkEmail === 'true')
+                    {
+                        next();
+                    }
             // }
         }
     }
@@ -274,6 +413,77 @@ exports.contactNumberValidation = (tableName) => async (req, res, next) =>
                 {
                     next();
                 }
+            }
+        }
+    }
+}
+
+exports.contactNumberValidationWhileUpdate = (tableName) => async (req, res, next) =>
+{
+    if (!req.body.contact_no) 
+    {
+        return res.status(200).send
+        ({
+            code: 400,
+            status: false,
+            message: "Contact number is required"
+        });
+    }
+    else
+    {
+        if(hasOnlyNonSpaces(req.body.contact_no) === true)
+        {
+            return res.status(200).send
+            ({
+                code: 400,
+                status: "failure",
+                message: "Contact Number contain space. It is not allowed."
+            });
+        }
+        else
+        {
+            console.log(isValidUAENumber(req.body.contact_no));
+            if(!isValidUAENumber(req.body.contact_no))
+            {
+                return res.status(200).send
+                ({
+                    code: 400,
+                    status: "failure",
+                    message: "Contact number is not in valid"
+                });                                
+            }
+            else
+            {
+                let checkContactNumber = await commonfetching.dataOnContactNumberUpdate(tableName, req.body.contact_no, req.params.id);
+                if(checkContactNumber === 'internalError')
+                {
+                    return res.status(200).json
+                    ({
+                        code : 500,
+                        status: false,
+                        error: 'Internal server error' 
+                    });
+                }
+
+                if(checkContactNumber === 'contactnumbernotavailable')
+                {
+                    return res.status(200).send
+                    ({
+                        code: 400,
+                        status: false,
+                        message: "This contact number already exists in the database. Someone is already registered with this contact nnumber"
+                    });
+                }
+                    
+                if(checkContactNumber === 'contactnumbernotchanged')
+                {
+                    next();
+                }
+
+                if(checkContactNumber === 'true')
+                {
+                    next();
+                }                
             }
         }
     }
@@ -380,7 +590,7 @@ exports.nameValidation = (req, res, next) =>
     }    
 };
 
-exports.idProofValidation = (req, res, next) =>
+exports.idProofValidation = async(req, res, next) =>
 {
     if (!req.body.id_proof_no) 
     {
@@ -393,9 +603,84 @@ exports.idProofValidation = (req, res, next) =>
     }
     else
     {
-        next();
+        let checkIdProofNumber = await commonfetching.vehiclesMiddleware(constants.tableName.customers, 'id_proof_no', req.body.id_proof_no) 
+        console.log(checkIdProofNumber);
+        if(checkIdProofNumber === 'err')
+        {
+            console.log('Internal Server Error');
+            return res.status(200).json
+            ({
+                code : 500,
+                status: false,
+                error: 'Internal server error while checking id proof number' 
+            });            
+        }
+        else if (checkIdProofNumber.length > 0)
+        {
+            console.log('Some body already having this id proof number. It can be duplicate');
+            return res.status(200).json
+            ({
+                code : 400,
+                status: false,
+                error: 'Some body already having this id proof number. It can be duplicate'
+            });    
+        }
+        else
+        {
+            console.log('No one having this id proof number');
+            next();
+        }
+        
     }    
 };
+
+exports.idProofValidationWhileUpdate = async(req, res, next) =>
+{
+    if (!req.body.id_proof_no) 
+    {
+        return res.status(200).send
+        ({
+            code: 400,
+            status: false,
+            message: "Id proof number is required"
+        });
+    }
+    else
+    {
+        let checkIdProofNumber = await commonfetching.dataOnIdProofNumberUpdate(constants.tableName.customers, req.body.id_proof_no, req.params.id);
+        if(checkIdProofNumber === 'internalError')
+        {
+            return res.status(200).json
+            ({
+                code : 500,
+                status : false,
+                error: 'Internal server error' 
+            });
+        }
+        
+        if(checkIdProofNumber === 'idproofnumbernotavailable')
+                {
+                    return res.status(200).send
+                    ({
+                        code: 400,
+                        status: false,
+                        message: "This id proof number already exists in the database. Someone is already registered with this id proof number"
+                    });
+                }
+                
+                if(checkIdProofNumber === 'idproofnumbernotchanged')
+                {
+                    next();
+                }
+
+                if(checkIdProofNumber === 'true')
+                {
+                    next();
+                }        
+    }    
+};
+
+
 
 exports.isValidDescription = (req, res, next) =>
 {
@@ -427,7 +712,7 @@ exports.isValidLicenceNumber = (req, res, next) =>
     }
     else
     {
-        
+
         next();
     }    
 };

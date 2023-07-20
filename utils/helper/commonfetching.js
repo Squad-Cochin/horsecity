@@ -223,7 +223,8 @@ exports.vehiclesMiddleware = (tableName, feildName, Value) =>
     {
         return new Promise((resolve, reject) => 
         {
-            let selQuery = `SELECT * FROM ${tableName} t WHERE t.{feildName} = '${Value}' `;
+            let selQuery = `SELECT * FROM ${tableName} t WHERE t.${feildName} = '${Value}' `;
+            console.log(selQuery);
             con.query(selQuery, (err, result) =>
             {
                 if(err)
@@ -249,4 +250,215 @@ exports.vehiclesMiddleware = (tableName, feildName, Value) =>
         console.log(`Error while vehicle middleware function in common fetching helper file `, error);       
     }
 
+};
+
+exports.dataOnEmailUpdate = async(tableName, feildName, Value, id) =>
+{
+    try
+    {
+        return await  new Promise(async (resolve, reject) =>
+        {
+            let selQuery = `SELECT * FROM customers c WHERE c.id = '${id}' AND c.email = '${Value}'`;
+            con.query(selQuery, async (err, result) =>
+            {
+                if(err)
+                {
+                    console.log('Error in the dataOnUpdate');
+                    resolve('internalError')
+                }
+                
+                if(result.length > 0)
+                {
+                    console.log('I think email is not updating this time');
+                    resolve('emailnotchanged');
+                }
+                else
+                {
+                    let checkwithOthers = await this.dataOnEmail(tableName, Value);
+                    console.log(checkwithOthers);
+                    if(checkwithOthers.length > 0)
+                    {
+                        console.log('Email Cannot be used. It is already registered');
+                        resolve('emailnotavailable');
+                    }
+                    else
+                    {
+                        console.log('No one has this email');
+                        resolve('true');
+                    }
+                }
+            });
+        });      
+    }
+    catch (error)
+    {
+        
+    }
+}; 
+
+
+exports.dataOnUsernameUpdate = async(tableName, Value, id) =>
+{
+    try
+    {
+        return await  new Promise(async (resolve, reject) =>
+        {
+            let selQuery = `SELECT * FROM ${tableName} t WHERE t.id = '${id}' AND t.user_name = '${Value}'`;
+            con.query(selQuery, async (err, result) =>
+            {
+                if(err)
+                {
+                    console.log('Internal Server Error');
+                    resolve('internalError')
+                }
+                
+                if(result.length > 0)
+                {
+                    console.log('I think username is not updating this time');
+                    resolve('usernamenotchanged');
+                }
+                else
+                {
+                    let checkwithOthers = await this.dataOnUsername(tableName, Value);
+                    console.log(checkwithOthers);
+                    if(checkwithOthers.length > 0)
+                    {
+                        console.log('Username Cannot be used. It is already registered');
+                        resolve('usernamenotavailable');
+                    }
+                    else
+                    {
+                        console.log('No one has this username');
+                        resolve('true');
+                    }
+                }
+            });
+        });      
+    }
+    catch (error)
+    {
+        
+    }
+}; 
+
+exports.dataOnContactNumberUpdate = async(tableName, Value, id) =>
+{
+    try
+    {
+        return await  new Promise(async (resolve, reject) =>
+        {
+            let selQuery = `SELECT * FROM ${tableName} t WHERE t.id = '${id}' AND t.contact_no = '${Value}'`;
+            con.query(selQuery, async (err, result) =>
+            {
+                if(err)
+                {
+                    console.log('Internal Server Error');
+                    resolve('internalError')
+                }
+                
+                if(result.length > 0)
+                {
+                    console.log('I think contact number is not updating this time');
+                    resolve('contactnumbernotchanged');
+                }
+                else
+                {
+                    let checkwithOthers = await this.dataOnContactNumber(tableName, Value);
+                    console.log(checkwithOthers);
+                    if(checkwithOthers.length > 0)
+                    {
+                        console.log('Contact number cannot be used. It is already registered');
+                        resolve('contactnumbernotavailable');
+                    }
+                    else
+                    {
+                        console.log('No one has this contact number');
+                        resolve('true');
+                    }
+                }
+            });
+        });      
+    }
+    catch (error)
+    {
+        
+    }
+};
+
+exports.dataOnIdProofNumberUpdate = async(tableName, Value, id) =>
+{
+    try
+    {
+        return await  new Promise(async (resolve, reject) =>
+        {
+            let selQuery = `SELECT * FROM ${tableName} c WHERE c.id = '${id}' AND c.id_proof_no = '${Value}'`;
+            con.query(selQuery, async (err, result) =>
+            {
+                if(err)
+                {
+                    console.log('Error in the dataOnUpdate');
+                    resolve('internalError')
+                }
+                
+                if(result.length > 0)
+                {
+                    console.log('I think id proof number is not updating this time');
+                    resolve('idproofnumbernotchanged');
+                }
+                else
+                {
+                    let checkwithOthers = await this.dataOnIdProof(tableName, Value);
+                    console.log(checkwithOthers);
+                    if(checkwithOthers.length > 0)
+                    {
+                        console.log('Id proof number cannot be used. It is already registered');
+                        resolve('idproofnumbernotavailable');
+                    }
+                    else
+                    {
+                        console.log('No one has this id proof number');
+                        resolve('true');
+                    }
+                }
+            });
+        });      
+    }
+    catch (error)
+    {
+        
+    }
+}; 
+
+
+exports.dataOnIdProof = (tablename, id_proof_no) =>
+{
+    try
+    {
+        return new Promise((resolve, reject) => 
+        {
+            let selQuery = `SELECT * FROM ${tablename} t WHERE t.id_proof_no = '${id_proof_no}' `;
+            con.query(selQuery, (err, result) =>
+            {
+                if(err)
+                {
+                    resolve('err');
+                }
+                else
+                {
+                    if (result.length > 0)
+                    {
+                        resolve(result);
+                    }
+                    else
+                    {
+                        resolve([]);
+                    }
+                }            
+            });
+        });       
+    }
+    catch(error)
+    {
+        console.log(`Error while fetching the table data on email`, error);        
+    }
 };
