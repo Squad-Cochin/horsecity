@@ -32,7 +32,7 @@ module.exports = (app) =>
 
 
     // Below route is for removing the customer
-    app.put(`/${process.env.apiToken}/remove/customer/:id`, isValidIdInTheParams(constants.tableName.customers),  isValidIdInTheParams, customerController.removeCustomer);
+    app.put(`/${process.env.apiToken}/remove/customer/:id`, isValidIdInTheParams(constants.tableName.customers), customerController.removeCustomer);
 
     // Below route is for updating the customer status
     app.put(`/${process.env.apiToken}/update/customer/:id`, isValidIdInTheParams(constants.tableName.customers),  customerController.updateStatus);
@@ -45,7 +45,7 @@ module.exports = (app) =>
             checkInput.usernameValidation(constants.tableName.customers),
             // checkInput.passwordValidation,
             checkInput.contactNumberValidation(constants.tableName.customers),
-            checkInput.dateOfBirthValidation,
+            // checkInput.dateOfBirthValidation,
             checkInput.idProofValidation,
             customerController.editCustomer
            );    

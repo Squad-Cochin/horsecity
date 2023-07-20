@@ -19,16 +19,12 @@ exports.getAll = async (req, res) =>
     if(drivers.length == 0)
     {
         console.log('No driver data present');
-        return res.send
+        return res.status(200).send
         ({
             code : 200,
             status : true,
             message : constant.responseMessage.getAll,
-            data : 
-            {
-                totalCount : drivers.length,
-                drivers : drivers
-            }
+            data : drivers
         });
     }
     else
@@ -39,11 +35,7 @@ exports.getAll = async (req, res) =>
             code : 200,
             status : true,
             message : constant.responseMessage.getAll,
-            data : 
-            {
-                totalCount : drivers.length,
-                drivers : drivers
-            }
+            data : drivers
         });
     }    
 }

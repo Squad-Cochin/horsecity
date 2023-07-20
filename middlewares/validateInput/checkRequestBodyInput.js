@@ -190,15 +190,15 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
             // }
             // else
             // {
-                let checkContactNumber = await commonfetching.dataOnUsername(tableName, req.body.userName);
-                if(checkContactNumber === 'err')
+                let checkUsername = await commonfetching.dataOnUsername(tableName, req.body.userName);
+                if(checkUsername === 'err')
                 {
                     return res.status(500).json
                     ({ 
                         error: 'Internal server error' 
                     });
                 }
-                else if(checkContactNumber.length > 0)
+                else if(checkUsername.length > 0)
                 {
                     return res.status(200).send
                     ({
@@ -427,6 +427,7 @@ exports.isValidLicenceNumber = (req, res, next) =>
     }
     else
     {
+        
         next();
     }    
 };

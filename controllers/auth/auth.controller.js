@@ -29,7 +29,7 @@ exports.serviceProviderLogin = async(req, res)=>
         return res.status(200).send
         ({
             status : "failure",
-            code : 200,
+            code : 400,
             message : "username not found",
         });
     }
@@ -40,7 +40,7 @@ exports.serviceProviderLogin = async(req, res)=>
         return res.status(200).send
         ({
             status : "failure",
-            code : 200,
+            code : 500,
             message : "Internal server error while sign in",
         });
     }
@@ -51,7 +51,7 @@ exports.serviceProviderLogin = async(req, res)=>
         return res.status(200).send
         ({
             status : "failure",
-            code : 200,
+            code : 400,
             message : "Password is incorrect",
         });
     }
@@ -62,7 +62,7 @@ exports.serviceProviderLogin = async(req, res)=>
         return res.status(200).send
         ({
             status : "failure",
-            code : 200,
+            code : 400,
             message : "Service provider is inactive",
         });
     } 
@@ -73,7 +73,7 @@ exports.serviceProviderLogin = async(req, res)=>
         return res.status(200).send
         ({
             status : "expired",
-            code : 200,
+            code : 400,
             message : "Your password is expired. Please make a new password",
         });
     }
@@ -113,7 +113,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         return res.status(200).send
         ({
             status : "failure",
-            code : 200,
+            code : 400,
             message : "This username must be incorect or no user is registered with this username",
         });
     }
@@ -124,7 +124,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         return res.status(200).send
         ({
             status : "failure",
-            code : 200,
+            code : 500,
             message : "Internal server error while updating the password",
         });
     }
@@ -134,7 +134,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         return res.status(200).send
         ({
             status : "failure",
-            code : 200,
+            code : 400,
             message : "Password is incorrect",
         });
     }

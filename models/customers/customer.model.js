@@ -102,17 +102,18 @@ module.exports = class customers
                 let uploadAttachment = await commonoperation.fileUploadTwo(id_proof_image, constants.attachmentLocation.customer.idProof);
                 // console.log(uploadAttachment);
                 let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${user_name}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.id_proof_image = '${uploadAttachment}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
-                // console.log(upQuery);
+                console.log(upQuery);
                 con.query(upQuery, (err, result) =>
                 {
-                    // console.log(result);
-                    if(result.length > 0)
+                    console.log(result);
+                    if(result.affectedRows > 0)
                     {
                         console.log('Customer data updated successfully');
                         resolve(result);
                     }
                     else
                     {
+                        console.log(err);
                         resolve('err')
                     }
                 });                
