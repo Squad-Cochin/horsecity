@@ -142,3 +142,12 @@ export async function updateSPStatus(id){
   }
 }
 
+export async function updateCustomerStatus(id){
+  try{
+    const { data } = await axios.put(`${url.PUT_CUSTOMER_UPDATE_STATUS}/${id}`);
+    console.log("data",data)
+    return data;
+  } catch (error) {
+    return { error : "Faild !"}
+  }
+}

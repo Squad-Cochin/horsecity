@@ -10,14 +10,14 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
 /**
  * The below one is Shaheer's Computer Details
  */
-export const API_BASE_URL = "http://192.168.200.211:8000";
-const apiBaseUrl = "http://192.168.200.211:8000";
+// export const API_BASE_URL = "http://192.168.200.211:8000";
+// const apiBaseUrl = "http://192.168.200.211:8000";
 
 /**
  * The below one is Saurabh's Computer Details
  */
-// export const API_BASE_URL = "http://192.168.200.130:8080";
-// const apiBaseUrl = "http://192.168.200.130:8080";
+export const API_BASE_URL = "http://192.168.200.130:8000";
+const apiBaseUrl = "http://192.168.200.130:8000";
 
 /**
  * The below one is own Computer Details
@@ -48,6 +48,15 @@ export const PUT_SP_UPDATE_STATUS = apiBaseUrl + token + "/update-status/service
 export const POST_SP_EDIT_URL = apiBaseUrl + token + "/update/serviceprovider"
 export const PUT_SP_REMOVE = apiBaseUrl + token + "/remove/serviceprovider"
 
+/**CUSTOMER */
+export const GET_CUSTOMER_ALL_DATA_URL = apiBaseUrl + token + "/getAll/customers"
+export const GET_CUSTOMER_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/serviceprovider"
+export const POST_CUSTOMER_ADD_URL = apiBaseUrl + token + "/add/customer"
+export const PUT_CUSTOMER_UPDATE_STATUS = apiBaseUrl + token + "/update/customer"
+export const POST_CUSTOMER_EDIT_URL = apiBaseUrl + token + "/update/serviceprovider"
+export const PUT_CUSTOMER_REMOVE = apiBaseUrl + token + "/remove/serviceprovider"
+
+// http://192.168.200.130:8000/horsecity661809/getAll/customers
 
 
 export const POST_FAKE_LOGIN = "/post-fake-login";

@@ -20,7 +20,11 @@ import * as url from "../url_helper";
             console.log("response",response)
             return response
         } catch (error) {
-            return { code : 500 , error : "Faild !"}
+            let errObj = {
+                code : 500 , 
+                error : "Faild !"
+            }
+            return errObj;
         }
     }
 
@@ -44,23 +48,40 @@ import * as url from "../url_helper";
         }
       }
 
-  /**Add new Taxation */
-  export async function addNewTaxation(){
-    try {
-        // const { data } = await axios.post(`${url.POST_SP_ADD_URL}`);
-        // return { data };
-    } catch (error) {
-        return { error : "Faild !"}
-    }
-  }
-
-    /**Add new Customer */
-    export async function addNewCustomer(data){
+    /**Add new Taxation */
+    export async function addNewTaxation(){
         try {
             // const { data } = await axios.post(`${url.POST_SP_ADD_URL}`);
             // return { data };
         } catch (error) {
             return { error : "Faild !"}
+        }
+    }
+
+    /**Add new Customer */
+    export async function addNewCustomer(data){
+        try {
+            console.log(data)
+            const formData = new FormData();
+            // Append the object data to the FormData instance
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+            
+            // Send the form data as a POST request using Axios
+            const response = await axios.post(`${url.POST_CUSTOMER_ADD_URL}`, formData, {
+                headers: {
+                'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log("response",response)
+            return response
+        } catch (error) {
+            let errObj = {
+                code : 500 , 
+                error : "Faild !"
+            }
+            return errObj;
         }
       }
     
@@ -78,6 +99,7 @@ import * as url from "../url_helper";
     /**Add new driver */
     export async function addNewDriver(data){
         try {
+            console.log(data)
             // const { data } = await axios.post(`${url.POST_SP_ADD_URL}`);
             // return { data };
         } catch (error) {

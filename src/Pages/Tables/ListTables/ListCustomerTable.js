@@ -6,7 +6,7 @@
 
 import React, { useState, useEffect } from 'react';
 //IMPORTED FROM REACT BOOTSTRAP
-import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
 
 /**Navigation UI element */
@@ -19,12 +19,14 @@ import { useFormik } from "formik";
 import Flatpickr from "react-flatpickr";
 
 /**IMPORTED APIs */
-import { getCustomersData } from '../../../helpers/ApiRoutes/authApiRoutes'; //For getting all customers
+// import { getCustomersData } from '../../../helpers/ApiRoutes/authApiRoutes'; //For getting all customers
 import { removeCustomer } from '../../../helpers/ApiRoutes/removeApiRoutes'; //For removing customers
 import { addNewCustomer } from '../../../helpers/ApiRoutes/addApiRoutes'; //For adding new customer
-import { updateCustomer } from '../../../helpers/ApiRoutes/editApiRoutes'; //For updating  customer
+import { updateCustomer, updateCustomerStatus } from '../../../helpers/ApiRoutes/editApiRoutes'; //For updating  customer
+import { getSingleCustomerData, getCustomersData } from '../../../helpers/ApiRoutes/getApiRoutes';
+import config from '../../../config';
 
-
+// Function for customer page
 const ListCustomerTable = () => {
 
     const [modal_list, setmodal_list] = useState(false); /**Using for showing ADD & EDIT modal */
@@ -34,20 +36,23 @@ const ListCustomerTable = () => {
     const [customer, setCustomer] = useState([]); /**Using for storing All particul  customer based of thair ID */
     const [updateImage, setUpdateImage] = useState(""); /**Using for storing id proof image file */
     const [idProofPreview, setIdProofPreview] = useState(null);  /**Using for storing idproof image URL*/
-
+    const [ pageNumber, setPageNumber ] = useState(1);
+    const [ numberOfData, setNumberOfData ] = useState(0);
+    const [ errors, setErrors ] = useState("")
+    const pageLimit = config.pageLimit;
 
     /**This hook is used to fetch customers data */
     useEffect(() => {
-        let getAllCustomers = getCustomersData();
-        setCustomers(getAllCustomers);
+        getAllData(1)
     }, [])
 
     /**This object sets the initial values for the form fields managed by formik */
     const initialValues = {
         name: !add_list ? customer[0]?.name : '',
         email: !add_list ? customer[0]?.email : '',
-        username: !add_list ? customer[0]?.user_name : '',
-        phone: !add_list ? customer[0]?.phone : '',
+        userName: !add_list ? customer[0]?.user_name : '',
+        password: !add_list ? customer[0]?.password : '',
+        contact_no: !add_list ? customer[0]?.contact_no : '',
         date_of_birth: !add_list ? customer[0]?.date_of_birth : '',
         id_proof_no: !add_list ? customer[0]?.id_proof_no : '',
         id_proof_image: !add_list ? customer[0]?.id_proof_image : '',
@@ -63,9 +68,7 @@ const ListCustomerTable = () => {
             values.id_proof_image = updateImage;
             if (add_list) {
                 //add new customer
-                addNewCustomer(values);
-                setAdd_list(false);
-                setmodal_list(false);
+                addCustomer(values)
             } else {
                 //update previes customer
                 console.log("update previues one ");
@@ -75,6 +78,20 @@ const ListCustomerTable = () => {
             }
         }
     });
+
+    // function for add customer
+    async function addCustomer(values){
+        let addCustomer = await addNewCustomer(values);
+        if(addCustomer.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+        }else{
+            setErrors("")
+            setErrors(addCustomer.message)
+        }
+    }
 
     /**This function is an event handler that triggers when the user
      *  selects a file for the idproof image */
@@ -89,18 +106,19 @@ const ListCustomerTable = () => {
     function tog_list(param, productId) {
         if (param === 'ADD') {
             setAdd_list(!add_list);
+        }else{
+            const data = customers?.find((item) => item?.id === productId)
+            setCustomer([data]);
+            setIdProofPreview(data?.id_proof_image)
         }
-        const data = customers?.find((item) => item?.id === productId)
-        setCustomer([data]);
         setmodal_list(!modal_list);
-        setIdProofPreview(data?.id_proof_image)
     }
 
     /**This function toggles the view modal for displaying details
     *  of a customer */
-    function tog_view(productId) {
-        const data = customers?.find((item) => item?.id === productId)
-        setCustomer([data]);
+    async function tog_view(productId) {
+        let singleCustomer = await getSingleCustomerData(productId)
+        setCustomer(singleCustomer.singleCustomer)
         setView_modal(!view_modal);
     }
 
@@ -112,32 +130,33 @@ const ListCustomerTable = () => {
     /**Function for changing customers status */
     function toggleStatus(button, customerId) {
         var currentStatus = button.innerText.trim();
-
+        const customerData = customers.find((s) => s.id === customerId);
+        updateCustomerStatus(customerData.id)
         if (currentStatus === 'ACTIVE') {
             button.innerText = 'INACTIVE';
             button.classList.remove('btn-success');
             button.classList.add('btn-danger');
-
-            // Find the corresponding customer by ID
-            const customer = customers.find((c) => c.id === customerId);
-            console.log("Customer", customer);
-            if (customer) {
-                console.log('Came here');
-                customer.status = 'INACTIVE';
-                console.log("Customer", customer);
+            if (customerData) {
+                customerData.status = 'INACTIVE';
             }
         }
         else if (currentStatus === 'INACTIVE') {
             button.innerText = 'ACTIVE';
             button.classList.remove('btn-danger');
             button.classList.add('btn-success');
-
-            // Find the corresponding customer by ID
-            const customer = customers.find((c) => c.id === customerId);
-            if (customer) {
-                customer.status = 'ACTIVE';
+            if (customerData) {
+                customerData.status = 'ACTIVE';
             }
         }
+    }
+
+    // function for get data all service provider data
+    async function getAllData(page) {
+        let getCustomers = await getCustomersData(page || 1);
+        console.log(getCustomers)
+        setCustomers(getCustomers?.customers);
+        setPageNumber(page);
+        setNumberOfData(getCustomers?.totalCount);
     }
 
     return (
@@ -190,20 +209,31 @@ const ListCustomerTable = () => {
                                         <tbody className="list form-check-all">
                                             {customers.map((item, index) => (
                                             <tr key={item.id}>
-                                                <th scope="row">{index + 1}</th>
+                                                <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                 <td className="customer_name">{item.name}</td>
                                                 <td className="email">{item.email}</td>
-                                                <td className="contact_no">{item.phone}</td>
+                                                <td className="contact_no">{item.contact_no}</td>
                                                 <td className="registered_date">{item.created_at}</td>
                                                 <td>
-                                                <button
-                                                    className="btn btn-sm btn-success status-item-btn"
-                                                    data-bs-toggle="modal"
-                                                    data-bs-target="#showModal"
-                                                    onClick={(event) => toggleStatus(event.target)}
-                                                >
-                                                    {item.status}
-                                                </button>
+                                                    {item.status === "ACTIVE" ?
+                                                        <button
+                                                            className="btn btn-sm btn-success status-item-btn"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#showModal"
+                                                            onClick={(event) => toggleStatus(event.target, item.id)}
+                                                        >
+                                                            {item.status}
+                                                        </button> :
+                                                        <button
+                                                            className="btn btn-sm btn-danger status-item-btn"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#showModal"
+                                                            onClick={(event) => toggleStatus(event.target, item.id)}
+                                                        >
+                                                            {item.status}
+                                                        </button>
+
+                                                    }
                                                 </td>
                                                 <td>
                                                 <div className="d-flex gap-2">
@@ -244,15 +274,22 @@ const ListCustomerTable = () => {
                                         </tbody>
                                         </table>
                                          </div>
-                                        <div className="d-flex justify-content-end">
+                                         <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">
-                                                <Link className="page-item pagination-prev disabled" to="#">
-                                                    Previous
-                                                </Link>
-                                                <ul className="pagination customers-pagination mb-0"></ul>
-                                                <Link className="page-item pagination-next" to="#">
-                                                    Next
-                                                </Link>
+                                                {pageNumber > 1 ?
+                                                    <Link 
+                                                        className="page-item pagination-prev disabled" 
+                                                        onClick={()=> getAllData(pageNumber - 1)}
+                                                    >
+                                                        Previous
+                                                    </Link>
+                                                : null }
+                                                <ul className="pagination listjs-pagination mb-0"></ul>
+                                                {numberOfData > pageLimit * pageNumber ? 
+                                                    <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}>
+                                                        Next
+                                                    </Link> 
+                                                : null }
                                             </div>
                                         </div>
                                     </div>
@@ -269,6 +306,7 @@ const ListCustomerTable = () => {
                 <form className="tablelist-form"
                     onSubmit={validation.handleSubmit}>
                     <ModalBody>
+                        {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
                         {/** Customer name */}
                         <div className="mb-3">
                             <label htmlFor="customername-field" className="form-label">Name</label>
@@ -302,23 +340,39 @@ const ListCustomerTable = () => {
                             <label htmlFor="username-field" className="form-label">Username</label>
                             <input
                                 type="text"
-                                name='username'
+                                name='userName'
                                 id="username-field"
-                                value={validation.values.username || ""}
+                                value={validation.values.userName || ""}
                                 onChange={validation.handleChange}
                                 className="form-control"
                                 placeholder="Enter Username"
                                 required
                             />
                         </div>
-                        {/** Customer Phone number */}
+                        {/** Customer Password */}
+                        {add_list ?
+                            <div className="mb-3">
+                                <label htmlFor="password-field" className="form-label">Password</label>
+                                <input
+                                    type="password"
+                                    name='password'
+                                    id="password-field"
+                                    value={validation.values.password || ""}
+                                    onChange={validation.handleChange}
+                                    className="form-control"
+                                    placeholder="Enter Password"
+                                    required
+                                />
+                            </div>
+                        : null }
+                        {/** Customer contact_no number */}
                         <div className="mb-3">
                             <label htmlFor="contact_no-field" className="form-label">Contact Number</label>
                             <input
                                 type="text"
-                                name='phone'
+                                name='contact_no'
                                 id="contact_no-field"
-                                value={validation.values.phone || ""}
+                                value={validation.values.contact_no || ""}
                                 onChange={validation.handleChange}
                                 className="form-control"
                                 placeholder="Enter Contact Number"
@@ -332,10 +386,10 @@ const ListCustomerTable = () => {
                                 className="form-control"
                                 name='date_of_birth'
                                 options={{
-                                    dateFormat: "d M, Y"
+                                    dateFormat: "d-m-Y"
                                 }}
                                 value={validation.values.date_of_birth || ""}
-                                onChange={validation.handleChange}
+                                onChange={(dates) =>validation.setFieldValue('date_of_birth', dates[0])}
                                 placeholder="Select Date"
                             />
                         </div>
@@ -422,19 +476,19 @@ const ListCustomerTable = () => {
                                 type="text"
                                 name='username'
                                 id="username-field"
-                                value={validation.values.username || ""}
+                                value={validation.values.userName || ""}
                                 className="form-control"
                                 readOnly
                             />
                         </div>
-                        {/** Customer Phone number */}
+                        {/** Customer contact_no number */}
                         <div className="mb-3">
                             <label htmlFor="contact_no-field" className="form-label">Contact Number</label>
                             <input
                                 type="text"
-                                name='phone'
+                                name='contact_no'
                                 id="contact_no-field"
-                                value={validation.values.phone || ""}
+                                value={validation.values.contact_no || ""}
                                 className="form-control"
                                 readOnly
                             />

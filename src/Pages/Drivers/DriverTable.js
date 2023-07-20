@@ -206,6 +206,7 @@ const ListTables = () =>
             values.licence_img = updateImage;
             if (add_list) {
                 //add new
+                console.log("vvv",values)
                 addNewDriver(values);
                 setAdd_list(false);
                 setmodal_list(false);
@@ -393,7 +394,7 @@ const ListTables = () =>
                                 dateFormat: "d M, Y"
                                 }}
                                 value={validation.values.date_of_birth || ""}
-                                onChange={validation.handleChange}
+                                onChange={(dates) =>validation.setFieldValue('date_of_birth', dates[0])}
                                 placeholder="Select Date"
                             />
                         </div>

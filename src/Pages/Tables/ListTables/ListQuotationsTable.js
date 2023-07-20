@@ -930,8 +930,8 @@ const ListQuotationsTable = () => {
               </label>
               <input
                 type="text"
-                name="Vehicle_cost"
-                id="Vehicle_cost-field"
+                name="vehicle_cost"
+                id="vehicle_cost-field"
                 className="form-control"
                 value={validation.values.vehicle_cost || ""}
                 placeholder="Enter Vehicle Cost"
