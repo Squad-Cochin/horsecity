@@ -22,7 +22,7 @@ module.exports = class settings {
           currency_id,
           logo,loginpage_logo
         } = reqBody; 
-
+        console.log("tt",tax_id);
         let validateQuery = `SELECT * FROM ${constants.tableName.application_settings} apps
                                      WHERE apps.id = '${id}'`;
         con.query(validateQuery, async (err, data) => {
@@ -30,7 +30,7 @@ module.exports = class settings {
             let validateLanguageQuery = `SELECT * FROM ${constants.tableName.languages} apps
                   WHERE apps.id = '${language_id}'`;
             con.query(validateLanguageQuery, async (err, data) => {
-                console.log("lang",data);
+        
               if (data?.length != 0) {
                 let validateCurrecyQuery = `SELECT * FROM ${constants.tableName.currencies} apps
                          WHERE apps.id = '${currency_id}'`;
@@ -40,6 +40,7 @@ module.exports = class settings {
                  
                     let validateTaxationQuery = `SELECT * FROM ${constants.tableName.taxations} apps
                           WHERE apps.id = '${tax_id}'`;
+             
 
                     con.query(validateTaxationQuery, async (err, data) => {
                       if (data?.length != 0) {
@@ -134,23 +135,28 @@ module.exports = class settings {
                             if (data?.length != 0) {
                               resolve({ status: "SUCCESS" });
                             } else {
+                              console.log("1");
                               resolve({ status: "FAILD" });
                             }
                           });
                         }
                       } else {
+                        console.log("22");
                         resolve({ status: "FAILD" });
                       }
                     });
                   } else {
+                    console.log("2244");
                     resolve({ status: "FAILD" });
                   }
                 });
               } else {
+                console.log("2255");
                 resolve({ status: "FAILD" });
               }
             });
           } else {
+            console.log("25642");
             resolve({ status: "FAILD" });
           }
         });

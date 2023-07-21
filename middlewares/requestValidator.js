@@ -178,6 +178,7 @@ exports.emailValidation = async (req, res, next) => {
              
                 });
              }else if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL  + req.params?.id){
+                console.log("done");
                     next()
              }
                
@@ -206,10 +207,10 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
     const requestMethod = req.method;
     const URL = req.url
 
-
-   
+    
             try {
-                if(requestMethod == 'POST' ||requestMethod == 'PUT' && URL == url.UPDATE_SERVICE_PROVIDER_URL  + req.params?.id){
+                console.log("333");
+                if(requestMethod == 'POST' || requestMethod == 'PUT' && URL == url.UPDATE_SERVICE_PROVIDER_URL  + req.params?.id){
                     const { licence_no } = req.body;
                     if (!licence_no) {
                         return res.status(200).send
@@ -246,6 +247,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                             });
             }else if(requestMethod == 'PUT' && URL == url.UPDATE_SERVICE_PROVIDER_URL  + req.params?.id){
                 let id = req.params.id
+        
                 let selQuery = `SELECT licence_no FROM service_providers WHERE id = '${id}';`;
                 con.query(selQuery, (err, result) => {      
                         if(result[0]?.licence_no == licence_no){
@@ -280,11 +282,10 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
         //         message: "Invalid Licence number",   // Or error message
         //     });
         // }
-    }  
-        if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL  + req.params?.id){
-            const { licence_number} = req.body;
+    }else if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL  + req.params?.id){
+         const { licence_number} = req.body;
     
-            
+        
             if(!licence_number){
                 return res.status(200).send
                 ({
@@ -417,6 +418,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
              }}}
              
              if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL  + req.params?.id){
+               
                 const { language_id,currency_id,tax_id,phone, country_code,invoice_prefix,quotation_prefix} = req.body;
                     if(!country_code){
                         return res.status(200).send
@@ -425,7 +427,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                             status: false,
                             message: "Cuntrey code is required"
                         });
-                    }
+                    }else 
                     if(!language_id){
                         return res.status(200).send
                         ({
@@ -433,7 +435,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                             status: false,
                             message: "Language id is required"
                         });
-                    }
+                    }else
                     if(!currency_id){
                         return res.status(200).send
                         ({
@@ -441,7 +443,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                             status: false,
                             message: "Currency id  is required"
                         });
-                    }
+                    }else
                     if(!invoice_prefix){
                         return res.status(200).send
                         ({
@@ -449,7 +451,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                             status: false,
                             message: "Invoice code is required"
                         });
-                    }
+                    }else
                     if(!quotation_prefix){
                         return res.status(200).send
                         ({
@@ -457,7 +459,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                             status: false,
                             message: "Quotationx code is required"
                         });
-                    }
+                    }else 
                     if(!tax_id){
                         return res.status(200).send
                         ({
@@ -465,7 +467,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                             status: false,
                             message: "Tax id is required"
                         });
-                    }
+                    }else
 
                 if (!phone  ) {
                     return res.status(200).send
@@ -484,7 +486,8 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
         
                 //     });
                 // }
-                else{  
+               else {  
+
                      next();
                 }
           
@@ -493,7 +496,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                     console.log("Error while validating phone number in the database");
                 }
         //     }else{
-        //         res.status(200).json
+        //         res.status(200).json 
         //         ({  
         //             code : 400 ,
         //             success : false,
@@ -599,6 +602,7 @@ exports.nameAvailable = async (req,res,next) =>
 
 exports.appTitleAvailable = async (req,res,next) =>
 {
+    console.log("hello");
     const { application_title } = req.body;
     if ( !application_title) {
         return res.status(200).send({

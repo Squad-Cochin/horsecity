@@ -27,16 +27,21 @@ exports.getAllTaxations = (requestBody) =>
                     const totalCountQuery = `SELECT count(*) FROM taxations sp
                                              WHERE sp.deleted_at IS NULL`
                     // resolve(result);
-                    con.query(totalCountQuery,(err,result)=>{
+                    con.query(totalCountQuery,async(err,result)=>{
                         if(!err){
-                            const count = result[0]['count(*)'];
+                            console.log();
+                                // let created_at = data[0].created_at
+                                console.log(data[0].created_at);
+                                //  let formatData =   time.getFormattedUTCTime(data[0].created_at)
+                                //  data[0].created_at = formatData;
+                            const count = result[0]['count(*)'];  
                             resolve({totalCount : count, taxations : data})
-                        }
+                        } 
                 })
             }})
           
         }catch(err){
-            console.log('Error while feching taxations', err);
+            console.log('Error while feching taxations', err); 
         }
 
 
