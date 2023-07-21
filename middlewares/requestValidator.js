@@ -227,7 +227,8 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                                 message: "Licence Number contain space. It is not allowed."
                 
                             });
-                    } else if(validateUAELicenseNumber(licence_no)) {
+                    }
+                    //  else if(validateUAELicenseNumber(licence_no)) {
                             if(requestMethod == 'POST'){
                             let verifyLicenceQuery = `SELECT * FROM service_providers WHERE licence_no = '${licence_no}'`;
                             con.query(verifyLicenceQuery, (err, result) => {
@@ -271,14 +272,15 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
              
                 });
          }
-        }else{
-            res.status(200).json
-            ({  
-                code : 400 ,
-                success : false,
-                message: "Invalid Licence number",   // Or error message
-            });
-        }}  
+        // }else{
+        //     res.status(200).json
+        //     ({  
+        //         code : 400 ,
+        //         success : false,
+        //         message: "Invalid Licence number",   // Or error message
+        //     });
+        // }
+    }  
         if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL  + req.params?.id){
             const { licence_number} = req.body;
     
@@ -298,15 +300,18 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                         message: "Licence Number contain space. It is not allowed."
         
                     });
-            }else if(!validateUAELicenseNumber(licence_number)){
-                return res.status(200).send
-                ({
-                    code: 400,
-                    status: false,
-                    message: "Invalid licence  number."
+            }
+            // else if(!validateUAELicenseNumber(licence_number)){
+                
+            //     return res.status(200).send
+            //     ({
+            //         code: 400,
+            //         status: false,
+            //         message: "Invalid licence  number."
     
-                });
-            }else{
+            //     });
+            // }
+            else{
                  next();
             }
       
@@ -469,15 +474,17 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                             status: false,
                             message: "Phone Number is required"
                         });
-                }else if(!validateUAEMobileNumber(phone)){
-                    return res.status(200).send
-                    ({
-                        code: 400,
-                        status: false,
-                        message: "Invalid phone number."
+                }
+                // else if(!validateUAEMobileNumber(phone)){
+                //     return res.status(200).send
+                //     ({
+                //         code: 400,
+                //         status: false,
+                //         message: "Invalid phone number."
         
-                    });
-                }else{
+                //     });
+                // }
+                else{  
                      next();
                 }
           
@@ -652,7 +659,8 @@ exports.verifyTaxationBody = async(req,res,next) =>
 
     if(method == 'POST'){ 
         try {
-            let selQuery = `SELECT * FROM ${constants.tableName.taxations} WHERE name = '${name}'`;
+            let selQuery = `SELECT * FROM ${constants.tableName.taxations} tx WHERE tx.name = '${name}' 
+                            AND tx.deleted_at IS NULL`;
             con.query(selQuery, (err, result) => {
                 console.log(result);
                 if (result.length != 0) {
@@ -663,64 +671,30 @@ exports.verifyTaxationBody = async(req,res,next) =>
                             message: "Name allredy in the database"
                         });
                 }
-                else {
-                    let selQuery = `SELECT * FROM ${constants.tableName.taxations} WHERE type = '${type}'`;
-                    con.query(selQuery, (err, result) => {
-                        console.log(result);
-                        if (result.length != 0) {
-                            return res.status(200).send
-                                ({
-                                    code: 400,
-                                    success: false,
-                                    message: "Type allredy in the database"
-                                });
-                        }
-                        else {
+                else {         
+
                                 next();
-                        }
-                    });
+                    
                 }
             });
         } catch (err) {
-            console.log("Error while checking username in the database");
+            console.log("Error while checking taxation name in the database");
         }
         
     }else if(method == 'PUT'){
 
         let id = req.params.id
-        let selQuery = `SELECT name FROM ${constants.tableName.taxations} WHERE id = '${id}';`;
+        let selQuery = `SELECT name FROM ${constants.tableName.taxations} tx WHERE tx.id = '${id}'
+        AND tx.deleted_at IS NULL`;
         con.query(selQuery, async(err, result) => {      
                 if(result[0]?.name == name){
                       
-                    let selQuery = `SELECT type FROM ${constants.tableName.taxations} WHERE id = '${id}';`;
-                    con.query(selQuery, async(err, result) => {      
-                            if(result[0]?.name == name){
-                                  
-                                    next();
-                            }else{
-                   
-                                let selQuery = `SELECT * FROM ${constants.tableName.taxations}  WHERE name = '${name}'`;
-                                con.query(selQuery, async(err, result) => {
-                            
-                                    if (result.length != 0) {
-                                        return res.status(200).send
-                                            ({
-                                                code: 400,
-                                                success: false,
-                                                message: "Name allredy in the database"
-                                            });
-                                    }
-                                    else {
-                                        next();
-                                    }
-                                });
-                            } 
-                 
-                    });
-                    /************************ */
+                next();
+              
                 }else{
        
-                    let selQuery = `SELECT * FROM ${constants.tableName.taxations}  WHERE name = '${name}'`;
+                    let selQuery = `SELECT * FROM ${constants.tableName.taxations} tx  WHERE tx.name = '${name}'
+                    AND tx.deleted_at IS NULL`;
                     con.query(selQuery, async(err, result) => {
                 
                         if (result.length != 0) {
@@ -740,6 +714,106 @@ exports.verifyTaxationBody = async(req,res,next) =>
         });
 
     }
+
+}
+
+/**Discount middleware */
+exports.verifyDiscountBody = async(req,res,next) =>
+{
+    const method = req.method;
+    const {type,rate,name} = req.body;
+    if(!name){
+        return res.status(200).send
+        ({
+            code: 400,
+            success: false,
+            message: "Name is required"
+        });
+    }else if(!type){
+        return res.status(200).send
+        ({
+            code: 400,
+            success: false,
+            message: "Type is required"
+        });
+    }else if(!rate){
+        return res.status(200).send
+        ({
+            code: 400,
+            success: false,
+            message: "Rate is required"
+        });
+
+    }
+    if(type == 'PERCENTAGE' ||  type == 'FLAT'){
+
+
+    if(method == 'POST'){ 
+        try {
+            let selQuery = `SELECT * FROM ${constants.tableName.discount_types}  WHERE name = '${name}' 
+                            AND deleted_at IS NULL`;
+            con.query(selQuery, (err, result) => {
+                console.log(result);
+                if (result.length != 0) {
+                    return res.status(200).send
+                        ({
+                            code: 400,
+                            success: false,
+                            message: "Name allredy in the database"
+                        });
+                }
+                else {         
+               
+                       
+                                next();
+                    
+                }
+            });
+        } catch (err) {
+            console.log("Error while checking discount name in the database");
+        }
+        
+    }else if(method == 'PUT'){
+
+        let id = req.params.id
+        let selQuery = `SELECT name FROM ${constants.tableName.discount_types}  WHERE id = '${id}'
+        AND deleted_at IS NULL`;
+        con.query(selQuery, async(err, result) => {      
+                if(result[0]?.name == name){
+                      
+                next();
+              
+                }else{
+       
+                    let selQuery = `SELECT * FROM ${constants.tableName.discount_types}  WHERE name = '${name}'
+                    AND deleted_at IS NULL`;
+                    con.query(selQuery, async(err, result) => {
+                
+                        if (result.length != 0) {
+                            return res.status(200).send
+                                ({
+                                    code: 400,
+                                    success: false,
+                                    message: "Name allredy in the database"
+                                });
+                        }
+                        else {
+                            next();
+                        }
+                    });
+                } 
+     
+        });
+
+    }
+}else{
+    return res.status(200).send
+    ({
+        code: 400,
+        success: false,
+        message: "Type only allowed PERCENTAGE || FLAT"
+    });
+}
 
 }
 

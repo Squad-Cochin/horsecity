@@ -1,31 +1,32 @@
 
-const tax = require('../../../models/applicationSettings/taxation/taxation')
+const discounts = require('../../../models/applicationSettings/discounts/discounts')
 const constants = require('../../../utils/constants');
 const commonoperation = require('../../../utils/helper/commonoperation');
 
 /**For gitting all data  */
-exports.getAllTaxations = async(req,res)=>
+exports.getAllDiscounts = async(req,res)=>
 {
-    let getAllTaxations = await tax.getAllTaxations(req.body);
+   
+    let getAllDiscounts = await discounts.getAllDiscounts(req.body);
 
-   if(getAllTaxations){
+   if(getAllDiscounts){
     return res.status(200).send
     ({
         code: 200,
         success: true,
         message: constants.responseMessage.getAll,
-        data : getAllTaxations
+        data : getAllDiscounts
     });
    }
 }
 
 /**For add new taxation  */
-exports.addNewTaxation = async(req,res)=>
+exports.addNewDiscount = async(req,res)=>
 {
     // console.log("1",req.body);
-    let addNewTaxation = await tax.addNewTaxation(req.body);
+    let addNewDiscount = await discounts.addNewDiscount(req.body);
     // console.log("addNew",addNewTaxation);
-   if(addNewTaxation){
+   if(addNewDiscount){
     return res.status(200).send
     ({
         code: 201,
@@ -35,12 +36,12 @@ exports.addNewTaxation = async(req,res)=>
    }
 }
 
-/**For update service provider  */
-exports.updateTaxation = async(req,res)=>
+/**For update Discount */
+exports.updateDiscount = async(req,res)=>
 {
-    let updateTaxation = await tax.updateTaxation(req.body,req.params.id);
+    let updateDiscount = await discounts.updateDiscount(req.body,req.params.id);
 
-        if(updateTaxation.status == 'FAILD'){
+        if(updateDiscount.status == 'FAILD'){
             return res.status(200).send
             ({
                 code: 400,
@@ -63,16 +64,16 @@ exports.updateTaxation = async(req,res)=>
 exports.updateStatus = async(req,res)=>
 {
 
-    const taxation = await commonoperation.updateUserStatus(constants.tableName.taxations,req.params.id);
+    const discounts = await commonoperation.updateUserStatus(constants.tableName.discount_types,req.params.id);
     // console.log("addNew",data);
-    console.log("status",taxation);
-    if(taxation.length === 0)
+    console.log("status",discounts);
+    if(discounts.length === 0)
     {
 
         return res.status(200).send
         ({
             code : 400,
-            status : true,
+            status : false,
             message : constants.responseMessage.statuserror
         });
     }
@@ -89,18 +90,18 @@ exports.updateStatus = async(req,res)=>
 
 
 // /**For remove taxation  */
-exports.removeTaxation = async(req,res)=>
+exports.removeDiscounts = async(req,res)=>
 {
 
-    const taxation = await commonoperation.removeUser(constants.tableName.taxations,req.params.id);
+    const discounts = await commonoperation.removeUser(constants.tableName.discount_types,req.params.id);
 
-    if(taxation.length === 0)
+    if(discounts.length === 0)
     {
 
         return res.status(200).send
         ({
             code : 400,
-            status : true,
+            status : false,
             message : constants.responseMessage.removeerror
         });
     }
@@ -116,11 +117,11 @@ exports.removeTaxation = async(req,res)=>
 }
 
 
-exports.getOneTaxation = async(req,res)=>
+exports.getOneDiscount = async(req,res)=>
 {
-    let getOneTaxation = await tax.getOneTaxation(req.params.id);
-    console.log(getOneTaxation);
-   if(getOneTaxation?.taxation == 'NOTFOUND'){
+    let getOneDiscount = await discounts.getOneDiscount(req.params.id);
+
+   if(getOneDiscount?.discount == 'NOTFOUND'){
     return res.status(200).send
     ({
         code: 400,
@@ -134,7 +135,7 @@ exports.getOneTaxation = async(req,res)=>
         code: 200,
         success: true,
         message: constants.responseMessage.getOne,
-        data : getOneTaxation
+        data : getOneDiscount
     });
    }
 }

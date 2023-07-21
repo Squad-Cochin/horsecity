@@ -42,6 +42,7 @@ require('./routes/drivers/driver.route')(app);
 require('./routes/serviceProvider/serviceProvider.route')(app); 
 require('./routes/vehicles/vehicle.route')(app);
 require('./routes/vehicles/vehicleImages.route')(app);
-require('./routes/applicationSettings/settings/settings')(app)
+require('./routes/applicationSettings/settings/settings')(app) 
 require('./routes/applicationSettings/taxation/taxation')(app) //Taxations
+require('./routes/applicationSettings/discounts/discounts')(app) //Taxations
 module.exports = app; // making the app variable for export

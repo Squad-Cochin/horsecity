@@ -8,7 +8,8 @@ module.exports = function(app)
     // app.post(`/${process.env.apiToken}/recoveryPassword`,verifyBody.emailvalidation, authcontroller.resetPasswordUsingEmail);  
     /**For geting all service provider  */
     app.post(`/${process.env.apiToken}/getAll/serviceproviders`,spcontroller.getAllServiceProviders); 
-    
+        /**For geting all service provider username  */
+    app.get(`/${process.env.apiToken}/getAll/serviceprovidersName`,spcontroller.getNameServiceProviders); 
     /**For adding new service provider  */
     app.post(`/${process.env.apiToken}/add/serviceprovider`,verifyBody.nameAvailable,verifyBody.emailValidation,verifyBody.usernamevalidation,verifyBody.contactPersonAvailable,verifyBody.validateUAEMobileNumber,verifyBody.contactAddressAvailable,verifyBody.validateUAELicenseNumber,verifyBody.licenceImageAvailable,spcontroller.addNewServiceProvider);
 

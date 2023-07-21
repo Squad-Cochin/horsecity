@@ -140,7 +140,7 @@ exports.getOneServiceProvider = (id) =>
 
             con.query(selQuery,async(err,data)=>{
                 if(data?.length != 0){
-                    console.log(data); 
+                    console.log(data);
                     let licenceImage = data[0].licence_image;
                     data[0].licence_image = `${process.env.PORT_SH}${constants.attachmentLocation.serviceProvider.licenceImage}${licenceImage}`;
                     
@@ -151,6 +151,36 @@ exports.getOneServiceProvider = (id) =>
             })
         }catch(err){
             console.log('Error while getting one  service providers', err);
+        }
+
+
+    })    
+   
+}
+
+exports.getNameServiceProviders = () =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {       
+
+
+            const selQuery = `SELECT sp.id,sp.user_name
+            FROM service_providers AS sp
+            WHERE sp.deleted_at IS NULL
+            `;
+            con.query(selQuery,(err,data)=>{
+
+                if(!err){
+
+               
+                     resolve({serviceProviders : data})
+             
+            }})
+          
+        }catch(err){
+            console.log('Error while feching service providers', err);
         }
 
 

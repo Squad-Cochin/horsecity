@@ -6,7 +6,7 @@ const time = require('../../../utils/helper/date');
 require('dotenv').config()
 
 
-exports.getAllTaxations = (requestBody) =>
+exports.getAllDiscounts = (requestBody) =>
 {
     return new Promise((resolve, reject) =>
     {
@@ -16,27 +16,27 @@ exports.getAllTaxations = (requestBody) =>
        
             const offset = (page - 1) * limit; 
 
-            const selQuery = `SELECT tx.id, tx.name, tx.type ,tx.value,tx.status,tx.created_at
-            FROM taxations AS tx
-            WHERE tx.deleted_at IS NULL
+            const selQuery = `SELECT ds.id, ds.name, ds.type ,ds.rate,ds.status,ds.created_at
+            FROM ${constants.tableName.discount_types} AS ds
+            WHERE ds.deleted_at IS NULL
             LIMIT ${+limit} OFFSET ${+offset}`;
             con.query(selQuery,(err,data)=>{
-
+            
                 if(!err){
-
-                    const totalCountQuery = `SELECT count(*) FROM taxations sp
-                                             WHERE sp.deleted_at IS NULL`
+                    console.log("hello",data);
+                    const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.discount_types} tx
+                                             WHERE tx.deleted_at IS NULL`
                     // resolve(result);
                     con.query(totalCountQuery,(err,result)=>{
                         if(!err){
                             const count = result[0]['count(*)'];
-                            resolve({totalCount : count, taxations : data})
+                            resolve({totalCount : count, discounts : data})
                         }
                 })
             }})
           
         }catch(err){
-            console.log('Error while feching taxations', err);
+            console.log('Error while feching discounts', err);
         }
 
 
@@ -45,7 +45,7 @@ exports.getAllTaxations = (requestBody) =>
 }
 
 
-exports.addNewTaxation = (requestBody) =>
+exports.addNewDiscount = (requestBody) =>
 {
     return new Promise(async(resolve, reject) =>
     {
@@ -53,10 +53,10 @@ exports.addNewTaxation = (requestBody) =>
         {  
        
 
-        const {type,name,value} = requestBody ;
+        const {type,name,rate} = requestBody ;
 
-        let insQuery = `INSERT INTO ${constants.tableName.taxations} (type, name, value, created_at)
-        VALUES ('${type}', '${name}', '${value}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+        let insQuery = `INSERT INTO ${constants.tableName.discount_types} (type, name, rate, created_at)
+        VALUES ('${type}', '${name}', '${rate}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
          
         con.query(insQuery,async(err,data)=>{
             if(!err){
@@ -65,7 +65,7 @@ exports.addNewTaxation = (requestBody) =>
             }
         })
         }catch(err){
-            console.log('Error while adding service providers', err);
+            console.log('Error while adding discount', err);
         }
 
   
@@ -73,23 +73,24 @@ exports.addNewTaxation = (requestBody) =>
    
 }
 
-exports.updateTaxation = (requestBody,id) =>
+exports.updateDiscount = (requestBody,id) =>
 {
     return new Promise(async(resolve, reject) =>
     {
         try
         {  
-        const {type,name,value} = requestBody ;         
-        let validateQuery  = `SELECT * FROM ${constants.tableName.taxations} tx
-                              WHERE id = '${id}' AND tx.deleted_at IS NULL`
+            /**iF the deleted id */
+        const {type,name,rate} = requestBody ;         
+        let validateQuery  = `SELECT * FROM ${constants.tableName.discount_types} 
+                              WHERE  id = '${id}' AND deleted_at IS NULL`
         con.query(validateQuery,async(err,data)=>{
            console.log("data",data);
         if(data?.length != 0 ){
 
-                    let updateQuery = `UPDATE ${constants.tableName.taxations} SET 
+                    let updateQuery = `UPDATE ${constants.tableName.discount_types} SET 
                 type = '${type}',
                 name = '${name}',
-                value = '${value}',
+                rate = '${rate}',
                 updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                 WHERE id = '${id}'
                 `;
@@ -123,28 +124,28 @@ exports.updateTaxation = (requestBody,id) =>
 
 
 
-exports.getOneTaxation = (id) =>
+exports.getOneDiscount = (id) =>
 {
     return new Promise((resolve, reject) =>
     {
         try
         {    
-            const selQuery = `SELECT tx.id, tx.type, tx.name, tx.value
-            FROM ${constants.tableName.taxations} AS tx
-            WHERE tx.id = '${id}'`
+            const selQuery = `SELECT ds.id, ds.type, ds.name, ds.rate
+            FROM ${constants.tableName.discount_types} AS ds
+            WHERE ds.id = '${id}' AND ds.deleted_at IS NULL`
 
             con.query(selQuery,async(err,data)=>{
                 if(data?.length != 0){
                    
                     
-                    resolve({taxation : data})
+                    resolve({discount : data})
                 }else{
-                    resolve({taxation : "NOTFOUND"})
+                    resolve({discount : "NOTFOUND"})
                 }
             })
         }catch(err){
-            resolve({taxation : "NOTFOUND"})
-            console.log('Error while getting one  taxation', err);
+            resolve({discount : "NOTFOUND"})
+            console.log('Error while getting one  discount', err);
         }
 
 

@@ -146,3 +146,19 @@ exports.getOneServiceProvider = async(req,res)=>
     });
    }
 }
+
+exports.getNameServiceProviders = async(req,res)=>
+{    
+    let getAllSProvidersUsername = await serviceProvider.getNameServiceProviders();
+
+   if(getAllSProvidersUsername){
+
+    return res.status(200).send
+    ({
+        code: 200,
+        success: true,
+        message: constants.responseMessage.getAll,
+        data : getAllSProvidersUsername
+    });
+   }
+}

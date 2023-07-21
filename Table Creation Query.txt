@@ -295,14 +295,14 @@ CREATE TABLE calculate_amount_types
 CREATE TABLE discount_types
 (
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    name ENUM('PERCENTAGE', 'FLAT'),
+    name CHAR(50) NOT NULL,
+    type ENUM('PERCENTAGE', 'FLAT'),
     rate DECIMAL(6,2) NOT NULL,
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
     created_at DATETIME ,
     updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL   
 );
-
 CREATE TABLE drivers
 (
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
