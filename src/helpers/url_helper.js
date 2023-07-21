@@ -10,14 +10,14 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
 /**
  * The below one is Shaheer's Computer Details
  */
-export const API_BASE_URL = "http://192.168.200.211:8000";
-const apiBaseUrl = "http://192.168.200.211:8000";
+// export const API_BASE_URL = "http://192.168.200.211:8000";
+// const apiBaseUrl = "http://192.168.200.211:8000";
 
 /**
  * The below one is Saurabh's Computer Details
  */
-// export const API_BASE_URL = "http://192.168.200.130:8000";
-// const apiBaseUrl = "http://192.168.200.130:8000";
+export const API_BASE_URL = "http://192.168.200.130:8000";
+const apiBaseUrl = "http://192.168.200.130:8000";
 
 /**
  * The below one is own Computer Details
@@ -59,11 +59,11 @@ export const PUT_CUSTOMER_REMOVE = apiBaseUrl + token + "/remove/customer"
 
 /**VEHICLES */
 export const GET_VEHICLES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/vehicles"
-// export const GET_CUSTOMER_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/customer"
-// export const POST_CUSTOMER_ADD_URL = apiBaseUrl + token + "/add/customer"
-// export const PUT_CUSTOMER_UPDATE_STATUS = apiBaseUrl + token + "/update/customer"
+export const GET_VEHICLES_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/vehicle"
+export const POST_VEHICLES_ADD_URL = apiBaseUrl + token + "/addNew/vehicle"
+export const PUT_VEHICLES_UPDATE_STATUS = apiBaseUrl + token + "/updateStatus/vehicle"
 // export const POST_CUSTOMER_EDIT_URL = apiBaseUrl + token + "/edit/customer"
-// export const PUT_CUSTOMER_REMOVE = apiBaseUrl + token + "/remove/customer"
+export const PUT_VEHICLES_REMOVE = apiBaseUrl + token + "/removeVehicle"
 
 // http://192.168.200.130:8000/horsecity661809/getAll/customers
 

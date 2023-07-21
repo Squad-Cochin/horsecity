@@ -29,7 +29,10 @@ export async function removeCustomer(customer_id){
 /**Remove service provider */
 export async function removeVehicle(vehicle_id){
     try {
-        alert(`Vehicle ${vehicle_id} delete request reached.`)
+        console.log("data",url.PUT_VEHICLES_REMOVE+"/"+vehicle_id)
+        const { data } = await axios.put(`${url.PUT_VEHICLES_REMOVE}/${vehicle_id}`);
+        console.log("data",data)
+        return data;
     } catch (error) {
         return { error : "Failed !"}
     }

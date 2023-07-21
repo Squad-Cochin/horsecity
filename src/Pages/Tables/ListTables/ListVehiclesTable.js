@@ -10,7 +10,7 @@
 // Importing the inbuilt component
 import React, { useState, useEffect } from 'react';
 import {Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
-import List from 'list.js';
+// import List from 'list.js';
 import Flatpickr from "react-flatpickr";
 import {useNavigate} from "react-router-dom"
 import { Link } from 'react-router-dom';
@@ -23,10 +23,10 @@ import Breadcrumbs from "../../../components/Common/Breadcrumb";
 
 //Get vehicles data
 import { removeVehicle } from '../../../helpers/ApiRoutes/removeApiRoutes';
-import { getVehiclesData, getSPUserName } from '../../../helpers/ApiRoutes/getApiRoutes'
+import { getVehiclesData, getSPUserName, getSingleVechileData } from '../../../helpers/ApiRoutes/getApiRoutes'
 import { addNewVehicle } from '../../../helpers/ApiRoutes/addApiRoutes';
-import { updateVehicle } from '../../../helpers/ApiRoutes/editApiRoutes';
-import { Vehicles } from '../../../CommonData/Data';
+import { updateVehicle, updateVechileStatus } from '../../../helpers/ApiRoutes/editApiRoutes';
+// import { Vehicles } from '../../../CommonData/Data';
 import config from '../../../config';
 
 // The name of the function is ListVehiclesTable. Which will be executed and used all over program. This funtion is having all the code
@@ -90,17 +90,18 @@ const ListVehiclesTable = () =>
     }
 
     // The Below function is used when we are displaying the particular vehicle data.
-    function tog_view(productId) 
-    {
-    const data = vehicles?.find((item) => item?.id === productId); // Find the vehicle data with matching 'productId' in the 'vehicles' array
-    setVehicle([data]); // Set the 'vehicle' state to the found vehicle data
-    setView_modal(!view_modal); // Toggle 'view_modal' state
+    async function tog_view(productId) {
+        console.log("rr",productId)
+        let data = await getSingleVechileData(productId)
+        setVehicle(data); // Set the 'vehicle' state to the found vehicle data
+        setView_modal(!view_modal); // Toggle 'view_modal' state
     }
 
     // The below function is for remove button of a particular vehicle.
-    function remove_data(id)
+    async function remove_data(id)
     {
-        removeVehicle(id); // Call the 'removeVehicle' function with 'id' parameter
+        await removeVehicle(id); // Call the 'removeVehicle' function with 'id' parameter
+        window.location.reload();
     }
 
     // The below function is for delete button of a particular vehicle.
@@ -112,14 +113,15 @@ const ListVehiclesTable = () =>
      // The below function is the Status button
     function toggleStatus(button, vehiclesId)
     {
+        console.log("vid",vehiclesId)
         var currentStatus = button.innerText.trim();
+        const vehicle = vehicles.find((v) => v.id === vehiclesId);
+        updateVechileStatus(vehicle.id)
         if (currentStatus === 'ACTIVE')
         {
             button.innerText = 'INACTIVE';
             button.classList.remove('btn-success');
             button.classList.add('btn-danger');
-            // Find the corresponding vehicle by ID
-            const vehicle = Vehicles.find((v) => v.id === vehiclesId);
             if (vehicle)
             {
                 vehicle.status = 'INACTIVE';
@@ -130,8 +132,6 @@ const ListVehiclesTable = () =>
             button.innerText = 'ACTIVE';
             button.classList.remove('btn-danger');
             button.classList.add('btn-success');
-            // Find the corresponding vehicle by ID
-            const vehicle = Vehicles.find((v) => v.id === vehiclesId);
             if (vehicle)
             {
                 vehicle.status = 'ACTIVE';
@@ -146,7 +146,7 @@ const ListVehiclesTable = () =>
         service_provider_id: !add_list ? vehicle[0]?.service_provider_id : '',
         vehicle_number: !add_list ? vehicle[0]?.vehicle_number : '',
         make: !add_list ? vehicle[0]?.make : '',
-        models: !add_list ? vehicle[0]?.models : '',
+        model: !add_list ? vehicle[0]?.model : '',
         color: !add_list ? vehicle[0]?.color : '',
         length: !add_list ? vehicle[0]?.length : '',
         breadth: !add_list ? vehicle[0]?.breadth : '',
@@ -164,7 +164,7 @@ const ListVehiclesTable = () =>
         insurance_expiry_date: !add_list ? vehicle[0]?.insurance_expiration_date : '',
         vehicle_type: !add_list ? vehicle[0]?.vehicle_type : '',
         vehicle_registration_date: !add_list ? vehicle[0]?.vehicle_registration_date : '',
-        vehicle_expiration_date: !add_list ? vehicle[0]?.vehicle_expiration_date : '',
+        vehicle_exipration_date: !add_list ? vehicle[0]?.vehicle_exipration_date : '',
     };
 
     const validation = useFormik
@@ -177,12 +177,7 @@ const ListVehiclesTable = () =>
             setmodal_list(false);
             if (add_list) 
             {   
-                console.log("bbb",values)
                 addVechile(values);
-                // Add new vehicle
-                addNewVehicle(values); // Call the 'addNewVehicle' function with form values as a parameter
-                setAdd_list(false); // Reset 'add_list' state to false
-                setmodal_list(false); // Reset 'modal_list' state to false
             }
             else
             {
@@ -197,6 +192,7 @@ const ListVehiclesTable = () =>
     // function for get data all Vechile data
     async function getAllData(page) {
         let getvehicles = await getVehiclesData(page || 1);
+        console.log("ggg",getvehicles)
         let getSP = await getSPUserName();
         setSproviders(getSP.serviceProviders);
         setVehicles(getvehicles?.vehicles);
@@ -271,17 +267,25 @@ const ListVehiclesTable = () =>
                                                             <td className="make">{item.make}</td> {/* Manufaturer of the vehicle */}
                                                             <td className="no_of_horse text-center">{item.no_of_horse}</td> {/* Maximum number of horses a vehicle can carry */}
                                                             {/* This is the place from where we are calling the status button and function */}
-                                                            <div>
-                                                                <div className="d-flex gap-2">
-                                                                    <div className="status">
-                                                                        <button className="btn btn-sm btn-success status-item-btn"
-                                                                            data-bs-toggle="modal" data-bs-target="#showModal"
-                                                                            onClick={(event) => toggleStatus(event.target, item.id)}>
-                                                                            {item.status}
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                            <td>{item.status === "ACTIVE" ?
+                                                                <button
+                                                                    className="btn btn-sm btn-success status-item-btn"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#showModal"
+                                                                    onClick={(event) => toggleStatus(event.target, item.id)}
+                                                                >
+                                                                    {item.status}
+                                                                </button> :
+                                                                <button
+                                                                    className="btn btn-sm btn-danger status-item-btn"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#showModal"
+                                                                    onClick={(event) => toggleStatus(event.target, item.id)}
+                                                                >
+                                                                    {item.status}
+                                                                </button>
+                                                                }
+                                                            </td>
                                                             <td>
                                                                 <div className="d-flex gap-2">
                                                                     {/* This is the place from where we are calling the view button and function */}
@@ -784,15 +788,15 @@ const ListVehiclesTable = () =>
 
                         {/* The below element is for seleting the vehicle expiration date. */} 
                         <div className="mb-3">
-                            <label htmlFor="vehicle_expiration_date-field" className="form-label">Vehicle Expiration Date</label>
+                            <label htmlFor="vehicle_exipration_date-field" className="form-label">Vehicle Expiration Date</label>
                             <Flatpickr
                                 className="form-control"
                                 options={{
                                     dateFormat: "d M, Y"
                                 }}
-                                name='vehicle_expiration_date'
-                                value={validation.values.vehicle_expiration_date || ""}
-                                onChange={(dates) =>validation.setFieldValue('vehicle_expiration_date', dates[0])}
+                                name='vehicle_exipration_date'
+                                value={validation.values.vehicle_exipration_date || ""}
+                                onChange={(dates) =>validation.setFieldValue('vehicle_exipration_date', dates[0])}
                                 placeholder="Select Vehicle Expiration Date"
                             />
                         </div>
@@ -995,7 +999,7 @@ const ListVehiclesTable = () =>
                         </div>
 
                         {/* The below element is for displaying the images of the vehicle. */} 
-                        <div className="mb-3">
+                        {/* <div className="mb-3">
                             <label htmlFor="vehicle_image-field" className="form-label">Vehicle Image</label>
                             <input
                                 type="file"
@@ -1005,7 +1009,7 @@ const ListVehiclesTable = () =>
                                 placeholder="Upload Vehicle Image"
                                 required
                             />
-                        </div>
+                        </div> */}
 
                         {/* The below element is for displaying the registration number of the vehicle. */} 
                         <div className="mb-3">
@@ -1186,13 +1190,13 @@ const ListVehiclesTable = () =>
 
                         {/* The below element is for displaying the vehicle expiration date. */} 
                         <div className="mb-3">
-                            <label htmlFor="vehicle_expiration_date-field" className="form-label">Vehicle Expiration Date</label>
+                            <label htmlFor="vehicle_exipration_date-field" className="form-label">Vehicle Expiration Date</label>
                             <input
                                 type="text"
-                                id="vehicle_expiration_date-field"
+                                id="vehicle_exipration_date-field"
                                 className="form-control"
-                                name='vehicle_expiration_date'
-                                value={validation.values.vehicle_expiration_date || ""}
+                                name='vehicle_exipration_date'
+                                value={validation.values.vehicle_exipration_date || ""}
                                 readOnly
                             />
                         </div>

@@ -102,9 +102,6 @@ export async function updateDriver(data){
 }
 
 
-
-
-
 /**Update previous report */
 export async function updateMonthlyReport(data){
   try {
@@ -158,6 +155,17 @@ export async function updateSPStatus(id){
 export async function updateCustomerStatus(id){
   try{
     const { data } = await axios.put(`${url.PUT_CUSTOMER_UPDATE_STATUS}/${id}`);
+    console.log("data",data)
+    return data;
+  } catch (error) {
+    return { error : "Faild !"}
+  }
+}
+
+export async function updateVechileStatus(id){
+  try{
+    console.log("data",id)
+    const { data } = await axios.put(`${url.PUT_VEHICLES_UPDATE_STATUS}/${id}`);
     console.log("data",data)
     return data;
   } catch (error) {

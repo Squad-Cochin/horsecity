@@ -90,17 +90,15 @@ export async function getSingleCustomerData(cId){
     }
 }
 
-export async function getVehiclesData(pageNumber){
+    export async function getVehiclesData(pageNumber){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = {
             "page" : pageNumber,
             "limit" : pageLimit
         }
-        console.log(reqObj)
         const { data } = await axios.post(`${url.GET_VEHICLES_ALL_DATA_URL}`,reqObj);
-        console.log("ddd",data)
-        return(data)
+        return(data.vehicles)
     } catch (error) {
         let errorObj =  {
             "code": 500,
@@ -113,4 +111,15 @@ export async function getVehiclesData(pageNumber){
         }
         return errorObj.data
     }
-  }
+    }
+  
+  export async function getSingleVechileData(vId){
+    try {
+        console.log(vId)
+        const { data } = await axios.get(`${url.GET_VEHICLES_SINGLE_DATA_URL}/${vId}`);
+        console.log(data.vehicles)
+        return(data.vehicles)
+    } catch (error) {
+        return null
+    }
+}
