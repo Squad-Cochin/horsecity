@@ -303,8 +303,8 @@ const ListTables = () => {
                     onSubmit={validation.handleSubmit}>
                     <ModalBody>
                         {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
-                        {sprovider?.map((item, index) => (
-                            <div key={index}>
+                        {/* {sprovider?.map((item, index) => ( */}
+                            {/* <div key={index}> */}
                                 {/* Provider Name */}
                                 <div className="mb-3">
                                     <label htmlFor="providerName-field" className="form-label">Provider Name</label>
@@ -320,6 +320,7 @@ const ListTables = () => {
                                     />
                                 </div>
                                 {/* Email */}
+                                {add_list ?
                                 <div className="mb-3">
                                     <label htmlFor="email-field" className="form-label">Email</label>
                                     <input
@@ -332,7 +333,7 @@ const ListTables = () => {
                                         placeholder="Enter Email"
                                         required
                                     />
-                                </div>
+                                </div> : null}
                                 {/* User Name */}
                                 <div className="mb-3">
                                     <label htmlFor="userName-field" className="form-label">User Name</label>
@@ -475,8 +476,8 @@ const ListTables = () => {
                                             />
                                     </div>
                                 </div>
-                            </div>
-                        ))}
+                            {/* </div> */}
+                        {/* ))} */}
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">

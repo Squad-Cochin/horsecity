@@ -335,6 +335,7 @@ const ListCustomerTable = () => {
                             />
                         </div>
                         {/** Customer email */}
+                        {add_list ?
                         <div className="mb-3">
                             <label htmlFor="email-field" className="form-label">Email</label>
                             <input
@@ -348,6 +349,7 @@ const ListCustomerTable = () => {
                                 required
                             />
                         </div>
+                        : null}
                         {/** Customer username */}
                         <div className="mb-3">
                             <label htmlFor="username-field" className="form-label">Username</label>

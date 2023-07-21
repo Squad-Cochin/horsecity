@@ -23,7 +23,7 @@ import Breadcrumbs from "../../../components/Common/Breadcrumb";
 
 //Get vehicles data
 import { removeVehicle } from '../../../helpers/ApiRoutes/removeApiRoutes';
-import { getVehiclesData } from '../../../helpers/ApiRoutes/getApiRoutes'
+import { getVehiclesData, getSPUserName } from '../../../helpers/ApiRoutes/getApiRoutes'
 import { addNewVehicle } from '../../../helpers/ApiRoutes/addApiRoutes';
 import { updateVehicle } from '../../../helpers/ApiRoutes/editApiRoutes';
 import { Vehicles } from '../../../CommonData/Data';
@@ -38,6 +38,7 @@ const ListVehiclesTable = () =>
     const [vehicle, setVehicle] = useState([]); // State variable to store a single vehicle
     const [modal_delete, setmodal_delete] = useState(false); // State variable to control delete modal visibility
     const [view_modal, setView_modal] = useState(false); // State variable to control view modal visibility
+    const [sproviders, setSproviders] = useState([]);
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("")
@@ -142,6 +143,7 @@ const ListVehiclesTable = () =>
     const initialValues = 
     {
         service_provider: !add_list ? vehicle[0]?.service_provider : '',
+        service_provider_id: !add_list ? vehicle[0]?.service_provider_id : '',
         vehicle_number: !add_list ? vehicle[0]?.vehicle_number : '',
         make: !add_list ? vehicle[0]?.make : '',
         models: !add_list ? vehicle[0]?.models : '',
@@ -176,6 +178,7 @@ const ListVehiclesTable = () =>
             if (add_list) 
             {   
                 console.log("bbb",values)
+                addVechile(values);
                 // Add new vehicle
                 addNewVehicle(values); // Call the 'addNewVehicle' function with form values as a parameter
                 setAdd_list(false); // Reset 'add_list' state to false
@@ -194,9 +197,25 @@ const ListVehiclesTable = () =>
     // function for get data all Vechile data
     async function getAllData(page) {
         let getvehicles = await getVehiclesData(page || 1);
+        let getSP = await getSPUserName();
+        setSproviders(getSP.serviceProviders);
         setVehicles(getvehicles?.vehicles);
         setPageNumber(page);
         setNumberOfData(getvehicles?.totalCount);
+    }
+
+    async function addVechile(values){
+        console.log("adddd",values)
+        let addedVechile = await addNewVehicle(values);
+        if(addedVechile.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+        }else{
+            setErrors("")
+            setErrors(addedVechile?.message)
+        }
     }
 
     // The execution of all the object and element are written inside the return. Whenever this file will be called only the code inside this return coded will be returned
@@ -309,13 +328,20 @@ const ListVehiclesTable = () =>
                                             The previous and next button are also in side this function */}
                                         <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">
-                                                <Link className="page-item pagination-prev disabled" to="#">
-                                                    Previous
-                                                </Link>
+                                                {pageNumber > 1 ?
+                                                    <Link 
+                                                        className="page-item pagination-prev disabled" 
+                                                        onClick={()=> getAllData(pageNumber - 1)}
+                                                    >
+                                                        Previous
+                                                    </Link>
+                                                : null }
                                                 <ul className="pagination listjs-pagination mb-0"></ul>
-                                                <Link className="page-item pagination-next" to="#">
-                                                    Next
-                                                </Link>
+                                                {numberOfData > pageLimit * pageNumber ? 
+                                                    <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}>
+                                                        Next
+                                                    </Link> 
+                                                : null }
                                             </div>
                                         </div>
 
@@ -336,17 +362,24 @@ const ListVehiclesTable = () =>
                         {/* The below element is adding the name of the service provider. Whose vehicle is being added */}
                         {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
                         <div className="mb-3">
-                            <label htmlFor="serviceprovider-field" className="form-label">Service Provider</label>
-                            <input
-                                type="text"
+                            <label htmlFor="serviceprovider-field" className="form-label">
+                                Service Provider
+                            </label>
+                            <select
+                                data-trigger
+                                name="service_provider_id"
                                 id="serviceprovider-field"
                                 className="form-control"
-                                name='service_provider'
-                                value={validation.values.service_provider || ""}
+                                value={validation.values.service_provider_id || ""}
                                 onChange={validation.handleChange}
-                                placeholder="Enter Vehicle Name"
+                                onBlur={validation.handleBlur}
                                 required
-                            />
+                            >
+                                <option value="">Select Service Provider</option>
+                            {sproviders.map((item, index) => (
+                                <option key={index} value={item.id}>{item.user_name}</option>
+                            ))}
+                            </select>
                         </div>
 
                         {/* The below element is adding the number of the number plate of the vehcile */}

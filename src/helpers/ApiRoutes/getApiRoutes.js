@@ -44,6 +44,19 @@ export async function getSPSingleData(spId){
     }
 }
 
+export async function getSPUserName(){
+    try {
+        console.log("urr",url.GET_SP_USER_NAME)
+        const { data } = await axios.get(`${url.GET_SP_USER_NAME}`);
+        console.log(data)
+        return(data)
+    } catch (error) {
+        return {
+            "serviceProviders": []
+        }
+    }
+}
+
 export async function getCustomersData(pageNumber){
     try {
         let pageLimit = config.pageLimit;
