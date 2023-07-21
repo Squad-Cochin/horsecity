@@ -429,13 +429,13 @@ const ListCustomerTable = () => {
                             <div className="col-md-10">
                                 {idProofPreview && (
                                     <div>
-                                        <img src={idProofPreview} alt="Id Proof Preview" style={{ maxWidth: '100px' }} />
+                                        <img name="id_proof_image" src={idProofPreview} alt="Id Proof Preview" style={{ maxWidth: '100px' }} />
                                     </div>
                                 )}
 
                                 <input
                                     className="form-control"
-                                    name="certification_or_license_img"
+                                    name="id_proof_image"
                                     type="file"
                                     placeholder="Certificate Image"
                                     onChange={handleIdProofImageChange}
