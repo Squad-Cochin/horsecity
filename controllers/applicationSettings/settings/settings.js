@@ -8,11 +8,11 @@ const commonoperation = require('../../../utils/helper/commonoperation');
 /**For gitting all data  */
 exports.updateSettings = async(req,res)=>
 {
-
+console.log(req.body);
     let settingsPage = await settings.updateSettings(req.body,req.files,req.params.id);
     console.log("new",settingsPage);
     if(settingsPage.status == 'INVALIDFORMAT'){
-        return res.status(400).send({
+        return res.status(200).send({
             code: 400,
             success: false,
             message: constants.responseMessage.imageFormat
