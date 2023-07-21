@@ -301,7 +301,7 @@ const TaxationDeatails = () => {
 
             {/* Add Modal */}
             <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}  centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ?  'Add taxation' : 'Edit taxation' } </ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ?  'Add taxation' : 'Edit taxation' } </ModalHeader>
                 <form className="tablelist-form"
                  onSubmit={validation.handleSubmit}>
                     <ModalBody>

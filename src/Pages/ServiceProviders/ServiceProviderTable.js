@@ -297,7 +297,7 @@ const ListTables = () => {
             </div>
 
             {/****************************** Add Modal *************/}
-            <Modal className="extra-width" isOpen={modal_list} toggle={() => { setmodal_list(false); setAdd_list(false);; setLicenscePreview(null) }} centered >
+            <Modal className="extra-width" isOpen={modal_list} toggle={() => { setmodal_list(false); setAdd_list(false); setLicenscePreview(null) }} centered >
                 <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); setAdd_list(false);; setLicenscePreview(null) }}>{add_list ? 'Add service provider' : 'Edit service provider'}</ModalHeader>
                 <form className="tablelist-form"
                     onSubmit={validation.handleSubmit}>

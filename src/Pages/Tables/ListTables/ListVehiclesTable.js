@@ -79,12 +79,12 @@ const ListVehiclesTable = () =>
     }, []);
 
     // The Below function is used when we are adding the vehicle
-    function tog_list(param, productId) 
+    async function tog_list(param, productId) 
     {
     if (param === 'ADD') {
         setAdd_list(!add_list); // Toggle 'add_list' state
     }
-        const data = vehicles?.find((item) => item?.id === productId); // Find the vehicle data with matching 'productId' in the 'vehicles' array
+        let data = await getSingleVechileData(productId)
         setVehicle([data]); // Set the 'vehicle' state to the found vehicle data
         setmodal_list(!modal_list); // Toggle 'modal_list' state
     }
@@ -181,10 +181,11 @@ const ListVehiclesTable = () =>
             }
             else
             {
-                // Update existing vehicle
-                updateVehicle(values); // Call the 'updateVehicle' function with form values as a parameter
-                setAdd_list(false); // Reset 'add_list' state to false
-                setmodal_list(false); // Reset 'modal_list' state to false
+                editVehicles(values);
+                // // Update existing vehicle
+                // updateVehicle(values); // Call the 'updateVehicle' function with form values as a parameter
+                // setAdd_list(false); // Reset 'add_list' state to false
+                // setmodal_list(false); // Reset 'modal_list' state to false
             }
         },
     });
@@ -192,7 +193,6 @@ const ListVehiclesTable = () =>
     // function for get data all Vechile data
     async function getAllData(page) {
         let getvehicles = await getVehiclesData(page || 1);
-        console.log("ggg",getvehicles)
         let getSP = await getSPUserName();
         setSproviders(getSP.serviceProviders);
         setVehicles(getvehicles?.vehicles);
@@ -200,8 +200,22 @@ const ListVehiclesTable = () =>
         setNumberOfData(getvehicles?.totalCount);
     }
 
+    // Update vehicle
+    async function editVehicles(data){
+        console.log("reachx")
+        let updatedVehicle = await updateVehicle(vehicle[0]?.id, data);
+        if(updatedVehicle.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+        }else{
+            setErrors("")
+            setErrors(updatedVehicle.message)
+        }
+    }
+
     async function addVechile(values){
-        console.log("adddd",values)
         let addedVechile = await addNewVehicle(values);
         if(addedVechile.code === 200){
             setErrors("")

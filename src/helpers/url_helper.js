@@ -62,7 +62,7 @@ export const GET_VEHICLES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/vehicles"
 export const GET_VEHICLES_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/vehicle"
 export const POST_VEHICLES_ADD_URL = apiBaseUrl + token + "/addNew/vehicle"
 export const PUT_VEHICLES_UPDATE_STATUS = apiBaseUrl + token + "/updateStatus/vehicle"
-// export const POST_CUSTOMER_EDIT_URL = apiBaseUrl + token + "/edit/customer"
+export const POST_VEHICLES_EDIT_URL = apiBaseUrl + token + "/updateData/vehicle"
 export const PUT_VEHICLES_REMOVE = apiBaseUrl + token + "/removeVehicle"
 
 
