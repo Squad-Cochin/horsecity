@@ -248,8 +248,8 @@ exports.isheightEntered = (req, res, next) =>
   
 exports.isMaximumHorseCarryingCapicityEntered = (req,res,next) =>
 {
-    const numericLength = parseFloat(req.body.max_no_of_horse);
-    if(!req.body.max_no_of_horse)
+    const numericLength = parseFloat(req.body.no_of_horse);
+    if(!req.body.no_of_horse)
     {
         return res.status(200).send
         ({
@@ -267,7 +267,7 @@ exports.isMaximumHorseCarryingCapicityEntered = (req,res,next) =>
             message: "Vehicle maximum horse carrying capicity must be a numeric value",
         });
     }
-    else if (req.body.max_no_of_horse <= 0)
+    else if (req.body.no_of_horse <= 0)
     {
         return res.status(200).send
         ({
@@ -323,7 +323,7 @@ exports.isTemperaturControlValueEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Vehicle is enabled with temperature control. Details required"
         });        
@@ -420,7 +420,7 @@ exports.isInsuranceCoverValueEntered = (req, res, next) =>
 
 exports.isRegistrationNumberEntered = async (req, res, next) =>
 {
-    if(!req.body.registration_no)
+    if(!req.body.vehicle_registration_number)
     {
         return res.status(200).send
         ({
@@ -432,7 +432,7 @@ exports.isRegistrationNumberEntered = async (req, res, next) =>
     else
     {
         console.log('Vehicle registration number is entered');
-        const data = await commonfetching.vehiclesMiddleware(constants.tableName.vehicles, 'registration_no', req.body.registration_no);
+        const data = await commonfetching.vehiclesMiddleware(constants.tableName.vehicles, 'registration_no', req.body.vehicle_registration_number);
         console.log('Registration numberd: ', data);
         if(!data || data === 'err')
         {
@@ -701,5 +701,48 @@ function hasOnlyNonSpaces(str)
     else
     {
         return false;
+    }
+}
+
+
+exports.isValidVehicleNumberEnteredWhileUpdate = (tableName) => async (req, res, next) =>
+{
+    if (!req.body.vehicle_number) 
+    {
+        return res.status(200).send
+        ({
+            code: 200,
+            status: false,
+            message: "Vehicle number is required"
+        });
+    }
+    else
+    {
+        const data = await commonfetching.vehiclesMiddleware(tableName, 'vehicle_number',req.body.vehicle_number)
+        console.log(data);
+        if(data === 'err' || !data)
+        {
+            return res.status(500).json
+            ({
+                code : 200,
+                status : "failed",
+                error: 'Internal server error while number plate' 
+            });
+        }
+        else if(data.length > 0)
+        {
+            console.log('Vehicle number already Present');
+            return res.status(200).send
+            ({
+                code: 400,
+                status: false,
+                message: "This vehicle number already exists in the database"
+            });
+        }
+        else
+        {
+            console.log(`Vehicle number doesn't exist`);
+            next();           
+        }
     }
 }

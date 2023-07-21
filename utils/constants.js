@@ -29,9 +29,9 @@ module.exports =
         driver :
         {
             licence : `${__dirname}../../Attachements/Drivers/Licence/`,
-            fetchlicence :`${__dirname}../..//Drivers/Licence/`,
+            fetchlicence :`/Drivers/Licence/`,
             profilephoto : `${__dirname}../../Attachements/Drivers/ProfilePhoto/`,
-            fetchprofilephoto : `${__dirname}../..//Drivers/ProfilePhoto/`,
+            fetchprofilephoto : `/Drivers/ProfilePhoto/`,
         },
         serviceProvider :
         {
@@ -44,7 +44,8 @@ module.exports =
         vehicle :
         {
             scertificate : `${__dirname}../../Attachements/Vehicles/scertificate/`,
-            images : `${__dirname}../../Attachements/Vehicles/images/`
+            images : `${__dirname}../../Attachements/Vehicles/images/`,
+            fetchimages : `/Vehicles/images/`
         },
         applicationSettings : 
         {
@@ -59,6 +60,7 @@ module.exports =
     responseMessage :
     {
         getAll : `Data Fetched Sucessfully`,
+        getNoData : `No data to display`,
         getAllErr : `Error while fetching all the data`,
         getOne : `Particular data fetched Successfully`,
         getOneErr : `Particular data fetched failed`,

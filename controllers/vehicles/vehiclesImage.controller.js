@@ -14,7 +14,7 @@ const vehicleImage = require('../../models/vehicles/vehicleImages.model');
 
 exports.addImages = async (req, res, next) =>
 {
-    const vehicleImages = await vehicleImage.addimages(req.param.id, req.body.image, req.body.title);
+    const vehicleImages = await vehicleImage.addimages(req.params.id, req.files.image, req.body.title);
     if(vehicleImages === 'err')
     {
         console.log('Error while uploading the particular vehicle image');
@@ -40,7 +40,8 @@ exports.addImages = async (req, res, next) =>
 
 exports.allImages = async (req, res, next) =>
 {
-    const vehicleImages = await vehicleImage.allimages(req.body.page, req.body.limit)
+    const vehicleImages = await vehicleImage.allimages(req.params.id, req.body.page, req.body.limit)
+    console.log('Vehicle Image', vehicleImages);
     if(vehicleImages === 'err')
     {
         console.log('Error while fetching the particular vehicle all images');
@@ -51,6 +52,16 @@ exports.allImages = async (req, res, next) =>
             message : constant.responseMessage.getAllErr,
         });
     }
+    else if(vehicleImages.length == 0)
+    {
+        console.log('There are no images on this Id');
+        res.status(200).send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.getNoData,
+        });
+    }
     else
     {
         console.log('Particular vehicle all the images fetched successfully');
@@ -59,6 +70,7 @@ exports.allImages = async (req, res, next) =>
             code : 200,
             status : true,
             message : constant.responseMessage.getAll,
+            data : vehicleImages
         });
     }
 

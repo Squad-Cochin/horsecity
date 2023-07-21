@@ -43,7 +43,7 @@ exports.getAll= async (req, res) =>
 exports.getOne= async (req, res, next) =>
 {
     const customers = await customer.getone(req.params.id);
-    // console.log(customers);
+    console.log('Customre One Data: ',customers);
     if(customers.length === 0)
     {
         console.log('No Customer data present');
@@ -51,7 +51,7 @@ exports.getOne= async (req, res, next) =>
         ({
             code : 404,
             status : true,
-            message : constant.responseMessage.getAll,
+            message : constant.responseMessage.getAllErr,
             data : customers
         });
     }

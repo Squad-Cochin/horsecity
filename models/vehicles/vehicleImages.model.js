@@ -22,7 +22,8 @@ module.exports = class vehicleImages
             {
                 let uploadVehicleImage = await commonoperation.fileUploadTwo(image, constants.attachmentLocation.vehicle.images);
                 console.log(uploadVehicleImage);
-                let insQuery = `INSERT INTO vehicles_images(vehicle_id, image, title, uploaded_at) VALUES('${id}', '${uploadVehicleImage}', '${title}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                let insQuery = `INSERT INTO vehicles_images(vehicle_id, image, title, uploaded_at) VALUES(${id}, '${uploadVehicleImage}', '${title}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                console.log(insQuery);
                 con.query(insQuery, (err, result) =>
                 {
                     if(result.length != 0)
@@ -44,26 +45,51 @@ module.exports = class vehicleImages
         }
     }
 
-    static async allimages (pageNumber, pageSize)
+    static async allimages (id, pageNumber, pageSize)
     {
         try 
         {
             return await new Promise(async(resolve, reject)=>
             {
                 const offset = (pageNumber - 1) * pageSize;
-                let selQuery = `SELECT  FROM  ${constants.tableName.vehicles_images} vi, ${constants.tableName.vehicles} v WHERE vi.id = v.service_provider_id AND v.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
-                // console.log(selQuery);
+                // let selQuery = `SELECT * FROM  ${constants.tableName.vehicles_images} vi, ${constants.tableName.vehicles} v WHERE vi.id = v.service_provider_id AND v.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
+                // let selQuery = `SELECT * FROM  vehicles_images vi, vehicles v WHERE  vi.vehicle_id = v.id AND v.deleted_at IS NULL;`;
+                let selQuery = `SELECT vi.id, vi.vehicle_id, vi.image, vi.updated_at, vi.status FROM vehicles_images vi JOIN vehicles v ON vi.vehicle_id = v.id WHERE vi.vehicle_id = ${id} AND vi.deleted_at IS NULL;`;
+                console.log(selQuery);
                 con.query(selQuery, (err, result) =>
                 {
-                    // console.log(result);
-                    if(err)
-                    {
-                        resolve(err);
-                    }
-                    else
-                    {
-                        resolve(result)
-                    }
+                    console.log('Model:', result);
+                    if (result.length !== 0) {
+                        // Create an array to store the return objects
+                        let returnArray = [];
+                      
+                        for (let i = 0; i < result.length; i++) {
+                          let returnObj = {
+                            id: result[i].id,
+                            url: `${process.env.PORT_SP}${constants.attachmentLocation.vehicle.fetchimages}${result[i].image}`,
+                            updated_at: result[i].updated_at,
+                            status: result[i].status,
+                          };
+                      
+                          // Add the current object to the returnArray
+                          returnArray.push(returnObj);
+                        }
+                      
+                        // Resolve with the array of objects
+                        resolve(returnArray);
+                      } else {
+                        // Resolve with an empty array to indicate no data found
+                        resolve([]);
+                      }
+                      
+                    // if(err)
+                    // {
+                    //     resolve(err);
+                    // }
+                    // else
+                    // {
+                        
+                    // }
                 });
                 
             });            

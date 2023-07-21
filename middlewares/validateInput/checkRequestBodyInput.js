@@ -1,6 +1,7 @@
 const commonfetching = require(`../../utils/helper/commonfetching`);
 const con = require(`../../configs/db.configs`);
 const constants = require("../../utils/constants");
+const fileUpload = require("express-fileupload");
 
 function hasOnlyNonSpaces(str) 
 {
@@ -1035,6 +1036,35 @@ exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
     }
     else
     {
+        
+        next();
+    }
+}
+
+exports.isCustomerIdProofImageSubmitted2 = async (req, res, next) =>
+{    
+    if(!req.files?.id_proof_image)
+    {
+        console.log('Id proof image is not uploaded');
+        return res.status(200).json
+        ({
+            code: 400,
+            success: false,
+            message: "Customer Id proof image is not uploaded"
+        });     
+    }
+    else
+    {
+        console.log('ebyuenjiebreorvjeobvnsvnnebncvenvne');
+        let getCustomerData = await commonfetching.dataOnEmail(constants.tableName.customers, req.body.email)
+        console.log(getCustomerData);
+        let oldimageLink = `http://192.168.200.130:8000/Customers/IdProofs/${getCustomerData[0].id_proof_image} `;
+        console.log('Old Image Link: ', oldimageLink)
+        // http://192.168.200.130:8000/Customers/IdProofs/508580_a.png
+        let filname = req.files.id_proof_image
+        let newImageName = `http://192.168.200.130:8000/Customers/IdProofs/${filname}`;
+        console.log('New Image Link :', newImageName);
+
         next();
     }
 }

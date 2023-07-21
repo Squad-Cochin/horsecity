@@ -31,18 +31,22 @@ module.exports = (app) =>
     vehicleController.addNew);
     
     // The below route is for getting all the vehicles data.
-    app.get(`/${process.env.apiToken}/getAll/vehicles`, vehicleController.getAll);
+    app.post(`/${process.env.apiToken}/getAll/vehicles`, vehicleController.getAll);
     
     // the below route is for updating the status of the vehicle data.
-    app.put(`/${process.env.apiToken}/updateStatus/vehicle/:id`, isValidIdInTheParams(constants.tableName.vehicles),  vehicleController.updateStatus);
+    app.put(`/${process.env.apiToken}/updateStatus/vehicle/:id`, 
+    isValidIdInTheParams(constants.tableName.vehicles),  
+    vehicleController.updateStatus);
     
     // The below route is for get individual vehicle data.
-    app.get(`/${process.env.apiToken}/getOne/vehicle/:id`, isValidIdInTheParams(constants.tableName.vehicles),  vehicleController.getOne);
+    app.get(`/${process.env.apiToken}/getOne/vehicle/:id`, 
+    isValidIdInTheParams(constants.tableName.vehicles), 
+    vehicleController.getOne);
 
     // The below route is for updating particular vehicle data.
     app.put(`/${process.env.apiToken}/updateData/vehicle/:id`,
     checkInput.isServiceProviderIdEntered(constants.tableName.service_providers),
-    checkInput.isValidVehicleNumberEntered(constants.tableName.vehicles),
+    checkInput. isValidVehicleNumberEnteredWhileUpdate(constants.tableName.vehicles),
     checkInput.isManufacturerEntered,
     checkInput.isColorEntered,
     checkInput.isModelEntered,
@@ -52,11 +56,11 @@ module.exports = (app) =>
     checkInput.isMaximumHorseCarryingCapicityEntered,
     checkInput.isAirConditionerValueEntered,
     checkInput.isTemperaturControlValueEntered,
-    checkInput.isRegistrationNumberEntered,
+    // checkInput.isRegistrationNumberEntered,
     checkInput.isGCCTravelValueEntered,
     checkInput.isInsuranceCoverValueEntered,
     checkInput.isValidInsuranceCoverDateEntered,
-    checkInput.isInsuranceNumberEntered,
+    // checkInput.isInsuranceNumberEntered,
     checkInput.insurancePolicyProviderEntered,
     checkInput.isValidInsuranceExpirationDateEntered,
     checkInput.isValidVehicleTypeEntered,
@@ -66,8 +70,12 @@ module.exports = (app) =>
     vehicleController.updateData);
 
     // The below route is for getting all the images of a particular vehicle data.
-    app.get(`/${process.env.apiToken}/getAllImages/vehicle/:id`, isValidIdInTheParams(constants.tableName.vehicles),  vehicleController.getAllImages);
+    app.get(`/${process.env.apiToken}/getAllImages/vehicle/:id`, 
+    isValidIdInTheParams(constants.tableName.vehicles),  
+    vehicleController.getAllImages);
 
     // The below route is for removing or deleting the particular vehicle data.
-    app.put(`/${process.env.apiToken}/removeVehicle/:id`, isValidIdInTheParams(constants.tableName.vehicles),  vehicleController.removeVehicle);
+    app.put(`/${process.env.apiToken}/removeVehicle/:id`, 
+    isValidIdInTheParams(constants.tableName.vehicles),  
+    vehicleController.removeVehicle);
 };

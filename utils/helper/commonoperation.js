@@ -123,7 +123,7 @@ exports.updateUserStatus = (tablename, Id) =>
                 {
                     if(result[0].status === constant.status.active)
                     {
-                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.inactive}', t.updated_at = '${timeCalculate.getFormattedUTCTime(constant.timeOffSet.UAE)}' WHERE t.id = '${Id}' AND t.deleted_at IS NULL`;
+                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.inactive}', t.updated_at = '${timeCalculate.getFormattedUTCTime(constant.timeOffSet.UAE)}'  WHERE t.id = '${Id}' AND t.deleted_at IS NULL`;
                         console.log(UpdateQuery);
                         con.query(UpdateQuery, (err, result) => // executing the above query 
                         {

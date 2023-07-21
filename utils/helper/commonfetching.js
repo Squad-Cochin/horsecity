@@ -38,36 +38,95 @@ exports.userDataOnUsername = (tablename, username) =>
     });
 }
 
-exports.tableDataOnId = (tablename, Id) =>
-{
-    return new Promise((resolve, reject) => 
-    {
-        let selQuery = `SELECT * FROM ${tablename}  WHERE ${tablename}.id = '${Id}' `;
-        con.query(selQuery, (err, result) =>
-        { 
-            // console.log('Result: ',result);
-            if (err)
-            {
-                console.log('Error while executing the query:', err);
-                resolve('err');
-            }
-            else
-            {
-                if (result.length > 0)
-                {
-                    console.log('Visted');
-                    // console.log(result);
-                    resolve(result);
-                }
-                else
-                {
-                    console.log("Visted 2");
-                    resolve([]);
-                }       
-            }
-        });
+// exports.tableDataOnId = (tablename, Id) =>
+// {
+//     return new Promise((resolve, reject) => 
+//     {
+//         console.log('Table Name: ', tablename);
+//         let selQuery = `SELECT * FROM ${tablename}  WHERE ${tablename}.id = ${Id} `;
+//         console.log(selQuery);
+//         con.query(selQuery, (err, result) =>
+//         { 
+//             console.log('Result: ',result);
+//             if (err)
+//             {
+//                 console.log('Error while executing the query:', err);
+//                 resolve('err');
+//             }
+//             else
+//             {
+//                 if (result.length > 0)
+//                 {
+//                     console.log('Visted');
+//                     // console.log(result);
+//                     resolve(result);
+//                 }
+//                 else
+//                 {
+//                     console.log("Visted 2");
+//                     resolve([]);
+//                 }       
+//             }
+//         });
+//     });
+// }
+
+// exports.tableDataOnId = (tablename, Id) =>
+// {
+//     return new Promise((resolve, reject) => 
+//     {
+//         let selQuery = `SELECT * FROM ${tablename}  WHERE ${tablename}.id = '${Id}' `;
+//         con.query(selQuery, (err, result) =>
+//         { 
+//             // console.log('Result: ',result);
+//             if (err)
+//             {
+//                 console.log('Error while executing the query:', err);
+//                 resolve('err');
+//             }
+//             else
+//             {
+//                 if (result.length > 0)
+//                 {
+//                     console.log('Visted');
+//                     // console.log(result);
+//                     resolve(result);
+//                 }
+//                 else
+//                 {
+//                     console.log("Visted 2");
+//                     resolve([]);
+//                 }       
+//             }
+//         });
+//     });
+// }
+
+exports.tableDataOnId = (tablename, Id) => {
+    return new Promise((resolve, reject) => {
+      console.log('Table Name: ', tablename);
+      let selQuery = `SELECT * FROM ${tablename} WHERE ${tablename}.id = '${Id}' `;
+      console.log(selQuery);
+  
+      con.query(selQuery, (err, result) => {
+        if (err) {
+          console.log('Error while executing the query:', err);
+          reject(err);
+        } else {
+          console.log('Result: ', result);
+          if (result.length > 0) {
+            console.log('Data found');
+            resolve(result);
+          } else {
+            console.log('No data found');
+            resolve([]);
+          }
+        }
+      });
     });
-}
+  };
+  
+
 
 
 exports.getAllDataOfDriverAndCustomer = (tablename, pageNumber, pageSize) =>
