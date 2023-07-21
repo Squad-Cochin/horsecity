@@ -35,16 +35,24 @@ module.exports =
         },
         serviceProvider :
         {
-            licenceImage : `/serviceProvider/licenceImage/`
+             licenceImage : {
+                upload : `${__dirname}../../Attachements/serviceProvider/licenceImage/`,
+                view : `/serviceProvider/licenceImage/`
+            }
+            // licenceImage : `/serviceProvider/licenceImage/`
         },
         vehicle :
         {
             scertificate : `${__dirname}../../Attachements/Vehicles/scertificate/`,
             images : `${__dirname}../../Attachements/Vehicles/images/`
         },
-        applicationSettings :
+        applicationSettings : 
         {
-            settings : `/applicationSettings/settings/`
+            settings : {
+                upload : `${__dirname}../../Attachements/applicationSettings/settings/`,
+                view : `/applicationSettings/settings/`
+            }
+            // settings : `/applicationSettings/settings/`
         }
     },
 

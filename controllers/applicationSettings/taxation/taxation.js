@@ -28,7 +28,7 @@ exports.addNewTaxation = async(req,res)=>
    if(addNewTaxation){
     return res.status(200).send
     ({
-        code: 201,
+        code: 200,
         success: true,
         message: constants.responseMessage.insert,
     });

@@ -52,7 +52,7 @@ exports.addNewServiceProviders = (requestBody,file) =>
         try
         {  
        
-        let uploadAttachment = await commonoperation.fileUpload(file, constants.attachmentLocation.serviceProvider.licenceImage);
+        let uploadAttachment = await commonoperation.fileUpload(file, constants.attachmentLocation.serviceProvider.licenceImage.upload);
         const {name,email,user_name,password,contact_person,contact_no,emergency_contact_no,contact_address,licence_no} = requestBody ;
 
         let insQuery = `INSERT INTO ${constants.tableName.service_providers} (name, email, user_name, password, contact_person, contact_no, contact_address, emergency_contact_no, licence_image, licence_no, expiry_at, created_at)
@@ -79,7 +79,7 @@ exports.updateServiceProvider = (requestBody,file,id) =>
         try
         {  
       
-        let uploadLicence = await commonoperation.fileUpload(file?.licence_image, constants.attachmentLocation.serviceProvider.licenceImage);
+        let uploadLicence = await commonoperation.fileUpload(file?.licence_image, constants.attachmentLocation.serviceProvider.licenceImage.upload);
         const invalidFormat = "INVALIDFORMAT";
         const invalidAttachment = 'INVALIDATTACHMENT'
         if(uploadLicence.message == invalidFormat ){
@@ -98,7 +98,7 @@ exports.updateServiceProvider = (requestBody,file,id) =>
         contact_no = '${contact_no}',
         contact_address = '${contact_address}',
         emergency_contact_no = '${emergency_contact_no}',
-        ${uploadLicence.message === invalidAttachment ? '' : `licence_image = '${uploadLicence}',`}
+        ${uploadLicence.message === invalidAttachment ? '' : `licence_image = '${uploadLicence}',`} 
         licence_no = '${licence_no}',
         expiry_at = '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}',
         updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
@@ -142,7 +142,7 @@ exports.getOneServiceProvider = (id) =>
                 if(data?.length != 0){
                     console.log(data);
                     let licenceImage = data[0].licence_image;
-                    data[0].licence_image = `${process.env.PORT_SH}${constants.attachmentLocation.serviceProvider.licenceImage}${licenceImage}`;
+                    data[0].licence_image = `${process.env.PORT_SH}${constants.attachmentLocation.serviceProvider.licenceImage.view}${licenceImage}`;
                     
                     resolve({serviceProvider : data})
                 }else{

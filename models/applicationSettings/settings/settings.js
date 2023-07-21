@@ -21,7 +21,7 @@ module.exports = class settings {
           tax_id,
           currency_id,
           logo,loginpage_logo
-        } = reqBody;
+        } = reqBody; 
 
         let validateQuery = `SELECT * FROM ${constants.tableName.application_settings} apps
                                      WHERE apps.id = '${id}'`;
@@ -34,9 +34,10 @@ module.exports = class settings {
               if (data?.length != 0) {
                 let validateCurrecyQuery = `SELECT * FROM ${constants.tableName.currencies} apps
                          WHERE apps.id = '${currency_id}'`;
-
+                    
                 con.query(validateCurrecyQuery, async (err, data) => {
                   if (data?.length != 0) {
+                 
                     let validateTaxationQuery = `SELECT * FROM ${constants.tableName.taxations} apps
                           WHERE apps.id = '${tax_id}'`;
 
@@ -45,25 +46,25 @@ module.exports = class settings {
                         let uploadLogo = await commonoperation.fileUpload(
                           files?.logo,
                           constants.attachmentLocation.applicationSettings
-                          .settings
+                          .settings.upload
                         );
                         let uploadLoginPageLogo =
                           await commonoperation.fileUpload(
                             files?.loginpage_logo,
                             constants.attachmentLocation.applicationSettings
-                              .settings
+                              .settings.upload
                           );
                 
                         let uploadLoginPageBGimg =
                           await commonoperation.fileUpload(
                             files?.loginpage_bg_image,
                             constants.attachmentLocation.applicationSettings
-                            .settings
+                            .settings.upload
                           );
                         let uploadFavicon = await commonoperation.fileUpload(
                           files?.favicon,
                           constants.attachmentLocation.applicationSettings
-                          .settings
+                          .settings.upload
                         );
 
                         const invalidFormat = "INVALIDFORMAT";
@@ -166,7 +167,7 @@ module.exports = class settings {
   static async getSettingsData(id) {
     return new Promise((resolve, rejuct) => {
       try {
-        let selQuery = `SELECT  apps.application_title,
+        let selQuery = `SELECT apps.id, apps.application_title,
                 apps.contact_address,
                 apps.email,
                 apps.phone,
@@ -194,10 +195,10 @@ module.exports = class settings {
             let loginpage_logo = data[0].loginpage_logo
             let loginpage_bg_image = data[0].loginpage_bg_image
             let favicon = data[0].favicon
-            data[0].logo = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings}${logoImage}`;
-            data[0].loginpage_logo = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings}${loginpage_logo}`;
-            data[0].loginpage_bg_image = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings}${loginpage_bg_image}`;
-            data[0].favicon = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings}${favicon}`;
+            data[0].logo = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings.view}${logoImage}`;
+            data[0].loginpage_logo = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings.view}${loginpage_logo}`;
+            data[0].loginpage_bg_image = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings.view}${loginpage_bg_image}`;
+            data[0].favicon = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings.view}${favicon}`;
             resolve({ settingsPageData: data });
           } else {
             resolve({ settingsPageData: "NOTFOUND" });
