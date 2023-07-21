@@ -10,7 +10,7 @@
 // Importing the inbuilt component
 import React, { useState, useEffect } from 'react';
 import {Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
-import List from 'list.js';
+// import List from 'list.js';
 import Flatpickr from "react-flatpickr";
 import {useNavigate} from "react-router-dom"
 import { Link } from 'react-router-dom';
@@ -23,10 +23,10 @@ import Breadcrumbs from "../../../components/Common/Breadcrumb";
 
 //Get vehicles data
 import { removeVehicle } from '../../../helpers/ApiRoutes/removeApiRoutes';
-import { getVehiclesData } from '../../../helpers/ApiRoutes/getApiRoutes'
+import { getVehiclesData, getSPUserName, getSingleVechileData } from '../../../helpers/ApiRoutes/getApiRoutes'
 import { addNewVehicle } from '../../../helpers/ApiRoutes/addApiRoutes';
-import { updateVehicle } from '../../../helpers/ApiRoutes/editApiRoutes';
-import { Vehicles } from '../../../CommonData/Data';
+import { updateVehicle, updateVechileStatus } from '../../../helpers/ApiRoutes/editApiRoutes';
+// import { Vehicles } from '../../../CommonData/Data';
 import config from '../../../config';
 
 // The name of the function is ListVehiclesTable. Which will be executed and used all over program. This funtion is having all the code
@@ -38,6 +38,7 @@ const ListVehiclesTable = () =>
     const [vehicle, setVehicle] = useState([]); // State variable to store a single vehicle
     const [modal_delete, setmodal_delete] = useState(false); // State variable to control delete modal visibility
     const [view_modal, setView_modal] = useState(false); // State variable to control view modal visibility
+    const [sproviders, setSproviders] = useState([]);
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("")
@@ -78,28 +79,29 @@ const ListVehiclesTable = () =>
     }, []);
 
     // The Below function is used when we are adding the vehicle
-    function tog_list(param, productId) 
+    async function tog_list(param, productId) 
     {
     if (param === 'ADD') {
         setAdd_list(!add_list); // Toggle 'add_list' state
     }
-        const data = vehicles?.find((item) => item?.id === productId); // Find the vehicle data with matching 'productId' in the 'vehicles' array
+        let data = await getSingleVechileData(productId)
         setVehicle([data]); // Set the 'vehicle' state to the found vehicle data
         setmodal_list(!modal_list); // Toggle 'modal_list' state
     }
 
     // The Below function is used when we are displaying the particular vehicle data.
-    function tog_view(productId) 
-    {
-    const data = vehicles?.find((item) => item?.id === productId); // Find the vehicle data with matching 'productId' in the 'vehicles' array
-    setVehicle([data]); // Set the 'vehicle' state to the found vehicle data
-    setView_modal(!view_modal); // Toggle 'view_modal' state
+    async function tog_view(productId) {
+        console.log("rr",productId)
+        let data = await getSingleVechileData(productId)
+        setVehicle([data]); // Set the 'vehicle' state to the found vehicle data
+        setView_modal(!view_modal); // Toggle 'view_modal' state
     }
 
     // The below function is for remove button of a particular vehicle.
-    function remove_data(id)
+    async function remove_data(id)
     {
-        removeVehicle(id); // Call the 'removeVehicle' function with 'id' parameter
+        await removeVehicle(id); // Call the 'removeVehicle' function with 'id' parameter
+        window.location.reload();
     }
 
     // The below function is for delete button of a particular vehicle.
@@ -111,14 +113,15 @@ const ListVehiclesTable = () =>
      // The below function is the Status button
     function toggleStatus(button, vehiclesId)
     {
+        console.log("vid",vehiclesId)
         var currentStatus = button.innerText.trim();
+        const vehicle = vehicles.find((v) => v.id === vehiclesId);
+        updateVechileStatus(vehicle.id)
         if (currentStatus === 'ACTIVE')
         {
             button.innerText = 'INACTIVE';
             button.classList.remove('btn-success');
             button.classList.add('btn-danger');
-            // Find the corresponding vehicle by ID
-            const vehicle = Vehicles.find((v) => v.id === vehiclesId);
             if (vehicle)
             {
                 vehicle.status = 'INACTIVE';
@@ -129,8 +132,6 @@ const ListVehiclesTable = () =>
             button.innerText = 'ACTIVE';
             button.classList.remove('btn-danger');
             button.classList.add('btn-success');
-            // Find the corresponding vehicle by ID
-            const vehicle = Vehicles.find((v) => v.id === vehiclesId);
             if (vehicle)
             {
                 vehicle.status = 'ACTIVE';
@@ -142,9 +143,10 @@ const ListVehiclesTable = () =>
     const initialValues = 
     {
         service_provider: !add_list ? vehicle[0]?.service_provider : '',
+        service_provider_id: !add_list ? vehicle[0]?.service_provider_id : '',
         vehicle_number: !add_list ? vehicle[0]?.vehicle_number : '',
         make: !add_list ? vehicle[0]?.make : '',
-        models: !add_list ? vehicle[0]?.models : '',
+        model: !add_list ? vehicle[0]?.model : '',
         color: !add_list ? vehicle[0]?.color : '',
         length: !add_list ? vehicle[0]?.length : '',
         breadth: !add_list ? vehicle[0]?.breadth : '',
@@ -162,7 +164,7 @@ const ListVehiclesTable = () =>
         insurance_expiry_date: !add_list ? vehicle[0]?.insurance_expiration_date : '',
         vehicle_type: !add_list ? vehicle[0]?.vehicle_type : '',
         vehicle_registration_date: !add_list ? vehicle[0]?.vehicle_registration_date : '',
-        vehicle_expiration_date: !add_list ? vehicle[0]?.vehicle_expiration_date : '',
+        vehicle_exipration_date: !add_list ? vehicle[0]?.vehicle_exipration_date : '',
     };
 
     const validation = useFormik
@@ -175,18 +177,15 @@ const ListVehiclesTable = () =>
             setmodal_list(false);
             if (add_list) 
             {   
-                console.log("bbb",values)
-                // Add new vehicle
-                addNewVehicle(values); // Call the 'addNewVehicle' function with form values as a parameter
-                setAdd_list(false); // Reset 'add_list' state to false
-                setmodal_list(false); // Reset 'modal_list' state to false
+                addVechile(values);
             }
             else
             {
-                // Update existing vehicle
-                updateVehicle(values); // Call the 'updateVehicle' function with form values as a parameter
-                setAdd_list(false); // Reset 'add_list' state to false
-                setmodal_list(false); // Reset 'modal_list' state to false
+                editVehicles(values);
+                // // Update existing vehicle
+                // updateVehicle(values); // Call the 'updateVehicle' function with form values as a parameter
+                // setAdd_list(false); // Reset 'add_list' state to false
+                // setmodal_list(false); // Reset 'modal_list' state to false
             }
         },
     });
@@ -194,9 +193,39 @@ const ListVehiclesTable = () =>
     // function for get data all Vechile data
     async function getAllData(page) {
         let getvehicles = await getVehiclesData(page || 1);
+        let getSP = await getSPUserName();
+        setSproviders(getSP.serviceProviders);
         setVehicles(getvehicles?.vehicles);
         setPageNumber(page);
         setNumberOfData(getvehicles?.totalCount);
+    }
+
+    // Update vehicle
+    async function editVehicles(data){
+        console.log("reachx")
+        let updatedVehicle = await updateVehicle(vehicle[0]?.id, data);
+        if(updatedVehicle.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+        }else{
+            setErrors("")
+            setErrors(updatedVehicle.message)
+        }
+    }
+
+    async function addVechile(values){
+        let addedVechile = await addNewVehicle(values);
+        if(addedVechile.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+        }else{
+            setErrors("")
+            setErrors(addedVechile?.message)
+        }
     }
 
     // The execution of all the object and element are written inside the return. Whenever this file will be called only the code inside this return coded will be returned
@@ -252,17 +281,25 @@ const ListVehiclesTable = () =>
                                                             <td className="make">{item.make}</td> {/* Manufaturer of the vehicle */}
                                                             <td className="no_of_horse text-center">{item.no_of_horse}</td> {/* Maximum number of horses a vehicle can carry */}
                                                             {/* This is the place from where we are calling the status button and function */}
-                                                            <div>
-                                                                <div className="d-flex gap-2">
-                                                                    <div className="status">
-                                                                        <button className="btn btn-sm btn-success status-item-btn"
-                                                                            data-bs-toggle="modal" data-bs-target="#showModal"
-                                                                            onClick={(event) => toggleStatus(event.target, item.id)}>
-                                                                            {item.status}
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                            <td>{item.status === "ACTIVE" ?
+                                                                <button
+                                                                    className="btn btn-sm btn-success status-item-btn"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#showModal"
+                                                                    onClick={(event) => toggleStatus(event.target, item.id)}
+                                                                >
+                                                                    {item.status}
+                                                                </button> :
+                                                                <button
+                                                                    className="btn btn-sm btn-danger status-item-btn"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#showModal"
+                                                                    onClick={(event) => toggleStatus(event.target, item.id)}
+                                                                >
+                                                                    {item.status}
+                                                                </button>
+                                                                }
+                                                            </td>
                                                             <td>
                                                                 <div className="d-flex gap-2">
                                                                     {/* This is the place from where we are calling the view button and function */}
@@ -309,13 +346,20 @@ const ListVehiclesTable = () =>
                                             The previous and next button are also in side this function */}
                                         <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">
-                                                <Link className="page-item pagination-prev disabled" to="#">
-                                                    Previous
-                                                </Link>
+                                                {pageNumber > 1 ?
+                                                    <Link 
+                                                        className="page-item pagination-prev disabled" 
+                                                        onClick={()=> getAllData(pageNumber - 1)}
+                                                    >
+                                                        Previous
+                                                    </Link>
+                                                : null }
                                                 <ul className="pagination listjs-pagination mb-0"></ul>
-                                                <Link className="page-item pagination-next" to="#">
-                                                    Next
-                                                </Link>
+                                                {numberOfData > pageLimit * pageNumber ? 
+                                                    <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}>
+                                                        Next
+                                                    </Link> 
+                                                : null }
                                             </div>
                                         </div>
 
@@ -336,17 +380,24 @@ const ListVehiclesTable = () =>
                         {/* The below element is adding the name of the service provider. Whose vehicle is being added */}
                         {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
                         <div className="mb-3">
-                            <label htmlFor="serviceprovider-field" className="form-label">Service Provider</label>
-                            <input
-                                type="text"
+                            <label htmlFor="serviceprovider-field" className="form-label">
+                                Service Provider
+                            </label>
+                            <select
+                                data-trigger
+                                name="service_provider_id"
                                 id="serviceprovider-field"
                                 className="form-control"
-                                name='service_provider'
-                                value={validation.values.service_provider || ""}
+                                value={validation.values.service_provider_id || ""}
                                 onChange={validation.handleChange}
-                                placeholder="Enter Vehicle Name"
+                                onBlur={validation.handleBlur}
                                 required
-                            />
+                            >
+                                <option value="">Select Service Provider</option>
+                            {sproviders.map((item, index) => (
+                                <option key={index} value={item.id}>{item.user_name}</option>
+                            ))}
+                            </select>
                         </div>
 
                         {/* The below element is adding the number of the number plate of the vehcile */}
@@ -384,9 +435,9 @@ const ListVehiclesTable = () =>
                             <input
                                 type="text"
                                 id="modal-field"
-                                name='models' // Updated the name attribute to 'models'
+                                name='model' // Updated the name attribute to 'models'
                                 className="form-control"
-                                value={validation.values.models || ""}
+                                value={validation.values.model || ""}
                                 onChange={validation.handleChange}
                                 placeholder="Enter Vehicle Model"
                                 required
@@ -751,15 +802,15 @@ const ListVehiclesTable = () =>
 
                         {/* The below element is for seleting the vehicle expiration date. */} 
                         <div className="mb-3">
-                            <label htmlFor="vehicle_expiration_date-field" className="form-label">Vehicle Expiration Date</label>
+                            <label htmlFor="vehicle_exipration_date-field" className="form-label">Vehicle Expiration Date</label>
                             <Flatpickr
                                 className="form-control"
                                 options={{
                                     dateFormat: "d M, Y"
                                 }}
-                                name='vehicle_expiration_date'
-                                value={validation.values.vehicle_expiration_date || ""}
-                                onChange={(dates) =>validation.setFieldValue('vehicle_expiration_date', dates[0])}
+                                name='vehicle_exipration_date'
+                                value={validation.values.vehicle_exipration_date || ""}
+                                onChange={(dates) =>validation.setFieldValue('vehicle_exipration_date', dates[0])}
                                 placeholder="Select Vehicle Expiration Date"
                             />
                         </div>
@@ -829,9 +880,9 @@ const ListVehiclesTable = () =>
                             <input
                                 type="text"
                                 id="modal-field"
-                                name='models' // Updated the name attribute to 'models'
+                                name='model' // Updated the name attribute to 'models'
                                 className="form-control"
-                                value={validation.values.models || ""}
+                                value={validation.values.model || ""}
                                 readOnly
                             />
                         </div>
@@ -962,7 +1013,7 @@ const ListVehiclesTable = () =>
                         </div>
 
                         {/* The below element is for displaying the images of the vehicle. */} 
-                        <div className="mb-3">
+                        {/* <div className="mb-3">
                             <label htmlFor="vehicle_image-field" className="form-label">Vehicle Image</label>
                             <input
                                 type="file"
@@ -972,7 +1023,7 @@ const ListVehiclesTable = () =>
                                 placeholder="Upload Vehicle Image"
                                 required
                             />
-                        </div>
+                        </div> */}
 
                         {/* The below element is for displaying the registration number of the vehicle. */} 
                         <div className="mb-3">
@@ -1153,13 +1204,13 @@ const ListVehiclesTable = () =>
 
                         {/* The below element is for displaying the vehicle expiration date. */} 
                         <div className="mb-3">
-                            <label htmlFor="vehicle_expiration_date-field" className="form-label">Vehicle Expiration Date</label>
+                            <label htmlFor="vehicle_exipration_date-field" className="form-label">Vehicle Expiration Date</label>
                             <input
                                 type="text"
-                                id="vehicle_expiration_date-field"
+                                id="vehicle_exipration_date-field"
                                 className="form-control"
-                                name='vehicle_expiration_date'
-                                value={validation.values.vehicle_expiration_date || ""}
+                                name='vehicle_exipration_date'
+                                value={validation.values.vehicle_exipration_date || ""}
                                 readOnly
                             />
                         </div>

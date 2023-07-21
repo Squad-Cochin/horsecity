@@ -44,6 +44,19 @@ export async function getSPSingleData(spId){
     }
 }
 
+export async function getSPUserName(){
+    try {
+        console.log("urr",url.GET_SP_USER_NAME)
+        const { data } = await axios.get(`${url.GET_SP_USER_NAME}`);
+        console.log(data)
+        return(data)
+    } catch (error) {
+        return {
+            "serviceProviders": []
+        }
+    }
+}
+
 export async function getCustomersData(pageNumber){
     try {
         let pageLimit = config.pageLimit;
@@ -84,8 +97,41 @@ export async function getVehiclesData(pageNumber){
             "page" : pageNumber,
             "limit" : pageLimit
         }
-        console.log(reqObj)
         const { data } = await axios.post(`${url.GET_VEHICLES_ALL_DATA_URL}`,reqObj);
+        return(data.vehicles)
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data": {
+                "totalCount": 0,
+                "vehicles": []
+            }
+        }
+        return errorObj.data
+    }
+}
+  
+export async function getSingleVechileData(vId){
+    try {
+        console.log(url.GET_VEHICLES_SINGLE_DATA_URL+"/"+vId)
+        const { data } = await axios.get(`${url.GET_VEHICLES_SINGLE_DATA_URL}/${vId}`);
+        console.log(data)
+        return(data)
+    } catch (error) {
+        return null
+    }
+}
+
+export async function getTaxationsData(pageNumber){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = {
+            "page" : pageNumber,
+            "limit" : pageLimit
+        }
+        const { data } = await axios.post(`${url.GET_TAXATION_ALL_DATA_URL}`,reqObj);
         console.log("ddd",data)
         return(data)
     } catch (error) {
@@ -132,3 +178,14 @@ export async function getVehiclesData(pageNumber){
     // }
     // return null ;
   }
+
+
+export async function getSingleTaxationData(tId){
+    try {
+        const { data } = await axios.get(`${url.GET_TAXATION_SINGLE_DATA_URL}/${tId}`);
+        console.log("DDD",data)
+        return(data)
+    } catch (error) {
+        return null
+    }
+}

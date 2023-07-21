@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 // import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
@@ -15,10 +15,12 @@ import List from 'list.js';
 // import avatar5 from "../../assets/images/users/avatar-5.jpg";
 
 //Import Drivers
-import { getTaxations } from '../../helpers/ApiRoutes/authApiRoutes'
+import { removeTaxation } from '../../helpers/ApiRoutes/removeApiRoutes'
 import { addNewTaxation } from '../../helpers/ApiRoutes/addApiRoutes';
-import { updateTaxation } from '../../helpers/ApiRoutes/editApiRoutes';
+import { updateTaxation, updateTaxationStatus} from '../../helpers/ApiRoutes/editApiRoutes';
+import { getTaxationsData, getSingleTaxationData } from '../../helpers/ApiRoutes/getApiRoutes';
 import { useFormik } from "formik";
+import config from '../../config';
 const TaxationDeatails = () => {
 
     const [ modal_list, setmodal_list] = useState(false);
@@ -26,16 +28,22 @@ const TaxationDeatails = () => {
     const [ taxation, setTaxation] = useState([]);
     const [ add_list, setAdd_list ] = useState(false);
     const [modal_delete, setmodal_delete] = useState(false);
-    function tog_list(param,productId) {
+    const [ pageNumber, setPageNumber ] = useState(1);
+    const [ numberOfData, setNumberOfData ] = useState(0);
+    const [ errors, setErrors ] = useState("")
+    const pageLimit = config.pageLimit;
+
+    async function tog_list(param,productId) {
         if(param === 'ADD'){
             setAdd_list(!add_list);
+        } else {
+            // const data = taxations?.find((item)=>item?.id === productId)
+            let taxationData = await getSingleTaxationData(productId)
+            setTaxation(taxationData.taxation);
         }
-        const data = taxations?.find((item)=>item?.id === productId)
-        setTaxation([data]);
         setmodal_list(!modal_list);
-
-
-          
+        
+      
           // Later in your code, when setting the initial state
     }
     const initialValues = {
@@ -51,17 +59,11 @@ const TaxationDeatails = () => {
                 console.log(values);
                 if(add_list){
                     //add new
-                    console.log("add new");
-                    addNewTaxation(values);
-                    setAdd_list(false);
-                    setmodal_list(false);
+                    addTaxation(values)
                 }else{
                     //update previes one
                     console.log("update previues one ");
-                    updateTaxation(values);
-                    setAdd_list(false);
-                    setmodal_list(false);
-                 
+                    editTxations(values)
                 }
     
         }
@@ -69,62 +71,75 @@ const TaxationDeatails = () => {
     function tog_delete() {
         setmodal_delete(!modal_delete);
     }
-    useEffect(()=>{
- 
-    setTaxations(getTaxations())
-    },[])
     useEffect(() => {
+        getAllData(1)
+    }, []);
 
-        // const attroptions = {
-        //     valueNames: [
-        //         'name',
-        //         'born',
-        //         {
-        //             data: ['id']
-        //         },
-        //         {
-        //             attr: 'src',
-        //             name: 'image'
-        //         },
-        //         {
-        //             attr: 'href',
-        //             name: 'link'
-        //         },
-        //         {
-        //             attr: 'data-timestamp',
-        //             name: 'timestamp'
-        //         }
-        //     ]
-        // };
-        // const attrList = new List('users', attroptions);
-        // attrList.add({
-        //     name: 'Leia',
-        //     born: '1954',
-        //     image: avatar5,
-        //     id: 5,
-        //     timestamp: '67893'
-        // });
+    // function for get data all service provider data
+    async function getAllData(page) {
+        let getTaxations = await getTaxationsData(page || 1);
+        setTaxations(getTaxations.taxations);
+        setPageNumber(page);
+        setNumberOfData(getTaxations.totalCount);
+    }
 
-        // Existing List
-        const existOptionsList = {
-            valueNames: ['contact-name', 'contact-message']
-        };
+    // Add Taxation
+    async function addTaxation(val){
+        let addTax = await addNewTaxation(val);
+        if(addTax.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+        }else{
+            setErrors("")
+            setErrors(addTax.message)
+        }
+    }
 
-        new List('contact-existing-list', existOptionsList);
+    /**Function for changing service provider status */
+    function toggleStatus(button, taxationId) {
+        var currentStatus = button.innerText.trim();
+        const taxation = taxations.find((t) => t.id === taxationId);
+        updateTaxationStatus(taxation.id)
+        if (currentStatus === 'ACTIVE') {
+            button.innerText = 'INACTIVE';
+            button.classList.remove('btn-success');
+            button.classList.add('btn-danger');
+            if (taxation) {
+                taxation.status = 'INACTIVE';
+            }
+        }
+        else if (currentStatus === 'INACTIVE') {
+            button.innerText = 'ACTIVE';
+            button.classList.remove('btn-danger');
+            button.classList.add('btn-success');
+            if (taxation) {
+                taxation.status = 'ACTIVE';
+            }
+        }
+    }
 
-        // Fuzzy Search list
-        new List('fuzzysearch-list', {
-            valueNames: ['name']
-        });
+    
+    // Update service provider
+    async function editTxations(data){
+        let updateTax = await updateTaxation(taxations[0]?.id, data);
+        if(updateTax.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+        }else{
+            setErrors("")
+            setErrors(updateTax.message)
+        }
+    }
 
-        // pagination list
-
-        new List('pagination-list', {
-            valueNames: ['pagi-list'],
-            page: 3,
-            pagination: true
-        });
-    });
+    /**This function is used to remove a service provider*/
+    async function remove_data(id) {
+        await removeTaxation(id)
+        window.location.reload();
+    }
 
     return (
         <React.Fragment>
@@ -172,7 +187,25 @@ const TaxationDeatails = () => {
                                                 <td className="type">{item.type}</td>
                                                 <td className="value">{item.value}</td>
                                                 <td className="status">
-                                                <span className="badge badge-soft-success text-uppercase">{item.status}</span>
+                                                    {item.status === "ACTIVE" ?
+                                                        <button
+                                                            className="btn btn-sm btn-success status-item-btn"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#showModal"
+                                                            onClick={(event) => toggleStatus(event.target, item.id)}
+                                                        >
+                                                            {item.status}
+                                                        </button> :
+                                                        <button
+                                                            className="btn btn-sm btn-danger status-item-btn"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#showModal"
+                                                            onClick={(event) => toggleStatus(event.target, item.id)}
+                                                        >
+                                                            {item.status}
+                                                        </button>
+
+                                                    }
                                                 </td>
                                                 <td className="created_at">{item.created_at}</td>
                                                 <td>
@@ -192,6 +225,7 @@ const TaxationDeatails = () => {
                                                         className="btn btn-sm btn-danger remove-item-btn"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#deleteRecordModal"
+                                                        onClick={() => remove_data(item?.id)}
                                                     >
                                                         Remove
                                                     </button>
@@ -218,13 +252,20 @@ const TaxationDeatails = () => {
 
                                         <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">
-                                                <Link className="page-item pagination-prev disabled" to="#">
-                                                    Previous
-                                                </Link>
+                                                {pageNumber > 1 ?
+                                                    <Link 
+                                                        className="page-item pagination-prev disabled" 
+                                                        onClick={()=> getAllData(pageNumber - 1)}
+                                                    >
+                                                        Previous
+                                                    </Link>
+                                                : null }
                                                 <ul className="pagination listjs-pagination mb-0"></ul>
-                                                <Link className="page-item pagination-next" to="#">
-                                                    Next
-                                                </Link>
+                                                {numberOfData > pageLimit * pageNumber ? 
+                                                    <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}>
+                                                        Next
+                                                    </Link> 
+                                                : null }
                                             </div>
                                         </div>
                                     </div>
@@ -260,10 +301,11 @@ const TaxationDeatails = () => {
 
             {/* Add Modal */}
             <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}  centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ?  'Add taxation' : 'Edit taxation' } </ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ?  'Add taxation' : 'Edit taxation' } </ModalHeader>
                 <form className="tablelist-form"
                  onSubmit={validation.handleSubmit}>
                     <ModalBody>
+                    {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
                     {/* Tax Name */}
                     <div className="mb-3">
                         <label htmlFor="tax-field" className="form-label">Name</label>
@@ -282,16 +324,20 @@ const TaxationDeatails = () => {
                     {/* Tax Type */}
                     <div className="mb-3">
                         <label htmlFor="taxtype-field" className="form-label">Tax Type</label>
-                        <input
-                        type="text"
-                        id="taxtype-field"
-                        className="form-control"
-                        name="type"
-                        placeholder="Enter Tax Type"
-                        value={validation.values.type || ""}
-                        onChange={validation.handleChange}
-                        required
-                        />
+                        <select
+                            data-trigger
+                            name="type"
+                            id="taxtype-field"
+                            className="form-control"
+                            value={validation.values.type || ""}
+                            onChange={validation.handleChange}
+                            onBlur={validation.handleBlur}
+                            required
+                        >
+                            <option value="">Select Tax Type</option>
+                            <option value="PERCENTAGE">PERCENTAGE</option>
+                            <option value="FLAT">FLAT</option>
+                        </select>
                     </div>
 
                     {/* Tax Value */}

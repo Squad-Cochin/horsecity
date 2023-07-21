@@ -335,6 +335,7 @@ const ListCustomerTable = () => {
                             />
                         </div>
                         {/** Customer email */}
+                        {add_list ?
                         <div className="mb-3">
                             <label htmlFor="email-field" className="form-label">Email</label>
                             <input
@@ -348,6 +349,7 @@ const ListCustomerTable = () => {
                                 required
                             />
                         </div>
+                        : null}
                         {/** Customer username */}
                         <div className="mb-3">
                             <label htmlFor="username-field" className="form-label">Username</label>
@@ -427,13 +429,13 @@ const ListCustomerTable = () => {
                             <div className="col-md-10">
                                 {idProofPreview && (
                                     <div>
-                                        <img src={idProofPreview} alt="Id Proof Preview" style={{ maxWidth: '100px' }} />
+                                        <img name="id_proof_image" src={idProofPreview} alt="Id Proof Preview" style={{ maxWidth: '100px' }} />
                                     </div>
                                 )}
 
                                 <input
                                     className="form-control"
-                                    name="certification_or_license_img"
+                                    name="id_proof_image"
                                     type="file"
                                     placeholder="Certificate Image"
                                     onChange={handleIdProofImageChange}

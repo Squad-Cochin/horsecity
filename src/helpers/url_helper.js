@@ -47,6 +47,7 @@ export const POST_SP_ADD_URL = apiBaseUrl + token + "/add/serviceprovider"
 export const PUT_SP_UPDATE_STATUS = apiBaseUrl + token + "/update-status/serviceprovider"
 export const POST_SP_EDIT_URL = apiBaseUrl + token + "/update/serviceprovider"
 export const PUT_SP_REMOVE = apiBaseUrl + token + "/remove/serviceprovider"
+export const GET_SP_USER_NAME = apiBaseUrl + token + "/getAll/serviceprovidersName"
 
 /**CUSTOMER */
 export const GET_CUSTOMER_ALL_DATA_URL = apiBaseUrl + token + "/getAll/customers"
@@ -58,11 +59,22 @@ export const PUT_CUSTOMER_REMOVE = apiBaseUrl + token + "/remove/customer"
 
 /**VEHICLES */
 export const GET_VEHICLES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/vehicles"
-// export const GET_CUSTOMER_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/customer"
-// export const POST_CUSTOMER_ADD_URL = apiBaseUrl + token + "/add/customer"
-// export const PUT_CUSTOMER_UPDATE_STATUS = apiBaseUrl + token + "/update/customer"
-// export const POST_CUSTOMER_EDIT_URL = apiBaseUrl + token + "/edit/customer"
-// export const PUT_CUSTOMER_REMOVE = apiBaseUrl + token + "/remove/customer"
+export const GET_VEHICLES_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/vehicle"
+export const POST_VEHICLES_ADD_URL = apiBaseUrl + token + "/addNew/vehicle"
+export const PUT_VEHICLES_UPDATE_STATUS = apiBaseUrl + token + "/updateStatus/vehicle"
+export const POST_VEHICLES_EDIT_URL = apiBaseUrl + token + "/updateData/vehicle"
+export const PUT_VEHICLES_REMOVE = apiBaseUrl + token + "/removeVehicle"
+
+
+
+/**TAXATION */
+export const GET_TAXATION_ALL_DATA_URL = apiBaseUrl + token + "/getAll/tax"
+export const GET_TAXATION_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/taxations"
+export const POST_TAXATION_ADD_URL = apiBaseUrl + token + "/add/taxation"
+export const PUT_TAXATION_UPDATE_STATUS = apiBaseUrl + token + "/update-status/taxation"
+export const POST_TAXATION_EDIT_URL = apiBaseUrl + token + "/update/taxation"
+export const PUT_TAXATION_REMOVE = apiBaseUrl + token + "/remove/taxation"
+
 
 // http://192.168.200.130:8000/horsecity661809/getAll/customers
 /**SETTINGS*/
