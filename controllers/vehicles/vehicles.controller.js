@@ -17,7 +17,7 @@ const vehicle = require('../../models/vehicles/vehicle.model');
 exports.addNew = async (req, res, next) =>
 {  
     console.log('REeached'); 
-    const vehicles = await vehicle.addnew(req.body.serviceProviderId, req.body.vehicle_number, req.body.make, req.body.models, req.body.color, req.body.length, req.body.breadth, req.body.height, req.body.max_no_of_horse, req.body.air_conditioner.toUpperCase(), req.body.temp_manageable.toUpperCase(), req.body.registration_no, req.body.gcc_travel_allowed.toUpperCase(), req.body.insurance_cover.toUpperCase(), req.body.insurance_date, req.body.insurance_policy_no, req.body.insurance_provider, req.body.insurance_expiry_date, req.files.safety_certicate, req.body.vehicle_type.toUpperCase(), req.body.vehicle_registration_date, req.body.vehicle_exipration_date);
+    const vehicles = await vehicle.addnew(req.body.service_provider_id, req.body.vehicle_number, req.body.make, req.body.models, req.body.color, req.body.length, req.body.breadth, req.body.height, req.body.no_of_horse, req.body.air_conditioner, req.body.temperature_manageable, req.body.vehicle_registration_number, req.body.gcc_travel_allowed, req.body.insurance_cover, req.body.insurance_date, req.body.insurance_policy_no, req.body.insurance_policy_provider, req.body.insurance_expiration_date, req.files.safety_certicate, req.body.vehicle_type, req.body.vehicle_registration_date, req.body.vehicle_expiration_date);
     
     if(vehicles === 'err')
     {
@@ -178,7 +178,7 @@ exports.getOne = async (req, res, next) =>
 }
 exports.updateData = async (req, res, next) =>
 {
-    const vehicles = await vehicle.updatedata(req.params.id, req.body.serviceProviderId, req.body.vehicle_number, req.body.make, req.body.models, req.body.color, req.body.length, req.body.breadth, req.body.height, req.body.max_no_of_horse, req.body.air_conditioner, req.body.temp_manageable, req.body.registration_no, req.body.gcc_travel_allowed, req.body.insurance_cover, req.body.insurance_date, req.body.insurance_policy_no, req.body.insurance_policy_provider, req.body.insurance_expiration_date, req.body.vehicle_type, req.body.vehicle_registration_date, req.body.vehicle_exipration_date, req.files.safety_certicate);
+    const vehicles = await vehicle.updatedata(req.params.id, req.body.service_provider_id, req.body.vehicle_number, req.body.make, req.body.models, req.body.color, req.body.length, req.body.breadth, req.body.height, req.body.no_of_horse, req.body.air_conditioner, req.body.temperature_manageable, req.body.vehicle_registration_number, req.body.gcc_travel_allowed, req.body.insurance_cover, req.body.insurance_date, req.body.insurance_policy_no, req.body.insurance_policy_provider, req.body.insurance_expiration_date, req.body.vehicle_type, req.body.vehicle_registration_date, req.body.vehicle_expiration_date, req.files.safety_certicate);
 
     if(vehicles === 'err')
     {

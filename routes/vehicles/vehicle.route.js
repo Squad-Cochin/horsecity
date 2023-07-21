@@ -21,13 +21,13 @@ module.exports = (app) =>
     checkInput.isRegistrationNumberEntered,
     checkInput.isGCCTravelValueEntered,
     checkInput.isInsuranceCoverValueEntered,
-    checkInput.isValidInsuranceCoverDateEntered,
+    // checkInput.isValidInsuranceCoverDateEntered,
     checkInput.isInsuranceNumberEntered,
     checkInput.insurancePolicyProviderEntered,
-    checkInput.isValidInsuranceExpirationDateEntered,
+    // checkInput.isValidInsuranceExpirationDateEntered,
     checkInput.isValidVehicleTypeEntered,
-    checkInput.isValidVehicleRegistrationDateEntered,
-    checkInput.isValidVehicleExpirationDateEntered,              
+    // checkInput.isValidVehicleRegistrationDateEntered,
+    // checkInput.isValidVehicleExpirationDateEntered,              
     vehicleController.addNew);
     
     // The below route is for getting all the vehicles data.

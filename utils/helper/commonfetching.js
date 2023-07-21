@@ -42,7 +42,7 @@ exports.tableDataOnId = (tablename, Id) =>
 {
     return new Promise((resolve, reject) => 
     {
-        let selQuery = `SELECT * FROM ${tablename} WHERE ${tablename}.id = '${Id}' `;
+        let selQuery = `SELECT * FROM ${tablename}  WHERE ${tablename}.id = '${Id}' `;
         con.query(selQuery, (err, result) =>
         { 
             // console.log('Result: ',result);

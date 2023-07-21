@@ -1074,3 +1074,22 @@ exports.isDriverLicenceImageSubmitted = (req, res, next) =>
         next();
     }
 }
+
+exports.idProofImageWhileUpdate = (req, res, next) =>
+{
+    if(!req.files?.id_proof_image)
+    {
+        console.log('Customer Id Proof image is not uploaded');
+        return res.status(200).json
+        ({
+            code: 400,
+            success: false,
+            message: "Customer id proof image is not uploaded"
+        });
+    }
+    else
+    {
+        next();
+    }
+}
+    

@@ -24,15 +24,14 @@ module.exports =
         customer : 
         {
             idProof : `${__dirname}../../Attachements/Customers/IdProofs/`,
-            fetchidProof : `/Customers/IdProofs/`,
-            
+            fetchidProof : `/Customers/IdProofs/`,           
         },
         driver :
         {
             licence : `${__dirname}../../Attachements/Drivers/Licence/`,
-            fetchlicence :`/Drivers/Licence/`,
+            fetchlicence :`${__dirname}../..//Drivers/Licence/`,
             profilephoto : `${__dirname}../../Attachements/Drivers/ProfilePhoto/`,
-            fetchprofilephoto : `/Drivers/ProfilePhoto/`,
+            fetchprofilephoto : `${__dirname}../..//Drivers/ProfilePhoto/`,
         },
         serviceProvider :
         {

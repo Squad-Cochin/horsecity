@@ -50,6 +50,7 @@ module.exports = (app) =>
             // checkInput.contactNumberValidationWhileUpdate(constants.tableName.customers),
             // // checkInput.dateOfBirthValidation,
             checkInput.idProofValidationWhileUpdate,
+            checkInput.idProofImageWhileUpdate,
             // verifyBody.nameAvailable,
             // verifyBody.emailValidation,
             // verifyBody.usernamevalidation,

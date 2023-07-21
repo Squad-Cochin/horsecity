@@ -3,7 +3,7 @@ const commonfetching = require(`../../utils/helper/commonfetching`);
 
 exports.isServiceProviderIdEntered = (tableName) =>async (req, res, next) =>
 {
-    if (!req.body.serviceProviderId) 
+    if (!req.body.service_provider_id) 
     {
         return res.status(200).send
         ({
@@ -14,14 +14,14 @@ exports.isServiceProviderIdEntered = (tableName) =>async (req, res, next) =>
     }
     else
     {
-        const data = await commonfetching.tableDataOnId(tableName, req.body.serviceProviderId)
+        const data = await commonfetching.tableDataOnId(tableName, req.body.service_provider_id)
         if(data === 'err' || !data)
         {
             return res.status(500).json
             ({
                 code : 200,
                 status : "failed",
-                error: 'Internal server error' 
+                error: 'Internal server error while service provider' 
             });
         }
         else if(data.length > 0)
@@ -56,7 +56,7 @@ exports.isValidVehicleNumberEntered = (tableName) => async (req, res, next) =>
     }
     else
     {
-        const data = await commonfetching.tableDataOnId(tableName, req.body.vehicle_number)
+        const data = await commonfetching.vehiclesMiddleware(tableName, 'vehicle_number',req.body.vehicle_number)
         console.log(data);
         if(data === 'err' || !data)
         {
@@ -64,7 +64,7 @@ exports.isValidVehicleNumberEntered = (tableName) => async (req, res, next) =>
             ({
                 code : 200,
                 status : "failed",
-                error: 'Internal server error' 
+                error: 'Internal server error while number plate' 
             });
         }
         else if(data.length > 0)
@@ -450,13 +450,14 @@ exports.isRegistrationNumberEntered = async (req, res, next) =>
             });
         }
         else
-        {       
-            return res.status(500).json
-            ({
-                code : 200,
-                status : "failed",
-                error: 'Internal server error' 
-            });    
+        { 
+            next();     
+            // return res.status(200).json
+            // ({
+            //     code : 500,
+            //     status : "failed",
+            //     error: 'Internal server error' 
+            // });    
         }     
     }
 }
@@ -495,12 +496,13 @@ exports.isInsuranceNumberEntered = async (req, res, next) =>
         }
         else
         {
-            return res.status(500).json
-            ({
-                code : 200,
-                status : "failed",
-                error: 'Internal server error' 
-            });           
+            next();
+            // return res.status(500).json
+            // ({
+            //     code : 200,
+            //     status : "failed",
+            //     error: 'Internal server error while insurance number' 
+            // });           
         }     
     }
 }
@@ -543,7 +545,7 @@ exports.isValidInsuranceCoverDateEntered = (req, res, next) =>
 
 exports.insurancePolicyProviderEntered = (req, res, next) =>
 {
-    if (!req.body.insurance_provider) 
+    if (!req.body.insurance_policy_provider) 
     {
         return res.status(200).send
         ({
