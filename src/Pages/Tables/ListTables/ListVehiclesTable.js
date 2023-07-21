@@ -682,7 +682,7 @@ const ListVehiclesTable = () =>
                             <Flatpickr
                                 className="form-control"
                                 options={{
-                                    dateFormat: "d M, Y"
+                                    dateFormat: "d-m-Y"
                                 }}
                                 name='insurance_date'
                                 value={validation.values.insurance_date || ""}
@@ -729,7 +729,7 @@ const ListVehiclesTable = () =>
                             <Flatpickr
                                 className="form-control"
                                 options={{
-                                    dateFormat: "d M, Y"
+                                    dateFormat: "d-m-Y"
                                 }}
                                 name='insurance_expiry_date'
                                 value={validation.values.insurance_expiry_date || ""}
@@ -791,7 +791,7 @@ const ListVehiclesTable = () =>
                             <Flatpickr
                                 className="form-control"
                                 options={{
-                                    dateFormat: "d M, Y"
+                                    dateFormat: "d-m-Y"
                                 }}
                                 name='vehicle_registration_date'
                                 value={validation.values.vehicle_registration_date || ""}
@@ -806,7 +806,7 @@ const ListVehiclesTable = () =>
                             <Flatpickr
                                 className="form-control"
                                 options={{
-                                    dateFormat: "d M, Y"
+                                    dateFormat: "d-m-Y"
                                 }}
                                 name='vehicle_exipration_date'
                                 value={validation.values.vehicle_exipration_date || ""}

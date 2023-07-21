@@ -17,8 +17,7 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
  * The below one is Saurabh's Computer Details
  */
 export const API_BASE_URL = "http://192.168.200.130:8000";
-// const apiBaseUrl = "http://192.168.200.130:8000";
-const apiBaseUrl = "http://localhost:8000"
+const apiBaseUrl = "http://192.168.200.130:8000";
 /**
  * The below one is own Computer Details
  */
