@@ -90,7 +90,7 @@ export async function getSingleCustomerData(cId){
     }
 }
 
-    export async function getVehiclesData(pageNumber){
+export async function getVehiclesData(pageNumber){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = {
@@ -111,14 +111,48 @@ export async function getSingleCustomerData(cId){
         }
         return errorObj.data
     }
-    }
+}
   
-  export async function getSingleVechileData(vId){
+export async function getSingleVechileData(vId){
     try {
-        console.log(vId)
+        console.log(url.GET_VEHICLES_SINGLE_DATA_URL+"/"+vId)
         const { data } = await axios.get(`${url.GET_VEHICLES_SINGLE_DATA_URL}/${vId}`);
-        console.log(data.vehicles)
-        return(data.vehicles)
+        console.log(data)
+        return(data)
+    } catch (error) {
+        return null
+    }
+}
+
+export async function getTaxationsData(pageNumber){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = {
+            "page" : pageNumber,
+            "limit" : pageLimit
+        }
+        const { data } = await axios.post(`${url.GET_TAXATION_ALL_DATA_URL}`,reqObj);
+        console.log("ddd",data)
+        return(data)
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data": {
+                "totalCount": 0,
+                "vehicles": []
+            }
+        }
+        return errorObj.data
+    }
+}
+
+export async function getSingleTaxationData(tId){
+    try {
+        const { data } = await axios.get(`${url.GET_TAXATION_SINGLE_DATA_URL}/${tId}`);
+        console.log("DDD",data)
+        return(data)
     } catch (error) {
         return null
     }

@@ -65,6 +65,17 @@ export const PUT_VEHICLES_UPDATE_STATUS = apiBaseUrl + token + "/updateStatus/ve
 // export const POST_CUSTOMER_EDIT_URL = apiBaseUrl + token + "/edit/customer"
 export const PUT_VEHICLES_REMOVE = apiBaseUrl + token + "/removeVehicle"
 
+
+
+/**TAXATION */
+export const GET_TAXATION_ALL_DATA_URL = apiBaseUrl + token + "/getAll/tax"
+export const GET_TAXATION_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/taxations"
+export const POST_TAXATION_ADD_URL = apiBaseUrl + token + "/add/taxation"
+export const PUT_TAXATION_UPDATE_STATUS = apiBaseUrl + token + "/update-status/taxation"
+export const POST_TAXATION_EDIT_URL = apiBaseUrl + token + "/update/taxation"
+export const PUT_TAXATION_REMOVE = apiBaseUrl + token + "/remove/taxation"
+
+
 // http://192.168.200.130:8000/horsecity661809/getAll/customers
 
 

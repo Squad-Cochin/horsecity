@@ -55,3 +55,15 @@ export async function removeDriver(driver_id){
         return { error : "Failed !"}
     }
 }
+
+/**Remove Taxation*/
+export async function removeTaxation(tax_id){
+    try {
+        console.log("data",url.PUT_TAXATION_REMOVE+"/"+tax_id)
+        const { data } = await axios.put(`${url.PUT_TAXATION_REMOVE}/${tax_id}`);
+        console.log("data",data)
+        return data;
+    } catch (error) {
+        return { error : "Failed !"}
+    }
+}

@@ -93,7 +93,7 @@ const ListVehiclesTable = () =>
     async function tog_view(productId) {
         console.log("rr",productId)
         let data = await getSingleVechileData(productId)
-        setVehicle(data); // Set the 'vehicle' state to the found vehicle data
+        setVehicle([data]); // Set the 'vehicle' state to the found vehicle data
         setView_modal(!view_modal); // Toggle 'view_modal' state
     }
 
@@ -421,9 +421,9 @@ const ListVehiclesTable = () =>
                             <input
                                 type="text"
                                 id="modal-field"
-                                name='models' // Updated the name attribute to 'models'
+                                name='model' // Updated the name attribute to 'models'
                                 className="form-control"
-                                value={validation.values.models || ""}
+                                value={validation.values.model || ""}
                                 onChange={validation.handleChange}
                                 placeholder="Enter Vehicle Model"
                                 required
@@ -866,9 +866,9 @@ const ListVehiclesTable = () =>
                             <input
                                 type="text"
                                 id="modal-field"
-                                name='models' // Updated the name attribute to 'models'
+                                name='model' // Updated the name attribute to 'models'
                                 className="form-control"
-                                value={validation.values.models || ""}
+                                value={validation.values.model || ""}
                                 readOnly
                             />
                         </div>
