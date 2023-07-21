@@ -5,13 +5,13 @@
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Import modules and files
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import LanguageDropdown from "../../components/Common/TopbarDropdown/LanguageDropdown";
 import { withTranslation } from "react-i18next";
 import logo from "../../assets/images/white-logo.png";
-
+import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 
 // Redux Store
 import {
   showRightSidebarAction,
@@ -23,6 +23,18 @@ import ProfileMenu from "../../components/Common/TopbarDropdown/ProfileMenu";
 // Header function
 const Header = (props) => {
   const [search, setsearch] = useState(false);
+  const [menulogo,setMenuLogo] = useState('')
+  useEffect(()=>{
+    getAllData()
+  },[])
+  console.log("log",menulogo);
+  async function getAllData() {
+    console.log("first")
+    let settingsData = await getSettingsPageData();
+    console.log("LLL",settingsData.settingsPageData);
+    setMenuLogo(settingsData?.settingsPageData[0]?.logo);
+
+}
   // Toggle screen function
   function toggleFullscreen() {
     if (
@@ -69,19 +81,19 @@ const Header = (props) => {
             <div className="navbar-brand-box text-center">
               <Link to="/" className="logo logo-dark">
                 <span className="logo-sm">
-                  <img src={logo} alt="logo-sm-dark" height="22" />
+                  <img src={menulogo} alt="logo-sm-dark" height="22" />
                 </span>
                 <span className="logo-lg">
-                  <img src={logo} alt="logo-dark" height="24" />
+                  <img src={menulogo} alt="logo-dark" height="24" />
                 </span>
               </Link>
 
               <Link to="/" className="logo logo-light">
                 <span className="logo-sm">
-                <img src={logo} alt="logo-sm-dark" height="22" />
+                <img src={menulogo} alt="logo-sm-dark" height="22" />
                 </span>
                 <span className="logo-lg">
-                  <img src={logo} alt="logo-light" height="60" />
+                  <img src={menulogo} alt="logo-light" height="60" />
                 </span>
               </Link>
             </div>

@@ -101,3 +101,34 @@ export async function getVehiclesData(pageNumber){
         return errorObj.data
     }
   }
+
+  export async function getSettingsPageData(){
+
+    console.log(url.GET_SETTINGS_ALL_DATA_URL+"/1");
+    try {
+        // let pageLimit = config.pageLimit;
+        // let reqObj = {
+        //     "page" : pageNumber,
+        //     "limit" : pageLimit
+        // }
+        let sId = 1
+        const { data } = await axios.get(`${url.GET_SETTINGS_ALL_DATA_URL}/${sId}`);
+        console.log("ddd",data)
+        return(data)
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data": {
+                "totalCount": 0,
+                "vehicles": []
+            }
+        }
+        return errorObj.data
+    }
+    // if(settings){
+    //   return settings ;
+    // }
+    // return null ;
+  }
