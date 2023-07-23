@@ -20,13 +20,13 @@ module.exports = class vehicles
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.scertificate);
+                let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);
                 // console.log(uploadSafetyCertificate);
                 let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, no_of_horse, air_conditioner, temp_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${serviceProviderId}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
-                console.log(insQuery);
+                // console.log(insQuery);
                 con.query(insQuery, (err, result) =>
                 {
-                    console.log(result);
+                    // console.log(result);
                     if(result.affectedRows > 0)
                     {
                         console.log('Vehicles data added successfully');
@@ -55,9 +55,9 @@ module.exports = class vehicles
                 const offset = (pageNumber - 1) * pageSize;
 
                 let selQuery = `SELECT v.id, sp.name AS service_provider, v.vehicle_number, v.make, v.no_of_horse, v.status FROM  ${constants.tableName.service_providers} sp, ${constants.tableName.vehicles} v WHERE sp.id = v.service_provider_id AND v.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
-                console.log(selQuery);
+                // console.log(selQuery);
                 const count = await commonoperation.totalCount(constants.tableName.vehicles)
-                console.log('Total Data', count[0]['count(t.id)']);
+                // console.log('Total Data', count[0]['count(t.id)']);
                 con.query(selQuery, (err, result) =>
                 {
                     // console.log(result);
@@ -87,7 +87,7 @@ module.exports = class vehicles
         {
             return await new Promise(async(resolve, reject)=>
             {
-                const vehicleData = await commonfetching.tableDataOnId(constants.tableName.vehicles, id);
+                const vehicleData = await commonfetching.dataOnCondition(constants.tableName.vehicles, id, 'id');
                 // console.log(vehicleData);
                 if(vehicleData.length === 0)
                 {
@@ -151,44 +151,13 @@ module.exports = class vehicles
     {
         try
         {
-            const data = await commonfetching.tableDataOnId(constants.tableName.vehicles, Id);
-            console.log('Data', data);
+            const data = await commonfetching.dataOnCondition(constants.tableName.vehicles, Id, 'id');
+            // console.log('Data', data);
 
-            let getserviceProviderName = await commonfetching.tableDataOnId(constants.tableName.service_providers,  data[0].service_provider_id)
+            let getserviceProviderName = await commonfetching.dataOnCondition(constants.tableName.service_providers,  data[0].service_provider_id, 'id')
 
-            console.log('Provider Name', getserviceProviderName[0].name);
+            // console.log('Provider Name', getserviceProviderName[0].name);
             let returnObj =
-                // {
-                // "id": data[0].id,
-                // "service_provider_id": data[0].service_provider_id,
-                // "service_provider" : getserviceProviderName[0].name,
-                // "vehicle_number": data[0].vehicle_number,
-                // "make": data[0].make,
-                // "model": data[0].model,
-                // "color": data[0].color,
-                // "length": data[0].length,
-                // "breadth": data[0].breadth,
-                // "height": data[0].height,
-                // "no_of_horse": data[0].no_of_horse,
-                // "air_conditioner": data[0].air_conditioner,
-                // "temp_manageable": data[0].temp_manageable,
-                // "registration_no": data[0].registration_no,
-                // "gcc_travel_allowed": data[0].gcc_travel_allowed,
-                // "insurance_cover": data[0].insurance_cover,
-                // "insurance_date": data[0].insurance_date,
-                // "insurance_policy_no": data[0].insurance_policy_no,
-                // "insurance_provider": data[0].insurance_provider,
-                // "insurance_expiration_date": data[0].insurance_expiration_date,
-                // "safety_certicate": data[0].safety_certicate,
-                // "vehicle_type": data[0].vehicle_type,
-                // "vehicle_registration_date": data[0].vehicle_registration_date,
-                // "vehicle_exipration_date": data[0].vehicle_exipration_date,
-                // "status": data[0].status,
-                // "created_at": data[0].created_at,
-                // "updated_at": data[0].updated_at,
-                // "deleted_at": data[0].deleted_at
-                // }
-
                 {
                     "id": data[0].id,
                     "service_provider_id": data[0].service_provider_id,
@@ -249,7 +218,7 @@ module.exports = class vehicles
     {
         try
         {
-            let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.scertificate);
+            let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);
             // console.log(uploadSafetyCertificate);
             let upQuery = `UPDATE ${constants.tableName.vehicles} v SET v.service_provider_id = '${serviceProviderId}', v.vehicle_number = '${vehicle_number}', v.make = '${make}', v.model = '${model}', v.color = '${color}', v.length = '${length}', v.breadth = '${breadth}', v.height = '${height}', v.max_no_of_horse = '${max_no_of_horse}', v.air_conditioner = '${air_conditioner}', v.temp_manageable ='${temp_manageable}', v.registration_no ='${registration_no}', v.gcc_travel_allowed = '${gcc_travel_allowed}', v.insurance_cover = '${insurance_cover}', v.insurance_date = '${insurance_date}', v.insurance_policy_no = '${insurance_policy_no}', v.insurance_provider = '${insurance_provider}', v.insurance_expiration_date = '${insurance_expiration_date}', v.vehicle_type = '${vehicle_type}', v.vehicle_registration_date = '${vehicle_registration_date}', v.vehicle_exipration_date = '${vehicle_exipration_date}', v.safety_certicate ='${uploadSafetyCertificate}', v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE id = '${id}' `;
             console.log(upQuery);

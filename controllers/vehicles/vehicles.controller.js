@@ -16,8 +16,31 @@ const vehicle = require('../../models/vehicles/vehicle.model');
 
 exports.addNew = async (req, res, next) =>
 {  
-    console.log('REeached'); 
-    const vehicles = await vehicle.addnew(req.body.service_provider_id, req.body.vehicle_number, req.body.make, req.body.model, req.body.color, req.body.length, req.body.breadth, req.body.height, req.body.no_of_horse, req.body.air_conditioner, req.body.temperature_manageable, req.body.vehicle_registration_number, req.body.gcc_travel_allowed, req.body.insurance_cover, req.body.insurance_date, req.body.insurance_policy_no, req.body.insurance_policy_provider, req.body.insurance_expiry_date, req.files.safety_certicate, req.body.vehicle_type, req.body.vehicle_registration_date, req.body.vehicle_exipration_date);
+    const vehicles = await vehicle.addnew
+    (
+        req.body.service_provider_id,
+        req.body.vehicle_number,
+        req.body.make,
+        req.body.model,
+        req.body.color,
+        req.body.length,
+        req.body.breadth,
+        req.body.height,
+        req.body.no_of_horse,
+        req.body.air_conditioner,
+        req.body.temperature_manageable,
+        req.body.vehicle_registration_number,
+        req.body.gcc_travel_allowed,
+        req.body.insurance_cover,
+        req.body.insurance_date,
+        req.body.insurance_policy_no,
+        req.body.insurance_policy_provider,
+        req.body.insurance_expiration_date,
+        req.files.safety_certicate,
+        req.body.vehicle_type,
+        req.body.vehicle_registration_date,
+        req.body.vehicle_expiration_date
+    );
     
     if(vehicles === 'err')
     {
@@ -43,7 +66,6 @@ exports.addNew = async (req, res, next) =>
 
 exports.getAll = async (req, res, next) =>
 {
-    console.log('Hariprasad');
     const vehicles = await vehicle.getall(req.body.page, req.body.limit)
     // console.log(vehicles);
     if(vehicles === 'err')
@@ -129,7 +151,7 @@ exports.updateStatus = async (req, res, next) =>
 exports.getOne = async (req, res, next) =>
 {
     const vehicles = await vehicle.getone(req.params.id)
-    console.log('vehicles : ',vehicles);
+    // console.log('vehicles : ',vehicles);
     if(vehicles === 'nodata')
     {
         console.log('No vehicle data present');
@@ -171,7 +193,32 @@ exports.getOne = async (req, res, next) =>
 }
 exports.updateData = async (req, res, next) =>
 {
-    const vehicles = await vehicle.updatedata(req.params.id, req.body.service_provider_id, req.body.vehicle_number, req.body.make, req.body.model, req.body.color, req.body.length, req.body.breadth, req.body.height, req.body.no_of_horse, req.body.air_conditioner, req.body.temperature_manageable, req.body.vehicle_registration_number, req.body.gcc_travel_allowed, req.body.insurance_cover, req.body.insurance_date, req.body.insurance_policy_no, req.body.insurance_policy_provider, req.body.insurance_expiration_date, req.body.vehicle_type, req.body.vehicle_registration_date, req.body.vehicle_expiration_date, req.files.safety_certicate);
+    const vehicles = await vehicle.updatedata
+    (
+        req.params.id,
+        req.body.service_provider_id,
+        req.body.vehicle_number,
+        req.body.make,
+        req.body.model,
+        req.body.color,
+        req.body.length,
+        req.body.breadth,
+        req.body.height,
+        req.body.no_of_horse,
+        req.body.air_conditioner,
+        req.body.temperature_manageable,
+        req.body.vehicle_registration_number,
+        req.body.gcc_travel_allowed,
+        req.body.insurance_cover,
+        req.body.insurance_date,
+        req.body.insurance_policy_no,
+        req.body.insurance_policy_provider,
+        req.body.insurance_expiration_date,
+        req.body.vehicle_type,
+        req.body.vehicle_registration_date,
+        req.body.vehicle_expiration_date,
+        req.files.safety_certicate
+    );
 
     if(vehicles === 'err')
     {

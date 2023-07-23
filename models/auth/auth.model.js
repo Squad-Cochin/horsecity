@@ -4,7 +4,6 @@
 //                                                                                     //
 /////////////////////////////////////////////////////////////////////////////////////////
 
-const { resolve } = require('path');
 const constant = require('../../utils/constants');
 const commonfetching = require('../../utils/helper/commonfetching');
 const commonoperation = require('../../utils/helper/commonoperation'); 
@@ -20,7 +19,7 @@ module.exports = class authentication
     {
         try
         {
-            const userData = await commonfetching.userDataOnUsername('service_providers', username);
+            const userData = await commonfetching.dataOnCondition(tableName, req.body.userName, 'user_name')(constant.tableName.service_providers, username);
             // console.log("User data:", userData);
             if (userData.length === 0) 
             {
@@ -29,6 +28,8 @@ module.exports = class authentication
             else
             {
                 const passwordHashed = await commonoperation.changePasswordToSQLHashing(password);
+                // console.log(passwordHashed);
+                // console.log(userData[0].password);
                 if (userData[0].password === passwordHashed)
                 { 
                     if(userData[0].status === constant.status.inactive)
@@ -41,8 +42,6 @@ module.exports = class authentication
                         const expiryDate = new Date(userData[0].expiry_at).getTime();
                         if(givenDate > expiryDate)
                         {    
-                            // checks if token is more then certain time old
-                            // sendEmail.resetPassword(req.user); // if token is expired, a new token is sent to email-Id
                             return 'passwordexpired';
                         }
                         else
@@ -69,7 +68,7 @@ module.exports = class authentication
     {
         try
         {
-            const userData = await commonfetching.userDataOnUsername('service_providers', username);
+            const userData = await commonfetching.dataOnCondition(tableName, req.body.userName, 'user_name')(constant.tableName.service_providers, username);
             if (userData.length === 0) 
             {
                 return 'noserviceprovider';
@@ -111,7 +110,7 @@ module.exports = class authentication
 
     static async serviceproviderlogout(username, password) 
     {
-        const userData = await commonfetching.userDataOnUsername('service_providers', username);
+        const userData = await commonfetching.dataOnCondition(tableName, req.body.userName, 'user_name')(constant.tableName.service_providers, username);
         if (userData.length === 0) 
             {
                 return 'noserviceprovider';

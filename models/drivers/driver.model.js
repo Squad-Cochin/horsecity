@@ -39,7 +39,7 @@ module.exports = class drivers
     {
         try
         {
-            const data = await commonfetching.tableDataOnId(constants.tableName.drivers, Id);
+            const data = await commonfetching.dataOnCondition(constants.tableName.drivers, Id, 'id');
             // console.log('Data', data);
             if(data.length === 0)
             {
@@ -47,18 +47,16 @@ module.exports = class drivers
             }
             else
             {
-                console.log('Came inside');
+                // console.log('Came inside');
                 let dob = data[0].date_of_birth;
-                console.log('Dob: ', dob);
+                // console.log('Dob: ', dob);
                 data[0].date_of_birth = convertDate(dob); 
                 let driverProfileImage = data[0].profile_image;
-                data[0].profile_image = `${process.env.PORT_SP}${constants.attachmentLocation.driver.fetchprofilephoto}${driverProfileImage}`;
+                data[0].profile_image = `${process.env.PORT_SP}${constants.attachmentLocation.driver.view.profilephoto}${driverProfileImage}`;
                 console.log("Driver profile image link: ", data[0].profile_image);
-
                 let driverlicenceImage = data[0].licence_img;
-                data[0].licence_img = `${process.env.PORT_SP}${constants.attachmentLocation.driver.fetchlicence}${driverlicenceImage}`;
-                console.log('Driver licence image link: ', data[0].licence_img);
-                
+                data[0].licence_img = `${process.env.PORT_SP}${constants.attachmentLocation.driver.view.licence}${driverlicenceImage}`;
+                console.log('Driver licence image link: ', data[0].licence_img);      
                 return data;
             }            
         }
@@ -74,12 +72,12 @@ module.exports = class drivers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.profilephoto);
+                let uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.upload.profilephoto);
                 // console.log(uploadprofile_image);
-                let uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.licence);
+                let uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.upload.licence);
                 // console.log(uploadprofile_image);
                 let insQuery = `INSERT INTO ${constants.tableName.drivers}(name, email, contact_no, emergency_contact_no, date_of_birth, profile_image, licence_no , licence_img , description, created_at) VALUES('${name}', '${email}', '${contact_no}', '${emergency_contact_no}', '${date_of_birth}', '${uploadprofile_image}', '${licence_no}', '${uploadlicence_img}', '${description}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                console.log(insQuery);
+                // console.log(insQuery);
                 con.query(insQuery, (err, result) =>
                 {
                     // console.log(result);
@@ -150,15 +148,15 @@ module.exports = class drivers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.profilephoto);
-                console.log(uploadprofile_image);
-                let uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.licence);
-                console.log(uploadprofile_image);
+                let uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.upload.profilephoto);
+                // console.log(uploadprofile_image);
+                let uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.upload.licence);
+                // console.log(uploadprofile_image);
                 let upQuery = `UPDATE ${constants.tableName.drivers} d SET d.name = '${name}', d.email = '${email}', d.contact_no = '${contact_no}', d.emergency_contact_no = '${emergency_contact_no}', d.date_of_birth = '${date_of_birth}', d.licence_no = '${licence_no}', d.description = '${description}', d.licence_img  = '${uploadlicence_img}', d.profile_image = '${uploadprofile_image}', d.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE d.id = '${id}'`;
-                console.log(upQuery);
+                // console.log(upQuery);
                 con.query(upQuery, (err, result) =>
                 {
-                    console.log(result);
+                    // console.log(result);
                     if(result.affectedRows > 0)
                     {
                         console.log('Driver data updated successfully');

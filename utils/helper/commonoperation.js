@@ -293,7 +293,7 @@ exports.fileUploadTwo = async (attachments, path) =>
                     }
                     else
                     {
-                        console.log('File Uploaded');
+                        // console.log('File Uploaded');
                         // resolve({message : 'INVALIDFORMAT'});
                         resolve(filename);
                     }

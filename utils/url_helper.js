@@ -1,13 +1,8 @@
-const token = "/horsecity661809"
+const token = `/${process.env.apiToken}`
+const UPDATE_SERVICE_PROVIDER_URL = token + `/update/serviceprovider/`
+const UPDATE_SETTINGS_PAGE_URL = token + `/update/settings/` 
+const UPDATE_CUSTOMER_PAGE_URL = token + `/edit/customer/` 
+const UPDATE_DRIVER_PAGE_URL = token + `/edit/driver/` 
+const UPDATE_VEHICLE_PAGE_URL = token + `/edit/vehicle/` 
 
-const UPDATE_SERVICE_PROVIDER_URL = token + "/update/serviceprovider/"
-
- const UPDATE_SETTINGS_PAGE_URL = token + "/update/settings"
-
-
-
-module.exports=
-{
-    UPDATE_SERVICE_PROVIDER_URL,
-    UPDATE_SETTINGS_PAGE_URL
-}
+module.exports= { UPDATE_SERVICE_PROVIDER_URL, UPDATE_SETTINGS_PAGE_URL, UPDATE_CUSTOMER_PAGE_URL, UPDATE_DRIVER_PAGE_URL, UPDATE_VEHICLE_PAGE_URL }

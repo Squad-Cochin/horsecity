@@ -41,21 +41,21 @@ module.exports = class customers
     {
         try
         {
-            const data = await commonfetching.tableDataOnId(constants.tableName.customers, Id);
-            console.log('Data : ', data);
+            const data = await commonfetching.dataOnCondition(constants.tableName.customers, Id, 'id');
+            // console.log('Data : ', data);
             if(data.length === 0)
             {
                 return data
             }
             else
             {
-                console.log('Came inside');
+                // console.log('Came inside');
                 let dob = data[0].date_of_birth;
-                console.log('Dob: ', dob);
+                // console.log('Dob: ', dob);
                 data[0].date_of_birth = convertDate(dob); 
                 let idProofImage = data[0].id_proof_image;
-                data[0].id_proof_image = `${process.env.PORT_SP}${constants.attachmentLocation.customer.fetchidProof}${idProofImage}`;
-                console.log("Link: ", data[0].id_proof_image);
+                data[0].id_proof_image = `${process.env.PORT_SP}${constants.attachmentLocation.customer.view.idProof}${idProofImage}`;
+                // console.log("Link: ", data[0].id_proof_image);
                 return data;
             }            
         }
@@ -71,8 +71,8 @@ module.exports = class customers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let uploadAttachment = await commonoperation.fileUploadTwo(files, constants.attachmentLocation.customer.idProof);
-                console.log(uploadAttachment);
+                let uploadAttachment = await commonoperation.fileUploadTwo(files, constants.attachmentLocation.customer.upload.idProof);
+                // console.log(uploadAttachment);
                 //INVALIDFORMAT,NOATTACHEMENT,ERR
                 if(uploadAttachment === 'INVALIDFORMAT')
                 {
@@ -90,7 +90,7 @@ module.exports = class customers
                 else
                 {
                     let insQuery = `INSERT INTO customers(name, email, user_name, password, contact_no, date_of_birth, id_proof_no, id_proof_image, phone_verified, email_verified, expiry_at, created_at) VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', '${id_proof_no}', '${uploadAttachment}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                    console.log(insQuery);
+                    // console.log('Customer insert query: ', insQuery);
                     con.query(insQuery, (err, result) =>
                     {
                         // console.log(result);
@@ -120,15 +120,13 @@ module.exports = class customers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let uploadAttachment = await commonoperation.fileUploadTwo(id_proof_image, constants.attachmentLocation.customer.idProof);
-                // let uploadAttachment = await commonoperation.fileUploadTwo(file?.id_proof_image, constants.attachmentLocation.customer.idProof);
-                console.log(uploadAttachment);
+                let uploadAttachment = await commonoperation.fileUploadTwo(id_proof_image, constants.attachmentLocation.customer.upload.idProof);
                 // const {name, email, userName, contact_no, date_of_birth, id_proof_no} = requestBody ;
                 let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.id_proof_image = '${uploadAttachment}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
-                console.log(upQuery);
+                // console.log(upQuery);
                 con.query(upQuery, (err, result) =>
                 {
-                    console.log(result);
+                    // console.log(result);
                     if(result.affectedRows > 0)
                     {
                         console.log('Customer data updated successfully');
@@ -229,8 +227,10 @@ module.exports = class customers
 };
 
 
-function convertDate(originalDateStr) {
-    const months = {
+function convertDate(originalDateStr) 
+{
+    const months = 
+    {
       Jan: '01',
       Feb: '02',
       Mar: '03',
@@ -243,12 +243,10 @@ function convertDate(originalDateStr) {
       Oct: '10',
       Nov: '11',
       Dec: '12',
-    };
-  
+    };  
     const parts = originalDateStr.split(' ');
     const day = parts[2];
     const month = months[parts[1]];
     const year = parts[3];
-  
     return `${day}-${month}-${year}`;
-  }
+}

@@ -1,5 +1,6 @@
 const constants = require("../../utils/constants");
 const commonfetching = require(`../../utils/helper/commonfetching`);
+const checkInput = require(`./checkRequestBodyInput`);
 
 exports.isServiceProviderIdEntered = (tableName) =>async (req, res, next) =>
 {
@@ -14,7 +15,7 @@ exports.isServiceProviderIdEntered = (tableName) =>async (req, res, next) =>
     }
     else
     {
-        const data = await commonfetching.tableDataOnId(tableName, req.body.service_provider_id)
+        const data = await commonfetching.dataOnCondition(tableName, req.body.service_provider_id, 'id')
         if(data === 'err' || !data)
         {
             return res.status(500).json
@@ -26,7 +27,7 @@ exports.isServiceProviderIdEntered = (tableName) =>async (req, res, next) =>
         }
         else if(data.length > 0)
         {
-            console.log('service provider id Present');
+            // console.log('service provider id Present');
             next()          
         }
         else
@@ -38,49 +39,6 @@ exports.isServiceProviderIdEntered = (tableName) =>async (req, res, next) =>
                 status: false,
                 message: "This service provider id doesn't exists in the database"
             });
-        }
-    }
-}  
-
-
-exports.isValidVehicleNumberEntered = (tableName) => async (req, res, next) =>
-{
-    if (!req.body.vehicle_number) 
-    {
-        return res.status(200).send
-        ({
-            code: 200,
-            status: false,
-            message: "Vehicle number is required"
-        });
-    }
-    else
-    {
-        const data = await commonfetching.vehiclesMiddleware(tableName, 'vehicle_number',req.body.vehicle_number)
-        console.log(data);
-        if(data === 'err' || !data)
-        {
-            return res.status(500).json
-            ({
-                code : 200,
-                status : "failed",
-                error: 'Internal server error while number plate' 
-            });
-        }
-        else if(data.length > 0)
-        {
-            console.log('Vehicle number already Present');
-            return res.status(200).send
-            ({
-                code: 400,
-                status: false,
-                message: "This vehicle number already exists in the database"
-            });
-        }
-        else
-        {
-            console.log(`Vehicle number doesn't exist`);
-            next();           
         }
     }
 }
@@ -295,7 +253,7 @@ exports.isAirConditionerValueEntered = (req, res, next) =>
     }
     else if(req.body.air_conditioner === 'YES')
     {
-        console.log('AC present');
+        // console.log('AC present');
         next();
     }
     else if(req.body.air_conditioner === 'NO')
@@ -315,11 +273,9 @@ exports.isAirConditionerValueEntered = (req, res, next) =>
     }
 }
 
-///
-
 exports.isTemperaturControlValueEntered = (req, res, next) =>
 {
-    if(!req.body.temp_manageable)
+    if(!req.body.temperature_manageable)
     {
         return res.status(200).send
         ({
@@ -328,12 +284,12 @@ exports.isTemperaturControlValueEntered = (req, res, next) =>
             message: "Vehicle is enabled with temperature control. Details required"
         });        
     }
-    else if(req.body.temp_manageable === 'YES')
+    else if(req.body.temperature_manageable === 'YES')
     {
-        console.log('Temperature control present');
+        // console.log('Temperature control present');
         next();
     }
-    else if(req.body.temp_manageable === 'NO')
+    else if(req.body.temperature_manageable === 'NO')
     {
         console.log('Temperature control Not Present');
         next();
@@ -365,7 +321,7 @@ exports.isGCCTravelValueEntered = (req, res, next) =>
     }
     else if(req.body.gcc_travel_allowed === 'YES')
     {
-        console.log('GCC travel present');
+        // console.log('GCC travel present');
         next();
     }
     else if(req.body.gcc_travel_allowed === 'NO')
@@ -398,7 +354,7 @@ exports.isInsuranceCoverValueEntered = (req, res, next) =>
     }
     else if(req.body.insurance_cover === 'YES')
     {
-        console.log('Insurance present');
+        // console.log('Insurance present');
         next();
     }
     else if(req.body.insurance_cover === 'NO')
@@ -431,9 +387,9 @@ exports.isRegistrationNumberEntered = async (req, res, next) =>
     }
     else
     {
-        console.log('Vehicle registration number is entered');
-        const data = await commonfetching.vehiclesMiddleware(constants.tableName.vehicles, 'registration_no', req.body.vehicle_registration_number);
-        console.log('Registration numberd: ', data);
+        // console.log('Vehicle registration number is entered');
+        const data = await commonfetching.dataOnCondition(constants.tableName.vehicles, req.body.vehicle_registration_number, 'registration_no')
+        console.log('Data while cheking vehicle registration number: ', data);
         if(!data || data === 'err')
         {
             console.log(`Vehicle registration number doesn't exist`);
@@ -476,9 +432,9 @@ exports.isInsuranceNumberEntered = async (req, res, next) =>
     }
     else
     {
-        console.log('Vehicle Insurance cover is entered');
-        const data = await commonfetching.vehiclesMiddleware(constants.tableName.vehicles, 'insurance_policy_no', req.body.insurance_policy_no);
-        console.log('Insurance number: ', data);
+        // console.log('Vehicle Insurance cover is entered');
+        const data = await commonfetching.dataOnCondition(constants.tableName.vehicles, req.body.insurance_policy_no, 'insurance_policy_no')
+        console.log('Data while cheking vehicle insurance cover number: ', data);
         if(!data || data === 'err')
         {
             console.log(`Vehicle registration number doesn't exist`);
@@ -556,7 +512,7 @@ exports.insurancePolicyProviderEntered = (req, res, next) =>
     }
     else
     {
-        console.log('Insurance provider name is entered');
+        // console.log('Insurance provider name is entered');
         next();
     }
 }
@@ -665,17 +621,17 @@ exports.isValidVehicleTypeEntered = (req, res, next) =>
     }
     else if(req.body.vehicle_type === 'PRIVATE')
     {
-        console.log('Vehicle Type PRIVATE');
+        // console.log('Vehicle Type PRIVATE');
         next();
     }
     else if(req.body.vehicle_type === 'GCC')
     {
-        console.log('Vehicle Type GCC');
+        // console.log('Vehicle Type GCC');
         next();
     }
     else if(req.body.vehicle_type === 'SHARING')
     {
-        console.log('Vehicle Type SHARING');
+        // console.log('Vehicle Type SHARING');
         next();
     }
     else
@@ -704,8 +660,7 @@ function hasOnlyNonSpaces(str)
     }
 }
 
-
-exports.isValidVehicleNumberEnteredWhileUpdate = (tableName) => async (req, res, next) =>
+exports.isValidVehicleNumberEntered = (tableName) => async (req, res, next) =>
 {
     if (!req.body.vehicle_number) 
     {
@@ -717,32 +672,50 @@ exports.isValidVehicleNumberEnteredWhileUpdate = (tableName) => async (req, res,
         });
     }
     else
-    {
-        const data = await commonfetching.vehiclesMiddleware(tableName, 'vehicle_number',req.body.vehicle_number)
-        console.log(data);
-        if(data === 'err' || !data)
+    {        
+        if(req.method === 'POST')
         {
-            return res.status(500).json
-            ({
-                code : 200,
-                status : "failed",
-                error: 'Internal server error while number plate' 
-            });
+            checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params.id, 'Vehicle number')(req, res, next);                        
         }
-        else if(data.length > 0)
+        else if(req.method === `PUT` && req.url === url.UPDATE_DRIVER_PAGE_URL + req.params.id)
         {
-            console.log('Vehicle number already Present');
-            return res.status(200).send
-            ({
-                code: 400,
-                status: false,
-                message: "This vehicle number already exists in the database"
-            });
+            checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params.id, 'Vehicle number')(req, res, next);
         }
         else
         {
-            console.log(`Vehicle number doesn't exist`);
-            next();           
+            return res.status(500).json
+            ({
+                code : 500,
+                status : false, 
+                message : `Internal server error. While checking the vehicle number.` 
+            });
         }
+
+        // const data = await commonfetching.dataOnCondition(tableName, req.body.vehicle_number, 'vehicle_number')
+        // console.log('Data while cheking vehicle number plate:', data);
+        // if(data === 'err' || !data)
+        // {
+        //     return res.status(500).json
+        //     ({
+        //         code : 200,
+        //         status : "failed",
+        //         error: 'Internal server error while number plate' 
+        //     });
+        // }
+        // else if(data.length > 0)
+        // {
+        //     console.log('Vehicle number already Present');
+        //     return res.status(200).send
+        //     ({
+        //         code: 400,
+        //         status: false,
+        //         message: "This vehicle number already exists in the database"
+        //     });
+        // }
+        // else
+        // {
+        //     console.log(`Vehicle number doesn't exist`);
+        //     next();           
+        // }
     }
 }

@@ -23,15 +23,27 @@ module.exports =
     {
         customer : 
         {
-            idProof : `${__dirname}../../Attachements/Customers/IdProofs/`,
-            fetchidProof : `/Customers/IdProofs/`,           
+            view : 
+            {
+                idProof : `/Customers/IdProofs/`,                 
+            },
+            upload :
+            {
+                idProof : `${__dirname}../../Attachements/Customers/IdProofs/`,
+            }       
         },
         driver :
         {
-            licence : `${__dirname}../../Attachements/Drivers/Licence/`,
-            fetchlicence :`/Drivers/Licence/`,
-            profilephoto : `${__dirname}../../Attachements/Drivers/ProfilePhoto/`,
-            fetchprofilephoto : `/Drivers/ProfilePhoto/`,
+            view :
+            {
+                licence : `/Drivers/Licence/`,
+                profilephoto : `/Drivers/ProfilePhoto/`
+            },
+            upload :
+            {
+                licence : `${__dirname}../../Attachements/Drivers/Licence/`,
+                profilephoto : `${__dirname}../../Attachements/Drivers/ProfilePhoto/`               
+            }
         },
         serviceProvider :
         {
@@ -43,9 +55,16 @@ module.exports =
         },
         vehicle :
         {
-            scertificate : `${__dirname}../../Attachements/Vehicles/scertificate/`,
-            images : `${__dirname}../../Attachements/Vehicles/images/`,
-            fetchimages : `/Vehicles/images/`
+            view :
+            {
+                image : `/Vehicles/images/`,
+                scertificate : `/Vehicles/scertificate`
+            },
+            upload :
+            {
+                scertificate : `${__dirname}../../Attachements/Vehicles/scertificate/`,
+                images : `${__dirname}../../Attachements/Vehicles/images/`
+            }
         },
         applicationSettings : 
         {
@@ -64,7 +83,7 @@ module.exports =
         getAllErr : `Error while fetching all the data`,
         getOne : `Particular data fetched Successfully`,
         getOneErr : `Particular data fetched failed`,
-        insert : `Data inserted succesfully`,
+        insert : `data inserted succesfully`,
         errorInsert : `Error while inserting data`,
         statusinactive : `status changed to INACTIVE`,
         statusactive : `status changed to ACTIVE`,
@@ -72,7 +91,7 @@ module.exports =
         statusChanged : `Status Changed`,
         removesuccess : `Data Removed`,
         removeerror : `Error While removing`,
-        edit : `Data updated successfully`,
+        edit : `data updated successfully`,
         erroredit : `Error while updating the data`,
         vehiclesuccess : `Vehicles data added successfully`,
         vehicleerror : `Error while adding the vehicles data`,

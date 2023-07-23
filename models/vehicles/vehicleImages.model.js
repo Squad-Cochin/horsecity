@@ -20,7 +20,7 @@ module.exports = class vehicleImages
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let uploadVehicleImage = await commonoperation.fileUploadTwo(image, constants.attachmentLocation.vehicle.images);
+                let uploadVehicleImage = await commonoperation.fileUploadTwo(image, constants.attachmentLocation.vehicle.upload.images);
                 console.log(uploadVehicleImage);
                 let insQuery = `INSERT INTO vehicles_images(vehicle_id, image, title, uploaded_at) VALUES(${id}, '${uploadVehicleImage}', '${title}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                 console.log(insQuery);
@@ -66,7 +66,7 @@ module.exports = class vehicleImages
                         for (let i = 0; i < result.length; i++) {
                           let returnObj = {
                             id: result[i].id,
-                            url: `${process.env.PORT_SP}${constants.attachmentLocation.vehicle.fetchimages}${result[i].image}`,
+                            url: `${process.env.PORT_SP}${constants.attachmentLocation.vehicle.view.image}${result[i].image}`,
                             updated_at: result[i].updated_at,
                             status: result[i].status,
                           };

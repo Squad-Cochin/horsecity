@@ -7,8 +7,8 @@ module.exports = function(app)
 {
     // The below route is for login of service provider user.
     app.post(`/${process.env.apiToken}/login`,
-    checkInput.usernameValidation(constants.tableName.service_providers),
-    checkInput.passwordValidation,
+    // checkInput.usernameValidation(constants.tableName.service_providers),
+    // checkInput.passwordValidation,
     authcontroller.serviceProviderLogin);
     
     // app.post(`/${process.env.apiToken}/login`, (req, res)=>{ console.log("Came here"); });

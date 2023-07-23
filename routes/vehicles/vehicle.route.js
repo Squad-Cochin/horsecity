@@ -44,9 +44,9 @@ module.exports = (app) =>
     vehicleController.getOne);
 
     // The below route is for updating particular vehicle data.
-    app.put(`/${process.env.apiToken}/updateData/vehicle/:id`,
+    app.put(`/${process.env.apiToken}/edit/vehicle/:id`,
     checkInput.isServiceProviderIdEntered(constants.tableName.service_providers),
-    checkInput. isValidVehicleNumberEnteredWhileUpdate(constants.tableName.vehicles),
+    checkInput.isValidVehicleNumberEntered(constants.tableName.vehicles),
     checkInput.isManufacturerEntered,
     checkInput.isColorEntered,
     checkInput.isModelEntered,
