@@ -12,6 +12,7 @@ import LanguageDropdown from "../../components/Common/TopbarDropdown/LanguageDro
 import { withTranslation } from "react-i18next";
 import logo from "../../assets/images/white-logo.png";
 import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 
+import { useSelector } from "react-redux";
 // Redux Store
 import {
   showRightSidebarAction,
@@ -27,6 +28,11 @@ const Header = (props) => {
   useEffect(()=>{
     getAllData()
   },[])
+  const { file } = useSelector(state => ({
+    file: state.settings.file,
+  }));
+  console.log("file",file);
+
   console.log("log",menulogo);
   async function getAllData() {
     console.log("first")

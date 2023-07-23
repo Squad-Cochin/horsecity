@@ -6,6 +6,7 @@ import Header from '../../Layout/VerticalLayout/Header';
 import { updateSettings} from '../../helpers/ApiRoutes/editApiRoutes';
 import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 
 import { useFormik } from "formik";
+import { uploadMenuImg } from "../../store/actions";
 import { useSelector, useDispatch } from "react-redux";
 const SettingPage = () => 
 {
@@ -69,17 +70,19 @@ const SettingPage = () =>
         values.loginpage_bg_image = loginPageBackgroundImg
         values.loginpage_logo = loginPageLogo
 
-                   console.log("values",values.id,values);    
+                  //  console.log("values",values.id,values);    
 
-                  //  dispatch(loginUser(menuLogoPreview));
+                   dispatch(uploadMenuImg("hello"));
+                   console.log("menulogo",menuLogoPreview);
 
-                  let updateSettings = await updateSettings(1,values);
-                  if(updateSettings.code === 200){
+                  let updateSettingsPage = await updateSettings(1,values);
+                  console.log("update",updateSettingsPage);
+                  if(updateSettingsPage.code === 200){
                       setErrors("")
                   }else{
                       setErrors("")
-                      console.log("ERRRRR",updateSettings);
-                      setErrors(updateSettings.message)
+                      console.log("ERRRRR",updateSettingsPage);
+                      setErrors(updateSettingsPage.message)
                   }
       }
     });

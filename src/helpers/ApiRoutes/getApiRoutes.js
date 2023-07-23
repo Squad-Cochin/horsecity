@@ -158,7 +158,7 @@ export async function getTaxationsData(pageNumber){
         //     "limit" : pageLimit
         // }
         let sId = 1
-        const { data } = await axios.get(`${url.GET_SETTINGS_ALL_DATA_URL}/${sId}`);
+        const { data } = await axios.get(`${url.GET_SETTINGS_ALL_DATA_URL}`);
         console.log("ddd",data)
         return(data)
     } catch (error) {

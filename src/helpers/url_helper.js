@@ -77,7 +77,7 @@ export const PUT_TAXATION_REMOVE = apiBaseUrl + token + "/remove/taxation"
 
 // http://192.168.200.130:8000/horsecity661809/getAll/customers
 /**SETTINGS*/
-export const GET_SETTINGS_ALL_DATA_URL = apiBaseUrl + token + "/getOne/settings"
+export const GET_SETTINGS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/settings"
 export const PUT_SETTINGS_EDIT_URL = apiBaseUrl + token + "/update/settings"
 
 

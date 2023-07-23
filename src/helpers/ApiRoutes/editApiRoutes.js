@@ -168,7 +168,7 @@ export async function updateSettings(id,data){
       }
       console.log("datas",data)
       // Send the form data as a POST request using Axios
-      const response = await axios.put(`${url.PUT_SETTINGS_EDIT_URL}/${id}`, formData, {
+      const response = await axios.put(`${url.PUT_SETTINGS_EDIT_URL}`, formData, {
           headers: {
           'Content-Type': 'multipart/form-data'
           }
