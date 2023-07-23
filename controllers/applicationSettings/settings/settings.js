@@ -9,7 +9,7 @@ const commonoperation = require('../../../utils/helper/commonoperation');
 exports.updateSettings = async(req,res)=>
 {
 console.log(req.body);
-    let settingsPage = await settings.updateSettings(req.body,req.files,req.params.id);
+    let settingsPage = await settings.updateSettings(req.body,req.files);
     console.log("new",settingsPage);
     if(settingsPage.status == 'INVALIDFORMAT'){
         return res.status(200).send({
@@ -42,7 +42,7 @@ console.log(req.body);
 exports.getSettingsData = async(req,res)=>
 {
 
-    let settingsPage = await settings.getSettingsData(req.params?.id);
+    let settingsPage = await settings.getSettingsData();
     console.log("new",settingsPage);
    if(settingsPage.settingsPageData == 'NOTFOUND'){
     return res.status(200).send

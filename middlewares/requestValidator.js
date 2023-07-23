@@ -89,7 +89,7 @@ exports.emailValidation = async (req, res, next) => {
     const requestMethod = req.method;
     const URL = req.url
     console.log("url",URL);
-    console.log("url2",url.UPDATE_SETTINGS_PAGE_URL  + req.params?.id);
+    console.log("url2",url.UPDATE_SETTINGS_PAGE_URL);
     if (!email) {
         return res.status(200).send
             ({
@@ -177,7 +177,7 @@ exports.emailValidation = async (req, res, next) => {
                         } 
              
                 });
-             }else if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL  + req.params?.id){
+             }else if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL){
                 console.log("done");
                     next()
              }
@@ -282,7 +282,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
         //         message: "Invalid Licence number",   // Or error message
         //     });
         // }
-    }else if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL  + req.params?.id){
+    }else if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL ){
          const { licence_number} = req.body;
     
         
@@ -417,7 +417,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                     });
              }}}
              
-             if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL  + req.params?.id){
+             if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL  ){
                
                 const { language_id,currency_id,tax_id,phone, country_code,invoice_prefix,quotation_prefix} = req.body;
                     if(!country_code){

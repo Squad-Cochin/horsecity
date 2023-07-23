@@ -5,8 +5,8 @@ const verifyBody = require(`../../../middlewares/requestValidator`); // Importin
 module.exports = function(app)
 {
     // Below route is for getting settings page data
-    app.get(`/${process.env.apiToken}/getOne/settings/:id`, settings.getSettingsData);
+    app.get(`/${process.env.apiToken}/getAll/settings`, settings.getSettingsData);
 
     // Below route is for updating settings page data
-    app.put(`/${process.env.apiToken}/update/settings/:id`,verifyBody.appTitleAvailable,verifyBody.contactAddressAvailable,verifyBody.emailValidation,verifyBody.validateUAEMobileNumber,verifyBody.validateUAELicenseNumber,settings.updateSettings);
+    app.put(`/${process.env.apiToken}/update/settings`,verifyBody.appTitleAvailable,verifyBody.contactAddressAvailable,verifyBody.emailValidation,verifyBody.validateUAEMobileNumber,verifyBody.validateUAELicenseNumber,settings.updateSettings);
 }

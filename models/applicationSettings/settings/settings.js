@@ -5,7 +5,7 @@ const commonoperation = require("../../../utils/helper/commonoperation");
 const con = require("../../../configs/db.configs");
 require('dotenv').config()
 module.exports = class settings {
-  static async updateSettings(reqBody, files, id) {
+  static async updateSettings(reqBody, files) {
     return new Promise(async (resolve, rejuct) => {
       try {
         const {
@@ -22,11 +22,8 @@ module.exports = class settings {
           currency_id,
           logo,loginpage_logo
         } = reqBody; 
-        console.log("tt",tax_id);
-        let validateQuery = `SELECT * FROM ${constants.tableName.application_settings} apps
-                                     WHERE apps.id = '${id}'`;
-        con.query(validateQuery, async (err, data) => {
-          if (data?.length != 0) {
+    
+    
             let validateLanguageQuery = `SELECT * FROM ${constants.tableName.languages} apps
                   WHERE apps.id = '${language_id}'`;
             con.query(validateLanguageQuery, async (err, data) => {
@@ -106,8 +103,7 @@ module.exports = class settings {
                               apps.quotation_prefix = '${quotation_prefix}',
                               apps.language_id = '${language_id}',
                               apps.currency_id = '${currency_id}',
-                              apps.tax_id = '${tax_id}'
-                            WHERE apps.id = '${id}';
+                              apps.tax_id = '${tax_id}';
                           `;
 
 
@@ -155,11 +151,8 @@ module.exports = class settings {
                 resolve({ status: "FAILD" });
               }
             });
-          } else {
-            console.log("25642");
-            resolve({ status: "FAILD" });
-          }
-        });
+  
+
 
 
       } catch (err) {
@@ -170,29 +163,31 @@ module.exports = class settings {
     });
   }
 
-  static async getSettingsData(id) {
-    return new Promise((resolve, rejuct) => {
-      try {
-        let selQuery = `SELECT apps.id, apps.application_title,
-                apps.contact_address,
-                apps.email,
-                apps.phone,
-                apps.country_code,
-                apps.logo,
-                apps.loginpage_logo,
-                apps.loginpage_bg_image,
-                apps.favicon,
-                apps.licence_number,
-                apps.invoice_prefix,
-                apps.quotation_prefix,
-                lg.name AS language_name,
-                tx.name AS taxation_name,
-                cr.name AS currency_name
-                FROM ${constants.tableName.application_settings} apps
-                JOIN ${constants.tableName.languages} lg ON apps.language_id = lg.id
-                JOIN ${constants.tableName.currencies} cr ON apps.currency_id = cr.id
-                JOIN ${constants.tableName.taxations} tx ON apps.tax_id = tx.id
-                WHERE apps.id = '${id}'`;
+  static async getSettingsData() {
+    return new Promise((resolve, rejuct) => {   
+      try { 
+        let selQuery = `SELECT apps.id,
+        apps.application_title,
+        apps.contact_address,
+        apps.email,
+        apps.phone,
+        apps.country_code,
+        apps.logo,
+        apps.loginpage_logo,
+        apps.loginpage_bg_image,
+        apps.favicon,
+        apps.licence_number,
+        apps.invoice_prefix,
+        apps.quotation_prefix,
+        lg.name AS language_name,
+        tx.name AS taxation_name,
+        cr.name AS currency_name
+ FROM ${constants.tableName.application_settings} apps
+ JOIN ${constants.tableName.languages} lg ON apps.language_id = lg.id
+ JOIN ${constants.tableName.currencies} cr ON apps.currency_id = cr.id
+ JOIN ${constants.tableName.taxations} tx ON apps.tax_id = tx.id;
+ 
+                `;
 
         con.query(selQuery, async (err, data) => {
           console.log(data);
