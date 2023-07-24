@@ -145,11 +145,27 @@ import * as url from "../url_helper";
     /**Add new driver */
     export async function addNewDriver(data){
         try {
-            console.log(data)
-            // const { data } = await axios.post(`${url.POST_SP_ADD_URL}`);
-            // return { data };
+            console.log("dd1",data)
+            const formData = new FormData();
+            // Append the object data to the FormData instance
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+            
+            // Send the form data as a POST request using Axios
+            const response = await axios.post(`${url.POST_DRIVERS_ADD_URL}`, formData, {
+                headers: {
+                'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log("response11",response)
+            return response
         } catch (error) {
-            return { error : "Faild !"}
+            let errObj = {
+                code : 500 , 
+                error : "Faild !"
+            }
+            return errObj;
         }
       }   
 

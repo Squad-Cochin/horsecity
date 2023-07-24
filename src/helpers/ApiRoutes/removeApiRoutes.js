@@ -50,7 +50,9 @@ export async function removeVehicleImage(vehicle_id,image_id){
 /**Remove Driver provider */
 export async function removeDriver(driver_id){
     try {
-        alert(`Driver ${driver_id} delete request reached.`)
+        const { data } = await axios.put(`${url.PUT_DRIVERS_REMOVE}/${driver_id}`);
+        console.log("data",data)
+        return data;
     } catch (error) {
         return { error : "Failed !"}
     }
@@ -59,7 +61,6 @@ export async function removeDriver(driver_id){
 /**Remove Taxation*/
 export async function removeTaxation(tax_id){
     try {
-        console.log("data",url.PUT_TAXATION_REMOVE+"/"+tax_id)
         const { data } = await axios.put(`${url.PUT_TAXATION_REMOVE}/${tax_id}`);
         console.log("data",data)
         return data;

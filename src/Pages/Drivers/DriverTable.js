@@ -14,20 +14,14 @@ import Flatpickr from "react-flatpickr";
 //The purpose of the Breadcrumbs component is to display a breadcrumb navigation element. 
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 
-// Define the toggleStatus function outside the component
-import { Drivers } from '../../CommonData/Data';
-import { removeDriver } from '../../helpers/ApiRoutes/removeApiRoutes';
-import { addNewDriver } from '../../helpers/ApiRoutes/addApiRoutes';
-import { updateDriver } from '../../helpers/ApiRoutes/editApiRoutes';
-
 // The code you provided imports the useFormik hook from the "formik" library. The useFormik hook is a custom hook provided by Formik, which is a popular form library for React.
 import { useFormik } from "formik";
 
 /**IMPORTED APIs */
-import { addNewProvider } from '../../helpers/ApiRoutes/addApiRoutes';  //For adding new service providers
-import { removeSProvider } from '../../helpers/ApiRoutes/removeApiRoutes'; //For removing service providers
-import { updateSProvider , updateDriverStatus } from '../../helpers/ApiRoutes/editApiRoutes'; //For updating  service providers
-import { getDriversData, getSingleDriverData } from '../../helpers/ApiRoutes/getApiRoutes';  //For getting all service providers
+import { addNewDriver } from '../../helpers/ApiRoutes/addApiRoutes';
+import { removeDriver } from '../../helpers/ApiRoutes/removeApiRoutes';
+import { updateDriver , updateDriverStatus } from '../../helpers/ApiRoutes/editApiRoutes'; 
+import { getDriversData, getSingleDriverData, getSPUserName } from '../../helpers/ApiRoutes/getApiRoutes'; 
 import config from '../../config';
 
 
@@ -38,13 +32,15 @@ const ListTables = () =>
     // Define state variables and their corresponding setter functions using the useState hook
     const [drivers, setDrivers] = useState([]); // Array to store drivers
     const [driver, setDriver] = useState([]); // Array to store a single driver
-    const [updateImage, setUpdateImage] = useState(""); // String to store the updated image
-    const [modal_delete, setmodal_delete] = useState(false); // Boolean to control delete modal visibility
+    const [updateLiscenceImage, setUpdateLiscenceImage] = useState(""); // String to store the updated image
+    const [updateProfileImage, setUpdateProfileImage] = useState("");
+    const [modal_assign, setModal_assign] = useState(false); // Boolean to control delete modal visibility
     const [modal_list, setmodal_list] = useState(false); // Boolean to control list modal visibility
     const [add_list, setAdd_list] = useState(false); // Boolean to control add modal visibility
     const [view_modal, setView_modal] = useState(false); // Boolean to control view modal visibility
     const [profileImagePreview, setProfileImagePreview] = useState(false); // Boolean to control profile image preview visibility
     const [licenceImagePreview, setLicenceImagePreview] = useState(false); // Boolean to control license image preview visibility
+    const [sproviders, setSproviders] = useState([]);
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("")
@@ -56,7 +52,7 @@ const ListTables = () =>
         // Get the selected file from the event
         const file = event.target.files[0];    
         // Update the state variable 'updateImage' with the selected file
-        setUpdateImage(file);
+        setUpdateProfileImage(file);
         // Generate a preview URL for the selected image using the URL.createObjectURL method
         const previewURL = URL.createObjectURL(file); 
         // Update the state variable 'profileImagePreview' with the preview URL
@@ -73,31 +69,28 @@ const ListTables = () =>
     const handleLicenceImageChange = (event) => 
     {
       const file = event.target.files[0];
-      setUpdateImage(file)
+      setUpdateLiscenceImage(file)
       setLicenceImagePreview(URL.createObjectURL(file));
     };    
 
-    function tog_list(param, productId){
-        // Toggle 'add_list' state if 'param' is 'ADD'
-        if (param === 'ADD'){
-          // Reset profile and license image previews
-          setProfileImagePreview(null);
-          setLicenceImagePreview(null);
-          setAdd_list(!add_list);
-        }
-      
-        // Find the driver data with matching 'productId' in the 'drivers' array
-        const data = drivers?.find((item) => item?.id === productId);
-      
-        // Set the 'driver' state to the found driver data
-        setDriver([data]);
-      
+    async function tog_list(param, productId){
         // Toggle 'modal_list' state
         setmodal_list(!modal_list);
-      
-        // Set profile and license image previews to driver's profile_image and licence_img
-        setProfileImagePreview(data.profile_image);
-        setLicenceImagePreview(data.licence_img);
+        // Toggle 'add_list' state if 'param' is 'ADD'
+        if (param === 'ADD'){
+            // Reset profile and license image previews
+            setProfileImagePreview(null);
+            setLicenceImagePreview(null);
+            setAdd_list(!add_list);
+        }else{
+            // Find the driver data with matching 'productId' in the 'drivers' array
+            let driverData = await getSingleDriverData(productId)
+            // Set the 'driver' state to the found driver data
+            setDriver(driverData.drivers);
+            // Set profile and license image previews to driver's profile_image and licence_img
+            setProfileImagePreview(driverData.drivers[0].profile_image);
+            setLicenceImagePreview(driverData.drivers[0].licence_img);
+        }
     }
       
     async function tog_view(productId){
@@ -106,15 +99,11 @@ const ListTables = () =>
         setView_modal(!view_modal);
     }  
     
-    function remove_data(id)
+    async function remove_data(id)
     {
         // Call the 'removeDriver' function with 'id' parameter
-        removeDriver(id);
-    }
-
-    // For delete, We will use this function
-    function tog_delete() {
-        setmodal_delete(!modal_delete);
+        await removeDriver(id);
+        window.location.reload();
     }
 
     // The below function is for the status button functionalities.
@@ -142,11 +131,14 @@ const ListTables = () =>
 
     function toggleAssign(id){
         console.log(id)
+        setModal_assign(!modal_assign);
     }
 
      // function for get data all drivers data
     async function getAllData(page) {
         let getDrivers = await getDriversData(page || 1);
+        let getSP = await getSPUserName();
+        setSproviders(getSP.serviceProviders);
         setDrivers(getDrivers.drivers);
         setPageNumber(page);
         setNumberOfData(getDrivers.totalCount);
@@ -157,6 +149,7 @@ const ListTables = () =>
     // We will store this in the initialValues object
     const initialValues = {
         name: !add_list ? driver[0]?.name : '',
+        user_name: '',
         email: !add_list ? driver[0]?.email : '',
         contact_no: !add_list ? driver[0]?.contact_no : '',
         emergency_contact_no: !add_list ? driver[0]?.emergency_contact_no : '',
@@ -176,21 +169,46 @@ const ListTables = () =>
         initialValues,
         onSubmit: (values) =>
         {
-            values.licence_img = updateImage;
             if (add_list) {
                 //add new
-                console.log("vvv",values)
-                addNewDriver(values);
-                setAdd_list(false);
-                setmodal_list(false);
+                values.licence_img = updateLiscenceImage;
+                values.profile_image = updateProfileImage;
+                addDriver(values)
             } else {
                 //update previes one
-                updateDriver(values);
-                setAdd_list(false);
-                setmodal_list(false);
+                editDriver(values)
             }
         }
     });
+
+    // Add Driver
+    async function addDriver(val){
+        let addDriver = await addNewDriver(val);
+        if(addDriver.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+        }else{
+            setErrors("")
+            setErrors(addDriver.message)
+        }
+    }
+
+    async function editDriver(data){
+        console.log("first",data)
+        let updatedDriver = await updateDriver(driver[0]?.id, data);
+        if(updatedDriver.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber);
+        }else{
+            setErrors("")
+            setErrors(updatedDriver.message)
+        }
+    }
+    
     
     // the execution of all the object and element are written inside the return. Whenever this file will be called only the code inside the return written will be returned
     return (
@@ -240,7 +258,7 @@ const ListTables = () =>
                                                     {drivers.map((item,index) => (
                                                         <tr key={item.id}> 
                                                         {/* Below we are intialize the enquiry data */}
-                                                        <th scope="row"> {index + 1} </th> {/* // Serial Number */}
+                                                        <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th> {/* // Serial Number */}
                                                             <td className="driver_name">{item.name}</td> {/* // Driver Name */}
                                                             <td className="driver_email">{item.email}</td> {/* // Driver Email */}
                                                             <td className="driver_phone">{item.contact_no}</td> {/* // Driver Contact Number */}
@@ -250,7 +268,7 @@ const ListTables = () =>
                                                                     className="btn btn-sm btn-success status-item-btn"
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#showModal"
-                                                                    onClick={ toggleAssign(item.id) }
+                                                                    onClick={ () => {toggleAssign(item.id)} }
                                                                 >
                                                                     Assign
                                                                 </button>
@@ -392,7 +410,7 @@ const ListTables = () =>
                                 className="form-control"
                                 name='date_of_birth'
                                 options={{
-                                dateFormat: "d M, Y"
+                                dateFormat: "d-m-Y"
                                 }}
                                 value={validation.values.date_of_birth || ""}
                                 onChange={(dates) =>validation.setFieldValue('date_of_birth', dates[0])}
@@ -401,25 +419,21 @@ const ListTables = () =>
                         </div>
 
                         {/* Profile Photo Or Image of the driver*/}
-                        <div className="mb-3">
-                            <label htmlFor="profileImage" className="form-label">Profile Image</label>
-                            <div className="col-md-10">
-                                {profileImagePreview &&(
-                                    <div>
-                                        {/* <h5>Id Proof Preview:</h5> */}
-                                        <img src={profileImagePreview} alt="Profile Preview" style={{ maxWidth: '100px' }} />
-                                    </div>
-                                )}
-                   
-                                <input
-                                    className="form-control"
-                                    name="profile_image"
-                                    type="file"
-                                    placeholder="Profile Image"
-                                    onChange={handleProfileImageChange}
-                                />
-                     
+                        <label htmlFor="profileImage" className="form-label">Profile Image</label>
+                        {profileImagePreview &&(
+                            <div>
+                                {/* <h5>Id Proof Preview:</h5> */}
+                                <img src={profileImagePreview} alt="Profile Preview" style={{ maxWidth: '100px' }} />
                             </div>
+                        )}
+                        <div className="mb-3">
+                            <input
+                                className="form-control"
+                                name="profile_image"
+                                type="file"
+                                placeholder="Profile Image"
+                                onChange={handleProfileImageChange}
+                            />
                         </div>
 
                         {/* The Below element is adding the licence number of the driver */}
@@ -432,24 +446,21 @@ const ListTables = () =>
                         </div>
 
                         {/* Licence Photo Or Image of the driver*/}
-                        <div className="mb-3">
-                            <label htmlFor="licenceImage" className="form-label">Licence Image</label>
-                            <div className="col-md-10">
-                                {licenceImagePreview &&(
-                                    <div>
-                                        <img src={licenceImagePreview} alt="Licence Preview" style={{ maxWidth: '100px' }} />
-                                    </div>
-                                )}
-                      
-                                <input
-                                    className="form-control"
-                                    name="licence_image"
-                                    type="file"
-                                    placeholder="Profile Image"
-                                    onChange={handleLicenceImageChange}
-                                />
-                      
+                        
+                        <label htmlFor="licenceImage" className="form-label">Licence Image</label>
+                        {licenceImagePreview &&(
+                            <div>
+                                <img src={licenceImagePreview} alt="Licence Preview" style={{ maxWidth: '100px' }} />
                             </div>
+                        )}
+                        <div className="mb-3">
+                            <input
+                                className="form-control"
+                                name="licence_image"
+                                type="file"
+                                placeholder="Profile Image"
+                                onChange={handleLicenceImageChange}
+                            />
                         </div>
 
                         {/* The Below element is adding the description of the driver */}
@@ -609,25 +620,61 @@ const ListTables = () =>
             </Modal>
 
             {/* This is the Remove button model. We will remove the particular driver. */}
-            <Modal isOpen={modal_delete} toggle={() => { tog_delete(); }} className="modal fade zoomIn" id="deleteRecordModal" centered >
-                <div className="modal-header">
-                    <Button type="button" onClick={() => setmodal_delete(false)} className="btn-close" aria-label="Close"> </Button>
-                </div>
-                <ModalBody>
-                    {/* The below element is for the the confirmation of deleting any driver through pop up */}
-                    <div className="mt-2 text-center">
-                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
-                            colors="primary:#f7b84b,secondary:#f06548" style={{ width: "100px", height: "100px" }}></lord-icon>
-                        <div className="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                            <h4>Are you Sure ?</h4>
-                            <p className="text-muted mx-4 mb-0">Are you Sure You want to Remove this Record ?</p>
+            <Modal className="extra-width" isOpen={modal_assign} toggle={() => { toggleAssign(); }} centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel"toggle={() => { setModal_assign(false); tog_view('Assign To Provider'); }}>Assign To Provider</ModalHeader>
+                <form className="tablelist-form"
+                 onSubmit={validation.handleSubmit}>
+                    <ModalBody>
+                        {/* The below element is for the the confirmation of deleting any driver through pop up */}
+                        {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
+                        {/* The Below element is adding the name of the driver */}
+                        <div className="mb-3">
+                            <label htmlFor="provider-field" className="form-label">Service Provider Name</label>
+                            <select
+                                data-trigger
+                                name="user_name"
+                                id="provider-field"
+                                className="form-control"
+                                value={validation.values.user_name || ""}
+                                onChange={validation.handleChange}
+                                onBlur={validation.handleBlur}
+                                required
+                            >
+                                <option value="">Select Service Provider</option>
+                            {sproviders.map((item, index) => (
+                                <option key={index} value={item.id}>{item.user_name}</option>
+                            ))}
+                            </select>
                         </div>
+                        <div className="mb-3">
+                            <table className="table align-middle table-nowrap" id="assignedProvider">
+                                <thead className="table-light">
+                                    <tr>
+                                        <th className="index" data-sort="index">#</th> 
+                                        <th className="sort" data-sort="provider_name">Provider Name</th>
+                                        <th className="index" data-sort="action">Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="list form-check-all">
+                                    <tr>
+                                        <td>1</td>
+                                        <td>Admin</td>
+                                        <td>
+                                        <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </ModalBody>
+                <ModalFooter>
+                    <div className="hstack gap-2 justify-content-end">
+                        <button type="button" className="btn btn-light" onClick={() =>{ setModal_assign(false);}}>Close</button>
+                        {/* Assign Driver to provider */}
+                        <button type="submit" className="btn btn-success" id="add-btn">Assign</button>
                     </div>
-                    <div className="d-flex gap-2 justify-content-center mt-4 mb-2">
-                        <button type="button" className="btn w-sm btn-light" onClick={() => setmodal_delete(false)}>Close</button>
-                        <button type="button" className="btn w-sm btn-danger " id="delete-record">Yes, Delete It!</button>
-                    </div>
-                </ModalBody>
+                </ModalFooter>
+                </form>
             </Modal>
         </React.Fragment>
     );

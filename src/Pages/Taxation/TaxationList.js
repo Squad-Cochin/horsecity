@@ -173,8 +173,8 @@ const TaxationDeatails = () => {
                                             <th className="sort" data-sort="name">Name</th>
                                             <th className="sort" data-sort="type">Type</th>
                                             <th className="sort" data-sort="value">Value</th>
-                                            <th className="sort" data-sort="status">Status</th>
                                             <th className="sort" data-sort="created_at">Created At</th>
+                                            <th className="sort" data-sort="status">Status</th>
                                             <th className="sort" data-sort="action">Action</th>
                                             </tr>
                                         </thead>
@@ -185,6 +185,7 @@ const TaxationDeatails = () => {
                                                 <td className="name">{item.name}</td>
                                                 <td className="type">{item.type}</td>
                                                 <td className="value">{item.value}</td>
+                                                <td className="created_at">{item.created_at}</td>
                                                 <td className="status">
                                                     {item.status === "ACTIVE" ?
                                                         <button
@@ -206,7 +207,6 @@ const TaxationDeatails = () => {
 
                                                     }
                                                 </td>
-                                                <td className="created_at">{item.created_at}</td>
                                                 <td>
                                                 <div className="d-flex gap-2">
                                                     <div className="edit">

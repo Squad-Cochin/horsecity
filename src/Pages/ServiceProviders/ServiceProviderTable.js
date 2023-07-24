@@ -68,7 +68,6 @@ const ListTables = () => {
             } else {
                 //update previes SProvider
                 console.log("update previues one ");
-                console.log(values)
                 editProvider(values);
             }
         }
@@ -244,14 +243,14 @@ const ListTables = () => {
                                                     </button>
                                                     </div>
                                                     <div className="edit">
-                                                    <button
-                                                        className="btn btn-sm btn-primary edit-item-btn"
-                                                        onClick={() => tog_list("EDIT", value.id)}
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#showModal"
-                                                    >
-                                                        Edit
-                                                    </button>
+                                                        <button
+                                                            className="btn btn-sm btn-primary edit-item-btn"
+                                                            onClick={() => tog_list("EDIT", value.id)}
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#showModal"
+                                                        >
+                                                            Edit
+                                                        </button>
                                                     </div>
                                                     <div className="remove">
                                                     <button

@@ -70,10 +70,10 @@ export const PUT_VEHICLES_REMOVE = apiBaseUrl + token + "/removeVehicle"
 /**DRIVERS */
 export const GET_DRIVERS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/drivers"
 export const GET_DRIVERS_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/driver"
-// export const POST_CUSTOMER_ADD_URL = apiBaseUrl + token + "/add/customer"
+export const POST_DRIVERS_ADD_URL = apiBaseUrl + token + "/add/driver"
 export const PUT_DRIVERS_UPDATE_STATUS = apiBaseUrl + token + "/update/driver"
-// export const POST_CUSTOMER_EDIT_URL = apiBaseUrl + token + "/edit/customer"
-// export const PUT_CUSTOMER_REMOVE = apiBaseUrl + token + "/remove/customer"
+export const POST_DRIVERS_EDIT_URL = apiBaseUrl + token + "/edit/driver"
+export const PUT_DRIVERS_REMOVE = apiBaseUrl + token + "/remove/driver"
 
 
 /**TAXATION */
