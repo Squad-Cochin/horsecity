@@ -20,9 +20,9 @@ exports.getAllTaxations = async(req,res)=>
 }
 
 /**For gitting all data  */
-exports.getTaxations = async(req,res)=>
+exports.getTaxationsNames = async(req,res)=>
 {
-    let getAllTaxations = await tax.getTaxations();
+    let getAllTaxations = await tax.getTaxationsNames();
 
    if(getAllTaxations){
     return res.status(200).send

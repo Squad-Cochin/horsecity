@@ -48,7 +48,7 @@ exports.getAllTaxations = (requestBody) =>
 }
 
 
-exports.getTaxations = () =>
+exports.getTaxationsNames = () =>
 {
     return new Promise((resolve, reject) =>
     {

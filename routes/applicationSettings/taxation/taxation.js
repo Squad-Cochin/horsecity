@@ -18,7 +18,7 @@ module.exports = function(app)
     app.get(`/${process.env.apiToken}/getOne/taxations/:id`, taxation.getOneTaxation);
 
     /**For listing taxations basis of page limit  */ 
-    app.get(`/${process.env.apiToken}/getAll/taxations`,taxation.getTaxations);   
+    app.get(`/${process.env.apiToken}/getAll/taxations`,taxation.getTaxationsNames);   
 
  
 }

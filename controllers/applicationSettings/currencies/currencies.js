@@ -4,9 +4,9 @@ const constants = require('../../../utils/constants');
 const commonoperation = require('../../../utils/helper/commonoperation');
 
 /**For gitting all data  */
-exports.getCurrencies = async(req,res)=>
+exports.getCurrenciesNames = async(req,res)=>
 {
-    let getAllCurrencies = await currencies.getCurrencies();
+    let getAllCurrencies = await currencies.getCurrenciesNames();
 
    if(getAllCurrencies){
     return res.status(200).send

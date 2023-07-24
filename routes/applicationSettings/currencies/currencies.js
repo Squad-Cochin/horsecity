@@ -6,7 +6,7 @@ module.exports = function(app)
 {
 
     /**For listing taxations basis of page limit  */ 
-    app.get(`/${process.env.apiToken}/getAll/currencies`,currencies.getCurrencies);   
+    app.get(`/${process.env.apiToken}/getAll/currencies`,currencies.getCurrenciesNames);   
 
 
 }

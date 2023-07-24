@@ -6,7 +6,7 @@ const time = require('../../../utils/helper/date');
 require('dotenv').config()
 
 
-exports.getCurrencies = () =>
+exports.getCurrenciesNames = () =>
 {
     return new Promise((resolve, reject) =>
     {

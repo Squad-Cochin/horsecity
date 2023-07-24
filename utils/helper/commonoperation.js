@@ -105,6 +105,43 @@ exports.fileUpload = (attachments, path) =>
 }
 
 
+exports.fileNameUpload = (attachments) =>
+{ 
+    // console.log(attachments);
+    return new Promise((resolve, reject) =>
+    {
+        if (!attachments)// || !attachments.file || !Array.isArray(attachments.file)) 
+        {
+            console.log('#### Invalid attachments parameter ####');
+            resolve({message : 'INVALIDATTACHMENT'}); 
+        }
+        else
+        {
+            // let file = attachments;
+            // console.log(file);
+            let fileExtension = attachments.name.split('.').pop().toLowerCase(); // get the file extension
+            // console.log(fileExtension);
+            if (['json'].includes(fileExtension)) 
+            {
+                // let currentDate = new Date().toISOString().replace(/:/g, '-').replace(//./g, '-'); // generate current date and time
+                let filename = `${attachments.name}`; // use current date, random number and original file name to create a unique file name
+        
+                    if(filename)
+                    {
+                        resolve(filename);
+                    }
+                 
+        
+            }
+            else
+            {
+                resolve({message : 'INVALIDFORMAT'});
+                console.log("Invalid Format");
+            }
+        }
+    });
+}
+
 exports.updateUserStatus = (tablename, Id) =>
 {
     return new Promise((resolve, reject) => 
