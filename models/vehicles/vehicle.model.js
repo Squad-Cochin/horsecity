@@ -15,19 +15,19 @@ module.exports = class vehicles
     constructor(){}
 
     static async addnew(serviceProviderId, vehicle_number, make, model, color, length, breadth, height, max_no_of_horse, air_conditioner, temp_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date)
-    {
+    { 
         try
-        {
+        { 
             return await new Promise(async(resolve, reject)=>
             {
                 let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);
                 // console.log(uploadSafetyCertificate);
-                let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, no_of_horse, air_conditioner, temp_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${serviceProviderId}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
+                let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${serviceProviderId}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
                 // console.log(insQuery);
                 con.query(insQuery, (err, result) =>
                 {
                     // console.log(result);
-                    if(result.affectedRows > 0)
+                    if(result.affectedRows > 0) 
                     {
                         console.log('Vehicles data added successfully');
                         resolve(result);
@@ -101,7 +101,6 @@ module.exports = class vehicles
                 }
                 else
                 {
-                    console.log("Data Found");
                     if(vehicleData[0].status === constants.status.active)
                     {
                         let UpdateQuery = `UPDATE ${constants.tableName.vehicles} v SET v.status ='${constants.status.inactive}', v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE v.id = '${id}' `;
@@ -171,27 +170,26 @@ module.exports = class vehicles
                     "height": data[0].height,
                     "no_of_horse": data[0].no_of_horse,
                     "air_conditioner": data[0].air_conditioner,
-                    "temp_manageable": data[0].temp_manageable,
+                    "temperature_manageable": data[0].temp_manageable,
                     "registration_no": data[0].registration_no,
                     "gcc_travel_allowed": data[0].gcc_travel_allowed,
                     "insurance_cover": data[0].insurance_cover,
-                    "insurance_date": formatDateToDDMMYYYY(data[0].insurance_date),
+                    "insurance_date": time.formatDateToDDMMYYYY(data[0].insurance_date),
                     "insurance_policy_no": data[0].insurance_policy_no,
                     "insurance_provider": data[0].insurance_provider,
-                    "insurance_expiration_date": formatDateToDDMMYYYY(data[0].insurance_expiration_date),
-                    "safety_certicate": data[0].safety_certicate,
+                    "insurance_expiration_date": time.formatDateToDDMMYYYY(data[0].insurance_expiration_date),
+                    "safety_certicate": `${process.env.PORT_SP}${constants.attachmentLocation.vehicle.view.scertificate}${data[0].safety_certicate}`,
                     "vehicle_type": data[0].vehicle_type,
-                    "vehicle_registration_date": formatDateToDDMMYYYY(data[0].vehicle_registration_date),
-                    "vehicle_exipration_date": formatDateToDDMMYYYY(data[0].vehicle_exipration_date),
+                    "vehicle_registration_date": time.formatDateToDDMMYYYY(data[0].vehicle_registration_date),
+                    "vehicle_exipration_date": time.formatDateToDDMMYYYY(data[0].vehicle_exipration_date),
                     "status": data[0].status,
-                    "created_at": formatDateToDDMMYYYY(data[0].created_at),
-                    "updated_at": formatDateToDDMMYYYY(data[0].updated_at),
-                    "deleted_at": formatDateToDDMMYYYY(data[0].deleted_at)
+                    "created_at": time.formatDateToDDMMYYYY(data[0].created_at),
+                    "updated_at": time.formatDateToDDMMYYYY(data[0].updated_at),
+                    "deleted_at": time.formatDateToDDMMYYYY(data[0].deleted_at)
                     }
 
             if(data.length === 0)
-            {
-                
+            {                
                 console.log('No data present on this Id');
                 return ('nodata');
             }
@@ -202,7 +200,6 @@ module.exports = class vehicles
             }
             else
             {
-                console.log('Data Found');
                 // return ({serproviderName : getserviceProviderName[0].name, vehicles : data});
                 return returnObj;
             }     
@@ -220,8 +217,8 @@ module.exports = class vehicles
         {
             let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);
             // console.log(uploadSafetyCertificate);
-            let upQuery = `UPDATE ${constants.tableName.vehicles} v SET v.service_provider_id = '${serviceProviderId}', v.vehicle_number = '${vehicle_number}', v.make = '${make}', v.model = '${model}', v.color = '${color}', v.length = '${length}', v.breadth = '${breadth}', v.height = '${height}', v.max_no_of_horse = '${max_no_of_horse}', v.air_conditioner = '${air_conditioner}', v.temp_manageable ='${temp_manageable}', v.registration_no ='${registration_no}', v.gcc_travel_allowed = '${gcc_travel_allowed}', v.insurance_cover = '${insurance_cover}', v.insurance_date = '${insurance_date}', v.insurance_policy_no = '${insurance_policy_no}', v.insurance_provider = '${insurance_provider}', v.insurance_expiration_date = '${insurance_expiration_date}', v.vehicle_type = '${vehicle_type}', v.vehicle_registration_date = '${vehicle_registration_date}', v.vehicle_exipration_date = '${vehicle_exipration_date}', v.safety_certicate ='${uploadSafetyCertificate}', v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE id = '${id}' `;
-            console.log(upQuery);
+            let upQuery = `UPDATE ${constants.tableName.vehicles} v SET v.service_provider_id = '${serviceProviderId}', v.vehicle_number = '${vehicle_number}', v.make = '${make}', v.model = '${model}', v.color = '${color}', v.length = '${length}', v.breadth = '${breadth}', v.height = '${height}', v.no_of_horse = '${max_no_of_horse}', v.air_conditioner = '${air_conditioner}', v.temperature_manageable ='${temp_manageable}', v.registration_no ='${registration_no}', v.gcc_travel_allowed = '${gcc_travel_allowed}', v.insurance_cover = '${insurance_cover}', v.insurance_date = '${insurance_date}', v.insurance_policy_no = '${insurance_policy_no}', v.insurance_provider = '${insurance_provider}', v.insurance_expiration_date = '${insurance_expiration_date}', v.vehicle_type = '${vehicle_type}', v.vehicle_registration_date = '${vehicle_registration_date}', v.vehicle_exipration_date = '${vehicle_exipration_date}', v.safety_certicate ='${uploadSafetyCertificate}', v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE id = '${id}' `;
+            // console.log(upQuery);
             con.query(upQuery, (err, result) =>
             {
                 // console.log(result);
@@ -249,7 +246,7 @@ module.exports = class vehicles
             return await new Promise(async(resolve, reject)=>
             {
                 let selQuery = `SELECT vi.id, vi.image, vi.title, vi.uploaded_at, vi.status FROM ${constants.tableName.vehicles_images} vi, ${constants.tableName.vehicles} v WHERE vi.vehicle_id = ${id} AND vi.deleted_at IS NULL`;
-                console.log(selQuery);
+                // console.log(selQuery);
                 con.query(selQuery, (err, result) =>
                 {
                     if(result)
@@ -291,54 +288,4 @@ module.exports = class vehicles
             return console.log(`Error from the vehicle.model.js file from the models > vehicles folder. In the static function "removevehicle". Which is designed to delete or remove the data of a particular vehicles.`);                        
         }
     };
-
-
 };
-
-
-function convertDate(originalDateStr) {
-    const months = {
-      Jan: '01',
-      Feb: '02',
-      Mar: '03',
-      Apr: '04',
-      May: '05',
-      Jun: '06',
-      Jul: '07',
-      Aug: '08',
-      Sep: '09',
-      Oct: '10',
-      Nov: '11',
-      Dec: '12',
-    };
-  
-    const parts = originalDateStr.split(' ');
-    const day = parts[2];
-    const month = months[parts[1]];
-    const year = parts[3];
-  
-    return `${day}-${month}-${year}`;
-  }
-
-  function formatDateToDDMMYYYY(inputDate) 
-  {
-    if(!inputDate)
-    {
-        return null
-    }
-    else
-    {
-        // Convert the input date string to a Date object
-        const dateObj = new Date(inputDate);
-    
-        // Extract day, month, and year from the Date object
-        const day = String(dateObj.getDate()).padStart(2, '0');
-        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-        const year = dateObj.getFullYear();
-    
-        // Format the date as "DD-MM-YYYY"
-        const formattedDate = `${day}-${month}-${year}`;
-        return formattedDate;
-    }
-    
-  }

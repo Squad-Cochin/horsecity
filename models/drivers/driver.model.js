@@ -20,13 +20,15 @@ module.exports = class drivers
         {
             const data = await commonfetching.getAllDataOfDriverAndCustomer(constants.tableName.drivers, pageNumber, pageSize);
             // console.log('Data', data);
+            const count = await commonoperation.totalCount(constants.tableName.drivers)
+            // console.log('Total Data', count[0]['count(t.id)']);
             if(data.length === 0)
             {
-                return data
+                return ({totalCount : count[0]['count(t.id)'], drivers : data});
             }
             else
             {
-                return data;
+                return ({totalCount : count[0]['count(t.id)'], drivers : data});
             }                     
         }
         catch(error)
@@ -47,16 +49,15 @@ module.exports = class drivers
             }
             else
             {
-                // console.log('Came inside');
-                let dob = data[0].date_of_birth;
+                let dob = data[0].date_of_birth;                
+                data[0].date_of_birth = time.formatDateToDDMMYYYY(data[0].date_of_birth); 
+                data[0].updated_at = `${time.formatDateToDDMMYYYY(data[0].updated_at)}`;
+                data[0].created_at = `${time.formatDateToDDMMYYYY(data[0].created_at)}`;
+                data[0].profile_image = `${process.env.PORT_SP}${constants.attachmentLocation.driver.view.profilephoto}${data[0].profile_image}`;
+                data[0].licence_img = `${process.env.PORT_SP}${constants.attachmentLocation.driver.view.licence}${data[0].licence_img}`;
                 // console.log('Dob: ', dob);
-                data[0].date_of_birth = convertDate(dob); 
-                let driverProfileImage = data[0].profile_image;
-                data[0].profile_image = `${process.env.PORT_SP}${constants.attachmentLocation.driver.view.profilephoto}${driverProfileImage}`;
-                console.log("Driver profile image link: ", data[0].profile_image);
-                let driverlicenceImage = data[0].licence_img;
-                data[0].licence_img = `${process.env.PORT_SP}${constants.attachmentLocation.driver.view.licence}${driverlicenceImage}`;
-                console.log('Driver licence image link: ', data[0].licence_img);      
+                // console.log('Driver licence image link: ', data[0].licence_img);
+                // console.log("Driver profile image link: ", data[0].profile_image);
                 return data;
             }            
         }
@@ -105,7 +106,7 @@ module.exports = class drivers
         try
         {
             const data = await commonoperation.updateUserStatus(constants.tableName.drivers, Id);
-            console.log('Data', data);
+            // console.log('Data', data);
             if(data.length === 0)
             {
                 return data
@@ -175,29 +176,39 @@ module.exports = class drivers
         }
     }
 
+    static async assignserviceprovider(dId, sId)
+    {
+        try
+        {
+            return await new Promise(async(resolve, reject)=>
+            {
+                let insQuery = `INSERT INTO assign_drivers(service_provider_id, driver_id, created_at) VALUES(${sId}, ${dId}, ${time.getFormattedUTCTime(constants.timeOffSet.UAE)})`;
+                console.log(`Insert Query While Assigning Driver To A Service Provider: `, insQuery);
+                con.query(insQuery, (err, result) =>
+                {
+                    if(result.affectedRows > 0)
+                    {
+                        resolve(result);
+                    }
+                    else
+                    {
+                        console.log(err);
+                        resolve('err')
+                    }
+
+                });
+            });            
+        }
+        catch (error)
+        {
+            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "assignserviceprovider". Which is designed to assigne the driver to service provider.');            
+        }
+    }
+
+
+
+
+
+
+
 };
-
-
-function convertDate(originalDateStr) {
-    const months = {
-      Jan: '01',
-      Feb: '02',
-      Mar: '03',
-      Apr: '04',
-      May: '05',
-      Jun: '06',
-      Jul: '07',
-      Aug: '08',
-      Sep: '09',
-      Oct: '10',
-      Nov: '11',
-      Dec: '12',
-    };
-  
-    const parts = originalDateStr.split(' ');
-    const day = parts[2];
-    const month = months[parts[1]];
-    const year = parts[3];
-  
-    return `${day}-${month}-${year}`;
-  }

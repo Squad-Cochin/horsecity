@@ -58,7 +58,7 @@ module.exports =
             view :
             {
                 image : `/Vehicles/images/`,
-                scertificate : `/Vehicles/scertificate`
+                scertificate : `/Vehicles/scertificate/`
             },
             upload :
             {
@@ -100,10 +100,7 @@ module.exports =
         vehicleImgSuccess : "Images fetched succesfully",
         imageFormat : 'Only PNG and JPG formats are allowed',
         particularVehicleImageSuccess : 'Particular vehicle image succesfully uploaded',
-        particularVehicleImageError : 'Error while uploading the particular vehicle image',
-        
-
-
+        particularVehicleImageError : 'Error while uploading the particular vehicle image'
     },
 
     timeOffSet :

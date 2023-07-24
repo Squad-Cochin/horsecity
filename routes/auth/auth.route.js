@@ -24,8 +24,8 @@ module.exports = function(app)
     
     // The below route is for logout of the service provider user. 
     app.post(`/${process.env.apiToken}/logout`, 
-    checkInput.usernameValidation(constants.tableName.service_providers),
-    checkInput.passwordValidation,
+    // checkInput.usernameValidation(constants.tableName.service_providers),
+    // checkInput.passwordValidation,
     authcontroller.serviceProviderLogout); 
 
     // app.post(`/${process.env.apiToken}/recoveryPassword`,checkInput.emailvalidation, authcontroller.resetPasswordUsingEmail);  

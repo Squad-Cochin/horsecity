@@ -4,6 +4,7 @@
 //                                                                                     //
 /////////////////////////////////////////////////////////////////////////////////////////
 
+const constants = require('../../utils/constants');
 const constant = require('../../utils/constants');
 const commonfetching = require('../../utils/helper/commonfetching');
 const commonoperation = require('../../utils/helper/commonoperation'); 
@@ -19,7 +20,7 @@ module.exports = class authentication
     {
         try
         {
-            const userData = await commonfetching.dataOnCondition(tableName, req.body.userName, 'user_name')(constant.tableName.service_providers, username);
+            const userData = await commonfetching.dataOnCondition(constants.tableName.service_providers, username, 'user_name');
             // console.log("User data:", userData);
             if (userData.length === 0) 
             {
@@ -68,7 +69,7 @@ module.exports = class authentication
     {
         try
         {
-            const userData = await commonfetching.dataOnCondition(tableName, req.body.userName, 'user_name')(constant.tableName.service_providers, username);
+            const userData = await commonfetching.dataOnCondition(constants.tableName.service_providers, username, 'user_name');
             if (userData.length === 0) 
             {
                 return 'noserviceprovider';
@@ -110,7 +111,7 @@ module.exports = class authentication
 
     static async serviceproviderlogout(username, password) 
     {
-        const userData = await commonfetching.dataOnCondition(tableName, req.body.userName, 'user_name')(constant.tableName.service_providers, username);
+        const userData = await commonfetching.dataOnCondition(constants.tableName.service_providers, username, 'user_name');
         if (userData.length === 0) 
             {
                 return 'noserviceprovider';

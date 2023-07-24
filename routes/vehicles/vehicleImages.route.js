@@ -1,12 +1,15 @@
 const vehicleImageController = require('../../controllers/vehicles/vehiclesImage.controller');
 const { isValidIdInTheParams } = require('../../middlewares/validateInput/checkRequestparams');
+const checkInput = require(`../../middlewares/validateInput/checkRequestInputVehicles`);
 const constants = require('../../utils/constants');
 
 module.exports = (app) =>
 {
     // Below route is for adding the image for a particular vehicle
     app.post(`/${process.env.apiToken}/addImage/vehicle/:id`, 
-    isValidIdInTheParams(constants.tableName.vehicles), 
+    isValidIdInTheParams(constants.tableName.vehicles),
+    checkInput.isVehicleImageUploaded,
+    checkInput.isVehicleImageTitleAdded,
     vehicleImageController.addImages);
 
     // the below route is for gettting all the images of a particular vehicle

@@ -88,7 +88,7 @@ exports.dataOnConditionUpdate = async(tableName, feildName, Value, id, messageFe
         return await  new Promise(async (resolve, reject) =>
         {
             let selQuery = `SELECT * FROM ${tableName} t WHERE t.id = '${id}' AND t.${feildName} = '${Value}'`;
-            console.log(`Universl Query At Update Condition: `, selQuery);
+            // console.log(`Universl Query At Update Condition: `, selQuery);
             con.query(selQuery, async (err, result) =>
             {
                 if(err)

@@ -10,6 +10,8 @@ const commonfetching = require('../../utils/helper/commonfetching');
 const commonoperation = require('../../utils/helper/commonoperation');
 const con = require('../../configs/db.configs')
 
+
+
 module.exports = class customers
 {
     constructor(){}
@@ -44,27 +46,34 @@ module.exports = class customers
             const data = await commonfetching.dataOnCondition(constants.tableName.customers, Id, 'id');
             // console.log('Data : ', data);
             if(data.length === 0)
+            {                
+                console.log('No data present on this Id');
+                return ('nodata');
+            }
+            else if(data === 'err')
             {
-                return data
+                console.log(`Error while fethcing the vehicle data on the basis if Id. Model folder`);
+                return ('err');
             }
             else
             {
                 // console.log('Came inside');
                 let dob = data[0].date_of_birth;
                 // console.log('Dob: ', dob);
-                data[0].date_of_birth = convertDate(dob); 
+                data[0].date_of_birth = time.formatDateToDDMMYYYY(dob); 
                 let idProofImage = data[0].id_proof_image;
                 data[0].id_proof_image = `${process.env.PORT_SP}${constants.attachmentLocation.customer.view.idProof}${idProofImage}`;
                 // console.log("Link: ", data[0].id_proof_image);
                 return data;
-            }            
+            }     
         }
         catch (error)
         {
-            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getone". Which is designed to fetch particular data of the customers.');            
+            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getone". Which is designed to fetch particular data of the customers.', error);            
         }
     };
 
+    
     static async addcustomer(name, email, user_name, password, contact_no, date_of_birth, id_proof_no, files)
     {
         try
@@ -148,7 +157,6 @@ module.exports = class customers
 
 
 
-
     static async updatestatus(Id)
     {
         try
@@ -226,27 +234,3 @@ module.exports = class customers
     
 };
 
-
-function convertDate(originalDateStr) 
-{
-    const months = 
-    {
-      Jan: '01',
-      Feb: '02',
-      Mar: '03',
-      Apr: '04',
-      May: '05',
-      Jun: '06',
-      Jul: '07',
-      Aug: '08',
-      Sep: '09',
-      Oct: '10',
-      Nov: '11',
-      Dec: '12',
-    };  
-    const parts = originalDateStr.split(' ');
-    const day = parts[2];
-    const month = months[parts[1]];
-    const year = parts[3];
-    return `${day}-${month}-${year}`;
-}

@@ -1,6 +1,8 @@
 const constants = require("../../utils/constants");
 const commonfetching = require(`../../utils/helper/commonfetching`);
 const checkInput = require(`./checkRequestBodyInput`);
+const url = require(`../../utils/url_helper`);
+
 
 exports.isServiceProviderIdEntered = (tableName) =>async (req, res, next) =>
 {
@@ -8,7 +10,7 @@ exports.isServiceProviderIdEntered = (tableName) =>async (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Service provider id is required"
         });
@@ -20,7 +22,7 @@ exports.isServiceProviderIdEntered = (tableName) =>async (req, res, next) =>
         {
             return res.status(500).json
             ({
-                code : 200,
+                code: 400,
                 status : "failed",
                 error: 'Internal server error while service provider' 
             });
@@ -49,7 +51,7 @@ exports.isManufacturerEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Manufacturer or Maker name required"
         });        
@@ -65,7 +67,7 @@ exports.isModelEntered = (req,res,next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Vehicle model required"
         });        
@@ -82,7 +84,7 @@ exports.isColorEntered = (req,res,next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Vehicle color required"
         });        
@@ -101,7 +103,7 @@ exports.isLengthEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Vehicle length required",
         });
@@ -110,7 +112,7 @@ exports.isLengthEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: "failure",
             message: "Vehicle length must be a numeric value",
         });
@@ -119,7 +121,7 @@ exports.isLengthEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: "failure",
             message: "Vehicle length must be greater than zero.",
         });
@@ -138,7 +140,7 @@ exports.isBreadthEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Vehicle breadth required",
         });
@@ -147,7 +149,7 @@ exports.isBreadthEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: "failure",
             message: "Vehicle length must be a numeric value",
         });
@@ -156,7 +158,7 @@ exports.isBreadthEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: "failure",
             message: "Vehicle breadth must be greater than zero.",
         });
@@ -175,7 +177,7 @@ exports.isheightEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Vehicle height required",
         });
@@ -184,7 +186,7 @@ exports.isheightEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: "failure",
             message: "Vehicle length must be a numeric value",
         });
@@ -193,7 +195,7 @@ exports.isheightEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: "failure",
             message: "Vehicle height must be greater than zero.",
         });
@@ -211,7 +213,7 @@ exports.isMaximumHorseCarryingCapicityEntered = (req,res,next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Vehicle maximum horse carrying capicity required"
         });        
@@ -220,7 +222,7 @@ exports.isMaximumHorseCarryingCapicityEntered = (req,res,next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: "failure",
             message: "Vehicle maximum horse carrying capicity must be a numeric value",
         });
@@ -229,7 +231,7 @@ exports.isMaximumHorseCarryingCapicityEntered = (req,res,next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: "failure",
             message: "Vehicle maximum horse carrying capicity must be greater than zero.",
         });
@@ -246,7 +248,7 @@ exports.isAirConditionerValueEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Vehicle is enabled air conditioner. Details required"
         });        
@@ -266,7 +268,7 @@ exports.isAirConditionerValueEntered = (req, res, next) =>
         console.log('Invalid Input');
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: "failure",
             message: "Vehicle is air conditioner equiped input is wrong. Please write 'YES' or 'NO'. ",
         });        
@@ -299,7 +301,7 @@ exports.isTemperaturControlValueEntered = (req, res, next) =>
         console.log('Invalid Input');
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: "failure",
             message: "Vehicle is temperature control equiped input is wrong. Please write 'YES' or 'NO'. ",
         });        
@@ -314,7 +316,7 @@ exports.isGCCTravelValueEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Vehicle can travel across all the countries of GCC. Details required"
         });        
@@ -334,7 +336,7 @@ exports.isGCCTravelValueEntered = (req, res, next) =>
         console.log('Invalid Input');
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: "failure",
             message: "Vehicle can travel across all the countries of GCC input is wrong. Please write 'YES' or 'NO'. ",
         });        
@@ -347,7 +349,7 @@ exports.isInsuranceCoverValueEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Vehicle have a insurance cover value not entered. Details required"
         });        
@@ -367,98 +369,76 @@ exports.isInsuranceCoverValueEntered = (req, res, next) =>
         console.log('Invalid Input');
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: "failure",
             message: "Vehicle has a insurance cover input is not given correctly. Please write 'YES' or 'NO'. ",
         });        
     }
 }
 
-exports.isRegistrationNumberEntered = async (req, res, next) =>
+exports.isVehicleRegistrationNumberEntered = async (req, res, next) =>
 {
     if(!req.body.vehicle_registration_number)
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Vehicle registration number is not entered. Details required"
         });        
     }
     else
     {
-        // console.log('Vehicle registration number is entered');
-        const data = await commonfetching.dataOnCondition(constants.tableName.vehicles, req.body.vehicle_registration_number, 'registration_no')
-        console.log('Data while cheking vehicle registration number: ', data);
-        if(!data || data === 'err')
+        if(req.method === 'POST')
         {
-            console.log(`Vehicle registration number doesn't exist`);
-            next();                        
+            checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `registration_no`, req.body.vehicle_registration_number, req.params.id, 'Vehicle registration number')(req, res, next);                        
         }
-        else if(data.length > 0)
+        else if(req.method === `PUT` && req.url === url.UPDATE_VEHICLE_PAGE_URL + req.params.id)
         {
-            console.log('Vehicle registration number already present');
-            return res.status(200).send
-            ({
-                code: 400,
-                status: false,
-                message: "This vehicle registration number already exists in the database"
-            });
+            checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `registration_no`, req.body.vehicle_registration_number, req.params.id, 'Vehicle registration number')(req, res, next);
         }
         else
-        { 
-            next();     
-            // return res.status(200).json
-            // ({
-            //     code : 500,
-            //     status : "failed",
-            //     error: 'Internal server error' 
-            // });    
-        }     
+        {
+            return res.status(500).json
+            ({
+                code : 500,
+                status : false, 
+                message : `Internal server error. While checking the vehicle insurance policy number.` 
+            });
+        }   
     }
 }
 
 
-exports.isInsuranceNumberEntered = async (req, res, next) =>
+exports.isInsurancePolicyNumberEntered = async (req, res, next) =>
 {
     if(!req.body.insurance_policy_no)
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
-            message: "Vehicle Insurance cover number is not entered. Details required"
+            message: "Vehicle insurance cover number is not entered. Details required"
         });        
     }
     else
     {
-        // console.log('Vehicle Insurance cover is entered');
-        const data = await commonfetching.dataOnCondition(constants.tableName.vehicles, req.body.insurance_policy_no, 'insurance_policy_no')
-        console.log('Data while cheking vehicle insurance cover number: ', data);
-        if(!data || data === 'err')
+        if(req.method === 'POST')
         {
-            console.log(`Vehicle registration number doesn't exist`);
-            next();            
+            checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `insurance_policy_no`, req.body.insurance_policy_no, req.params.id, 'Vehicle insurance policy number')(req, res, next);                        
         }
-        else if(data.length > 0)
+        else if(req.method === `PUT` && req.url === url.UPDATE_VEHICLE_PAGE_URL + req.params.id)
         {
-            console.log('Vehicle Insurance cover number already present');
-            return res.status(200).send
-            ({
-                code: 400,
-                status: false,
-                message: "This vehicle Insurance cover number already exists in the database"
-            });
+            checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `insurance_policy_no`, req.body.insurance_policy_no, req.params.id, 'Vehicle insurance policy number')(req, res, next);
         }
         else
         {
-            next();
-            // return res.status(500).json
-            // ({
-            //     code : 200,
-            //     status : "failed",
-            //     error: 'Internal server error while insurance number' 
-            // });           
+            return res.status(500).json
+            ({
+                code : 500,
+                status : false, 
+                message : `Internal server error. While checking the vehicle insurance policy number.` 
+            });
         }     
     }
 }
@@ -469,13 +449,13 @@ const isValidDateEntered = (DOB) =>
     return DOB.match(/^\d{2}\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s\d{4}$/); // REGEX or regurlar expression
 }
 
-exports.isValidInsuranceCoverDateEntered = (req, res, next) =>
+exports.isValidInsuranceCoverEntered = (req, res, next) =>
 {
     if (!req.body.insurance_date) 
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Insurance Taken Date is required. Format - DD/Month starting three Letters/YYYY"
         });
@@ -487,7 +467,7 @@ exports.isValidInsuranceCoverDateEntered = (req, res, next) =>
         {
             return res.status(200).send
             ({
-                code: 200,
+                code: 400,
                 status: "failure",
                 message: "Insurance date is not in valid. The correct format is DD/Month starting three Letters/YYYY"
             });                                
@@ -505,7 +485,7 @@ exports.insurancePolicyProviderEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Insurance provider name is required."
         });
@@ -523,7 +503,7 @@ exports.isValidInsuranceExpirationDateEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Insurance expiry date is required. Format - DD/Month starting three Letters/YYYY"
         });
@@ -535,7 +515,7 @@ exports.isValidInsuranceExpirationDateEntered = (req, res, next) =>
         {
             return res.status(200).send
             ({
-                code: 200,
+                code: 400,
                 status: "failure",
                 message: "Insurance expiry date is not in valid. The correct format is DD/Month starting three Letters/YYYY"
             });                                
@@ -553,7 +533,7 @@ exports.isValidVehicleRegistrationDateEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Vehicle registration date is required. Format - DD/Month starting three Letters/YYYY"
         });
@@ -565,7 +545,7 @@ exports.isValidVehicleRegistrationDateEntered = (req, res, next) =>
         {
             return res.status(200).send
             ({
-                code: 200,
+                code: 400,
                 status: "failure",
                 message: "Vehicle registration date is not in valid. The correct format is DD/Month starting three Letters/YYYY"
             });                                
@@ -583,7 +563,7 @@ exports.isValidVehicleExpirationDateEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Vehicle expiration date is required. Format - DD/Month starting three Letters/YYYY"
         });
@@ -595,7 +575,7 @@ exports.isValidVehicleExpirationDateEntered = (req, res, next) =>
         {
             return res.status(200).send
             ({
-                code: 200,
+                code: 400,
                 status: "failure",
                 message: "Vehicle expiry date is not in valid. The correct format is DD/Month starting three Letters/YYYY"
             });                                
@@ -614,7 +594,7 @@ exports.isValidVehicleTypeEntered = (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Vehicle type is required. Please enter one amoung these 3 (PRIVATE, GCC, SHARING)"
         });
@@ -639,7 +619,7 @@ exports.isValidVehicleTypeEntered = (req, res, next) =>
         console.log('Invalid Vehicle Type Input');
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: "failure",
             message: "Vehicle type input is wrong. Please enter one amoung these 3 (PRIVATE, GCC, SHARING)",
         }); 
@@ -666,7 +646,7 @@ exports.isValidVehicleNumberEntered = (tableName) => async (req, res, next) =>
     {
         return res.status(200).send
         ({
-            code: 200,
+            code: 400,
             status: false,
             message: "Vehicle number is required"
         });
@@ -677,7 +657,7 @@ exports.isValidVehicleNumberEntered = (tableName) => async (req, res, next) =>
         {
             checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params.id, 'Vehicle number')(req, res, next);                        
         }
-        else if(req.method === `PUT` && req.url === url.UPDATE_DRIVER_PAGE_URL + req.params.id)
+        else if(req.method === `PUT` && req.url === url.UPDATE_VEHICLE_PAGE_URL + req.params.id)
         {
             checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params.id, 'Vehicle number')(req, res, next);
         }
@@ -697,7 +677,7 @@ exports.isValidVehicleNumberEntered = (tableName) => async (req, res, next) =>
         // {
         //     return res.status(500).json
         //     ({
-        //         code : 200,
+        //         code: 400,
         //         status : "failed",
         //         error: 'Internal server error while number plate' 
         //     });
@@ -717,5 +697,60 @@ exports.isValidVehicleNumberEntered = (tableName) => async (req, res, next) =>
         //     console.log(`Vehicle number doesn't exist`);
         //     next();           
         // }
+    }
+}
+
+exports.isSafetyCertificateAdded = (req, res, next) =>
+{
+    if(!req.files?.safety_certicate)
+    {
+        console.log(`Vehicle safety certificate is not uploaded`);
+        return res.status(200).json
+        ({
+            code : 400,
+            success: false,
+            message : `Vehicle safety certificate is not uploaded`
+        });
+    } 
+    else
+    {
+        next();
+    }
+}
+
+
+exports.isVehicleImageUploaded = (req, res, next) =>
+{
+    if(!req.files?.image)
+    {
+        console.log(`Vehicle image is not uploaded`);
+        return res.status(200).json
+        ({
+            code : 400,
+            success: false,
+            message : `Vehicle image is not uploaded`
+        });
+    } 
+    else
+    {
+        next();
+    }
+}
+
+exports.isVehicleImageTitleAdded = (req, res, next) =>
+{
+    if(!req.body.title)
+    {
+        console.log(`Vehicle image title is not added`);
+        return res.status(200).json
+        ({
+            code : 400,
+            success: false,
+            message : `Vehicle image title is not added`
+        });
+    } 
+    else
+    {
+        next();
     }
 }

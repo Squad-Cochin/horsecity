@@ -11,6 +11,7 @@
  
 const constant = require('../../utils/constants');
 const driver = require('../../models/drivers/driver.model');
+const time = require('../../utils/helper/date');
 
 exports.getAll = async (req, res) =>
 {
@@ -76,32 +77,6 @@ exports.getOne= async (req, res) =>
     }
 }
 
-// exports.addDriver = async (req, res, next) =>
-// {
-//     const drivers = await driver.adddriver(req.body.name, req.body.email, req.body.contact_no, req.body.emergency_contact_no, req.body.date_of_birth, req.body.licence_no, req.body.description, req.files.profile_image, req.files.licence_img);
-//     console.log(drivers);
-//     if(drivers === 'err')
-//     {
-//         console.log('Error while inserting the driver data ');
-//         return res.status(200).send
-//         ({
-//             code : 400,
-//             status : true,
-//             message : constant.responseMessage.errorInsert,
-//         });
-//     }
-//     if(drivers === 'true')
-//     {
-//         console.log('Driver data inserted successfully');
-//         return res.json
-//         ({
-//             code : 200,
-//             status : true,
-//             message : constant.responseMessage.insert,
-//         });
-//     }
-// }
-
 exports.addDriver = async (req, res, next) => {
     
       const drivers = await driver.adddriver(
@@ -109,7 +84,7 @@ exports.addDriver = async (req, res, next) => {
         req.body.email,
         req.body.contact_no,
         req.body.emergency_contact_no,
-        req.body.date_of_birth,
+        time.changeDateToSQLFormat(req.body.date_of_birth),
         req.body.licence_no,
         req.body.description,
         req.files.profile_image,
@@ -198,7 +173,7 @@ exports.editDriver = async (req, res, next) =>
         req.body.email,
         req.body.contact_no,
         req.body.emergency_contact_no,
-        req.body.date_of_birth,
+        time.changeDateToSQLFormat(req.body.date_of_birth),
         req.body.licence_no,
         req.body.description,
         req.files.profile_image,
@@ -222,6 +197,25 @@ exports.editDriver = async (req, res, next) =>
             code : 200,
             status : true,
             message : `Driver ${constant.responseMessage.edit}`,
+        });
+    }
+};
+
+exports.AssignServiceProvider = async (req, res, next) =>
+{
+    const drivers = await driver.assignserviceprovider(req.body.driver_id, req.body.serviceProvider_id)
+    if(drivers=== 'err')
+    {
+        console.log('Error while assigning service provider to a driver');
+    }
+    else
+    {
+        console.log(`Driver is assigned to a service provider`);
+        res.status(200).send
+        ({
+            code : 200,
+            success : true,
+            message : 'Driver is assigned to a service provider'
         });
     }
 };

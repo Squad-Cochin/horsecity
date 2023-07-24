@@ -40,17 +40,5 @@ INSERT INTO service_providers(name, email, user_name, password, contact_person, 
 /**
 [6:02 PM] Hariprasad T B
 
-Fri Jul 14 2023 00:00:00 GMT+0530 (India Standard Time)
-
-[6:02 PM] Hariprasad T B
-
-Input format
-
-[6:02 PM] Hariprasad T B
-
-15-07-2023
-
-[6:02 PM] Hariprasad T B
-
-vie 
+Fri Jul 14 2023 00:00:00 GMT+0530 (India Standard Time) 
  */

@@ -54,7 +54,14 @@ module.exports = function(app)
     // checkInput.dateOfBirthValidation,
     checkInput.isValidLicenceNumber,
     checkInput.isValidDescription,
+    checkInput.isDriverLicenceImageSubmitted,
+    checkInput.isDriverProfileImageSubmitted,
     driverController.editDriver
     );
+
+    // The below route is for assigning a driver to a particular service provider.
+    app.post(`/${process.env.apiToken}/assign/driver`, driverController.AssignServiceProvider);
+    
+    // The below route is for fetching a details 
     
 }

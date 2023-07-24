@@ -11,6 +11,7 @@
 
 const constant = require('../../utils/constants');
 const customer = require('../../models/customers/customer.model');
+const time = require('../../utils/helper/date');
 
 exports.getAll= async (req, res) =>
 {
@@ -43,29 +44,40 @@ exports.getAll= async (req, res) =>
 exports.getOne= async (req, res, next) =>
 {
     const customers = await customer.getone(req.params.id);
-    console.log('Customre One Data: ',customers);
-    if(customers.length === 0)
+    // console.log('Customer One Data: ',customers);
+    if(customers === 'nodata')
     {
-        console.log('No Customer data present');
+        console.log('No customer data present');
         return res.send
         ({
-            code : 404,
+            code : 200,
             status : true,
-            message : constant.responseMessage.getAllErr,
-            data : customers
+            message : constant.responseMessage.getOneErr,
+            data : []
+        });
+    }
+    else if(customers === 'err')
+    {
+        console.log('Error');
+        return res.send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.universalError,
+            data : []
         });
     }
     else
     {
-        console.log('Customer data fetched successfully');
+        console.log('Particular customer data fetched successfully');
         return res.send
         ({
             code : 200,
             status : true,
             message : constant.responseMessage.getAll,
-            data : customers
+            data : customers 
         });
-    }
+    }    
 }
 
 exports.addCustomer = async (req, res, next) =>
@@ -77,7 +89,7 @@ exports.addCustomer = async (req, res, next) =>
         req.body.userName,
         req.body.password,
         req.body.contact_no,
-        req.body.date_of_birth, 
+        time.changeDateToSQLFormat(req.body.date_of_birth), 
         req.body.id_proof_no,
         req.files.id_proof_image
     );
@@ -128,7 +140,7 @@ exports.addCustomer = async (req, res, next) =>
         ({
             code: 200,
             status: true,
-            message: constant.responseMessage.insert,
+            message: `Customer ${constant.responseMessage.insert}`,
         });
     }
 };
@@ -136,7 +148,17 @@ exports.addCustomer = async (req, res, next) =>
 
 exports.editCustomer = async (req, res, next) =>
 {
-    const customers = await customer.editcustomer(req.params.id, req.body.name, req.body.email, req.body.userName, req.body.contact_no, req.body.date_of_birth, req.body.id_proof_no, req.files.id_proof_image);
+    const customers = await customer.editcustomer
+    (
+        req.params.id,
+        req.body.name,
+        req.body.email,
+        req.body.userName,
+        req.body.contact_no,
+        time.changeDateToSQLFormat(req.body.date_of_birth),
+        req.body.id_proof_no,
+        req.files.id_proof_image
+    );
     // const customers = await customer.editcustomer(req.params.id, req.body, req.files);
     
     if(customers === 'err')
@@ -186,7 +208,7 @@ exports.editCustomer = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.edit,
+            message : ` Customer ${constant.responseMessage.edit} `,
         });
     }
 };
@@ -213,7 +235,7 @@ exports.updateStatus= async (req, res) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.statusChanged
+            message : `Customer ${constant.responseMessage.statusChanged}`
         });
     }
 }
@@ -240,7 +262,7 @@ exports.removeCustomer = async (req, res) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.removesuccess
+            message : `Customer ${constant.responseMessage.removesuccess}`
         });
     }
 }

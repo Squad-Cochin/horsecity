@@ -41,7 +41,7 @@ exports.addImages = async (req, res, next) =>
 exports.allImages = async (req, res, next) =>
 {
     const vehicleImages = await vehicleImage.allimages(req.params.id, req.body.page, req.body.limit)
-    console.log('Vehicle Image', vehicleImages);
+    // console.log('Vehicle Image', vehicleImages);
     if(vehicleImages === 'err')
     {
         console.log('Error while fetching the particular vehicle all images');

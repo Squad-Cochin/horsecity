@@ -11,6 +11,7 @@
 
 const constant = require('../../utils/constants');
 const vehicle = require('../../models/vehicles/vehicle.model');
+const time = require('../../utils/helper/date');
 
 // The below function is for Adding the vehicle
 
@@ -32,14 +33,15 @@ exports.addNew = async (req, res, next) =>
         req.body.vehicle_registration_number,
         req.body.gcc_travel_allowed,
         req.body.insurance_cover,
-        req.body.insurance_date,
+        time.changeDateToSQLFormat(req.body.insurance_date),
         req.body.insurance_policy_no,
         req.body.insurance_policy_provider,
-        req.body.insurance_expiration_date,
+        time.changeDateToSQLFormat(req.body.insurance_expiry_date),
+        // req.files.safety_certicate,
         req.files.safety_certicate,
         req.body.vehicle_type,
-        req.body.vehicle_registration_date,
-        req.body.vehicle_expiration_date
+        time.changeDateToSQLFormat(req.body.vehicle_registration_date),
+        time.changeDateToSQLFormat(req.body.vehicle_exipration_date)
     );
     
     if(vehicles === 'err')
@@ -188,8 +190,7 @@ exports.getOne = async (req, res, next) =>
                 //     vehicles : vehicles
                 // }
         });
-    }
-    
+    }    
 }
 exports.updateData = async (req, res, next) =>
 {
@@ -210,13 +211,13 @@ exports.updateData = async (req, res, next) =>
         req.body.vehicle_registration_number,
         req.body.gcc_travel_allowed,
         req.body.insurance_cover,
-        req.body.insurance_date,
+        time.changeDateToSQLFormat(req.body.insurance_date),
         req.body.insurance_policy_no,
         req.body.insurance_policy_provider,
-        req.body.insurance_expiration_date,
+        time.changeDateToSQLFormat(req.body.insurance_expiry_date),
         req.body.vehicle_type,
-        req.body.vehicle_registration_date,
-        req.body.vehicle_expiration_date,
+        time.changeDateToSQLFormat(req.body.vehicle_registration_date),
+        time.changeDateToSQLFormat(req.body.vehicle_exipration_date),
         req.files.safety_certicate
     );
 
@@ -237,7 +238,7 @@ exports.updateData = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.edit,
+            message : ` Vehicle ${constant.responseMessage.edit}`,
         });
     }
 }

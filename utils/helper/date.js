@@ -40,15 +40,57 @@ const getFormattedUTCTime = (utcOffset) =>
     const hours = targetDate.getUTCHours().toString().padStart(2, '0');
     const minutes = targetDate.getUTCMinutes().toString().padStart(2, '0');
     const seconds = targetDate.getUTCSeconds().toString().padStart(2, '0');
-
     // return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 
+  const changeDateToSQLFormat = (dateString) =>
+  {
+      // Convert the input string to a Date object
+      const dateObj = new Date(dateString);
+  
+      // Extract the individual date components
+      const year = dateObj.getFullYear();
+      const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+      const day = String(dateObj.getDate()).padStart(2, '0');
+      const hours = String(dateObj.getHours()).padStart(2, '0');
+      const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+      const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+  
+      // Format the date in YYYY-MM-DD HH-MM-SS
+      const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+      return formattedDate;  
+  };
+
+function formatDateToDDMMYYYY(inputDate) 
+  {
+    if(!inputDate)
+    {
+        return null
+    }
+    else
+    {
+        // Convert the input date string to a Date object
+        const dateObj = new Date(inputDate);
+    
+        // Extract day, month, and year from the Date object
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const year = dateObj.getFullYear();
+    
+        // Format the date as "DD-MM-YYYY"
+        const formattedDate = `${day}-${month}-${year}`;
+        return formattedDate;
+    }
+    
+}
+
 const timeexportfunction = 
 {
     addingSpecifiedDaysToCurrentDate,
-    getFormattedUTCTime
+    getFormattedUTCTime,
+    changeDateToSQLFormat,
+    formatDateToDDMMYYYY
 }
 
 module.exports = timeexportfunction;
