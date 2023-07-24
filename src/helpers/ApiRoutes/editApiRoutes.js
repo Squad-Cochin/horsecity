@@ -37,15 +37,8 @@ export async function updateLanguage(){
   }
 }
 
-/**Update previous discounts */
-export async function updateDiscounts(){
-  try {
-      // const { data } = await axios.put(`${url.POST_SP_EDIT_URL}`);
-      // return { data };
-  } catch (error) {
-      return { error : "Faild !"}
-  }
-}
+
+
 
 /**Update previous taxation */
 export async function updateTaxation(id, data){
@@ -223,5 +216,39 @@ export async function updateTaxationStatus(id){
     return data;
   } catch (error) {
     return { error : "Faild !"}
+  }
+}
+
+
+export async function updateDiscountStatus(id){
+  try{
+    const { data } = await axios.put(`${url.PUT_DISCOUNTS_UPDATE_STATUS}/${id}`);
+    console.log("data",data)
+    return data;
+  } catch (error) {
+    return { error : "Faild !"}
+  }
+}
+
+
+/**Update previous discounts */
+export async function updateDiscounts(id, data){
+  try {
+    console.log("datas",id,data)
+    const formData = new FormData();
+    // Append the object data to the FormData instance
+    for (const key in data) {
+        formData.append(key, data[key]);
+    }
+    // Send the form data as a POST request using Axios
+    const response = await axios.put(`${url.PUT_DISCOUNTS_EDIT_URL}/${id}`, formData, {
+        headers: {
+        'Content-Type': 'multipart/form-data'
+        }
+    });
+    console.log("response",response)
+    return response
+  } catch (error) {
+      return { error : "Faild !"}
   }
 }

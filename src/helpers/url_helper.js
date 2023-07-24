@@ -17,12 +17,12 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
  * The below one is Saurabh's Computer Details
  */
 export const API_BASE_URL = "http://192.168.200.130:8000";
-const apiBaseUrl = "http://192.168.200.130:8000";
+// const apiBaseUrl = "http://192.168.200.130:8000";
 /**
  * The below one is own Computer Details
  */
 
-// const apiBaseUrl = "http://localhost:8000";
+const apiBaseUrl = "http://localhost:8000";
 // export const API_BASE_URL = "http://localhost:8000";
 
 const token = "/horsecity661809"
@@ -75,12 +75,17 @@ export const POST_TAXATION_EDIT_URL = apiBaseUrl + token + "/update/taxation"
 export const PUT_TAXATION_REMOVE = apiBaseUrl + token + "/remove/taxation"
 
 
-// http://192.168.200.130:8000/horsecity661809/getAll/customers
 /**SETTINGS*/
 export const GET_SETTINGS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/settings"
 export const PUT_SETTINGS_EDIT_URL = apiBaseUrl + token + "/update/settings"
 
-
+/**DISCOUNTS */
+export const GET_DISCOUNTS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/discounts"
+export const PUT_DISCOUNTS_UPDATE_STATUS = apiBaseUrl + token + "/update-status/discount"
+export const POST_DISCOUNTS_ADD_URL = apiBaseUrl + token + "/add/discount"
+export const PUT_DISCOUNTS_EDIT_URL = apiBaseUrl + token + "/update/discount"
+export const PUT_DISCOUNTS_REMOVE = apiBaseUrl + token + "/remove/discount"
+export const GET_DISCOUNTS_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/discounts"
 
 export const POST_FAKE_LOGIN = "/post-fake-login";
 export const POST_FAKE_JWT_LOGIN = "/post-jwt-login";

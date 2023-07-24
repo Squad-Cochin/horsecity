@@ -65,7 +65,6 @@ const TaxationDeatails = () => {
                     console.log("update previues one ");
                     editTxations(values)
                 }
-    
         }
       });
     function tog_delete() {
@@ -182,7 +181,7 @@ const TaxationDeatails = () => {
                                         <tbody className="list form-check-all">
                                             {taxations.map((item,index) => (
                                             <tr key={item.id}>
-                                                <th scope="row">   {index + 1} </th>
+                                                <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                 <td className="name">{item.name}</td>
                                                 <td className="type">{item.type}</td>
                                                 <td className="value">{item.value}</td>
@@ -300,8 +299,8 @@ const TaxationDeatails = () => {
             </div>
 
             {/* Add Modal */}
-            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}  centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ?  'Add taxation' : 'Edit taxation' } </ModalHeader>
+            <Modal className="extra-width" isOpen={modal_list} toggle={() => { setmodal_list(false); setAdd_list(false); }}  centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); setAdd_list(false); }}>{add_list ?  'Add taxation' : 'Edit taxation' } </ModalHeader>
                 <form className="tablelist-form"
                  onSubmit={validation.handleSubmit}>
                     <ModalBody>

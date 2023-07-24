@@ -31,8 +31,7 @@ const SettingPage = () =>
 
 
     useEffect(()=>{
- 
-      // setSetting_data(getSettingsPageData());
+      
       setloginPageBackgroundPreview(settings_data[0]?.loginpage_bg_image);
       setLoginPageLogoPreview(settings_data[0]?.loginpage_logo);
       setMenuLogoPreview(settings_data[0]?.logo);
@@ -52,14 +51,14 @@ const SettingPage = () =>
       loginpage_logo: settings_data[0]?.loginpage_logo || '',
       favicon: settings_data[0]?.favicon || '',
       loginpage_bg_image: settings_data[0]?.loginpage_bg_image || '',
-      language_id: settings_data[0]?.language_id || '1',
-      currency_id: settings_data[0]?.currency_id || '1',
-      tax_id: settings_data[0]?. tax_id || '1',
+      language_id: settings_data[0]?.language_id || '',
+      currency_id: settings_data[0]?.currency_id || '',
+      tax_id: settings_data[0]?.tax_id || '',
       invoice_prefix: settings_data[0]?.invoice_prefix || '',
       quotation_prefix: settings_data[0]?.quotation_prefix || '',
       licence_number: settings_data[0]?.licence_number || '',
     };
-    console.log("image",settings_data[0]?.loginpage_logo);
+    console.log("Data",settings_data[0]);
     const validation = useFormik({
       // enableReinitialize : use this flag when initial values needs to be changed
       enableReinitialize: true,
@@ -71,11 +70,11 @@ const SettingPage = () =>
         values.loginpage_logo = loginPageLogo
 
                   //  console.log("values",values.id,values);    
+                   console.log(values);
+                  //  dispatch(uploadMenuImg(menuLogoPreview));
+      
 
-                   dispatch(uploadMenuImg("hello"));
-                   console.log("menulogo",menuLogoPreview);
-
-                  let updateSettingsPage = await updateSettings(1,values);
+                  let updateSettingsPage = await updateSettings(values);
                   console.log("update",updateSettingsPage);
                   if(updateSettingsPage.code === 200){
                       setErrors("")
@@ -119,8 +118,9 @@ const SettingPage = () =>
         { code: '+971', country: 'United Arab Emirates', region: 'GCC' },
       ];
     const languageCodes = [
-        { code: '1', language: 'English'},
         { code: '2', language: 'Arabic'},
+        { code: '1', language: 'English'},
+  
     ];
     const currencies = [
         { code: '1', currency: 'Dhiram'},

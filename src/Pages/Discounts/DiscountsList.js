@@ -1,6 +1,6 @@
 
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 // import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
@@ -9,47 +9,50 @@ import List from 'list.js';
 import Flatpickr from "react-flatpickr";
 
 
-// Import Images
-// import avatar1 from "../../assets/images/users/avatar-1.jpg";
-// import avatar2 from "../../assets/images/users/avatar-2.jpg";
-// import avatar3 from "../../assets/images/users/avatar-3.jpg";
-// import avatar4 from "../../assets/images/users/avatar-4.jpg";
-// import avatar5 from "../../assets/images/users/avatar-5.jpg";
-
 //Import discounts
-import { getDiscounts } from '../../helpers/ApiRoutes/authApiRoutes'
+import { getDiscountsPageData , getSingleDiscountData} from '../../helpers/ApiRoutes/getApiRoutes';
+import { updateDiscountStatus } from '../../helpers/ApiRoutes/editApiRoutes';
+import { removeDiscount } from '../../helpers/ApiRoutes/removeApiRoutes'
 import { addNewDiscounts } from '../../helpers/ApiRoutes/addApiRoutes';
 import { updateDiscounts } from '../../helpers/ApiRoutes/editApiRoutes';
 import { useFormik } from "formik";
+
+import config from '../../config';
 const DiscountsDeatails = () => {
 
     const [modal_list, setmodal_list] = useState(false);
     const [discounts, setDiscounts] = useState([])
     const [add_list, setAdd_list] = useState(false);
-    const [discount, setDiscount] = useState([])
+    const [discount, setDiscount] = useState([]);
+    const [ pageNumber, setPageNumber ] = useState(1);
+    const [ numberOfData, setNumberOfData ] = useState(0);
+    const [ errors, setErrors ] = useState("") ;
+    const [modal_delete, setmodal_delete] = useState(false);
+
+    const pageLimit = config.pageLimit;
+
+
+    useEffect(() => {
+        getAllData(1)
+    }, [])
+
 
     function toggleStatus(button, discountId) {
-        console.log(button, discountId);
         var currentStatus = button.innerText.trim();
+        const discount = discounts.find((d) => d.id === discountId);
+        updateDiscountStatus(discount.id)
         if (currentStatus === 'ACTIVE') {
             button.innerText = 'INACTIVE';
             button.classList.remove('btn-success');
             button.classList.add('btn-danger');
-            // Find the corresponding customer by ID
-            const discount = discounts.find((s) => s.id === discountId);
-            console.log("Service Provider ", discount);
             if (discount) {
-                console.log('Came here');
                 discount.status = 'INACTIVE';
-                console.log("Service Provider", discount);
             }
         }
         else if (currentStatus === 'INACTIVE') {
             button.innerText = 'ACTIVE';
             button.classList.remove('btn-danger');
             button.classList.add('btn-success');
-            // Find the corresponding customer by ID
-            const discount = discounts.find((s) => s.id === discountId);
             if (discount) {
                 discount.status = 'ACTIVE';
             }
@@ -57,26 +60,25 @@ const DiscountsDeatails = () => {
     }
 
 
-    function tog_list(param, productId) {
+    async function tog_list(param, productId) {
         if (param === 'ADD') {
+            setErrors("")
             setAdd_list(!add_list);
-        }
-        const data = discounts?.find((item) => item?.id === productId)
-        setDiscount([data]);
+        }else {
+            setErrors("")
+            let discountData = await getSingleDiscountData(productId)
+            setDiscount(discountData.discount);
+        }   
         setmodal_list(!modal_list);
-
-
     }
+
+
     const initialValues = {
         name: !add_list ? discount[0]?.name : '',
         type: !add_list ? discount[0]?.type : '',
         rate: !add_list ? discount[0]?.rate : '',
     };
-
     // Later in your code, when setting the initial state
-
-
-
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
@@ -86,81 +88,61 @@ const DiscountsDeatails = () => {
             if (add_list) {
                 //add new
                 console.log("add new");
-                addNewDiscounts(values);
-                setAdd_list(false);
-                setmodal_list(false);
+                addDiscount(values)
+      
             } else {
                 //update previes one
                 console.log("update previues one ");
-                updateDiscounts(values);
-                setAdd_list(false);
-                setmodal_list(false);
-
+                editDiscounts(values)
             }
 
         }
     });
-
-    const [modal_delete, setmodal_delete] = useState(false);
-    function tog_delete() {
-        setmodal_delete(!modal_delete);
+    // Add discount
+    async function addDiscount(val){
+        let addDsc = await addNewDiscounts(val);
+        if(addDsc.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+        }else{
+            setErrors("")
+            setErrors(addDsc.message)
+        }
     }
-    useEffect(() => {
 
-        setDiscounts(getDiscounts())
-    }, [])
-    useEffect(() => {
+        // Update Discount
+        async function editDiscounts(data){
+            let updateDsc = await updateDiscounts(discounts[0]?.id, data);
+            if(updateDsc.code === 200){
+                setErrors("")
+                setAdd_list(false);
+                setmodal_list(false);
+                getAllData(pageNumber)
+            }else{
+                setErrors("")
+                setErrors(updateDsc.message)
+            }
+        }
 
-        // const attroptions = {
-        //     valueNames: [
-        //         'name',
-        //         'born',
-        //         {
-        //             data: ['id']
-        //         },
-        //         {
-        //             attr: 'src',
-        //             name: 'image'
-        //         },
-        //         {
-        //             attr: 'href',
-        //             name: 'link'
-        //         },
-        //         {
-        //             attr: 'data-timestamp',
-        //             name: 'timestamp'
-        //         }
-        //     ]
-        // };
-        // const attrList = new List('users', attroptions);
-        // attrList.add({
-        //     name: 'Leia',
-        //     born: '1954',
-        //     image: avatar5,
-        //     id: 5,
-        //     timestamp: '67893'
-        // });
+        function tog_delete() {
+            setmodal_delete(!modal_delete);
+        }
 
-        // Existing List
-        const existOptionsList = {
-            valueNames: ['contact-name', 'contact-message']
-        };
+  
+        async function getAllData(page) {
+            let getDiscounts = await getDiscountsPageData(page || 1);
+            setDiscounts(getDiscounts.discounts);
+            setPageNumber(page);
+            setNumberOfData(getDiscounts.totalCount);
+        }
 
-        new List('contact-existing-list', existOptionsList);
-
-        // Fuzzy Search list
-        new List('fuzzysearch-list', {
-            valueNames: ['name']
-        });
-
-        // pagination list
-
-        new List('pagination-list', {
-            valueNames: ['pagi-list'],
-            page: 3,
-            pagination: true
-        });
-    });
+        /**This function is used to remove a discount*/
+        async function remove_data(id) {
+            await removeDiscount(id)
+            window.location.reload();
+        }
 
     return (
         <React.Fragment>
@@ -173,7 +155,6 @@ const DiscountsDeatails = () => {
                                 <CardHeader>
                                     <h4 className="card-title mb-0">Add, Edit & Remove</h4>
                                 </CardHeader>
-
                                 <CardBody>
                                     <div id="customerList">
                                         <Row className="g-4 mb-3">
@@ -182,15 +163,12 @@ const DiscountsDeatails = () => {
                                                     <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
 
                                                 </div>
-                                            </Col>
-
+                                           </Col>
                                         </Row>
-
                                         <div className="table-responsive table-card mt-3 mb-1">
                                             <table className="table align-middle table-nowrap" id="customerTable">
                                                 <thead className="table-light">
                                                     <tr>
-
                                                         <th className="index" data-sort="index">#</th>
                                                         <th className="sort" data-sort="name">Name</th>
                                                         <th className="sort" data-sort="type">Type</th>
@@ -203,18 +181,14 @@ const DiscountsDeatails = () => {
                                                 <tbody className="list form-check-all">
                                                     {discounts.map((item, index) => (
                                                         <tr key={item.id}>
-
-                                                            <th scope="row">   {index + 1} </th>
-
+                                                            <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                             <td className="name">{item.name}</td>
                                                             <td className="name">{item.type}</td>
                                                             <td className="abbreviation">{item.rate}</td>
-
-
                                                             <td className="created_at">{item.created_at}</td>
                                                             <td>
                                                             <div>
-                                                                        <div className="d-flex gap-2">
+                                                            <div className="d-flex gap-2">
                                                                             <div className="status">
                                                                                 <button className="btn btn-sm btn-success status-item-btn"
                                                                                     data-bs-toggle="modal" data-bs-target="#showModal"
@@ -223,11 +197,10 @@ const DiscountsDeatails = () => {
                                                                                 </button>
                                                                             </div>
                                                                         </div>
-                                                                    </div>
+                                                             </div>
                                                             </td>
                                                             <td>
                                                                 <div className="d-flex gap-2">
-                                              
                                                                     <div className="edit">
                                                                         <button
                                                                             className="btn btn-sm btn-success edit-item-btn"
@@ -243,6 +216,7 @@ const DiscountsDeatails = () => {
                                                                             className="btn btn-sm btn-danger remove-item-btn"
                                                                             data-bs-toggle="modal"
                                                                             data-bs-target="#deleteRecordModal"
+                                                                            onClick={() => remove_data(item?.id)}
                                                                         >
                                                                             Remove
                                                                         </button>
@@ -253,28 +227,23 @@ const DiscountsDeatails = () => {
                                                     ))}
                                                 </tbody>
                                             </table>
-
-                                            <div className="noresult" style={{ display: "none" }}>
-                                                <div className="text-center">
-                                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                                        colors="primary:#121331,secondary:#08a88a" style={{ width: "75px", height: "75px" }}>
-                                                    </lord-icon>
-                                                    <h5 className="mt-2">Sorry! No Result Found</h5>
-                                                    <p className="text-muted mb-0">We've searched more than 150+ Orders We did not find any
-                                                        orders for you search.</p>
-                                                </div>
-                                            </div>
                                         </div>
-
                                         <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">
-                                                <Link className="page-item pagination-prev disabled" to="#">
-                                                    Previous
-                                                </Link>
+                                                {pageNumber > 1 ?
+                                                    <Link 
+                                                        className="page-item pagination-prev disabled" 
+                                                        onClick={()=> getAllData(pageNumber - 1)}
+                                                    >
+                                                        Previous
+                                                    </Link>
+                                                : null }
                                                 <ul className="pagination listjs-pagination mb-0"></ul>
-                                                <Link className="page-item pagination-next" to="#">
-                                                    Next
-                                                </Link>
+                                                {numberOfData > pageLimit * pageNumber ? 
+                                                    <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}>
+                                                        Next
+                                                    </Link> 
+                                                : null }
                                             </div>
                                         </div>
                                     </div>
@@ -282,43 +251,16 @@ const DiscountsDeatails = () => {
                             </Card>
                         </Col>
                     </Row>
-
-                    {/* <Row>
-                 <Col xl={4}>
-                            <Card>
-                           
-                                <CardBody>    
-                                    <div id="users">
-                                        <SimpleBar style={{ height: "242px" }} className="mx-n3">
-                                            <ListGroup className="list mb-0" flush>
-                                                <ListGroupItem data-id="1">
-                                              </ListGroupItem>
-                                            </ListGroup>
-                                        </SimpleBar>
-                                    </div>
-                                </CardBody>
-                            </Card>
-                        </Col>
-
-
-                       
-                    </Row> */}
-
-
                 </Container>
             </div>
 
             {/* Add Modal */}
-            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ? 'Add discount' : 'Edit discount'}</ModalHeader>
+            <Modal className="extra-width" isOpen={modal_list} toggle={() =>  { setmodal_list(false); setAdd_list(false); }}  centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() =>  { setmodal_list(false); setAdd_list(false); }}>{add_list ? 'Add discount' : 'Edit discount'}</ModalHeader>
                 <form className="tablelist-form"
                     onSubmit={validation.handleSubmit}>
                     <ModalBody>
-                        {/* <div className="mb-3" id="modal-id" style={{ display: "none" }}>
-                            <label htmlFor="id-field" className="form-label">ID</label>
-                            <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
-                        </div> */}
-
+                    {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
                         <div className="mb-3">
                             <label htmlFor="taxationname-field" className="form-label">Name</label>
                             <input type="text" id="taxationname-field" name='name' className="form-control" placeholder="Enter Name" value={validation.values.name || ""}
@@ -361,7 +303,7 @@ const DiscountsDeatails = () => {
                 </form>
             </Modal>
 
-            {/* Remove Modal */}
+            {/* Remove Modal
             <Modal isOpen={modal_delete} toggle={() => { tog_delete(); }} className="modal fade zoomIn" id="deleteRecordModal" centered >
                 <div className="modal-header">
                     <Button type="button" onClick={() => setmodal_delete(false)} className="btn-close" aria-label="Close"> </Button>
@@ -380,7 +322,7 @@ const DiscountsDeatails = () => {
                         <button type="button" className="btn w-sm btn-danger " id="delete-record">Yes, Delete It!</button>
                     </div>
                 </ModalBody>
-            </Modal>
+            </Modal> */}
         </React.Fragment>
     );
 };

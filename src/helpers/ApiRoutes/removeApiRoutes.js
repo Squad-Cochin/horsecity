@@ -67,3 +67,17 @@ export async function removeTaxation(tax_id){
         return { error : "Failed !"}
     }
 }
+
+
+/**Remove Taxation*/
+export async function removeDiscount(dsc_id){
+    try {
+        console.log("remove id",dsc_id);
+        // console.log("data",url.PUT_TAXATION_REMOVE+"/"+dsc_id)
+        const { data } = await axios.put(`${url.PUT_DISCOUNTS_REMOVE}/${dsc_id}`);
+        console.log("data",data)
+        return data;
+    } catch (error) {
+        return { error : "Failed !"}
+    }
+}

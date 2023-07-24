@@ -150,14 +150,9 @@ export async function getTaxationsData(pageNumber){
 
   export async function getSettingsPageData(){
 
-    console.log(url.GET_SETTINGS_ALL_DATA_URL+"/1");
     try {
-        // let pageLimit = config.pageLimit;
-        // let reqObj = {
-        //     "page" : pageNumber,
-        //     "limit" : pageLimit
-        // }
-        let sId = 1
+        let pageLimit = config.pageLimit;
+
         const { data } = await axios.get(`${url.GET_SETTINGS_ALL_DATA_URL}`);
         console.log("ddd",data)
         return(data)
@@ -183,6 +178,46 @@ export async function getTaxationsData(pageNumber){
 export async function getSingleTaxationData(tId){
     try {
         const { data } = await axios.get(`${url.GET_TAXATION_SINGLE_DATA_URL}/${tId}`);
+        console.log("DDD",data)
+        return(data)
+    } catch (error) {
+        return null
+    }
+}
+
+export async function getDiscountsPageData(pageNumber){
+
+
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = {
+            "page" : pageNumber,
+            "limit" : pageLimit
+        }
+        let sId = 1
+        const { data } = await axios.post(`${url.GET_DISCOUNTS_ALL_DATA_URL}`,reqObj);
+        console.log("ddd",data)
+        return(data)
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data": {
+                "totalCount": 0,
+                "vehicles": []
+            }
+        }
+        return errorObj.data
+    }
+    // if(settings){
+    //   return settings ;
+    // }
+    // return null ;
+  }
+  export async function getSingleDiscountData(dscId){
+    try {
+        const { data } = await axios.get(`${url.GET_DISCOUNTS_SINGLE_DATA_URL}/${dscId}`);
         console.log("DDD",data)
         return(data)
     } catch (error) {
