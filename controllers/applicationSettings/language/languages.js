@@ -171,7 +171,7 @@ exports.updateLanguage = async(req,res)=>
 exports.addNewLanguage = async(req,res)=>
 {
     // console.log("1",req.body);
-    let addNewTaxation = await lngModal.addNewLanguage(req.body);
+    let addNewTaxation = await lngModal.addNewLanguage(req.body,req.files);
     // console.log("addNew",addNewTaxation);
    if(addNewTaxation){
     return res.status(200).send
