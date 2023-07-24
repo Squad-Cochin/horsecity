@@ -5,10 +5,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
+import React, { useEffect ,useState} from "react";
 import logo from "../../assets/images/black-logo.png";
 import { Row, Col, CardBody, Card, Alert, Container, Form, Input, FormFeedback, Label } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
+import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 
 import { Link } from "react-router-dom";
 import withRouter from "../../components/Common/withRouter";
 
@@ -19,6 +20,20 @@ import { loginUser } from "../../store/actions";
 
 // Login function
 const Login = props => {
+
+
+  const [loginpage_logo,setLoginPageLogo] = useState('')
+  useEffect(()=>{
+    getAllData()
+  },[])
+  const { file } = useSelector(state => ({
+    file: state.settings.file,
+  }));
+ 
+  async function getAllData() {
+    let settingsData = await getSettingsPageData();
+    setLoginPageLogo(settingsData?.settingsPageData[0]?.loginpage_logo);
+   }
 
    // At the bigining unmounting 
    useEffect(() => {
@@ -70,13 +85,13 @@ const Login = props => {
                   <div className="text-center">
                     <Link to="/">
                       <img
-                        src={logo}
+                        src={ loginpage_logo || logo}
                         alt=""
                         height="50"
                         className="auth-logo logo-dark mx-auto"
                       />
                       <img
-                        src={logo}
+                        src={ loginpage_logo || logo}
                         alt=""
                         height="50"
                         className="auth-logo logo-light mx-auto"

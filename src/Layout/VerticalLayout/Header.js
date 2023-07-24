@@ -31,16 +31,11 @@ const Header = (props) => {
   const { file } = useSelector(state => ({
     file: state.settings.file,
   }));
-  console.log("file",file);
-
-  console.log("log",menulogo);
+ 
   async function getAllData() {
-    console.log("first")
     let settingsData = await getSettingsPageData();
-    console.log("LLL",settingsData.settingsPageData);
     setMenuLogo(settingsData?.settingsPageData[0]?.logo);
-
-}
+   }
   // Toggle screen function
   function toggleFullscreen() {
     if (
@@ -87,19 +82,19 @@ const Header = (props) => {
             <div className="navbar-brand-box text-center">
               <Link to="/" className="logo logo-dark">
                 <span className="logo-sm">
-                  <img src={menulogo} alt="logo-sm-dark" height="22" />
+                  <img src={menulogo || logo} alt="logo-sm-dark" height="22" />
                 </span>
                 <span className="logo-lg">
-                  <img src={menulogo} alt="logo-dark" height="24" />
+                  <img src={menulogo || logo} alt="logo-dark" height="24" />
                 </span>
               </Link>
 
               <Link to="/" className="logo logo-light">
                 <span className="logo-sm">
-                <img src={menulogo} alt="logo-sm-dark" height="22" />
+                <img src={menulogo || logo} alt="logo-sm-dark" height="22" />
                 </span>
                 <span className="logo-lg">
-                  <img src={menulogo} alt="logo-light" height="60" />
+                  <img src={menulogo || logo} alt="logo-light" height="60" />
                 </span>
               </Link>
             </div>

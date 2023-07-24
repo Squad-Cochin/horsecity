@@ -42,6 +42,8 @@ const SettingPage = () =>
       setFaviconPreview(settings_data[0]?.favicon);
 
     },[settings_data])
+    // Use useEffect to update the title when pageTitle changes
+
 
           //  console.log("TT",settings_data);
     const initialValues = {
@@ -62,7 +64,7 @@ const SettingPage = () =>
       quotation_prefix: settings_data[0]?.quotation_prefix || '',
       licence_number: settings_data[0]?.licence_number || '',
     };
-    console.log("Data",settings_data[0]);
+    console.log("Data",settings_data[0]?.currency_id);
     const validation = useFormik({
       // enableReinitialize : use this flag when initial values needs to be changed
       enableReinitialize: true,
@@ -74,14 +76,15 @@ const SettingPage = () =>
         values.loginpage_logo = loginPageLogo
 
                   //  console.log("values",values.id,values);    
-                   console.log(values);
+                   console.log("values",values);
                   //  dispatch(uploadMenuImg(menuLogoPreview));
       
 
                   let updateSettingsPage = await updateSettings(values);
                   console.log("update",updateSettingsPage);
                   if(updateSettingsPage.code === 200){
-                      setErrors("")
+                      setErrors("");
+                      window.location.reload();
                   }else{
                       setErrors("")
                       console.log("ERRRRR",updateSettingsPage);
@@ -121,74 +124,22 @@ const SettingPage = () =>
         { code: '+966', country: 'Saudi Arabia', region: 'GCC' },
         { code: '+971', country: 'United Arab Emirates', region: 'GCC' },
       ];
-    const languageCodes = [
-        { code: '1', language: 'Arabic'},
-        { code: '2', language: 'English'},
-  
-    ];
-    const currencie = [
-        { code: '1', currency: 'Dhiram'},
-        { code: '2', currency: 'Dollar'},
-    ];
-    const taxation = [
-      { code: '1', tax: 'VAT'},
-      { code: '2', tax: 'EID'},
-    
-  ];
-    // const handleSubmit = (event) => 
-    // {
-    //   event.preventDefault();
-    //   const form = event.target;
-    //   if (form.checkValidity())
-    //   {
-    //     // Form is valid, perform submit actions here
-    //     console.log('Form submitted');
-    //   }
-    //   else
-    //   {
-    //     form.reportValidity();
-    //   }
-    // };
 
-    const handleSubmit = (event) => {
-      event.preventDefault();
-      const form = event.target;
-      if (form.checkValidity()) {
-        // Perform form submission logic here
-        
-        // Update the logo image in the header if menuLogoPreview is set
-        if (menuLogoPreview) {
-          // Assuming you have a function to update the logo image in the header component
-          // Replace "updateHeaderLogo" with the actual function name and pass the menuLogoPreview as a parameter
-          updateHeaderLogo(menuLogoPreview);
-          // setLogoChanged(true);
-        }
   
-        console.log('Form submitted');
-      } else {
-        form.reportValidity();
-      }
-    };
-  
-    const updateHeaderLogo = (logoUrl) => 
-    {
-      
-    };
-  
-
     // function for get data all service provider data
     async function getAllData() {
-      console.log("first")
       let settingsData = await getSettingsPageData();
       let languages = await getLanguagesNames();
       let currencies = await getCurrenciesNames();
       let taxations = await getTaxationsNames();
       setSetting_data(settingsData.settingsPageData);
-
+      setLanguages(languages?.languages);
+      setCurrencies(currencies?.currencies);
+      setTaxations(taxations?.taxations)
   }
 
 
-console.log("datadd",settings_data);
+
 
 
     return (
@@ -353,7 +304,7 @@ console.log("datadd",settings_data);
                           <div className="col-md-10">
                               <select id="country-code-select" className="form-select" name='language_id'   value={validation.values.language_id || ""}
                               onChange={validation.handleChange} >
-                                {languageCodes.map((item) => ( <option key={item.code} value={item.code}> {`${item.language}`} </option> ))}
+                                {languages.map((item) => ( <option key={item?.id} value={item?.id}> {`${item?.name}`} </option> ))}
                               </select>
                           </div>
                         </div>
@@ -364,9 +315,9 @@ console.log("datadd",settings_data);
                     <div className="col-md-10">
                         <select id="country-code-select" className="form-select" name='currency_id'  value={validation.values.currency_id || ""}
                               onChange={validation.handleChange} >
-                        {currencie.map((item) => (
-                            <option key={item.code}  value={item.code}>
-                            {`${item.currency}`}
+                        {currencies.map((item) => (
+                            <option key={item?.id}  value={item?.id}>
+                            {`${item?.name}`}
                             </option>
                         ))}
                         </select>
@@ -380,9 +331,9 @@ console.log("datadd",settings_data);
                     <div className="col-md-10">
                         <select id="country-code-select" className="form-select" name='tax_id'  value={validation.values.tax_id || ""}
                               onChange={validation.handleChange} >
-                        {taxation.map((item) => (
-                            <option key={item.code} value={item.code}>
-                            {`${item.tax}`}
+                        {taxations.map((item) => (
+                            <option key={item?.id} value={item?.id}>
+                            {`${item?.name}`}
                             </option>
                         ))}
                         </select>

@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import UsePanel from "./UserPanel";
 import OrderStatus from "./OrderStatus";
 import Notifications from "./Notifications";
@@ -8,17 +8,30 @@ import RevenueByLocation from "./RevenueByLocation";
 import LatestTransation from "./LatestTransation";
 
 import { Row, Container } from "reactstrap";
-
+/**Api */
+import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 
 const Dashboard = () => {
-  document.title = "Dashboard | HORSCITY - React Admin & Dashboard Template";
+
+  const [pageTitle, setPageTitle] = useState('HORSCITY');
+  
+  useEffect(() => {
+    getAllData()
+
+  }, [pageTitle]);
+  
+  async function getAllData() {
+    let settingsData = await getSettingsPageData();
+    setPageTitle(settingsData?.settingsPageData[0]?.application_title);
+   }
+  document.title = `Dashboard | ${pageTitle} - React Admin & Dashboard Template`;
   return (
     <React.Fragment>
       <div className="page-content">
         <Container fluid={true}>
-          <Breadcrumbs title="HORSCITY" breadcrumbItem="Dashboard" />
+          <Breadcrumbs title={pageTitle} breadcrumbItem="Dashboard" />
           {/* User Panel Charts */}
           <UsePanel />
 
