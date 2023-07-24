@@ -930,3 +930,40 @@ exports.idProofImageWhileUpdate = (req, res, next) =>
     }
 }
     
+
+exports.isDriverIdEntered = (req, res, next) =>
+{
+    if(!req.body.driver_id)
+    {
+        console.log(`Driver id is not entered`);
+        return res.status(200).json
+        ({
+            code : 500,
+            success: false,
+            message : `Internal Server Error. Driver id is not entered`
+        });     
+    }
+    else
+    {
+        next();
+    }
+}
+
+
+exports.isServiceProviderIdEntered = (req, res, next) =>
+{
+    if(!req.body.serviceProvider_id)
+    {
+        console.log(`Service provider id is not entered`);
+        return res.status(200).json
+        ({
+            code : 500,
+            success: false,
+            message : `Internal Server Error. Service provider id is not entered`
+        });     
+    }
+    else
+    {
+        next();
+    }
+}

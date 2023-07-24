@@ -100,7 +100,8 @@ module.exports =
         vehicleImgSuccess : "Images fetched succesfully",
         imageFormat : 'Only PNG and JPG formats are allowed',
         particularVehicleImageSuccess : 'Particular vehicle image succesfully uploaded',
-        particularVehicleImageError : 'Error while uploading the particular vehicle image'
+        particularVehicleImageError : 'Error while uploading the particular vehicle image',
+        
     },
 
     timeOffSet :
@@ -147,7 +148,8 @@ module.exports =
         vehciles_transportation : `vehciles_transportation`,
         vehicles : `vehicles`,
         vehicles_breakouts : `vehicles_breakout`,
-        vehicles_images : `vehicles_images`
+        vehicles_images : `vehicles_images`,
+        assign_drivers : `assign_drivers`
     }
   
 }

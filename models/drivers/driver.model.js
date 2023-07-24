@@ -8,7 +8,8 @@ const constants = require('../../utils/constants');
 const commonfetching = require('../../utils/helper/commonfetching');
 const commonoperation = require('../../utils/helper/commonoperation');
 const time = require('../../utils/helper/date');
-const con = require('../../configs/db.configs')
+const con = require('../../configs/db.configs');
+const { pastWorkHistroyResponse } = require('../../utils/objectConvertor');
 
 module.exports = class drivers
 {
@@ -42,15 +43,13 @@ module.exports = class drivers
         try
         {
             const data = await commonfetching.dataOnCondition(constants.tableName.drivers, Id, 'id');
-            // console.log('Data', data);
             if(data.length === 0)
             {
                 return data
             }
             else
             {
-                let dob = data[0].date_of_birth;                
-                data[0].date_of_birth = time.formatDateToDDMMYYYY(data[0].date_of_birth); 
+                data[0].date_of_birth = `${time.formatDateToDDMMYYYY(data[0].date_of_birth)}`; 
                 data[0].updated_at = `${time.formatDateToDDMMYYYY(data[0].updated_at)}`;
                 data[0].created_at = `${time.formatDateToDDMMYYYY(data[0].created_at)}`;
                 data[0].profile_image = `${process.env.PORT_SP}${constants.attachmentLocation.driver.view.profilephoto}${data[0].profile_image}`;
@@ -182,21 +181,39 @@ module.exports = class drivers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let insQuery = `INSERT INTO assign_drivers(service_provider_id, driver_id, created_at) VALUES(${sId}, ${dId}, ${time.getFormattedUTCTime(constants.timeOffSet.UAE)})`;
-                console.log(`Insert Query While Assigning Driver To A Service Provider: `, insQuery);
-                con.query(insQuery, (err, result) =>
+                let insQuery = `INSERT INTO assign_drivers(service_provider_id, driver_id, created_at) VALUES(${sId}, ${dId}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'  )`;
+                // console.log(`Insert Query While Assigning Driver To A Service Provider: `, insQuery);
+                let driverId = await commonfetching.dataOnCondition(constants.tableName.drivers, dId, 'id');
+                // console.log(`Driver Data: `, driverId);
+                let serproviderId = await commonfetching.dataOnCondition(constants.tableName.service_providers, sId, 'id');
+                // console.log(`Provider Data: `, serproviderId);
+                if(driverId.length === 0)
                 {
-                    if(result.affectedRows > 0)
+                    resolve('noDriver')
+                }
+                else
+                {
+                    if(serproviderId.length === 0)
                     {
-                        resolve(result);
+                        resolve('noServiceProvider')
                     }
                     else
                     {
-                        console.log(err);
-                        resolve('err')
+                        console.log(insQuery);
+                        con.query(insQuery, (err, result) =>
+                        {
+                            if(result.affectedRows > 0)
+                            {
+                                resolve(result);
+                            }
+                            else
+                            {
+                                console.log(err);
+                                resolve('err')
+                            }
+                        });
                     }
-
-                });
+                }
             });            
         }
         catch (error)
@@ -204,6 +221,44 @@ module.exports = class drivers
             console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "assignserviceprovider". Which is designed to assigne the driver to service provider.');            
         }
     }
+
+    // 
+
+    static async getworkpastserviceprovider(id)
+    {
+        try
+        {
+            return await new Promise(async(resolve, reject)=>
+            {
+                let selQuery = `SELECT ad.id, sp.user_name, ad.created_at FROM ${constants.tableName.assign_drivers} ad, ${constants.tableName.service_providers} sp WHERE ad.driver_id = ${id} AND sp.id = ad.service_provider_id`;
+                // console.log(selQuery);
+                con.query(selQuery, (err, result) =>
+                {
+                    // console.log(result);
+                    if(result.length === 0)
+                    {
+                        resolve(data)
+                    }
+                    else if(err)
+                    {
+                        resolve(`err`)
+                    }
+                    else
+                    {
+                        let data = pastWorkHistroyResponse(result);
+                        console.log('Data From Object Convertor', data);
+                        resolve(data)
+                    }
+                });                
+            });            
+        }
+        catch (error)
+        {
+            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "assignserviceprovider". Which is designed to assigne the driver to service provider.');            
+        }
+    }
+
+
 
 
 

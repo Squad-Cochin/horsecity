@@ -42,3 +42,39 @@ INSERT INTO service_providers(name, email, user_name, password, contact_person, 
 
 Fri Jul 14 2023 00:00:00 GMT+0530 (India Standard Time) 
  */
+
+
+/**
+ INSERT INTO service_providers (
+  name,
+  email,
+  user_name,
+  password,
+  contact_person,
+  contact_no,
+  role_id,
+  contact_address,
+  emergency_contact_no,
+  licence_image,
+  licence_no,
+  phone_verified,
+  email_verified,
+  expiry_at
+) VALUES (
+  'Saurabh Pande',
+  'sp832155@gmail.com',
+  'Saurabh1998',
+  SHA2('Asdf$1234', 256),
+  'owner',
+  '126432WDCWSE4',
+  NULL, -- Assigning NULL to role_id
+  '78 SAKET NAGAR NEAR NARENDRA NAGAR',
+  '8421168036',
+  'dqw5ec9+5c3sc1sws6fe7cw31ce.jpg',
+  'adsf45421a8dssc',
+  1,  -- Use 1 for TRUE for phone_verified
+  1,  -- Use 1 for TRUE for email_verified
+  '2023-10-03 15:32:34'
+);
+
+ */
