@@ -4,7 +4,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 import Header from '../../Layout/VerticalLayout/Header';
 // import { getSettingsPageData } from '../../helpers/ApiRoutes/authApiRoutes'
 import { updateSettings} from '../../helpers/ApiRoutes/editApiRoutes';
-import { getSettingsPageData , getTaxations, getCurrencies, getLanguages} from '../../helpers/ApiRoutes/getApiRoutes'; 
+import { getSettingsPageData , getTaxationsNames, getCurrenciesNames, getLanguagesNames} from '../../helpers/ApiRoutes/getApiRoutes'; 
 import { useFormik } from "formik";
 import { uploadMenuImg } from "../../store/actions";
 import { useSelector, useDispatch } from "react-redux";
@@ -180,9 +180,9 @@ const SettingPage = () =>
     async function getAllData() {
       console.log("first")
       let settingsData = await getSettingsPageData();
-      let languages = await getLanguages();
-      let currencies = await getCurrencies();
-      let taxations = await getTaxations();
+      let languages = await getLanguagesNames();
+      let currencies = await getCurrenciesNames();
+      let taxations = await getTaxationsNames();
       setSetting_data(settingsData.settingsPageData);
 
   }

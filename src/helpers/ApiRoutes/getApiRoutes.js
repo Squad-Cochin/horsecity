@@ -131,7 +131,7 @@ export async function getTaxationsData(pageNumber){
             "page" : pageNumber,
             "limit" : pageLimit
         }
-        const { data } = await axios.post(`${url.GET_TAXATION_ALL_DATA_URL}`,reqObj);
+        const { data } = await axios.post(`${url.POST_TAXATION_ALL_DATA_URL}`,reqObj);
         console.log("ddd",data)
         return(data)
     } catch (error) {
@@ -153,7 +153,7 @@ export async function getTaxationsData(pageNumber){
     try {
         let pageLimit = config.pageLimit;
 
-        const { data } = await axios.get(`${url.GET_SETTINGS_ALL_DATA_URL}`);
+        const { data } = await axios.get(`${url.POST_SETTINGS_ALL_DATA_URL}`);
         console.log("ddd",data)
         return(data)
     } catch (error) {
@@ -168,10 +168,6 @@ export async function getTaxationsData(pageNumber){
         }
         return errorObj.data
     }
-    // if(settings){
-    //   return settings ;
-    // }
-    // return null ;
   }
 
 
@@ -210,10 +206,6 @@ export async function getDiscountsPageData(pageNumber){
         }
         return errorObj.data
     }
-    // if(settings){
-    //   return settings ;
-    // }
-    // return null ;
   }
   export async function getSingleDiscountData(dscId){
     try {
@@ -225,13 +217,10 @@ export async function getDiscountsPageData(pageNumber){
     }
 }
 
-
-export async function getLanguages(){
+export async function getLanguagesNames(){
 
     try {
-
-
-        const { data } = await axios.get(`${url.GET_SETTINGS_ALL_DATA_URL}`);
+        const { data } = await axios.get(`${url.GET_LANGUAGES_ALL_DATA_URL}`);
         console.log("ddd",data)
         return(data)
     } catch (error) {
@@ -246,20 +235,14 @@ export async function getLanguages(){
         }
         return errorObj.data
     }
-    // if(settings){
-    //   return settings ;
-    // }
-    // return null ;
   }
 
 
   
-export async function getCurrencies(){
+export async function getCurrenciesNames(){
 
     try {
-        let pageLimit = config.pageLimit;
-
-        const { data } = await axios.get(`${url.GET_SETTINGS_ALL_DATA_URL}`);
+        const { data } = await axios.get(`${url.GET_CURRENCIES_ALL_DATA_URL}`);
         console.log("ddd",data)
         return(data)
     } catch (error) {
@@ -274,20 +257,14 @@ export async function getCurrencies(){
         }
         return errorObj.data
     }
-    // if(settings){
-    //   return settings ;
-    // }
-    // return null ;
   }
 
 
   
-export async function getTaxations(){
+export async function getTaxationsNames(){
 
     try {
-        let pageLimit = config.pageLimit;
-
-        const { data } = await axios.get(`${url.GET_SETTINGS_ALL_DATA_URL}`);
+        const { data } = await axios.get(`${url.GET_TAXATION_ALL_DATA_URL}`);
         console.log("ddd",data)
         return(data)
     } catch (error) {
@@ -302,8 +279,4 @@ export async function getTaxations(){
         }
         return errorObj.data
     }
-    // if(settings){
-    //   return settings ;
-    // }
-    // return null ;
   }

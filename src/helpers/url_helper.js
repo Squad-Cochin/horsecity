@@ -68,8 +68,8 @@ export const PUT_VEHICLES_REMOVE = apiBaseUrl + token + "/removeVehicle"
 
 /**TAXATION */
 /**This URL basis of page & limit  */
-export const GET_TAXATION_ALL_DATA_URL = apiBaseUrl + token + "/getAll/tax"
-
+export const POST_TAXATION_ALL_DATA_URL = apiBaseUrl + token + "/getAll/tax"
+export const GET_TAXATION_ALL_DATA_URL = apiBaseUrl + token + "/getAll/taxations"
 export const GET_TAXATION_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/taxations"
 export const POST_TAXATION_ADD_URL = apiBaseUrl + token + "/add/taxation"
 export const PUT_TAXATION_UPDATE_STATUS = apiBaseUrl + token + "/update-status/taxation"
@@ -78,16 +78,16 @@ export const PUT_TAXATION_REMOVE = apiBaseUrl + token + "/remove/taxation"
 
 
 /**SETTINGS*/
-export const GET_SETTINGS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/settings"
+export const POST_SETTINGS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/settings"
 export const PUT_SETTINGS_EDIT_URL = apiBaseUrl + token + "/update/settings"
 
 /**CURRENCIES */
-
+export const GET_CURRENCIES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/currencies"
 /**LANGUAGES */
-
+export const GET_LANGUAGES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/languages"
 /**DISCOUNTS */
 export const GET_DISCOUNTS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/discounts"
-export const PUT_DISCOUNTS_UPDATE_STATUS = apiBaseUrl + token + "/update-status/discount"
+export const PUT_DISCOUNTS_UPDATE_STATUS = apiBaseUrl + token + "/update-status/discounts"
 export const POST_DISCOUNTS_ADD_URL = apiBaseUrl + token + "/add/discount"
 export const PUT_DISCOUNTS_EDIT_URL = apiBaseUrl + token + "/update/discount"
 export const PUT_DISCOUNTS_REMOVE = apiBaseUrl + token + "/remove/discount"
