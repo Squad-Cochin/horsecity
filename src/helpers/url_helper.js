@@ -67,7 +67,9 @@ export const PUT_VEHICLES_REMOVE = apiBaseUrl + token + "/removeVehicle"
 
 
 /**TAXATION */
+/**This URL basis of page & limit  */
 export const GET_TAXATION_ALL_DATA_URL = apiBaseUrl + token + "/getAll/tax"
+
 export const GET_TAXATION_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/taxations"
 export const POST_TAXATION_ADD_URL = apiBaseUrl + token + "/add/taxation"
 export const PUT_TAXATION_UPDATE_STATUS = apiBaseUrl + token + "/update-status/taxation"
@@ -78,6 +80,10 @@ export const PUT_TAXATION_REMOVE = apiBaseUrl + token + "/remove/taxation"
 /**SETTINGS*/
 export const GET_SETTINGS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/settings"
 export const PUT_SETTINGS_EDIT_URL = apiBaseUrl + token + "/update/settings"
+
+/**CURRENCIES */
+
+/**LANGUAGES */
 
 /**DISCOUNTS */
 export const GET_DISCOUNTS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/discounts"

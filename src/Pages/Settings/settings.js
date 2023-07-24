@@ -4,7 +4,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 import Header from '../../Layout/VerticalLayout/Header';
 // import { getSettingsPageData } from '../../helpers/ApiRoutes/authApiRoutes'
 import { updateSettings} from '../../helpers/ApiRoutes/editApiRoutes';
-import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 
+import { getSettingsPageData , getTaxations, getCurrencies, getLanguages} from '../../helpers/ApiRoutes/getApiRoutes'; 
 import { useFormik } from "formik";
 import { uploadMenuImg } from "../../store/actions";
 import { useSelector, useDispatch } from "react-redux";
@@ -21,8 +21,12 @@ const SettingPage = () =>
     const [logo, setMenuLogo] = useState('');
 
     const [ errors, setErrors ] = useState("")
-    // const [logoChanged, setLogoChanged] = useState(false);
     const [settings_data, setSetting_data] =useState([]);
+
+    const [ languages, setLanguages ] = useState([]);
+    const [ currencies, setCurrencies ] = useState([]);
+    const [ taxations, setTaxations ] = useState([]);
+
     const dispatch = useDispatch();
       /**This hook is used to fetch settings data */
       useEffect(() => {
@@ -118,16 +122,17 @@ const SettingPage = () =>
         { code: '+971', country: 'United Arab Emirates', region: 'GCC' },
       ];
     const languageCodes = [
-        { code: '2', language: 'Arabic'},
-        { code: '1', language: 'English'},
+        { code: '1', language: 'Arabic'},
+        { code: '2', language: 'English'},
   
     ];
-    const currencies = [
+    const currencie = [
         { code: '1', currency: 'Dhiram'},
         { code: '2', currency: 'Dollar'},
     ];
-    const taxations = [
+    const taxation = [
       { code: '1', tax: 'VAT'},
+      { code: '2', tax: 'EID'},
     
   ];
     // const handleSubmit = (event) => 
@@ -175,7 +180,9 @@ const SettingPage = () =>
     async function getAllData() {
       console.log("first")
       let settingsData = await getSettingsPageData();
-      console.log("LLL",settingsData.settingsPageData);
+      let languages = await getLanguages();
+      let currencies = await getCurrencies();
+      let taxations = await getTaxations();
       setSetting_data(settingsData.settingsPageData);
 
   }
@@ -357,7 +364,7 @@ console.log("datadd",settings_data);
                     <div className="col-md-10">
                         <select id="country-code-select" className="form-select" name='currency_id'  value={validation.values.currency_id || ""}
                               onChange={validation.handleChange} >
-                        {currencies.map((item) => (
+                        {currencie.map((item) => (
                             <option key={item.code}  value={item.code}>
                             {`${item.currency}`}
                             </option>
@@ -373,7 +380,7 @@ console.log("datadd",settings_data);
                     <div className="col-md-10">
                         <select id="country-code-select" className="form-select" name='tax_id'  value={validation.values.tax_id || ""}
                               onChange={validation.handleChange} >
-                        {taxations.map((item) => (
+                        {taxation.map((item) => (
                             <option key={item.code} value={item.code}>
                             {`${item.tax}`}
                             </option>

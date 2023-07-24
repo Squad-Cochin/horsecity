@@ -224,3 +224,86 @@ export async function getDiscountsPageData(pageNumber){
         return null
     }
 }
+
+
+export async function getLanguages(){
+
+    try {
+
+
+        const { data } = await axios.get(`${url.GET_SETTINGS_ALL_DATA_URL}`);
+        console.log("ddd",data)
+        return(data)
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data": {
+                "totalCount": 0,
+                "vehicles": []
+            }
+        }
+        return errorObj.data
+    }
+    // if(settings){
+    //   return settings ;
+    // }
+    // return null ;
+  }
+
+
+  
+export async function getCurrencies(){
+
+    try {
+        let pageLimit = config.pageLimit;
+
+        const { data } = await axios.get(`${url.GET_SETTINGS_ALL_DATA_URL}`);
+        console.log("ddd",data)
+        return(data)
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data": {
+                "totalCount": 0,
+                "vehicles": []
+            }
+        }
+        return errorObj.data
+    }
+    // if(settings){
+    //   return settings ;
+    // }
+    // return null ;
+  }
+
+
+  
+export async function getTaxations(){
+
+    try {
+        let pageLimit = config.pageLimit;
+
+        const { data } = await axios.get(`${url.GET_SETTINGS_ALL_DATA_URL}`);
+        console.log("ddd",data)
+        return(data)
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data": {
+                "totalCount": 0,
+                "vehicles": []
+            }
+        }
+        return errorObj.data
+    }
+    // if(settings){
+    //   return settings ;
+    // }
+    // return null ;
+  }
