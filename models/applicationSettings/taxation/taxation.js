@@ -29,11 +29,9 @@ exports.getAllTaxations = (requestBody) =>
                     // resolve(result);
                     con.query(totalCountQuery,async(err,result)=>{
                         if(!err){
-                            console.log();
-                                // let created_at = data[0].created_at
-                                console.log(data[0].created_at);
-                                //  let formatData =   time.getFormattedUTCTime(data[0].created_at)
-                                //  data[0].created_at = formatData;
+                            for(let i = 0;i<data.length;i++){
+                                data[i].created_at = `${time.formatDateToDDMMYYYY(data[i].created_at)}`;
+                            }
                             const count = result[0]['count(*)'];  
                             resolve({totalCount : count, taxations : data})
                         } 

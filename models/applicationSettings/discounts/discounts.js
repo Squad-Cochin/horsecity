@@ -26,10 +26,14 @@ exports.getAllDiscounts = (requestBody) =>
                     console.log("hello",data);
                     const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.discount_types} tx
                                              WHERE tx.deleted_at IS NULL`
-                    // resolve(result);
                     con.query(totalCountQuery,(err,result)=>{
                         if(!err){
                             const count = result[0]['count(*)'];
+                            console.log("data",data[0].created_at);
+                            for(let i = 0;i<data.length;i++){
+                                data[i].created_at = `${time.formatDateToDDMMYYYY(data[i].created_at)}`;
+                            }
+               
                             resolve({totalCount : count, discounts : data})
                         }
                 })
