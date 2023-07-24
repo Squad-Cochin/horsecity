@@ -17,12 +17,12 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
  * The below one is Saurabh's Computer Details
  */
 export const API_BASE_URL = "http://192.168.200.130:8000";
-const apiBaseUrl = "http://192.168.200.130:8000";
+// const apiBaseUrl = "http://192.168.200.130:8000";
 /**
  * The below one is own Computer Details
  */
 
-// const apiBaseUrl = "http://localhost:8000";
+const apiBaseUrl = "http://localhost:8000";
 // export const API_BASE_URL = "http://localhost:8000";
 
 const token = "/horsecity661809"
@@ -93,8 +93,17 @@ export const PUT_SETTINGS_EDIT_URL = apiBaseUrl + token + "/update/settings"
 
 /**CURRENCIES */
 export const GET_CURRENCIES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/currencies"
+
 /**LANGUAGES */
 export const GET_LANGUAGES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/languages"
+/**This URL basis of page & limit  */
+export const POST_LANGUAGES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/languages"
+export const GET_LANGUAGES_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/languages"
+export const POST_LANGUAGES_ADD_URL = apiBaseUrl + token + "/add/languages"
+export const PUT_LANGUAGES_UPDATE_STATUS = apiBaseUrl + token + "/update-status/languages"
+export const PUT_LANGUAGES_EDIT_URL = apiBaseUrl + token + "/update/languages"
+export const PUT_LANGUAGES_REMOVE = apiBaseUrl + token + "/remove/languages/:id"
+
 /**DISCOUNTS */
 export const GET_DISCOUNTS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/discounts"
 export const PUT_DISCOUNTS_UPDATE_STATUS = apiBaseUrl + token + "/update-status/discounts"

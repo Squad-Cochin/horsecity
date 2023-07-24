@@ -16,6 +16,8 @@ export const loginUser = (user, history) => {
     payload: { user, history },
   }
 }
+
+
 export const userRecoverPassword = (user ) => {
   return {
     type: RECOVER_PASSWORD,

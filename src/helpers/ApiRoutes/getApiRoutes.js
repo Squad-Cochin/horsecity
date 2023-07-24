@@ -308,3 +308,42 @@ export async function getSingleDriverData(dId){
         return null
     }
 }
+
+
+
+export async function getLanguagesPageData(pageNumber){
+
+
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = {
+            "page" : pageNumber,
+            "limit" : pageLimit
+        }
+        console.log(reqObj);
+        const { data } = await axios.post(`${url.POST_LANGUAGES_ALL_DATA_URL}`,reqObj);
+        console.log("ddd",data)
+        return(data)
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data": {
+                "totalCount": 0,
+                "vehicles": []
+            }
+        }
+        return errorObj.data
+    }
+}
+
+export async function getSingleLanguageData(tId){
+    try {
+        const { data } = await axios.get(`${url.GET_LANGUAGES_SINGLE_DATA_URL}/${tId}`);
+        console.log("DDD",data)
+        return(data)
+    } catch (error) {
+        return null
+    }
+}

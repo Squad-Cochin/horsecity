@@ -114,7 +114,8 @@ const DiscountsDeatails = () => {
 
         // Update Discount
         async function editDiscounts(data){
-            let updateDsc = await updateDiscounts(discounts[0]?.id, data);
+            console.log(discounts[0]?.id);
+            let updateDsc = await updateDiscounts(discount[0]?.id, data);
             if(updateDsc.code === 200){
                 setErrors("")
                 setAdd_list(false);

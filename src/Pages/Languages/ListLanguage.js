@@ -9,100 +9,43 @@ import Flatpickr from "react-flatpickr";
 import { useFormik } from "formik";
 import { addNewLanguage } from "../../helpers/ApiRoutes/addApiRoutes";
 import { updateLanguage } from "../../helpers/ApiRoutes/editApiRoutes"
-// Import Images
-// import avatar1 from "../../assets/images/users/avatar-1.jpg";
-// import avatar2 from "../../assets/images/users/avatar-2.jpg";
-// import avatar3 from "../../assets/images/users/avatar-3.jpg";
-// import avatar4 from "../../assets/images/users/avatar-4.jpg";
-// import avatar5 from "../../assets/images/users/avatar-5.jpg";
-
-//Import Drivers
-import { getLanguages } from '../../helpers/ApiRoutes/authApiRoutes'
+import { removeLanguage } from '../../helpers/ApiRoutes/removeApiRoutes'
+import { updateLanguageStatus } from '../../helpers/ApiRoutes/editApiRoutes';
+//Import get language api's
+import { getLanguagesPageData,getSingleLanguageData } from '../../helpers/ApiRoutes/getApiRoutes'
+import config from '../../config';
 const LanguageDeatails = () => {
 
     const [ modal_list, setmodal_list] = useState(false);
     const [ languages, setLanguges] = useState([])
     const [ add_list, setAdd_list ] = useState(false);
-    const [ language, setLanguge] = useState([])
+    const [ language, setLanguge] = useState([]);
+    const [ pageNumber, setPageNumber ] = useState(1);
+    const [ numberOfData, setNumberOfData ] = useState(0);
+    const [ errors, setErrors ] = useState("") ;
     const [modal_delete, setmodal_delete] = useState(false);
 
-
-      
- 
-  
-      
-      
- 
-
+    const pageLimit = config.pageLimit;
     useEffect(()=>{
-    // let TripDeatails = getTripDeatails();
-    setLanguges(getLanguages())
+        getAllData(1)
     },[])
-    useEffect(() => {
-
-        // const attroptions = {
-        //     valueNames: [
-        //         'name',
-        //         'born',
-        //         {
-        //             data: ['id']
-        //         },
-        //         {
-        //             attr: 'src',
-        //             name: 'image'
-        //         },
-        //         {
-        //             attr: 'href',
-        //             name: 'link'
-        //         },
-        //         {
-        //             attr: 'data-timestamp',
-        //             name: 'timestamp'
-        //         }
-        //     ]
-        // };
-        // const attrList = new List('users', attroptions);
-        // attrList.add({
-        //     name: 'Leia',
-        //     born: '1954',
-        //     image: avatar5,
-        //     id: 5,
-        //     timestamp: '67893'
-        // });
-
-        // Existing List
-        const existOptionsList = {
-            valueNames: ['contact-name', 'contact-message']
-        };
-
-        new List('contact-existing-list', existOptionsList);
-
-        // Fuzzy Search list
-        new List('fuzzysearch-list', {
-            valueNames: ['name']
-        });
-
-        // pagination list
-
-        new List('pagination-list', {
-            valueNames: ['pagi-list'],
-            page: 3,
-            pagination: true
-        });
-    });
-    function tog_list(param,productId) {
-        if(param === 'ADD'){
+   console.log("lng",language);
+    async function tog_list(param,productId) {
+         if (param === 'ADD') {
+            setErrors("")
             setAdd_list(!add_list);
-        }
-        const data = languages?.find((item)=>item?.id === productId)
-        setLanguge([data]);
+        }else {
+            setErrors("")
+            let discountData = await getSingleLanguageData(productId)
+            setLanguge(discountData.discount);
+        }   
         setmodal_list(!modal_list);
 
     }
     const initialValues = {
         name: !add_list ? language[0]?.name : '',
         abbreviation: !add_list ? language[0]?.abbreviation : '',
-        file: '',
+        language_file: '',
       };
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
@@ -113,25 +56,82 @@ const LanguageDeatails = () => {
                 if(add_list){
                     //add new
                     console.log("add new");
-                    addNewLanguage(values);
-                    setAdd_list(false);
-                    setmodal_list(false);
+                    addLanguage(values)
                 }else{
                     //update previes one
                     console.log("update previues one ");
-                    updateLanguage(values);
-                    setAdd_list(false);
-                    setmodal_list(false);
+                    editLanguage(values)
                  
                 }
     
         }
       });
 
-    function tog_delete() {
-        setmodal_delete(!modal_delete);
+      function toggleStatus(button, lngId) {
+        var currentStatus = button.innerText.trim();
+        const language = languages.find((d) => d.id === lngId);
+        updateLanguageStatus(language.id)
+        if (currentStatus === 'ACTIVE') {
+            button.innerText = 'INACTIVE';
+            button.classList.remove('btn-success');
+            button.classList.add('btn-danger');
+            if (language) {
+                language.status = 'INACTIVE';
+            }
+        }
+        else if (currentStatus === 'INACTIVE') {
+            button.innerText = 'ACTIVE';
+            button.classList.remove('btn-danger');
+            button.classList.add('btn-success');
+            if (language) {
+                language.status = 'ACTIVE';
+            }
+        }
     }
 
+
+        // Add discount
+    async function addLanguage(val){
+        let addLng = await addNewLanguage(val);
+        if(addLng.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+        }else{
+            setErrors("")
+            setErrors(addLng.message)
+        }
+    }
+
+        // Update Discount
+        async function editLanguage(data){
+            let updateDsc = await updateLanguage(language[0]?.id, data);
+            if(updateDsc.code === 200){
+                setErrors("")
+                setAdd_list(false);
+                setmodal_list(false);
+                getAllData(pageNumber)
+            }else{
+                setErrors("")
+                setErrors(updateDsc.message)
+            }
+        }
+    async function getAllData(page) {
+        let getLanguages = await getLanguagesPageData(page || 1);
+        console.log("Getlg",getLanguages);
+        setLanguges(getLanguages.languages);
+        setPageNumber(page);
+        setNumberOfData(getLanguages.totalCount);
+    }  
+
+console.log(languages);
+
+    /**This function is used to remove a language*/
+    async function remove_data(id) {
+            await removeLanguage(id)
+            window.location.reload();
+     }
     return (
         <React.Fragment>
             <div className="page-content">
@@ -165,29 +165,26 @@ const LanguageDeatails = () => {
                  
                                             <th className="sort" data-sort="name">Name</th>
                                             <th className="sort" data-sort="abbreviation">Abbreviation</th>
-                                            <th className="sort" data-sort="status">Status</th>
                                             <th className="sort" data-sort="created_at">Created At</th>
                                             <th className="sort" data-sort="action">Action</th>
                                             </tr>
                                         </thead>
                                         <tbody className="list form-check-all">
-                                            {languages.map((item,index) => (
+                                            {languages?.map((item,index) => (
                                             <tr key={item.id}>
-                                                <th scope="row">
-                                                        {index + 1}
-
-                                                        </th>
-                                                <td className="id" style={{ display: "none" }}>
-                                                <Link to="#" className="fw-medium link-primary">#{item.id}</Link>
-                                                </td>
+                                                <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                 <td className="name">{item.name}</td>
                                                 <td className="abbreviation">{item.abbreviation}</td>
-                                                <td className="status">
-                                                <span className="badge badge-soft-success text-uppercase">{item.status}</span>
-                                                </td>
                                                 <td className="created_at">{item.created_at}</td>
                                                 <td>
                                                 <div className="d-flex gap-2">
+                                                <div className="status">
+                                                     <button className="btn btn-sm btn-success status-item-btn"
+                                                       data-bs-toggle="modal" data-bs-target="#showModal"
+                                                       onClick={(event) => toggleStatus(event.target, item.id)}>
+                                                          {item.status}
+                                                    </button>
+                                                      </div>
                                                     <div className="edit">
                                                     <button
                                                         className="btn btn-sm btn-success edit-item-btn"
@@ -202,6 +199,7 @@ const LanguageDeatails = () => {
                                                         className="btn btn-sm btn-danger remove-item-btn"
                                                         data-bs-toggle="modal"
                                                         data-bs-target="#deleteRecordModal"
+                                                        onClick={() => remove_data(item?.id)}
                                                     >
                                                         Remove
                                                     </button>
@@ -213,27 +211,25 @@ const LanguageDeatails = () => {
                                         </tbody>
                                         </table>
 
-                                            <div className="noresult" style={{ display: "none" }}>
-                                                <div className="text-center">
-                                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                                        colors="primary:#121331,secondary:#08a88a" style={{ width: "75px", height: "75px" }}>
-                                                    </lord-icon>
-                                                    <h5 className="mt-2">Sorry! No Result Found</h5>
-                                                    <p className="text-muted mb-0">We've searched more than 150+ Orders We did not find any
-                                                        orders for you search.</p>
-                                                </div>
-                                            </div>
+                               
                                         </div>
 
                                         <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">
-                                                <Link className="page-item pagination-prev disabled" to="#">
-                                                    Previous
-                                                </Link>
+                                                {pageNumber > 1 ?
+                                                    <Link 
+                                                        className="page-item pagination-prev disabled" 
+                                                        onClick={()=> getAllData(pageNumber - 1)}
+                                                    >
+                                                        Previous
+                                                    </Link>
+                                                : null }
                                                 <ul className="pagination listjs-pagination mb-0"></ul>
-                                                <Link className="page-item pagination-next" to="#">
-                                                    Next
-                                                </Link>
+                                                {numberOfData > pageLimit * pageNumber ? 
+                                                    <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}>
+                                                        Next
+                                                    </Link> 
+                                                : null }
                                             </div>
                                         </div>
                                     </div>
@@ -309,7 +305,7 @@ const LanguageDeatails = () => {
                         <div className="mb-3">
                         <label htmlFor="certificateNumber-field" className="form-label">Language File</label>
                         <input
-                            type="file"
+                            type="language_file"
                             id="certificateNumber-field"
                             name="certification_or_license_img"
                             className="form-control"
@@ -330,26 +326,7 @@ const LanguageDeatails = () => {
                 </form>
             </Modal>
 
-            {/* Remove Modal */}
-            <Modal isOpen={modal_delete} toggle={() => { tog_delete(); }} className="modal fade zoomIn" id="deleteRecordModal" centered >
-                <div className="modal-header">
-                    <Button type="button" onClick={() => setmodal_delete(false)} className="btn-close" aria-label="Close"> </Button>
-                </div>
-                <ModalBody>
-                    <div className="mt-2 text-center">
-                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
-                            colors="primary:#f7b84b,secondary:#f06548" style={{ width: "100px", height: "100px" }}></lord-icon>
-                        <div className="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                            <h4>Are you Sure ?</h4>
-                            <p className="text-muted mx-4 mb-0">Are you Sure You want to Remove this Record ?</p>
-                        </div>
-                    </div>
-                    <div className="d-flex gap-2 justify-content-center mt-4 mb-2">
-                        <button type="button" className="btn w-sm btn-light" onClick={() => setmodal_delete(false)}>Close</button>
-                        <button type="button" className="btn w-sm btn-danger " id="delete-record">Yes, Delete It!</button>
-                    </div>
-                </ModalBody>
-            </Modal>
+        
         </React.Fragment>
     );
 };

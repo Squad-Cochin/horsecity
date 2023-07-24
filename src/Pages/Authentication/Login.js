@@ -62,14 +62,15 @@ const Login = props => {
     }),
     onSubmit: (values) => {
       localStorage.setItem('userName', values.userName);
+
       dispatch(loginUser(values, props.router.navigate));
 
     }
   });
 
   // Set error function
-  const { error } = useSelector(state => ({
-    error: state.login.error,
+  const { error} = useSelector(state => ({
+    error: state.login.error
   }));
 
   return (
