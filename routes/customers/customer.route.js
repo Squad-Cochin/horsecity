@@ -49,7 +49,7 @@ module.exports = (app) =>
             checkInput.contactNumberValidation(constants.tableName.customers),
             // checkInput.dateOfBirthValidation,
             checkInput.idProofNumberValidation,
-            // checkInput.idProofImageWhileUpdate,
+            checkInput.isCustomerIdProofImageSubmitted,
             customerController.editCustomer
            );    
 }

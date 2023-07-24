@@ -77,7 +77,7 @@ exports.dataOnCondition = async (tableName, Value, feildName) =>
     }
     catch (error)
     {
-        
+        console.log(`Error from the commonfetching.js file from the helper folder. The function is the dataOnCondition`, error);        
     }
 };
 
@@ -122,7 +122,7 @@ exports.dataOnConditionUpdate = async(tableName, feildName, Value, id, messageFe
     }
     catch (error)
     {
-        
+        console.log(`Error from the commonfetching.js file from the helper folder. The function is the dataOnConditionUpdate`, error);                
     }
 }; 
 

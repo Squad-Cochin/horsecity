@@ -125,7 +125,7 @@ exports.fileNameUpload = (attachments) =>
             {
                 // let currentDate = new Date().toISOString().replace(/:/g, '-').replace(//./g, '-'); // generate current date and time
                 let filename = `${attachments.name}`; // use current date, random number and original file name to create a unique file name
-        
+
                     if(filename)
                     {
                         resolve(filename);

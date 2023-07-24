@@ -1,7 +1,7 @@
 
 /////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                     //
-//    This file is related for connecting with the database(Mysql)                     //
+//    This file is related for connecting with the database(Mysql).                    //
 //                                                                                     //
 /////////////////////////////////////////////////////////////////////////////////////////
 
@@ -12,17 +12,17 @@ const mysql = require('mysql2'); // Importing the mysql2 library functionalities
 var con = mysql.createConnection
 ({
     // host : "192.168.200.211",
-    host: "192.168.200.6",
-    // // // // // port: 3306,
-    user: "vsourz",
-    password: "vsourz",
-    database: "horscity"
+    // host: "192.168.200.6",
+    // // // // // // port: 3306,
+    // user: "vsourz",
+    // password: "vsourz",
+    // database: "horscity"
 
-    // host: "localhost",
+    host: "localhost",
     // port: 3306,
-    // user: "root",
-    // password: "",
-    // database: "horsecity"
+    user: "root",
+    password: "",
+    database: "horsecity"
     
 });
     

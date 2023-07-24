@@ -10,8 +10,6 @@ const commonfetching = require('../../utils/helper/commonfetching');
 const commonoperation = require('../../utils/helper/commonoperation');
 const con = require('../../configs/db.configs')
 
-
-
 module.exports = class customers
 {
     constructor(){}
@@ -81,11 +79,8 @@ module.exports = class customers
             return await new Promise(async(resolve, reject)=>
             {
                 let uploadAttachment = await commonoperation.fileUploadTwo(files, constants.attachmentLocation.customer.upload.idProof);
-                // console.log(uploadAttachment);
-                //INVALIDFORMAT,NOATTACHEMENT,ERR
                 if(uploadAttachment === 'INVALIDFORMAT')
                 {
-                    console.log('Going ');
                     resolve('INVALIDFORMAT');
                 }
                 else if(uploadAttachment === 'ERR')
@@ -130,23 +125,37 @@ module.exports = class customers
             return await new Promise(async(resolve, reject)=>
             {
                 let uploadAttachment = await commonoperation.fileUploadTwo(id_proof_image, constants.attachmentLocation.customer.upload.idProof);
-                // const {name, email, userName, contact_no, date_of_birth, id_proof_no} = requestBody ;
-                let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.id_proof_image = '${uploadAttachment}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
-                // console.log(upQuery);
-                con.query(upQuery, (err, result) =>
+                if(uploadAttachment === 'INVALIDFORMAT')
                 {
-                    // console.log(result);
-                    if(result.affectedRows > 0)
+                    resolve('INVALIDFORMAT');
+                }
+                else if(uploadAttachment === 'ERR')
+                {
+                    resolve('err');
+                }
+                else if(uploadAttachment === 'NOATTACHEMENT')
+                {
+                    resolve('NOATTACHEMENT');
+                }
+                else
+                {
+                    let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.id_proof_image = '${uploadAttachment}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
+                    // console.log(upQuery);
+                    con.query(upQuery, (err, result) =>
                     {
-                        console.log('Customer data updated successfully');
-                        resolve(result);
-                    }
-                    else
-                    {
-                        console.log(err);
-                        resolve('err')
-                    }
-                });                
+                        // console.log(result);
+                        if(result.affectedRows > 0)
+                        {
+                            console.log('Customer data updated successfully');
+                            resolve(result);
+                        }
+                        else
+                        {
+                            console.log(err);
+                            resolve('err')
+                        }
+                    });
+                }                
             });            
         }
         catch (error)
