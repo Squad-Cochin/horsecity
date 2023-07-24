@@ -3,7 +3,7 @@ const tax = require('../../../models/applicationSettings/taxation/taxation')
 const constants = require('../../../utils/constants');
 const commonoperation = require('../../../utils/helper/commonoperation');
 
-/**For gitting all data  */
+/**For gitting all data basisi of page and limit  */
 exports.getAllTaxations = async(req,res)=>
 {
     let getAllTaxations = await tax.getAllTaxations(req.body);
@@ -18,6 +18,23 @@ exports.getAllTaxations = async(req,res)=>
     });
    }
 }
+
+/**For gitting all data  */
+exports.getTaxations = async(req,res)=>
+{
+    let getAllTaxations = await tax.getTaxations();
+
+   if(getAllTaxations){
+    return res.status(200).send
+    ({
+        code: 200,
+        success: true,
+        message: constants.responseMessage.getAll,
+        data : getAllTaxations
+    });
+   }
+}
+
 
 /**For add new taxation  */
 exports.addNewTaxation = async(req,res)=>

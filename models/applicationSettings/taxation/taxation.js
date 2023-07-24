@@ -50,6 +50,31 @@ exports.getAllTaxations = (requestBody) =>
 }
 
 
+exports.getTaxations = () =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {       
+
+            const selQuery = `SELECT tx.id, tx.name
+            FROM ${constants.tableName.taxations} AS tx
+            WHERE tx.deleted_at IS NULL AND tx.status = '${constants.status.active}'`;
+            con.query(selQuery,(err,data)=>{
+
+                if(!err){
+                            resolve({taxations : data})     
+            }})
+          
+        }catch(err){
+            console.log('Error while feching taxations', err); 
+        }
+
+
+    })    
+   
+}
+
 exports.addNewTaxation = (requestBody) =>
 {
     return new Promise(async(resolve, reject) =>

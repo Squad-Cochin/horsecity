@@ -9,6 +9,7 @@ const url = require("../utils/url_helper")
 exports.usernamevalidation = (req, res, next) => {
     const { user_name } = req.body;
     const requestMethod = req.method;
+    const URL = req.url ;
     console.log(user_name);
     if (!user_name) {
         return res.status(200).send
@@ -27,7 +28,7 @@ exports.usernamevalidation = (req, res, next) => {
                 });
         } else {
          
-                if(requestMethod == 'POST'){
+                if(requestMethod == 'POST' && URL ==  url.ADD_SERVICEPROVIDER__URL){
 
                     try {
                 let selQuery = `SELECT * FROM service_providers WHERE user_name = '${user_name}'`;
@@ -48,7 +49,7 @@ exports.usernamevalidation = (req, res, next) => {
             } catch (err) {
                 console.log("Error while checking username in the database");
             }
-            }else if(requestMethod == 'PUT'){
+            }else if(requestMethod == 'PUT'  && URL == url.UPDATE_SERVICE_PROVIDER_URL  + req.params?.id){
                 let id = req.params.id
                 let selQuery = `SELECT user_name FROM service_providers WHERE id = '${id}';`;
                 con.query(selQuery, (err, result) => {      
@@ -88,8 +89,7 @@ exports.emailValidation = async (req, res, next) => {
     const { email } = req.body;
     const requestMethod = req.method;
     const URL = req.url
-    console.log("url",URL);
-    console.log("url2",url.UPDATE_SETTINGS_PAGE_URL);
+
     if (!email) {
         return res.status(200).send
             ({
@@ -134,7 +134,7 @@ exports.emailValidation = async (req, res, next) => {
         {
             try {
 
-             if(requestMethod == 'POST'){
+             if(requestMethod == 'POST' && URL ==  url.ADD_SERVICEPROVIDER__URL){
                 let selQuery = `SELECT * FROM service_providers WHERE email = '${email}' `;
                 con.query(selQuery, (err, result) => {
                     //console.log(result);
@@ -142,7 +142,7 @@ exports.emailValidation = async (req, res, next) => {
                         return res.status(200).send({
                             code: 400,
                             status: false,
-                            message: "This Email already exists in the database"
+                            message: "This Email already exists "
                         });
                     }
                     else {
@@ -178,7 +178,7 @@ exports.emailValidation = async (req, res, next) => {
              
                 });
              }else if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL){
-                console.log("done");
+  
                     next()
              }
                
@@ -602,7 +602,7 @@ exports.nameAvailable = async (req,res,next) =>
 
 exports.appTitleAvailable = async (req,res,next) =>
 {
-    console.log("hello");
+
     const { application_title } = req.body;
     if ( !application_title) {
         return res.status(200).send({
@@ -763,7 +763,7 @@ exports.verifyDiscountBody = async(req,res,next) =>
                         ({
                             code: 400,
                             success: false,
-                            message: "Name allredy in the database"
+                            message: "Name allredy available"
                         });
                 }
                 else {         
@@ -798,7 +798,7 @@ exports.verifyDiscountBody = async(req,res,next) =>
                                 ({
                                     code: 400,
                                     success: false,
-                                    message: "Name allredy in the database"
+                                    message: "Name allredy available"
                                 });
                         }
                         else {
@@ -833,7 +833,6 @@ exports.contactAddressAvailable = async (req,res,next) =>
             message: "Contact Address is required"
         });
     }else{
-console.log("address done");
                 next();
         
     }

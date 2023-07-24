@@ -29,7 +29,7 @@ exports.addNewDiscount = async(req,res)=>
    if(addNewDiscount){
     return res.status(200).send
     ({
-        code: 201,
+        code: 200,
         success: true,
         message: constants.responseMessage.insert,
     });

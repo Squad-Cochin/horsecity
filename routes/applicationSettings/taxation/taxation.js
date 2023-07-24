@@ -4,8 +4,8 @@ const verifyBody = require(`../../../middlewares/requestValidator`); // Importin
 
 module.exports = function(app)
 {
-        /**For listing service provider basis of page limit  */ 
-    app.post(`/${process.env.apiToken}/getAll/tax`,taxation.getAllTaxations); 
+        /**For listing taxations basis of page limit  */ 
+    app.post(`/${process.env.apiToken}/getAll/tax`,taxation.getAllTaxations);    
            /**For changing status taxations  */ 
     app.put(`/${process.env.apiToken}/update-status/taxation/:id`, taxation.updateStatus);
            /**For removing taxations  */
@@ -17,6 +17,8 @@ module.exports = function(app)
         // Below route is for getting data of any particular service provider
     app.get(`/${process.env.apiToken}/getOne/taxations/:id`, taxation.getOneTaxation);
 
+    /**For listing taxations basis of page limit  */ 
+    app.get(`/${process.env.apiToken}/getAll/taxations`,taxation.getTaxations);   
 
-
+ 
 }

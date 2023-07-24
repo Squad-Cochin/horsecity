@@ -44,5 +44,7 @@ require('./routes/vehicles/vehicle.route')(app);
 require('./routes/vehicles/vehicleImages.route')(app);
 require('./routes/applicationSettings/settings/settings')(app) 
 require('./routes/applicationSettings/taxation/taxation')(app) //Taxations
-require('./routes/applicationSettings/discounts/discounts')(app) //Taxations
-module.exports = app; // making the app variable for export
+require('./routes/applicationSettings/discounts/discounts')(app); //Discounts
+require('./routes/applicationSettings/currencies/currencies')(app); //Currencies
+require('./routes/applicationSettings/language/language')(app) //Languages
+module.exports = app; // making the app variable for export 

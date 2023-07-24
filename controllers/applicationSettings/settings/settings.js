@@ -8,7 +8,7 @@ const commonoperation = require('../../../utils/helper/commonoperation');
 /**For gitting all data  */
 exports.updateSettings = async(req,res)=>
 {
-console.log(req.body);
+console.log("here");
     let settingsPage = await settings.updateSettings(req.body,req.files);
     console.log("new",settingsPage);
     if(settingsPage.status == 'INVALIDFORMAT'){

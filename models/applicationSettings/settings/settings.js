@@ -22,7 +22,7 @@ module.exports = class settings {
           currency_id,
           logo,loginpage_logo
         } = reqBody; 
-    
+    console.log("cu",currency_id);
     
             let validateLanguageQuery = `SELECT * FROM ${constants.tableName.languages} apps
                   WHERE apps.id = '${language_id}'`;
@@ -127,8 +127,9 @@ module.exports = class settings {
                         //                                 WHERE apps.id = '${id}'`;
 
                           con.query(updateSettingsQuery, (err, data) => {
-                            console.log(data);
+               
                             if (data?.length != 0) {
+                              console.log("Success");
                               resolve({ status: "SUCCESS" });
                             } else {
                               console.log("1");
@@ -179,9 +180,9 @@ module.exports = class settings {
         apps.licence_number,
         apps.invoice_prefix,
         apps.quotation_prefix,
-        lg.name AS language_name,
-        tx.name AS taxation_name,
-        cr.name AS currency_name
+        lg.id AS language_id,
+        tx.id AS tax_id,
+        cr.id AS currency_id
  FROM ${constants.tableName.application_settings} apps
  JOIN ${constants.tableName.languages} lg ON apps.language_id = lg.id
  JOIN ${constants.tableName.currencies} cr ON apps.currency_id = cr.id
