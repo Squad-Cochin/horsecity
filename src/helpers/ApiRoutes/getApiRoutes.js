@@ -146,10 +146,9 @@ export async function getTaxationsData(pageNumber){
         }
         return errorObj.data
     }
-  }
+}
 
-  export async function getSettingsPageData(){
-
+export async function getSettingsPageData(){
     try {
         let pageLimit = config.pageLimit;
 
@@ -168,8 +167,7 @@ export async function getTaxationsData(pageNumber){
         }
         return errorObj.data
     }
-  }
-
+}
 
 export async function getSingleTaxationData(tId){
     try {
@@ -206,8 +204,9 @@ export async function getDiscountsPageData(pageNumber){
         }
         return errorObj.data
     }
-  }
-  export async function getSingleDiscountData(dscId){
+}
+
+export async function getSingleDiscountData(dscId){
     try {
         const { data } = await axios.get(`${url.GET_DISCOUNTS_SINGLE_DATA_URL}/${dscId}`);
         console.log("DDD",data)
@@ -218,7 +217,6 @@ export async function getDiscountsPageData(pageNumber){
 }
 
 export async function getLanguagesNames(){
-
     try {
         const { data } = await axios.get(`${url.GET_LANGUAGES_ALL_DATA_URL}`);
         console.log("ddd",data)
@@ -235,9 +233,7 @@ export async function getLanguagesNames(){
         }
         return errorObj.data
     }
-  }
-
-
+}
   
 export async function getCurrenciesNames(){
 
@@ -257,10 +253,8 @@ export async function getCurrenciesNames(){
         }
         return errorObj.data
     }
-  }
-
-
-  
+}
+ 
 export async function getTaxationsNames(){
 
     try {
@@ -279,4 +273,38 @@ export async function getTaxationsNames(){
         }
         return errorObj.data
     }
-  }
+}
+
+export async function getDriversData(pageNumber){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = {
+            "page" : pageNumber,
+            "limit" : pageLimit
+        }
+        const { data } = await axios.post(`${url.GET_DRIVERS_ALL_DATA_URL}`,reqObj);
+        console.log("drivers",data);
+        return(data)
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data": {
+                "totalCount": 0,
+                "serviceProvider": []
+            }
+        }
+        return errorObj.data
+    }
+}
+
+export async function getSingleDriverData(dId){
+    try {
+        const { data } = await axios.get(`${url.GET_DRIVERS_SINGLE_DATA_URL}/${dId}`);
+        console.log("SD",data)
+        return(data)
+    } catch (error) {
+        return null
+    }
+}

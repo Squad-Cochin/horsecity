@@ -6,18 +6,14 @@
 
 // Importing the react component
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
 import Flatpickr from "react-flatpickr";
-
+// GET_DRIVERS_ALL_DATA_URL
 //The purpose of the Breadcrumbs component is to display a breadcrumb navigation element. 
-
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 
-
-//Import Drivers
-import { getDriversData } from '../../helpers/ApiRoutes/authApiRoutes'
 // Define the toggleStatus function outside the component
 import { Drivers } from '../../CommonData/Data';
 import { removeDriver } from '../../helpers/ApiRoutes/removeApiRoutes';
@@ -26,6 +22,13 @@ import { updateDriver } from '../../helpers/ApiRoutes/editApiRoutes';
 
 // The code you provided imports the useFormik hook from the "formik" library. The useFormik hook is a custom hook provided by Formik, which is a popular form library for React.
 import { useFormik } from "formik";
+
+/**IMPORTED APIs */
+import { addNewProvider } from '../../helpers/ApiRoutes/addApiRoutes';  //For adding new service providers
+import { removeSProvider } from '../../helpers/ApiRoutes/removeApiRoutes'; //For removing service providers
+import { updateSProvider , updateDriverStatus } from '../../helpers/ApiRoutes/editApiRoutes'; //For updating  service providers
+import { getDriversData, getSingleDriverData } from '../../helpers/ApiRoutes/getApiRoutes';  //For getting all service providers
+import config from '../../config';
 
 
 // The name of the function. Which will be executed and used all over program. This funtion is having all the code
@@ -42,8 +45,10 @@ const ListTables = () =>
     const [view_modal, setView_modal] = useState(false); // Boolean to control view modal visibility
     const [profileImagePreview, setProfileImagePreview] = useState(false); // Boolean to control profile image preview visibility
     const [licenceImagePreview, setLicenceImagePreview] = useState(false); // Boolean to control license image preview visibility
-   
-   
+    const [ pageNumber, setPageNumber ] = useState(1);
+    const [ numberOfData, setNumberOfData ] = useState(0);
+    const [ errors, setErrors ] = useState("")
+    const pageLimit = config.pageLimit;
 
     // Define a function to handle the profile image change event
     const handleProfileImageChange = (event) => 
@@ -61,41 +66,8 @@ const ListTables = () =>
     // The below effect for displaying the overall data of the driver page in the front.
     useEffect(() =>
     {
-        let getDrivers = getDriversData();
-        setDrivers(getDrivers)
+        getAllData(1)
     }, []);
-
-    // Execute the code inside the useEffect hook when the component mounts
-    
-    useEffect(() => 
-    {
-        // Existing List
-        const existOptionsList =
-        {
-            valueNames: ['contact-name', 'contact-message']
-        };
-
-        new List('contact-existing-list', existOptionsList);
-        // Initialize List.js with ID 'contact-existing-list' and options from 'existOptionsList'.
-        // This creates a list with the ability to filter based on the values of 'contact-name' and 'contact-message'.
-
-        // Fuzzy Search list
-        new List('fuzzysearch-list',
-        {
-            valueNames: ['name']
-        });
-        // Initialize List.js with ID 'fuzzysearch-list' and options specifying that fuzzy search should be performed on 'name'.
-        // This enables searching and filtering the list based on the values of 'name' using fuzzy search algorithm.
-
-        // Pagination list
-        new List('pagination-list', {
-            valueNames: ['pagi-list'],
-            page: 3,
-            pagination: true
-        });
-        // Initialize List.js with ID 'pagination-list' and options specifying pagination.
-        // This creates a paginated list where each page displays three items at a time.
-    });
     
     // The function is desing the handle the chnage in profile image of the driver.
     const handleLicenceImageChange = (event) => 
@@ -105,11 +77,9 @@ const ListTables = () =>
       setLicenceImagePreview(URL.createObjectURL(file));
     };    
 
-    function tog_list(param, productId)
-    {
+    function tog_list(param, productId){
         // Toggle 'add_list' state if 'param' is 'ADD'
-        if (param === 'ADD')
-        {
+        if (param === 'ADD'){
           // Reset profile and license image previews
           setProfileImagePreview(null);
           setLicenceImagePreview(null);
@@ -130,13 +100,9 @@ const ListTables = () =>
         setLicenceImagePreview(data.licence_img);
     }
       
-    function tog_view(productId)
-    {
-        // Find the driver data with matching 'productId' in the 'drivers' array
-        const data = drivers?.find((item) => item?.id === productId);  
-        // Set the 'driver' state to the found driver data
-        setDriver([data]);      
-        // Toggle 'view_modal' state
+    async function tog_view(productId){
+        let driver = await getSingleDriverData(productId)
+        setDriver(driver.drivers)
         setView_modal(!view_modal);
     }  
     
@@ -152,33 +118,40 @@ const ListTables = () =>
     }
 
     // The below function is for the status button functionalities.
-    function toggleStatus(button, driverID) 
-    {
+    function toggleStatus(button, driverID) {
         var currentStatus = button.innerText.trim();
+        const driver = drivers.find((s) => s.id === driverID);
+        updateDriverStatus(driver.id)
         if (currentStatus === 'ACTIVE') {
             button.innerText = 'INACTIVE';
             button.classList.remove('btn-success');
             button.classList.add('btn-danger');
-            // Find the corresponding customer by ID
-            const driver = Drivers.find((d) => d.id === driverID);
-            if (driver)
-            {
+            if (driver) {
                 driver.status = 'INACTIVE';
             }
         }
-        else if (currentStatus === 'INACTIVE') 
-        {
+        else if (currentStatus === 'INACTIVE') {
             button.innerText = 'ACTIVE';
             button.classList.remove('btn-danger');
             button.classList.add('btn-success');
-            // Find the corresponding customer by ID
-            const driver = Drivers.find((d) => d.id === driverID);
-            if (driver) 
-            {
+            if (driver) {
                 driver.status = 'ACTIVE';
             }
         }
     }
+
+    function toggleAssign(id){
+        console.log(id)
+    }
+
+     // function for get data all drivers data
+    async function getAllData(page) {
+        let getDrivers = await getDriversData(page || 1);
+        setDrivers(getDrivers.drivers);
+        setPageNumber(page);
+        setNumberOfData(getDrivers.totalCount);
+    }
+
     // The below intialValues variable is used for having the data the driver. When we will use the edit button.
     // We are usign the add module for editing the driver. That is why if we are having data of a particular then
     // We will store this in the initialValues object
@@ -254,6 +227,7 @@ const ListTables = () =>
                                                         <th className="sort" data-sort="driver_email">Email</th>
                                                         <th className="sort" data-sort="driver_phone">Contact Number</th>
                                                         <th className="sort" data-sort="registered_date">Registered Date</th>
+                                                        <th className="sort" data-sort="status">Assign To</th>
                                                         <th className="sort" data-sort="status">Status</th>
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>
@@ -271,18 +245,38 @@ const ListTables = () =>
                                                             <td className="driver_email">{item.email}</td> {/* // Driver Email */}
                                                             <td className="driver_phone">{item.contact_no}</td> {/* // Driver Contact Number */}
                                                             <td className="registered_date">{item.created_at}</td> {/* // Driver Created Time */}
+                                                            <td className="status">
+                                                                <button
+                                                                    className="btn btn-sm btn-success status-item-btn"
+                                                                    data-bs-toggle="modal"
+                                                                    data-bs-target="#showModal"
+                                                                    onClick={ toggleAssign(item.id) }
+                                                                >
+                                                                    Assign
+                                                                </button>
+                                                            </td>
                                                             {/* This is the place from where we are calling the status button and function */}
-                                                            <div>
-                                                                <div className="d-flex gap-2">
-                                                                    <div className="status">
-                                                                        <button className="btn btn-sm btn-success status-item-btn"
-                                                                            data-bs-toggle="modal" data-bs-target="#showModal"
-                                                                            onClick={(event) => toggleStatus(event.target, item.id)}>
-                                                                            {item.status}
-                                                                        </button>
-                                                                    </div>
-                                                                </div>
-                                                            </div>
+                                                            <td className="status">
+                                                                {item.status === "ACTIVE" ?
+                                                                    <button
+                                                                        className="btn btn-sm btn-success status-item-btn"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#showModal"
+                                                                        onClick={(event) => toggleStatus(event.target, item.id)}
+                                                                    >
+                                                                        {item.status}
+                                                                    </button> :
+                                                                    <button
+                                                                        className="btn btn-sm btn-danger status-item-btn"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#showModal"
+                                                                        onClick={(event) => toggleStatus(event.target, item.id)}
+                                                                    >
+                                                                        {item.status}
+                                                                    </button>
+
+                                                                }
+                                                            </td>
                                                             {/* The below column will have the 3 buttons
                                                                 1. View button
                                                                 2. Edit button
@@ -328,13 +322,20 @@ const ListTables = () =>
                                         The previous and next button are also in side this function */}
                                         <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">
-                                                <Link className="page-item pagination-prev disabled" to="#">
-                                                    Previous
-                                                </Link>
+                                                {pageNumber > 1 ?
+                                                    <Link 
+                                                        className="page-item pagination-prev disabled" 
+                                                        onClick={()=> getAllData(pageNumber - 1)}
+                                                    >
+                                                        Previous
+                                                    </Link>
+                                                : null }
                                                 <ul className="pagination listjs-pagination mb-0"></ul>
-                                                <Link className="page-item pagination-next" to="#">
-                                                    Next
-                                                </Link>
+                                                {numberOfData > pageLimit * pageNumber ? 
+                                                    <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}>
+                                                        Next
+                                                    </Link> 
+                                                : null }
                                             </div>
                                         </div>
                                     </div>
@@ -349,11 +350,11 @@ const ListTables = () =>
             {/* The below line is for the pop up of edit and add driver */}
             <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
                 {/* The below line is for the heading of pop up of edit and add driver */}
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ? 'Add Driver' : 'Edit Driver'} </ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ? 'Add Driver' : 'Edit Driver'} </ModalHeader>
                 <form className="tablelist-form"
                  onSubmit={validation.handleSubmit}>
                     <ModalBody>
-
+                        {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
                         {/* The Below element is adding the name of the driver */}
                         <div className="mb-3">
                             <label htmlFor="driver-field" className="form-label">Name</label>
@@ -473,7 +474,7 @@ const ListTables = () =>
             {/* This is the view button model. We will get all the details of a particular driver */}
             <Modal className="extra-width" isOpen={view_modal} toggle={() => { tog_view('view'); }} >
                 {/* The below line is for the heading of pop up of view driver */}
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel"toggle={() => { tog_view('view'); }}>View Driver</ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel"toggle={() => { setView_modal(false); tog_view('view'); }}>View Driver</ModalHeader>
                 <form className="tablelist-form"
                  onSubmit={validation.handleSubmit}>
                     <ModalBody>

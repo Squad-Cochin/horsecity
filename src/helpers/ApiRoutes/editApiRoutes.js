@@ -37,9 +37,6 @@ export async function updateLanguage(){
   }
 }
 
-
-
-
 /**Update previous taxation */
 export async function updateTaxation(id, data){
   try {
@@ -151,9 +148,8 @@ export async function updatQuataion(data){
   }
 }
 
-export async function updateSettings(id,data){
+export async function updateSettings(data){
   try {
- 
       const formData = new FormData();
       // Append the object data to the FormData instance
       for (const key in data) {
@@ -168,9 +164,6 @@ export async function updateSettings(id,data){
       });
       console.log("response",response)
       return response
-
-      // const { data } = await axios.put(`${url.POST_SP_EDIT_URL}/${id}`, updateData);
-      // return { data };
   } catch (error) {
       return { error : "Faild !"}
   }
@@ -219,6 +212,16 @@ export async function updateTaxationStatus(id){
   }
 }
 
+export async function updateDriverStatus(id){
+  try{
+    const { data } = await axios.put(`${url.PUT_DRIVERS_UPDATE_STATUS}/${id}`);
+    console.log("update",data)
+    return data;
+  } catch (error) {
+    return { error : "Faild !"}
+  }
+}
+
 
 export async function updateDiscountStatus(id){
   try{
@@ -229,7 +232,6 @@ export async function updateDiscountStatus(id){
     return { error : "Faild !"}
   }
 }
-
 
 /**Update previous discounts */
 export async function updateDiscounts(id, data){

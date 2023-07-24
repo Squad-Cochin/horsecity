@@ -17,12 +17,12 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
  * The below one is Saurabh's Computer Details
  */
 export const API_BASE_URL = "http://192.168.200.130:8000";
-// const apiBaseUrl = "http://192.168.200.130:8000";
+const apiBaseUrl = "http://192.168.200.130:8000";
 /**
  * The below one is own Computer Details
  */
 
-const apiBaseUrl = "http://localhost:8000";
+// const apiBaseUrl = "http://localhost:8000";
 // export const API_BASE_URL = "http://localhost:8000";
 
 const token = "/horsecity661809"
@@ -64,6 +64,16 @@ export const PUT_VEHICLES_UPDATE_STATUS = apiBaseUrl + token + "/updateStatus/ve
 export const POST_VEHICLES_EDIT_URL = apiBaseUrl + token + "/updateData/vehicle"
 export const PUT_VEHICLES_REMOVE = apiBaseUrl + token + "/removeVehicle"
 
+/**VEHICLES_IMAGES */
+
+
+/**DRIVERS */
+export const GET_DRIVERS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/drivers"
+export const GET_DRIVERS_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/driver"
+// export const POST_CUSTOMER_ADD_URL = apiBaseUrl + token + "/add/customer"
+export const PUT_DRIVERS_UPDATE_STATUS = apiBaseUrl + token + "/update/driver"
+// export const POST_CUSTOMER_EDIT_URL = apiBaseUrl + token + "/edit/customer"
+// export const PUT_CUSTOMER_REMOVE = apiBaseUrl + token + "/remove/customer"
 
 
 /**TAXATION */

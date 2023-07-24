@@ -38,6 +38,8 @@ const ListVehiclesTable = () =>
     const [vehicle, setVehicle] = useState([]); // State variable to store a single vehicle
     const [modal_delete, setmodal_delete] = useState(false); // State variable to control delete modal visibility
     const [view_modal, setView_modal] = useState(false); // State variable to control view modal visibility
+    const [certificatePreview, setCertificatePreview] = useState(null);
+    const [certificateImage, setCertificateImage] = useState("");
     const [sproviders, setSproviders] = useState([]);
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
@@ -46,46 +48,60 @@ const ListVehiclesTable = () =>
 
     const navigate = useNavigate(); // Use the 'useNavigate' hook from React Router
 
-    // // Execute the code inside the useEffect hook when the component mounts
-    // useEffect(() => {
-    // // Existing List
-    // const existOptionsList = {
-    //     valueNames: ['contact-name', 'contact-message'],
-    // };
-    // new List('contact-existing-list', existOptionsList);
-    // // Initialize List.js with ID 'contact-existing-list' and options from 'existOptionsList'.
-    // // This creates a list with the ability to filter based on the values of 'contact-name' and 'contact-message'.
-
-    // // Fuzzy Search list
-    // new List('fuzzysearch-list', {
-    //     valueNames: ['name'],
-    // });
-    // // Initialize List.js with ID 'fuzzysearch-list' and options specifying that fuzzy search should be performed on 'name'.
-    // // This enables searching and filtering the list based on the values of 'name' using fuzzy search algorithm.
-
-    // // Pagination list
-    // new List('pagination-list', {
-    //     valueNames: ['pagi-list'],
-    //     page: 3,
-    //     pagination: true,
-    // });
-    // // Initialize List.js with ID 'pagination-list' and options specifying pagination.
-    // // This creates a paginated list where each page displays three items at a time.
-    // });
+     // Later in your code, when setting the initial state
+     const initialValues = 
+     {
+         service_provider: !add_list ? vehicle[0]?.service_provider : '',
+         service_provider_id: !add_list ? vehicle[0]?.service_provider_id : '',
+         vehicle_number: !add_list ? vehicle[0]?.vehicle_number : '',
+         make: !add_list ? vehicle[0]?.make : '',
+         model: !add_list ? vehicle[0]?.model : '',
+         color: !add_list ? vehicle[0]?.color : '',
+         length: !add_list ? vehicle[0]?.length : '',
+         breadth: !add_list ? vehicle[0]?.breadth : '',
+         height: !add_list ? vehicle[0]?.height : '',
+         no_of_horse: !add_list ? vehicle[0]?.no_of_horse : '',
+         air_conditioner: !add_list ? vehicle[0]?.air_conditioner : '',
+         temperature_manageable: !add_list ? vehicle[0]?.temp_manageable : '',
+         vehicle_images: !add_list ? vehicle[0]?.images : [],
+         vehicle_registration_number: !add_list ? vehicle[0]?.registration_no : '',
+         gcc_travel_allowed: !add_list ? vehicle[0]?.gcc_travel_allowed : '',
+         insurance_cover: !add_list ? vehicle[0]?.insurance_cover : '',
+         insurance_date: !add_list ? vehicle[0]?.insurance_date : '',
+         insurance_policy_no: !add_list ? vehicle[0]?.insurance_policy_no : '',
+         insurance_policy_provider: !add_list ? vehicle[0]?.insurance_provider : '',
+         insurance_expiry_date: !add_list ? vehicle[0]?.insurance_expiration_date : '',
+         vehicle_type: !add_list ? vehicle[0]?.vehicle_type : '',
+         vehicle_registration_date: !add_list ? vehicle[0]?.vehicle_registration_date : '',
+         vehicle_exipration_date: !add_list ? vehicle[0]?.vehicle_exipration_date : '',
+         safety_certicate: !add_list ? vehicle[0]?.safety_certicate : '',
+     };
 
     // Execute the code inside the useEffect hook when the component mounts
     useEffect(() => {
         getAllData(1)
     }, []);
 
+    /**This function is an event handler that triggers when the user
+     *  selects a file for the idproof image */
+    const handleIdProofImageChange = (event) => {
+        const file = event.target.files[0];
+        setCertificateImage(file)
+        setCertificatePreview(URL.createObjectURL(file));
+    };
+
     // The Below function is used when we are adding the vehicle
     async function tog_list(param, productId) 
     {
-    if (param === 'ADD') {
-        setAdd_list(!add_list); // Toggle 'add_list' state
-    }
-        let data = await getSingleVechileData(productId)
-        setVehicle([data]); // Set the 'vehicle' state to the found vehicle data
+        setErrors("")
+        if (param === 'ADD') {
+            setCertificatePreview(null)
+            setAdd_list(!add_list); // Toggle 'add_list' state
+        } else {
+            let data = await getSingleVechileData(productId)
+            setVehicle([data]); // Set the 'vehicle' state to the found vehicle data
+            setCertificatePreview(vehicle[0]?.safety_certicate)
+        }
         setmodal_list(!modal_list); // Toggle 'modal_list' state
     }
 
@@ -138,42 +154,14 @@ const ListVehiclesTable = () =>
             }
         }
     }
-  
-    // Later in your code, when setting the initial state
-    const initialValues = 
-    {
-        service_provider: !add_list ? vehicle[0]?.service_provider : '',
-        service_provider_id: !add_list ? vehicle[0]?.service_provider_id : '',
-        vehicle_number: !add_list ? vehicle[0]?.vehicle_number : '',
-        make: !add_list ? vehicle[0]?.make : '',
-        model: !add_list ? vehicle[0]?.model : '',
-        color: !add_list ? vehicle[0]?.color : '',
-        length: !add_list ? vehicle[0]?.length : '',
-        breadth: !add_list ? vehicle[0]?.breadth : '',
-        height: !add_list ? vehicle[0]?.height : '',
-        no_of_horse: !add_list ? vehicle[0]?.no_of_horse : '',
-        air_conditioner: !add_list ? vehicle[0]?.air_conditioner : '',
-        temperature_manageable: !add_list ? vehicle[0]?.temp_manageable : '',
-        vehicle_images: !add_list ? vehicle[0]?.images : [],
-        vehicle_registration_number: !add_list ? vehicle[0]?.registration_no : '',
-        gcc_travel_allowed: !add_list ? vehicle[0]?.gcc_travel_allowed : '',
-        insurance_cover: !add_list ? vehicle[0]?.insurance_cover : '',
-        insurance_date: !add_list ? vehicle[0]?.insurance_date : '',
-        insurance_policy_no: !add_list ? vehicle[0]?.insurance_policy_no : '',
-        insurance_policy_provider: !add_list ? vehicle[0]?.insurance_provider : '',
-        insurance_expiry_date: !add_list ? vehicle[0]?.insurance_expiration_date : '',
-        vehicle_type: !add_list ? vehicle[0]?.vehicle_type : '',
-        vehicle_registration_date: !add_list ? vehicle[0]?.vehicle_registration_date : '',
-        vehicle_exipration_date: !add_list ? vehicle[0]?.vehicle_exipration_date : '',
-    };
 
     const validation = useFormik
     ({
         // enableReinitialize: use this flag when initial values need to be changed
         enableReinitialize: true,
         initialValues, // Initial values for the form
-        onSubmit: (values) =>
-        {
+        onSubmit: (values) =>{
+            values.safety_certicate = certificateImage
             setmodal_list(false);
             if (add_list) 
             {   
@@ -194,6 +182,7 @@ const ListVehiclesTable = () =>
     async function getAllData(page) {
         let getvehicles = await getVehiclesData(page || 1);
         let getSP = await getSPUserName();
+        console.log("ss",getSP)
         setSproviders(getSP.serviceProviders);
         setVehicles(getvehicles?.vehicles);
         setPageNumber(page);
@@ -216,6 +205,7 @@ const ListVehiclesTable = () =>
     }
 
     async function addVechile(values){
+        console.log("va",values)
         let addedVechile = await addNewVehicle(values);
         if(addedVechile.code === 200){
             setErrors("")
@@ -586,18 +576,24 @@ const ListVehiclesTable = () =>
                             </div>
                         </div>
 
-                        {/* The below element is for uploading the images of the vehicle. */} 
-                        {/* <div className="mb-3">
-                            <label htmlFor="vehicle_image-field" className="form-label">Vehicle Image</label>
+                        {/* The below element is for uploading the images of safty certificate*/} 
+                        <div className="mb-3">
+                            {certificatePreview && (
+                                <div>
+                                    <img name="id_proof_image" src={certificatePreview} alt="Id Proof Preview" style={{ maxWidth: '100px' }} />
+                                </div>
+                            )}  
+                            <label htmlFor="vehicle_image-field" className="form-label">Safty Certificate Image</label>
                             <input
                                 type="file"
-                                name='vehicle_image'
+                                name='safety_certicate'
                                 id="vehicle_image-field"
                                 className="form-control"
-                                placeholder="Upload Vehicle Image"
+                                placeholder="Upload Safty Certificate Image"
+                                onChange={handleIdProofImageChange}
                                 required
                             />
-                        </div> */}
+                        </div>
 
                         {/* The below element is for adding the registration number of the vehicle. */} 
                         <div className="mb-3">
@@ -1213,6 +1209,10 @@ const ListVehiclesTable = () =>
                                 value={validation.values.vehicle_exipration_date || ""}
                                 readOnly
                             />
+                        </div>
+                        <div className="mb-3">
+                            <div><label htmlFor="vehicle_certification_image-field" className="form-label">Vehicle Safety Certicate</label></div>
+                            <img id="vehicle_certification_image-field" name="safety_certicate" src={validation.values.safety_certicate || ""} alt="Id Proof Preview" style={{ maxWidth: '100px' }} />
                         </div>
                     </ModalBody> {/* Here all the element will be done*/}
                     {/* All the buttons are add from the footer */}
