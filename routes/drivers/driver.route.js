@@ -69,5 +69,9 @@ module.exports = function(app)
     app.get(`/${process.env.apiToken}/past/service/provider/driver/:id`,
     isValidIdInTheParams(constants.tableName.drivers),
     driverController.getWorkPastServiceProvider);
+
+    app.put(`/${process.env.apiToken}/unassign/driver/:id`,
+    isValidIdInTheParams(constants.tableName.assign_drivers), 
+    driverController.UnAssignServiceProvider)
     
 }

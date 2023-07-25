@@ -8,7 +8,7 @@
 const con = require('./configs/db.configs'); // Importing the con variable
 const timeCalculate = require('./utils/helper/date'); // This variable will have the date file data. It is used to add days to current date for expiration of token
 require('dotenv').config(); // Importing the dotenv library
-const constants = require('./utils/constants');
+const constants = require('./utils/constants'); // Importing the constants variables data
 
 module.exports = async function() 
 {
@@ -33,6 +33,7 @@ module.exports = async function()
                     {
                         if(result1) // if inserion happend correctly then if block
                         {
+                            // The belwo query is for add the data into the password policies table
                             let insQueryPP = `INSERT INTO ${constants.tableName.password_policies}(name, value) VALUES ('${process.env.pname}', '${process.env.regex}')`;
                             // console.log(insQueryPP); 
                             con.query(insQueryPP, (err, result2)=> // Executing the above query

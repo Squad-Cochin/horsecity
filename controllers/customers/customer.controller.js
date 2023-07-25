@@ -28,7 +28,7 @@ exports.getAll = async (req, res, next) =>
         console.log('No Customer data present');
         return res.status(200).send
         ({
-            code : 404,
+            code : 400,
             status : false,
             message : constant.responseMessage.getAll,
             data : customers
@@ -68,7 +68,7 @@ exports.getOne= async (req, res, next) =>
         console.log('No customer data present');
         return res.status(200).send
         ({
-            code : 404,
+            code : 400,
             status : false,
             message : constant.responseMessage.getOneErr,
             data : []
@@ -77,7 +77,6 @@ exports.getOne= async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this else if block of code will be executed.
     else if(customers === 'err')
     {
-        console.log('Error');
         return res.status(200).send
         ({
             code : 500,
@@ -128,7 +127,7 @@ exports.addCustomer = async (req, res, next) =>
         console.log('Error while inserting the customer data');
         return res.status(200).json
         ({
-            code: 401,
+            code: 400,
             status: false,
             message: constant.responseMessage.errorInsert,
         });
@@ -139,7 +138,7 @@ exports.addCustomer = async (req, res, next) =>
         console.log('Invalid Format of file submit for upload');
         res.status(200).send
         ({
-            code : 401,
+            code : 400,
             status : true,
             message : "Invalid Format of file submit for upload",
         });
@@ -150,7 +149,7 @@ exports.addCustomer = async (req, res, next) =>
         console.log('No image uploaded for customer');
         res.status(200).send
         ({
-            code : 401,
+            code : 400,
             status : true,
             message : "No image uploaded for customer",
         });
@@ -199,7 +198,7 @@ exports.editCustomer = async (req, res, next) =>
         console.log('Error while editing the customer data');
         res.status(200).send
         ({
-            code : 401,
+            code : 400,
             status : true,
             message : constant.responseMessage.erroredit,
         });
@@ -210,7 +209,7 @@ exports.editCustomer = async (req, res, next) =>
         console.log('Invalid Format of file submit for upload');
         res.status(200).send
         ({
-            code : 401,
+            code : 400,
             status : true,
             message : "Invalid Format of file submit for upload",
         });
@@ -260,6 +259,9 @@ exports.updateStatus= async (req, res) =>
 }
 
 
+/**
+ * The below function is for removing the customer from the view page. The data will be in the datbase but it will never shown on the front end
+ */
 exports.removeCustomer = async (req, res) =>
 {
     const customers = await customer.removecustomer(req.params.id);

@@ -111,6 +111,9 @@ exports.getAll = async (req, res, next) =>
     }
 }
 
+/**
+ * The below function is for updating the status of the vehicle.
+ */
 exports.updateStatus = async (req, res, next) =>
 {
     const vehicles = await vehicle.updatestatus(req.params.id);
@@ -279,6 +282,10 @@ exports.getAllImages = async (req, res, next) =>
         });
     }
 }
+
+/**
+ * The below function is for removing the vehicle from the view page. The data will be in the database but it will never shown on the front-end
+ */
 exports.removeVehicle = async (req, res, next) =>
 {
     const vehicles = await vehicle.removevehicle(req.params.id);
@@ -303,5 +310,4 @@ exports.removeVehicle = async (req, res, next) =>
             message : constant.responseMessage.removesuccess
         });
     }
-
 }

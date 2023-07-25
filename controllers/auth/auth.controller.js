@@ -30,7 +30,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 400,
-            message : "username not found",
+            message : "Username not found",
         });
     }
     // If any unspecified or unencountered error came. Which is not as per you code thinking, then this else if block

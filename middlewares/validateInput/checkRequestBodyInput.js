@@ -2,7 +2,7 @@ const commonfetching = require(`../../utils/helper/commonfetching`);
 const con = require(`../../configs/db.configs`);
 const constants = require(`../../utils/constants`);
 const url = require(`../../utils/url_helper`);
-
+const time = require(`../../utils/helper/date`);
 
 function hasOnlyNonSpaces(str) 
 {
@@ -19,20 +19,20 @@ function hasOnlyNonSpaces(str)
 const isValidDateOfBirth = (DOB) =>  
 {
     // This is regex or regular expression for verify the Date or birth validation
-    return DOB.match(/^\d{2}\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s\d{4}$/); // REGEX or regurlar expression
+    return DOB.match(new RegExp(process.env.DOBREGEX)); // REGEX or regurlar expression
 }
 
 const isValidUAENumber = (phoneNumber) =>
 {
     // console.log(`Phone Number`, phoneNumber);
     // Phone number format: +9715XXXXXXXX
-    const phoneRegex = /^\+9715\d{8}$/;
+    const phoneRegex = new RegExp(process.env.PHONENUMBERREGEX);
     return phoneRegex.test(phoneNumber);
 }
 
 const isValidUsername = (username) => 
 {
-    return username.match(/^[a-zA-Z0-9]{8,12}$/);
+    return username.match(new RegExp(process.env.DOBREGEX));
 }
 
 const isValidPasswordTestWithRegex = (result, password) => 
@@ -45,8 +45,7 @@ const isValidPasswordTestWithRegex = (result, password) =>
 
 const isvalidEmail = (email) => 
 {
-    const regex = (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?$/);
-    if (regex.test(email))
+    if (new RegExp(process.env.EMAILREGEX).test(email))
     {
         const domain = email.split(`@`)[1]; // get domain name after `@` symbol
         const domainParts = domain.split(`.`); // split domain name by `.` separator
@@ -481,8 +480,8 @@ exports.dateOfBirthValidation = (req, res, next) =>
         }
         else
         {
-            console.log(isValidDateOfBirth(req.body.date_of_birth));
-            if(!isValidDateOfBirth(req.body.date_of_birth))
+            console.log(isValidDateOfBirth(time.formatDateToDDMMYYYY(req.body.date_of_birth)));
+            if(!isValidDateOfBirth(time.formatDateToDDMMYYYY(req.body.date_of_birth)))
             {
                 return res.status(200).send
                 ({

@@ -245,19 +245,45 @@ module.exports = class vehicles
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let selQuery = `SELECT vi.id, vi.image, vi.title, vi.uploaded_at, vi.status FROM ${constants.tableName.vehicles_images} vi, ${constants.tableName.vehicles} v WHERE vi.vehicle_id = ${id} AND vi.deleted_at IS NULL`;
+                let selQuery = `SELECT vi.id, vi.title, vi.vehicle_id, vi.image, vi.uploaded_at, vi.status FROM vehicles_images vi JOIN vehicles v ON vi.vehicle_id = v.id WHERE vi.vehicle_id = ${id} AND vi.deleted_at IS NULL`;
                 // console.log(selQuery);
                 con.query(selQuery, (err, result) =>
                 {
-                    if(result)
+                    // console.log('Model:', result);
+                    if (result.length !== 0)
                     {
-                        resolve(result);                       
+                        // Create an array to store the return objects
+                        let returnArray = [];                      
+                        for (let i = 0; i < result.length; i++)
+                        {
+                            let returnObj =
+                            {
+                                id: result[i].id,
+                                title : result[i].title,
+                                url: `${process.env.PORT_SP}${constants.attachmentLocation.vehicle.view.image}${result[i].image}`,
+                                uploaded_at: time.formatDateToDDMMYYYY(result[i].uploaded_at),
+                                status: result[i].status,
+                            };                      
+                            // Add the current object to the returnArray
+                            returnArray.push(returnObj);
+                        }
+                        // Resolve with the array of objects
+                        resolve(returnArray);
                     }
                     else
                     {
-                        console.log(err);
-                        resolve('err');
+                        // Resolve with an empty array to indicate no data found
+                        resolve([]);
                     }
+                    // if(result)
+                    // {
+                    //     resolve(result);                       
+                    // }
+                    // else
+                    // {
+                    //     console.log(err);
+                    //     resolve('err');
+                    // }
                 });
             });            
         }

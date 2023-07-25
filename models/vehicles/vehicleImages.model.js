@@ -52,36 +52,36 @@ module.exports = class vehicleImages
             return await new Promise(async(resolve, reject)=>
             {
                 const offset = (pageNumber - 1) * pageSize;
-                // let selQuery = `SELECT * FROM  ${constants.tableName.vehicles_images} vi, ${constants.tableName.vehicles} v WHERE vi.id = v.service_provider_id AND v.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
-                // let selQuery = `SELECT * FROM  vehicles_images vi, vehicles v WHERE  vi.vehicle_id = v.id AND v.deleted_at IS NULL;`;
-                let selQuery = `SELECT vi.id, vi.vehicle_id, vi.image, vi.uploaded_at, vi.status FROM vehicles_images vi JOIN vehicles v ON vi.vehicle_id = v.id WHERE vi.vehicle_id = ${id} AND vi.deleted_at IS NULL;`;
+                let selQuery = `SELECT vi.id, vi.vehicle_id, vi.image, vi.uploaded_at, vi.status FROM vehicles_images vi JOIN vehicles v ON vi.vehicle_id = v.id WHERE vi.vehicle_id = ${id} AND vi.deleted_at IS NULL`;
                 // console.log(selQuery);
                 con.query(selQuery, (err, result) =>
                 {
                     // console.log('Model:', result);
-                    if (result.length !== 0) {
+                    if (result.length !== 0)
+                    {
                         // Create an array to store the return objects
                         let returnArray = [];                      
-                        for (let i = 0; i < result.length; i++) {
-                          let returnObj = {
-                            id: result[i].id,
-                            url: `${process.env.PORT_SP}${constants.attachmentLocation.vehicle.view.image}${result[i].image}`,
-                            uploaded_at: time.formatDateToDDMMYYYY(result[i].uploaded_at),
-                            status: result[i].status,
-                          };
-                      
-                          // Add the current object to the returnArray
-                          returnArray.push(returnObj);
+                        for (let i = 0; i < result.length; i++)
+                        {
+                            let returnObj =
+                            {
+                                id: result[i].id,
+                                url: `${process.env.PORT_SP}${constants.attachmentLocation.vehicle.view.image}${result[i].image}`,
+                                uploaded_at: time.formatDateToDDMMYYYY(result[i].uploaded_at),
+                                status: result[i].status,
+                            };                      
+                            // Add the current object to the returnArray
+                            returnArray.push(returnObj);
                         }
-                      
                         // Resolve with the array of objects
                         resolve(returnArray);
-                      } else {
+                    }
+                    else
+                    {
                         // Resolve with an empty array to indicate no data found
                         resolve([]);
-                      }
-                });
-                
+                    }
+                }); 
             });            
         }
         catch (error)
@@ -90,7 +90,7 @@ module.exports = class vehicleImages
         }
     }
 
-    static async updatestatus (Id)
+    static async updatestatus(Id)
     {
         try 
         {

@@ -10,6 +10,7 @@ const commonoperation = require('../../utils/helper/commonoperation');
 const time = require('../../utils/helper/date');
 const con = require('../../configs/db.configs');
 const { pastWorkHistroyResponse } = require('../../utils/objectConvertor');
+const objectConvertor = require('../../utils/objectConvertor');
 
 module.exports = class drivers
 {
@@ -181,8 +182,6 @@ module.exports = class drivers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let insQuery = `INSERT INTO assign_drivers(service_provider_id, driver_id, created_at) VALUES(${sId}, ${dId}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'  )`;
-                // console.log(`Insert Query While Assigning Driver To A Service Provider: `, insQuery);
                 let driverId = await commonfetching.dataOnCondition(constants.tableName.drivers, dId, 'id');
                 // console.log(`Driver Data: `, driverId);
                 let serproviderId = await commonfetching.dataOnCondition(constants.tableName.service_providers, sId, 'id');
@@ -199,17 +198,45 @@ module.exports = class drivers
                     }
                     else
                     {
-                        console.log(insQuery);
-                        con.query(insQuery, (err, result) =>
+                        let selQuery = `SELECT * FROM assign_drivers t WHERE t.service_provider_id = ${sId} AND t.driver_id = ${dId} AND t.deleted_at IS NULL`;
+                        // console.log('Select query in the driver assignment', selQuery);
+                        con.query(selQuery, (error, result) =>
                         {
-                            if(result.affectedRows > 0)
+                            // console.log('Select query result', result);
+                            // console.log('Select query error',  error)
+                            if(error)
                             {
-                                resolve(result);
+                                // console.log('Error while fetching the information of driver. Whether the driver left the last work place', error);
+                                resolve('lastworkplaceerror')
                             }
                             else
                             {
-                                console.log(err);
-                                resolve('err')
+                                if(result.length === 0)
+                                {
+                                    let insQuery = `INSERT INTO assign_drivers(service_provider_id, driver_id, created_at) VALUES(${sId}, ${dId}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                                    // console.log(`Insert Query While Assigning Driver To A Service Provider: `, insQuery);
+                                    con.query(insQuery, (err, result2) =>
+                                    {
+                                        // console.log('Insert Query Error', err);
+                                        // console.log(`Insert Query Result`, result2);
+                                        if(result2.affectedRows > 0)
+                                        {
+                                            // console.log('Data inserted into the assign driver table');
+                                            resolve('datainserted');
+                                        }
+                                        else
+                                        {
+                                            // console.log('Error while inserting the data into the assign driver table');
+                                            // console.log(err);
+                                            resolve('err')
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    // console.log('The driver is already working under a service provider. We cannot allow them to work here.');
+                                    resolve('notallowed')
+                                }
                             }
                         });
                     }
@@ -230,25 +257,37 @@ module.exports = class drivers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let selQuery = `SELECT ad.id, sp.user_name, ad.created_at FROM ${constants.tableName.assign_drivers} ad, ${constants.tableName.service_providers} sp WHERE ad.driver_id = ${id} AND sp.id = ad.service_provider_id`;
-                // console.log(selQuery);
+                let selQuery = `SELECT ad.id, sp.user_name, ad.created_at FROM ${constants.tableName.assign_drivers} ad, ${constants.tableName.service_providers} sp WHERE ad.driver_id = ${id} AND ad.deleted_at IS NULL AND sp.id = ad.service_provider_id`;
+                // console.log('First Query: ',selQuery);
                 con.query(selQuery, (err, result) =>
                 {
-                    // console.log(result);
-                    if(result.length === 0)
+                    // console.log('First Result: ', result);
+                    let existSelQuery = `SELECT sp.* FROM service_providers sp LEFT JOIN assign_drivers ad ON sp.id = ad.service_provider_id AND ad.driver_id = ${id} AND ad.deleted_at IS NULL WHERE ad.id IS NULL`;
+                    console.log('Second Query: ', existSelQuery);
+                    con.query(existSelQuery, (error, result1)=>
                     {
-                        resolve(data)
-                    }
-                    else if(err)
-                    {
-                        resolve(`err`)
-                    }
-                    else
-                    {
-                        let data = pastWorkHistroyResponse(result);
-                        console.log('Data From Object Convertor', data);
-                        resolve(data)
-                    }
+                        // console.log('Second Result: ', result1);
+                        let responseObj =
+                        {
+                            exist: [],      // Set 'result' into 'exist' property
+                            notexist: []   // Set 'result1' into 'notexist' property
+                        };
+                        if(result.length == 0)
+                        {
+                            responseObj.notexist = objectConvertor.notWorkedPlace(result1);
+                            resolve(responseObj);
+                        }
+                        else if(err)
+                        {
+                            resolve(`err`)
+                        }
+                        else
+                        {
+                            responseObj.exist = objectConvertor.pastWorkHistroyResponse(result),
+                            responseObj.notexist = objectConvertor.notWorkedPlace(result1);
+                            resolve(responseObj)
+                        }
+                    });
                 });                
             });            
         }
@@ -257,6 +296,44 @@ module.exports = class drivers
             console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "assignserviceprovider". Which is designed to assigne the driver to service provider.');            
         }
     }
+
+    static async unassignserviceprovider(Id)
+    {
+        try
+        {
+            return await new Promise(async(resolve, reject)=>
+            {
+                let upQuery = `UPDATE ${constants.tableName.assign_drivers} t SET t.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE t.id = '${Id}' AND t.deleted_at IS NULL `;
+                con.query(upQuery, (err, result) =>
+                {
+                    if(result.affectedRows > 0)
+                    {
+                        console.log(`Unassigned of the driver ${Id} id done `);
+                        resolve('unassigned');
+                    }
+                    else
+                    {
+                        if(result.affectedRows === 0)
+                        {
+                            console.log(`The id which is submitted is already unassigned`);
+                            resolve('alreadyunassigned');
+                        }
+                        else
+                        {
+                            console.log(err);
+                            resolve('err');
+                        }
+                    }
+                });
+            });      
+        }
+        catch (error)
+        {
+            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "unassignserviceprovider". Which is designed to unassigned particular driver to their service provider.', error);            
+        }        
+    }
+
+    
 
 
 

@@ -499,7 +499,7 @@ exports.insurancePolicyProviderEntered = (req, res, next) =>
 
 exports.isValidInsuranceExpirationDateEntered = (req, res, next) =>
 {
-    if (!req.body.insurance_expiration_date) 
+    if (!req.body.insurance_expiry_date) 
     {
         return res.status(200).send
         ({

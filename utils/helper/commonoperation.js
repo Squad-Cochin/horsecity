@@ -206,8 +206,10 @@ exports.removeUser = (tablename, Id) =>
     return new Promise((resolve, reject) => 
     {
         let selQuery = `SELECT * FROM ${tablename} WHERE ${tablename}.id = '${Id}' `;
+        console.log(selQuery);
         con.query(selQuery, (err, result) =>
         {
+            console.log(result);
             if (err)
             {
                 console.log('Error while executing the query:', err);
@@ -343,3 +345,21 @@ exports.fileUploadTwo = async (attachments, path) =>
         }
     });
 }
+
+
+exports.getFileNameFromURL = async (url) =>
+{
+    // Split the URL by slashes ('/') to get an array of path components
+    const pathComponents = url.split('/');
+  
+    // Get the last element of the array, which represents the file name with extension
+    const fileNameWithExtension = pathComponents[pathComponents.length - 1];
+  
+    return fileNameWithExtension;
+  }
+  
+// Example usage:
+// const url = 'http://192.168.200.130:8000/Drivers/Licence/736895_a.png';
+// const fileName = getFileNameFromURL(url);
+// console.log(fileName); // Output: 736895_a.png
+  

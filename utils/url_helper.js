@@ -8,7 +8,7 @@ const UPDATE_VEHICLE_PAGE_URL = token + `/edit/vehicle/`
 
 const ADD_SERVICEPROVIDER__URL = token + `/add/serviceprovider` 
 
-module.exports = { 
+module.exports= { 
     UPDATE_SERVICE_PROVIDER_URL, 
     UPDATE_SETTINGS_PAGE_URL, 
     UPDATE_CUSTOMER_PAGE_URL,
