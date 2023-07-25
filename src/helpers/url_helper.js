@@ -67,6 +67,9 @@ export const PUT_VEHICLES_REMOVE = apiBaseUrl + token + "/removeVehicle"
 /**VEHICLES_IMAGES */
 export const GET_VEHICLES_IMAGES_DATA_URL = apiBaseUrl + token + "/getAllImages/vehicle"
 export const POST_VEHICLES_IMAGES_ADD_URL = apiBaseUrl + token + "/addImage/vehicle"
+export const PUT_VEHICLES_IMAGE_UPDATE_STATUS = apiBaseUrl + token + "/updateStatus/vehicle/image"
+export const PUT_VEHICLES_IMAGES_REMOVE = apiBaseUrl + token + "/removeImage/vehicle/image"
+
 
 /**DRIVERS */
 export const GET_DRIVERS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/drivers"
@@ -80,6 +83,7 @@ export const PUT_DRIVERS_REMOVE = apiBaseUrl + token + "/remove/driver"
 export const POST_ASSIGN_DRIVERS = apiBaseUrl + token + "/assign/driver"
 export const GET_ASSIGNED_DRIVERS = apiBaseUrl + token + "/past/service/provider/driver"
 export const PUT_ASSIGN_DRIVERS_REMOVE = apiBaseUrl + token + "/unassign/driver"
+
 
 /**TAXATION */
 /**This URL basis of page & limit  */

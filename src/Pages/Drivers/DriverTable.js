@@ -170,10 +170,10 @@ const ListTables = () =>
     // function for display assigned drivers modal
     async function toggleAssign(id){
         console.log(id)
-        let assignedSP = await getAssignedProviders(id)
-        let notAssigned = await getSPUserName()
-        setSproviders(notAssigned)
-        setAssignedSProviders(assignedSP)
+        let data = await getAssignedProviders(id)
+        // let data = await getSPUserName()
+        setSproviders(data.notexist)
+        setAssignedSProviders(data.exist)
         setModal_assign(!modal_assign);
         setAssignSP(!assignSP)
         setSelectedDriver(id);
@@ -242,17 +242,19 @@ const ListTables = () =>
 
     // function for remove assigned to service provider
     async function removeAsigned(id){
-        alert(id + " remove url on progress");
-        let removeSP = await removeAssignedDriver(id);
-        if(removeSP.code === 200){
-            setErrors("")
-            setAdd_list(false);
-            setmodal_list(false);
-            getAllData(pageNumber)
-        }else{
-            setErrors("")
-            setErrors(removeSP.message)
-        }
+        // alert(id + " remove url on progress");
+        await removeAssignedDriver(id);
+        window.location.reload();
+        // console.log(removeSP)
+        // if(removeSP.code === 200){
+        //     setErrors("")
+        //     setAdd_list(false);
+        //     setmodal_list(false);
+        //     getAllData(pageNumber)
+        // }else{
+        //     setErrors("")
+        //     setErrors(removeSP.message)
+        // }
     }
     
     
@@ -687,7 +689,7 @@ const ListTables = () =>
                             >
                                 <option value="">Select Service Provider</option>
                             {sproviders.map((item, index) => (
-                                <option key={index} value={item.id}>{item.user_name}</option>
+                                <option key={index} value={item.id}>{item.username}</option>
                             ))}
                             </select>
                         </div>

@@ -150,7 +150,7 @@ export async function getTaxationsData(pageNumber){
 
 export async function getSettingsPageData(){
     try {
-        let pageLimit = config.pageLimit;
+        // let pageLimit = config.pageLimit;
 
         const { data } = await axios.get(`${url.POST_SETTINGS_ALL_DATA_URL}`);
         console.log("ddd",data)
@@ -188,7 +188,6 @@ export async function getDiscountsPageData(pageNumber){
             "page" : pageNumber,
             "limit" : pageLimit
         }
-        let sId = 1
         const { data } = await axios.post(`${url.GET_DISCOUNTS_ALL_DATA_URL}`,reqObj);
         console.log("ddd",data)
         return(data)

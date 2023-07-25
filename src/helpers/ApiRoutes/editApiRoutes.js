@@ -206,6 +206,17 @@ export async function updateVechileStatus(id){
   }
 }
 
+export async function updateVechileImageStatus(id){
+  try{
+    console.log("data",id)
+    const { data } = await axios.put(`${url.PUT_VEHICLES_IMAGE_UPDATE_STATUS}/${id}`);
+    console.log("data",data)
+    return data;
+  } catch (error) {
+    return { error : "Faild !"}
+  }
+}
+
 export async function updateTaxationStatus(id){
   try{
     console.log("data",id)

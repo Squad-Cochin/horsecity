@@ -39,10 +39,11 @@ export async function removeVehicle(vehicle_id){
 }
 
 /**Remove service provider */
-export async function removeVehicleImage(vehicle_id,image_id){
+export async function removeVehicleImage(id){
     try {
-
-        alert(`Vehicle ${vehicle_id} image ${image_id} delete request reached.`)
+        const { data } = await axios.put(`${url.PUT_VEHICLES_IMAGES_REMOVE}/${id}`);
+        console.log("data",data)
+        return data;
     } catch (error) {
         return { error : "Failed !"}
     }
@@ -60,10 +61,11 @@ export async function removeDriver(driver_id){
 }
 
 /**Remove assigned Driver  */
-export async function removeAssignedDriver(driver_id){
+export async function removeAssignedDriver(id){
     try {
-        const { data } = await axios.put(`${url.PUT_ASSIGN_DRIVERS_REMOVE}/${driver_id}`);
-        console.log("data",data)
+        console.log(url.PUT_ASSIGN_DRIVERS_REMOVE+"/"+id)
+        const { data } = await axios.put(`${url.PUT_ASSIGN_DRIVERS_REMOVE}/${id}`);
+        console.log("dataaaa",data)
         return data;
     } catch (error) {
         return { error : "Failed !"}

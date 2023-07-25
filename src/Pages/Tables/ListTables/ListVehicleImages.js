@@ -22,6 +22,7 @@ import { getVehicleImageData } from '../../../helpers/ApiRoutes/getApiRoutes'
 //Import remove vehicle image data
 import { removeVehicleImage } from '../../../helpers/ApiRoutes/removeApiRoutes';
 import { addNewImage } from '../../../helpers/ApiRoutes/addApiRoutes';
+import { updateVechileImageStatus } from '../../../helpers/ApiRoutes/editApiRoutes';
 // import { func } from 'prop-types';
 
 // The name of the ListVehicleImages function. Which will be executed and used all over program. This funtion is having all the code
@@ -75,7 +76,7 @@ const ListVehicleImages = () =>
             button.classList.remove('btn-success');
             button.classList.add('btn-danger');
             // Find the corresponding vehicle by ID
-            const vehicle = getvehicles.find((v) => v.id === vehiclesId);
+            const vehicle = vhImages.find((v) => v.id === vehiclesId);
             if (vehicle) 
             {
                 vehicle.status = 'INACTIVE';
@@ -87,7 +88,7 @@ const ListVehicleImages = () =>
             button.classList.remove('btn-danger');
             button.classList.add('btn-success');
             // Find the corresponding vehicle by ID
-            const vehicle = getvehicles.find((v) => v.id === vehiclesId);
+            const vehicle = vhImages.find((v) => v.id === vehiclesId);
             if (vehicle) 
             {
                 vehicle.status = 'ACTIVE';
@@ -106,12 +107,6 @@ const ListVehicleImages = () =>
     {
         window.history.back(); // Go back to the previous page
     };
-    
-    // The below function is for removing the vehicle image
-    function remove_data(vehicle_id, image_id)
-    {
-        removeVehicleImage(vehicle_id, image_id);
-    }
     
     // The below function is for chnaing the vehicle image
     const handleVehicleImageChange = (event) => 
@@ -144,6 +139,41 @@ const ListVehicleImages = () =>
             setErrors("")
             setErrors(addImg.message)
         }
+    }
+
+     // The below function is the Status button
+     function toggleStatus(button, vehiclesId)
+     {
+         console.log("vid",vehiclesId)
+         var currentStatus = button.innerText.trim();
+         const vehicle = vhImages.find((v) => v.id === vehiclesId);
+         updateVechileImageStatus(vehicle.id)
+         if (currentStatus === 'ACTIVE')
+         {
+             button.innerText = 'INACTIVE';
+             button.classList.remove('btn-success');
+             button.classList.add('btn-danger');
+             if (vehicle)
+             {
+                 vehicle.status = 'INACTIVE';
+             }
+         }
+         else if (currentStatus === 'INACTIVE')
+         {
+             button.innerText = 'ACTIVE';
+             button.classList.remove('btn-danger');
+             button.classList.add('btn-success');
+             if (vehicle)
+             {
+                 vehicle.status = 'ACTIVE';
+             }
+         }
+     }
+
+     /**This function is used to remove a service provider*/
+    async function remove_data(id) {
+        await removeVehicleImage(id)
+        window.location.reload();
     }
 
     return (     
@@ -196,19 +226,29 @@ const ListVehicleImages = () =>
                                             <td className="vehicletitle">{imageItem?.title}</td>
                                             <td className="created_at">{imageItem?.uploaded_at}</td>
                                             {/* This is the place from where we are calling the status button and function */}
-                                            <td className='status'>
-                                                <div>
-                                                    <div className="d-flex gap-2">
-                                                        <div className="status">
-                                                            <button className="btn btn-sm btn-success status-item-btn" data-bs-toggle="modal" data-bs-target="#showModal" onClick={(event) => toggleStatus(event.target, imageItem.id)}> {imageItem.status} </button>
-                                                        </div>
-                                                    </div>
-                                                </div>
+                                            <td>{imageItem.status === "ACTIVE" ?
+                                                <button
+                                                    className="btn btn-sm btn-success status-item-btn"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#showModal"
+                                                    onClick={(event) => toggleStatus(event.target, imageItem.id)}
+                                                >
+                                                    {imageItem.status}
+                                                </button> :
+                                                <button
+                                                    className="btn btn-sm btn-danger status-item-btn"
+                                                    data-bs-toggle="modal"
+                                                    data-bs-target="#showModal"
+                                                    onClick={(event) => toggleStatus(event.target, imageItem.id)}
+                                                >
+                                                    {imageItem.status}
+                                                </button>
+                                                }
                                             </td>
                                             {/* This is the place from where we are calling the Remove button and function */}
                                             <td>
                                                 <div className="d-flex gap-2">
-                                                    <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal" onClick={() => remove_data(2, imageItem?.id)}>
+                                                    <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal" onClick={() => remove_data(imageItem?.id)}>
                                                         Remove
                                                     </button>
                                                 </div>
