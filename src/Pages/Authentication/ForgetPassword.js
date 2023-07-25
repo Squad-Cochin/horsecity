@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React from "react";
+import React, { useEffect } from "react";
 import { Row, Col, Alert, Card, CardBody, Container, FormFeedback, Input, Label, Form } from "reactstrap";
 
 //redux
@@ -22,6 +22,10 @@ import logo from "../../assets/images/logo.png";
 const ForgetPasswordPage = props => {
   const dispatch = useDispatch();
   document.title = "Forget Password | HORSCITY";
+  useEffect(()=>{
+    document.body.style.backgroundImage = "none";
+    document.body.className = "";
+  },[])
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed

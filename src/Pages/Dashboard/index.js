@@ -16,10 +16,11 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 const Dashboard = () => {
 
   const [pageTitle, setPageTitle] = useState('HORSCITY');
-  
+
   useEffect(() => {
     getAllData()
-
+    document.body.style.backgroundImage = "none";
+    document.body.className = "";
   }, [pageTitle]);
   
   async function getAllData() {

@@ -23,6 +23,7 @@ const Login = props => {
 
 
   const [loginpage_logo,setLoginPageLogo] = useState('')
+  const [backgroundImage, setBackgroundImage] = useState('../../assets/images/bg.jpg');
   useEffect(()=>{
     getAllData()
   },[])
@@ -32,12 +33,14 @@ const Login = props => {
  
   async function getAllData() {
     let settingsData = await getSettingsPageData();
+    setBackgroundImage(settingsData?.settingsPageData[0]?.loginpage_bg_image);
     setLoginPageLogo(settingsData?.settingsPageData[0]?.loginpage_logo);
    }
 
    // At the bigining unmounting 
    useEffect(() => {
     document.body.className = "bg-pattern";
+    document.body.style = `background-image: url('${backgroundImage}');`;
     // remove classname when component will unmount
     return function cleanup() {
       document.body.className = "";

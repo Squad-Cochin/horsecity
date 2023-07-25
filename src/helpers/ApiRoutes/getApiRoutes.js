@@ -365,3 +365,15 @@ export async function getVehicleImageData(id){
         return null
     }
 }
+
+
+
+// export async function getLanguageFile(){
+//     try {
+//         const { data } = await axios.get(`${url.GET_LANGUAGES_FILE}`);
+//         console.log("DDD",data)
+//         return(data)
+//     } catch (error) {
+//         return null
+//     }
+// }

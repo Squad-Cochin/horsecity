@@ -1,17 +1,27 @@
-import React from 'react';
+import React ,{useEffect,useState}from 'react';
 import logolight from '../../assets/images/logo-light.png';
 import logodark from '../../assets/images/logo-dark.png';
 import avatar1 from '../../assets/images/users/avatar-1.jpg'
 import { Container, Row, Col, Card, CardBody } from 'reactstrap';
-
+import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes';
 import { Link } from 'react-router-dom';
 
 const LockScreen = () => {
+    const [backgroundImage, setBackgroundImage] = useState('../../assets/images/bg.jpg');
     document.title = "Lock Screen | HORSCITY - React Admin & Dashboard Template";
+
+    useEffect(()=>{
+        getAllData()
+      },[])
+    async function getAllData() {
+        let settingsData = await getSettingsPageData();
+        console.log("bgimmage",settingsData);
+        setBackgroundImage(settingsData?.settingsPageData[0]?.loginpage_bg_image);
+       }
     return (
         <React.Fragment>
 
-            <div className="bg-pattern" style={{height:"100vh"}}>
+            <div className="bg-pattern" style={{height:"100vh",backgroundImage: `url(${backgroundImage})`}}>
                 <div className="bg-overlay"></div>
                 <div className="account-pages pt-5">
                     <Container>

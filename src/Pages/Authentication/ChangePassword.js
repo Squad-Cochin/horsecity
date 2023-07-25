@@ -1,5 +1,5 @@
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import logo from "../../assets/images/logo.png";
 // import logodark from "../../assets/images/logo-dark.png";
 
@@ -15,13 +15,7 @@ import withRouter from "../../components/Common/withRouter";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
-//Social Media Imports
-// import { GoogleLogin } from "react-google-login";
-// // import TwitterLogin from "react-twitter-auth"
-// import FacebookLogin from "react-facebook-login/dist/facebook-login-render-props";
-
-// actions
-// import { loginUser, socialLogin } from "../../store/actions";
+import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 
 import { updateNewPwd } from "../../store/actions";
 
 import { logoutUser } from "../../store/actions";
@@ -32,21 +26,18 @@ import { logoutUser } from "../../store/actions";
 const ChangePassword = props => {
   document.title = "Change-Password | HORSCITY";
 
+  const [backgroundImage, setBackgroundImage] = useState('../../assets/images/bg.jpg');
 
-  // const { isUserLogout } = useSelector((state) => ({
-  //   isUserLogout: state.login.isUserLogout,
-  // }));
+
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(logoutUser());
   }, [dispatch]);
 
-
-  
-  // const { user } = useSelector(state => ({
-  //   user: state.login.user,
-  // }));
+  useEffect(()=>{
+    getAllData()
+  },[])
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
@@ -79,47 +70,16 @@ const ChangePassword = props => {
     error: state.login.error,
   }));
 
-  console.log("Errr",error);
-  // handleValidSubmit
-  // const handleValidSubmit = (event, values) => {
-  //   dispatch(loginUser(values, props.router.navigate));
-  // };
 
-  // const signIn = (res, type) => {
-  //   if (type === "google" && res) {
-  //     const postData = {
-  //       name: res.profileObj.name,
-  //       email: res.profileObj.email,
-  //       token: res.tokenObj.access_token,
-  //       idToken: res.tokenId,
-  //     };
-  //     dispatch(socialLogin(postData, props.router.navigate, type));
-  //   } else if (type === "facebook" && res) {
-  //     const postData = {
-  //       name: res.name,
-  //       email: res.email,
-  //       token: res.accessToken,
-  //       idToken: res.tokenId,
-  //     };
-  //     dispatch(socialLogin(postData, props.router.navigate, type));
-  //   }
-  // };
-
-  //handleGoogleLoginResponse
-  // const googleResponse = response => {
-  //   signIn(response, "google");
-  // };
-
-  //handleTwitterLoginResponse
-  // const twitterResponse = e => {}
-
-  //handleFacebookLoginResponse
-  // const facebookResponse = response => {
-  //   signIn(response, "facebook");
-  // };
+  async function getAllData() {
+    let settingsData = await getSettingsPageData();
+    console.log("bgimmage",settingsData);
+    setBackgroundImage(settingsData?.settingsPageData[0]?.loginpage_bg_image);
+   }
 
   useEffect(() => {
     document.body.className = "bg-pattern";
+    document.body.style = `background-image: url('${backgroundImage}');`;
     // remove classname when component will unmount
     return function cleanup() {
       document.body.className = "";

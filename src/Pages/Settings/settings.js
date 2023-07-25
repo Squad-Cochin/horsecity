@@ -8,6 +8,9 @@ import { getSettingsPageData , getTaxationsNames, getCurrenciesNames, getLanguag
 import { useFormik } from "formik";
 import { uploadMenuImg } from "../../store/actions";
 import { useSelector, useDispatch } from "react-redux";
+
+//i18n
+import i18n from "../../i18n";
 const SettingPage = () => 
 {
     const [faviconPreview, setFaviconPreview] = useState(null);
@@ -30,8 +33,10 @@ const SettingPage = () =>
     const dispatch = useDispatch();
       /**This hook is used to fetch settings data */
       useEffect(() => {
-     getAllData()
-    }, [])
+         getAllData()
+
+       }, []);
+
 
 
     useEffect(()=>{
@@ -84,6 +89,10 @@ const SettingPage = () =>
                   console.log("update",updateSettingsPage);
                   if(updateSettingsPage.code === 200){
                       setErrors("");
+                      const data = languages?.find((item)=>item?.id == values.language_id)
+                      console.log("abb",data.abbreviation);
+                      i18n.changeLanguage('en');
+                      localStorage.setItem("I18N_LANGUAGE", 'en');
                       window.location.reload();
                   }else{
                       setErrors("")
@@ -132,13 +141,14 @@ const SettingPage = () =>
       let languages = await getLanguagesNames();
       let currencies = await getCurrenciesNames();
       let taxations = await getTaxationsNames();
+      console.log("get",settingsData);
       setSetting_data(settingsData.settingsPageData);
       setLanguages(languages?.languages);
       setCurrencies(currencies?.currencies);
       setTaxations(taxations?.taxations)
   }
 
-
+  console.log("lng",languages);
 
 
 
@@ -289,7 +299,7 @@ const SettingPage = () =>
                               className="form-control"
                               type="file"
                               name='loginpage_bg_image'
-                              placeholder="Upload Favicon Image"
+                              placeholder="Upload background image"
                               // value={validation.values.loginpage_bg_image || ""}
                               // onChange={validation.handleChange} 
                               onChange={handleLoginPageBackgroundChange}

@@ -101,13 +101,14 @@ export const GET_CURRENCIES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/currenc
 
 /**LANGUAGES */
 export const GET_LANGUAGES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/languages"
+export const GET_LANGUAGES_FILE = apiBaseUrl + token + "/getFile/lngFile"
 /**This URL basis of page & limit  */
 export const POST_LANGUAGES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/languages"
 export const GET_LANGUAGES_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/languages"
 export const POST_LANGUAGES_ADD_URL = apiBaseUrl + token + "/add/languages"
 export const PUT_LANGUAGES_UPDATE_STATUS = apiBaseUrl + token + "/update-status/languages"
 export const PUT_LANGUAGES_EDIT_URL = apiBaseUrl + token + "/update/languages"
-export const PUT_LANGUAGES_REMOVE = apiBaseUrl + token + "/remove/languages/:id"
+export const PUT_LANGUAGES_REMOVE = apiBaseUrl + token + "/remove/languages"
 
 /**DISCOUNTS */
 export const GET_DISCOUNTS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/discounts"
