@@ -330,6 +330,8 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
 exports.verifyLanguageBody = async(req,res,next) =>
 {
     const method = req.method;
+    req.body.name = req.body.name.toLowerCase().trim();
+    req.body.abbreviation = req.body.abbreviation.toLowerCase().trim();
     const {name,abbreviation} = req.body;
     if(!name){
         return res.status(200).send
@@ -352,7 +354,7 @@ exports.verifyLanguageBody = async(req,res,next) =>
                 let selQuery = `SELECT * FROM ${constants.tableName.languages}  WHERE name = '${name}' 
                 AND deleted_at IS NULL`;
                 con.query(selQuery, (err, result) => {
-                    console.log(result);
+                    // console.log(result);
                     if (result.length != 0) {
                         return res.status(200).send
                             ({
@@ -362,7 +364,22 @@ exports.verifyLanguageBody = async(req,res,next) =>
                             });
                     }
                     else {         
-                        next();
+                        let selQuery = `SELECT * FROM ${constants.tableName.languages}  WHERE abbreviation = '${abbreviation}' 
+                        AND deleted_at IS NULL`;
+                        con.query(selQuery, (err, result) => {
+                            // console.log(result);
+                            if (result.length != 0) {
+                                return res.status(200).send
+                                    ({
+                                        code: 400,
+                                        success: false,
+                                        message: "Abbreviation allredy available"
+                                    });
+                            }
+                            else {         
+                                next();
+                            }
+                        });
                     }
                 });
             }else{
@@ -386,7 +403,30 @@ exports.verifyLanguageBody = async(req,res,next) =>
         con.query(selQuery, async(err, result) => {      
                 if(result[0]?.name == name){
                       
-                next();
+       
+                            if(result[0]?.abbreviation == abbreviation){
+                                  
+                            next();
+                          
+                            }else{
+                   
+                                let selQuery = `SELECT * FROM ${constants.tableName.languages}  WHERE abbreviation = '${abbreviation}'
+                                AND deleted_at IS NULL`;
+                                con.query(selQuery, async(err, result) => {
+                            
+                                    if (result.length != 0) {
+                                        return res.status(200).send
+                                            ({
+                                                code: 400,
+                                                success: false,
+                                                message: "Abbreviation allredy available"
+                                            });
+                                    }
+                            
+                                });
+                            } 
+                 
+          
               
                 }else{
        
@@ -402,9 +442,7 @@ exports.verifyLanguageBody = async(req,res,next) =>
                                     message: "Name allredy available"
                                 });
                         }
-                        else {
-                            next();
-                        }
+                    
                     });
                 } 
      

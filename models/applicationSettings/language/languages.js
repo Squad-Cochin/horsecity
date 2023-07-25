@@ -10,7 +10,7 @@ exports.getLanguageNames = () => {
     try {
       console.log("hello");
 
-      const selQuery = `SELECT lng.id, lng.name
+      const selQuery = `SELECT lng.id, lng.name, lng.abbreviation
             FROM ${constants.tableName.languages} AS lng
             WHERE lng.deleted_at IS NULL AND lng.status = '${constants.status.active}'`;
       con.query(selQuery, (err, data) => {
@@ -65,7 +65,11 @@ exports.getAllLanguages = (requestBody) => {
 exports.addNewLanguage = (requestBody, file) => {
   return new Promise(async (resolve, reject) => {
     try {
-      const { name, abbreviation } = requestBody;
+  
+        requestBody.name = requestBody.name.toLowerCase().trim();
+        requestBody.abbreviation = requestBody.abbreviation.toLowerCase().trim();
+        const { name, abbreviation } = requestBody;
+        console.log(name,abbreviation);
       let uploadLanguage = await commonoperation.fileNameUpload(file?.language_file);
       if(uploadLanguage.message == 'INVALIDFORMAT'){
         console.log("haii");

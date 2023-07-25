@@ -184,6 +184,7 @@ module.exports = class settings {
             data[0].favicon = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings.view}${favicon}`;
             resolve({ settingsPageData: data });
           } else {
+    
             resolve({ settingsPageData: "NOTFOUND" });
           }
         });
