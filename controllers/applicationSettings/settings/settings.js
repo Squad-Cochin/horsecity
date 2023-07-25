@@ -63,3 +63,30 @@ exports.getSettingsData = async(req,res)=>
     });
    }
 }
+
+
+/**For gitting all data  */
+exports.getLngFile = async(req,res)=>
+{
+
+    let getLngFile = await settings.getLngFile();
+    console.log("new",getLngFile);
+   if(getLngFile.languagefile == 'NOTFOUND'){
+    return res.status(200).send
+    ({
+        code: 400,
+        success: false,
+        message: constants.responseMessage.getOneErr
+     
+    });
+   }else{
+    return res.status(200).send
+    ({
+        code: 200,
+        success: true,
+        message: constants.responseMessage.getOne,
+        data : getLngFile
+     
+    });
+   }
+}

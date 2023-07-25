@@ -22,6 +22,31 @@ exports.getLanguageNames = async(req,res)=>
 }
 
 
+
+/**For add new languages  */
+exports.addNewLanguage = async(req,res)=>
+{
+    // console.log("1",req.body);
+    let addNewLanguage = await lngModal.addNewLanguage(req.body,req.files);
+    // console.log("addNew",addNewTaxation);
+   if(addNewLanguage.status == 'INVALIDFORMAT'){
+    return res.status(200).send
+    ({
+        code: 400,
+        success: false,
+        message: 'Only JSON are allowed',
+    });
+   }else{
+    return res.status(200).send
+    ({
+        code: 200,
+        success: true,
+        message: constants.responseMessage.insert,
+    });
+   }
+}
+
+
 /**For gitting all data basisi of page and limit  */
 exports.getAllLanguages = async(req,res)=>
 {
@@ -42,24 +67,31 @@ exports.getAllLanguages = async(req,res)=>
 /**For update service provider  */
 exports.updateLanguages = async(req,res)=>
 {
-    let updateTaxation = await lngModal.updateLanguage(req.body,req.params.id);
+    let updateLanguage = await lngModal.updateLanguage(req.body,req.files,req.params.id);
 
-        if(updateTaxation.status == 'FAILD'){
-            return res.status(200).send
-            ({
-                code: 400,
-                success: false,
-                message: constants.responseMessage.erroredit,
-            
-            });
-        }else{
-            return res.status(200).send
-            ({
-                code: 200,
-                success: true,
-                message: constants.responseMessage.edit,
-            });
-        }
+    if(updateLanguage.status == 'INVALIDFORMAT'){
+        return res.status(400).send({
+            code: 400,
+            success: false,
+            message: 'Only JSON file are allowed'
+        });
+        
+    }else if(updateLanguage.status == 'FAILD'){
+        return res.status(200).send
+        ({
+            code: 400,
+            success: false,
+            message: constants.responseMessage.erroredit,
+         
+        });
+    }else{
+        return res.status(200).send
+        ({
+            code: 200,
+            success: true,
+            message: constants.responseMessage.edit,
+        });
+    }
 }
 
 
@@ -69,7 +101,7 @@ exports.updateStatus = async(req,res)=>
 
     const languages = await commonoperation.updateUserStatus(constants.tableName.languages,req.params.id);
     // console.log("addNew",data);
-    console.log("status",taxation);
+
     if(languages.length === 0)
     {
 
@@ -122,9 +154,9 @@ exports.removeLanguage = async(req,res)=>
 
 exports.getOneLanguage = async(req,res)=>
 {
-    let getOneTaxation = await lngModal.getOneLanguage(req.params.id);
-    console.log(getOneTaxation);
-   if(getOneTaxation?.taxation == 'NOTFOUND'){
+    let getOneLanguage = await lngModal.getOneLanguage(req.params.id);
+    console.log(getOneLanguage);
+   if(getOneLanguage?.language == 'NOTFOUND'){
     return res.status(200).send
     ({
         code: 400,
@@ -138,47 +170,8 @@ exports.getOneLanguage = async(req,res)=>
         code: 200,
         success: true,
         message: constants.responseMessage.getOne,
-        data : getOneTaxation
+        data : getOneLanguage
     });
    }
 }
 
-
-/**For update service provider  */
-exports.updateLanguage = async(req,res)=>
-{
-    let updateTaxation = await lngModal.updateTaxation(req.body,req.params.id);
-
-        if(updateTaxation.status == 'FAILD'){
-            return res.status(200).send
-            ({
-                code: 400,
-                success: false,
-                message: constants.responseMessage.erroredit,
-            
-            });
-        }else{
-            return res.status(200).send
-            ({
-                code: 200,
-                success: true,
-                message: constants.responseMessage.edit,
-            });
-        }
-}
-
-/**For add new languages  */
-exports.addNewLanguage = async(req,res)=>
-{
-    // console.log("1",req.body);
-    let addNewTaxation = await lngModal.addNewLanguage(req.body,req.files);
-    // console.log("addNew",addNewTaxation);
-   if(addNewTaxation){
-    return res.status(200).send
-    ({
-        code: 200,
-        success: true,
-        message: constants.responseMessage.insert,
-    });
-   }
-}

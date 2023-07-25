@@ -18,9 +18,9 @@ module.exports = function(app)
     app.put(`/${process.env.apiToken}/remove/languages/:id`,languages.removeLanguage );
 
     // /**For adding new languages  */
-    app.post(`/${process.env.apiToken}/add/languages`,languages.addNewLanguage);-
+    app.post(`/${process.env.apiToken}/add/languages`,verifyBody.verifyLanguageBody,languages.addNewLanguage);-
     // /**For updating discount  */
-    app.put(`/${process.env.apiToken}/update/languages/:id`,languages.updateLanguages);-
+    app.put(`/${process.env.apiToken}/update/languages/:id`,verifyBody.verifyLanguageBody,languages.updateLanguages);-
         // Below route is for getting data of any particular discount
     app.get(`/${process.env.apiToken}/getOne/languages/:id`,languages.getOneLanguage);
 }

@@ -323,10 +323,101 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
             }
         
 
+}
+
+
+/**Languages middleware */
+exports.verifyLanguageBody = async(req,res,next) =>
+{
+    const method = req.method;
+    const {name,abbreviation} = req.body;
+    if(!name){
+        return res.status(200).send
+        ({
+            code: 400,
+            success: false,
+            message: "Name is required"
+        });
+    }else if(!abbreviation){
+        return res.status(200).send
+        ({
+            code: 400,
+            success: false,
+            message: "Abbriviation is required"
+        });
+    }
+    if(method == 'POST'){ 
+        try {
+            if(req.files?.language_file){
+                let selQuery = `SELECT * FROM ${constants.tableName.languages}  WHERE name = '${name}' 
+                AND deleted_at IS NULL`;
+                con.query(selQuery, (err, result) => {
+                    console.log(result);
+                    if (result.length != 0) {
+                        return res.status(200).send
+                            ({
+                                code: 400,
+                                success: false,
+                                message: "Name allredy available"
+                            });
+                    }
+                    else {         
+                        next();
+                    }
+                });
+            }else{
+                return res.status(200).send
+                ({
+                    code: 400,
+                    success: false,
+                    message: "Language file is required"
+                });
+            }
+
+        } catch (err) {
+            console.log("Error while checking discount name in the database");
+        }
         
-    
+    }else if(method == 'PUT'){
+
+        let id = req.params.id
+        let selQuery = `SELECT name FROM ${constants.tableName.languages}  WHERE id = '${id}'
+        AND deleted_at IS NULL`;
+        con.query(selQuery, async(err, result) => {      
+                if(result[0]?.name == name){
+                      
+                next();
+              
+                }else{
+       
+                    let selQuery = `SELECT * FROM ${constants.tableName.languages}  WHERE name = '${name}'
+                    AND deleted_at IS NULL`;
+                    con.query(selQuery, async(err, result) => {
+                
+                        if (result.length != 0) {
+                            return res.status(200).send
+                                ({
+                                    code: 400,
+                                    success: false,
+                                    message: "Name allredy available"
+                                });
+                        }
+                        else {
+                            next();
+                        }
+                    });
+                } 
+     
+        });
+
+    }
+
 
 }
+
+
+
+
 
 exports.validateUAEMobileNumber = async (req, res, next) => {
     const { contact_no, emergency_contact_no } = req.body;

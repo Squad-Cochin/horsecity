@@ -107,25 +107,6 @@ module.exports = class settings {
                           `;
 
 
-                        //   let updateSettingsQuery = `UPDATE ${constants.tableName.application_settings} AS apps
-                        //                               SET
-                        //                                 apps.application_title = '${application_title}',
-                        //                                 apps.contact_address = '${contact_address}',
-                        //                                 apps.email = '${email}',
-                        //                                 apps.phone = '${phone}',
-                        //                                 apps.country_code = '${country_code}',
-                        //                                 apps.logo = '${uploadLogo}',
-                        //                                 apps.loginpage_logo = '${uploadLoginPageLogo}',
-                        //                                 apps.loginpage_bg_image = '${uploadLoginPageBGimg}',
-                        //                                 apps.favicon = '${uploadFavicon}',
-                        //                                 apps.licence_number = '${licence_number}',
-                        //                                 apps.invoice_prefix = '${invoice_prefix}',
-                        //                                 apps.quotation_prefix = '${quotation_prefix}',
-                        //                                 apps.language_id  = '${language_id}',
-                        //                                 apps.currency_id  = '${currency_id}',
-                        //                                 apps.tax_id   = '${tax_id}'
-                        //                                 WHERE apps.id = '${id}'`;
-
                           con.query(updateSettingsQuery, (err, data) => {
                
                             if (data?.length != 0) {
@@ -211,4 +192,32 @@ module.exports = class settings {
       }
     });
   }
+
+
+  /**For getting language file */
+  static async getLngFile() {
+    return new Promise((resolve, rejuct) => {   
+      try { 
+      let selQuery =`SELECT 
+      lg.name, lg.abbreviation, lg.file
+      FROM ${constants.tableName.application_settings} apps
+      JOIN ${constants.tableName.languages} lg ON apps.language_id = lg.id
+      WHERE lg.status = '${constants.status.active}' AND lg.deleted_at IS NULL`;
+
+        con.query(selQuery, async (err, data) => {
+          console.log(data);
+          if (data?.length != 0) {
+           
+            resolve({ languagefile: data });
+          } else {
+            resolve({ languagefile: "NOTFOUND" });
+          }
+        });
+      } catch (err) {
+        console.log("Error while selecting settings data in the database");
+      }
+    });
+  }
 };
+
+
