@@ -28,8 +28,6 @@ import * as url from "../url_helper";
         }
     }
 
-
-
      /**Add new discounts */
     export async function addNewDiscounts(data){
         try {
@@ -132,7 +130,33 @@ import * as url from "../url_helper";
             }
             return errObj;
         }
-      }   
+    }   
+      
+    export async function addNewImage(data, id){
+        try {
+            console.log("dd1",data)
+            const formData = new FormData();
+            // Append the object data to the FormData instance
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+            
+            // Send the form data as a POST request using Axios
+            const response = await axios.post(`${url.POST_VEHICLES_IMAGES_ADD_URL}/${id}`, formData, {
+                headers: {
+                'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log("response11",response)
+            return response
+        } catch (error) {
+            let errObj = {
+                code : 500 , 
+                error : "Faild !"
+            }
+            return errObj;
+        }
+    }
       
     /**Add new driver */
     export async function addNewDriver(data){
@@ -159,8 +183,24 @@ import * as url from "../url_helper";
             }
             return errObj;
         }
-      }   
-
+    }
+    
+    export async function assignNewSP(dId, spId){
+        try{
+            let reqObj = {
+                "driver_id": dId,
+                "serviceProvider_id": spId
+            }
+            const response = await axios.post(`${url.POST_ASSIGN_DRIVERS}`, reqObj);
+            return response;
+        } catch {
+            let errObj = {
+                code : 500 , 
+                message : "Server error !"
+            }
+            return errObj;
+        }
+    }
 
      /**Add new monthly report */
     export async function addNewMonthlyReport(data){
@@ -170,7 +210,8 @@ import * as url from "../url_helper";
         } catch (error) {
             return { error : "Faild !"}
         }
-      }   
+    }   
+
            /**Add new quataion */
     export async function addNewQuataion(data){
         try {
@@ -180,8 +221,7 @@ import * as url from "../url_helper";
         } catch (error) {
             return { error : "Faild !"}
         }
-      }  
-
+    }  
       
      /**Add new discounts */
     export async function addNewLanguage(data){

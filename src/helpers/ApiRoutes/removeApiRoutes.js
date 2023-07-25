@@ -47,10 +47,22 @@ export async function removeVehicleImage(vehicle_id,image_id){
         return { error : "Failed !"}
     }
 }
-/**Remove Driver provider */
+
+/**Remove Driver  */
 export async function removeDriver(driver_id){
     try {
         const { data } = await axios.put(`${url.PUT_DRIVERS_REMOVE}/${driver_id}`);
+        console.log("data",data)
+        return data;
+    } catch (error) {
+        return { error : "Failed !"}
+    }
+}
+
+/**Remove assigned Driver  */
+export async function removeAssignedDriver(driver_id){
+    try {
+        const { data } = await axios.put(`${url.PUT_ASSIGN_DRIVERS_REMOVE}/${driver_id}`);
         console.log("data",data)
         return data;
     } catch (error) {
@@ -69,7 +81,6 @@ export async function removeTaxation(tax_id){
     }
 }
 
-
 /**Remove Taxation*/
 export async function removeDiscount(dsc_id){
     try {
@@ -82,6 +93,7 @@ export async function removeDiscount(dsc_id){
         return { error : "Failed !"}
     }
 }
+
 /**Remove Taxation*/
 export async function removeLanguage(dsc_id){
     try {

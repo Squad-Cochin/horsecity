@@ -7,54 +7,68 @@
 
 // Importing the react component
 import React, { useState, useEffect } from 'react';
-import { Button, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
-import { Link } from 'react-router-dom';
+import { Alert, Button, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+// import { Link } from 'react-router-dom';
 
 // The code you provided imports the useFormik hook from the "formik" library. The useFormik hook is a custom hook provided by Formik, which is a popular form library for React.
 import { useFormik } from "formik";
 import { useParams } from 'react-router-dom';
 
 //The purpose of the Breadcrumbs component is to display a breadcrumb navigation element. 
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
+// import Breadcrumbs from "../../../components/Common/Breadcrumb";
 
 //Import Vehicle image data
-import { getVehiclesData } from '../../../helpers/ApiRoutes/authApiRoutes'
+import { getVehicleImageData } from '../../../helpers/ApiRoutes/getApiRoutes'
 //Import remove vehicle image data
 import { removeVehicleImage } from '../../../helpers/ApiRoutes/removeApiRoutes';
+import { addNewImage } from '../../../helpers/ApiRoutes/addApiRoutes';
+// import { func } from 'prop-types';
 
 // The name of the ListVehicleImages function. Which will be executed and used all over program. This funtion is having all the code
 const ListVehicleImages = () => 
 {
     const [vhImages, setVhImages] = useState([]); // State variable to store vehicle images
-    const [vehicle, setVehicle] = useState({}); // State variable to store a single vehicle
+    // const [vehicle, setVehicle] = useState({}); // State variable to store a single vehicle
     const [image_view, setImageView] = useState(); // State variable to store the image view
     const [modal_list, setmodal_list] = useState(false); // State variable to control list modal visibility
     const [updateImage, setUpdateImage] = useState(""); // State variable to store the updated image
-
+    const [ errors, setErrors ] = useState("")
     const { id } = useParams(); // Retrieve the 'id' parameter from the URL using the 'useParams' hook
-    let title = `${vehicle?.make} ${vehicle?.models}`; // Generate a title using the 'make' and 'models' properties of the 'vehicle' object
+    // let title = `${vehicle?.make} ${vehicle?.models}`; // Generate a title using the 'make' and 'models' properties of the 'vehicle' object
 
     useEffect(() => {
-    if (id) {
-        let getvehicles = getVehiclesData();
-        const data = getvehicles?.find((item) => item?.id === parseInt(id));
-        setVehicle(data); // Set the 'vehicle' state to the found vehicle data
-        setVhImages(data?.images); // Set the 'vhImages' state to the vehicle images
-    }
+        if (id) {
+            getAllData()
+            // let getvehicles = getVehicleImageData();
+            // const data = getvehicles?.find((item) => item?.id === parseInt(id));
+            // setVehicle(data); // Set the 'vehicle' state to the found vehicle data
+            // setVhImages(data?.images); // Set the 'vhImages' state to the vehicle images
+        }
     }, []);
 
     // The intial values of the variables
     const initialValues = 
     {
-        image_title: '',
-        file: '',
+        title: '',
+        image: '',
     };
+
+    // function for get data all Vechile data
+    async function getAllData() {
+        let getvehicleImages = await getVehicleImageData(id);
+        console.log("ss",getvehicleImages)
+        setVhImages(getvehicleImages)
+        // setSproviders(getSP.serviceProviders);
+        // setVehicles(getvehicles?.vehicles);
+        // setPageNumber(page);
+        // setNumberOfData(getvehicles?.totalCount);
+    }
 
     // The below function is the Status button
     function toggleStatus(button, vehiclesId) 
     {
         var currentStatus = button.innerText.trim();
-        let getvehicles = getVehiclesData();
+        let getvehicles = getVehicleImageData();
         if (currentStatus === 'ACTIVE') 
         {
             button.innerText = 'INACTIVE';
@@ -113,12 +127,24 @@ const ListVehicleImages = () =>
         initialValues, // Initial values for the form
         onSubmit: (values) =>
         {
-          values.file = updateImage; // Assign the updated image file to the 'file' field in form values
-          setmodal_list(false); // Set 'modal_list' state to false, closing the modal
-          initialValues.image_title = ''; // Reset the 'image_title' field in initial values
-          initialValues.file = ''; // Reset the 'file' field in initial values
+          values.image = updateImage; // Assign the updated image file to the 'file' field in form values
+          addVechileImage(values)
         },
     });
+
+    async function addVechileImage(val){
+        let addImg = await addNewImage(val, id);
+        if(addImg.code === 200){
+            setErrors("")
+            setmodal_list(false);
+            initialValues.title = ''; // Reset the 'image_title' field in initial values
+            initialValues.image = ''; // Reset the 'file' field in initial values
+            getAllData()
+        }else{
+            setErrors("")
+            setErrors(addImg.message)
+        }
+    }
 
     return (     
         <React.Fragment>
@@ -126,7 +152,7 @@ const ListVehicleImages = () =>
             <div className="page-content">
                 <Container fluid>
                     {/* Header of the Page */}
-                    <Breadcrumbs title="Tables" breadcrumbItem={title} />
+                    {/* <Breadcrumbs title="Tables" breadcrumbItem={title} /> */}
                     <div id="customerList">
                         <Row className="g-4 mb-3">
                             <Col className="col-sm-auto">
@@ -168,7 +194,7 @@ const ListVehicleImages = () =>
                                             <th scope="row">{index + 1}</th>
                                             <td className="vehicleimage"> <img src={imageItem?.url} alt={`Static Image ${index + 1}`} className="image-size" /> </td>
                                             <td className="vehicletitle">{imageItem?.title}</td>
-                                            <td className="created_at">{imageItem?.updated_at}</td>
+                                            <td className="created_at">{imageItem?.uploaded_at}</td>
                                             {/* This is the place from where we are calling the status button and function */}
                                             <td className='status'>
                                                 <div>
@@ -212,13 +238,13 @@ const ListVehicleImages = () =>
                         </div>
                         {/* the below is having the code of the pagination of the page.
                             The previous and next button are also in side this function */}
-                        <div className="d-flex justify-content-end">
+                        {/* <div className="d-flex justify-content-end">
                             <div className="pagination-wrap hstack gap-2">
                                 <Link className="page-item pagination-prev disabled"to="#"> Previous </Link>
                                 <ul className="pagination customers-pagination mb-0"></ul>
                                 <Link className="page-item pagination-next" to="#"> Next </Link>
                             </div>
-                        </div>
+                        </div> */}
 
                     </div>
                 </Container>
@@ -234,17 +260,17 @@ const ListVehicleImages = () =>
                 </ModalHeader>
                 <form className="tablelist-form" onSubmit={validation.handleSubmit}>
                     <ModalBody>
-                        
+                        {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
                         {/* The Below element is adding the title of the image of the vehicle. It will be taken when it is uploaded */}
                         {/* Done by Shaheer */}
                         <div className="mb-3">
                             <label htmlFor="customerName-field" className="form-label"> Image Title </label>
                             <input
                                 type="text"
-                                name="image_title"
+                                name="title"
                                 id="customerName-field"
                                 className="form-control"
-                                value={validation.values.image_title}
+                                value={validation.values.title}
                                 placeholder="Enter image title"
                                 onChange={validation.handleChange}
                                 onBlur={validation.handleBlur}

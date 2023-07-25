@@ -18,10 +18,10 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { useFormik } from "formik";
 
 /**IMPORTED APIs */
-import { addNewDriver } from '../../helpers/ApiRoutes/addApiRoutes';
-import { removeDriver } from '../../helpers/ApiRoutes/removeApiRoutes';
+import { addNewDriver, assignNewSP } from '../../helpers/ApiRoutes/addApiRoutes';
+import { removeDriver, removeAssignedDriver } from '../../helpers/ApiRoutes/removeApiRoutes';
 import { updateDriver , updateDriverStatus } from '../../helpers/ApiRoutes/editApiRoutes'; 
-import { getDriversData, getSingleDriverData, getSPUserName } from '../../helpers/ApiRoutes/getApiRoutes'; 
+import { getDriversData, getSingleDriverData, getSPUserName, getAssignedProviders } from '../../helpers/ApiRoutes/getApiRoutes'; 
 import config from '../../config';
 
 
@@ -37,14 +37,63 @@ const ListTables = () =>
     const [modal_assign, setModal_assign] = useState(false); // Boolean to control delete modal visibility
     const [modal_list, setmodal_list] = useState(false); // Boolean to control list modal visibility
     const [add_list, setAdd_list] = useState(false); // Boolean to control add modal visibility
+    const [assignSP, setAssignSP] = useState(false);
     const [view_modal, setView_modal] = useState(false); // Boolean to control view modal visibility
     const [profileImagePreview, setProfileImagePreview] = useState(false); // Boolean to control profile image preview visibility
     const [licenceImagePreview, setLicenceImagePreview] = useState(false); // Boolean to control license image preview visibility
+    const [ assignedSProviders, setAssignedSProviders ] = useState([]);
+    const [ selectedDriver, setSelectedDriver ] = useState();
     const [sproviders, setSproviders] = useState([]);
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("")
     const pageLimit = config.pageLimit;
+
+     
+    // The below effect for displaying the overall data of the driver page in the front.
+    useEffect(() =>
+    {
+        getAllData(1)
+    }, []);
+
+    // The below intialValues variable is used for having the data the driver. When we will use the edit button.
+    // We are usign the add module for editing the driver. That is why if we are having data of a particular then
+    // We will store this in the initialValues object
+    const initialValues = {
+        name: !add_list ? driver[0]?.name : '',
+        service_providers_id : '',
+        email: !add_list ? driver[0]?.email : '',
+        contact_no: !add_list ? driver[0]?.contact_no : '',
+        emergency_contact_no: !add_list ? driver[0]?.emergency_contact_no : '',
+        date_of_birth: !add_list ? driver[0]?.date_of_birth : '',
+        licence_no: !add_list ? driver[0]?.licence_no : '',
+        profile_image: !add_list ? driver[0]?.profile_image : '',
+        licence_img: !add_list ? driver[0]?.licence_img : '',
+        description: !add_list ? driver[0]?.description : '',
+        updated_at: !add_list ? driver[0]?.updated_at : ''
+    };
+
+    // The below unction will be used for the CRUD functionalites of he validation data.
+    const validation = useFormik
+    ({
+        // enableReinitialize : use this flag when initial values needs to be changed
+        enableReinitialize: true,
+        initialValues,
+        onSubmit: (values) =>
+        {
+            if (add_list) {
+                //add new
+                values.licence_img = updateLiscenceImage;
+                values.profile_image = updateProfileImage;
+                addDriver(values)
+            } else if(assignSP){
+                assignNewProvider(values)
+            } else {
+                //update previes one
+                editDriver(values)
+            }
+        }
+    });
 
     // Define a function to handle the profile image change event
     const handleProfileImageChange = (event) => 
@@ -59,20 +108,15 @@ const ListTables = () =>
         setProfileImagePreview(previewURL);
     };
 
-    // The below effect for displaying the overall data of the driver page in the front.
-    useEffect(() =>
-    {
-        getAllData(1)
-    }, []);
-    
     // The function is desing the handle the chnage in profile image of the driver.
     const handleLicenceImageChange = (event) => 
     {
       const file = event.target.files[0];
       setUpdateLiscenceImage(file)
       setLicenceImagePreview(URL.createObjectURL(file));
-    };    
+    };   
 
+    // function for open add and edit modal
     async function tog_list(param, productId){
         // Toggle 'modal_list' state
         setmodal_list(!modal_list);
@@ -92,18 +136,12 @@ const ListTables = () =>
             setLicenceImagePreview(driverData.drivers[0].licence_img);
         }
     }
-      
+
+    // function for open view modal  
     async function tog_view(productId){
         let driver = await getSingleDriverData(productId)
         setDriver(driver.drivers)
         setView_modal(!view_modal);
-    }  
-    
-    async function remove_data(id)
-    {
-        // Call the 'removeDriver' function with 'id' parameter
-        await removeDriver(id);
-        window.location.reload();
     }
 
     // The below function is for the status button functionalities.
@@ -129,59 +167,27 @@ const ListTables = () =>
         }
     }
 
-    function toggleAssign(id){
+    // function for display assigned drivers modal
+    async function toggleAssign(id){
         console.log(id)
+        let assignedSP = await getAssignedProviders(id)
+        let notAssigned = await getSPUserName()
+        setSproviders(notAssigned)
+        setAssignedSProviders(assignedSP)
         setModal_assign(!modal_assign);
+        setAssignSP(!assignSP)
+        setSelectedDriver(id);
     }
 
      // function for get data all drivers data
     async function getAllData(page) {
         let getDrivers = await getDriversData(page || 1);
-        let getSP = await getSPUserName();
-        setSproviders(getSP.serviceProviders);
         setDrivers(getDrivers.drivers);
         setPageNumber(page);
         setNumberOfData(getDrivers.totalCount);
     }
 
-    // The below intialValues variable is used for having the data the driver. When we will use the edit button.
-    // We are usign the add module for editing the driver. That is why if we are having data of a particular then
-    // We will store this in the initialValues object
-    const initialValues = {
-        name: !add_list ? driver[0]?.name : '',
-        user_name: '',
-        email: !add_list ? driver[0]?.email : '',
-        contact_no: !add_list ? driver[0]?.contact_no : '',
-        emergency_contact_no: !add_list ? driver[0]?.emergency_contact_no : '',
-        date_of_birth: !add_list ? driver[0]?.date_of_birth : '',
-        licence_no: !add_list ? driver[0]?.licence_no : '',
-        profile_image: !add_list ? driver[0]?.profile_image : '',
-        licence_img: !add_list ? driver[0]?.licence_img : '',
-        description: !add_list ? driver[0]?.description : '',
-        updated_at: !add_list ? driver[0]?.updated_at : ''
-    };
-
-    // The below unction will be used for the CRUD functionalites of he validation data.
-    const validation = useFormik
-    ({
-        // enableReinitialize : use this flag when initial values needs to be changed
-        enableReinitialize: true,
-        initialValues,
-        onSubmit: (values) =>
-        {
-            if (add_list) {
-                //add new
-                values.licence_img = updateLiscenceImage;
-                values.profile_image = updateProfileImage;
-                addDriver(values)
-            } else {
-                //update previes one
-                editDriver(values)
-            }
-        }
-    });
-
-    // Add Driver
+    // function for add Driver
     async function addDriver(val){
         let addDriver = await addNewDriver(val);
         if(addDriver.code === 200){
@@ -195,6 +201,7 @@ const ListTables = () =>
         }
     }
 
+    // function for edit driver
     async function editDriver(data){
         console.log("first",data)
         let updatedDriver = await updateDriver(driver[0]?.id, data);
@@ -206,6 +213,45 @@ const ListTables = () =>
         }else{
             setErrors("")
             setErrors(updatedDriver.message)
+        }
+    }  
+    
+    // function for remove driver
+    async function remove_data(id)
+    {
+        // Call the 'removeDriver' function with 'id' parameter
+        await removeDriver(id);
+        window.location.reload();
+    }
+
+    // function for assign sp
+    async function assignNewProvider(val){
+        console.log("val",val.service_providers_id,selectedDriver)
+        let assignSP = await assignNewSP(selectedDriver, val.service_providers_id)
+        if(assignSP.code === 200){
+            setErrors("")
+            setAssignSP(false);
+            setModal_assign(false);
+            setSelectedDriver();
+            validation.values.service_providers_id = "";
+        }else{
+            setErrors("")
+            setErrors(assignSP.message)
+        }
+    }
+
+    // function for remove assigned to service provider
+    async function removeAsigned(id){
+        alert(id + " remove url on progress");
+        let removeSP = await removeAssignedDriver(id);
+        if(removeSP.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+        }else{
+            setErrors("")
+            setErrors(removeSP.message)
         }
     }
     
@@ -619,23 +665,22 @@ const ListTables = () =>
                 </form>
             </Modal>
 
-            {/* This is the Remove button model. We will remove the particular driver. */}
+            {/* This is the assign button model. We will assign the particular driver. */}
             <Modal className="extra-width" isOpen={modal_assign} toggle={() => { toggleAssign(); }} centered >
                 <ModalHeader className="bg-light p-3" id="exampleModalLabel"toggle={() => { setModal_assign(false); tog_view('Assign To Provider'); }}>Assign To Provider</ModalHeader>
                 <form className="tablelist-form"
                  onSubmit={validation.handleSubmit}>
                     <ModalBody>
-                        {/* The below element is for the the confirmation of deleting any driver through pop up */}
                         {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
-                        {/* The Below element is adding the name of the driver */}
+                        {/* The Below element is adding the name of the service rpovider */}
                         <div className="mb-3">
                             <label htmlFor="provider-field" className="form-label">Service Provider Name</label>
                             <select
                                 data-trigger
-                                name="user_name"
+                                name="service_providers_id"
                                 id="provider-field"
                                 className="form-control"
-                                value={validation.values.user_name || ""}
+                                value={validation.values.service_providers_id || ""}
                                 onChange={validation.handleChange}
                                 onBlur={validation.handleBlur}
                                 required
@@ -656,13 +701,15 @@ const ListTables = () =>
                                     </tr>
                                 </thead>
                                 <tbody className="list form-check-all">
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Admin</td>
-                                        <td>
-                                        <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
-                                        </td>
-                                    </tr>
+                                    {assignedSProviders.map((item,index) => (
+                                        <tr key={item.id}> 
+                                            <td>{index + 1}</td>
+                                            <td>{item.username}</td>
+                                            <td>
+                                                <button onClick={()=> {removeAsigned(item.id)}} className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
+                                            </td>
+                                        </tr>
+                                    ))}
                                 </tbody>
                             </table>
                         </div>

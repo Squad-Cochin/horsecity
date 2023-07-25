@@ -17,12 +17,12 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
  * The below one is Saurabh's Computer Details
  */
 export const API_BASE_URL = "http://192.168.200.130:8000";
-// const apiBaseUrl = "http://192.168.200.130:8000";
+const apiBaseUrl = "http://192.168.200.130:8000";
 /**
  * The below one is own Computer Details
  */
 
-const apiBaseUrl = "http://localhost:8000";
+// const apiBaseUrl = "http://localhost:8000";
 // export const API_BASE_URL = "http://localhost:8000";
 
 const token = "/horsecity661809"
@@ -65,7 +65,8 @@ export const POST_VEHICLES_EDIT_URL = apiBaseUrl + token + "/updateData/vehicle"
 export const PUT_VEHICLES_REMOVE = apiBaseUrl + token + "/removeVehicle"
 
 /**VEHICLES_IMAGES */
-
+export const GET_VEHICLES_IMAGES_DATA_URL = apiBaseUrl + token + "/getAllImages/vehicle"
+export const POST_VEHICLES_IMAGES_ADD_URL = apiBaseUrl + token + "/addImage/vehicle"
 
 /**DRIVERS */
 export const GET_DRIVERS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/drivers"
@@ -75,6 +76,10 @@ export const PUT_DRIVERS_UPDATE_STATUS = apiBaseUrl + token + "/update/driver"
 export const POST_DRIVERS_EDIT_URL = apiBaseUrl + token + "/edit/driver"
 export const PUT_DRIVERS_REMOVE = apiBaseUrl + token + "/remove/driver"
 
+// ASSIGN_DRIVERS
+export const POST_ASSIGN_DRIVERS = apiBaseUrl + token + "/assign/driver"
+export const GET_ASSIGNED_DRIVERS = apiBaseUrl + token + "/past/service/provider/driver"
+export const PUT_ASSIGN_DRIVERS_REMOVE = apiBaseUrl + token + "/unassign/driver"
 
 /**TAXATION */
 /**This URL basis of page & limit  */

@@ -170,10 +170,6 @@ const ListVehiclesTable = () =>
             else
             {
                 editVehicles(values);
-                // // Update existing vehicle
-                // updateVehicle(values); // Call the 'updateVehicle' function with form values as a parameter
-                // setAdd_list(false); // Reset 'add_list' state to false
-                // setmodal_list(false); // Reset 'modal_list' state to false
             }
         },
     });
@@ -183,6 +179,7 @@ const ListVehiclesTable = () =>
         let getvehicles = await getVehiclesData(page || 1);
         let getSP = await getSPUserName();
         console.log("ss",getSP)
+        console.log("ssv",getvehicles)
         setSproviders(getSP.serviceProviders);
         setVehicles(getvehicles?.vehicles);
         setPageNumber(page);
@@ -265,7 +262,7 @@ const ListVehiclesTable = () =>
                                                         <tr key={item.id}>
                                                             {/* Below we are intialize the vehicle data */}
                                                             <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
-                                                            <th scope="row"> {index + 1} </th> {/* Serial Number */}
+                                                            <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th> {/* Serial Number */}
                                                             <td className="name">{item.service_provider}</td> {/* Name of the service provider */}
                                                             <td className="vhnumber">{item.vehicle_number}</td> {/* Vehicle number of the vehicle */}
                                                             <td className="make">{item.make}</td> {/* Manufaturer of the vehicle */}

@@ -309,11 +309,18 @@ export async function getSingleDriverData(dId){
     }
 }
 
-
+export async function getAssignedProviders(aId){
+    try {
+        console.log("id",aId)
+        const { data } = await axios.get(`${url.GET_ASSIGNED_DRIVERS}/${aId}`);
+        console.log("AP",data)
+        return(data)
+    } catch (error) {
+        return null
+    }
+}
 
 export async function getLanguagesPageData(pageNumber){
-
-
     try {
         let pageLimit = config.pageLimit;
         let reqObj = {
@@ -342,6 +349,17 @@ export async function getSingleLanguageData(tId){
     try {
         const { data } = await axios.get(`${url.GET_LANGUAGES_SINGLE_DATA_URL}/${tId}`);
         console.log("DDD",data)
+        return(data)
+    } catch (error) {
+        return null
+    }
+}
+
+export async function getVehicleImageData(id){
+    try {
+        console.log(url.GET_VEHICLES_IMAGES_DATA_URL)
+        const { data } = await axios.get(`${url.GET_VEHICLES_IMAGES_DATA_URL}/${id}`);
+        console.log("images",data)
         return(data)
     } catch (error) {
         return null
