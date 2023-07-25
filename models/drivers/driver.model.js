@@ -149,9 +149,9 @@ module.exports = class drivers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.upload.profilephoto);
+                let uploadprofile_image = await commonoperation.fileUploadTwo(commonoperation.getFileNameFromURL(profile_image), constants.attachmentLocation.driver.upload.profilephoto);
                 // console.log(uploadprofile_image);
-                let uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.upload.licence);
+                let uploadlicence_img = await commonoperation.fileUploadTwo(commonoperation.getFileNameFromURL(licence_img), constants.attachmentLocation.driver.upload.licence);
                 // console.log(uploadprofile_image);
                 let upQuery = `UPDATE ${constants.tableName.drivers} d SET d.name = '${name}', d.email = '${email}', d.contact_no = '${contact_no}', d.emergency_contact_no = '${emergency_contact_no}', d.date_of_birth = '${date_of_birth}', d.licence_no = '${licence_no}', d.description = '${description}', d.licence_img  = '${uploadlicence_img}', d.profile_image = '${uploadprofile_image}', d.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE d.id = '${id}'`;
                 // console.log(upQuery);

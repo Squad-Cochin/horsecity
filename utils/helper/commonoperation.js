@@ -351,12 +351,19 @@ exports.getFileNameFromURL = async (url) =>
 {
     // Split the URL by slashes ('/') to get an array of path components
     const pathComponents = url.split('/');
-  
+
     // Get the last element of the array, which represents the file name with extension
-    const fileNameWithExtension = pathComponents[pathComponents.length - 1];
-  
+    let fileNameWithExtension = pathComponents[pathComponents.length - 1];
+
+    // Check if the last element contains a dot (.) indicating it's a file name with extension
+    // If not, it means the URL itself is the file name, so return it as it is
+    if (!fileNameWithExtension.includes('.'))
+    {
+        return fileNameWithExtension;
+    }
+    console.log('Filename: ', fileNameWithExtension)
     return fileNameWithExtension;
-  }
+}
   
 // Example usage:
 // const url = 'http://192.168.200.130:8000/Drivers/Licence/736895_a.png';
