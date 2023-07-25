@@ -93,6 +93,7 @@ const SettingPage = () =>
                       console.log("abb",data.abbreviation);
                       i18n.changeLanguage('en');
                       localStorage.setItem("I18N_LANGUAGE", 'en');
+                      
                       window.location.reload();
                   }else{
                       setErrors("")
@@ -314,6 +315,7 @@ const SettingPage = () =>
                           <div className="col-md-10">
                               <select id="country-code-select" className="form-select" name='language_id'   value={validation.values.language_id || ""}
                               onChange={validation.handleChange} >
+                                 <option > Select Language </option>
                                 {languages.map((item) => ( <option key={item?.id} value={item?.id}> {`${item?.name}`} </option> ))}
                               </select>
                           </div>
@@ -325,6 +327,7 @@ const SettingPage = () =>
                     <div className="col-md-10">
                         <select id="country-code-select" className="form-select" name='currency_id'  value={validation.values.currency_id || ""}
                               onChange={validation.handleChange} >
+                         <option > Select Currency </option>
                         {currencies.map((item) => (
                             <option key={item?.id}  value={item?.id}>
                             {`${item?.name}`}
@@ -341,6 +344,7 @@ const SettingPage = () =>
                     <div className="col-md-10">
                         <select id="country-code-select" className="form-select" name='tax_id'  value={validation.values.tax_id || ""}
                               onChange={validation.handleChange} >
+                         <option > Select Tax </option>
                         {taxations.map((item) => (
                             <option key={item?.id} value={item?.id}>
                             {`${item?.name}`}
