@@ -185,10 +185,11 @@ module.exports = class settings {
             resolve({ settingsPageData: data });
           } else {
     
-            resolve({ settingsPageData: "NOTFOUND" });
+            resolve({ settingsPageData: data });
           }
         });
       } catch (err) {
+        resolve({ settingsPageData: "NOTFOUND" });
         console.log("Error while selecting settings data in the database");
       }
     });
