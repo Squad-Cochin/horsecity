@@ -1,0 +1,11 @@
+const quotation = require(`../../controllers/quotation/quotation`);   // importing the auth controller details and assigning it to the authcontroller variable
+const checkInput = require(`../../middlewares/validateInput/checkRequestBodyInput`);
+
+
+module.exports = function(app)
+{
+    /**For getting all enquiries */
+    app.post(`/${process.env.apiToken}/add/quotation`,
+    checkInput.checkValuesEnteredInTheQuotationBody,
+    quotation.addNewQuotaion); 
+};

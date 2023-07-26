@@ -144,6 +144,7 @@ exports.updateStatus = async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for updating the status of the existing vehicle.
     const vehicles = await vehicle.updatestatus(req.params.id);
+    // If no data on the id is there then this if block will work
     if(vehicles === 'nodata')
     {
         console.log('No vehicles data on this Id from controller');
@@ -155,6 +156,7 @@ exports.updateStatus = async (req, res, next) =>
             data : []
         });
     }
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     else if(vehicles === 'err')
     {
         console.log('Error');
@@ -166,6 +168,8 @@ exports.updateStatus = async (req, res, next) =>
             data : []
         });
     }
+    
+    // If there are vehiles in the database. Then these lines of code will be executed
     else
     {
         console.log('Vehicle Status updated successfully');
@@ -178,12 +182,23 @@ exports.updateStatus = async (req, res, next) =>
     }
 }
 
+/**
+ * The below function is for getting all the details of a particular vehicle. Only single vehicle
+ * details we get through the below function.
+ * 
+ * For get the details of a particular vehicle. We need to give the vehicle Id in the params.
+ * On the basis of that, All the details of a particular vehicle will be fetched.
+ * 
+ */
 exports.getOne = async (req, res, next) =>
 {
     const vehicles = await vehicle.getone(req.params.id)
     // console.log('vehicles : ',vehicles);
     if(vehicles === 'nodata')
     {
+        // The below line is for going to the model function to implement the code for getting all details of particular vehicle.
+        // If any wrong id or some thing wrong entered, If that Id has no data then this if block of code will be executed
+        // Because we need vehicle id in the params for working of this route
         console.log('No vehicle data present');
         return res.status(200).send
         ({
@@ -193,9 +208,9 @@ exports.getOne = async (req, res, next) =>
             data : []
         });
     }
+    // If any unwanted, unencounter, or unconventionaal error came then this else if block of code will be executed.
     else if(vehicles === 'err')
     {
-        console.log('Error');
         return res.status(200).send
         ({
             code : 500,
@@ -206,6 +221,7 @@ exports.getOne = async (req, res, next) =>
     }
     else
     {
+        // Every things went well and vehicle data is available then this else block of code will executed.
         console.log('Particular Vehicles data fetched successfully');
         return res.status(200).send
         ({
@@ -215,12 +231,20 @@ exports.getOne = async (req, res, next) =>
             data : vehicles
         });
     }    
-}
+};
+
+/**
+ * The below function is for the editing or changing of the existing vehicle. 
+ * The most important thing is the vehicle id in the params.
+ * We need number of input from the end user to editing or changing of the existing vehicle. 
+ */
+
 exports.updateData = async (req, res, next) =>
 {
+    // The below line is for going to the model function to implement the code for editing or updating the existing vehicle.
     const vehicles = await vehicle.updatedata
     (
-        req.params.id,
+        req.params.id, // vehicle is in the params, Whose data we need to update
         req.body.service_provider_id, // Already registered service provider id
         req.body.vehicle_number, // Vehicle number of the new vehicle
         req.body.make, // Manufacturer of the vehicle
@@ -230,22 +254,34 @@ exports.updateData = async (req, res, next) =>
         req.body.breadth, // breadth of the vehicle
         req.body.height, // height of the vehicle
         req.body.no_of_horse, // Maximum number of the horses a vehicle carry
-        req.body.air_conditioner,
-        req.body.temperature_manageable,
-        req.body.vehicle_registration_number,
-        req.body.gcc_travel_allowed,
-        req.body.insurance_cover,
+        req.body.air_conditioner, // Value of the vehicle whether it consist of air conditioner or not
+        req.body.temperature_manageable, // Value of the vehicle whether it consist of temperature manageable device or not
+        req.body.vehicle_registration_number, // Vehicle registration number
+        req.body.gcc_travel_allowed, // Value of the vehicle whether it can travel in the GCC country or not
+        req.body.insurance_cover, // Value of the vehicle whether it has the insurance cover or not
+        // Insurance date of the vehicle. Since the format from the front end is coming 
+        // in this way "Fri Jul 14 2023 00:00:00 GMT+0530 (India Standard Time)". So a function
+        // is written to convert them into SQL DATETIME format. FORMAT is YYYY-MM-DD HH-MM-SS
         time.changeDateToSQLFormat(req.body.insurance_date),
-        req.body.insurance_policy_no,
-        req.body.insurance_policy_provider,
+        req.body.insurance_policy_no, // Insurance policy number of the vehicle
+        req.body.insurance_policy_provider, // Provider of the vehicle
+        // Insurance expiryation date of the vehicle. Since the format from the front end is coming 
+        // in this way "Fri Jul 14 2023 00:00:00 GMT+0530 (India Standard Time)". So a function
+        // is written to convert them into SQL DATETIME format. FORMAT is YYYY-MM-DD HH-MM-SS
         time.changeDateToSQLFormat(req.body.insurance_expiry_date),
-        req.body.vehicle_type,
-        time.changeDateToSQLFormat(req.body.vehicle_registration_date),
+        req.body.vehicle_type, // Type of the vehicle
+        // Vehicle registration date of the vehicle. Since the format from the front end is coming 
+        // in this way "Fri Jul 14 2023 00:00:00 GMT+0530 (India Standard Time)". So a function
+        // is written to convert them into SQL DATETIME format. FORMAT is YYYY-MM-DD HH-MM-SS
+        time.changeDateToSQLFormat(req.body.vehicle_registration_date), 
+        // Vehicle expiration date of the vehicle. Since the format from the front end is coming 
+        // in this way "Fri Jul 14 2023 00:00:00 GMT+0530 (India Standard Time)". So a function
+        // is written to convert them into SQL DATETIME format. FORMAT is YYYY-MM-DD HH-MM-SS
         time.changeDateToSQLFormat(req.body.vehicle_exipration_date),
-        req.files && req.files.safety_certicate !== undefined ? req.files.safety_certicate : null
-        // req.files.safety_certicate
+        req.files && req.files.safety_certicate !== undefined ? req.files.safety_certicate : null  // Perform the null check here // Image of dafety certificate
     );
 
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(vehicles === 'err')
     {
         console.log('Error while editing the vehicle data ');
@@ -256,6 +292,7 @@ exports.updateData = async (req, res, next) =>
             message : constant.responseMessage.erroredit,
         });
     }
+    // If input feild are in correct format and not already present in the database, then this else block of code will be executed
     else
     {
         console.log('Vehicle data edited successfully');
@@ -266,13 +303,23 @@ exports.updateData = async (req, res, next) =>
             message : `Vehicle ${constant.responseMessage.edit}`,
         });
     }
-}
+};
+
+/**
+ * The below function is for getting all the vehicle images details of a particular vehicle. Those vehicle images whose deleted at feild are having
+ * 'NULL' only those details will be shown or fetched.
+ */
+
+
 exports.getAllImages = async (req, res, next) =>
 {
+    // We need to add the vehicle id in the params
+    // The below line is for going to the model function to implement the code for get all vehcile image logic.
     const vehicles = await vehicle.getallimages(req.params.id);
+    
+    // If any unwanted, unencounter, or unconventionaal error came then this else if block of code will be executed.
     if(vehicles === 'err')
     {
-        console.log('Error');
         return res.status(200).send
         ({
             code : 500,
@@ -281,6 +328,7 @@ exports.getAllImages = async (req, res, next) =>
             data : []
         });
     }
+    // No images are there for the vehicle whose id submitted in the params, then this else if block will be executed
     else if(vehicles.length === 0)
     {
         console.log('No images are there for this vehicle now');
@@ -292,6 +340,7 @@ exports.getAllImages = async (req, res, next) =>
             data : []
         });
     }
+    // Every things went well and vehcile image data of a particular vehcle is available then this else block of code will executed.
     else
     {
         console.log(`Images fetched successfuly for this particular image`);
@@ -310,8 +359,12 @@ exports.getAllImages = async (req, res, next) =>
  */
 exports.removeVehicle = async (req, res, next) =>
 {
+    // We need to add the vehicle id in the params
+    // The below line is for going to the model function to implement the code for removing vehicle logic.
     const vehicles = await vehicle.removevehicle(req.params.id);
     // console.log(vehicles);
+
+    // The id present in the params, But incorrect id then this if block of code will be executed
     if(vehicles.length === 0)
     {
         console.log('No vehicles data present and remove is not done');
@@ -322,6 +375,7 @@ exports.removeVehicle = async (req, res, next) =>
             message : constant.responseMessage.removeerror
         });
     }
+    // If vehicle remove is done successfully
     else
     {
         console.log('Vehicle is removed');

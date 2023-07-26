@@ -20,11 +20,20 @@ const addingSpecifiedDaysToCurrentDate = (plus) =>
     return formattedDateTime;
 };  
 
-const getFormattedUTCTime = (utcOffset) => 
+const getFormattedUTCTime = (utcOffset) =>
 {
     const currentDate = new Date();
-    const utcTime = currentDate.getTime() + (currentDate.getTimezoneOffset() * 60000);
-  
+    const utcTime = Date.UTC
+    (
+        currentDate.getUTCFullYear(),
+        currentDate.getUTCMonth(),
+        currentDate.getUTCDate(),
+        currentDate.getUTCHours(),
+        currentDate.getUTCMinutes(),
+        currentDate.getUTCSeconds(),
+        currentDate.getUTCMilliseconds()
+    );
+
     // Parse offset string in format "+hh:mm" or "-hh:mm"
     const offsetParts = utcOffset.split(':');
     const offsetSign = (offsetParts[0][0] === '-') ? -1 : 1;
@@ -32,7 +41,7 @@ const getFormattedUTCTime = (utcOffset) =>
     const offsetMinutes = parseInt(offsetParts[1], 10);
     const offsetMilliseconds = (offsetHours * 3600000) + (offsetMinutes * 60000);
     const targetTime = utcTime + (offsetSign * offsetMilliseconds);
-    
+
     const targetDate = new Date(targetTime);
     const year = targetDate.getUTCFullYear();
     const month = (targetDate.getUTCMonth() + 1).toString().padStart(2, '0');
@@ -40,12 +49,13 @@ const getFormattedUTCTime = (utcOffset) =>
     const hours = targetDate.getUTCHours().toString().padStart(2, '0');
     const minutes = targetDate.getUTCMinutes().toString().padStart(2, '0');
     const seconds = targetDate.getUTCSeconds().toString().padStart(2, '0');
-    // return `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-  }
+}
+
 
   const changeDateToSQLFormat = (dateString) => {
-    console.log('Got date in this format', dateString);
+    // console.log('Got date in this format', dateString);
 
     // Check if the input date string is in the format "DD-MM-YYYY"
     if (/^\d{2}-\d{2}-\d{4}$/.test(dateString)) {

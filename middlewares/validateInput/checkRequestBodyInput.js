@@ -1,9 +1,10 @@
-const commonfetching = require(`../../utils/helper/commonfetching`);
-const con = require(`../../configs/db.configs`);
-const constants = require(`../../utils/constants`);
-const url = require(`../../utils/url_helper`);
-const time = require(`../../utils/helper/date`);
+const commonfetching = require(`../../utils/helper/commonfetching`); // Importing the commonfetching. Where most of the common sql query or code is written
+const con = require(`../../configs/db.configs`); // Calling database details
+const constants = require(`../../utils/constants`); // Constant elements are stored in this file
+const url = require(`../../utils/url_helper`);// Fetching the url details from the url helper file
+const time = require(`../../utils/helper/date`); // All the time related formating are written in this file.
 
+// Below is function which wille eliminate the space from the string
 function hasOnlyNonSpaces(str) 
 {
     if (str.includes(` `))
@@ -15,6 +16,7 @@ function hasOnlyNonSpaces(str)
         return false;
     }
 }
+
 
 const isValidDateOfBirth = (DOB) =>  
 {
@@ -921,7 +923,7 @@ exports.isDriverProfileImageSubmitted = (req, res, next) =>
         // }
         if(req.method === 'POST')
         {
-            console.log('4 again from the middleware during profile image time');
+            // console.log('4 again from the middleware during profile image time');
             next();
         }
     }
@@ -955,7 +957,7 @@ exports.isDriverLicenceImageSubmitted = (req, res, next) =>
         // }
         if(req.method === 'POST')
         {
-            console.log('4 again from the middleware during licence time');
+            // console.log('4 again from the middleware during licence time');
             next();
         }
     }
@@ -1015,4 +1017,103 @@ exports.isServiceProviderIdEntered = (req, res, next) =>
     {
         next();
     }
-}
+};
+
+
+exports.checkValueEntered = (fieldName, messageField) => (req, res, next) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        if (!fieldName)
+        {
+            res.status(400).send
+            ({
+                code: 400,
+                status: false,
+                message: `${messageField} not entered`,
+            });
+            
+            reject();
+        }
+        else 
+        {
+            console.log(`${messageField} is available`);
+            resolve();
+        }
+    });
+};
+
+exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) => {
+    try {
+        // Add await to each checkValueEntered call and handle errors explicitly
+        await this.checkValueEntered(req.body.customer_id, 'Customer id') (req, res, next);
+        await this.checkValueEntered(req.body.enquiry_id, 'Enquiry id') (req, res, next);
+        await this.checkValueEntered(req.body.driver_id, 'Driver id') (req, res, next);
+        await this.checkValueEntered(req.body.vehicle_id, 'Vehicle id') (req, res, next);
+        await this.checkValueEntered(req.body.service_provider_id, 'Service provider id') (req, res, next);
+        await this.checkValueEntered(req.body.discount_type_id, 'Discount type Id') (req, res, next);
+        await this.checkValueEntered(req.body.pickup_location, 'Pickup location') (req, res, next);
+        await this.checkValueEntered(req.body.pickup_country, 'Pick up country') (req, res, next);
+        await this.checkValueEntered(req.body.pickup_date, 'Pick up date')(req, res, next) ;
+        await this.checkValueEntered(req.body.drop_location, 'Drop location') (req, res, next);
+        await this.checkValueEntered(req.body.drop_country, 'Drop country') (req, res, next);
+        await this.checkValueEntered(req.body.drop_date, 'Drop date') (req, res, next);
+        await this.checkValueEntered(req.body.no_of_horse, 'Number of horses') (req, res, next);
+        await this.checkValueEntered(req.body.special_requirement, 'Special requirement') (req, res, next);
+        await this.checkValueEntered(req.body.additional_service, 'Additional service') (req, res, next);
+        await this.checkValueEntered(req.body.transportation_insurance_coverage, 'Transportation insurance coverage') (req, res, next);
+        await this.checkValueEntered(req.body.tax_amount, 'Tax amount') (req, res, next);
+        await this.checkValueEntered(req.body.discount_amount, 'Discount amount') (req, res, next);
+        await this.checkValueEntered(req.body.final_amount, 'Final amount') (req, res, next);
+        next();
+    } catch (error) {
+        // Handle any errors that might occur during the checks
+        res.status(500).send({
+            code: 500,
+            status: false,
+            message: 'Internal server error',
+        });
+    }
+};
+
+// exports.checkValueEntered = (fieldName, messageField) => (req, res, next) => 
+// {
+//     console.log('Function is coming here');
+//     return new Promise((resolve, reject) =>
+//     {
+//         if (!fieldName)
+//         {
+//             res.status(400).send
+//             ({
+//                 code: 400,
+//                 status: false,
+//                 message: `${messageField} not entered`,
+//             });
+            
+//             reject(new Error(`${messageField} not entered`));
+//         }
+//         else
+//         {
+//             resolve();
+//         }
+//     });
+// };
+
+// exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) => {
+//     try {
+//         this.checkValueEntered(req.body.customer_id, 'Customer id') (req, res, next);
+//         this.checkValueEntered(req.body.enquiry_id, 'Enquiry id');
+//         this.checkValueEntered(req.body.driver_id, 'Driver id');
+//         this.checkValueEntered(req.body.vehicle_id, 'Vehicle id');
+//         this.checkValueEntered(req.body.serviceprovider_id, 'Service provider id');
+//         // Add other field checks here
+//         next();
+//     } catch (error) {
+//         // Handle any errors that might occur during the checks
+//         res.status(400).send({
+//             code: 400,
+//             status: false,
+//             message: error.message,
+//         });
+//     }
+// };
