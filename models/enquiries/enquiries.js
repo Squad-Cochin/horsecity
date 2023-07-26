@@ -15,7 +15,7 @@ exports.getAllEnquiries = (requestBody) =>
             const {page, limit} = requestBody;
        
             const offset = (page - 1) * limit; 
-console.log(requestBody);
+
             const selQuery = `SELECT enq.id, cu.name AS customer_name,sp.name AS service_provider,enq.status,enq.created_at
             FROM ${constants.tableName.enquiries} AS enq
             JOIN ${constants.tableName.customers} cu ON enq.customer_id = cu.id
@@ -60,7 +60,7 @@ exports.getOneEnquiry = (id) =>
     {
         try
         {     
-            const selQuery = `SELECT enq.id, cu.name , cu.contact_no, sp.name, vh.vehicle_number, enq.pickup_location, enq.drop_location, enq.description
+            const selQuery = `SELECT enq.id, cu.name AS customer_name,cu.id AS customer_id ,cu.contact_no AS customer_contact_no ,sp.name AS service_provider_name,sp.id AS service_provider_id,enq.trip_type,enq.drop_country,enq.pickup_country,  vh.id AS vehicle_id, vh.vehicle_number,enq.no_of_horse,enq.created_at, enq.pickup_location, enq.drop_location, enq.description
             FROM ${constants.tableName.enquiries} AS enq
             JOIN ${constants.tableName.customers} cu ON enq.customer_id = cu.id
             JOIN ${constants.tableName.vehicles} vh ON enq.vehicle_id = vh.id
@@ -69,6 +69,11 @@ exports.getOneEnquiry = (id) =>
 
             con.query(selQuery,async(err,data)=>{
                 if(data?.length != 0){
+          
+                        data[0].created_at = `${time.formatDateToDDMMYYYY(
+                          data[0].created_at
+                        )}`;
+                      
                     resolve({enquiry : data})
                 }else{
                     resolve({enquiry : []})

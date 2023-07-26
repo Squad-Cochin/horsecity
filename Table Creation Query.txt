@@ -335,7 +335,6 @@ CREATE TABLE vehicles_images
 );
 
 
-
 CREATE TABLE enquiries
 (
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -343,12 +342,13 @@ CREATE TABLE enquiries
     FOREIGN KEY (customer_id) REFERENCES customers(id),
     vehicle_id INT(11),
     FOREIGN KEY (vehicle_id) REFERENCES vehicles(id),
-    driver_id INT(11),
-    FOREIGN KEY (driver_id) REFERENCES drivers(id),
     serviceprovider_id INT(11),
     FOREIGN KEY (serviceprovider_id) REFERENCES service_providers(id),
     pickup_location VARCHAR(255) NOT NULL,
     drop_location VARCHAR(255) NOT NULL,
+    trip_type ENUM('PRIVATE','SHARING','GCC'),
+    pickup_country ENUM('BAHRAIN', 'KUWAIT', 'OMAN', 'QATAR', 'SAUDI ARABIA', 'UAE'),
+    drop_country ENUM('BAHRAIN', 'KUWAIT', 'OMAN', 'QATAR', 'SAUDI ARABIA', 'UAE'),
     no_of_horse INT(3) NOT NULL,
     description VARCHAR(255) NOT NULL,
     status ENUM ('CONFIRMED', 'NOTCONFIRMED') DEFAULT 'NOTCONFIRMED',
