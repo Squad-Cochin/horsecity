@@ -177,11 +177,11 @@ module.exports = class settings {
             let logoImage = data[0].logo;
             let loginpage_logo = data[0].loginpage_logo
             let loginpage_bg_image = data[0].loginpage_bg_image
-            let favicon = data[0].favicon
-            data[0].logo = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings.view}${logoImage}`;
-            data[0].loginpage_logo = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings.view}${loginpage_logo}`;
-            data[0].loginpage_bg_image = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings.view}${loginpage_bg_image}`;
-            data[0].favicon = `${process.env.PORT_SH}${constants.attachmentLocation.applicationSettings.settings.view}${favicon}`;
+            let favicon = data[0].favicon    
+            data[0].logo = `${process.env.PORT_SP}${constants.attachmentLocation.applicationSettings.settings.view}${logoImage}`;
+            data[0].loginpage_logo = `${process.env.PORT_SP}${constants.attachmentLocation.applicationSettings.settings.view}${loginpage_logo}`;
+            data[0].loginpage_bg_image = `${process.env.PORT_SP}${constants.attachmentLocation.applicationSettings.settings.view}${loginpage_bg_image}`;
+            data[0].favicon = `${process.env.PORT_SP}${constants.attachmentLocation.applicationSettings.settings.view}${favicon}`;
             resolve({ settingsPageData: data });
           } else {
     

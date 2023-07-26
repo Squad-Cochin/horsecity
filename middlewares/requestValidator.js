@@ -31,7 +31,7 @@ exports.usernamevalidation = (req, res, next) => {
                 if(requestMethod == 'POST' && URL ==  url.ADD_SERVICEPROVIDER__URL){
 
                     try {
-                let selQuery = `SELECT * FROM service_providers WHERE user_name = '${user_name}'`;
+                let selQuery = `SELECT * FROM service_providers WHERE user_name = '${user_name}' AND deleted_at IS NULL`;
                 con.query(selQuery, (err, result) => {
                     console.log(result);
                     if (result.length != 0) {
@@ -58,7 +58,7 @@ exports.usernamevalidation = (req, res, next) => {
                                 next();
                         }else{
                
-                            let selQuery = `SELECT * FROM service_providers WHERE user_name = '${user_name}'`;
+                            let selQuery = `SELECT * FROM service_providers WHERE user_name = '${user_name}' AND deleted_at IS NULL`;
                             con.query(selQuery, (err, result) => {
                         
                                 if (result.length != 0) {
@@ -135,7 +135,7 @@ exports.emailValidation = async (req, res, next) => {
             try {
 
              if(requestMethod == 'POST' && URL ==  url.ADD_SERVICEPROVIDER__URL){
-                let selQuery = `SELECT * FROM service_providers WHERE email = '${email}' `;
+                let selQuery = `SELECT * FROM service_providers WHERE email = '${email}' AND deleted_at IS NULL`;
                 con.query(selQuery, (err, result) => {
                     //console.log(result);
                     if (result.length != 0) {
@@ -159,7 +159,7 @@ exports.emailValidation = async (req, res, next) => {
                                 next();
                         }else{
                
-                            let selQuery = `SELECT * FROM service_providers WHERE email = '${email}'`;
+                            let selQuery = `SELECT * FROM service_providers WHERE email = '${email}' AND deleted_at IS NULL`;
                             con.query(selQuery, (err, result) => {
                         
                                 if (result.length != 0) {
@@ -231,7 +231,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                     }
                     //  else if(validateUAELicenseNumber(licence_no)) {
                             if(requestMethod == 'POST'){
-                            let verifyLicenceQuery = `SELECT * FROM service_providers WHERE licence_no = '${licence_no}'`;
+                            let verifyLicenceQuery = `SELECT * FROM service_providers WHERE licence_no = '${licence_no}' AND deleted_at IS NULL`;
                             con.query(verifyLicenceQuery, (err, result) => {
                                 //console.log(result);
                                 if (result.length != 0) {
@@ -255,7 +255,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                                 next();
                         }else{
                
-                            let selQuery = `SELECT * FROM service_providers WHERE licence_no = '${licence_no}'`;
+                            let selQuery = `SELECT * FROM service_providers WHERE licence_no = '${licence_no}' AND deleted_at IS NULL`;
                             con.query(selQuery, (err, result) => {
                         
                                 if (result.length != 0) {
@@ -503,7 +503,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                                 });
                         } else {
                     if(requestMethod == 'POST'){
-                    let verifyPhoneNumbereQuery = `SELECT * FROM service_providers WHERE contact_no = '${contact_no}'`;
+                    let verifyPhoneNumbereQuery = `SELECT * FROM service_providers WHERE contact_no = '${contact_no}' AND deleted_at IS NULL`;
                     con.query(verifyPhoneNumbereQuery, (err, result) => {
                         //console.log(result);
                         if (result.length != 0) {
@@ -526,7 +526,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                                     next();
                             }else{
                    
-                                let selQuery = `SELECT * FROM service_providers WHERE contact_no = '${contact_no}'`;
+                                let selQuery = `SELECT * FROM service_providers WHERE contact_no = '${contact_no}' AND deleted_at IS NULL        `;
                                 con.query(selQuery, (err, result) => {
                             
                                     if (result.length != 0) {
