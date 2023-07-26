@@ -1043,7 +1043,7 @@ exports.checkValueEntered = (fieldName, messageField) => (req, res, next) =>
     });
 };
 
-exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) => {
+exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) => {  
     try {
         // Add await to each checkValueEntered call and handle errors explicitly
         await this.checkValueEntered(req.body.customer_id, 'Customer id') (req, res, next);
@@ -1066,7 +1066,7 @@ exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) => {
         await this.checkValueEntered(req.body.discount_amount, 'Discount amount') (req, res, next);
         await this.checkValueEntered(req.body.final_amount, 'Final amount') (req, res, next);
         next();
-    } catch (error) {
+    } catch (error) { 
         // Handle any errors that might occur during the checks
         res.status(500).send({
             code: 500,

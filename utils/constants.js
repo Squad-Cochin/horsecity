@@ -13,6 +13,11 @@ module.exports =
         active : `ACTIVE`,
         inactive : `INACTIVE`,
     },
+    enquiry_status  :
+    {
+        confirmed : `CONFIRMED`,
+        notconfirmed : `NOTCONFIRMED`,
+    },
 
     password :
     { 

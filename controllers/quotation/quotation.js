@@ -6,14 +6,14 @@ const commonoperation = require('../../utils/helper/commonoperation');
 exports.addNewQuotaion = async(req,res)=>
 {
     console.log("1",req.body);
-    let addNewQuotaion = await quotation.addNewQuotaion(req.body,req.files.licence_image);
-    console.log("addNew",addNewProvider);
+    let addNewQuotaion = await quotation.addNewQuotaion(req.body);
+    console.log("addNew",addNewQuotaion);
    if(addNewQuotaion){
     return res.status(200).send
     ({
         code: 200,
         success: true,
-        message: "Successfully added service providers",
+        message: constants.responseMessage.insert,
     });
    }
 }

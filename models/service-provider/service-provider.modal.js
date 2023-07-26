@@ -145,7 +145,7 @@ exports.getNameServiceProviders = () =>
         {       
             const selQuery = `SELECT sp.id,sp.user_name
             FROM service_providers AS sp
-            WHERE sp.deleted_at IS NULL
+            WHERE sp.deleted_at IS NULL AND sp.status = '${constants.status.active}'
             `;
             con.query(selQuery,(err,data)=>{
                 if(!err){

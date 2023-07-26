@@ -1,11 +1,12 @@
 const quotation = require(`../../controllers/quotation/quotation`);   // importing the auth controller details and assigning it to the authcontroller variable
 
+const validator = require('../../middlewares/validateInput/checkRequestBodyInput')
 
 
 module.exports = function(app)
 {
-    /**For getting all enquiries */
-    app.post(`/${process.env.apiToken}/getAll/enquiries`,quotation.addNewServiceProvider); 
+    /**For adding new quotation */
+    app.post(`/${process.env.apiToken}/add/quotation`,validator.checkValuesEnteredInTheQuotationBody,quotation.addNewQuotaion); 
     
 
 

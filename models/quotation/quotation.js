@@ -14,17 +14,31 @@ exports.addNewQuotaion = (requestBody) =>
         {  
         let selQuery = `SELECT 	tax_id  FROM ${constants.tableName.application_settings}`
         con.query(selQuery,async(err,data)=>{
-            if(!err){
-               console.log(data);
+            if(data.length != 0){
+                let tax_id = data[0].tax_id
                
-                const {customer_id,enquiry_id,driver_id,serviceprovider_id,discount_type_id,trip_type,pickup_location,pickup_country,pickup_date,drop_location,drop_country,drop_date,no_of_horse,special_requirement,additional_service,transportation_insurance_coverage,tax_amount,discount_amount,final_amount} = requestBody ;
+                const {customer_id,enquiry_id,driver_id,vehicle_id,service_provider_id,discount_type_id,trip_type,pickup_location,pickup_country,pickup_date,drop_location,drop_country,drop_date,no_of_horse,special_requirement,additional_service,transportation_insurance_coverage,tax_amount,discount_amount,final_amount} = requestBody ;
 
-                // let insQuery = `INSERT INTO ${constants.tableName.service_providers} (name, email, user_name, password, contact_person, contact_no, contact_address, emergency_contact_no, licence_image, licence_no, expiry_at, created_at)
-                // VALUES ('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_person}', '${contact_no}', '${contact_address}', '${emergency_contact_no}', '${uploadAttachment}', '${licence_no}', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                let insQuery = `INSERT INTO quotations (customer_id, enquiry_id, driver_id, vehicle_id, serviceprovider_id, taxation_id, discount_type_id, trip_type, pickup_location, pickup_country, pickup_date, drop_location, drop_country, drop_date, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage, tax_amount, discount_amount, final_amount,created_at)
+                VALUES ('${customer_id}', '${enquiry_id}', '${driver_id}', '${vehicle_id}', '${service_provider_id}', '${tax_id}', '${discount_type_id}', '${trip_type}', '${pickup_location}', '${pickup_country}','${pickup_date}', '${drop_location}','${drop_country}', '${drop_date}','${no_of_horse}','${special_requirement}', '${additional_service}','${transportation_insurance_coverage}', '${tax_amount}','${discount_amount}','${final_amount}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                 
                 con.query(insQuery,async(err,data)=>{
                     if(!err){
-                        resolve(true)
+                        let updateQuery = `UPDATE ${constants.tableName.enquiries} SET  
+                        status = '${constants.enquiry_status.confirmed}'
+                        WHERE id = '${enquiry_id}'`;
+    
+                        con.query(updateQuery,async(err,data)=>{
+                            console.log("data",data);
+                            if(data?.length != 0 ){
+                                resolve(true)
+                               
+                            }else{
+                                resolve(false)
+                            }
+                        })
+                    }else{
+                        resolve(false)
                     }
                 })
 
@@ -34,7 +48,8 @@ exports.addNewQuotaion = (requestBody) =>
         })
 
         }catch(err){
-            console.log('Error while adding service providers', err);
+            resolve(false)
+            console.log('Error while adding quotation', err);
         }
     })    
 }
