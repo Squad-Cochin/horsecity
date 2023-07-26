@@ -156,3 +156,38 @@ exports.getOneDiscount = (id) =>
     })    
    
 }
+
+exports.getallactivediscount = async () =>
+{
+    return await new Promise((resolve, reject) =>
+    {
+        try
+        {
+            let selQuery = `SELECT ds.id, ds.name FROM discount_types ds WHERE ds.deleted_at IS NULL AND ds.status = '${constants.status.active}' `;
+            // console.log(selQuery);
+            con.query(selQuery, (err, result) =>
+            {
+                // console.log(result);
+                if(result.length !== 0)
+                {
+                    console.log('Data Fetched');
+                    resolve(result);
+                }    
+                else if(result.length == 0)
+                {
+                    console.log('No data present to show');
+                    resolve(result);
+                }  
+                else
+                {
+                    console.log(err);
+                    resolve('err');
+                }                          
+            });
+        }
+        catch(error)
+        {
+            console.log(`Error from 'dicount.js' file. In the controllers>dicounts>dicounts.js. Function from which the eror we are getting is 'getallactivediscount' `);
+        }
+    });
+}

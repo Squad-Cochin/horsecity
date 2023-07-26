@@ -139,3 +139,40 @@ exports.getOneDiscount = async(req,res)=>
     });
    }
 }
+
+exports.getAllActiveDiscount = async (req, res, next) =>
+{
+    let discount = await discounts.getallactivediscount(); 
+    if(discount.length !== 0)
+    {
+        console.log('Discount data fetched successfully');
+        return res.status(200).send
+        ({
+            code : 200,
+            status : true,
+            message : constants.responseMessage.getAll,
+            data : discount 
+        });
+    }
+    if(discount.length == 0)
+    {
+        console.log('No discount data present');
+        return res.status(200).send
+        ({
+            code : 200,
+            status : true,
+            message : constants.responseMessage.getAll,
+            data : []
+        });
+    }
+    if(discount === 'err')
+    {
+        console.log('Error while fetching the discount table data');
+        return res.status(200).send
+        ({
+            code : 400,
+            status : true,
+            message : constants.responseMessage.erroredit,
+        });
+    }
+};

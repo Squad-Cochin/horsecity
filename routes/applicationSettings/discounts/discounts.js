@@ -20,6 +20,9 @@ module.exports = function(app)
         // Below route is for getting data of any particular discount
     app.get(`/${process.env.apiToken}/getOne/discounts/:id`,discounts.getOneDiscount);
 
+    app.get(`/${process.env.apiToken}/getAll/active/discounts`, discounts.getAllActiveDiscount);
+
+
 
 
 }
