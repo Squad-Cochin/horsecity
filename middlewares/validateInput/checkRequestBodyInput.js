@@ -1026,14 +1026,14 @@ exports.checkValueEntered = (fieldName, messageField) => (req, res, next) =>
     {
         if (!fieldName)
         {
-            res.status(400).send
+           return res.status(400).send
             ({
                 code: 400,
                 status: false,
                 message: `${messageField} not entered`,
             });
             
-            reject();
+
         }
         else 
         {
