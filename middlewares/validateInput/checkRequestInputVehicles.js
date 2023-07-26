@@ -702,7 +702,7 @@ exports.isValidVehicleNumberEntered = (tableName) => async (req, res, next) =>
 
 exports.isSafetyCertificateAdded = (req, res, next) =>
 {
-    if(!req.files?.safety_certicate)
+    if(!req.files?.safety_certicate && req.url === url.ADD_VEHICLE_PAGE_URL && req.method === 'POST')
     {
         console.log(`Vehicle safety certificate is not uploaded`);
         return res.status(200).json
@@ -714,7 +714,23 @@ exports.isSafetyCertificateAdded = (req, res, next) =>
     } 
     else
     {
-        next();
+        if(req.method === 'PUT' && req.url === url.UPDATE_VEHICLE_PAGE_URL + req.params.id && !req.files?.licence_img)
+        {
+            next();
+        }
+        if(req.method === 'PUT' && req.url === url.UPDATE_VEHICLE_PAGE_URL + req.params.id && req.files?.licence_img)
+        {
+            next();
+        }
+        // if(req.method === 'POST' && req.url === url.UPDATE_VEHICLE_PAGE_URL + req.params.id && req.files?.licence_img)
+        // {
+        //     next();
+        // }
+        if(req.method === 'POST')
+        {
+            console.log('4');
+            next();
+        }
     }
 }
 

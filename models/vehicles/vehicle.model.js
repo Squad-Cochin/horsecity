@@ -170,7 +170,7 @@ module.exports = class vehicles
                     "height": data[0].height,
                     "no_of_horse": data[0].no_of_horse,
                     "air_conditioner": data[0].air_conditioner,
-                    "temperature_manageable": data[0].temp_manageable,
+                    "temperature_manageable": data[0].temperature_manageable,
                     "registration_no": data[0].registration_no,
                     "gcc_travel_allowed": data[0].gcc_travel_allowed,
                     "insurance_cover": data[0].insurance_cover,
@@ -215,23 +215,47 @@ module.exports = class vehicles
     {
         try
         {
-            let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);
-            // console.log(uploadSafetyCertificate);
-            let upQuery = `UPDATE ${constants.tableName.vehicles} v SET v.service_provider_id = '${serviceProviderId}', v.vehicle_number = '${vehicle_number}', v.make = '${make}', v.model = '${model}', v.color = '${color}', v.length = '${length}', v.breadth = '${breadth}', v.height = '${height}', v.no_of_horse = '${max_no_of_horse}', v.air_conditioner = '${air_conditioner}', v.temperature_manageable ='${temp_manageable}', v.registration_no ='${registration_no}', v.gcc_travel_allowed = '${gcc_travel_allowed}', v.insurance_cover = '${insurance_cover}', v.insurance_date = '${insurance_date}', v.insurance_policy_no = '${insurance_policy_no}', v.insurance_provider = '${insurance_provider}', v.insurance_expiration_date = '${insurance_expiration_date}', v.vehicle_type = '${vehicle_type}', v.vehicle_registration_date = '${vehicle_registration_date}', v.vehicle_exipration_date = '${vehicle_exipration_date}', v.safety_certicate ='${uploadSafetyCertificate}', v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE id = '${id}' `;
-            // console.log(upQuery);
-            con.query(upQuery, (err, result) =>
+            console.log(safety_certicate);
+            if(safety_certicate === null || safety_certicate === undefined)
             {
-                // console.log(result);
-                if(result.affectedRows > 0)
+                // let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);
+                // console.log(uploadSafetyCertificate);
+                let upQuery = `UPDATE ${constants.tableName.vehicles} v SET v.service_provider_id = '${serviceProviderId}', v.vehicle_number = '${vehicle_number}', v.make = '${make}', v.model = '${model}', v.color = '${color}', v.length = '${length}', v.breadth = '${breadth}', v.height = '${height}', v.no_of_horse = '${max_no_of_horse}', v.air_conditioner = '${air_conditioner}', v.temperature_manageable ='${temp_manageable}', v.registration_no ='${registration_no}', v.gcc_travel_allowed = '${gcc_travel_allowed}', v.insurance_cover = '${insurance_cover}', v.insurance_date = '${insurance_date}', v.insurance_policy_no = '${insurance_policy_no}', v.insurance_provider = '${insurance_provider}', v.insurance_expiration_date = '${insurance_expiration_date}', v.vehicle_type = '${vehicle_type}', v.vehicle_registration_date = '${vehicle_registration_date}', v.vehicle_exipration_date = '${vehicle_exipration_date}', v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE id = '${id}' `;
+                // console.log(upQuery);
+                con.query(upQuery, (err, result) =>
                 {
-                    console.log('Vehicle data updated successfully');
-                    return result;
-                }
-                else
+                    // console.log(result);
+                    if(result.affectedRows > 0)
+                    {
+                        console.log('Vehicle data updated successfully');
+                        return result;
+                    }
+                    else
+                    {
+                        return('err')
+                    }
+                });
+            }
+            else
+            {
+                let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);
+                // console.log(uploadSafetyCertificate);
+                let upQuery = `UPDATE ${constants.tableName.vehicles} v SET v.service_provider_id = '${serviceProviderId}', v.vehicle_number = '${vehicle_number}', v.make = '${make}', v.model = '${model}', v.color = '${color}', v.length = '${length}', v.breadth = '${breadth}', v.height = '${height}', v.no_of_horse = '${max_no_of_horse}', v.air_conditioner = '${air_conditioner}', v.temperature_manageable ='${temp_manageable}', v.registration_no ='${registration_no}', v.gcc_travel_allowed = '${gcc_travel_allowed}', v.insurance_cover = '${insurance_cover}', v.insurance_date = '${insurance_date}', v.insurance_policy_no = '${insurance_policy_no}', v.insurance_provider = '${insurance_provider}', v.insurance_expiration_date = '${insurance_expiration_date}', v.vehicle_type = '${vehicle_type}', v.vehicle_registration_date = '${vehicle_registration_date}', v.vehicle_exipration_date = '${vehicle_exipration_date}', v.safety_certicate ='${uploadSafetyCertificate}', v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE id = '${id}' `;
+                // console.log(upQuery);
+                con.query(upQuery, (err, result) =>
                 {
-                    return('err')
-                }
-            });
+                    // console.log(result);
+                    if(result.affectedRows > 0)
+                    {
+                        console.log('Vehicle data updated successfully');
+                        return result;
+                    }
+                    else
+                    {
+                        return('err')
+                    }
+                });
+            }
         }
         catch(error)
         {

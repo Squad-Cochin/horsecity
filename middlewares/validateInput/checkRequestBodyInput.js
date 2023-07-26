@@ -810,8 +810,8 @@ exports.isPageSizeEntered = (req, res, next) =>
 
 
 exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
-{
-    if(!req.files?.id_proof_image)
+{  
+    if(!req.files?.id_proof_image && req.method === 'POST' && req.url === url.ADD_CUSTOMER_PAGE_URL + req.params.id)
     {
         console.log(`Id proof image is not uploaded`);
         return res.status(200).json
@@ -823,8 +823,26 @@ exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
     }
     else
     {
-        
-        next();
+        if(req.method === 'PUT' && req.url === url.UPDATE_CUSTOMER_PAGE_URL + req.params.id && !req.files?.id_proof_image)
+        {
+            console.log('2 Is this the place');
+            next();
+        }
+        if(req.method === 'PUT' && req.url === url.UPDATE_CUSTOMER_PAGE_URL + req.params.id && req.files?.id_proof_image)
+        {
+            console.log('5');
+            next();
+        }
+        // if(req.method === 'POST' && req.url === url.ADD_CUSTOMER_PAGE_URL + req.params.id && req.files?.id_proof_image)
+        // {
+        //     console.log('3');
+        //     next();
+        // }
+        if(req.method === 'POST')
+        {
+            console.log('4 again from the middleware');
+            next();
+        }
     }
 }
 
@@ -877,7 +895,7 @@ exports.isCustomerIdProofImageSubmitted2 = async (req, res, next) =>
 
 exports.isDriverProfileImageSubmitted = (req, res, next) =>
 {
-    if(!req.files?.profile_image)
+    if(!req.files?.profile_image && req.method === 'POST' && req.url === url.ADD_DRIVER_PAGE_URL)
     {
         console.log(`Driver profile image is not uploaded`);
         return res.status(200).json
@@ -889,13 +907,29 @@ exports.isDriverProfileImageSubmitted = (req, res, next) =>
     }
     else
     {
-        next();
+        if(req.method === 'PUT' && req.url === url.UPDATE_DRIVER_PAGE_URL + req.params.id && !req.files?.profile_image)
+        {
+            next();
+        }
+        if(req.method === 'PUT' && req.url === url.UPDATE_DRIVER_PAGE_URL + req.params.id && req.files?.profile_image)
+        {
+            next();
+        }
+        // if(req.method === 'POST' && req.url === url.ADD_DRIVER_PAGE_URL && req.files?.profile_image)
+        // {
+        //     next();
+        // }
+        if(req.method === 'POST')
+        {
+            console.log('4 again from the middleware during profile image time');
+            next();
+        }
     }
 }
 
 exports.isDriverLicenceImageSubmitted = (req, res, next) =>
 {
-    if(!req.files?.licence_img)
+    if(!req.files?.licence_img && req.method === 'POST' && req.url === url.ADD_DRIVER_PAGE_URL)
     {
         console.log(`Driver licence image is not uploaded`);
         return res.status(200).json
@@ -907,7 +941,23 @@ exports.isDriverLicenceImageSubmitted = (req, res, next) =>
     }
     else
     {
-        next();
+        if(req.method === 'PUT' && req.url === url.UPDATE_DRIVER_PAGE_URL + req.params.id && !req.files?.licence_img)
+        {
+            next();
+        }
+        if(req.method === 'PUT' && req.url === url.UPDATE_DRIVER_PAGE_URL + req.params.id && req.files?.licence_img)
+        {
+            next();
+        }
+        // if(req.method === 'POST' && req.url === url.ADD_DRIVER_PAGE_URL + req.params.id && req.files?.licence_img)
+        // {
+        //     next();
+        // }
+        if(req.method === 'POST')
+        {
+            console.log('4 again from the middleware during licence time');
+            next();
+        }
     }
 }
 

@@ -112,7 +112,7 @@ exports.addDriver = async (req, res, next) =>
         req.files.licence_img // Licence image of the driver 
     );
 
-    // console.log(drivers);
+    // console.log('Driver kya aarha hain: ',drivers);
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if (drivers === 'err')
     {
@@ -215,8 +215,10 @@ exports.editDriver = async (req, res, next) =>
         time.changeDateToSQLFormat(req.body.date_of_birth), // Date of birth of the driver
         req.body.licence_no, // Licence number of the driver
         req.body.description, // Description of the driver
-        req.files.profile_image, // profile image of the driver
-        req.files.licence_img // Licence image of the driver
+        // req.files.profile_image, // profile image of the driver
+        req.files && req.files.profile_image !== undefined ? req.files.profile_image : null,
+        // req.files.licence_img // Licence image of the driver
+        req.files && req.files.licence_img !== undefined ? req.files.licence_img : null
     );
 
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.

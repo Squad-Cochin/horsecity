@@ -221,7 +221,8 @@ exports.updateData = async (req, res, next) =>
         req.body.vehicle_type,
         time.changeDateToSQLFormat(req.body.vehicle_registration_date),
         time.changeDateToSQLFormat(req.body.vehicle_exipration_date),
-        req.files.safety_certicate
+        req.files && req.files.safety_certicate !== undefined ? req.files.safety_certicate : null
+        // req.files.safety_certicate
     );
 
     if(vehicles === 'err')

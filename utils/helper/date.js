@@ -44,23 +44,49 @@ const getFormattedUTCTime = (utcOffset) =>
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
   }
 
-  const changeDateToSQLFormat = (dateString) =>
+  const changeDateToSQLFormat = (dateString) => 
   {
-      // Convert the input string to a Date object
-      const dateObj = new Date(dateString);
-  
-      // Extract the individual date components
-      const year = dateObj.getFullYear();
-      const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-      const day = String(dateObj.getDate()).padStart(2, '0');
-      const hours = String(dateObj.getHours()).padStart(2, '0');
-      const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-      const seconds = String(dateObj.getSeconds()).padStart(2, '0');
-  
-      // Format the date in YYYY-MM-DD HH-MM-SS
-      const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-      return formattedDate;  
-  };
+    console.log('Got data in this format', dateString);
+    // Check if the input date string is already in the desired format
+    if (/^\d{2}-\d{2}-\d{4}$/.test(dateString)) 
+    {
+        console.log('Does we are changing the date');
+        // If the input date is in the format "YYYY-MM-DD," assume time as "00:00:00"
+        console.log(`${dateString} 00:00:00`);
+        // Convert the input string to a Date object
+        let dateString2 = `${dateString} 00:00:00`
+        console.log('Date String', dateString2);
+        const dateObj = new Date(dateString2);
+        // Extract the individual date components
+        const year = dateObj.getFullYear();
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const hours = String(dateObj.getHours()).padStart(2, '0');
+        const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+        const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+        // Format the date in YYYY-MM-DD HH:MM:SS
+        const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+        console.log(`${formattedDate} 00:00:00`);
+        return `${formattedDate} 00:00:00`;
+    }
+
+    // Convert the input string to a Date object
+    const dateObj = new Date(dateString);
+
+    // Extract the individual date components
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const hours = String(dateObj.getHours()).padStart(2, '0');
+    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+    const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+
+    // Format the date in YYYY-MM-DD HH:MM:SS
+    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    return formattedDate;
+};
+
+
 
 function formatDateToDDMMYYYY(inputDate) 
   {

@@ -143,38 +143,149 @@ module.exports = class drivers
         }
     };
 
-    static async editdriver(id, name, email, contact_no, emergency_contact_no, date_of_birth, licence_no, description, profile_image, licence_img)
-    {
-        try
-        {
-            return await new Promise(async(resolve, reject)=>
-            {
-                let uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.upload.profilephoto);
-                // console.log(uploadprofile_image);
-                let uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.upload.licence);
-                // console.log(uploadprofile_image);
-                let upQuery = `UPDATE ${constants.tableName.drivers} d SET d.name = '${name}', d.email = '${email}', d.contact_no = '${contact_no}', d.emergency_contact_no = '${emergency_contact_no}', d.date_of_birth = '${date_of_birth}', d.licence_no = '${licence_no}', d.description = '${description}', d.licence_img  = '${uploadlicence_img}', d.profile_image = '${uploadprofile_image}', d.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE d.id = '${id}'`;
-                // console.log(upQuery);
-                con.query(upQuery, (err, result) =>
-                {
-                    // console.log(result);
-                    if(result.affectedRows > 0)
-                    {
+    // static async editdriver(id, name, email, contact_no, emergency_contact_no, date_of_birth, licence_no, description, profile_image, licence_img)
+    // {
+    //     try
+    //     {
+    //         return await new Promise(async(resolve, reject)=>
+    //         {
+    //             console.log('Licence Image', licence_img);
+    //             console.log('Profile Image', profile_image);
+    //             if(profile_image === null || profile_image === undefined && licence_img === null || licence_img === undefined )
+    //             {
+    //                 console.log('Idhar');
+    //                 let upQuery = `UPDATE ${constants.tableName.drivers} d SET d.name = '${name}', d.email = '${email}', d.contact_no = '${contact_no}', d.emergency_contact_no = '${emergency_contact_no}', d.date_of_birth = '${date_of_birth}', d.licence_no = '${licence_no}', d.description = '${description}', d.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE d.id = '${id}'`;
+    //                 // console.log(upQuery);
+    //                 con.query(upQuery, (err, result) =>
+    //                 {
+    //                     // console.log(result);
+    //                     if(result.affectedRows > 0)
+    //                     {
+    //                         console.log('Driver data updated successfully');
+    //                         resolve(result);
+    //                     }
+    //                     else
+    //                     {
+    //                         resolve('err')
+    //                     }
+    //                 });
+    //             }
+    //             if(licence_img === null || licence_img === undefined)
+    //             {
+    //                 console.log('I');
+    //                 let uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.upload.profilephoto);
+    //                 let upQuery = `UPDATE ${constants.tableName.drivers} d SET d.name = '${name}', d.email = '${email}', d.contact_no = '${contact_no}', d.emergency_contact_no = '${emergency_contact_no}', d.date_of_birth = '${date_of_birth}', d.licence_no = '${licence_no}', d.description = '${description}', d.profile_image = '${uploadprofile_image}', d.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE d.id = '${id}'`;
+    //                 // console.log(upQuery);
+    //                 con.query(upQuery, (err, result) =>
+    //                 {
+    //                     // console.log(result);
+    //                     if(result.affectedRows > 0)
+    //                     {
+    //                         console.log('Driver data updated successfully');
+    //                         resolve(result);
+    //                     }
+    //                     else
+    //                     {
+    //                         resolve('err')
+    //                     }
+    //                 });
+    //             }
+    //             if(profile_image === null || profile_image === undefined)
+    //             {
+    //                 console.log('Idhar Udhar');
+    //                 let uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.upload.licence);
+    //                 let upQuery = `UPDATE ${constants.tableName.drivers} d SET d.name = '${name}', d.email = '${email}', d.contact_no = '${contact_no}', d.emergency_contact_no = '${emergency_contact_no}', d.date_of_birth = '${date_of_birth}', d.licence_no = '${licence_no}', d.description = '${description}', d.licence_img  = '${uploadlicence_img}', d.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE d.id = '${id}'`;
+    //                 // console.log(upQuery);
+    //                 con.query(upQuery, (err, result) =>
+    //                 {
+    //                     // console.log(result);
+    //                     if(result.affectedRows > 0)
+    //                     {
+    //                         console.log('Driver data updated successfully');
+    //                         resolve(result);
+    //                     }
+    //                     else
+    //                     {
+    //                         resolve('err')
+    //                     }
+    //                 });
+    //             }
+    //             else 
+    //             {
+    //                 console.log('Idhar Udhar ADhar');
+    //                 let uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.upload.profilephoto);
+    //                 // console.log(uploadprofile_image);
+    //                 let uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.upload.licence);
+    //                 // console.log(uploadprofile_image);
+    //                 let upQuery = `UPDATE ${constants.tableName.drivers} d SET d.name = '${name}', d.email = '${email}', d.contact_no = '${contact_no}', d.emergency_contact_no = '${emergency_contact_no}', d.date_of_birth = '${date_of_birth}', d.licence_no = '${licence_no}', d.description = '${description}', d.licence_img  = '${uploadlicence_img}', d.profile_image = '${uploadprofile_image}', d.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE d.id = '${id}'`;
+    //                 // console.log(upQuery);
+    //                 con.query(upQuery, (err, result) =>
+    //                 {
+    //                     // console.log(result);
+    //                     if(result.affectedRows > 0)
+    //                     {
+    //                         console.log('Driver data updated successfully');
+    //                         resolve(result);
+    //                     }
+    //                     else
+    //                     {
+    //                         resolve('err')
+    //                     }
+    //                 });
+    //             }               
+    //         });            
+    //     }
+    //     catch (error)
+    //     {
+    //         console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "editdriver". Which is designed to edit particular data of the driver.');            
+    //     }
+    // }
+
+    static async editdriver(id, name, email, contact_no, emergency_contact_no, date_of_birth, licence_no, description, profile_image, licence_img) {
+        try {
+            console.log('Licence Image', licence_img);
+            console.log('Profile Image', profile_image);
+    
+            let uploadprofile_image, uploadlicence_img;
+    
+            if (profile_image !== null && profile_image !== undefined) {
+                uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.upload.profilephoto);
+            }
+    
+            if (licence_img !== null && licence_img !== undefined) {
+                uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.upload.licence);
+            }
+    
+            let upQuery = `UPDATE ${constants.tableName.drivers} d SET d.name = '${name}', d.email = '${email}', d.contact_no = '${contact_no}', d.emergency_contact_no = '${emergency_contact_no}', d.date_of_birth = '${date_of_birth}', d.licence_no = '${licence_no}', d.description = '${description}',`;
+    
+            if (uploadprofile_image) {
+                upQuery += ` d.profile_image = '${uploadprofile_image}',`;
+            }
+    
+            if (uploadlicence_img) {
+                upQuery += ` d.licence_img = '${uploadlicence_img}',`;
+            }
+    
+            upQuery += ` d.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE d.id = '${id}'`;
+    
+            return await new Promise((resolve, reject) => {
+                con.query(upQuery, (err, result) => {
+                    if (err) {
+                        console.error(err);
+                        resolve('err');
+                    } else if (result.affectedRows > 0) {
                         console.log('Driver data updated successfully');
                         resolve(result);
+                    } else {
+                        resolve('err');
                     }
-                    else
-                    {
-                        resolve('err')
-                    }
-                });                
-            });            
-        }
-        catch (error)
-        {
-            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "editdriver". Which is designed to edit particular data of the driver.');            
+                });
+            });
+        } catch (error) {
+            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "editdriver". Which is designed to edit particular data of the driver.');
         }
     }
+    
 
     static async assignserviceprovider(dId, sId)
     {

@@ -176,6 +176,7 @@ exports.addCustomer = async (req, res, next) =>
 
 exports.editCustomer = async (req, res, next) =>
 {
+    console.log(req.body.date_of_birth);
     // The below line is for going to the model function to implement the code for editing or updating the existing customer.
     const customers = await customer.editcustomer
     (
@@ -189,7 +190,7 @@ exports.editCustomer = async (req, res, next) =>
         // is written to convert them into SQL DATETIME format. FORMAT is YYYY-MM-DD HH-MM-SS
         time.changeDateToSQLFormat(req.body.date_of_birth), 
         req.body.id_proof_no, // Identity proof number of the customer
-        req.files.id_proof_image // Image of the identity proof
+        req.files && req.files.id_proof_image !== undefined ? req.files.id_proof_image : null // Perform the null check here // Image of the identity proof
     );
     
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
