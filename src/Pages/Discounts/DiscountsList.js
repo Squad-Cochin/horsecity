@@ -28,7 +28,6 @@ const DiscountsDeatails = () => {
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("") ;
     const [modal_delete, setmodal_delete] = useState(false);
-
     const pageLimit = config.pageLimit;
 
 
@@ -78,6 +77,7 @@ const DiscountsDeatails = () => {
         type: !add_list ? discount[0]?.type : '',
         rate: !add_list ? discount[0]?.rate : '',
     };
+
     // Later in your code, when setting the initial state
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
@@ -98,19 +98,20 @@ const DiscountsDeatails = () => {
 
         }
     });
-    // Add discount
-    async function addDiscount(val){
-        let addDsc = await addNewDiscounts(val);
-        if(addDsc.code === 200){
-            setErrors("")
-            setAdd_list(false);
-            setmodal_list(false);
-            getAllData(pageNumber)
-        }else{
-            setErrors("")
-            setErrors(addDsc.message)
-        }
-    }
+
+            // Add discount
+            async function addDiscount(val){
+                let addDsc = await addNewDiscounts(val);
+                if(addDsc.code === 200){
+                    setErrors("")
+                    setAdd_list(false);
+                    setmodal_list(false);
+                    getAllData(pageNumber)
+                }else{
+                    setErrors("")
+                    setErrors(addDsc.message)
+                }
+            }
 
         // Update Discount
         async function editDiscounts(data){
@@ -131,7 +132,6 @@ const DiscountsDeatails = () => {
             setmodal_delete(!modal_delete);
         }
 
-  
         async function getAllData(page) {
             let getDiscounts = await getDiscountsPageData(page || 1);
             setDiscounts(getDiscounts.discounts);
@@ -141,8 +141,10 @@ const DiscountsDeatails = () => {
 
         /**This function is used to remove a discount*/
         async function remove_data(id) {
-            await removeDiscount(id)
-            window.location.reload();
+          let Dsc =   await removeDiscount(id)
+        if (Dsc.code === 200) {
+            getAllData(pageNumber)
+           } 
         }
 
     return (
@@ -162,7 +164,6 @@ const DiscountsDeatails = () => {
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
                                                     <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
-
                                                 </div>
                                            </Col>
                                         </Row>
@@ -188,18 +189,25 @@ const DiscountsDeatails = () => {
                                                             <td className="abbreviation">{item.rate}</td>
                                                             <td className="created_at">{item.created_at}</td>
                                                             <td>
-                                                            <div>
-                                                            <div className="d-flex gap-2">
-                                                                            <div className="status">
-                                                                                <button className="btn btn-sm btn-success status-item-btn"
-                                                                                    data-bs-toggle="modal" data-bs-target="#showModal"
-                                                                                    onClick={(event) => toggleStatus(event.target, item.id)}>
-                                                                                    {item.status}
-                                                                                </button>
-                                                                            </div>
-                                                                        </div>
-                                                             </div>
-                                                            </td>
+                                                    {item.status === "ACTIVE" ?
+                                                        <button
+                                                            className="btn btn-sm btn-success status-item-btn"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#showModal"
+                                                            onClick={(event) => toggleStatus(event.target, item.id)}
+                                                        >
+                                                            {item.status}
+                                                        </button> :
+                                                        <button
+                                                            className="btn btn-sm btn-danger status-item-btn"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#showModal"
+                                                            onClick={(event) => toggleStatus(event.target, item.id)}
+                                                        >
+                                                            {item.status}
+                                                        </button>
+                                                    }
+                                                </td>
                                                             <td>
                                                                 <div className="d-flex gap-2">
                                                                     <div className="edit">
@@ -298,32 +306,10 @@ const DiscountsDeatails = () => {
                         <div className="hstack gap-2 justify-content-end">
                             <button type="button" className="btn btn-light" onClick={() => { setmodal_list(false); setAdd_list(false); }}>Close</button>
                             <button type="submit" className="btn btn-success" id="add-btn">{add_list ? 'Add discount' : 'Update discount'}</button>
-                            {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>
                 </form>
             </Modal>
-
-            {/* Remove Modal
-            <Modal isOpen={modal_delete} toggle={() => { tog_delete(); }} className="modal fade zoomIn" id="deleteRecordModal" centered >
-                <div className="modal-header">
-                    <Button type="button" onClick={() => setmodal_delete(false)} className="btn-close" aria-label="Close"> </Button>
-                </div>
-                <ModalBody>
-                    <div className="mt-2 text-center">
-                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
-                            colors="primary:#f7b84b,secondary:#f06548" style={{ width: "100px", height: "100px" }}></lord-icon>
-                        <div className="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                            <h4>Are you Sure ?</h4>
-                            <p className="text-muted mx-4 mb-0">Are you Sure You want to Remove this Record ?</p>
-                        </div>
-                    </div>
-                    <div className="d-flex gap-2 justify-content-center mt-4 mb-2">
-                        <button type="button" className="btn w-sm btn-light" onClick={() => setmodal_delete(false)}>Close</button>
-                        <button type="button" className="btn w-sm btn-danger " id="delete-record">Yes, Delete It!</button>
-                    </div>
-                </ModalBody>
-            </Modal> */}
         </React.Fragment>
     );
 };

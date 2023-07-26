@@ -1,4 +1,4 @@
-export const MENU_IMAGE = "MENU_IMAGE"
+export const SETTINGS_SUCCESS = "SETTINGS_SUCCESS"
  export const API_ERROR = "SETTINGS_API_ERROR"
 
 // export const LOGOUT_USER = "LOGOUT_USER"

@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from "react"
 import { Container, Row, Col } from "reactstrap"
 import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 
+// import { useSelector } from "react-redux";
 const Footer = () => {
   const [pageTitle, setPageTitle] = useState('HORSCITY');
   
@@ -13,6 +14,11 @@ const Footer = () => {
     let settingsData = await getSettingsPageData();
     setPageTitle(settingsData?.settingsPageData[0]?.application_title);
    }
+  //  const { data } = useSelector(state => ({
+  //   data: state.settings.data,
+  // }));
+  // console.log("DAta",data);
+ 
   return (
     <React.Fragment>
       <footer className="footer">

@@ -1,14 +1,14 @@
 import {
-  MENU_IMAGE,
+  SETTINGS_SUCCESS,
   // API_ERROR,
 } from "./actionTypes"
 
-export const uploadMenuImg = (file) => {
-  console.log("Fileeee",file);
-  // return {
-  //   type: MENU_IMAGE,
-  //   payload: { file } ,
-  // }
+export const uploadSettings = (data) => {
+
+  return {
+    type: SETTINGS_SUCCESS,
+    payload: data,
+  }
 }
 
 

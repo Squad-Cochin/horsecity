@@ -42,10 +42,9 @@ const TaxationDeatails = () => {
             setTaxation(taxationData.taxation);
         }
         setmodal_list(!modal_list);
-        
-      
           // Later in your code, when setting the initial state
     }
+
     const initialValues = {
         name : !add_list ? taxation[0]?.name : '',
         type : !add_list ? taxation[0]?.type : '',
@@ -136,8 +135,11 @@ const TaxationDeatails = () => {
 
     /**This function is used to remove a service provider*/
     async function remove_data(id) {
-        await removeTaxation(id)
-        window.location.reload();
+      let tax =   await removeTaxation(id)
+      console.log("test",test);
+      if (tax.code === 200) {
+        getAllData(pageNumber)
+    } 
     }
 
     return (
@@ -145,26 +147,21 @@ const TaxationDeatails = () => {
             <div className="page-content">
                 <Container fluid>
                     <Breadcrumbs title="Tables" breadcrumbItem="Taxations" />
-
                     <Row>
                         <Col lg={12}>
                             <Card>
                                 <CardHeader>
                                     <h4 className="card-title mb-0">Add, Edit & Remove</h4>
                                 </CardHeader>
-
                                 <CardBody>
                                     <div id="customerList">
                                         <Row className="g-4 mb-3">
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
                                                     <Button color="success" className="add-btn" onClick={() => tog_list('ADD')}  id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
-                                              
                                                 </div>
                                             </Col>
-                              
                                         </Row>
-
                                         <div className="table-responsive table-card mt-3 mb-1">
                                         <table className="table align-middle table-nowrap" id="customerTable">
                                         <thead className="table-light">
@@ -204,7 +201,6 @@ const TaxationDeatails = () => {
                                                         >
                                                             {item.status}
                                                         </button>
-
                                                     }
                                                 </td>
                                                 <td>
@@ -235,8 +231,6 @@ const TaxationDeatails = () => {
                                             ))}
                                         </tbody>
                                         </table>
-
-
                                             <div className="noresult" style={{ display: "none" }}>
                                                 <div className="text-center">
                                                     <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
@@ -248,7 +242,6 @@ const TaxationDeatails = () => {
                                                 </div>
                                             </div>
                                         </div>
-
                                         <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">
                                                 {pageNumber > 1 ?
@@ -272,29 +265,6 @@ const TaxationDeatails = () => {
                             </Card>
                         </Col>
                     </Row>
-
-                    {/* <Row>
-                 <Col xl={4}>
-                            <Card>
-                           
-                                <CardBody>    
-                                    <div id="users">
-                                        <SimpleBar style={{ height: "242px" }} className="mx-n3">
-                                            <ListGroup className="list mb-0" flush>
-                                                <ListGroupItem data-id="1">
-                                              </ListGroupItem>
-                                            </ListGroup>
-                                        </SimpleBar>
-                                    </div>
-                                </CardBody>
-                            </Card>
-                        </Col>
-
-
-                       
-                    </Row> */}
-
-                
                 </Container>
             </div>
 
@@ -353,19 +323,6 @@ const TaxationDeatails = () => {
                         required
                         />
                     </div>
-
-
-                        {/* <div className="mb-3">
-                            <label htmlFor="date-field" className="form-label">Joining Date</label>
-                            <Flatpickr
-                                className="form-control"
-                                options={{
-                                    dateFormat: "d M, Y"
-                                }}
-                                placeholder="Select Date"
-                            />
-                        </div> */}
-
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">

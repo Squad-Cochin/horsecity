@@ -133,7 +133,7 @@ function* socialLogin({ payload: { data, history, type } }) {
   }
 }
 
-function* authSaga() {
+function* settings() {
   yield takeEvery(LOGIN_USER, loginUser);
   yield takeLatest(SOCIAL_LOGIN, socialLogin);
   yield takeEvery(LOGOUT_USER, logoutUser);
@@ -141,4 +141,4 @@ function* authSaga() {
   yield takeEvery(CHANGE_NEW_PASSWORD, updateNewPassword);
 }
 
-export default authSaga;
+export default settings;

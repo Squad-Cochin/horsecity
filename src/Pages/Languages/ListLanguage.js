@@ -24,13 +24,13 @@ const LanguageDeatails = () => {
     const [numberOfData, setNumberOfData] = useState(0);
     const [errors, setErrors] = useState("");
     const [lng_file, setLngFile] = useState(null)
-    const [modal_delete, setmodal_delete] = useState(false);
+
 
     const pageLimit = config.pageLimit;
     useEffect(() => {
         getAllData(1)
     }, [])
-    console.log("lng", language);
+
     async function tog_list(param, productId) {
         if (param === 'ADD') {
             setErrors("")
@@ -115,7 +115,7 @@ const LanguageDeatails = () => {
             getAllData(pageNumber)
         } else {
             setErrors("")
-            console.log("err",updateLng.message);
+            console.log("err", updateLng.message);
             setErrors(updateLng.message)
         }
     }
@@ -134,8 +134,10 @@ const LanguageDeatails = () => {
 
     /**This function is used to remove a language*/
     async function remove_data(id) {
-        await removeLanguage(id)
-        window.location.reload();
+        let lng = await removeLanguage(id)
+        if (lng.code === 200) {
+            getAllData(pageNumber)
+        }
     }
     return (
         <React.Fragment>
@@ -159,18 +161,16 @@ const LanguageDeatails = () => {
 
                                                 </div>
                                             </Col>
-
                                         </Row>
-
                                         <div className="table-responsive table-card mt-3 mb-1">
                                             <table className="table align-middle table-nowrap" id="Table">
                                                 <thead className="table-light">
                                                     <tr>
                                                         <th className="index" data-sort="index">#</th>
-
                                                         <th className="sort" data-sort="name">Name</th>
                                                         <th className="sort" data-sort="abbreviation">Abbreviation</th>
                                                         <th className="sort" data-sort="created_at">Created At</th>
+                                                        <th className="sort" data-sort="status">status</th>
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
@@ -182,15 +182,27 @@ const LanguageDeatails = () => {
                                                             <td className="abbreviation">{item.abbreviation}</td>
                                                             <td className="created_at">{item.created_at}</td>
                                                             <td>
-                                                                <div className="d-flex gap-2">
-                                                                    <div className="status">
-                                                                        <button className="btn btn-sm btn-success status-item-btn"
-                                                                            data-bs-toggle="modal" data-bs-target="#showModal"
-                                                                            onClick={(event) => toggleStatus(event.target, item.id)}>
-                                                                            {item.status}
-                                                                        </button>
-                                                                    </div>
-                                                                    {/* <div className="edit">
+                                                                {item.status === "ACTIVE" ?
+                                                                    <button
+                                                                        className="btn btn-sm btn-success status-item-btn"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#showModal"
+                                                                        onClick={(event) => toggleStatus(event.target, item.id)}
+                                                                    >
+                                                                        {item.status}
+                                                                    </button> :
+                                                                    <button
+                                                                        className="btn btn-sm btn-danger status-item-btn"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#showModal"
+                                                                        onClick={(event) => toggleStatus(event.target, item.id)}
+                                                                    >
+                                                                        {item.status}
+                                                                    </button>
+                                                                }
+                                                            </td>
+                                                            <td>
+                                                                {/* <div className="edit">
                                                                         <button
                                                                             className="btn btn-sm btn-success edit-item-btn"
                                                                             data-bs-toggle="modal"
@@ -199,24 +211,21 @@ const LanguageDeatails = () => {
                                                                             Edit
                                                                         </button>
                                                                     </div> */}
-                                                                    <div className="remove">
-                                                                        <button
-                                                                            className="btn btn-sm btn-danger remove-item-btn"
-                                                                            data-bs-toggle="modal"
-                                                                            data-bs-target="#deleteRecordModal"
-                                                                            onClick={() => remove_data(item?.id)}
-                                                                        >
-                                                                            Remove
-                                                                        </button>
-                                                                    </div>
+                                                                <div className="remove">
+                                                                    <button
+                                                                        className="btn btn-sm btn-danger remove-item-btn"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#deleteRecordModal"
+                                                                        onClick={() => remove_data(item?.id)}
+                                                                    >
+                                                                        Remove
+                                                                    </button>
                                                                 </div>
                                                             </td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
                                             </table>
-
-
                                         </div>
 
                                         <div className="d-flex justify-content-end">
@@ -312,7 +321,6 @@ const LanguageDeatails = () => {
                         <div className="hstack gap-2 justify-content-end">
                             <button type="button" className="btn btn-light" onClick={() => { setmodal_list(false); setAdd_list(false); }}>Close</button>
                             <button type="submit" className="btn btn-success" id="add-btn">{add_list ? 'Add language' : 'Update language'}</button>
-                            {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>
                 </form>

@@ -1,20 +1,19 @@
 import {
-  MENU_IMAGE,
+  SETTINGS_SUCCESS,
   API_ERROR,
 } from "./actionTypes";
 
 const initialState = {
   error: "",
-  file : "",
+  data : "",
 };
 
 const settings = (state = initialState, action) => {
   switch (action.type) {
-    case MENU_IMAGE:
+    case SETTINGS_SUCCESS:
       state = {
         ...state,
-        error: "",
-        file : action.payload.file,
+        data : action.payload,
       };
       break;
     case API_ERROR:

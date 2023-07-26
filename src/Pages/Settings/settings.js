@@ -8,7 +8,7 @@ import { getSettingsPageData , getTaxationsNames, getCurrenciesNames, getLanguag
 import { useFormik } from "formik";
 import { uploadMenuImg } from "../../store/actions";
 import { useSelector, useDispatch } from "react-redux";
-
+// import { uploadSettings } from "../../store/actions";
 //i18n
 import i18n from "../../i18n";
 const SettingPage = () => 
@@ -93,7 +93,8 @@ const SettingPage = () =>
                       console.log("abb",data.abbreviation);
                       i18n.changeLanguage('en');
                       localStorage.setItem("I18N_LANGUAGE", 'en');
-                      
+                      // let test = "hello"
+                      // dispatch(uploadSettings(test));
                       window.location.reload();
                   }else{
                       setErrors("")
