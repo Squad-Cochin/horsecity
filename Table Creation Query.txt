@@ -334,6 +334,8 @@ CREATE TABLE vehicles_images
     deleted_at DATETIME DEFAULT NULL
 );
 
+
+
 CREATE TABLE enquiries
 (
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -343,19 +345,14 @@ CREATE TABLE enquiries
     FOREIGN KEY (vehicle_id) REFERENCES vehicles(id),
     driver_id INT(11),
     FOREIGN KEY (driver_id) REFERENCES drivers(id),
-    serviceprovider_id_id INT(11),
-    FOREIGN KEY (serviceprovider_id_id) REFERENCES service_providers(id),
-    name VARCHAR(155) NOT NULL,
-    email VARCHAR(150) UNIQUE NOT NULL,
-    contact_no VARCHAR(15) UNIQUE NOT NULL,
+    serviceprovider_id INT(11),
+    FOREIGN KEY (serviceprovider_id) REFERENCES service_providers(id),
     pickup_location VARCHAR(255) NOT NULL,
     drop_location VARCHAR(255) NOT NULL,
     no_of_horse INT(3) NOT NULL,
     description VARCHAR(255) NOT NULL,
-    status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME ,
-    updated_at DATETIME DEFAULT NULL ,
-    deleted_at DATETIME DEFAULT NULL   
+    status ENUM ('CONFIRMED', 'NOTCONFIRMED') DEFAULT 'NOTCONFIRMED',
+    created_at DATETIME  
 );
 
 CREATE TABLE quotations

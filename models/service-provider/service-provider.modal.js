@@ -173,17 +173,84 @@ exports.getNameServiceProviders = () =>
             con.query(selQuery,(err,data)=>{
 
                 if(!err){
-
-               
                      resolve({serviceProviders : data})
-             
-            }})
+              }})
           
         }catch(err){
             console.log('Error while feching service providers', err);
+        }
+    })    
+}
+
+
+
+/**For getting particlar service provider vehicle */
+exports.getSpVehicles = (spID) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {       
+            console.log(spID);
+            const selQuery = `SELECT vh.id, vh.vehicle_number
+            FROM ${constants.tableName.vehicles} AS vh
+            WHERE vh.service_provider_id = '${spID}'
+            AND vh.deleted_at IS NULL AND vh.status = '${constants.status.active}'`;
+
+
+            con.query(selQuery,async(err,data)=>{
+                // console.log(data);
+                if(data?.length != 0){                  
+                    
+                    resolve({vehicles : data})
+                }else{
+                    resolve({vehicles : []})
+                }
+            })
+        }catch(err){
+            resolve({vehicles : "NOTFOUND"})
+            console.log('Error while feching vehicles', err);
         }
 
 
     })    
    
 }
+
+
+/**For getting particlar service provider driver */
+exports.getSpDrivers = (spID) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {       
+       
+            const selQuery = `SELECT dvr.id, dvr.name
+            FROM ${constants.tableName.assign_drivers} AS asd
+            JOIN ${constants.tableName.drivers} dvr ON asd.driver_id = asd.id
+            WHERE asd.service_provider_id = '${spID}'
+            AND dvr.deleted_at IS NULL AND dvr.status = '${constants.status.active}'`;
+
+
+            con.query(selQuery,async(err,data)=>{
+                // console.log(data);
+                if(data?.length != 0){                  
+                    
+                    resolve({drivers : data})
+                }else{
+                    resolve({drivers :[] })
+                }
+            })
+        }catch(err){
+            resolve({drivers : "NOTFOUND"})
+            console.log('Error while feching particular service provider drivers', err);
+        }
+
+
+    })    
+   
+}
+
+                         
+             

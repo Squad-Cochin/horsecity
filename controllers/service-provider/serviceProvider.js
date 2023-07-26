@@ -162,3 +162,53 @@ exports.getNameServiceProviders = async(req,res)=>
     });
    }
 }
+
+
+/**For getting particlar service provider vehicle */
+exports.getSpVehicles = async(req,res)=>
+{
+    let getSpVehicles = await serviceProvider.getSpVehicles(req.params.id);
+  
+   if(getSpVehicles?.vehicles == 'NOTFOUND'){
+    return res.status(200).send
+    ({
+        code: 400,
+        success: false,
+        message: constants.responseMessage.getOneErr,
+
+    });
+   }else{
+    return res.status(200).send
+    ({
+        code: 200,
+        success: true,
+        message: constants.responseMessage.getOne,
+        data : getSpVehicles
+    });
+   }
+}
+
+
+/**For getting particlar service provider driver */
+exports.getSpDrivers = async(req,res)=>
+{
+    let getSpDrivers = await serviceProvider.getSpDrivers(req.params.id);
+  
+   if(getSpDrivers?.drivers == 'NOTFOUND'){
+    return res.status(200).send
+    ({
+        code: 400,
+        success: false,
+        message: constants.responseMessage.getOneErr,
+
+    });
+   }else{
+    return res.status(200).send
+    ({
+        code: 200,
+        success: true,
+        message: constants.responseMessage.getOne,
+        data : getSpDrivers
+    });
+   }
+}
