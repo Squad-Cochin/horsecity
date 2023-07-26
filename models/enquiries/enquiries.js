@@ -35,6 +35,7 @@ console.log(requestBody);
                                   data[i].created_at
                                 )}`;
                               }
+                              console.log("data",data);
                             resolve({totalCount : count, enquiries : data})
                         }
                 })
