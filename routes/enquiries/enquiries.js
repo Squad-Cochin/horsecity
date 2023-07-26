@@ -6,7 +6,8 @@ module.exports = function(app)
 {
     /**For getting all enquiries */
     app.post(`/${process.env.apiToken}/getAll/enquiries`,enquiry.getAllEnquiries); 
-
+    
+    /**For getting one enquiries */
     app.get(`/${process.env.apiToken}/getOne/enquiry/:id`, enquiry.getOneEnquiry);
 
 
