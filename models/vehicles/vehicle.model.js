@@ -215,7 +215,7 @@ module.exports = class vehicles
     {
         try
         {
-            console.log(safety_certicate);
+            // console.log(safety_certicate);
             if(safety_certicate === null || safety_certicate === undefined)
             {
                 // let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);

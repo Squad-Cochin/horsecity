@@ -38,10 +38,7 @@ exports.getAllServiceProviders = (requestBody) =>
         }catch(err){
             console.log('Error while feching service providers', err);
         }
-
-
-    })    
-   
+    });   
 }
 
 

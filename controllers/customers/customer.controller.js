@@ -60,8 +60,7 @@ exports.getOne= async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for getting all details of particular customer.
     const customers = await customer.getone(req.params.id);
-    // console.log('Customer One Data: ',customers);
-    
+    // console.log('Customer One Data: ',customers);    
     // If any wrong id or some thing wrong entered, If that Id has no data then this if block of code will be executed
     if(customers === 'nodata')
     {
@@ -136,7 +135,7 @@ exports.addCustomer = async (req, res, next) =>
     else if (customers === 'INVALIDFORMAT')
     {
         console.log('Invalid Format of file submit for upload');
-        res.status(200).send
+        return res.status(200).send
         ({
             code : 400,
             status : true,
@@ -147,7 +146,7 @@ exports.addCustomer = async (req, res, next) =>
     else if(customers === 'NOATTACHEMENT')
     {
         console.log('No image uploaded for customer');
-        res.status(200).send
+        return res.status(200).send
         ({
             code : 400,
             status : true,
@@ -176,7 +175,6 @@ exports.addCustomer = async (req, res, next) =>
 
 exports.editCustomer = async (req, res, next) =>
 {
-    console.log(req.body.date_of_birth);
     // The below line is for going to the model function to implement the code for editing or updating the existing customer.
     const customers = await customer.editcustomer
     (
@@ -197,7 +195,7 @@ exports.editCustomer = async (req, res, next) =>
     if(customers === 'err')
     {
         console.log('Error while editing the customer data');
-        res.status(200).send
+        return res.status(200).send
         ({
             code : 400,
             status : true,
@@ -208,7 +206,7 @@ exports.editCustomer = async (req, res, next) =>
     else if(customers === 'INVALIDFORMAT')
     {
         console.log('Invalid Format of file submit for upload');
-        res.status(200).send
+        return res.status(200).send
         ({
             code : 400,
             status : true,
@@ -219,7 +217,7 @@ exports.editCustomer = async (req, res, next) =>
     else
     {
         console.log('Customer data edited successfully');
-        res.send
+        return res.status(200).send
         ({
             code : 200,
             status : true,

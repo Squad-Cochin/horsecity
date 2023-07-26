@@ -215,10 +215,8 @@ exports.editDriver = async (req, res, next) =>
         time.changeDateToSQLFormat(req.body.date_of_birth), // Date of birth of the driver
         req.body.licence_no, // Licence number of the driver
         req.body.description, // Description of the driver
-        // req.files.profile_image, // profile image of the driver
-        req.files && req.files.profile_image !== undefined ? req.files.profile_image : null,
-        // req.files.licence_img // Licence image of the driver
-        req.files && req.files.licence_img !== undefined ? req.files.licence_img : null
+        req.files && req.files.profile_image !== undefined ? req.files.profile_image : null, // profile image of the driver
+        req.files && req.files.licence_img !== undefined ? req.files.licence_img : null // Licence image of the driver
     );
 
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
@@ -256,8 +254,8 @@ exports.AssignServiceProvider = async (req, res, next) =>
     // The below line is for going to the model function to implement the code for assigning a driver to a service provider.
     const drivers = await driver.assignserviceprovider
     (
-        req.body.driver_id,
-        req.body.serviceProvider_id
+        req.body.driver_id, // Driver id in the request body
+        req.body.serviceProvider_id // Service Provider id in the request body
     );
 
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
@@ -328,8 +326,13 @@ exports.AssignServiceProvider = async (req, res, next) =>
     }
 };
 
+/**
+ * The below function is for the checking whether the driver is working under any service provider
+ */
 exports.getWorkPastServiceProvider = async (req, res, next) =>
 {
+    // The below line is for going to the model function to implement the code for get the service provider details. If a driver is registered under any driver.
+    // We need to give driver id in the params to look this otherwise it will not work
     const drivers = await driver.getworkpastserviceprovider(req.params.id);
     // console.log('Checking whether the data comming to controller: ', drivers);
     if(drivers.exist.length == 0)
@@ -343,6 +346,7 @@ exports.getWorkPastServiceProvider = async (req, res, next) =>
             data : drivers
         });
     }
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     else if(drivers === 'err')
     {
         console.log('Internal server error. While fetching the driver past service provider details');
@@ -353,6 +357,7 @@ exports.getWorkPastServiceProvider = async (req, res, next) =>
             message : `Internal server error. While fetching the driver past service provider details`
         });
     }
+    // If every thing went well and no issue came then,  this else if block of code will be executed.
     else
     {
         console.log('Drivers past service provider details fetched');
@@ -366,11 +371,18 @@ exports.getWorkPastServiceProvider = async (req, res, next) =>
     }
 };
 
+/**
+ * The below function is for unassigning or remove a driver from the service provider they are registered
+ */
 
 exports.UnAssignServiceProvider = async (req, res, next) =>
 {
+    // The below line is for going to the model function to implement the code for unassigning the driver from a service provider.
+    // We need to give assign_drivers table id in the params to remove this otherwise it will not work
     const drivers = await driver.unassignserviceprovider(req.params.id);
     // console.log(drivers);
+
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(drivers === 'err')
     {
         console.log('Error while driver is unassigned to their particular service provider');
@@ -381,6 +393,8 @@ exports.UnAssignServiceProvider = async (req, res, next) =>
             message : "Error while driver is unassigned to their particular service provider"
         });
     }
+    // If driver is successfully unassigned to the respective service provider then this if block of code will be executed.
+    // We need to give assign_drivers table id in the params to remove this otherwise it will not work
     if(drivers === 'unassigned')
     {
         console.log('Driver is unassigned to their particular service provider');
@@ -391,6 +405,8 @@ exports.UnAssignServiceProvider = async (req, res, next) =>
             message : "Driver is unassigned to their particular service provider"
         });
     }
+    // If driver is already unassigned to the respective service provider then this if block of code will be executed.
+    // We need to give assign_drivers table id in the params to remove this otherwise it will not work
     if(drivers === 'alreadyunassigned')
     {
         console.log('Driver is already unassigned to their particular service provider');
