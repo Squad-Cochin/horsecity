@@ -62,7 +62,7 @@ const ListVehiclesTable = () =>
          height: !add_list ? vehicle[0]?.height : '',
          no_of_horse: !add_list ? vehicle[0]?.no_of_horse : '',
          air_conditioner: !add_list ? vehicle[0]?.air_conditioner : '',
-         temperature_manageable: !add_list ? vehicle[0]?.temp_manageable : '',
+         temperature_manageable: !add_list ? vehicle[0]?.temperature_manageable : '',
          vehicle_images: !add_list ? vehicle[0]?.images : [],
          vehicle_registration_number: !add_list ? vehicle[0]?.registration_no : '',
          gcc_travel_allowed: !add_list ? vehicle[0]?.gcc_travel_allowed : '',
@@ -99,8 +99,9 @@ const ListVehiclesTable = () =>
             setAdd_list(!add_list); // Toggle 'add_list' state
         } else {
             let data = await getSingleVechileData(productId)
+            console.log("DDDD",data)
             setVehicle([data]); // Set the 'vehicle' state to the found vehicle data
-            setCertificatePreview(vehicle[0]?.safety_certicate)
+            setCertificatePreview(data.safety_certicate)
         }
         setmodal_list(!modal_list); // Toggle 'modal_list' state
     }
@@ -109,7 +110,9 @@ const ListVehiclesTable = () =>
     async function tog_view(productId) {
         console.log("rr",productId)
         let data = await getSingleVechileData(productId)
+        console.log("DD",data)
         setVehicle([data]); // Set the 'vehicle' state to the found vehicle data
+        setCertificatePreview(data.safety_certicate)
         setView_modal(!view_modal); // Toggle 'view_modal' state
     }
 
@@ -117,7 +120,7 @@ const ListVehiclesTable = () =>
     async function remove_data(id)
     {
         await removeVehicle(id); // Call the 'removeVehicle' function with 'id' parameter
-        window.location.reload();
+        getAllData(pageNumber)
     }
 
     // The below function is for delete button of a particular vehicle.
@@ -162,7 +165,6 @@ const ListVehiclesTable = () =>
         initialValues, // Initial values for the form
         onSubmit: (values) =>{
             values.safety_certicate = certificateImage
-            setmodal_list(false);
             if (add_list) 
             {   
                 addVechile(values);
@@ -195,6 +197,7 @@ const ListVehiclesTable = () =>
             setAdd_list(false);
             setmodal_list(false);
             getAllData(pageNumber)
+            setCertificateImage("")
         }else{
             setErrors("")
             setErrors(updatedVehicle.message)
@@ -209,6 +212,7 @@ const ListVehiclesTable = () =>
             setAdd_list(false);
             setmodal_list(false);
             getAllData(pageNumber)
+            setCertificateImage("")
         }else{
             setErrors("")
             setErrors(addedVechile?.message)
@@ -361,7 +365,7 @@ const ListVehiclesTable = () =>
             {/* Add new vehicle modal */}
             <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
                 {/* The below line is for the heading of pop up of edit exixing vehicle or adding new vehicle. */}
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }}> {add_list ? 'Add Vehicle' : 'Edit Vehicle'} </ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setCertificateImage(""); setmodal_list(false); tog_list(add_list ? 'ADD' : 'EDIT'); }}> {add_list ? 'Add Vehicle' : 'Edit Vehicle'} </ModalHeader>
                 <form className="tablelist-form" onSubmit={validation.handleSubmit}>
                     <ModalBody>                        
                         {/* The below element is adding the name of the service provider. Whose vehicle is being added */}
@@ -588,7 +592,6 @@ const ListVehiclesTable = () =>
                                 className="form-control"
                                 placeholder="Upload Safty Certificate Image"
                                 onChange={handleIdProofImageChange}
-                                required
                             />
                         </div>
 
@@ -1209,7 +1212,7 @@ const ListVehiclesTable = () =>
                         </div>
                         <div className="mb-3">
                             <div><label htmlFor="vehicle_certification_image-field" className="form-label">Vehicle Safety Certicate</label></div>
-                            <img id="vehicle_certification_image-field" name="safety_certicate" src={validation.values.safety_certicate || ""} alt="Id Proof Preview" style={{ maxWidth: '100px' }} />
+                            <img id="vehicle_certification_image-field" name="safety_certicate" src={certificatePreview || ""} alt="Id Proof Preview" style={{ maxWidth: '100px' }} />
                         </div>
                     </ModalBody> {/* Here all the element will be done*/}
                     {/* All the buttons are add from the footer */}

@@ -44,6 +44,16 @@ export async function getSPSingleData(spId){
     }
 }
 
+export async function getSPVehiclesData(spId){
+    try {
+        const { data } = await axios.get(`${url.GET_SP_VEHICLES_DATA_URL}/${spId}`);
+        console.log("ddata",data)
+        return(data)
+    } catch (error) {
+        return null
+    }
+}
+
 export async function getSPUserName(){
     try {
         console.log("urr",url.GET_SP_USER_NAME)
@@ -180,8 +190,6 @@ export async function getSingleTaxationData(tId){
 }
 
 export async function getDiscountsPageData(pageNumber){
-
-
     try {
         let pageLimit = config.pageLimit;
         let reqObj = {
@@ -308,6 +316,26 @@ export async function getSingleDriverData(dId){
     }
 }
 
+export async function getSPDriverData(dId){
+    try {
+        const { data } = await axios.get(`${url.GET_SP_DRIVER_DATA_URL}/${dId}`);
+        console.log("SD",data)
+        return(data)
+    } catch (error) {
+        return null
+    }
+}
+
+export async function getDiscounts(){
+    try {
+        const { data } = await axios.get(`${url.GET_DISCOUNTS}`);
+        console.log("SD",data)
+        return(data)
+    } catch (error) {
+        return null
+    }
+}
+
 export async function getAssignedProviders(aId){
     try {
         console.log("id",aId)
@@ -365,7 +393,40 @@ export async function getVehicleImageData(id){
     }
 }
 
+export async function getEnquiriesData(pageNumber){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = {
+            "page" : pageNumber,
+            "limit" : pageLimit
+        }
+        console.log(reqObj)
+        const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
+        console.log(data)
+        return(data)
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data": {
+                "totalCount": 0,
+                "vehicles": []
+            }
+        }
+        return errorObj.data
+    }
+}
 
+export async function getSingleEnquiryData(dId){
+    try {
+        const { data } = await axios.get(`${url.GET_ENQUIRY_SINGLE_DATA_URL}/${dId}`);
+        console.log("SD",data)
+        return(data)
+    } catch (error) {
+        return null
+    }
+}
 
 // export async function getLanguageFile(){
 //     try {

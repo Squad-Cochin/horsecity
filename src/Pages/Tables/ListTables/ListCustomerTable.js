@@ -64,8 +64,8 @@ const ListCustomerTable = () => {
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
-            console.log(values);
             values.id_proof_image = updateImage;
+            console.log(values);
             if (add_list) {
                 //add new customer
                 addCustomer(values)
@@ -85,6 +85,7 @@ const ListCustomerTable = () => {
             setAdd_list(false);
             setmodal_list(false);
             getAllData(pageNumber)
+            setUpdateImage("")
         }else{
             setErrors("")
             setErrors(addCustomer.message)
@@ -99,6 +100,7 @@ const ListCustomerTable = () => {
             setAdd_list(false);
             setmodal_list(false);
             getAllData(pageNumber)
+            setUpdateImage("")
         }else{
             setErrors("")
             setErrors(updatedCustomer.message)
@@ -116,6 +118,7 @@ const ListCustomerTable = () => {
     /**This function is used to toggle the modal for adding/editing customers 
     * and set the selected customer */
     async function tog_list(param, productId) {
+        setErrors("")
         if (param === 'ADD') {
             setAdd_list(!add_list);
         }else{
@@ -137,7 +140,7 @@ const ListCustomerTable = () => {
     /**This function is used to remove a service provider*/
     async function remove_data(id) {
         await removeCustomer(id);
-        window.location.reload();
+        getAllData(pageNumber)
     }
 
     /**Function for changing customers status */
@@ -315,7 +318,7 @@ const ListCustomerTable = () => {
 
             {/********* Add Modal*************** */}
             <Modal className="extra-width" isOpen={modal_list} toggle={() => { setmodal_list(false); setAdd_list(false); setIdProofPreview(null) }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); setAdd_list(false); setIdProofPreview(null) }}>{add_list ? 'Add Customer' : 'Edit Customer'} </ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); setAdd_list(false); setIdProofPreview(null); setUpdateImage("")}}>{add_list ? 'Add Customer' : 'Edit Customer'} </ModalHeader>
                 <form className="tablelist-form"
                     onSubmit={validation.handleSubmit}>
                     <ModalBody>
@@ -403,9 +406,9 @@ const ListCustomerTable = () => {
                                 options={{
                                     dateFormat: "d-m-Y"
                                 }}
-                                value={validation.values.date_of_birth || ""}
+                                value= ""
                                 onChange={(dates) =>validation.setFieldValue('date_of_birth', dates[0])}
-                                placeholder="Select Date"
+                                placeholder={validation.values.date_of_birth || "Select Date"}
                             />
                         </div>
                         {/** Customer Id proof no */}
@@ -446,7 +449,7 @@ const ListCustomerTable = () => {
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() => { setmodal_list(false); setAdd_list(false); setIdProofPreview(null) }}>Close</button>
+                            <button type="button" className="btn btn-light" onClick={() => { setUpdateImage(""); setmodal_list(false); setAdd_list(false); setIdProofPreview(null) }}>Close</button>
                             <button type="submit" className="btn btn-success" id="add-btn">{add_list ? 'Add Customer' : 'Update Customer'}
                             </button>
                         </div>

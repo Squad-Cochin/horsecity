@@ -40,10 +40,6 @@ const ListVehicleImages = () =>
     useEffect(() => {
         if (id) {
             getAllData()
-            // let getvehicles = getVehicleImageData();
-            // const data = getvehicles?.find((item) => item?.id === parseInt(id));
-            // setVehicle(data); // Set the 'vehicle' state to the found vehicle data
-            // setVhImages(data?.images); // Set the 'vhImages' state to the vehicle images
         }
     }, []);
 
@@ -57,43 +53,7 @@ const ListVehicleImages = () =>
     // function for get data all Vechile data
     async function getAllData() {
         let getvehicleImages = await getVehicleImageData(id);
-        console.log("ss",getvehicleImages)
         setVhImages(getvehicleImages)
-        // setSproviders(getSP.serviceProviders);
-        // setVehicles(getvehicles?.vehicles);
-        // setPageNumber(page);
-        // setNumberOfData(getvehicles?.totalCount);
-    }
-
-    // The below function is the Status button
-    function toggleStatus(button, vehiclesId) 
-    {
-        var currentStatus = button.innerText.trim();
-        let getvehicles = getVehicleImageData();
-        if (currentStatus === 'ACTIVE') 
-        {
-            button.innerText = 'INACTIVE';
-            button.classList.remove('btn-success');
-            button.classList.add('btn-danger');
-            // Find the corresponding vehicle by ID
-            const vehicle = vhImages.find((v) => v.id === vehiclesId);
-            if (vehicle) 
-            {
-                vehicle.status = 'INACTIVE';
-            }
-        }
-        else if (currentStatus === 'INACTIVE')
-        {
-            button.innerText = 'ACTIVE';
-            button.classList.remove('btn-danger');
-            button.classList.add('btn-success');
-            // Find the corresponding vehicle by ID
-            const vehicle = vhImages.find((v) => v.id === vehiclesId);
-            if (vehicle) 
-            {
-                vehicle.status = 'ACTIVE';
-            }
-        }   
     }
 
     // The below function is showing the data. 
@@ -173,7 +133,7 @@ const ListVehicleImages = () =>
      /**This function is used to remove a service provider*/
     async function remove_data(id) {
         await removeVehicleImage(id)
-        window.location.reload();
+        getAllData()
     }
 
     return (     

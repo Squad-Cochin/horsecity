@@ -10,14 +10,14 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
 /**
  * The below one is Shaheer's Computer Details
  */
-// export const API_BASE_URL = "http://192.168.200.211:8000";
-// const apiBaseUrl = "http://192.168.200.211:8000";
+export const API_BASE_URL = "http://192.168.200.211:8000";
+const apiBaseUrl = "http://192.168.200.211:8000";
 
 /**
  * The below one is Saurabh's Computer Details
  */
-export const API_BASE_URL = "http://192.168.200.130:8000";
-const apiBaseUrl = "http://192.168.200.130:8000";
+// export const API_BASE_URL = "http://192.168.200.130:8000";
+// const apiBaseUrl = "http://192.168.200.130:8000";
 /**
  * The below one is own Computer Details
  */
@@ -48,6 +48,10 @@ export const POST_SP_EDIT_URL = apiBaseUrl + token + "/update/serviceprovider"
 export const PUT_SP_REMOVE = apiBaseUrl + token + "/remove/serviceprovider"
 export const GET_SP_USER_NAME = apiBaseUrl + token + "/getAll/serviceprovidersName"
 
+// Discount
+export const GET_DISCOUNTS = apiBaseUrl + token + "/getAll/active/discounts"
+
+
 /**CUSTOMER */
 export const GET_CUSTOMER_ALL_DATA_URL = apiBaseUrl + token + "/getAll/customers"
 export const GET_CUSTOMER_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/customer"
@@ -61,8 +65,10 @@ export const GET_VEHICLES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/vehicles"
 export const GET_VEHICLES_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/vehicle"
 export const POST_VEHICLES_ADD_URL = apiBaseUrl + token + "/addNew/vehicle"
 export const PUT_VEHICLES_UPDATE_STATUS = apiBaseUrl + token + "/updateStatus/vehicle"
-export const POST_VEHICLES_EDIT_URL = apiBaseUrl + token + "/updateData/vehicle"
+export const POST_VEHICLES_EDIT_URL = apiBaseUrl + token + "/edit/vehicle"
 export const PUT_VEHICLES_REMOVE = apiBaseUrl + token + "/removeVehicle"
+export const GET_SP_VEHICLES_DATA_URL = apiBaseUrl + token + "/serviceprovider/vehicle"
+export const GET_SP_DRIVER_DATA_URL = apiBaseUrl + token + "/serviceprovider/driver"
 
 /**VEHICLES_IMAGES */
 export const GET_VEHICLES_IMAGES_DATA_URL = apiBaseUrl + token + "/getAllImages/vehicle"
@@ -84,6 +90,13 @@ export const POST_ASSIGN_DRIVERS = apiBaseUrl + token + "/assign/driver"
 export const GET_ASSIGNED_DRIVERS = apiBaseUrl + token + "/past/service/provider/driver"
 export const PUT_ASSIGN_DRIVERS_REMOVE = apiBaseUrl + token + "/unassign/driver"
 
+/**ENQUIRY */
+export const GET_ENQUIRY_ALL_DATA_URL = apiBaseUrl + token + "/getAll/enquiries"
+export const GET_ENQUIRY_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/enquiry"
+// export const POST_DRIVERS_ADD_URL = apiBaseUrl + token + "/add/driver"
+// export const PUT_DRIVERS_UPDATE_STATUS = apiBaseUrl + token + "/update/driver"
+// export const POST_DRIVERS_EDIT_URL = apiBaseUrl + token + "/edit/driver"
+// export const PUT_DRIVERS_REMOVE = apiBaseUrl + token + "/remove/driver"
 
 /**TAXATION */
 /**This URL basis of page & limit  */

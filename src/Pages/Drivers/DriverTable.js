@@ -21,7 +21,7 @@ import { useFormik } from "formik";
 import { addNewDriver, assignNewSP } from '../../helpers/ApiRoutes/addApiRoutes';
 import { removeDriver, removeAssignedDriver } from '../../helpers/ApiRoutes/removeApiRoutes';
 import { updateDriver , updateDriverStatus } from '../../helpers/ApiRoutes/editApiRoutes'; 
-import { getDriversData, getSingleDriverData, getSPUserName, getAssignedProviders } from '../../helpers/ApiRoutes/getApiRoutes'; 
+import { getDriversData, getSingleDriverData, getAssignedProviders } from '../../helpers/ApiRoutes/getApiRoutes'; 
 import config from '../../config';
 
 
@@ -118,8 +118,6 @@ const ListTables = () =>
 
     // function for open add and edit modal
     async function tog_list(param, productId){
-        // Toggle 'modal_list' state
-        setmodal_list(!modal_list);
         // Toggle 'add_list' state if 'param' is 'ADD'
         if (param === 'ADD'){
             // Reset profile and license image previews
@@ -130,17 +128,19 @@ const ListTables = () =>
             // Find the driver data with matching 'productId' in the 'drivers' array
             let driverData = await getSingleDriverData(productId)
             // Set the 'driver' state to the found driver data
-            setDriver(driverData.drivers);
+            setDriver(driverData);
             // Set profile and license image previews to driver's profile_image and licence_img
-            setProfileImagePreview(driverData.drivers[0].profile_image);
-            setLicenceImagePreview(driverData.drivers[0].licence_img);
+            setProfileImagePreview(driverData[0].profile_image);
+            setLicenceImagePreview(driverData[0].licence_img);
         }
+        // Toggle 'modal_list' state
+        setmodal_list(!modal_list);
     }
 
     // function for open view modal  
     async function tog_view(productId){
         let driver = await getSingleDriverData(productId)
-        setDriver(driver.drivers)
+        setDriver(driver)
         setView_modal(!view_modal);
     }
 
@@ -171,7 +171,6 @@ const ListTables = () =>
     async function toggleAssign(id){
         console.log(id)
         let data = await getAssignedProviders(id)
-        // let data = await getSPUserName()
         setSproviders(data.notexist)
         setAssignedSProviders(data.exist)
         setModal_assign(!modal_assign);
@@ -230,8 +229,9 @@ const ListTables = () =>
         let assignSP = await assignNewSP(selectedDriver, val.service_providers_id)
         if(assignSP.code === 200){
             setErrors("")
-            setAssignSP(false);
-            setModal_assign(false);
+            let data = await getAssignedProviders(selectedDriver)
+            setSproviders(data.notexist)
+            setAssignedSProviders(data.exist)
             setSelectedDriver();
             validation.values.service_providers_id = "";
         }else{
@@ -242,19 +242,10 @@ const ListTables = () =>
 
     // function for remove assigned to service provider
     async function removeAsigned(id){
-        // alert(id + " remove url on progress");
         await removeAssignedDriver(id);
-        window.location.reload();
-        // console.log(removeSP)
-        // if(removeSP.code === 200){
-        //     setErrors("")
-        //     setAdd_list(false);
-        //     setmodal_list(false);
-        //     getAllData(pageNumber)
-        // }else{
-        //     setErrors("")
-        //     setErrors(removeSP.message)
-        // }
+        let data = await getAssignedProviders(selectedDriver)
+        setSproviders(data.notexist)
+        setAssignedSProviders(data.exist)
     }
     
     
@@ -630,7 +621,7 @@ const ListTables = () =>
                     </div>
 
                     {/* The Below element is displaying the last time when the driver details are updated. */}
-                    <div className="mb-3">
+                    {/* <div className="mb-3">
                     <label htmlFor="last_update_date-field" className="form-label">Last Update Date</label>
                     <input
                         type="text"
@@ -640,7 +631,7 @@ const ListTables = () =>
                         value={validation.values.updated_at || ""}
                         readOnly
                     />
-                    </div>
+                    </div> */}
 
                     {/* Profile image of the image*/}
                     <div className="mb-3">
@@ -669,7 +660,7 @@ const ListTables = () =>
 
             {/* This is the assign button model. We will assign the particular driver. */}
             <Modal className="extra-width" isOpen={modal_assign} toggle={() => { toggleAssign(); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel"toggle={() => { setModal_assign(false); tog_view('Assign To Provider'); }}>Assign To Provider</ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setModal_assign(false); }}>Assign To Provider</ModalHeader>
                 <form className="tablelist-form"
                  onSubmit={validation.handleSubmit}>
                     <ModalBody>
