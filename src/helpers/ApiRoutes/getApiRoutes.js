@@ -391,6 +391,33 @@ export async function getAssignedProviders(aId){
     }
 }
 
+export async function getSingleInvoicePaymentHistroy(pId)
+{
+    try
+    {
+        console.log(`Invoice id for which payment detail is fetched: `, pId);
+        const { data } = await axios.get(`${url.GET_INVOICE_SINGLE_INVOICE_PAYMENT_HISTROY}/${pId}`);
+        console.log(`Single Invoice Payment Histroy: `, data);
+        return(data);       
+    }
+    catch(error)
+    {
+        let errorObj =  
+        {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data": 
+            {
+                "totalCount": 0,
+                "vehicles": []
+            }
+        }
+        return errorObj.data      
+    }
+}
+
+
 export async function getLanguagesPageData(pageNumber){
     try {
         let pageLimit = config.pageLimit;
