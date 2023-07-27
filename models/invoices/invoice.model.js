@@ -74,7 +74,7 @@ module.exports = class invoices
             {
                 let selQuery = `SELECT i.id, 
                 i.invoice_no AS iId, 
-                i.created_at AS iDate, 
+                DATE_FORMAT(i.created_at, '%d-%m-%Y')AS iDate, 
                 c.name AS customer_name, 
                 sp.name AS companyName, 
                 q.pickup_location AS customerAddress, 
