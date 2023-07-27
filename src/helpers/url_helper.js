@@ -76,7 +76,9 @@ export const POST_VEHICLES_IMAGES_ADD_URL = apiBaseUrl + token + "/addImage/vehi
 export const PUT_VEHICLES_IMAGE_UPDATE_STATUS = apiBaseUrl + token + "/updateStatus/vehicle/image"
 export const PUT_VEHICLES_IMAGES_REMOVE = apiBaseUrl + token + "/removeImage/vehicle/image"
 
-
+// INVOICE PAGE
+export const POST_INVOICE_ALL_DATA_URL = apiBaseUrl + token + "/getAll/invoices"
+export const GET_INVOICE_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/invoice"
 /**DRIVERS */
 export const GET_DRIVERS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/drivers"
 export const GET_DRIVERS_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/driver"
