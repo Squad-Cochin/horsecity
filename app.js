@@ -39,6 +39,7 @@ require('./routes/serviceProvider/serviceProvider.route')(app);  // Comment: Imp
 require('./routes/vehicles/vehicle.route')(app); // Comment: Imports the route handlers for vehicles and associates them with the Express application.
 require('./routes/vehicles/vehicleImages.route')(app); // Comment: Imports the route handlers for vehicleImages and associates them with the Express application.
 require('./routes/applicationSettings/settings/settings')(app) // Comment: Imports the route handlers for settings and associates them with the Express application.
+require('./routes/invoices/invoices.route')(app) // Comment: Imports the route handlers for invoices and associates them with the Express application.
 require('./routes/applicationSettings/taxation/taxation')(app) //Taxations
 require('./routes/applicationSettings/discounts/discounts')(app); //Discounts
 require('./routes/applicationSettings/currencies/currencies')(app); //Currencies
