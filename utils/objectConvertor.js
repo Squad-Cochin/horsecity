@@ -86,6 +86,7 @@ exports.getAllInvoice = (data) =>
   {
     dataResult.push
     ({
+      id : item.id,
       iId : item.invoice_no,
       quotation_id : item.quotation_id,
       customer_name : item.name,

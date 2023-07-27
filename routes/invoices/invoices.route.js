@@ -17,4 +17,17 @@ module.exports = function (app)
             isValidIdInTheParams(constants.tableName.invoices),
             invoiceController.getOne
             );
+            
+
+    app.post(
+        `/${process.env.apiToken}/add/amount/:id`, 
+        isValidIdInTheParams(constants.tableName.invoices),
+        invoiceController.enterAmountForParticularInvoice
+        );
+
+    app.get(
+        `/${process.env.apiToken}/payment/histroy/:id`, 
+        isValidIdInTheParams(constants.tableName.invoices),
+        invoiceController.getPaymentHistroyOfParticularInvoice
+    )
 };

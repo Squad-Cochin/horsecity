@@ -12,6 +12,8 @@ module.exports =
     {
         active : `ACTIVE`,
         inactive : `INACTIVE`,
+        paid : `PAID`,
+        partPaid : `PARTIALLY PAID`
     },
     enquiry_status  :
     {
@@ -107,6 +109,7 @@ module.exports =
         particularVehicleImageSuccess : 'Particular vehicle image succesfully uploaded',
         particularVehicleImageError : 'Error while uploading the particular vehicle image',
         
+        
     },
 
     timeOffSet :
@@ -154,7 +157,8 @@ module.exports =
         vehicles : `vehicles`,
         vehicles_breakouts : `vehicles_breakout`,
         vehicles_images : `vehicles_images`,
-        assign_drivers : `assign_drivers`
+        assign_drivers : `assign_drivers`,
+        payment_records : `payment_records`
     }
   
 }

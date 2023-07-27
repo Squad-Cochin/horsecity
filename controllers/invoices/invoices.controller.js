@@ -83,3 +83,51 @@ exports.getOne = async (req, res) =>
     }
 };
 
+exports.enterAmountForParticularInvoice = async(req, res) =>
+{
+    
+    const invoices = await invoice.enteramountforparticularinvoice(req.params.id, req.body.amount)
+
+    if(invoices === 'nodata')
+    {
+        console.log('Error while inserting the data into enter amount ');
+        return res.status(200).json
+        ({
+            code: 400,
+            status: false,
+            message: constant.responseMessage.errorInsert,
+        });
+
+    }
+    if(invoices.length !== 0)
+    {
+        console.log('Amount data inserted successfully');
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: "Amount data inserted successfully",
+        });
+    }
+};
+
+exports.getPaymentHistroyOfParticularInvoice = async (req, res) =>
+{
+    const invoices = await invoice.getpaymenthistroyofparticularinvoice(req.params.id);
+    if(invoices === 'nodata')
+    {
+        console.log('Error while inserting the data into enter amount ');
+        return res.status(200).json
+        ({
+            code: 400,
+            status: false,
+            message: constant.responseMessage.errorInsert,
+        });
+    }
+
+
+};
+
+
+
+
