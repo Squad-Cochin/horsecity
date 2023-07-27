@@ -282,6 +282,37 @@ export async function getTaxationsNames(){
     }
 }
 
+export async function getInvoicesData(pageNumber)
+{
+    try 
+    {
+        // let pageLimit = config.pageLimit;
+        let reqObj =
+        {
+            "page" : 1,
+            "limit" : 1
+        }
+        const { data } = await axios.post(`${url.POST_INVOICE_ALL_DATA_URL}`, reqObj);
+        console.log("Invoices: ",data);
+        return(data)
+    }
+    catch (error) 
+    {
+        let errorObj =
+        {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data":
+            {
+                "totalCount": 0,
+                "serviceProvider": []
+            }
+        }
+        return errorObj.data
+    }
+};
+
 export async function getDriversData(pageNumber){
     try {
         let pageLimit = config.pageLimit;
@@ -315,6 +346,19 @@ export async function getSingleDriverData(dId){
         return null
     }
 }
+
+export async function getSingleInvoiceData(iId){
+    try
+    {
+        console.log(url.GET_INVOICE_SINGLE_DATA_URL+"/"+iId)
+        const { data } = await axios.get(`${url.GET_INVOICE_SINGLE_DATA_URL}/${iId}`);
+        console.log("Single Invoice:",data)
+        return(data)
+    } catch (error) {
+        return null
+    }
+}
+
 
 export async function getSPDriverData(dId){
     try {

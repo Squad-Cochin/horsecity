@@ -21,7 +21,6 @@ import { APIClient } from "../api_helper";
 
 
 
-
   export function getDriversData(){
 
     if(Drivers){
@@ -78,7 +77,7 @@ import { APIClient } from "../api_helper";
     return null ;
   }
 
-  //Get all languages
+  //Get all languagess
   export function getLanguages(){
     if(Languages){
       return Languages ;
@@ -87,7 +86,7 @@ import { APIClient } from "../api_helper";
   }
 
   //Get all Invoices
-  export function getInvoice(){
+  export function getInvoicesData(){
     if(Invoices){
       return Languages ;
     }

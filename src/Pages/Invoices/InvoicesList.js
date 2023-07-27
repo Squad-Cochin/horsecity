@@ -11,25 +11,34 @@ import { Invoices } from '../../CommonData/Data/Invoices';
 // import { getInvoice, getLedgerData } from '../../helpers/ApiRoutes/authApiRoutes';
 import { getLedgerData } from '../../helpers/ApiRoutes/authApiRoutes';
 import html2canvas from 'html2canvas';
+import config from '../../config';
+/**IMPORTED APIs */
+import { getInvoicesData, getSingleInvoiceData, getAssignedProviders } from '../../helpers/ApiRoutes/getApiRoutes'; 
 
 const InvoiceDetails = () =>
 {
     const [ ledger, setLedger] = useState([])
     const [ ledg, setLedg] = useState([]);
-    // const [modal_list, setmodal_list] = useState(false);
+    const [modal_list, setmodal_list] = useState(false);
     const [view_modal, setView_modal] = useState(false);
     const [modal, setModal] = useState(false);
-    // const [invoices, setInvoices] = useState([]);
+    const [invoices, setInvoices] = useState([]);
     const [invoice, setInvoice] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [toValue, setToValue] = useState('');
     const [subjectValue, setSubjectValue] = useState('');
     const [bodyValue, setBodyValue] = useState('');
     const invoiceRef = useRef(null); // Reference to the invoice section for PDF generation
+    const [ pageNumber, setPageNumber ] = useState(1);
+    const [ numberOfData, setNumberOfData ] = useState(0);
+    const [ errors, setErrors ] = useState("")
+    const pageLimit = config.pageLimit;
 
     useEffect(() => {
       // setInvoices(getInvoice());
       setLedger(getLedgerData());
+      getAllData(1)
+      
     }, []);
 
     const handleOpenModal = () =>{
@@ -104,16 +113,33 @@ const InvoiceDetails = () =>
     }
   };
 
-  function tog_view(productId)
+  async function tog_view(productId)
   {
-    const data = Invoices?.find((item) => item?.id === productId);
-    console.log('Data : ',data.iId);
-    const data2 = ledger?.filter((item) => item?.invoiceId === data.iId);
-    console.log("dat2",data2);
-    setInvoice([data]);
-    setLedg(data2);
-    setView_modal(!view_modal);
+    console.log("reach1",productId)
+    let invoiceData = await getSingleInvoiceData(productId)
+    console.log("dd",invoiceData)
+    setView_modal(!view_modal)
+    setInvoice(invoiceData)
+    // Toggle 'add_list' state if 'param' is 'ADD'
+  // Toggle 'modal_list' state
+
+    // const data = Invoices?.find((item) => item?.id === productId);
+    // console.log('Data : ',data.iId);
+    // const data2 = ledger?.filter((item) => item?.invoiceId === data.iId);
+    // console.log("dat2",data2);
+    // setInvoice([data]);
+    // setLedg(data2);
+    // setView_modal(!view_modal);
   }
+
+  // function for get data all drivers data
+  async function getAllData(page) {
+    let getInvoices = await getInvoicesData(page || 1);
+    console.log("Get",getInvoices)
+    setInvoices(getInvoices.invoices);
+    setPageNumber(page);
+    setNumberOfData(getInvoices.totalCount);
+}
 
 
   useEffect(() =>
@@ -164,9 +190,10 @@ const InvoiceDetails = () =>
                             </tr>
                           </thead>
                           <tbody className="list form-check-all">
-                            {Invoices.map((item, index) => (
-                              <tr key={index}>
-                                <td className="index text-center">{index + 1}</td> 
+                            {invoices.map((item, index) => (
+                              <tr key={index.id}>
+                                <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
+                                {/* <td className="index text-center">{index + 1}</td>  */}
                                 <td className="invoice_number">{item.iId}</td>
                                 <td className="quotation_id">{item.quotation_id}</td>
                                 <td className="customer_name">{item.customer_name}</td>
@@ -185,12 +212,30 @@ const InvoiceDetails = () =>
                         </table>
                       </div>
                       <div className="d-flex justify-content-end">
+                          <div className="pagination-wrap hstack gap-2">
+                            {pageNumber > 1 ?
+                                <Link 
+                                    className="page-item pagination-prev disabled" 
+                                    onClick={()=> getAllData(pageNumber - 1)}
+                                >
+                                  Previous
+                                </Link>
+                            : null }
+                            <ul className="pagination listjs-pagination mb-0"></ul>
+                              {numberOfData > pageLimit * pageNumber ? 
+                                <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}>
+                                  Next
+                                </Link> 
+                              : null }
+                          </div>
+                        </div>
+                      {/* <div className="d-flex justify-content-end">
                         <div className="pagination-wrap hstack gap-2">
                           <Link className="page-item pagination-prev disabled" to="#">Previous</Link>
                             <ul className="pagination listjs-pagination mb-0"></ul>
-                          <Link className="page-item pagination-next" to="#">Next</Link>
-                        </div>
-                      </div>
+                          <Link className="page-item pagination-next" to="#">Next</Link> */}
+                        {/* </div>
+                      </div> */}
                     </div>
                   </CardBody>
                 </Card>
@@ -231,13 +276,13 @@ const InvoiceDetails = () =>
                         <div className="tm_invoice_section tm_invoice_to">
                           <p className="tm_mb2"><b className="tm_primary_color">Invoice To:</b></p>
                           <div>
-                            <p>{item.customer_name}<br />{item.customerAddress.Plot_No} {item.customerAddress.Road_Number}, {item.customerAddress.Area}<br />{item.cusCountry}<br />{item.customer_email}</p>
+                            <p>{item.customer_name}<br />{item.customerAddress}<br />{item.cusCountry}<br />{item.customer_email}</p>
                           </div>
                         </div>
                         <div className="tm_invoice_section tm_pay_to">
                           <p className="tm_mb2"><b className="tm_primary_color">Pay To:</b></p>
                             {/* <p>Laralink Ltd<br />86-90 Paul Street, Londo<br />England EC2A 4NE<br />demo@gmail.com</p> */}
-                          <p>{item.companName}<br />{item.companyAddress.Plot_No} {item.companyAddress.Road_Number}, {item.companyAddress.Area}<br />{item.comCountry}<br />{item.com_email}</p>
+                            <p>{item.companyName}<br />{item.companyAddress}<br />{item.comCountry}<br />{item.com_email}</p>
                         </div>
                       </div>
                     </div>
