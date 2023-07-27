@@ -7,7 +7,7 @@
 
 // Importing the react component
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+import { Alert, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import config from '../../../config';
 
@@ -17,24 +17,34 @@ import { useFormik } from "formik";
 // Importing the Enquiry Data 
 import { getEnquiriesData, getSingleEnquiryData, getSPUserName, getSPVehiclesData, getSPDriverData, getDiscounts } from "../../../helpers/ApiRoutes/getApiRoutes";
 
+import { addNewQuotaion } from "../../../helpers/ApiRoutes/addApiRoutes";
 //The purpose of the Breadcrumbs component is to display a breadcrumb navigation element. 
 import Breadcrumbs from "../../../components/Common/Breadcrumb";
-import { func } from 'prop-types';
+// import { func } from 'prop-types';
 // Import Flatepicker for using  date pick
 import Flatpickr from "react-flatpickr";
+import { func } from 'prop-types';
 
 // The name of the function. Which will be executed and used all over program. This funtion is having all the code
-const ListEnquiriesTable = () => 
-{
-    const [view_modal, setView_modal] = useState(false);
-    const [enquiry, setEnquiry] = useState(null);
-    const [enquiries, setEnquiries] = useState([]);
-    const [modal, setModal] = useState(false);
+const ListEnquiriesTable = () => {
+
+    const [ view_modal, setView_modal ] = useState(false);
+    const [ enquiry, setEnquiry ] = useState(null);
+    const [ enquiries, setEnquiries ] = useState([]);
+    const [ tAmount, setTAmount ] = useState(0)
+    const [ driverAmount, setDriverAmount ] = useState(0)
+    const [ vehicleAmount, setVehicleAmount ] = useState(0)
+    const [ taxation, setTaxation ] = useState([]);
+    const [ taxAmount, setTaxAmount ] = useState(0)
+    const [ taxApplayed, setTaxApplayed ] = useState("NO")
+    const [ finalAmount, setFinalAmount ] = useState(0);
+    const [ modal, setModal ] = useState(false);
     const [ serviceProviders, setServiceProviders ] = useState([]);
     const [ sPVechiles, setSPVechiles ] = useState([]);
     const [ sPDrivers, setSPDrivers ] = useState([]);
     const [ discounts, setDiscounts ] = useState([]);
-    // const [selectedImage, setSelectedImage] = useState('')
+    const [ selectedDiscount, setSelectedDiscount ] = useState("");
+    const [ discountAmount, setDiscountAmount ] = useState(0);
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("")
@@ -60,18 +70,19 @@ const ListEnquiriesTable = () =>
         drop_location : enquiry ? enquiry[0]?.drop_location : "",
         drop_country : enquiry ? enquiry[0]?.drop_country : "",
         no_of_horse : enquiry ? enquiry[0]?.no_of_horse : "",
-
+        current_amount : "",
         tax_amount : "",
         discount_amount : "",
-        final_amount : "",
+        vehicle_amount : "",
+        driver_amount : "",
         special_requirement : "",
         additional_service : "",
-        
         transportation_insurance_coverage : "",
         drop_date : "",
         pickup_date : "",
         discount_type_id : "",
         driver_id : "",
+        final_amount : "",
     };
 
     // validation function
@@ -80,15 +91,46 @@ const ListEnquiriesTable = () =>
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
+            values.discount_amount = discountAmount;
+            values.final_amount = finalAmount;
+            values.tax_amount = taxAmount;
+            values.current_amount = tAmount;
             addQuatation(values)
         }
     });
 
-    async function addQuatation(val){
-        console.log("vvv",val)
-        // let getEnqData = await getEnquiriesData(1);
+    function modalClose(){
+        setEnquiry(null);
+        setTAmount(0);
+        setDriverAmount(0);
+        setVehicleAmount(0);
+        setTaxAmount(0)
+        setFinalAmount(0);
+        setTaxation([]);
+        setTaxApplayed("NO");
+        setServiceProviders([]);
+        setSPVechiles([]);
+        setSPDrivers([]);
+        setDiscounts([]);
+        setSelectedDiscount("");
+        setDiscountAmount(0);
+        setModal(false);
+        setView_modal(false);
     }
 
+    async function addQuatation(val){
+        console.log("vvv",val)
+        let addQut = await addNewQuotaion(val)
+        if(addQut.code === 200){
+            setErrors("")
+            getAllData(pageNumber)
+            modalClose();
+        }else{
+            setErrors("")
+            setErrors(addQut.message)
+        }
+        // let getEnqData = await getEnquiriesData(1);
+    }
 
     // function for get data all service provider data
     async function getAllData(page) {
@@ -101,33 +143,27 @@ const ListEnquiriesTable = () =>
     /**
      * The below function is for the view buttone. It will be used for getting the details of the particular enquiry.
      */
-
     async function tog_view(productId)
     {
         let singleEnqData = await getSingleEnquiryData(productId)
+        console.log("errq",singleEnqData)
         setEnquiry(singleEnqData.enquiry);
         setView_modal(prevState => !prevState);
     }
 
-    /**
-     * This function is typically used in a React component and is responsible for toggling the value of a state variable, modal, by calling the setModal function.
-     */
-
     const tog_confirm = async (id) => 
     {
-        console.log("enq",validation.values.customer_id)
         let singleEnqData = await getSingleEnquiryData(id)
         let serviceProviderData = await getSPUserName()
-        console.log("spid",singleEnqData.enquiry[0]?.service_provider_id)
         const sPVechilesData = await getSPVehiclesData(singleEnqData.enquiry[0]?.service_provider_id) 
         setSPVechiles(sPVechilesData.vehicles)
         const sPDriverData = await getSPDriverData(singleEnqData.enquiry[0]?.service_provider_id)
         setSPDrivers(sPDriverData.drivers)
         const discountsData = await getDiscounts()
         setDiscounts(discountsData)
-        console.log("serviceProviderData",sPDriverData)
         setServiceProviders(serviceProviderData.serviceProviders)
         setEnquiry(singleEnqData.enquiry);
+        setTaxation(singleEnqData.tax);
         setModal(!modal);
     };  
     
@@ -136,10 +172,237 @@ const ListEnquiriesTable = () =>
         const sPDriverData = await getSPDriverData(id)
         setSPDrivers(sPDriverData.drivers)
         setSPVechiles(sPVechilesData.vehicles)
-        
-
     }
 
+    async function calcDiscount(val){
+        setSelectedDiscount(val);
+        if(val !== ""){
+            let discountType = discounts.find((d) => d.id === Number(val));
+            if(discountType.type === "PERCENTAGE"){
+                let discount = Number(tAmount) * (Number(discountType.rate)/100);
+                setDiscountAmount(discount)
+                setFinalAmount(Number(tAmount) - Number(discount));
+                if(taxApplayed === "YES"){
+                    console.log("tt",taxation[0])
+                    if(taxation[0]?.type === "PERCENTAGE"){
+                        let taxAmount = (Number(tAmount) - Number(discount)) * (Number(taxation[0].value) / 100)
+                        setTaxAmount(taxAmount)
+                        setFinalAmount(Number(tAmount) - Number(discount) + Number(taxAmount));
+                    }else{
+                        if(Number(taxation[0].value) < (Number(tAmount) - Number(discount))){
+                            setTaxAmount(0)
+                            setFinalAmount(Number(tAmount) - Number(discount));
+                        }else {
+                            setTaxAmount(Number(taxation[0].value))
+                            setFinalAmount(Number(tAmount) - Number(discount) + Number(taxation[0].value));
+                        }
+                        
+                    }
+                }else{
+                    setTaxAmount(0)
+                    setFinalAmount(Number(tAmount) - Number(discount));
+                }
+            }else{
+                if(Number(discountType.rate) < Number(tAmount)){
+                    setDiscountAmount(Number(discountType.rate))
+                    setFinalAmount(Number(tAmount) - Number(discountType.rate));
+                    if(taxApplayed === "YES"){
+                        console.log("tt",taxation[0])
+                        if(taxation[0]?.type === "PERCENTAGE"){
+                            let taxAmount = (Number(tAmount) - Number(discountType.rate) ) * (Number(taxation[0].value) / 100)
+                            setTaxAmount(Number(taxAmount))
+                            setFinalAmount(Number(tAmount) - Number(discountType.rate));
+                        }else{
+                            if(Number(taxation[0].value) < (Number(tAmount) - Number(discountType.rate) )){
+                                setTaxAmount(0)
+                                setFinalAmount(Number(tAmount) - Number(discountType.rate));
+                            }else {
+                                setTaxAmount(Number(taxation[0].value))
+                                setFinalAmount(Number(tAmount) - Number(discountType.rate) + Number(taxation[0].value));
+                            }
+                            
+                        }
+                    }else{
+                        setTaxAmount(0)
+                        setFinalAmount(Number(tAmount) - Number(discountType.rate))
+                    }
+                }else{
+                    setDiscountAmount(0)
+                    if(taxApplayed === "YES"){
+                        console.log("tt",taxation[0])
+                        if(taxation[0]?.type === "PERCENTAGE"){
+                            let taxAmount = (Number(tAmount)) * (Number(taxation[0].value) / 100)
+                            setTaxAmount(taxAmount)
+                            setFinalAmount(Number(tAmount) + Number(taxAmount));
+                        }else{
+                            if(Number(taxation[0].value) < (Number(tAmount) )){
+                                setTaxAmount(0)
+                                setFinalAmount(Number(tAmount))
+                            }else {
+                                setTaxAmount(taxation[0].value)
+                                setFinalAmount(Number(tAmount) + Number(taxation[0].value));
+                            }
+                        }
+                    }else{
+                        setTaxAmount(0)
+                        setFinalAmount(Number(tAmount))
+                    }
+                }
+            }
+        }else{
+            setDiscountAmount(0)
+            if(taxApplayed === "YES"){
+                console.log("tt",taxation[0])
+                if(taxation[0]?.type === "PERCENTAGE"){
+                    let taxAmount = (Number(tAmount)) * (Number(taxation[0].value) / 100)
+                    setTaxAmount(taxAmount)
+                    setFinalAmount(Number(tAmount) + Number(taxAmount));
+                }else{
+                    if(Number(taxation[0].value) < (Number(tAmount) )){
+                        setTaxAmount(0)
+                        setFinalAmount(Number(tAmount))
+                    }else {
+                        setTaxAmount(Number(taxation[0].value))
+                        setFinalAmount(Number(tAmount) + Number(Number(taxation[0].value)))
+                    }
+                    
+                }
+            }else{
+                setTaxAmount(0)
+                setFinalAmount(Number(tAmount))
+            }
+        }
+    }
+
+    async function totalAmount(val){
+        console.log("total",val,selectedDiscount,taxApplayed, taxAmount)
+        if(selectedDiscount !== ""){
+            let discountType = discounts.find((d) => d.id === Number(selectedDiscount));
+            if(discountType.type === "PERCENTAGE"){
+                let discount = Number(val) * (Number(discountType.rate)/100);
+                setDiscountAmount(Number(discount))
+                setFinalAmount(Number(val) - Number(discount));
+                if(taxApplayed === "YES"){
+                    console.log("tt",taxation[0])
+                    if(taxation[0]?.type === "PERCENTAGE"){
+                        let taxAmount = (Number(val) - Number(discount)) * (Number(taxation[0].value) / 100)
+                        setTaxAmount(Number(taxAmount))
+                        setFinalAmount(Number(val) - Number(discount) + Number(taxAmount));
+                    }else{
+                        if(taxation[0].value < (Number(val) - Number(discount))){
+                            setTaxAmount(0)
+                            setFinalAmount(Number(val) - Number(discount));
+                        }else {
+                            setTaxAmount(Number(taxation[0].value))
+                            setFinalAmount(Number(val) - Number(discount) + Number(taxation[0].value));
+                        }
+                        
+                    }
+                }else{
+                    setTaxAmount(0)
+                    setFinalAmount(Number(val) - Number(discount));
+                }
+            }else{
+                if(Number(discountType.rate) < Number(val)){
+                    setDiscountAmount(Number(discountType.rate))
+                    setFinalAmount(Number(val) - Number(discountType.rate));
+                    if(taxApplayed === "YES"){
+                        console.log("tt",taxation[0])
+                        if(taxation[0]?.type === "PERCENTAGE"){
+                            let taxAmount = (Number(val) - Number(discountType.rate)) * (Number(taxation[0].value) / 100)
+                            setTaxAmount(Number(taxAmount))
+                            setFinalAmount(Number(val) - Number(discountType.rate) + Number(taxAmount));
+                        }else{
+                            if(taxation[0].value < (Number(val) - Number(discountType.rate))){
+                                setTaxAmount(0)
+                                setFinalAmount(Number(val) - Number(discountType.rate));
+                            }else {
+                                setTaxAmount(Number(taxation[0].value))
+                                setFinalAmount(Number(val) - Number(discountType.rate) + Number(taxation[0].value));
+                            }
+                            
+                        }
+                    }else{
+                        setTaxAmount(0)
+                        setFinalAmount(Number(val));
+                    }
+                }else{
+                    setDiscountAmount(0)
+                    if(taxApplayed === "YES"){
+                        console.log("tt",taxation[0])
+                        if(taxation[0]?.type === "PERCENTAGE"){
+                            let taxAmount = Number(val) * (Number(taxation[0].value) / 100)
+                            setTaxAmount(taxAmount)
+                            setFinalAmount(Number(val) + Number(taxAmount));
+                        }else{
+                            if(Number(taxation[0].value) < Number(val)){
+                                setTaxAmount(0)
+                                setFinalAmount(Number(val));
+                            }else {
+                                setTaxAmount(Number(taxation[0].value))
+                                setFinalAmount(Number(val) + Number(taxation[0].value));
+                            }
+                            
+                        }
+                    }else{
+                        setTaxAmount(0)
+                        setFinalAmount(Number(val));
+                    }
+                }
+            }
+        }else{
+            setDiscountAmount(0)
+            setFinalAmount(Number(val));
+            if(taxApplayed === "YES"){
+                console.log("tt",taxation[0])
+                if(taxation[0]?.type === "PERCENTAGE"){
+                    let taxAmount = Number(val) * (Number(taxation[0].value) / 100)
+                    setTaxAmount(taxAmount)
+                    setFinalAmount(Number(val) + taxAmount);
+                    
+                }else{
+                    if(Number(taxation[0].value) < Number(val)){
+                        setTaxAmount(0)
+                        setFinalAmount(Number(val));
+                        
+                    }else {
+                        setTaxAmount(Number(taxation[0].value))
+                        setFinalAmount(Number(val) + Number(taxation[0].value));
+                    }
+                    
+                }
+            }else{
+                setTaxAmount(0)
+                setFinalAmount(Number(val));
+            }
+        }
+        setTAmount(val)
+    }
+
+    async function applayTaxation(val){
+        setTaxApplayed(val);
+        if(val === "YES"){
+            console.log("tt",taxation[0])
+            if(taxation[0]?.type === "PERCENTAGE"){
+                let taxAmount = (Number(tAmount) - Number(discountAmount)) * (Number(taxation[0].value) / 100)
+                setTaxAmount(taxAmount)
+                setFinalAmount(Number(tAmount) - Number(discountAmount) + Number(taxAmount));
+            }else{
+                if(Number(taxation[0].value) < (Number(tAmount) - Number(discountAmount))){
+                    setTaxAmount(0)
+                    setFinalAmount(Number(tAmount) - Number(discountAmount));
+                }else {
+                    setTaxAmount(Number(taxation[0].value))
+                    setFinalAmount(Number(tAmount) - Number(discountAmount) + Number(taxation[0].value));
+                }
+                
+            }
+        }else{
+            setTaxAmount(0)
+            setFinalAmount(Number(tAmount) - Number(discountAmount))
+        }
+        
+    }
 
     // the execution of all the object and element are written inside the return. Whenever this file will be called only the code inside the return written will be returned
     return (
@@ -199,6 +462,7 @@ const ListEnquiriesTable = () =>
                                                                     </div>
                                                                 </div>
                                                             </td>
+                                                            { item.status !== "CONFIRMED" ?
                                                             <td>
                                                                 <div className="d-flex gap-2">
                                                                     <div className="edit">
@@ -208,7 +472,7 @@ const ListEnquiriesTable = () =>
                                                                         </button>
                                                                     </div>
                                                                 </div>
-                                                            </td>
+                                                            </td> : null }
                                                         </tr>
                                                     ))}
                                                 </tbody>
@@ -255,272 +519,399 @@ const ListEnquiriesTable = () =>
             </div>
 
                {/****************************** Add Modal *************/}
-            <Modal className="extra-width" isOpen={modal} toggle={() => { setModal(false); setEnquiry(null) }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setModal(false); setEnquiry(null) }}>Confirm Enquery</ModalHeader>
+            <Modal className="extra-width" isOpen={modal} toggle={() => { modalClose() }} centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { modalClose() }}>Confirm Enquery</ModalHeader>
                 <form className="tablelist-form"
                     onSubmit={validation.handleSubmit}>
                     <ModalBody>
-                        {/* {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null} */}
+                        {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
                         <div className="mb-3">
-                                <label htmlFor="customerName-field" className="form-label">Customer Name</label>
+                        <label htmlFor="customerName-field" className="form-label">Customer Name</label>
+                        <input
+                            type="text"
+                            name="customer_name"
+                            id="customerName-field"
+                            className="form-control"
+                            value={validation.values.customer_name || ""}
+                            onChange={validation.handleChange}
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="service_provider_id-field" className="form-label">Service Provider Name</label>
+                            <select
+                                data-trigger
+                                name="service_provider_id"
+                                id="service_provider_id-field"
+                                className="form-control"
+                                value={validation.values.service_provider_id || ""}
+                                onChange={(e) => {validation.handleChange(e); serviceProviderSelected(e.target.value);}}
+                                onBlur={validation.handleBlur}
+                                required
+                            >
+                                <option value="">Select Service Provider</option>
+                            {serviceProviders.map((item, index) => (
+                                <option key={index} value={item.id}>{item.user_name}</option>
+                            ))}
+                            </select>
+                        </div>
+                        
+                        <div className="mb-3">
+                            <label htmlFor="vehicle_id-field" className="form-label">Vehicle Number</label>
+                            <select
+                                data-trigger
+                                name="vehicle_id"
+                                id="vehicle_id-field"
+                                className="form-control"
+                                value={validation.values.vehicle_id || ""}
+                                // onSelect={enquiry_details(validation.values.service_provider_id)}
+                                onChange={validation.handleChange}
+                                onBlur={validation.handleBlur}
+                                // required
+                            >
+                                <option value="">Select Any Vehicle Number</option>
+                                {sPVechiles.map((item, index) => (
+                                    <option key={index} value={item.id}>{item.vehicle_number}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="trip_type-field" className="form-label">Trip Type</label>
+                            <select
+                                data-trigger
+                                name="trip_type"
+                                id="trip_type-field"
+                                className="form-control"
+                                value={validation.values.trip_type || ""}
+                                // onSelect={enquiry_details(validation.values.service_provider_id)}
+                                onChange={validation.handleChange}
+                                onBlur={validation.handleBlur}
+                                required
+                            >
+                                <option value="">Select Trip Type</option>
+                                <option value="PRIVATE">Private</option>
+                                <option value="GCC">GCC</option>
+                                <option value="SHARING">Sharing</option>
+                            </select>
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="pickup_country-field" className="form-label">Pickup Country</label>
+                            <input
+                                type="text"
+                                name="pickup_country"
+                                id="pickup_country-field"
+                                className="form-control"
+                                value={validation.values.pickup_country || ""}
+                                onChange={validation.handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="pickup_location-field" className="form-label">Pickup Location</label>
+                            <input
+                                type="text"
+                                name="pickup_location"
+                                id="pickup_location-field"
+                                className="form-control"
+                                value={validation.values.pickup_location || ""}
+                                onChange={validation.handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="drop_country-field" className="form-label">Drop Country</label>
+                            <input
+                                type="text"
+                                name="drop_country"
+                                id="drop_country-field"
+                                className="form-control"
+                                value={validation.values.drop_country || ""}
+                                onChange={validation.handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="drop_location-field" className="form-label">Drop Location</label>
+                            <input
+                                type="text"
+                                name="drop_location"
+                                id="drop_location-field"
+                                className="form-control"
+                                value={validation.values.drop_location || ""}
+                                onChange={validation.handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="no_of_horse-field" className="form-label">Number of Hourse</label>
+                            <input
+                                type="text"
+                                name="no_of_horse"
+                                id="no_of_horse-field"
+                                className="form-control"
+                                value={validation.values.no_of_horse || ""}
+                                onChange={validation.handleChange}
+                                required
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="driver_id-field" className="form-label">Driver</label>
+                            <select
+                                data-trigger
+                                name="driver_id"
+                                id="driver_id-field"
+                                className="form-control"
+                                value={validation.values.driver_id || ""}
+                                onChange={validation.handleChange}
+                                onBlur={validation.handleBlur}
+                                required
+                            >
+                                <option value="">Select Any Vehicle Number</option>
+                                {sPDrivers.map((item, index) => (
+                                    <option key={index} value={item.id}>{item.name}</option>
+                                ))}
+                            </select>
+                        </div>
+                        
+                        <div className="mb-3">
+                            <label htmlFor="discount_type_id-field" className="form-label">Discount</label>
+                            <select
+                                data-trigger
+                                name="discount_type_id"
+                                id="discount_type_id-field"
+                                className="form-control"
+                                value={validation.values.discount_type_id || ""}
+                                onChange={(e)=> { validation.handleChange(e); calcDiscount(e.target.value);}}
+                                onBlur={validation.handleBlur}
+                                // required
+                            >
+                                <option value="">Select Discount</option>
+                                {discounts.map((item, index) => (
+                                    <option key={index} value={item.id}>{item.name}</option>
+                                ))}
+                            </select>
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="pickup_date-field" className="form-label">Pickup Date</label>
+                            <Flatpickr
+                                className="form-control"
+                                name='pickup_date'
+                                options={{
+                                    dateFormat: "d-m-Y"
+                                }}
+                                value= ""
+                                onChange={(dates) =>validation.setFieldValue('pickup_date', dates[0])}
+                                placeholder={validation.values.pickup_date || "Select Date"}
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="drop_date-field" className="form-label">Drop Date</label>
+                            <Flatpickr
+                                className="form-control"
+                                name='drop_date'
+                                options={{
+                                    dateFormat: "d-m-Y"
+                                }}
+                                value= ""
+                                onChange={(dates) =>validation.setFieldValue('drop_date', dates[0])}
+                                placeholder={validation.values.drop_date || "Select Date"}
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label className="form-label">
+                                Transportation Insurance Coverage
+                            </label>
+                            <div className="form-check">
                                 <input
-                                    type="text"
-                                    name="customer_name"
-                                    id="customerName-field"
-                                    className="form-control"
-                                    value={validation.values.customer_name || ""}
-                                    onChange={validation.handleChange}
-                                    />
-                                </div>
+                                type="radio"
+                                id="transportation-insurance-coverage-yes"
+                                name="transportation_insurance_coverage"
+                                className="form-check-input"
+                                value="TRUE"
+                                checked={
+                                    validation.values.transportation_insurance_coverage ===
+                                    "TRUE"
+                                }
+                                onChange={validation.handleChange}
+                                onBlur={validation.handleBlur}
+                                required
+                                />
+                                <label
+                                htmlFor="transportation-insurance-coverage-yes"
+                                className="form-check-label"
+                                >
+                                Yes
+                                </label>
+                            </div>
+                            <div className="form-check">
+                                <input
+                                type="radio"
+                                id="transportation-insurance-coverage-no"
+                                name="transportation_insurance_coverage"
+                                className="form-check-input"
+                                value="FALSE"
+                                checked={
+                                    validation.values.transportation_insurance_coverage === "FALSE  "
+                                }
+                                onChange={validation.handleChange}
+                                onBlur={validation.handleBlur}
+                                required
+                                />
+                                <label
+                                htmlFor="transportation-insurance-coverage-no"
+                                className="form-check-label"
+                                >
+                                No
+                                </label>
+                            </div>
+                        </div>
 
-                                <div className="mb-3">
-                                    <label htmlFor="service_provider_id-field" className="form-label">Service Provider Name</label>
-                                    <select
-                                        data-trigger
-                                        name="service_provider_id"
-                                        id="service_provider_id-field"
-                                        className="form-control"
-                                        value={validation.values.service_provider_id || ""}
-                                        onChange={(e) => {validation.handleChange(e); serviceProviderSelected(e.target.value);}}
-                                        onBlur={validation.handleBlur}
-                                        required
-                                    >
-                                        <option value="">Select Service Provider</option>
-                                    {serviceProviders.map((item, index) => (
-                                        <option key={index} value={item.id}>{item.user_name}</option>
-                                    ))}
-                                    </select>
-                                </div>
-                                {/* The below element is for the vehicle number feild in the view button.
-                                Which is for details of particular enquiry detail */}
-                                <div className="mb-3">
-                                    <label htmlFor="vehicle_id-field" className="form-label">Vehicle Number</label>
-                                    <select
-                                        data-trigger
-                                        name="vehicle_id"
-                                        id="vehicle_id-field"
-                                        className="form-control"
-                                        value={validation.values.vehicle_id || ""}
-                                        // onSelect={enquiry_details(validation.values.service_provider_id)}
-                                        onChange={validation.handleChange}
-                                        onBlur={validation.handleBlur}
-                                        // required
-                                    >
-                                        <option value="">Select Any Vehicle Number</option>
-                                        {sPVechiles.map((item, index) => (
-                                            <option key={index} value={item.id}>{item.vehicle_number}</option>
-                                        ))}
-                                    </select>
-                                </div>
+                        <div className="mb-3">
+                            <label htmlFor="additional_service-field" className="form-label">Additional Service</label>
+                            <input
+                                type="text"
+                                name="additional_service"
+                                id="additional_service-field"
+                                className="form-control"
+                                value={validation.values.additional_service || ""}
+                                onChange={validation.handleChange}
+                                required
+                            />
+                        </div>
 
-                                <div className="mb-3">
-                                    <label htmlFor="trip_type-field" className="form-label">Trip Type</label>
-                                    <select
-                                        data-trigger
-                                        name="trip_type"
-                                        id="trip_type-field"
-                                        className="form-control"
-                                        value={validation.values.trip_type || ""}
-                                        // onSelect={enquiry_details(validation.values.service_provider_id)}
-                                        onChange={validation.handleChange}
-                                        onBlur={validation.handleBlur}
-                                        required
-                                    >
-                                        <option value="">Select Trip Type</option>
-                                        <option value="PRIVATE">Private</option>
-                                        <option value="GCC">GCC</option>
-                                        <option value="SHARING">Sharing</option>
-                                    </select>
-                                </div>
+                        <div className="mb-3">
+                            <label htmlFor="special_requirement-field" className="form-label">Special Requirement</label>
+                            <input
+                                type="text"
+                                name="special_requirement"
+                                id="special_requirement-field"
+                                className="form-control"
+                                value={validation.values.special_requirement || ""}
+                                onChange={validation.handleChange}
+                                required
+                            />
+                        </div>
 
-                                <div className="mb-3">
-                                    <label htmlFor="pickup_country-field" className="form-label">Pickup Country</label>
-                                    <input
-                                        type="text"
-                                        name="pickup_country"
-                                        id="pickup_country-field"
-                                        className="form-control"
-                                        value={validation.values.pickup_country || ""}
-                                        onChange={validation.handleChange}
-                                        required
-                                    />
-                                </div>
+                        <div className="mb-3">
+                            <label htmlFor="vehicle_amount-field" className="form-label">Vehicle Amount</label>
+                            <input
+                                type="text"
+                                name="vehicle_amount"
+                                id="vehicle_amount-field"
+                                className="form-control"
+                                value={validation.values.vehicle_amount || ""}
+                                onChange={(e)=> { validation.handleChange(e); setVehicleAmount(e.target.value); totalAmount(Number(e.target.value) + Number(driverAmount))}}
+                                required
+                            />
+                        </div>
 
-                                {/* The below element is for the pickup location feild in the view button.
-                                Which is for details of particular enquiry detail */}
-                                <div className="mb-3">
-                                    <label htmlFor="pickup_location-field" className="form-label">Pickup Location</label>
-                                    <input
-                                        type="text"
-                                        name="pickup_location"
-                                        id="pickup_location-field"
-                                        className="form-control"
-                                        value={validation.values.pickup_location || ""}
-                                        onChange={validation.handleChange}
-                                        required
-                                    />
-                                </div>
+                        <div className="mb-3">
+                            <label htmlFor="driver_amount-field" className="form-label">Driver Amount</label>
+                            <input
+                                type="text"
+                                name="driver_amount"
+                                id="driver_amount-field"
+                                className="form-control"
+                                value={validation.values.driver_amount || ""}
+                                onChange={(e)=> { validation.handleChange(e); setDriverAmount(e.target.value); totalAmount(Number(e.target.value) + Number(vehicleAmount))}}
+                                required
+                            />
+                        </div>
 
-                                <div className="mb-3">
-                                    <label htmlFor="drop_country-field" className="form-label">Drop Country</label>
-                                    <input
-                                        type="text"
-                                        name="drop_country"
-                                        id="drop_country-field"
-                                        className="form-control"
-                                        value={validation.values.drop_country || ""}
-                                        onChange={validation.handleChange}
-                                        required
-                                    />
-                                </div>
+                        <div className="mb-3">
+                            <label htmlFor="discount_amount-field" className="form-label">Discount Amount</label>
+                            <input
+                                type="text"
+                                name="discount_amount"
+                                id="discount_amount-field"
+                                className="form-control"
+                                value={discountAmount}
+                                onChange={validation.handleChange}
+                                readOnly
+                            />
+                        </div>
 
-                                {/* The below element is for the drop location feild in the view button.
-                                Which is for details of particular enquiry detail */}
-                                <div className="mb-3">
-                                    <label htmlFor="drop_location-field" className="form-label">Drop Location</label>
-                                    <input
-                                        type="text"
-                                        name="drop_location"
-                                        id="drop_location-field"
-                                        className="form-control"
-                                        value={validation.values.drop_location || ""}
-                                        onChange={validation.handleChange}
-                                        required
-                                    />
-                                </div>
+                        <div className="mb-3">
+                            <label className="form-label">
+                                Applay Tax
+                            </label>
+                            <div className="form-check">
+                                <input
+                                type="radio"
+                                id="tax_applayed-yes"
+                                name="tax_applayed"
+                                className="form-check-input"
+                                value="YES"
+                                onChange={(e) => {applayTaxation(e.target.value);}}
+                                onBlur={validation.handleBlur}
+                                required
+                                />
+                                <label
+                                htmlFor="tax_applayed-yes"
+                                className="form-check-label"
+                                >
+                                Yes
+                                </label>
+                            </div>
+                            <div className="form-check">
+                                <input
+                                type="radio"
+                                id="tax_applayed-no"
+                                name="tax_applayed"
+                                className="form-check-input"
+                                value="NO"
+                                onChange={(e) => {applayTaxation(e.target.value);}}
+                                onBlur={validation.handleBlur}
+                                required
+                                />
+                                <label
+                                htmlFor="tax_applayed-no"
+                                className="form-check-label"
+                                >
+                                No
+                                </label>
+                            </div>
+                        </div>
+                        <div className="mb-3">
+                            <label htmlFor="tax_amount-field" className="form-label">Tax Amount</label>
+                            <input
+                                type="text"
+                                name="tax_amount"
+                                id="tax_amount-field"
+                                className="form-control"
+                                value={taxAmount}
+                                onChange={validation.handleChange}
+                                readOnly
+                            />
+                        </div>
 
-                                <div className="mb-3">
-                                    <label htmlFor="no_of_horse-field" className="form-label">Number of Hourse</label>
-                                    <input
-                                        type="text"
-                                        name="no_of_horse"
-                                        id="no_of_horse-field"
-                                        className="form-control"
-                                        value={validation.values.no_of_horse || ""}
-                                        onChange={validation.handleChange}
-                                        required
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label htmlFor="driver_id-field" className="form-label">Driver</label>
-                                    <select
-                                        data-trigger
-                                        name="driver_id"
-                                        id="driver_id-field"
-                                        className="form-control"
-                                        value={validation.values.driver_id || ""}
-                                        // onSelect={enquiry_details(validation.values.service_provider_id)}
-                                        onChange={validation.handleChange}
-                                        onBlur={validation.handleBlur}
-                                        // required
-                                    >
-                                        <option value="">Select Any Vehicle Number</option>
-                                        {sPDrivers.map((item, index) => (
-                                            <option key={index} value={item.id}>{item.name}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                
-                                <div className="mb-3">
-                                    <label htmlFor="discount_type_id-field" className="form-label">Discount</label>
-                                    <select
-                                        data-trigger
-                                        name="discount_type_id"
-                                        id="discount_type_id-field"
-                                        className="form-control"
-                                        value={validation.values.discount_type_id || ""}
-                                        // onSelect={enquiry_details(validation.values.service_provider_id)}
-                                        onChange={validation.handleChange}
-                                        onBlur={validation.handleBlur}
-                                        // required
-                                    >
-                                        <option value="">Select Discount</option>
-                                        {discounts.map((item, index) => (
-                                            <option key={index} value={item.id}>{item.name}</option>
-                                        ))}
-                                    </select>
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="pickup_date-field" className="form-label">Pickup Date</label>
-                                    <Flatpickr
-                                        className="form-control"
-                                        name='pickup_date'
-                                        options={{
-                                            dateFormat: "d-m-Y"
-                                        }}
-                                        value= ""
-                                        onChange={(dates) =>validation.setFieldValue('pickup_date', dates[0])}
-                                        placeholder={validation.values.pickup_date || "Select Date"}
-                                    />
-                                </div>
-                                <div className="mb-3">
-                                    <label htmlFor="drop_date-field" className="form-label">Drop Date</label>
-                                    <Flatpickr
-                                        className="form-control"
-                                        name='drop_date'
-                                        options={{
-                                            dateFormat: "d-m-Y"
-                                        }}
-                                        value= ""
-                                        onChange={(dates) =>validation.setFieldValue('drop_date', dates[0])}
-                                        placeholder={validation.values.drop_date || "Select Date"}
-                                    />
-                                </div>
-
-                                <div className="mb-3">
-                                    <label className="form-label">
-                                        Transportation Insurance Coverage
-                                    </label>
-                                    <div className="form-check">
-                                        <input
-                                        type="radio"
-                                        id="transportation-insurance-coverage-yes"
-                                        name="transportation_insurance_coverage"
-                                        className="form-check-input"
-                                        value="YES"
-                                        checked={
-                                            validation.values.transportation_insurance_coverage ===
-                                            "YES"
-                                        }
-                                        onChange={validation.handleChange}
-                                        onBlur={validation.handleBlur}
-                                        required
-                                        />
-                                        <label
-                                        htmlFor="transportation-insurance-coverage-yes"
-                                        className="form-check-label"
-                                        >
-                                        YES
-                                        </label>
-                                    </div>
-                                    <div className="form-check">
-                                        <input
-                                        type="radio"
-                                        id="transportation-insurance-coverage-no"
-                                        name="transportation_insurance_coverage"
-                                        className="form-check-input"
-                                        value="NO"
-                                        checked={
-                                            validation.values.transportation_insurance_coverage === "NO"
-                                        }
-                                        onChange={validation.handleChange}
-                                        onBlur={validation.handleBlur}
-                                        required
-                                        />
-                                        <label
-                                        htmlFor="transportation-insurance-coverage-no"
-                                        className="form-check-label"
-                                        >
-                                        NO
-                                        </label>
-                                    </div>
-                                </div>
+                        <div className="mb-3">
+                            <label htmlFor="final_amount-field" className="form-label">Final Amount</label>
+                            <input
+                                type="text"
+                                name="final_amount"
+                                id="final_amount-field"
+                                className="form-control"
+                                value={finalAmount}
+                                onChange={validation.handleChange}
+                                readOnly
+                            />
+                        </div>
                                                         
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() => { setModal(false); setEnquiry(null) }}>Close</button>
+                            <button type="button" className="btn btn-light" onClick={() => { modalClose() }}>Close</button>
                             <button type="submit" className="btn btn-success" id="add-btn">Confirm Enquery</button>
                         </div>
                     </ModalFooter>
@@ -530,7 +921,7 @@ const ListEnquiriesTable = () =>
 
             {/* View Modal function code*/}
             <Modal className="extra-width" isOpen={view_modal} centered >
-            <ModalHeader toggle={() => {setView_modal(false);  setEnquiry(null);}}>View Enquiry</ModalHeader>
+            <ModalHeader toggle={() => {modalClose()}}>View Enquiry</ModalHeader>
                 <form className="tablelist-form">
                     <ModalBody>
                         {enquiry && enquiry.length > 0 && enquiry.map((item, index) => (
@@ -695,7 +1086,7 @@ const ListEnquiriesTable = () =>
                     {/* All the buttons are add from the footer */}
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() => { setView_modal(false); setEnquiry(null);}}>Close</button>
+                            <button type="button" className="btn btn-light" onClick={() => { modalClose()}}>Close</button>
                         </div>
                     </ModalFooter>
                 </form>

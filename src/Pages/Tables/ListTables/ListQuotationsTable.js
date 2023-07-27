@@ -22,8 +22,8 @@ import Flatpickr from "react-flatpickr";
 // import { item } from "../../../CommonData/Data";
 import Logo from "../../../assets/images/black-logo.png";
 import { getQuotationData } from "../../../helpers/ApiRoutes/authApiRoutes";
-import { addNewQuataion } from "../../../helpers/ApiRoutes/addApiRoutes";
-import { updatQuataion } from "../../../helpers/ApiRoutes/editApiRoutes";
+import { addNewQuotaion } from "../../../helpers/ApiRoutes/addApiRoutes";
+import { updatQuotaion } from "../../../helpers/ApiRoutes/editApiRoutes";
 import { useFormik } from "formik";
 
 const ListQuotationsTable = () => {
@@ -133,14 +133,14 @@ const ListQuotationsTable = () => {
         //add new
         console.log("add new");
         console.log(values);
-        addNewQuataion(values);
+        addNewQuotaion(values);
         setAdd_list(false);
         setmodal_list(false);
       } else {
         //update previes one
         console.log("update previues one ");
         console.log(values);
-        updatQuataion(values);
+        updatQuotaion(values);
         setAdd_list(false);
         setmodal_list(false);
       }
@@ -185,9 +185,9 @@ const ListQuotationsTable = () => {
         button.classList.add('btn-danger');
 
         // Find the corresponding customer by ID
-        const quataion = quotaions.find((q) => q.id === quatationId);
-        if (quataion) {
-            quataion.status = 'INACTIVE';
+        const quotaion = quotaions.find((q) => q.id === quatationId);
+        if (quotaion) {
+            quotaion.status = 'INACTIVE';
         }
     }
     else if (currentStatus === 'INACTIVE') {
@@ -196,9 +196,9 @@ const ListQuotationsTable = () => {
         button.classList.add('btn-success');
 
         // Find the corresponding customer by ID
-        const quataion = quotaions.find((q) => q.id === quatationId);
-        if (quataion) {
-          quataion.status = 'ACTIVE';
+        const quotaion = quotaions.find((q) => q.id === quatationId);
+        if (quotaion) {
+          quotaion.status = 'ACTIVE';
         }
     }
   }
@@ -424,7 +424,7 @@ const ListQuotationsTable = () => {
             tog_list(add_list ? "ADD" : "EDIT");
           }}
         >
-          {add_list ? "Add Quataion" : "Edit Quataion"}
+          {add_list ? "Add Quotaion" : "Edit Quotaion"}
         </ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>

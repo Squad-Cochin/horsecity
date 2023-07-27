@@ -93,7 +93,7 @@ export const PUT_ASSIGN_DRIVERS_REMOVE = apiBaseUrl + token + "/unassign/driver"
 /**ENQUIRY */
 export const GET_ENQUIRY_ALL_DATA_URL = apiBaseUrl + token + "/getAll/enquiries"
 export const GET_ENQUIRY_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/enquiry"
-// export const POST_DRIVERS_ADD_URL = apiBaseUrl + token + "/add/driver"
+export const POST_ADD_QUOTATION_URL = apiBaseUrl + token + "/add/quotation"
 // export const PUT_DRIVERS_UPDATE_STATUS = apiBaseUrl + token + "/update/driver"
 // export const POST_DRIVERS_EDIT_URL = apiBaseUrl + token + "/edit/driver"
 // export const PUT_DRIVERS_REMOVE = apiBaseUrl + token + "/remove/driver"

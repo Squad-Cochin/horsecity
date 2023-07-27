@@ -143,8 +143,8 @@ export async function updatTripData(data){
   }
 }
 
-/**Update quataion  */
-export async function updatQuataion(data){
+/**Update quotaion  */
+export async function updatQuotaion(data){
   try {
       // const { data } = await axios.put(`${url.POST_SP_EDIT_URL}`);
       // return { data };
