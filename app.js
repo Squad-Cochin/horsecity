@@ -26,7 +26,7 @@ init(); // Calling the init file. In this file we are having the first user deta
 
 
 // Comment: Adds middleware to parse incoming request bodies with JSON payloads.
-app.use(express.json());
+app.use(express.json());  
 app.use(upload()); // We are using the upload file which have all the functionalities of
 app.use(express.urlencoded({ extended: true })); // Comment: Adds middleware to parse URL-encoded form data.
 app.use('/', express.static(__dirname + '/public')); // This will be used for showing the image or viewing the image

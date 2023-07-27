@@ -53,3 +53,21 @@ exports.getOneQuotation = async(req,res)=>
 }
 
 
+/**For feching particlar quotation basis of quotation id */
+exports.updateQuotation = async(req,res)=>
+{
+
+    let updateQuotation = await quotation.updateQuotation(req.body,req.params.id);
+
+   if(updateQuotation){
+    return res.status(200).send
+    ({
+        code: 200,
+        success: true,
+        message: constants.responseMessage.getOne,
+        data : constants.responseMessage.edit
+    });
+   }
+}
+
+

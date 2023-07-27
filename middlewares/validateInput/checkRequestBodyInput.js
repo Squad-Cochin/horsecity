@@ -1062,6 +1062,10 @@ exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) => {
         await this.checkValueEntered(req.body.special_requirement, 'Special requirement') (req, res, next);
         await this.checkValueEntered(req.body.additional_service, 'Additional service') (req, res, next);
         await this.checkValueEntered(req.body.transportation_insurance_coverage, 'Transportation insurance coverage') (req, res, next);
+        await this.checkValueEntered(req.body.driver_amount, 'Driver amount') (req, res, next);
+        await this.checkValueEntered(req.body.vehicle_amount, 'Vehicle amount') (req, res, next);
+        await this.checkValueEntered(req.body.current_amount, 'Current amount') (req, res, next);
+        await this.checkValueEntered(req.body.tax_amount, 'Tax amount') (req, res, next);
         await this.checkValueEntered(req.body.tax_amount, 'Tax amount') (req, res, next);
         await this.checkValueEntered(req.body.discount_amount, 'Discount amount') (req, res, next);
         await this.checkValueEntered(req.body.final_amount, 'Final amount') (req, res, next);
