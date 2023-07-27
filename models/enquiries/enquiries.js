@@ -69,12 +69,24 @@ exports.getOneEnquiry = (id) =>
 
             con.query(selQuery,async(err,data)=>{
                 if(data?.length != 0){
-          
-                        data[0].created_at = `${time.formatDateToDDMMYYYY(
-                          data[0].created_at
-                        )}`;
-                      
-                    resolve({enquiry : data})
+
+                    data[0].created_at = `${time.formatDateToDDMMYYYY(
+                        data[0].created_at
+                      )}`;
+
+                      /***For selecting tax */
+                    let selQuery = `SELECT 	tx.id , tx.type,tx.name,tx.value 
+                                    FROM ${constants.tableName.application_settings} apps
+                                    JOIN ${constants.tableName.taxations} tx ON apps.tax_id = tx.id
+                                    `
+                    con.query(selQuery,async(err,tax)=>{
+                        if(tax.length != 0){
+                    //    console.log({tax : tax});
+                            resolve({enquiry : data,tax : tax})
+                        }else{
+                            resolve({enquiry : data,tax : []})
+                        }
+                    })
                 }else{
                     resolve({enquiry : []})
                 }

@@ -6,9 +6,13 @@ const validator = require('../../middlewares/validateInput/checkRequestBodyInput
 module.exports = function(app)
 {
     /**For adding new quotation */
-    app.post(`/${process.env.apiToken}/add/quotation`,validator.checkValuesEnteredInTheQuotationBody,quotation.addNewQuotaion); 
+    app.post(`/${process.env.apiToken}/add/quotation`,validator.checkValuesEnteredInTheQuotationBody,quotation.addNewQuotation); 
     
+    /**List quotation basis of page & limit */
+    app.post(`/${process.env.apiToken}/list/quotations`,quotation.ListQuotation); 
 
+    /**For feching particlar quotation basis of quotation id */
+    app.post(`/${process.env.apiToken}/getOne/quotation/:id`,quotation.getOneQuotation); 
 
-
+  
 }

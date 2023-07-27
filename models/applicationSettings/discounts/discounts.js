@@ -163,7 +163,7 @@ exports.getallactivediscount = async () =>
     {
         try
         {
-            let selQuery = `SELECT ds.id, ds.name FROM discount_types ds WHERE ds.deleted_at IS NULL AND ds.status = '${constants.status.active}' `;
+            let selQuery = `SELECT ds.id, ds.name,ds.type,ds.rate FROM discount_types ds WHERE ds.deleted_at IS NULL AND ds.status = '${constants.status.active}' `;
             // console.log(selQuery);
             con.query(selQuery, (err, result) =>
             {

@@ -25,7 +25,7 @@ exports.getAllEnquiries = async(req,res)=>
 exports.getOneEnquiry = async(req,res)=>
 {
     let getOneEnquiry = await enquirie.getOneEnquiry(req.params.id);
-    console.log(getOneEnquiry);
+
    if(getOneEnquiry?.enquiry == 'NOTFOUND'){
     return res.status(200).send
     ({
