@@ -104,6 +104,11 @@ export const POST_ADD_QUOTATION_URL = apiBaseUrl + token + "/add/quotation"
 // export const POST_DRIVERS_EDIT_URL = apiBaseUrl + token + "/edit/driver"
 // export const PUT_DRIVERS_REMOVE = apiBaseUrl + token + "/remove/driver"
 
+/**QUOTATION */
+export const GET_QUOTATION_ALL_DATA_URL = apiBaseUrl + token + "/getAll/quotations"
+export const GET_QUOTATION_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/quotation"
+export const GET_QUOTATION_FULL_DATA_URL = apiBaseUrl + token + "/list/quotations"
+
 /**TAXATION */
 /**This URL basis of page & limit  */
 export const POST_TAXATION_ALL_DATA_URL = apiBaseUrl + token + "/getAll/tax"

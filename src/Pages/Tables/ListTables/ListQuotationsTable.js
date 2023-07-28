@@ -18,10 +18,11 @@ import { Link } from "react-router-dom";
 import List from "list.js";
 // Import Flatepicker
 import Flatpickr from "react-flatpickr";
+import config from '../../../config';
 
 // import { item } from "../../../CommonData/Data";
 import Logo from "../../../assets/images/black-logo.png";
-import { getQuotationData } from "../../../helpers/ApiRoutes/authApiRoutes";
+import { getQuotationData, getConfirmQut, getSingleQuotationData } from "../../../helpers/ApiRoutes/getApiRoutes";
 import { addNewQuotaion } from "../../../helpers/ApiRoutes/addApiRoutes";
 import { updatQuotaion } from "../../../helpers/ApiRoutes/editApiRoutes";
 import { useFormik } from "formik";
@@ -33,7 +34,13 @@ const ListQuotationsTable = () => {
   const [quotaions, setQuotaions] = useState([]);
   const [quotaion, setQuotaion] = useState([]);
   const [add_list, setAdd_list] = useState(false);
+  const [ quotaionListDetails, setQuotaionListDetails ] = useState([])
+  const [ quotaionList, setQuotaionList ] = useState([])
   const [ enquires, setEnquires] = useState([]);
+  const [ pageNumber, setPageNumber ] = useState(1);
+  const [ numberOfData, setNumberOfData ] = useState(0);
+  const [ errors, setErrors ] = useState("")
+  const pageLimit = config.pageLimit;
   // const [ enquiry_data, setEnquery_data] = useState({})
   // const [ enquiry, setEnquiry ] = useState("");
   // function toggleStatus(button, quotationID) {
@@ -65,44 +72,49 @@ const ListQuotationsTable = () => {
   // }
   
   const initialValues = {
-    cName: !add_list ? quotaions[0]?.cName : "",
-    cEmail: !add_list ? quotaions[0]?.cEmail : "",
-    cUser_name: !add_list ? quotaions[0]?.cUser_name : "",
-    cPhone: !add_list ? quotaions[0]?.cPhone : "",
-    cId_proof_no: !add_list ? quotaions[0]?.cId_proof_no : "",
-    enquiry_id: !add_list ? enquires[0]?.enquiry_id : "",
-    driver : !add_list ? enquires[0]?.driver : "",
-    driver_cost : !add_list ? enquires[0]?.driver_cost : "",
-    enquiry_date: !add_list ? quotaions[0]?.enquiry_date : "",
-    enquiry_updated_date: !add_list ? quotaions[0]?.enquiry_updated_date : "",
-    service_provider: !add_list ? quotaions[0]?.Service_provider : "",
-    Vehicle_number: !add_list ? quotaions[0]?.Vehicle_number : "",
-    Vehicle_Make: !add_list ? quotaions[0]?.Vehicle_Make : "",
-    vehicle_cost : !add_list ? enquires[0]?.vehicle_cost : "",
-    trip_type: !add_list ? quotaions[0]?.trip_type : "",
-    pickup_location: !add_list ? quotaions[0]?.pickup_location : "",
-    pickup_country: !add_list ? quotaions[0]?.pickup_country : "",
-    pickup_date: !add_list ? quotaions[0]?.pickup_date : "",
-    pickup_time: !add_list ? quotaions[0]?.pickup_time : "",
-    drop_location: !add_list ? quotaions[0]?.drop_location : "",
-    drop_country: !add_list ? quotaions[0]?.drop_country : "",
-    drop_date: !add_list ? quotaions[0]?.drop_date : "",
-    drop_time: !add_list ? quotaions[0]?.drop_time : "",
-    no_of_horse: !add_list ? quotaions[0]?.no_of_horse : "",
-    special_requirement: !add_list
-      ? quotaions[0]?.special_requirement
-      : ["Washing", "Bathing"],
-    additional_service: !add_list
-      ? quotaions[0]?.additional_service
-      : ["Medicine", "Water"],
-    transportation_insurance_coverage: !add_list
-      ? quotaions[0]?.transportation_insurance_coverage
-      : "",
-    tax_amount: !add_list ? quotaions[0]?.tax_amount : "",
-    discount_amount: !add_list ? quotaions[0]?.discount_amount : "",
-    final_amount: !add_list ? quotaions[0]?.final_amount : "",
-    status: !add_list ? quotaions[0]?.status : "",
-    created_at: !add_list ? quotaions[0]?.created_at : "",
+    quotation_id : quotaions ? quotaions[0]?.quotation_id : "",
+    enquiry_id : quotaions ? quotaions[0]?.enquiry_id : "",
+    customer_name : quotaions ? quotaions[0]?.customer_name : "",
+    customer_email : quotaions ? quotaions[0]?.customer_email : "",
+    status : quotaions ? quotaions[0]?.status : "",
+    // cName: !add_list ? quotaions[0]?.cName : "",
+    // cEmail: !add_list ? quotaions[0]?.cEmail : "",
+    // cUser_name: !add_list ? quotaions[0]?.cUser_name : "",
+    // cPhone: !add_list ? quotaions[0]?.cPhone : "",
+    // cId_proof_no: !add_list ? quotaions[0]?.cId_proof_no : "",
+    // enquiry_id: !add_list ? enquires[0]?.enquiry_id : "",
+    // driver : !add_list ? enquires[0]?.driver : "",
+    // driver_cost : !add_list ? enquires[0]?.driver_cost : "",
+    // enquiry_date: !add_list ? quotaions[0]?.enquiry_date : "",
+    // enquiry_updated_date: !add_list ? quotaions[0]?.enquiry_updated_date : "",
+    // service_provider: !add_list ? quotaions[0]?.Service_provider : "",
+    // Vehicle_number: !add_list ? quotaions[0]?.Vehicle_number : "",
+    // Vehicle_Make: !add_list ? quotaions[0]?.Vehicle_Make : "",
+    // vehicle_cost : !add_list ? enquires[0]?.vehicle_cost : "",
+    // trip_type: !add_list ? quotaions[0]?.trip_type : "",
+    // pickup_location: !add_list ? quotaions[0]?.pickup_location : "",
+    // pickup_country: !add_list ? quotaions[0]?.pickup_country : "",
+    // pickup_date: !add_list ? quotaions[0]?.pickup_date : "",
+    // pickup_time: !add_list ? quotaions[0]?.pickup_time : "",
+    // drop_location: !add_list ? quotaions[0]?.drop_location : "",
+    // drop_country: !add_list ? quotaions[0]?.drop_country : "",
+    // drop_date: !add_list ? quotaions[0]?.drop_date : "",
+    // drop_time: !add_list ? quotaions[0]?.drop_time : "",
+    // no_of_horse: !add_list ? quotaions[0]?.no_of_horse : "",
+    // special_requirement: !add_list
+    //   ? quotaions[0]?.special_requirement
+    //   : ["Washing", "Bathing"],
+    // additional_service: !add_list
+    //   ? quotaions[0]?.additional_service
+    //   : ["Medicine", "Water"],
+    // transportation_insurance_coverage: !add_list
+    //   ? quotaions[0]?.transportation_insurance_coverage
+    //   : "",
+    // tax_amount: !add_list ? quotaions[0]?.tax_amount : "",
+    // discount_amount: !add_list ? quotaions[0]?.discount_amount : "",
+    // final_amount: !add_list ? quotaions[0]?.final_amount : "",
+    // status: !add_list ? quotaions[0]?.status : "",
+    // created_at: !add_list ? quotaions[0]?.created_at : "",
   };
 
   const enquiry_details = (val) => {
@@ -159,17 +171,21 @@ const ListQuotationsTable = () => {
 
   console.log("modal", modal_list);
   //view
-  function tog_view(productId) {
-    const data = quotaions?.find((item) => item?.id === productId);
-    setQuotaion([data]);
+  async function tog_view(productId) {
+    console.log("f1",productId)
+    let confirmData = await getConfirmQut(productId)
+    setQuotaion(confirmData.quotation);
     setView_modal(!view_modal);
   }
 
-  function quat_list(productId) {
-    const data = quotaions?.find((item) => item?.id === productId);
-    setQuotaion([data]);
+  async function quat_list(productId) {
+    let qutData = await getSingleQuotationData(productId)
+    setQuotaionListDetails(qutData.quotation.details);
+    console.log("qq",qutData.quotation.quotations)
+    setQuotaionList(qutData.quotation.quotations)
     setQuatList_modal(!quatlist_modal);
   }
+
   const [modal_delete, setmodal_delete] = useState(false);
   function tog_delete() {
     setmodal_delete(!modal_delete);
@@ -204,32 +220,16 @@ const ListQuotationsTable = () => {
   }
 
   useEffect(() => {
-    let quatationData = getQuotationData();
-    setQuotaions(quatationData.quotations);
-    setEnquires(quatationData.enquires);
+    getAllData(1)
   }, []);
 
-  useEffect(() => {
-    // Existing List
-    const existOptionsList = {
-      valueNames: ["contact-name", "contact-message"],
-    };
-
-    new List("contact-existing-list", existOptionsList);
-
-    // Fuzzy Search list
-    new List("fuzzysearch-list", {
-      valueNames: ["name"],
-    });
-
-    // pagination list
-
-    new List("pagination-list", {
-      valueNames: ["pagi-list"],
-      page: 3,
-      pagination: true,
-    });
-  });
+  // function for get data all service provider data
+  async function getAllData(page) {
+    let quotationData = await getQuotationData(page || 1);
+    setQuotaions(quotationData.quotations);
+    setPageNumber(page);
+    setNumberOfData(quotationData.totalCount);
+  }
 
   return (
     <React.Fragment>
@@ -246,7 +246,7 @@ const ListQuotationsTable = () => {
 
                 <CardBody>
                   <div id="customerList">
-                    <Row className="g-4 mb-3">
+                    {/* <Row className="g-4 mb-3">
                       <Col className="col-sm-auto">
                         <div className="d-flex gap-1">
                           <Button
@@ -260,7 +260,7 @@ const ListQuotationsTable = () => {
                           </Button>
                         </div>
                       </Col>
-                    </Row>
+                    </Row> */}
 
                     <div className="table-responsive table-card mt-3 mb-1">
                       <table
@@ -295,22 +295,12 @@ const ListQuotationsTable = () => {
                         <tbody className="list form-check-all">
                           {quotaions?.map((item, index) => (
                             <tr key={index}>
-                              <th scope="row">{index + 1}</th>
-                              <td className="quatationId">{item?.id}</td>
+                              <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
+                              <td className="quatationId">{item?.quotation_id}</td>
                               <td className="enquiryId">{item?.enquiry_id}</td>
-                              <td className="customer_name">{item?.cName}</td>
-                              <td className="customer_email">{item?.cEmail}</td>
-                              <div>
-                                  <div className="d-flex gap-2">
-                                      <div className="status">
-                                          <button className="btn btn-sm btn-success status-item-btn"
-                                              data-bs-toggle="modal" data-bs-target="#showModal"
-                                              onClick={(event) => toggleStatus(event.target, item.id)}>
-                                              {item?.status}
-                                          </button>
-                                      </div>
-                                  </div>
-                              </div>
+                              <td className="customer_name">{item?.customer_name}</td>
+                              <td className="customer_email">{item?.customer_email}</td>
+                              <td className="customer_email">{item?.status}</td>
                               <td>
                                 <div className="d-flex gap-2">
 
@@ -319,9 +309,9 @@ const ListQuotationsTable = () => {
                                       className="btn btn-sm btn-success edit-item-btn"
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
-                                      onClick={() => tog_view(item?.id)}
+                                      onClick={() => tog_view(item?.quotation_id)}
                                     >
-                                      View
+                                      Confirm
                                     </button>
                                   </div>
 
@@ -330,7 +320,7 @@ const ListQuotationsTable = () => {
                                       className="btn btn-sm btn-success edit-item-btn"
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
-                                      onClick={() => quat_list(item?.id)}
+                                      onClick={() => quat_list(item?.quotation_id)}
                                     >
                                       Quot List
                                     </button>
@@ -355,13 +345,13 @@ const ListQuotationsTable = () => {
                                     Send Email
                                   </button>
 
-                                  <button
+                                  {/* <button
                                     className="btn btn-sm btn-danger remove-item-btn"
                                     data-bs-toggle="modal"
                                     data-bs-target="#deleteRecordModal"
                                   >
                                     Remove
-                                  </button>
+                                  </button> */}
                                 </div>
                               </td>
                             </tr>
@@ -385,20 +375,25 @@ const ListQuotationsTable = () => {
                         </div>
                       </div>
                     </div>
-
+                    {/* the below is having the code of the pagination of the page.
+                    The previous and next button are also in side this function */}
                     <div className="d-flex justify-content-end">
-                      <div className="pagination-wrap hstack gap-2">
-                        <Link
-                          className="page-item pagination-prev disabled"
-                          to="#"
-                        >
-                          Previous
-                        </Link>
-                        <ul className="pagination customers-pagination mb-0"></ul>
-                        <Link className="page-item pagination-next" to="#">
-                          Next
-                        </Link>
-                      </div>
+                        <div className="pagination-wrap hstack gap-2">
+                            {pageNumber > 1 ?
+                                <Link 
+                                    className="page-item pagination-prev disabled" 
+                                    onClick={()=> getAllData(pageNumber - 1)}
+                                >
+                                    Previous
+                                </Link>
+                            : null }
+                            <ul className="pagination listjs-pagination mb-0"></ul>
+                            {numberOfData > pageLimit * pageNumber ? 
+                                <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}>
+                                    Next
+                                </Link> 
+                            : null }
+                        </div>
                     </div>
                   </div>
                 </CardBody>
@@ -1033,7 +1028,7 @@ const ListQuotationsTable = () => {
         </ModalHeader>
         <form className="tablelist-form">
           <ModalBody>
-            {quotaion?.map((item, index) => (
+            {quotaionListDetails?.map((item, index) => (
               <div key={index} className="tm_container">
                 <div className="tm_invoice_wrap">
                   <div
@@ -1060,10 +1055,10 @@ const ListQuotationsTable = () => {
                       <div className="tm_invoice_info tm_mb20">
                         <div className="tm_invoice_seperator tm_gray_bg"></div>
                         <div className="tm_invoice_info_list">
-                          {/* <p className="tm_invoice_number tm_m0 ms-2">
+                          <p className="tm_invoice_number tm_m0 ms-2">
                             Quotation No:{" "}
-                            <b className="tm_primary_color ms-2">{item?.id}</b>
-                          </p> */}
+                            <b className="tm_primary_color ms-2">{item?.quotation_id}</b>
+                          </p>
                           <p className="tm_invoice_date tm_m0 ms-2">
                             Enquiry Date:{" "}
                             <b className="tm_primary_color ms-2">
@@ -1080,17 +1075,15 @@ const ListQuotationsTable = () => {
                             </b>
                           </p>
                           <div>
-                            <p>
-                              Name: {item?.cName}
+                            <div>
+                              <b>Name:</b> {item?.customer_user_name}
                               <br />
-                              Email: {item?.cEmail}
+                              <b>Email:</b> {item?.customer_email}
                               <br />
-                              Username: {item?.cUser_name}
+                              <b>Phone:</b> {item?.customer_contact_no}
                               <br />
-                              Phone: {item?.cPhone}
-                              <br />
-                              Id Proof No: {item?.cId_proof_no}
-                            </p>
+                              <b>Id Proof No:</b> {item?.customer_id_proof_no}
+                            </div>
                           </div>
                         </div>
                         <div className="tm_invoice_section tm_pay_to">
@@ -1099,93 +1092,80 @@ const ListQuotationsTable = () => {
                               Service Provider Details:
                             </b>
                           </p>
-                          <p>
-                            Name: {item?.Service_provider}
+                          <div>
+                            <b>Name:</b> {item?.service_provider_name}
                             <br />
-                            Vehicle Number: {item?.Vehicle_number}
+                            <b>Vehicle Number:</b> {item?.vehicle_number}
                             <br />
-                            Make: {item?.sMake}
-                          </p>
+                            <b>Make:</b> {item?.make}
+                            <br />
+                            <b>Model:</b> {item?.model}
+                            <br />
+                            <b>Driver:</b> {item?.driver}
+                          </div>
                         </div>
                       </div>
-                      <table
-                        className="table align-middle table-nowrap"
-                        id="Table"
-                      >
-                        <thead className="table-light">
-                          <tr>
-                            {/* <th className="index" data-sort="index">#</th> */}
-                            <th className="sort" data-sort="customer_name">
-                              Quot ID
-                            </th>
-                            <th
-                              className="sort"
-                              data-sort="service_provider_name"
-                            >
-                              Trip Type
-                            </th>
-                            <th className="sort" data-sort="quotation_id">
-                              Pickup Location
-                            </th>
-                            <th className="sort" data-sort="view_invoice">
-                              Drop Location
-                            </th>
-                            <th className="sort" data-sort="send_email">
-                              No Of Horse
-                            </th>
-                            <th className="sort" data-sort="quotation_id">
-                              Tax
-                            </th>
-                            <th className="sort" data-sort="view_invoice">
-                              Discount
-                            </th>
-                            <th className="sort" data-sort="send_email">
-                              Final Amount
-                            </th>
-                          </tr>
-                        </thead>
-                        <tbody className="list form-check-all">
-                          <tr>
-                            {/* <td className="index text-center">{index + 1}</td> */}
-                            <td className="customer_name">Q00{index + 1}</td>
-                            <td className="service_provider_name">Private</td>
-                            <td className="quotation_id">Dubai</td>
-                            <td className="quotation_id">Abu Dhabi</td>
-                            <td className="quotation_id">3</td>
-                            <td className="quotation_id">5%</td>
-                            <td className="quotation_id">10 AED</td>
-                            <td className="quotation_id">200 AED</td>
-                          </tr>
-                          <tr>
-                            {/* <td className="index text-center">{index + 1}</td> */}
-                            <td className="customer_name">Q00{index + 1}</td>
-                            <td className="service_provider_name">Sharing</td>
-                            <td className="quotation_id">Sharjah</td>
-                            <td className="quotation_id">Dubai</td>
-                            <td className="quotation_id">2</td>
-                            <td className="quotation_id">3%</td>
-                            <td className="quotation_id">5 AED</td>
-                            <td className="quotation_id">100 AED</td>
-                          </tr>
-                          <tr>
-                            {/* <td className="index text-center">{index + 1}</td> */}
-                            <td className="customer_name">Q00{index + 1}</td>
-                            <td className="service_provider_name">Private</td>
-                            <td className="quotation_id">Abu Dhabi</td>
-                            <td className="quotation_id">Sharjah</td>
-                            <td className="quotation_id">1</td>
-                            <td className="quotation_id">2%</td>
-                            <td className="quotation_id">2 AED</td>
-                            <td className="quotation_id">50 AED</td>
-                          </tr>
-                          {/* Add more rows as needed */}
-                        </tbody>
-                      </table>
+                      <div className="table-responsive table-card mt-3 mb-1">
+                        <table
+                          className="table align-middle table-nowrap"
+                          id="Table"
+                        >
+                          <thead className="table-light">
+                            <tr>
+                              {/* <th className="index" data-sort="index">#</th> */}
+                              <th className="sort" data-sort="customer_name">
+                                Quot ID
+                              </th>
+                              <th
+                                className="sort"
+                                data-sort="service_provider_name"
+                              >
+                                Trip Type
+                              </th>
+                              <th className="sort" data-sort="quotation_id">
+                                Pickup Location
+                              </th>
+                              <th className="sort" data-sort="view_invoice">
+                                Drop Location
+                              </th>
+                              <th className="sort" data-sort="send_email">
+                                No Of Horse
+                              </th>
+                              {/* <th className="sort" data-sort="quotation_id">
+                                Tax
+                              </th>
+                              <th className="sort" data-sort="view_invoice">
+                                Discount
+                              </th> */}
+                              <th className="sort" data-sort="send_email">
+                                Final Amount
+                              </th>
+                            </tr>
+                          </thead>
+                          <tbody className="list form-check-all">
+                            {quotaionList.map((item, index)=>{
+                              return(
+                                <tr key={index}>
+                                  {/* <td className="index text-center">{index + 1}</td> */}
+                                  <td className="customer_name">{item.quotation_id}</td>
+                                  <td className="service_provider_name">{item.trip_type}</td>
+                                  <td className="quotation_id">{item.pickup_location}</td>
+                                  <td className="quotation_id">{item.drop_location}</td>
+                                  <td className="quotation_id">{item.no_of_horse}</td>
+                                  {/* <td className="quotation_id">{item.tax_amount}</td>
+                                  <td className="quotation_id">{item.discount_amount}</td> */}
+                                  <td className="quotation_id">{item.final_amount}</td>
+                                </tr>
+                            )})}
+                            {/* Add more rows as needed */}
+                          </tbody>
+                        </table>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-            ))}
+            ))} 
           </ModalBody>
 
           <ModalFooter>
@@ -1221,7 +1201,7 @@ const ListQuotationsTable = () => {
             setView_modal(false);
           }}
         >
-          View Quotation
+          Confirm Quotation
         </ModalHeader>
         <form className="tablelist-form">
           <ModalBody>
@@ -1254,7 +1234,7 @@ const ListQuotationsTable = () => {
                         <div className="tm_invoice_info_list">
                           <p className="tm_invoice_number tm_m0 ms-2">
                             Quotation No:{" "}
-                            <b className="tm_primary_color ms-2">{item?.id}</b>
+                            <b className="tm_primary_color ms-2">{item?.quotation_id}</b>
                           </p>
                           <p className="tm_invoice_date tm_m0 ms-2">
                             Enquiry Date:{" "}
@@ -1273,15 +1253,20 @@ const ListQuotationsTable = () => {
                           </p>
                           <div>
                             <p>
-                              Name: {item?.cName}
+                              Name: 
+                              {item?.cName}
                               <br />
-                              Email: {item?.cEmail}
+                              Email: 
+                              {item?.customer_email}
                               <br />
-                              Username: {item?.cUser_name}
+                              Username: 
+                              {item?.customer_user_name}
                               <br />
-                              Phone: {item?.cPhone}
+                              Phone: 
+                              {item?.customer_contact_no}
                               <br />
-                              Id Proof No: {item?.cId_proof_no}
+                              Id Proof No: 
+                              {item?.customer_id_proof_no}
                             </p>
                           </div>
                         </div>
@@ -1292,11 +1277,14 @@ const ListQuotationsTable = () => {
                             </b>
                           </p>
                           <p>
-                            Name: {item?.Service_provider}
+                            Name: 
+                            {item?.service_provider_name}
                             <br />
-                            Vehicle Number: {item?.Vehicle_number}
+                            Vehicle Number: 
+                            {item?.vehicle_number}
                             <br />
-                            Make: {item?.sMake}
+                            Make: 
+                            {item?.make}
                           </p>
                         </div>
                       </div>
@@ -1304,14 +1292,15 @@ const ListQuotationsTable = () => {
                         <div className="tm_left_footer">
                           <p className="tm_mb2">
                             <b className="tm_primary_color">
-                              Additional Services:
+                              Reqirments:
                             </b>
                           </p>
                           <p className="tm_m0">
-                            Special Requirements:{" "}
-                            {item?.special_requirement.join(", ")}
+                            <h5>Special Requirements : </h5>
+                            {item?.special_requirement}
                             <br />
-                            Additional Service: {item?.additional_service}
+                            <h5>Additional Service :</h5> 
+                            {item?.additional_service}
                           </p>
                         </div>
                         <div className="tm_right_footer">
@@ -1353,14 +1342,14 @@ const ListQuotationsTable = () => {
                                   {item?.drop_location}, {item?.drop_country}
                                 </span>
                               </div>
-                              <div className="tm_card_item">
+                              {/* <div className="tm_card_item">
                                 <span className="tm_card_label">
                                   Drop Time:
                                 </span>
                                 <span className="tm_card_value">
                                   {item?.drop_time}
                                 </span>
-                              </div>
+                              </div> */}
                               <div className="tm_card_item">
                                 <span className="tm_card_label">
                                   Drop Date:

@@ -337,9 +337,54 @@ export async function getDriversData(pageNumber){
     }
 }
 
+export async function getQuotationData(pageNumber){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = {
+            "page" : pageNumber,
+            "limit" : pageLimit
+        }
+        const { data } = await axios.post(`${url.GET_QUOTATION_ALL_DATA_URL}`,reqObj);
+        console.log("QUOTATIONS",data);
+        return(data)
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data": {
+                "totalCount": 0,
+                "serviceProvider": []
+            }
+        }
+        return errorObj.data
+    }
+}
+
+export async function getConfirmQut(id){
+    try {
+        console.log(url.GET_QUOTATION_SINGLE_DATA_URL + "/" + id)
+        const { data } = await axios.get(`${url.GET_QUOTATION_SINGLE_DATA_URL}/${id}`);
+        console.log("CQ",data)
+        return(data)
+    } catch (error) {
+        return null
+    }
+}
+
 export async function getSingleDriverData(dId){
     try {
         const { data } = await axios.get(`${url.GET_DRIVERS_SINGLE_DATA_URL}/${dId}`);
+        console.log("SD",data)
+        return(data)
+    } catch (error) {
+        return null
+    }
+}
+
+export async function getSingleQuotationData(id){
+    try {
+        const { data } = await axios.get(`${url.GET_QUOTATION_FULL_DATA_URL}/${id}`);
         console.log("SD",data)
         return(data)
     } catch (error) {

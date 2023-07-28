@@ -445,7 +445,7 @@ const ListEnquiriesTable = () => {
                                                     {enquiries.map((item,index) => (
                                                         <tr key={item.id}>
                                                         {/* Below we are intialize the enquiry data */}
-                                                            <th scope="row"> {index + 1} </th> {/* // Serial Number */}
+                                                            <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th> {/* // Serial Number */}
                                                             <td className="customer_name">{item.customer_name}</td> {/* Customer name */}
                                                             <td className="service_provider">{item.service_provider}</td> {/* Customer Email */}
                                                             <td className="status">{item.status}</td> {/* Customer Phone */}
