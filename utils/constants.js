@@ -20,7 +20,29 @@ module.exports =
         confirmed : `CONFIRMED`,
         notconfirmed : `NOTCONFIRMED`,
     },
-
+    quotation_status :
+    {
+        confirmed : `CONFIRMED`,
+        notconfirmed : `NOTCONFIRMED`,
+    },
+    amound_status : 
+    {
+        paid : 'PAID',
+        pending : 'PENDING',
+        refund : 'REFUND'
+    },
+    booking_status : 
+    {
+        confirmed : 'CONFIRMED',
+        pending : 'PENDING',
+        cancelled : 'CANCELLED',
+        complete : 'COMPLETE'
+    },
+    booking_confirmation_send : 
+    {
+        yes : 'YES',
+        no : 'NO'
+    },
     password :
     { 
         expiry_after : 90, // Days after which the token will expire

@@ -9,13 +9,22 @@ module.exports = function(app)
     app.post(`/${process.env.apiToken}/add/quotation`,validator.checkValuesEnteredInTheQuotationBody,quotation.addNewQuotation); 
     
     /**List quotation basis of page & limit */
-    app.post(`/${process.env.apiToken}/list/quotations`,quotation.ListQuotation);  
+    app.post(`/${process.env.apiToken}/getAll/quotations`,quotation.ListQuotation);  
 
     /**For feching particlar quotation basis of quotation id */
     app.get(`/${process.env.apiToken}/getOne/quotation/:id`,quotation.getOneQuotation);  
     
     // /**For updating quataion That means add new one  */
-    app.post(`/${process.env.apiToken}/update/quotation/:id`,quotation.updateQuotation);   
- 
+    app.put(`/${process.env.apiToken}/update/quotation/:id`,quotation.updateQuotation);   
+
+    //**For listing removed quotaions  */ 
+    app.get(`/${process.env.apiToken}/list/quotations/:id`,quotation.removedQuotations);    
+
+    //**For chainging qutaion status    */ 
+    app.get(`/${process.env.apiToken}/update-status/quotations/:id`,quotation.updateStatusQuotation);   
+
+    //**For chainging qutaion status    */ 
+    app.post(`/${process.env.apiToken}/send-email/quotations/:id`,quotation.sendMail);   
+  
   
 }
