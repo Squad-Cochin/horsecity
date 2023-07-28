@@ -29,5 +29,9 @@ module.exports = function (app)
         `/${process.env.apiToken}/payment/histroy/:id`, 
         isValidIdInTheParams(constants.tableName.invoices),
         invoiceController.getPaymentHistroyOfParticularInvoice
-    )
+    );
+
+    app.get(`/${process.env.apiToken}/single/payment/histroy/:id`, 
+    isValidIdInTheParams(constants.tableName.invoices),
+    invoiceController.getLatestPaymentHistroy);
 };

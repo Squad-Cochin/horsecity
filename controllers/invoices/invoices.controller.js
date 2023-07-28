@@ -57,6 +57,7 @@ exports.getAll = async (req, res) =>
 
 exports.getOne = async (req, res) =>
 {
+    console.log('Came');
     const invoices = await invoice.getone(req.params.id);
     if(invoices.length === 0)
     {
@@ -85,8 +86,8 @@ exports.getOne = async (req, res) =>
 
 exports.enterAmountForParticularInvoice = async(req, res) =>
 {
-    
-    const invoices = await invoice.enteramountforparticularinvoice(req.params.id, req.body.amount)
+    console.log("body",req.body);
+    const invoices = await invoice.enteramountforparticularinvoice(req.params.id, req.body.totalRecievedAmount)
 
     if(invoices === 'nodata')
     {
@@ -109,6 +110,16 @@ exports.enterAmountForParticularInvoice = async(req, res) =>
             message: "Amount data inserted successfully",
         });
     }
+    if(invoices === 'fullypaid')
+    {
+        console.log('Amount is already paid fully');
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: "Amount is already paid fully",
+        });
+    }
 };
 
 exports.getPaymentHistroyOfParticularInvoice = async (req, res) =>
@@ -127,6 +138,39 @@ exports.getPaymentHistroyOfParticularInvoice = async (req, res) =>
 
 
 };
+
+exports.getLatestPaymentHistroy = async (req, res) =>
+{
+    const invoices = await invoice.getlatestpaymenthistroy(req.params.id);
+    if(invoices === 'err')
+    {
+        console.log('Internal Server Error');
+        return res.status(200).json
+        ({
+            code: 500,
+            status: false,
+            message: constant.responseMessage.universalError,
+        });
+    }
+    if(invoices.length != 0)
+    {
+        console.log('Data Fetched Succesfully');
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: 'Data Fetched Succesfully',
+            data : 
+            {
+                invoice: invoices
+            }
+        });
+    }
+};
+
+
+
+
 
 
 
