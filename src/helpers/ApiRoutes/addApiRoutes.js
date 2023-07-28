@@ -270,21 +270,23 @@ import * as url from "../url_helper";
     {
         try
         {
+            console.log("data",data)
             console.log(`Invoice id at the time of adding the payment data in the table`, id);
-            const formData = new FormData();
+            // const formData = new FormData();
             // Append the object data to the FormData instance
-            for (const key in data)
-            {
-                formData.append(key, data[key]);
-            }
+            // for (const key in data)
+            // {
+            //     formData.append(key, data[key]);
+            // }
             // Send the form data as a POST request using Axios
-            const response = await axios.post(`${url.POST_ADD_AMOUNT_URL}/${id}`, formData,
-            {
-                headers: 
-                {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
+            const formData = new FormData();
+    formData.append('totalRecievedAmount', data);
+     
+const response = await axios.post(`${url.POST_ADD_AMOUNT_URL}/${id}`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data'
+    }
+  });
             console.log("Response from the add amount: ",response)
             return response;            
         }

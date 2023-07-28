@@ -544,6 +544,19 @@ export async function getSingleEnquiryData(dId){
     }
 }
 
+export async function getLatestPayementHistroy(iId){
+    try
+    {
+        const { data } = await axios.get(`${url.GET_LATEST_PAYMENT_HISTROY_OF_INVOICE}/${iId}`);
+        console.log("Latest Payment Histroy: ",data)
+        return(data)
+    }
+    catch (error)
+    {
+        return null
+    }
+}
+
 // export async function getLanguageFile(){
 //     try {
 //         const { data } = await axios.get(`${url.GET_LANGUAGES_FILE}`);

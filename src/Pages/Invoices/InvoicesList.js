@@ -1,6 +1,9 @@
 
+
+
+
 import React, { useState, useEffect, useRef  } from 'react';
-import { useFormik } from "formik";
+import { useFormik , Field} from "formik";
 import jsPDF from 'jspdf';
 import List from "list.js";
 import { Link } from 'react-router-dom';
@@ -13,12 +16,15 @@ import { getLedgerData } from '../../helpers/ApiRoutes/authApiRoutes';
 import html2canvas from 'html2canvas';
 import config from '../../config';
 /**IMPORTED APIs */
-import { getInvoicesData, getSingleInvoiceData, getAssignedProviders } from '../../helpers/ApiRoutes/getApiRoutes'; 
 
+
+import { getInvoicesData, getSingleInvoiceData, getAssignedProviders, getLatestPayementHistroy } from '../../helpers/ApiRoutes/getApiRoutes'; 
+import { addAmount } from '../../helpers/ApiRoutes/addApiRoutes';
 const InvoiceDetails = () =>
 {
     const [ ledger, setLedger] = useState([])
     const [ ledg, setLedg] = useState([]);
+    const [ paymentHistroy, setPaymentHistroy] = useState([]);
     const [modal_list, setmodal_list] = useState(false);
     const [view_modal, setView_modal] = useState(false);
     const [modal, setModal] = useState(false);
@@ -46,23 +52,10 @@ const InvoiceDetails = () =>
     };
 
     const initialValues = {
-                              invoiceNo: "",
-                              invoiceDate: "",
-                              cusName: "",
-                              comName: "",
-                              cusStreetAddress: "",
-                              comStreetAddress: "",
-                              cusCountry: "",
-                              comCountry: "",
-                              cusEmail: "",
-                              comEmail: "",
-                              iSubTotal: "",
-                              iTaxRate: "",
-                              iTaxAmount: "",
-                              iDiscountRate: "",
-                              iDiscountAmount: "",
-                              iFinalAmount: "",
-                          };
+                        totalInvoiceAmount: "",
+                        totalRecievedAmount: "",
+                        invoiceId:invoice[0]?.id
+                      };
 
   // const handleOpenInvoiceModal = () =>
   // {
@@ -90,8 +83,12 @@ const InvoiceDetails = () =>
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues,
-    onSubmit: (values) => {
-      // setmodal_list(false);
+    onSubmit: async(values) => {
+      setmodal_list(false);
+      console.log("valuse",values);
+      let addedData = await addAmount(values.invoiceId, values.totalRecievedAmount);
+      console.log(addedData);
+      console.log("valuse",values);
     },
   });
 
@@ -119,17 +116,11 @@ const InvoiceDetails = () =>
     let invoiceData = await getSingleInvoiceData(productId)
     console.log("dd",invoiceData)
     setView_modal(!view_modal)
-    setInvoice(invoiceData)
-    // Toggle 'add_list' state if 'param' is 'ADD'
-  // Toggle 'modal_list' state
-
-    // const data = Invoices?.find((item) => item?.id === productId);
-    // console.log('Data : ',data.iId);
-    // const data2 = ledger?.filter((item) => item?.invoiceId === data.iId);
-    // console.log("dat2",data2);
-    // setInvoice([data]);
-    // setLedg(data2);
-    // setView_modal(!view_modal);
+    setInvoice(invoiceData.invoice)
+    setLedg(invoiceData.payment)
+    let latestPaymentHistroy = await getLatestPayementHistroy(1)
+    console.log("Lates Payment Data:",latestPaymentHistroy)
+    setPaymentHistroy(latestPaymentHistroy.invoice)
   }
 
   // function for get data all drivers data
@@ -250,6 +241,7 @@ const InvoiceDetails = () =>
         <ModalBody>
           {invoice.map((item, index) => (
             <div key={index} className="tm_container" ref={invoiceRef}>
+              {console.log(item)}
               <div className="tm_invoice_wrap">
                 <div className="tm_invoice tm_style1" id="tm_download_section">
                   <div className="tm_invoice_in">
@@ -292,27 +284,24 @@ const InvoiceDetails = () =>
                           <table>
                             <thead>
                               <tr>
-                                <th className="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg text-center">Item</th>
-                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Description</th>
-                                <th className="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg text-center">Price</th>
-                                <th className="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg text-center">Qty</th>
-                                <th className="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg tm_text_right text-center">Total</th>
+                                {/* <th className="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg text-center">Item</th> */}
+                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Pick Up Location</th>
+                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Pick Up Date</th>
+                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Drop Location</th>
+                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Drop date</th>
+                                <th className="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg text-center">Horse</th>
+                                <th className="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg tm_text_right text-center">Special Service</th>
                               </tr>
                             </thead>
                             <tbody>
                               <tr>
-                                <td className="tm_width_3 text-center">1</td>
-                                <td className="tm_width_4 text-center">Vehicle 1, Driver 1</td>
-                                <td className="tm_width_2 text-center">350 AED</td>
-                                <td className="tm_width_1 text-center">1</td>
-                                <td className="tm_width_2 text-center">350 AED</td>
-                              </tr>
-                              <tr>
-                                <td className="tm_width_3 text-center">2</td>
-                                <td className="tm_width_4 text-center">Vehicle 2, Driver 2</td>
-                                <td className="tm_width_2 text-center">600 AED</td>
-                                <td className="tm_width_1 text-center">1</td>
-                                <td className="tm_width_2 text-center">600 AED</td>
+                                {/* <td className="tm_width_3 text-center">1</td> */}
+                                <td className="tm_width_4 text-center">{item.pickup_location}</td>
+                                <td className="tm_width_2 text-center">{item.pickup_date}</td>
+                                <td className="tm_width_1 text-center">{item.pickup_location}</td>
+                                <td className="tm_width_2 text-center">{item.drop_date}</td>
+                                <td className="tm_width_2 text-center">{item.no_of_horse}</td>
+                                <td className="tm_width_2 text-center">{item.special_requirement}</td>
                               </tr>
                             </tbody>
                           </table>
@@ -369,9 +358,12 @@ const InvoiceDetails = () =>
                               <tr key = {index}>
                                 <td className="tm_width_3 text-center">{index + 1}</td>
                                 {/* <td className="tm_width_4 text-center">Vehicle 1, Driver 1</td> */}
-                                <td className="tm_width_2 text-center">{item.recievedMoney} AED</td>
-                                <td className="tm_width_1 text-center">{item.receivedDate}</td>
-                                <td className="tm_width_2 text-center">{item.remainingAmount} AED</td>
+                                <td className="tm_width_2 text-center">{item.received_amount === 0 ? "0 AED" : `${item.received_amount} AED`}</td>
+                                <td className="tm_width_1 text-center">{item.received_amount === 0 ? "" : item.received_date}</td>
+                                <td className="tm_width_2 text-center">{item.remaining_amount === 0 ? "0 AED" : `${item.remaining_amount} AED`}</td>
+                                {/* <td className="tm_width_2 text-center">{item.received_amount} AED</td>
+                                <td className="tm_width_1 text-center">{item.received_date}</td>
+                                <td className="tm_width_2 text-center">{item.remaining_amount} AED</td> */}
                               </tr>
                             ))}
                           </tbody>
@@ -409,24 +401,38 @@ const InvoiceDetails = () =>
           <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={toggleModal}>Enter Amount</ModalHeader>
             <form className="tablelist-form" onSubmit={validation.handleSubmit}>
               <ModalBody>
-                {invoice.map((item, index) => (
+                {paymentHistroy.map((item, index) => (
                   <div key={index} className="tm_container">
                 <div className="mb-3">
                   <label htmlFor="total_amount-field" className="form-label">Total Invoice Amount</label>
-                    <input type="text" className="form-control mb-3" placeholder={item.iFinalAmount} readOnly /> 
+                    <input type="text" name='totalInvoiceAmount' className="form-control mb-3" placeholder={item.total_amount} readOnly /> 
+                </div>
+                <div className="mb-3">
+                  <label htmlFor="remaining_amount-field" className="form-label">Total Remaining Amount</label>
+                    <input type="text" name='totalRemainingAmount' className="form-control mb-3" placeholder={item.remaining_amount} readOnly /> 
                 </div>
                 </div>
                 ))}
                 <div className="mb-3">
                   <label htmlFor="total_amount-field" className="form-label">Received Amount</label>
-                  <input type="text" name='totalinvoiceamount' id = 'total_amount-field' className="form-control" placeholder="Enter Received Amount" required/>
+                  <input type="text" 
+                  value={validation.values.totalRecievedAmount || ""}
+                  onChange={validation.handleChange}
+                  name='totalRecievedAmount' 
+                  id = 'total_amount-field' 
+                  className="form-control" 
+                  placeholder="Enter Received Amount" 
+                  required
+                  />
+                  <input type="hidden" name="invoiceId" value="1" />
                 </div>
               </ModalBody>
+              <ModalFooter>
+              <Button color="primary" type='submit'>Save</Button>
+              <Button color="secondary" onClick={toggleModal}>Cancel</Button>
+            </ModalFooter>
             </form>
-        <ModalFooter>
-          <Button color="primary" onClick={toggleModal}>Save</Button>
-          <Button color="secondary" onClick={toggleModal}>Cancel</Button>
-        </ModalFooter>
+        
       </Modal>
       </Modal>
 
@@ -476,6 +482,3 @@ const InvoiceDetails = () =>
 };
 
 export default InvoiceDetails;
-
-
-
