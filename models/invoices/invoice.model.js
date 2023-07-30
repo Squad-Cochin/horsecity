@@ -9,9 +9,8 @@ const commonfetching = require('../../utils/helper/commonfetching');
 const commonoperation = require('../../utils/helper/commonoperation');
 const time = require('../../utils/helper/date');
 const con = require('../../configs/db.configs');
-const { pastWorkHistroyResponse } = require('../../utils/objectConvertor');
 const objectConvertor = require('../../utils/objectConvertor');
-const { resolve } = require('path');
+const { SendEmail } = require('../../utils/mailer');
 
 module.exports = class invoices
 {
@@ -33,7 +32,7 @@ module.exports = class invoices
                                 WHERE i.deleted_at IS NULL
                                 LIMIT ${pageSize} OFFSET ${offset}`;
 
-                console.log('Selquery of invoice: ',selQuery);
+                // console.log('Selquery of invoice: ',selQuery);
 
                 const count = await commonoperation.totalCount(constants.tableName.invoices);
                 con.query(selQuery, async (err, result) =>
@@ -46,12 +45,12 @@ module.exports = class invoices
                     const data =  objectConvertor.getAllInvoice(result)
                     if(result.length === 0)
                     {
-                        console.log(`totalCount = ${count}, invoices = ${data}`);
+                        // console.log(`totalCount = ${count}, invoices = ${data}`);
                         resolve ({totalCount : count[0]['count(t.id)'], invoices : data});
                     }
                     else
                     {
-                        console.log(`totalCount = ${count}, invoices = ${data}`);
+                        // console.log(`totalCount = ${count}, invoices = ${data}`);
                         resolve ({totalCount : count[0]['count(t.id)'], invoices : data});
                     }
                 });
@@ -82,7 +81,7 @@ module.exports = class invoices
                     c.email AS customer_email,
                     sp.email AS com_email,
                     i.sub_total AS iSubTotal,
-                    t.name AS iTaxRate,
+                    t.value AS iTaxRate,
                     i.tax_amount AS iTaxAmount,
                     d.rate AS iDiscountRate,
                     i.discount_amount AS iDiscountAmount,
@@ -108,10 +107,8 @@ module.exports = class invoices
              JOIN discount_types d ON d.id = b.discount_type_id
              JOIN enquiries e ON e.id = q.enquiry_id
              JOIN payment_records pr ON pr.invoice_id = i.id
-             
-             WHERE i.id = ${Id};
-               `;
-                console.log(selQuery);
+             WHERE i.id = ${Id}`;
+                // console.log(selQuery);
                 con.query(selQuery, (err, result) => {
                     if (err) {
                         console.log(err);
@@ -122,7 +119,9 @@ module.exports = class invoices
                             "payment": []
                         };
     
-                        if (result.length !== 0) {
+                        if (result.length !== 0) 
+                        {
+                            
                             // If result has data, populate the invoiceResponse data and payment arrays
                             invoiceResponse.invoice.push({
                                 "id": result[0].id,
@@ -276,92 +275,97 @@ module.exports = class invoices
         {
             return await new Promise(async(resolve, reject)=>
             {
-                const data = await commonfetching.dataOnCondition(constants.tableName.invoices, Id, 'id');
-                if(data.length === 0)
+                if (amount < 0)
                 {
-                    resolve('nodata');
+                    resolve('lessThanZero');
                 }
                 else
                 {
-                    // console.log(data);
-                    // console.log('hyujy7yhhyhyujhuyhtygiohj');
-                    console.log(amount);
-                    console.log(Id);
-                    // let letPaymentRecord = await commonfetching.dataOnCondition(constants.tableName.payment_records, Id, 'invoice_id');
-                    // console.log(letPaymentRecord);
-                    // if(letPaymentRecord[0].invoice_id !== null && letPaymentRecord[0].total_amount !== null && letPaymentRecord[0].received_amount === null && letPaymentRecord[0].received_date === null && letPaymentRecord[0].remaining_amount === null && letPaymentRecord[0].invoice_id !== Id);
-                    // {
-                    //     let ra = data[0].final_amount - amount;
-                    //     const status = (data[0].final_amount - amount) === 0 ? constants.status.paid : constants.status.partPaid;
-                    //     const upQuery = `UPDATE payment_records pr
-                    //     SET received_amount = ${amount},
-                    //         received_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}',
-                    //         remaining_amount = ${ra},
-                    //         status = '${status}'
-                    //     WHERE pr.invoice_id = ${Id} AND pr.received_amount IS NULL
-                    //     AND pr.received_date IS NULL
-                    //     AND pr.remaining_amount IS NULL`;
-                    //     console.log(upQuery);
-                    //     con.query(upQuery, (err, result) =>
-                    //     {
-                    //         console.log('Enter Amount: ', result);
-                    //         if (result.affectedRows > 0)
-                    //         {
-                    //             console.log('Enter amount data added successfully');
-                    //             resolve(result);
-                    //         }
-                    //         else
-                    //         {
-                    //             let latdate = `SELECT *
-                    //             FROM ${constants.tableName.payment_records} p
-                    //             WHERE p.invoice_id  = ${Id}
-                    //             ORDER BY created_at DESC
-                    //             LIMIT 1`
-                    //             console.log('Latest Query: ', latdate);
-                    //             let ra2= latdate[0].remaining_amount - amount
-                    //             let insQuery = `INSERT INTO payment_records(invoice_id, total_amount, received_amount, received_date, remaining_amount, status) VALUES (${data[0].id}, ${data[0].final_amount}, ${amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${ra2}, '${status}')`;
-                    //             console.log(insQuery);
-                    //             con.query(insQuery, (err, result) =>
-                    //             {
-                    //                 if(result.affectedRows > 0)
-                    //                 {
-                    //                     console.log('Enter amount data added successfully');
-                    //                     resolve(result);
-                    //                 }
-                    //                 else
-                    //                 {
-                    //                     console.log('Error while Enter amount data');
-                    //                     resolve('err');
-                    //                 }
-                    //             });
-                    //         }                        
-                    //     });
-                    // }
-                    
-                    // if(letPaymentRecord[0].invoice_id !== null && letPaymentRecord[0].invoice_id !== Id && letPaymentRecord[0].remaining_amount !== null && letPaymentRecord[0].status !== constants.status.paid)
-                    // {
-                    //     let ra = (letPaymentRecord[0].remaining_amount - amount);
-                    //     if( ra === 0)
-                    //     {
-                    //         console.log('O');
-                    //         const insQuery = `INSERT INTO ${constants.tableName.payment_records} (invoice_id, total_amount, received_amount, received_date, remaining_amount, status) VALUEs(${Id}, ${letPaymentRecord[0].total_amount}, ${amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${ra}, '${constants.status.paid}' )`; 
-                    //     }
-                    //     if(ra < 0)
-                    //     {
-                    //         console.log('-O');
-
-                    //         const insQuery = `INSERT INTO ${constants.tableName.payment_records} (invoice_id, total_amount, received_amount, received_date, remaining_amount, status) VALUEs(${Id}, ${letPaymentRecord[0].total_amount}, ${amount}, '${time.getFormattedUTCTime(constants.timeOffSet(constants.timeOffSet.UAE))}', ${ra}, '${constants.status.partPaid}' )`; ;
-
-                    //     }
-                    //     if(ra > 0)
-                    //     {
-                    //         console.log('+O');
-
-                    //         console.log('takking access amount');
-                    //     }
-                                               
-                    // }
-                }            
+                    const data = await commonfetching.dataOnCondition(constants.tableName.invoices, Id, 'id');
+                    if(data.length === 0)
+                    {
+                        resolve('nodata');
+                    }
+                    else
+                    {
+                        let paymentRecordData = await commonfetching.dataOnCondition(constants.tableName.payment_records, Id, 'invoice_id')
+                        // console.log('Payment Record Date: ', paymentRecordData);
+                        
+                        if(paymentRecordData[0].invoice_id == Id && paymentRecordData[0].updated_at === null)
+                        {
+                            let ra = paymentRecordData[0].total_amount - amount
+                            let upQuery = `UPDATE ${constants.tableName.payment_records} pr SET pr.received_amount = ${amount}, pr.received_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', pr.remaining_amount = ${ra}, pr.status = '${constants.status.partPaid}', pr.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE pr.invoice_id = ${Id}`;
+                            // console.log(upQuery);
+                            con.query(upQuery, (err, result) =>
+                            {                            
+                                if(result.affectedRows > 0)
+                                {
+                                    console.log('Update query executed, That means the entry is done by first time');
+                                    resolve('affectedRows')
+                                }
+                                else
+                                {
+                                    console.log(`Error while updating the query that me at the first time`);
+                                    console.log(err);
+                                    resolve('err');
+                                }
+                            });
+                        }
+                        else
+                        {
+                            // console.log('Amount:', amount);
+                            let latestData = `SELECT * FROM payment_records WHERE invoice_id = '${Id}' ORDER BY remaining_amount ASC LIMIT 1`;
+                            con.query(latestData, (err, result) =>
+                            {
+                                // console.log('Latest Data: ', result);
+                                let ra = result[0].remaining_amount - amount
+                                // console.log('ra: ', ra);
+                                if(ra > 0)
+                                {
+                                    let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, ${result[0].total_amount}, ${amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${ra}, '${constants.status.partPaid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                                    // console.log(insQuery);
+                                    con.query(insQuery, (err, result) =>
+                                    {
+                                        if(result.affectedRows > 0)
+                                        {
+                                            console.log('Insert query executed, Payment is still partially paid');
+                                            resolve('affectedRows')
+                                        }
+                                        else
+                                        {
+                                            console.log(`Error while inserting the query that me payment is tiall partially paid`);
+                                            console.log(err);
+                                            resolve('err');
+                                        }
+                                    });
+                                }
+                                if(ra == 0)
+                                {
+                                    let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, ${result[0].total_amount}, ${amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${ra}, '${constants.status.paid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                                    // console.log(insQuery);
+                                    con.query(insQuery, (err, result) =>
+                                    {
+                                        if(result.affectedRows > 0)
+                                        {
+                                            console.log('Insert query executed, Payment is fully made');
+                                            resolve('fullypaid')
+                                        }
+                                        else
+                                        {
+                                            console.log(`Error while inserting the query that me payment is fully made`);
+                                            console.log(err);
+                                            resolve('err');
+                                        }
+                                    });
+                                }
+                                if(ra < 0)
+                                {
+                                    resolve('moreThanActualAmount');
+                                }
+                            });
+                        }                    
+                    } 
+                }
             });
         }
         catch (error)
@@ -380,11 +384,11 @@ module.exports = class invoices
                 const data = await commonfetching.dataOnCondition(constants.tableName.payment_records, Id, 'invoice_id');
                 if(data.length === 0)
                 {
-                    return data;
+                    return 'nodata';
                 }
                 else
                 {
-                    console.log(data);
+                    resolve(data);
                 }            
             });
         }
@@ -400,13 +404,18 @@ module.exports = class invoices
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let latdate = `SELECT p.invoice_id, p.total_amount, p.remaining_amount FROM ${constants.tableName.payment_records} p WHERE p.invoice_id  = ${Id} ORDER BY created_at DESC LIMIT 1`
+                let latdate = `SELECT p.invoice_id, p.total_amount, p.remaining_amount FROM ${constants.tableName.payment_records} p WHERE p.invoice_id  = ${Id} ORDER BY remaining_amount ASC LIMIT 1`
+                // console.log(latdate);
                 con.query(latdate, (err, result) =>
                 {
                     if(result.length != 0)
                     {
-                        console.log('Date Fetched: ');
+                        // console.log('Date Fetched: ');
                         resolve(result);
+                    }
+                    if(result.length == 0)
+                    {
+                        resolve(resolve);
                     }
                     else
                     {
@@ -418,6 +427,75 @@ module.exports = class invoices
         catch (error)
         {
 
+        }
+    };
+
+
+
+    static async sendemailatinvoice(to, subject, body)
+    {
+        try
+        {
+            return await new Promise(async(resolve, reject)=>
+            {
+                const emailSent = await SendEmail(to, body, subject);
+                if(emailSent === false)
+                {
+                    console.log(`Error while sending the email from the model function`);
+                    resolve(false)
+                }
+                if(emailSent === true)
+                {
+                    // console.log('True');
+                    // console.log(`Email send successfully from the model`);
+                    resolve(true);
+                }
+            });            
+        }
+        catch(error)
+        {
+            console.log(`Error from the try catch block of the sendemailatinvoice`, error);
+        }
+    };
+
+
+
+
+
+
+
+
+
+
+    static async getsendemailbuttondata(Id)
+    {
+        try
+        {
+            return await new Promise(async(resolve, reject)=>
+            {
+                let selQuery = `SELECT i.id, i.invoice_no, t.subject, c.email
+                FROM customers c, invoices i, quotations q, templates t, bookings b
+                WHERE i.id = ${Id} AND t.name = 'Invoice email sent' AND c.id = q.customer_id AND b.quot_id = q.id AND i.booking_id = b.id;`;
+                con.query(selQuery,(err, result) =>
+                {
+                    // console.log(`Email details: `, result);
+                    if(result.length != 0)
+                    {
+                        console.log('Send email button data for the invoice page fetched successfully');
+                        resolve(result);
+                    }
+                    else
+                    {
+                        console.log(err);
+                        console.log('Error while fetching the email details');
+                        resolve('err')
+                    }
+                });
+            });            
+        }
+        catch(error)
+        {
+            
         }
     };
 

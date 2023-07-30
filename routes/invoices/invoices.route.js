@@ -22,6 +22,7 @@ module.exports = function (app)
     app.post(
         `/${process.env.apiToken}/add/amount/:id`, 
         isValidIdInTheParams(constants.tableName.invoices),
+        checkInput.checkAmountEntered,
         invoiceController.enterAmountForParticularInvoice
         );
 
@@ -34,4 +35,16 @@ module.exports = function (app)
     app.get(`/${process.env.apiToken}/single/payment/histroy/:id`, 
     isValidIdInTheParams(constants.tableName.invoices),
     invoiceController.getLatestPaymentHistroy);
+
+    app.get(`/${process.env.apiToken}/email/button/data/:id`, 
+    isValidIdInTheParams(constants.tableName.invoices),
+    invoiceController.getSendEmailButtonData);
+
+    app.post(`/${process.env.apiToken}/send/email/:id`,
+    isValidIdInTheParams(constants.tableName.invoices),
+    checkInput.checkEmailBody,
+    invoiceController.sendEmailAtInvoice);
+
+
+
 };

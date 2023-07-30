@@ -20,12 +20,9 @@ app.listen(process.env.PORT, () =>
     console.log("My application running successfully on the port number :-", +process.env.PORT);    
 });
 
-/**
-[6:02 PM] Hariprasad T B Fri Jul 14 2023 00:00:00 GMT+0530 (India Standard Time) 
- */
 
 
 /**
- INSERT INTO service_providers (name, email, user_name, password, contact_person, contact_no, role_id, contact_address, emergency_contact_no, licence_image, licence_no, phone_verified, email_verified, expiry_at) VALUES ( 'Saurabh Pande', 'sp832155@gmail.com', 'Saurabh1998', SHA2('Asdf$1234', 256), 'owner', '126432WDCWSE4', NULL, '78 SAKET NAGAR NEAR NARENDRA NAGAR', '8421168036', 'dqw5ec9+5c3sc1sws6fe7cw31ce.jpg', 'adsf45421a8dssc', 1, '2023-10-03 15:32:34' );
+ * INSERT INTO service_providers (name, email, user_name, password, contact_person, contact_no, role_id, contact_address, emergency_contact_no, licence_image, licence_no, phone_verified, email_verified, expiry_at) VALUES ( 'Saurabh Pande', 'sp832155@gmail.com', 'Saurabh1998', SHA2('Asdf$1234', 256), 'owner', '126432WDCWSE4', NULL, '78 SAKET NAGAR NEAR NARENDRA NAGAR', '8421168036', 'dqw5ec9+5c3sc1sws6fe7cw31ce.jpg', 'adsf45421a8dssc',1, 1, '2023-10-03 15:32:34' );
  INSERT INTO service_providers (name, email, user_name, password, contact_person, contact_no, role_id, contact_address, emergency_contact_no, licence_image, licence_no, phone_verified, email_verified, expiry_at) VALUES ('Saurabh Pande', 'sp83255@gmail.com', 'Saurabh1999', SHA2('Asdf$1234', 256), 'owner', '126432WDCWSE4', NULL, '78 SAKET NAGAR NEAR NARENDRA NAGAR', '8421168036', 'dqw5ec9+5c3sc1ssws6fe7cw31ce.jpg', 'adsf5421a8dssc', 1, 1, '2023-10-03 15:32:34'); 
  */

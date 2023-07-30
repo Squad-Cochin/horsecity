@@ -54,19 +54,16 @@ const getFormattedUTCTime = (utcOffset) =>
 }
 
 
-  const changeDateToSQLFormat = (dateString) => {
-    // console.log('Got date in this format', dateString);
+  const changeDateToSQLFormat = (dateString) =>
+  {
 
     // Check if the input date string is in the format "DD-MM-YYYY"
-    if (/^\d{2}-\d{2}-\d{4}$/.test(dateString)) {
-        console.log('We need to change the date in the SQL format for editing purposes');
-
-         // Split the dateString into day, month, and year parts
-         const [day, month, year] = dateString.split('-');
-
+    if (/^\d{2}-\d{2}-\d{4}$/.test(dateString))
+    {
+        // Split the dateString into day, month, and year parts
+        const [day, month, year] = dateString.split('-');
          // Format the date in YYYY-MM-DD HH:MM:SS
          const formattedDate = `${year}-${month}-${day} 00:00:00`;
-         console.log('Returned date:', formattedDate);
          return formattedDate;
     }
 

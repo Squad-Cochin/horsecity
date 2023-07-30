@@ -562,9 +562,11 @@ exports.updateStatusQuotation = (quotId) => {
                                                                                                /********** After Inserting totalamount invoice id in to the payment records********** */  
                                                                                                let insQuery = `INSERT INTO ${constants.tableName.payment_records} (
                                                                                                 invoice_id,
-                                                                                                total_amount
+                                                                                                total_amount,
+                                                                                                remaining_amount
                                                                                                 ) VALUES (
                                                                                                     '${invoice_id}', 
+                                                                                                    '${final_amount}',
                                                                                                     '${final_amount}'
                                                                                                 );`;                                                                                            
                                                                                                 con.query(insQuery, async (err, result) => {

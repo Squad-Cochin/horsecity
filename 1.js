@@ -1205,20 +1205,21 @@ CREATE TABLE vehicles_transportation
     status ENUM('COMPLETED', 'ONGOING', 'NOT COMPLETED')
 );
 
-CREATE TABEL payment_records
+CREATE TABLE payment_records
 (
-    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-	invoice_id INT(11),
+    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    invoice_id INT(11),
     FOREIGN KEY (invoice_id) REFERENCES invoices(id),
     total_amount DECIMAL(4,2),
     received_amount DECIMAL(4,2),
-    received_data DATETIME,
-	remaining_amount DECIMAL(4,2),
+    received_date DATETIME,
+    remaining_amount DECIMAL(4,2),
     status ENUM('PAID', 'PARTIALLY PAID', 'PENDING'),
-    created_at DATETIME ,
-    updated_at DATETIME DEFAULT NULL ,
-    deleted_at DATETIME DEFAULT NULL 
+    created_at DATETIME,
+    updated_at DATETIME DEFAULT NULL,
+    deleted_at DATETIME DEFAULT NULL
 );
+
 
 
 INSERT INTO bookings (
@@ -2032,5 +2033,65 @@ CREATE TABEL payment_records
     status ENUM('PAID', 'PARTIALLY PAID', 'PENDING')
 );
 
+INSERT INTO `currencies` (`id`, `name`, `abbreviation`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, 'Dhiram', 'AED', 'ACTIVE', NULL, NULL, NULL);
+
+INSERT INTO `languages` (`id`, `name`, `file`, `abbreviation`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, 'English', 'englisj.json', 'ENG', 'ACTIVE', '2023-07-28 22:18:40', NULL, NULL);
+
+INSERT INTO `taxations` (`id`, `type`, `name`, `value`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, 'PERCENTAGE', 'VAT', '5', 'ACTIVE', '2023-07-28 22:21:18', NULL, NULL);
+
+INSERT INTO `application_settings` (`id`, `application_title`, `contact_address`, `email`, `phone`, `country_code`, `logo`, `loginpage_logo`, `loginpage_bg_image`, `favicon`, `language_id`, `currency_id`, `tax_id`, `licence_number`, `invoice_prefix`, `quotation_prefix`, `created_at`, `updated_at`, `deleted_at`) VALUES ('', 'Horse city Transportation', '2 Manewada Nagpur', 'so832154@gmail.com', '8421168035', '91', 'aqser.jpg', 'ahsp.jpg', 'asdfg.jpg', 'jhp.jpg', '1', '1', '1', '987654321234', 'IO', 'Qo', '2023-07-28 22:22:23', NULL, NULL);
+
+
+
+INSERT INTO `discount_types` (`id`, `name`, `type`, `rate`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES ('1', 'Id', 'PERCENTAGE', '5', 'ACTIVE', '2023-07-28 22:39:09', NULL, NULL);
+
+INSERT INTO `payment_types` (`id`, `name`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES ('1', 'Cash', 'ACTIVE', '2023-07-28 22:44:42', NULL, NULL);
+ALTER TABLE `quotations` CHANGE `tax_amount` `tax_amount` DECIMAL(15,2) NOT NULL;
+ALTER TABLE `invoices` CHANGE `final_amount` `final_amount` DECIMAL(15,2) NOT NULL;
+ALTER TABLE `bookings` CHANGE `final_amount` `final_amount` DECIMAL(15,2) NOT NULL;
+ALTER TABLE `bookings` CHANGE `sub_total` `sub_total` DECIMAL(15,2) NOT NULL;
+ALTER TABLE `invoices` CHANGE `sub_total` `sub_total` DECIMAL(15,2) NOT NULL;
+ALTER TABLE `bookings` CHANGE `tax_amount` `tax_amount` DECIMAL(15,2) NOT NULL, CHANGE `discount_amount` `discount_amount` DECIMAL(15,2) NOT NULL;
+ALTER TABLE `payment_records` CHANGE `total_amount` `total_amount` DECIMAL(15,2) NULL DEFAULT NULL;
+ALTER TABLE `payment_records` CHANGE `received_amount` `received_amount` DECIMAL(15,2) NULL DEFAULT NULL;
+ALTER TABLE `payment_records` CHANGE `remaining_amount` `remaining_amount` DECIMAL(15,2) NULL DEFAULT NULL;
+ALTER TABLE `invoices` CHANGE `tax_amount` `tax_amount` DECIMAL(15,2) NOT NULL, CHANGE `discount_amount` `discount_amount` DECIMAL(15,2) NOT NULL;
+
+
+INSERT INTO `enquiries` (`id`, `customer_id`, `vehicle_id`, `serviceprovider_id`, `pickup_location`, `drop_location`, `trip_type`, `pickup_country`, `drop_country`, `no_of_horse`, `description`, `status`, `created_at`) VALUES ('1', '1', '1', '4', 'Radisson Blu', 'Hithrow Airport', 'PRIVATE', 'India', 'England', '5', 'I want to ship my horse to UK.', 'NOTCONFIRMED', '2023-07-28 22:27:30');
+
+INSERT INTO `quotations` (`id`, `customer_id`, `enquiry_id`, `serviceprovider_id`, `taxation_id`, `vehicle_id`, `driver_id`, `discount_type_id`, `quotation_id`, `trip_type`, `pickup_location`, `pickup_country`, `pickup_date`, `drop_location`, `drop_country`, `drop_date`, `no_of_horse`, `special_requirement`, `additional_service`, `transportation_insurance_coverage`, `driver_amount`, `vehicle_amount`, `sub_total`, `tax_amount`, `discount_amount`, `final_amount`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES ('1', '1', '1', '4', '1', '1', '1', '1', 'Q001', 'PRIVATE', 'Devi Ahilya Bai Holkar Airport', 'India', '2023-07-29 22:40:51', 'Hithrow Airport', 'England', '2023-07-31 22:40:51', '5', 'Medicine', 'Washing', 'TRUE', '35', '45', '90', '15', '5', '100', 'CONFIRMED', '2023-07-28 22:40:51', NULL, NULL);
+
+
+INSERT INTO `bookings` (`id`, `customer_id`, `quot_id`, `quotation_prefix_id`, `service_provider_id`, `vehicle_id`, `driver_id`, `status`, `taxation_id`, `discount_type_id`, `payment_type_id`, `booking_status`, `pickup_location`, `pickup_country`, `pickup_date`, `drop_location`, `drop_country`, `drop_date`, `additional_services`, `confirmation_sent`, `sub_total`, `tax_amount`, `discount_amount`, `final_amount`, `created_at`, `updated_at`, `deleted_at`) VALUES ('1', '1', '1', 'Q003', '4', '1', '1', 'PENDING', '1', '1', '1', 'PENDING', 'Ahilya Bai Holkar Airport', 'India', '2023-07-29 22:43:52', 'Hithrow Airport', 'England', '2023-07-31 22:43:52', 'Washing', 'YES', '90', '15', '5', '100', '2023-07-28 22:43:52', NULL, NULL);
+
+
+INSERT INTO `invoices` (`id`, `invoice_no`, `booking_id`, `pickup_point`, `drop_point`, `sub_total`, `tax_amount`, `discount_amount`, `final_amount`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES ('1', 'I001', '1', 'Deviahilya Bai Holkar', 'Hithrow Airport', '90', '15', '5', '100', 'ACTIVE', '2023-07-28 22:47:25', NULL, NULL);
+
+
+INSERT INTO `enquiries` (`id`, `customer_id`, `vehicle_id`, `serviceprovider_id`, `pickup_location`, `drop_location`, `trip_type`, `pickup_country`, `drop_country`, `no_of_horse`, `description`, `status`, `created_at`) VALUES ('2', '1', '1', '4', 'Le Meridian', 'Sky Tower', 'SHARING', 'India', 'New Zealand', '5', 'I want to ship my horse to NZ.', 'NOTCONFIRMED', '2023-07-29 01:22:30');
+
+INSERT INTO `quotations` (`id`, `customer_id`, `enquiry_id`, `serviceprovider_id`, `taxation_id`, `vehicle_id`, `driver_id`, `discount_type_id`, `quotation_id`, `trip_type`, `pickup_location`, `pickup_country`, `pickup_date`, `drop_location`, `drop_country`, `drop_date`, `no_of_horse`, `special_requirement`, `additional_service`, `transportation_insurance_coverage`, `driver_amount`, `vehicle_amount`, `sub_total`, `tax_amount`, `discount_amount`, `final_amount`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES ('2', '1', '1', '4', '1', '1', '1', '1', 'Q002', 'SHARING', 'Le Meridian', 'India', '2023-07-29 01:25:51', 'Sky Tower', 'New Zealand', '2023-07-31 22:40:51', '5', 'Medicine', 'Washing', 'TRUE', '55', '85', '140', '25', '3', '162', 'CONFIRMED', '2023-07-29 01:27:51', NULL, NULL);
+
+
+INSERT INTO `bookings` (`id`, `customer_id`, `quot_id`, `quotation_prefix_id`, `service_provider_id`, `vehicle_id`, `driver_id`, `status`, `taxation_id`, `discount_type_id`, `payment_type_id`, `booking_status`, `pickup_location`, `pickup_country`, `pickup_date`, `drop_location`, `drop_country`, `drop_date`, `additional_services`, `confirmation_sent`, `sub_total`, `tax_amount`, `discount_amount`, `final_amount`, `created_at`, `updated_at`, `deleted_at`) VALUES ('2', '1', '1', 'Q002', '4', '1', '1', 'PENDING', '1', '1', '1', 'PENDING', 'Le Meridian', 'India', '2023-07-29 22:43:52', 'Sky Tower', 'New Zealand', '2023-07-31 22:43:52', 'Washing', 'YES', '140', '25', '3', '162', '2023-07-29 01:28:12', NULL, NULL);
+
+
+INSERT INTO `invoices` (`id`, `invoice_no`, `booking_id`, `pickup_point`, `drop_point`, `sub_total`, `tax_amount`, `discount_amount`, `final_amount`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES ('2', 'I002', '2', 'Le Meridian', 'Sky Tower', '140', '25', '3', '162', 'ACTIVE', '2023-07-29 01:30:25', NULL, NULL);
+
+
+INSERT INTO `enquiries` (`id`, `customer_id`, `vehicle_id`, `serviceprovider_id`, `pickup_location`, `drop_location`, `trip_type`, `pickup_country`, `drop_country`, `no_of_horse`, `description`, `status`, `created_at`) VALUES (NULL, '1', '1', '4', 'Red Fort', 'Kutumb Minar', 'SHARING', 'India', 'India', '5', 'There are 4 horse for transportation', 'NOTCONFIRMED', '2023-07-29 01:53:34');
+
+INSERT INTO `quotations` (`id`, `customer_id`, `enquiry_id`, `serviceprovider_id`, `taxation_id`, `vehicle_id`, `driver_id`, `discount_type_id`, `quotation_id`, `trip_type`, `pickup_location`, `pickup_country`, `pickup_date`, `drop_location`, `drop_country`, `drop_date`, `no_of_horse`, `special_requirement`, `additional_service`, `transportation_insurance_coverage`, `driver_amount`, `vehicle_amount`, `sub_total`, `tax_amount`, `discount_amount`, `final_amount`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES (1, '2', '3', '5', '1', '2', '2', '1', 'Q003', 'SHARING', 'Red Fort', 'India', '2023-07-29 02:00:13', 'Qutumb Minor', 'India', '2023-07-31 02:00:13', '2', 'Dressing', 'Makeup', 'TRUE', '20', '70', '90', '130', '40', '180', 'NOTCONFIRMED', '2023-07-29 02:00:13', NULL, NULL);
+
+INSERT INTO `bookings` (`id`, `customer_id`, `quot_id`, `quotation_prefix_id`, `service_provider_id`, `vehicle_id`, `driver_id`, `status`, `taxation_id`, `discount_type_id`, `payment_type_id`, `booking_status`, `pickup_location`, `pickup_country`, `pickup_date`, `drop_location`, `drop_country`, `drop_date`, `additional_services`, `confirmation_sent`, `sub_total`, `tax_amount`, `discount_amount`, `final_amount`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, '2', '3', 'Q003', '5', '2', '2', 'PENDING', '1', '1', '1', 'CONFIRMED', 'Red Fort', 'India', '2023-07-29 02:06:38', 'Qutumb Minar', 'India', '2023-07-31 02:06:38', 'Dressing', NULL, '90', '130', '40', '180', '2023-07-29 02:06:38', NULL, NULL);
+
+INSERT INTO `invoices` (`id`, `invoice_no`, `booking_id`, `pickup_point`, `drop_point`, `sub_total`, `tax_amount`, `discount_amount`, `final_amount`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, 'I003', '3', 'Red fort', 'Qutumb Minar', '90', '130', '40', '180', 'ACTIVE', '2023-07-29 02:13:13', NULL, NULL);
+
+INSERT INTO `payment_records` (`id`, `invoice_id`, `total_amount`, `received_amount`, `received_date`, `remaining_amount`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, '3', '180', NULL, NULL, NULL, NULL, '2023-07-28 23:11:11', NULL, NULL);
+INSERT INTO `payment_records` (`id`, `invoice_id`, `total_amount`, `received_amount`, `received_date`, `remaining_amount`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES ('1', '1', '233', NULL, NULL, NULL, NULL, '2023-07-28 23:19:28', NULL, NULL);
+INSERT INTO `payment_records` (`id`, `invoice_id`, `total_amount`, `received_amount`, `received_date`, `remaining_amount`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES ('10', '2', '162', NULL, NULL, NULL, NULL, '2023-07-29 01:31:28', NULL, NULL);
+
+INSERT INTO `templates` (`id`, `name`, `subject`, `purpose`, `template`, `type`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, 'Invoice email sent', 'Payment Invoice', 'The purpose of this is send email to the customer', 'The below you can find the invoice of your booking.', 'EMAIL', 'ACTIVE', '2023-07-29 20:40:40', NULL, NULL);
 
 */

@@ -55,7 +55,6 @@ module.exports = class customers
             }
             else
             {
-                // console.log('Came inside');
                 let dob = data[0].date_of_birth;
                 // console.log('Dob: ', dob);
                 data[0].date_of_birth = time.formatDateToDDMMYYYY(dob); 

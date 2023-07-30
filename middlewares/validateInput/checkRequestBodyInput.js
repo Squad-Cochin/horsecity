@@ -827,22 +827,14 @@ exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
     {
         if(req.method === 'PUT' && req.url === url.UPDATE_CUSTOMER_PAGE_URL + req.params.id && !req.files?.id_proof_image)
         {
-            console.log('2 Is this the place');
             next();
         }
         if(req.method === 'PUT' && req.url === url.UPDATE_CUSTOMER_PAGE_URL + req.params.id && req.files?.id_proof_image)
         {
-            console.log('5');
             next();
         }
-        // if(req.method === 'POST' && req.url === url.ADD_CUSTOMER_PAGE_URL + req.params.id && req.files?.id_proof_image)
-        // {
-        //     console.log('3');
-        //     next();
-        // }
         if(req.method === 'POST')
         {
-            console.log('4 again from the middleware');
             next();
         }
     }
@@ -917,13 +909,8 @@ exports.isDriverProfileImageSubmitted = (req, res, next) =>
         {
             next();
         }
-        // if(req.method === 'POST' && req.url === url.ADD_DRIVER_PAGE_URL && req.files?.profile_image)
-        // {
-        //     next();
-        // }
         if(req.method === 'POST')
         {
-            // console.log('4 again from the middleware during profile image time');
             next();
         }
     }
@@ -951,13 +938,8 @@ exports.isDriverLicenceImageSubmitted = (req, res, next) =>
         {
             next();
         }
-        // if(req.method === 'POST' && req.url === url.ADD_DRIVER_PAGE_URL + req.params.id && req.files?.licence_img)
-        // {
-        //     next();
-        // }
         if(req.method === 'POST')
         {
-            // console.log('4 again from the middleware during licence time');
             next();
         }
     }
@@ -1020,6 +1002,12 @@ exports.isServiceProviderIdEntered = (req, res, next) =>
 };
 
 
+exports.checkAmountEntered = async(req, res, next) =>
+{
+    this.checkValueEntered(req.body.totalRecievedAmount, 'Recieved Amount')(req, res, next);
+    next();
+};
+
 exports.checkValueEntered = (fieldName, messageField) => (req, res, next) =>
 {
     return new Promise((resolve, reject) =>
@@ -1032,8 +1020,6 @@ exports.checkValueEntered = (fieldName, messageField) => (req, res, next) =>
                 status: false,
                 message: `${messageField} not entered`,
             });
-            
-
         }
         else 
         {
@@ -1080,44 +1066,17 @@ exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) => {
     }
 };
 
-// exports.checkValueEntered = (fieldName, messageField) => (req, res, next) => 
-// {
-//     console.log('Function is coming here');
-//     return new Promise((resolve, reject) =>
-//     {
-//         if (!fieldName)
-//         {
-//             res.status(400).send
-//             ({
-//                 code: 400,
-//                 status: false,
-//                 message: `${messageField} not entered`,
-//             });
-            
-//             reject(new Error(`${messageField} not entered`));
-//         }
-//         else
-//         {
-//             resolve();
-//         }
-//     });
-// };
-
-// exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) => {
-//     try {
-//         this.checkValueEntered(req.body.customer_id, 'Customer id') (req, res, next);
-//         this.checkValueEntered(req.body.enquiry_id, 'Enquiry id');
-//         this.checkValueEntered(req.body.driver_id, 'Driver id');
-//         this.checkValueEntered(req.body.vehicle_id, 'Vehicle id');
-//         this.checkValueEntered(req.body.serviceprovider_id, 'Service provider id');
-//         // Add other field checks here
-//         next();
-//     } catch (error) {
-//         // Handle any errors that might occur during the checks
-//         res.status(400).send({
-//             code: 400,
-//             status: false,
-//             message: error.message,
-//         });
-//     }
-// };
+exports.checkEmailBody = async (req, res, next) =>
+{
+    try
+    {
+        await this.checkValueEntered(req.body.email, 'Email')(req, res, next);
+        await this.checkValueEntered(req.body.subject, 'Subject')(req, res, next);
+        await this.checkValueEntered(req.body.body, 'Body')(req, res, next);
+        next();
+    }
+    catch(error)
+    {
+        console.log(`Error from the 'checkRequestBodyInput' file in validator. Which is inside the middlewares. While checking the email body`, error);
+    }
+};

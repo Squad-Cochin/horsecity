@@ -244,18 +244,6 @@ exports.removeUser = (tablename, Id) =>
                             }
                         });
                     }
-                    // else
-                    // {
-                    //     let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.active}'WHERE t.id = '${Id}' `;
-                    //     con.query(UpdateQuery, (err, result) => // executing the above query 
-                    //     {
-                    //         if(result.length != 0) // if ticket updated then if block
-                    //         {
-                    //             console.log('Status Changed to ACTIVE');
-                    //             resolve(result);
-                    //         }
-                    //     });
-                    // }
                 }
                 else
                 {

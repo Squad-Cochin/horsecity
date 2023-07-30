@@ -43,7 +43,7 @@ exports.getAll = async (req, res) =>
     else
     {
         // If there are invoice in the database. Then these lines of code will be executed
-        console.log('Invoice data fetched successfully');
+        // console.log('Invoice data fetched successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -57,7 +57,6 @@ exports.getAll = async (req, res) =>
 
 exports.getOne = async (req, res) =>
 {
-    console.log('Came');
     const invoices = await invoice.getone(req.params.id);
     if(invoices.length === 0)
     {
@@ -84,11 +83,10 @@ exports.getOne = async (req, res) =>
     }
 };
 
-exports.enterAmountForParticularInvoice = async(req, res) =>
+exports.enterAmountForParticularInvoice = async (req, res, next) =>
 {
-    console.log("body",req.body);
+    console.log('Came to the controller');
     const invoices = await invoice.enteramountforparticularinvoice(req.params.id, req.body.totalRecievedAmount)
-
     if(invoices === 'nodata')
     {
         console.log('Error while inserting the data into enter amount ');
@@ -98,9 +96,32 @@ exports.enterAmountForParticularInvoice = async(req, res) =>
             status: false,
             message: constant.responseMessage.errorInsert,
         });
-
     }
-    if(invoices.length !== 0)
+    
+
+    if(invoices === 'err')
+    {
+        console.log('Internal server error from the enter amount for particular invoice');
+        return res.status(200).json
+        ({
+            code: 500,
+            status: false,
+            message: 'Internal server error from the enter amount for particular invoice',
+        });
+    }
+
+    if(invoices === 'lessThanZero')
+    {
+        console.log('Internal server error from the enter amount for particular invoice. The amount is less than zero.');
+        return res.status(200).json
+        ({
+            code: 400,
+            status: false,
+            message: 'Amount is less than zero. It is not allowed',
+        });
+    }
+    
+    if(invoices == 'affectedRows')
     {
         console.log('Amount data inserted successfully');
         return res.status(200).json
@@ -110,6 +131,7 @@ exports.enterAmountForParticularInvoice = async(req, res) =>
             message: "Amount data inserted successfully",
         });
     }
+
     if(invoices === 'fullypaid')
     {
         console.log('Amount is already paid fully');
@@ -118,6 +140,17 @@ exports.enterAmountForParticularInvoice = async(req, res) =>
             code: 200,
             status: true,
             message: "Amount is already paid fully",
+        });
+    }
+    
+    if(invoices === 'moreThanActualAmount')
+    {
+        console.log('Amount which is being inserted is more than the remaing amount');
+        return res.status(200).json
+        ({
+            code: 400,
+            status: false,
+            message: "Amount which is being inserted is more than the remaing amount. Please enter again",
         });
     }
 };
@@ -132,11 +165,20 @@ exports.getPaymentHistroyOfParticularInvoice = async (req, res) =>
         ({
             code: 400,
             status: false,
-            message: constant.responseMessage.errorInsert,
+            message: constant.responseMessage.getAllErr,
         });
     }
-
-
+    if(invoices.length != 0)
+    {
+        console.log(`Invoice histroy of a particular invoice id is fetched successfully`);
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: constant.responseMessage.getAll,
+            data : invoices
+        });
+    }
 };
 
 exports.getLatestPaymentHistroy = async (req, res) =>
@@ -164,6 +206,89 @@ exports.getLatestPaymentHistroy = async (req, res) =>
             {
                 invoice: invoices
             }
+        });
+    }
+    if(invoices.length == 0)
+    {
+        console.log('Data Fetched Succesfully. But there is no data present for this id');
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: 'Data Fetched Succesfully. But there is no data present for this id',
+            data : 
+            {
+                invoice: invoices
+            }
+        });
+    }
+};
+
+
+
+exports.sendEmailAtInvoice = async(req, res) =>
+{
+    const invoices = await invoice.sendemailatinvoice(req.body.email, req.body.subject, req.body.body);
+    // console.log('Invoices: ', invoices);
+    if(invoices === false)
+    {
+        console.log(`Error while sending the email from the invoice controller function`);
+        return res.status(200).json
+        ({
+            code: 400,
+            status: false,
+            message: 'Error while sending the invoice on email',
+        });
+    }
+    if(invoices === true)
+    {
+        console.log(`Email sent from the invoice controller function`);
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: 'Invoice sent successfully on email',
+        });
+    }
+};
+
+
+
+
+exports.getSendEmailButtonData = async(req, res) =>
+{
+    const invoices = await invoice.getsendemailbuttondata(req.params.id);
+    if(invoices === 'err')
+    {
+        console.log('Internal Server Error from the send email button data');
+        return res.status(200).json
+        ({
+            code: 500,
+            status: false,
+            message: constant.responseMessage.universalError,
+        });
+    }
+    
+    if(invoices.length != 0)
+    {
+        console.log('Data Fetched Succesfully');
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: 'Data Fetched Succesfully',
+            data : invoices
+        });
+    }
+    else
+    {
+        console.log('Data Fetched Succesfully. No data is there for this params id ');
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: 'Data Fetched Succesfully. No data is there for this params id',
+            data : invoice
         });
     }
 };

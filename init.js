@@ -45,7 +45,7 @@ module.exports = async function()
                                 }
                                 else
                                 { 
-                                    console.log("#### Error while entereing the password policies data from the backend #### ")
+                                    console.log("#### Error while entereing the password policies data from the backend #### ", err)
                                 }
                             });
                         }
