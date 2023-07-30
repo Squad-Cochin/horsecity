@@ -286,11 +286,11 @@ export async function getInvoicesData(pageNumber)
 {
     try 
     {
-        // let pageLimit = config.pageLimit;
+        let pageLimit = config.pageLimit;
         let reqObj =
         {
-            "page" : 1,
-            "limit" : 1
+            "page" : pageNumber,
+            "limit" : pageLimit
         }
         const { data } = await axios.post(`${url.POST_INVOICE_ALL_DATA_URL}`, reqObj);
         console.log("Invoices: ",data);
@@ -557,12 +557,16 @@ export async function getLatestPayementHistroy(iId){
     }
 }
 
-// export async function getLanguageFile(){
-//     try {
-//         const { data } = await axios.get(`${url.GET_LANGUAGES_FILE}`);
-//         console.log("DDD",data)
-//         return(data)
-//     } catch (error) {
-//         return null
-//     }
-// }
+export async function getSendEmailButtonData(iId)
+{
+    try
+    {
+        const { data } = await axios.get(`${url.GET_SEND_EMAIL_BUTTON_DATA_OF_INVOICE}/${iId}`);
+        // console.log("Send email button data: ",data)
+        return(data)
+    }
+    catch (error)
+    {
+        return null        
+    }
+}

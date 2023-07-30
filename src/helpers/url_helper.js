@@ -16,14 +16,14 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
 /**
  * The below one is Saurabh's Computer Details
  */
-export const API_BASE_URL = "http://192.168.200.130:8000";
-const apiBaseUrl = "http://192.168.200.130:8000";
+// export const API_BASE_URL = "http://192.168.200.130:8000";
+// const apiBaseUrl = "http://192.168.200.130:8000";
 /**
  * The below one is own Computer Details
  */
 
-// const apiBaseUrl = "http://localhost:8000";
-// export const API_BASE_URL = "http://localhost:8000";
+const apiBaseUrl = "http://localhost:8000";
+export const API_BASE_URL = "http://localhost:8000";
 
 const token = "/horsecity661809"
 
@@ -80,8 +80,10 @@ export const PUT_VEHICLES_IMAGES_REMOVE = apiBaseUrl + token + "/removeImage/veh
 export const POST_INVOICE_ALL_DATA_URL = apiBaseUrl + token + "/getAll/invoices"
 export const GET_INVOICE_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/invoice"
 export const GET_INVOICE_SINGLE_INVOICE_PAYMENT_HISTROY = apiBaseUrl + token + '/payment/histroy'
-export const POST_ADD_AMOUNT_URL = apiBaseUrl + token + `/add/amount`
 export const GET_LATEST_PAYMENT_HISTROY_OF_INVOICE = apiBaseUrl + token + '/single/payment/histroy'
+export const GET_SEND_EMAIL_BUTTON_DATA_OF_INVOICE = apiBaseUrl + token + `/email/button/data`
+export const POST_SENT_INVOICE_ON_EMAIL = apiBaseUrl + token + `/send/email`
+export const POST_ADD_AMOUNT_URL = apiBaseUrl + token + `/add/amount`
 
 
 /**DRIVERS */

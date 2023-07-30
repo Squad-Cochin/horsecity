@@ -1,78 +1,76 @@
-
-
-
-
 import React, { useState, useEffect, useRef  } from 'react';
-import { useFormik , Field} from "formik";
-import jsPDF from 'jspdf';
+import { useFormik} from "formik";
 import List from "list.js";
 import { Link } from 'react-router-dom';
-import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import Logo from "../../assets/images/black-logo.png";
-import { Invoices } from '../../CommonData/Data/Invoices';
-// import { getInvoice, getLedgerData } from '../../helpers/ApiRoutes/authApiRoutes';
 import { getLedgerData } from '../../helpers/ApiRoutes/authApiRoutes';
-import html2canvas from 'html2canvas';
+import html2pdf from 'html2pdf.js'; // Make sure to include the library properly
 import config from '../../config';
 /**IMPORTED APIs */
 
 
-import { getInvoicesData, getSingleInvoiceData, getAssignedProviders, getLatestPayementHistroy } from '../../helpers/ApiRoutes/getApiRoutes'; 
-import { addAmount } from '../../helpers/ApiRoutes/addApiRoutes';
+import { getInvoicesData, getSingleInvoiceData, getLatestPayementHistroy, getSendEmailButtonData } from '../../helpers/ApiRoutes/getApiRoutes'; 
+import { addAmount, sendEmail } from '../../helpers/ApiRoutes/addApiRoutes';
+
+
 const InvoiceDetails = () =>
 {
-    const [ ledger, setLedger] = useState([])
-    const [ ledg, setLedg] = useState([]);
-    const [ paymentHistroy, setPaymentHistroy] = useState([]);
+    const [ledger, setLedger] = useState([])
+    const [ledg, setLedg] = useState([]);
+    const [paymentHistroy, setPaymentHistroy] = useState([]);
+    const [sendEmailButtonData, setsendEmailButtonData] = useState([]);
     const [modal_list, setmodal_list] = useState(false);
     const [view_modal, setView_modal] = useState(false);
     const [modal, setModal] = useState(false);
     const [invoices, setInvoices] = useState([]);
     const [invoice, setInvoice] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
-    const [toValue, setToValue] = useState('');
-    const [subjectValue, setSubjectValue] = useState('');
-    const [bodyValue, setBodyValue] = useState('');
+    const [pageNumber, setPageNumber] = useState(1);
+    const [numberOfData, setNumberOfData] = useState(0);
+    const [errors, setErrors] = useState("")
+    const [showEnterAmountModal, setShowEnterAmountModal] = useState(false);
+    const [downloadingPDF, setDownloadingPDF] = useState(false);
+    const [recipientEmail, setRecipientEmail] = useState('');
     const invoiceRef = useRef(null); // Reference to the invoice section for PDF generation
-    const [ pageNumber, setPageNumber ] = useState(1);
-    const [ numberOfData, setNumberOfData ] = useState(0);
-    const [ errors, setErrors ] = useState("")
     const pageLimit = config.pageLimit;
 
-    useEffect(() => {
-      // setInvoices(getInvoice());
+    useEffect(() => 
+    {
       setLedger(getLedgerData());
-      getAllData(1)
-      
+      getAllData(1);      
     }, []);
 
-    const handleOpenModal = () =>{
+    const handleOpenModal = async (productId) =>
+    {
+      console.log('Invoice Id from the send email button: ', productId);
+      let sendEmailbuttondata = await getSendEmailButtonData(productId);
+      console.log(`Send Email Button Data: `, sendEmailbuttondata);
+      setsendEmailButtonData(sendEmailbuttondata);     
       setModalOpen(true);     
     };
+
+    const toggleEnterAmountModal = () => 
+    {
+      setShowEnterAmountModal(!showEnterAmountModal);
+    }
 
     const initialValues = {
                         totalInvoiceAmount: "",
                         totalRecievedAmount: "",
-                        invoiceId:invoice[0]?.id
+                        invoiceId:invoice[0]?.id,
+                        email: "",
+                        subject:"",
+                        body:""
                       };
 
-  // const handleOpenInvoiceModal = () =>
-  // {
-  //   setModalInvoiceOpen(true);     
-  // };  
+  
   const handleCloseModal = () => {
     setModalOpen(false);
   };
-  // const handleCloseInvoiceModal = () => 
-  // {
-  //   setModalInvoiceOpen(false);
-  // };
-  const handleSendMail = () => 
-  {
-    handleCloseModal();
-  };
-
+  
+  
   const toggleModal = () => 
   {
     setModal(!modal);
@@ -83,54 +81,118 @@ const InvoiceDetails = () =>
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues,
-    onSubmit: async(values) => {
+    onSubmit: async (values) =>
+    {
       setmodal_list(false);
-      console.log("valuse",values);
+      console.log("Values: ",values);
       let addedData = await addAmount(values.invoiceId, values.totalRecievedAmount);
       console.log(addedData);
-      console.log("valuse",values);
-    },
+      if(addedData.code === 200)
+      {
+        setErrors("")
+        getAllData(pageNumber)
+        setModal(!modal);
+        modalClose(values.invoiceId)
+      }
+      else
+      {
+        setErrors("")
+        setErrors(addedData.message)
+      }
+      let sendEmail = await sendEmail(values.invoiceId, values.email, values.subject, values.body);
+      console.log(`Send Email Response`, sendEmail);
+      if(addedData.code === 200)
+      {
+        setErrors("")
+        getAllData(pageNumber)
+        setModal(!modal);
+      }
+      else
+      {
+        setErrors("")
+        setErrors(addedData.message)
+      }
+    }
   });
 
-  const handleDownloadPDF = () =>
-  {
-    const invoiceSection = invoiceRef.current;  
-    if (invoiceSection)
-    {
-      html2canvas(invoiceSection).then((canvas) =>
-      {
-        const imgData = canvas.toDataURL('image/png');
-        const pdf = new jsPDF();
-        const imgProps = pdf.getImageProperties(imgData);
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = (imgProps.height * pdfWidth) / imgProps.width;  
-        pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
-        pdf.save(`invoice.pdf`);
-      });
-    }
-  };
+    // Function to handle sending email
+    const handleSendEmail = async () => {
+      const { email, subject, body } = validation.values;
+      // Extract the required data from the validation.values object.
+      // Make sure you use the correct field names for email, subject, and body.
+  
+      // Call the sendEmail function with the extracted data
+      const sendEmailResponse = await sendEmail(
+        sendEmailButtonData[0]?.id, // Pass the invoice number as an argument
+        email,
+        subject,
+        body
+      );
+  
+      // Handle the response from the API if needed
+      console.log('Send Email Response:', sendEmailResponse);
+  
+      // Optionally, you can perform additional actions after sending the email, such as displaying a success message or updating the UI.
+    };
 
-  async function tog_view(productId)
+  async function modalClose(productId)
   {
-    console.log("reach1",productId)
     let invoiceData = await getSingleInvoiceData(productId)
-    console.log("dd",invoiceData)
+    console.log("Invoice Data: ",invoiceData)
     setView_modal(!view_modal)
     setInvoice(invoiceData.invoice)
     setLedg(invoiceData.payment)
-    let latestPaymentHistroy = await getLatestPayementHistroy(1)
-    console.log("Lates Payment Data:",latestPaymentHistroy)
-    setPaymentHistroy(latestPaymentHistroy.invoice)
+  }
+
+  const handleDownloadPDF = () => {
+    const invoiceSection = invoiceRef.current;
+    if (invoiceSection) {
+      console.log('Download function executing started');
+      setDownloadingPDF(true);  
+      const opt = {
+        margin: 5,
+        filename: 'invoice.pdf',
+        image: { type: 'png', quality: 0.98 },
+        html2canvas: { scale: 2 },
+        jsPDF: { unit: 'px', format: 'a4', orientation: 'portrait' },
+      };
+  
+      const customWidth = 800; // Width in pixels
+      const customHeight = 1000; // Height in pixels
+      opt.jsPDF.unit = 'px';
+      opt.jsPDF.format = [customWidth, customHeight]; // Set the custom width and height
+  
+      html2pdf().from(invoiceSection).set(opt).save().then(() =>
+      {
+        setDownloadingPDF(false);
+        toggleEnterAmountModal();
+      });
+    }
+  };
+  
+
+  async function tog_view(productId)
+  {
+    console.log("Reached: ",productId)
+    let invoiceData = await getSingleInvoiceData(productId);
+    console.log("Invoice Data: ",invoiceData);
+    setView_modal(!view_modal);
+    setInvoice(invoiceData.invoice);
+    setLedg(invoiceData.payment);
+    let latestPaymentHistroy = await getLatestPayementHistroy(productId);
+    console.log("Latest Payment Data:",latestPaymentHistroy);
+    setPaymentHistroy(latestPaymentHistroy.invoice);
+    setView_modal(!view_modal);
   }
 
   // function for get data all drivers data
   async function getAllData(page) {
-    let getInvoices = await getInvoicesData(page || 1);
-    console.log("Get",getInvoices)
+    let getInvoices = await getInvoicesData(page);
+    console.log("Get Invoice Date",getInvoices)
     setInvoices(getInvoices.invoices);
     setPageNumber(page);
     setNumberOfData(getInvoices.totalCount);
-}
+  }
 
 
   useEffect(() =>
@@ -164,72 +226,46 @@ const InvoiceDetails = () =>
               <Col lg={12}>
                 <Card>
                   <CardHeader> {/* <h4 className="card-title mb-0">Add, Edit & Remove</h4> */} </CardHeader>
-                  <CardBody>
-                    <div id="invoiceList">
-                      <div className="table-responsive table-card mt-3 mb-1">
-                        <table className="table align-middle table-nowrap" id="Table">
-                          <thead className="table-light">
-                            <tr>
-                              <th className="index" data-sort="index">#</th>
-                              <th className="sort" data-sort="invoice_number">Invoice Number</th>
-                              <th className="sort" data-sort="quotation_id">Quotation Id</th>
-                              <th className="sort" data-sort="customer_name">Customer Name</th>
-                              <th className="sort" data-sort="customer_email">Customer Email</th>
-                              {/* <th className="sort" data-sort="service_provider_name">Service Provider Name</th> */}
-                              <th className="sort" data-sort="view_invoice">View Invoice</th>
-                              <th className="sort" data-sort="send_email">Send Email</th>
-                            </tr>
-                          </thead>
-                          <tbody className="list form-check-all">
-                            {invoices.map((item, index) => (
-                              <tr key={index.id}>
-                                <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
-                                {/* <td className="index text-center">{index + 1}</td>  */}
-                                <td className="invoice_number">{item.iId}</td>
-                                <td className="quotation_id">{item.quotation_id}</td>
-                                <td className="customer_name">{item.customer_name}</td>
-                                <td className="customer_email">{item.customer_email}</td>
-                                {/* <td className="service_provider_name">{item.service_provider_name}</td> */}
-                                {/* <td className="quotation_id">{item.quotation_id}</td> */}
-                                <td className="view_invoice">
-                                  <button type="button" className="btn btn-success" id="add-btn" onClick={() => tog_view(item.id)}> View Invoice </button>
-                                </td>
-                                <td className="send_email">
-                                  <button type="button" className="btn btn-success" id="add-btn" onClick={handleOpenModal}> Send Mail </button>
-                                </td>
+                    <CardBody>
+                      <div id="invoiceList">
+                        <div className="table-responsive table-card mt-3 mb-1">
+                          <table className="table align-middle table-nowrap" id="Table">
+                            <thead className="table-light">
+                              <tr>
+                                <th className="index" data-sort="index">#</th>
+                                <th className="sort" data-sort="invoice_number">Invoice Number</th>
+                                <th className="sort" data-sort="quotation_id">Quotation Id</th>
+                                <th className="sort" data-sort="customer_name">Customer Name</th>
+                                <th className="sort" data-sort="customer_email">Customer Email</th>
+                                <th className="sort" data-sort="view_invoice">View Invoice</th>
+                                <th className="sort" data-sort="send_email">Send Email</th>
                               </tr>
-                            ))}
-                          </tbody>
-                        </table>
-                      </div>
-                      <div className="d-flex justify-content-end">
+                            </thead>
+                            <tbody className="list form-check-all">
+                              {invoices.map((item, index) => (
+                                <tr key={index.id}>
+                                  <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
+                                  <td className="invoice_number">{item.iId}</td>
+                                  <td className="quotation_id">{item.quotation_id}</td>
+                                  <td className="customer_name">{item.customer_name}</td>
+                                  <td className="customer_email">{item.customer_email}</td>
+                                  <td className="view_invoice"> <button type="button" className="btn btn-success" id="add-btn" onClick={() => tog_view(item.id)}> View Invoice </button> </td>
+                                  <td className="send_email"> <button type="button" className="btn btn-success" id="add-btn" onClick={() => handleOpenModal(item.id)}> Send Mail </button> </td>
+                                </tr>
+                              ))}
+                            </tbody>
+                          </table>
+                        </div>
+                        <div className="d-flex justify-content-end">
                           <div className="pagination-wrap hstack gap-2">
-                            {pageNumber > 1 ?
-                                <Link 
-                                    className="page-item pagination-prev disabled" 
-                                    onClick={()=> getAllData(pageNumber - 1)}
-                                >
-                                  Previous
-                                </Link>
-                            : null }
+                            {pageNumber > 1 ? <Link className="page-item pagination-prev disabled" onClick={()=> getAllData(pageNumber - 1)}> Previous </Link> : null }
                             <ul className="pagination listjs-pagination mb-0"></ul>
-                              {numberOfData > pageLimit * pageNumber ? 
-                                <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}>
-                                  Next
-                                </Link> 
-                              : null }
+                            {numberOfData > pageLimit * pageNumber ? <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}> Next </Link> : null }
                           </div>
                         </div>
-                      {/* <div className="d-flex justify-content-end">
-                        <div className="pagination-wrap hstack gap-2">
-                          <Link className="page-item pagination-prev disabled" to="#">Previous</Link>
-                            <ul className="pagination listjs-pagination mb-0"></ul>
-                          <Link className="page-item pagination-next" to="#">Next</Link> */}
-                        {/* </div>
-                      </div> */}
-                    </div>
-                  </CardBody>
-                </Card>
+                      </div>
+                    </CardBody>
+                  </Card>
               </Col>
             </Row>
         </Container>
@@ -273,7 +309,6 @@ const InvoiceDetails = () =>
                         </div>
                         <div className="tm_invoice_section tm_pay_to">
                           <p className="tm_mb2"><b className="tm_primary_color">Pay To:</b></p>
-                            {/* <p>Laralink Ltd<br />86-90 Paul Street, Londo<br />England EC2A 4NE<br />demo@gmail.com</p> */}
                             <p>{item.companyName}<br />{item.companyAddress}<br />{item.comCountry}<br />{item.com_email}</p>
                         </div>
                       </div>
@@ -284,7 +319,6 @@ const InvoiceDetails = () =>
                           <table>
                             <thead>
                               <tr>
-                                {/* <th className="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg text-center">Item</th> */}
                                 <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Pick Up Location</th>
                                 <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Pick Up Date</th>
                                 <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Drop Location</th>
@@ -295,7 +329,6 @@ const InvoiceDetails = () =>
                             </thead>
                             <tbody>
                               <tr>
-                                {/* <td className="tm_width_3 text-center">1</td> */}
                                 <td className="tm_width_4 text-center">{item.pickup_location}</td>
                                 <td className="tm_width_2 text-center">{item.pickup_date}</td>
                                 <td className="tm_width_1 text-center">{item.pickup_location}</td>
@@ -337,12 +370,10 @@ const InvoiceDetails = () =>
                       </div>
                     </div>
                   </div>
-                  <Button color="primary"style={{ marginBottom: '1rem' }} onClick={toggleModal}> Enter Amount </Button>
-                  {/* <Button color="secondary" style={{ marginBottom: '1rem' }}>Enter Amount</Button>     */}
+                  {!downloadingPDF && ( <Button color="primary" style={{ marginBottom: '1rem' }} onClick={toggleModal}> Enter Amount </Button> )}
+                  {/* <Button color="primary"style={{ marginBottom: '1rem' }} onClick={toggleModal}> Enter Amount </Button> */}
                     <div className="tm_padd_15_20 no-padding tm_round_border .tm_table_responsive">
                       <p className="tm_mb5"><b className="tm_primary_color"></b></p>
-                      {/* <Button color="secondary">Enter Amount</Button> */}
-                      {/* <Button color="secondary" style={{ marginBottom: '1rem' }}>Enter Amount</Button> */}
                         <table>
                           <thead>
                             <tr>
@@ -350,64 +381,42 @@ const InvoiceDetails = () =>
                               <th className="tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center" style={{ width: '30%' }}>Recieved Money</th>
                               <th className="tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center" style={{ width: '30%' }}>Received Date</th>
                               <th className="tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center" style={{ width: '10%' }}>Remaining Amount</th>
-                              {/* <th className="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg tm_text_right text-center">Total</th> */}
                             </tr>
                           </thead>
                           <tbody>
                             {ledg.map((item, index) => (
-                              <tr key = {index}>
+                              <tr key = {index.id}>
                                 <td className="tm_width_3 text-center">{index + 1}</td>
-                                {/* <td className="tm_width_4 text-center">Vehicle 1, Driver 1</td> */}
                                 <td className="tm_width_2 text-center">{item.received_amount === 0 ? "0 AED" : `${item.received_amount} AED`}</td>
                                 <td className="tm_width_1 text-center">{item.received_amount === 0 ? "" : item.received_date}</td>
                                 <td className="tm_width_2 text-center">{item.remaining_amount === 0 ? "0 AED" : `${item.remaining_amount} AED`}</td>
-                                {/* <td className="tm_width_2 text-center">{item.received_amount} AED</td>
-                                <td className="tm_width_1 text-center">{item.received_date}</td>
-                                <td className="tm_width_2 text-center">{item.remaining_amount} AED</td> */}
                               </tr>
                             ))}
                           </tbody>
                         </table>
-                  {/* <ul className="tm_m0 tm_note_list">
-                    <li></li>
-                    <li></li>
-                  </ul> */}
                 </div>  
-                {/* <div className="tm_padd_15_20 tm_round_border">
-                  <p className="tm_mb5"><b className="tm_primary_color">Terms & Conditions</b></p>
-                  <ul className="tm_m0 tm_note_list">
-                    <li>All claims relating to quantity or shipping errors shall be waived by Buyer unless made in writing to Seller within thirty (30) days after delivery of goods to the address stated.</li>
-                    <li>Delivery dates are not guaranteed and Seller has no liability for damages that may be incurred due to any delay in shipment of goods hereunder. Taxes are excluded unless otherwise stated.</li>
-                  </ul>
-                </div> */}
               </div>
             </div>
           ))}
         </ModalBody>
         <ModalFooter>
-            {/* <Button color="secondary" onClick={handleCloseInvoiceModal}>Close</Button> */}
             <Button color="secondary" onClick={() => { setView_modal(false); }}>Close</Button>
-                <Button color="primary" onClick={handleDownloadPDF}>
-                {/* <Button color="primary"> */}
-                    {/* <a href={Pdf} download style={{ color: 'white', textDecoration: 'none' }}> */}
-                        Download PDF
-                    {/* </a> */}
-                </Button>
+            <Button color="primary" onClick={handleDownloadPDF}>Download PDF </Button>
         </ModalFooter>
 
+        {/* This is the enter amount model */}
         <Modal className="extra-width" isOpen={modal} toggle={toggleModal}>
-        {/* <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered > */}
-          {/* <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={toggleModal}>Enter Amount</ModalHeader> */}
           <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={toggleModal}>Enter Amount</ModalHeader>
             <form className="tablelist-form" onSubmit={validation.handleSubmit}>
               <ModalBody>
+              {console.log('Payment histroy: ',paymentHistroy)}
                 {paymentHistroy.map((item, index) => (
                   <div key={index} className="tm_container">
-                <div className="mb-3">
-                  <label htmlFor="total_amount-field" className="form-label">Total Invoice Amount</label>
-                    <input type="text" name='totalInvoiceAmount' className="form-control mb-3" placeholder={item.total_amount} readOnly /> 
-                </div>
-                <div className="mb-3">
+                    <div className="mb-3">
+                      <label htmlFor="total_amount-field" className="form-label">Total Invoice Amount</label>
+                      <input type="text" name='totalInvoiceAmount' className="form-control mb-3" placeholder={item.total_amount} readOnly /> 
+                    </div>
+                  <div className="mb-3">
                   <label htmlFor="remaining_amount-field" className="form-label">Total Remaining Amount</label>
                     <input type="text" name='totalRemainingAmount' className="form-control mb-3" placeholder={item.remaining_amount} readOnly /> 
                 </div>
@@ -431,52 +440,55 @@ const InvoiceDetails = () =>
               <Button color="primary" type='submit'>Save</Button>
               <Button color="secondary" onClick={toggleModal}>Cancel</Button>
             </ModalFooter>
-            </form>
-        
+            </form>        
       </Modal>
       </Modal>
 
-      {modalOpen && (
-        <Modal isOpen={modalOpen} toggle={handleCloseModal}>
-          <ModalHeader toggle={handleCloseModal}>Send Email</ModalHeader>
+      <Modal className="extra-width" isOpen={modalOpen} toggle={handleCloseModal} centered>
+      <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={handleCloseModal}>Send Email</ModalHeader>
+        <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>
-            <div className="form-group">
-              <label htmlFor="to-field">To:</label>
-              <input
-                type="text"
-                id="to-field"
-                className="form-control"
-                value={toValue}
-                onChange={(e) => setToValue(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="subject-field">Subject:</label>
-              <input
-                type="text"
-                id="subject-field"
-                className="form-control"
-                value={subjectValue}
-                onChange={(e) => setSubjectValue(e.target.value)}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="body-field">Body:</label>
-              <textarea
-                id="body-field"
-                className="form-control"
-                rows="5"
-                value={bodyValue}
-                onChange={(e) => setBodyValue(e.target.value)}
-              ></textarea>
-            </div>
+            {/* {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null} */}
+              {sendEmailButtonData && sendEmailButtonData.length > 0 ? (
+                <div className="tm_container">
+                  <div className="mb-3">
+                    <label htmlFor="recipient-email-field" className="form-label">To:</label>
+                    <input type="text" id="recipient-email-field" name="emailInvoice" className="form-control" value={sendEmailButtonData[0]?.email || ""} onChange={validation.handleChange} onBlur={validation.handleBlur} />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="subject-field">Subject:</label>
+                    <input type="text" id="subject-field" name="subjectEmail" className="form-control" value={`${sendEmailButtonData[0]?.subject} - ${sendEmailButtonData[0]?.invoice_no}` || ""} onChange={validation.handleChange} />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="body-field">Body:</label>
+                    <textarea type="text" id="email-body-field" name="emailBody" className="form-control" value={validation.values.body || "" } onChange={validation.handleChange} onBlur={validation.handleBlur} ></textarea>
+                  </div>
+                </div>
+              ) : (
+                <div className="tm_container">
+                  <div className="mb-3">
+                    <label htmlFor="recipient-email-field" className="form-label">To:</label>
+                    <input type="text" id="recipient-email-field" name="recipient email" className="form-control" value={validation.values.email || ""} onChange={validation.handleChange} onBlur={validation.handleBlur} />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="subject-field">Subject:</label>
+                    <input type="text" id="subject-field" name="subject email" className="form-control" value={validation.values.subject || ""} onChange={validation.handleChange} onBlur={validation.handleBlur} />
+                  </div>
+                  <div className="mb-3">
+                    <label htmlFor="body-field">Body:</label>
+                    <textarea type="text" id="email-body-field" name="email body" className="form-control" value={validation.values.body || ""} onChange={validation.handleChange} onBlur={validation.handleBlur}></textarea>
+                  </div>
+                </div>
+              )}
           </ModalBody>
           <ModalFooter>
             <Button color="secondary" onClick={handleCloseModal}>Close</Button>
-            <Button color="success" onClick={handleSendMail}>Send</Button>
+            <Button color="success" type="submit" onClick={handleSendEmail}>Send</Button>
           </ModalFooter>
-        </Modal>
-      )}
+        </form>
+      </Modal>
+
+
     </React.Fragment>
   );
 };
