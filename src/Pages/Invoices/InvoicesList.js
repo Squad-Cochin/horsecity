@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef  } from 'react';
+import ReactDOMServer from 'react-dom/server';
 import { useFormik} from "formik";
 import List from "list.js";
 import { Link } from 'react-router-dom';
@@ -9,16 +10,15 @@ import { getLedgerData } from '../../helpers/ApiRoutes/authApiRoutes';
 import html2pdf from 'html2pdf.js'; // Make sure to include the library properly
 import config from '../../config';
 /**IMPORTED APIs */
-
-
 import { getInvoicesData, getSingleInvoiceData, getLatestPayementHistroy, getSendEmailButtonData } from '../../helpers/ApiRoutes/getApiRoutes'; 
-import { addAmount, sendEmail } from '../../helpers/ApiRoutes/addApiRoutes';
+import { addAmount, sendEmail, startTrip } from '../../helpers/ApiRoutes/addApiRoutes';
 
 
 const InvoiceDetails = () =>
 {
     const [ledger, setLedger] = useState([])
     const [ledg, setLedg] = useState([]);
+    const [vehicles, setVehicles] = useState([]);
     const [paymentHistroy, setPaymentHistroy] = useState([]);
     const [sendEmailButtonData, setsendEmailButtonData] = useState([]);
     const [modal_list, setmodal_list] = useState(false);
@@ -33,9 +33,11 @@ const InvoiceDetails = () =>
     const [showEnterAmountModal, setShowEnterAmountModal] = useState(false);
     const [downloadingPDF, setDownloadingPDF] = useState(false);
     const [recipientEmail, setRecipientEmail] = useState('');
+    const [modal_start, setmodal_start] = useState(false); // State variable to control delete modal visibility
+
+    const [selectedInvoiceData, setSelectedInvoiceData] = useState(null);
     const invoiceRef = useRef(null); // Reference to the invoice section for PDF generation
     const pageLimit = config.pageLimit;
-
     useEffect(() => 
     {
       setLedger(getLedgerData());
@@ -48,33 +50,48 @@ const InvoiceDetails = () =>
       let sendEmailbuttondata = await getSendEmailButtonData(productId);
       console.log(`Send Email Button Data: `, sendEmailbuttondata);
       setsendEmailButtonData(sendEmailbuttondata);     
-      setModalOpen(true);     
+      setModalOpen(true); 
+      // Fetch the invoice data for the selected productId
+      let invoiceData = await getSingleInvoiceData(productId);
+      console.log("Invoice Data: ", invoiceData);      
+      // Store the invoice data in the state variable
+      setSelectedInvoiceData(invoiceData);
+      setModalOpen(true);    
     };
-
     const toggleEnterAmountModal = () => 
     {
       setShowEnterAmountModal(!showEnterAmountModal);
     }
-
     const initialValues = {
                         totalInvoiceAmount: "",
                         totalRecievedAmount: "",
                         invoiceId:invoice[0]?.id,
-                        email: "",
-                        subject:"",
-                        body:""
-                      };
-
-  
+                        recepientEmail: sendEmailButtonData[0]?.email,
+                        invoiceSubject:`${sendEmailButtonData[0]?.subject} - ${sendEmailButtonData[0]?.invoice_no}`,
+                        invoiceBody:""
+                      };  
   const handleCloseModal = () => {
     setModalOpen(false);
   };
-  
   
   const toggleModal = () => 
   {
     setModal(!modal);
   };
+
+  function tog_start()
+    {
+      setmodal_start(!modal_start); // Toggle 'modal_delete' state
+    }
+
+    async function startBooking(id)
+    {
+      await startTrip(id);
+      window.location.reload();
+      // let data = await getAssignedProviders(selectedDriver)
+      // setSproviders(data.notexist)
+      // setAssignedSProviders(data.exist)
+  }
 
   const validation = useFormik
   ({
@@ -115,20 +132,143 @@ const InvoiceDetails = () =>
     }
   });
 
+  const generateInvoiceAsString = () => {
+    return invoice.map((item, index) => (
+      
+  <div key={index} className="tm_container" ref={invoiceRef}>
+    {console.log(item)}
+    <div className="tm_invoice_wrap">
+      <div className="tm_invoice tm_style1" id="tm_download_section">
+        <div className="tm_invoice_in">
+          <div className="tm_invoice_head tm_align_center tm_mb20">
+            <div className="tm_invoice_left">
+              <div className="tm_logo">
+                <img src={Logo} alt="Logo" style={{ height: '50px', width: '50px' }} />
+              </div>
+            </div>
+            <div className="tm_invoice_right tm_text_right">
+              <div className="tm_primary_color tm_f50 tm_text_uppercase tm_font_sixe=50px">
+                <font size="6">INVOICE</font>
+              </div>
+            </div>
+          </div>
+          <div className="tm_invoice_info tm_mb20">
+            <div className="tm_invoice_seperator tm_gray_bg"></div>
+              <div className="tm_invoice_info_list">
+                <p className="tm_invoice_number tm_m0">Invoice No: <b className="tm_primary_color">{item.iId}</b></p> &nbsp; &nbsp; &nbsp;
+                <p className="tm_invoice_date tm_m0"> Date: <b className="tm_primary_color">{item.iDate}</b></p>
+              </div>
+            </div>
+            <div className="tm_invoice_head tm_mb10">
+              <div className="tm_invoice_section tm_invoice_to">
+                <p className="tm_mb2"><b className="tm_primary_color">Invoice To:</b></p>
+                <div>
+                  <p>{item.customer_name}<br />{item.customerAddress}<br />{item.cusCountry}<br />{item.customer_email}</p>
+                </div>
+              </div>
+              <div className="tm_invoice_section tm_pay_to">
+                <p className="tm_mb2"><b className="tm_primary_color">Pay To:</b></p>
+                  <p>{item.companyName}<br />{item.companyAddress}<br />{item.comCountry}<br />{item.com_email}</p>
+              </div>
+            </div>
+          </div>
+          <div className="tm_table tm_style1 tm_mb3">
+            <div className="tm_round_border">
+              <div className="tm_table_responsive">
+                <table>
+                  <thead>
+                    <tr>
+                      <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Pick Up Location</th>
+                      <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Description</th>
+                      <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Drop Location</th>
+                      <th className="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg text-center">Horse</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {vehicles.map((item, index) => (
+                    <tr key = {index.id}>
+                      <td className="tm_width_4 text-center">{item.pickup_location}</td>
+                      <td className="tm_width_2 text-center">{item.vehicle_number}/{item.vehicle_number}</td>
+                      <td className="tm_width_1 text-center">{item.drop_location}</td>
+                      <td className="tm_width_2 text-center">{item.no_of_horse}</td>
+                    </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+          <div className="tm_invoice_footer">
+            <div className="tm_left_footer">
+              <p className="tm_mb2"><b className="tm_primary_color">{/* Payment info: */}</b></p>
+              <p className="tm_m0">{/* Credit Card - 236***********928  */}<br />{/* Amount: AED 1732 */}</p>
+            </div>
+            <div className="tm_right_footer">
+              <table>
+                <tbody>
+                  <tr>
+                    <td className="tm_width_3 tm_primary_color tm_border_none tm_bold">Subtotal</td>
+                    <td className="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_bold">{item.iSubTotal} AED</td>
+                  </tr>
+                  <tr>
+                    <td className="tm_width_3 tm_primary_color tm_border_none tm_pt0">Discount <span className="tm_ternary_color">({item.iDiscountRate}%)</span></td>
+                    <td className="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">- {item.iDiscountAmount} AED</td>
+                  </tr>
+                  <tr>
+                    <td className="tm_width_3 tm_primary_color tm_border_none tm_pt0">Tax <span className="tm_ternary_color">({item.iTaxRate}%)</span></td>
+                    <td className="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">+ {item.iTaxAmount} AED</td>
+                  </tr>
+                  <tr className="tm_border_top tm_border_bottom">
+                    <td className="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color">Grand Total</td>
+                    <td className="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right">{item.iFinalAmount} AED</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+          <div className="tm_padd_15_20 no-padding tm_round_border .tm_table_responsive">
+            <p className="tm_mb5"><b className="tm_primary_color"></b></p>
+              <table>
+                <thead>
+                  <tr>
+                    <th className="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center">#</th>
+                    <th className="tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center" style={{ width: '30%' }}>Recieved Money</th>
+                    <th className="tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center" style={{ width: '30%' }}>Received Date</th>
+                    <th className="tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center" style={{ width: '10%' }}>Remaining Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ledg.map((item, index) => (
+                    <tr key = {index.id}>
+                      <td className="tm_width_3 text-center">{index + 1}</td>
+                      <td className="tm_width_2 text-center">{item.received_amount === 0 ? "0 AED" : `${item.received_amount} AED`}</td>
+                      <td className="tm_width_1 text-center">{item.received_amount === 0 ? "" : item.received_date}</td>
+                      <td className="tm_width_2 text-center">{item.remaining_amount === 0 ? "0 AED" : `${item.remaining_amount} AED`}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+      </div>  
+    </div>
+  </div>
+))};
+
+const invoiceAsString = generateInvoiceAsString();
+
     // Function to handle sending email
     const handleSendEmail = async () => {
-      const { email, subject, body } = validation.values;
+      const { recepientEmail, invoiceSubject, invoiceBody } = validation.values;
       // Extract the required data from the validation.values object.
       // Make sure you use the correct field names for email, subject, and body.
-  
-      // Call the sendEmail function with the extracted data
+      console.log("values", validation.values);
+      // Call th  e sendEmail function with the extracted data
       const sendEmailResponse = await sendEmail(
         sendEmailButtonData[0]?.id, // Pass the invoice number as an argument
-        email,
-        subject,
-        body
-      );
-  
+        recepientEmail,
+        invoiceSubject,
+        invoiceBody
+      );  
       // Handle the response from the API if needed
       console.log('Send Email Response:', sendEmailResponse);
   
@@ -142,6 +282,7 @@ const InvoiceDetails = () =>
     setView_modal(!view_modal)
     setInvoice(invoiceData.invoice)
     setLedg(invoiceData.payment)
+    setVehicles(invoiceData.vehicles)
   }
 
   const handleDownloadPDF = () => {
@@ -155,8 +296,7 @@ const InvoiceDetails = () =>
         image: { type: 'png', quality: 0.98 },
         html2canvas: { scale: 2 },
         jsPDF: { unit: 'px', format: 'a4', orientation: 'portrait' },
-      };
-  
+      };  
       const customWidth = 800; // Width in pixels
       const customHeight = 1000; // Height in pixels
       opt.jsPDF.unit = 'px';
@@ -168,8 +308,7 @@ const InvoiceDetails = () =>
         toggleEnterAmountModal();
       });
     }
-  };
-  
+  }; 
 
   async function tog_view(productId)
   {
@@ -179,12 +318,14 @@ const InvoiceDetails = () =>
     setView_modal(!view_modal);
     setInvoice(invoiceData.invoice);
     setLedg(invoiceData.payment);
+    setVehicles(invoiceData.vehicles);
     let latestPaymentHistroy = await getLatestPayementHistroy(productId);
     console.log("Latest Payment Data:",latestPaymentHistroy);
     setPaymentHistroy(latestPaymentHistroy.invoice);
     setView_modal(!view_modal);
   }
 
+  
   // function for get data all drivers data
   async function getAllData(page) {
     let getInvoices = await getInvoicesData(page);
@@ -193,8 +334,6 @@ const InvoiceDetails = () =>
     setPageNumber(page);
     setNumberOfData(getInvoices.totalCount);
   }
-
-
   useEffect(() =>
   {
     // Existing List
@@ -239,6 +378,7 @@ const InvoiceDetails = () =>
                                 <th className="sort" data-sort="customer_email">Customer Email</th>
                                 <th className="sort" data-sort="view_invoice">View Invoice</th>
                                 <th className="sort" data-sort="send_email">Send Email</th>
+                                <th className="sort" data-sort="send_email">Action</th>
                               </tr>
                             </thead>
                             <tbody className="list form-check-all">
@@ -251,6 +391,7 @@ const InvoiceDetails = () =>
                                   <td className="customer_email">{item.customer_email}</td>
                                   <td className="view_invoice"> <button type="button" className="btn btn-success" id="add-btn" onClick={() => tog_view(item.id)}> View Invoice </button> </td>
                                   <td className="send_email"> <button type="button" className="btn btn-success" id="add-btn" onClick={() => handleOpenModal(item.id)}> Send Mail </button> </td>
+                                  <td className="start_booking"> <button onClick={()=> {startBooking(item.id)}} className="btn btn-success" id="add-btn">Trip</button> </td>
                                 </tr>
                               ))}
                             </tbody>
@@ -271,7 +412,7 @@ const InvoiceDetails = () =>
         </Container>
       </div>
 
-      {/* Payment Table */}
+      {/* View invoice model*/}
       <Modal className="extra-width" isOpen={view_modal} toggle={() => {setView_modal(false);}} centered>
         <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => {setView_modal(false); }} >Invoice</ModalHeader>
         <ModalBody>
@@ -319,32 +460,38 @@ const InvoiceDetails = () =>
                           <table>
                             <thead>
                               <tr>
+                                <th className="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd ">#</th>
                                 <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Pick Up Location</th>
-                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Pick Up Date</th>
+                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Vehicle Number</th>
+                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Driver Name</th>
+                                {/* <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Pick Up Date</th> */}
                                 <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Drop Location</th>
-                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Drop date</th>
-                                <th className="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg text-center">Horse</th>
-                                <th className="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg tm_text_right text-center">Special Service</th>
+                                {/* <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Drop date</th> */}
+                                {/* <th className="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg text-center">Horse</th> */}
+                                {/* <th className="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg tm_text_right text-center">Special Service</th> */}
                               </tr>
                             </thead>
+                            {vehicles.map((item, index) => (
                             <tbody>
-                              <tr>
+                              <tr key={index}>
+                                <td className="tm_width_3">{index + 1}</td>
                                 <td className="tm_width_4 text-center">{item.pickup_location}</td>
-                                <td className="tm_width_2 text-center">{item.pickup_date}</td>
-                                <td className="tm_width_1 text-center">{item.pickup_location}</td>
-                                <td className="tm_width_2 text-center">{item.drop_date}</td>
-                                <td className="tm_width_2 text-center">{item.no_of_horse}</td>
-                                <td className="tm_width_2 text-center">{item.special_requirement}</td>
+                                <td className="tm_width_2 text-center">{item.vehicle_number}</td>
+                                <td className="tm_width_2 text-center">{item.driver_name}</td>
+                                <td className="tm_width_1 text-center">{item.drop_location}</td>
+                                {/* <td className="tm_width_2 text-center">{item.drop_date}</td>   */}
+                                {/* <td className="tm_width_2 text-center">{item.special_requirement}</td> */}
                               </tr>
                             </tbody>
+                            ))}
                           </table>
                         </div>
                       </div>
                     </div>
                     <div className="tm_invoice_footer">
                       <div className="tm_left_footer">
-                        <p className="tm_mb2"><b className="tm_primary_color">{/* Payment info: */}</b></p>
-                        <p className="tm_m0">{/* Credit Card - 236***********928  */}<br />{/* Amount: AED 1732 */}</p>
+                        <p className="tm_mb2"><b className="tm_primary_color"> Other Information :</b></p>
+                        <p className="tm_m0">Horse - {item.no_of_horse} <br />Special Requirement : {item.special_requirement}</p>
                       </div>
                       <div className="tm_right_footer">
                         <table>
@@ -443,6 +590,128 @@ const InvoiceDetails = () =>
             </form>        
       </Modal>
       </Modal>
+      {/* This is the body of the email */}
+      {invoice.map((item, index) => (
+            <div key={index} className="tm_container" ref={invoiceRef}>
+              {console.log(item)}
+              <div className="tm_invoice_wrap">
+                <div className="tm_invoice tm_style1" id="tm_download_section">
+                  <div className="tm_invoice_in">
+                    <div className="tm_invoice_head tm_align_center tm_mb20">
+                      <div className="tm_invoice_left">
+                        <div className="tm_logo">
+                          <img src={Logo} alt="Logo" style={{ height: '50px', width: '50px' }} />
+                        </div>
+                      </div>
+                      <div className="tm_invoice_right tm_text_right">
+                        <div className="tm_primary_color tm_f50 tm_text_uppercase tm_font_sixe=50px">
+                          <font size="6">INVOICE</font>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="tm_invoice_info tm_mb20">
+                      <div className="tm_invoice_seperator tm_gray_bg"></div>
+                        <div className="tm_invoice_info_list">
+                          <p className="tm_invoice_number tm_m0">Invoice No: <b className="tm_primary_color">{item.iId}</b></p> &nbsp; &nbsp; &nbsp;
+                          <p className="tm_invoice_date tm_m0"> Date: <b className="tm_primary_color">{item.iDate}</b></p>
+                        </div>
+                      </div>
+                      <div className="tm_invoice_head tm_mb10">
+                        <div className="tm_invoice_section tm_invoice_to">
+                          <p className="tm_mb2"><b className="tm_primary_color">Invoice To:</b></p>
+                          <div>
+                            <p>{item.customer_name}<br />{item.customerAddress}<br />{item.cusCountry}<br />{item.customer_email}</p>
+                          </div>
+                        </div>
+                        <div className="tm_invoice_section tm_pay_to">
+                          <p className="tm_mb2"><b className="tm_primary_color">Pay To:</b></p>
+                            <p>{item.companyName}<br />{item.companyAddress}<br />{item.comCountry}<br />{item.com_email}</p>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="tm_table tm_style1 tm_mb3">
+                      <div className="tm_round_border">
+                        <div className="tm_table_responsive">
+                          <table>
+                            <thead>
+                              <tr>
+                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Pick Up Location</th>
+                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Pick Up Date</th>
+                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Drop Location</th>
+                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Drop date</th>
+                                <th className="tm_width_1 tm_semi_bold tm_primary_color tm_gray_bg text-center">Horse</th>
+                                <th className="tm_width_2 tm_semi_bold tm_primary_color tm_gray_bg tm_text_right text-center">Special Service</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              <tr>
+                                <td className="tm_width_4 text-center">{item.pickup_location}</td>
+                                <td className="tm_width_2 text-center">{item.pickup_date}</td>
+                                <td className="tm_width_1 text-center">{item.pickup_location}</td>
+                                <td className="tm_width_2 text-center">{item.drop_date}</td>
+                                <td className="tm_width_2 text-center">{item.no_of_horse}</td>
+                                <td className="tm_width_2 text-center">{item.special_requirement}</td>
+                              </tr>
+                            </tbody>
+                          </table>
+                        </div>
+                      </div>
+                    </div>
+                    <div className="tm_invoice_footer">
+                      <div className="tm_left_footer">
+                        <p className="tm_mb2"><b className="tm_primary_color">{/* Payment info: */}</b></p>
+                        <p className="tm_m0">{/* Credit Card - 236***********928  */}<br />{/* Amount: AED 1732 */}</p>
+                      </div>
+                      <div className="tm_right_footer">
+                        <table>
+                          <tbody>
+                            <tr>
+                              <td className="tm_width_3 tm_primary_color tm_border_none tm_bold">Subtotal</td>
+                              <td className="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_bold">{item.iSubTotal} AED</td>
+                            </tr>
+                            <tr>
+                              <td className="tm_width_3 tm_primary_color tm_border_none tm_pt0">Discount <span className="tm_ternary_color">({item.iDiscountRate}%)</span></td>
+                              <td className="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">- {item.iDiscountAmount} AED</td>
+                            </tr>
+                            <tr>
+                              <td className="tm_width_3 tm_primary_color tm_border_none tm_pt0">Tax <span className="tm_ternary_color">({item.iTaxRate}%)</span></td>
+                              <td className="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_pt0">+ {item.iTaxAmount} AED</td>
+                            </tr>
+                            <tr className="tm_border_top tm_border_bottom">
+                              <td className="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color">Grand Total</td>
+                              <td className="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right">{item.iFinalAmount} AED</td>
+                            </tr>
+                          </tbody>
+                        </table>
+                      </div>
+                    </div>
+                  </div>
+                    <div className="tm_padd_15_20 no-padding tm_round_border .tm_table_responsive">
+                      <p className="tm_mb5"><b className="tm_primary_color"></b></p>
+                        <table>
+                          <thead>
+                            <tr>
+                              <th className="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center">#</th>
+                              <th className="tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center" style={{ width: '30%' }}>Recieved Money</th>
+                              <th className="tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center" style={{ width: '30%' }}>Received Date</th>
+                              <th className="tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center" style={{ width: '10%' }}>Remaining Amount</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                            {ledg.map((item, index) => (
+                              <tr key = {index.id}>
+                                <td className="tm_width_3 text-center">{index + 1}</td>
+                                <td className="tm_width_2 text-center">{item.received_amount === 0 ? "0 AED" : `${item.received_amount} AED`}</td>
+                                <td className="tm_width_1 text-center">{item.received_amount === 0 ? "" : item.received_date}</td>
+                                <td className="tm_width_2 text-center">{item.remaining_amount === 0 ? "0 AED" : `${item.remaining_amount} AED`}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                </div>  
+              </div>
+            </div>
+          ))}
 
       <Modal className="extra-width" isOpen={modalOpen} toggle={handleCloseModal} centered>
       <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={handleCloseModal}>Send Email</ModalHeader>
@@ -452,16 +721,23 @@ const InvoiceDetails = () =>
               {sendEmailButtonData && sendEmailButtonData.length > 0 ? (
                 <div className="tm_container">
                   <div className="mb-3">
-                    <label htmlFor="recipient-email-field" className="form-label">To:</label>
-                    <input type="text" id="recipient-email-field" name="emailInvoice" className="form-control" value={sendEmailButtonData[0]?.email || ""} onChange={validation.handleChange} onBlur={validation.handleBlur} />
+                    <label htmlFor="recipient_email-field" className="form-label">To:</label>
+                    <input type="text" id="recipient_email-field" name="recepientEmail" className="form-control" value={validation.values.recepientEmail || ""} onChange={validation.handleChange} onBlur={validation.handleBlur} />
                   </div>
                   <div className="mb-3">
-                    <label htmlFor="subject-field">Subject:</label>
-                    <input type="text" id="subject-field" name="subjectEmail" className="form-control" value={`${sendEmailButtonData[0]?.subject} - ${sendEmailButtonData[0]?.invoice_no}` || ""} onChange={validation.handleChange} />
+                    <label htmlFor="invoice_subject-field">Subject:</label>
+                    <input type="text" id="invoice_subject-field" name="invoiceSubject" className="form-control" value={validation.values.invoiceSubject || ""} onChange={validation.handleChange} />
                   </div>
                   <div className="mb-3">
                     <label htmlFor="body-field">Body:</label>
-                    <textarea type="text" id="email-body-field" name="emailBody" className="form-control" value={validation.values.body || "" } onChange={validation.handleChange} onBlur={validation.handleBlur} ></textarea>
+                    <textarea
+                        type="text"
+                        id="email-body-field"
+                        name="invoiceBody"
+                        className="form-control"
+                        value={invoiceAsString}                  
+                      />
+                    {/* <textarea type="text" id="email-body-field" name="emailBody" className="form-control" value={validation.values.body || "" } onChange={validation.handleChange} onBlur={validation.handleBlur} ></textarea> */}
                   </div>
                 </div>
               ) : (
@@ -487,6 +763,33 @@ const InvoiceDetails = () =>
           </ModalFooter>
         </form>
       </Modal>
+
+
+      {/* Start Button Modal */}
+            {/* This is the start button model. We will start the particular invoice from this button. */}
+            <Modal isOpen={modal_start} toggle={() => { tog_start(); }} className="modal fade zoomIn" id="deleteRecordModal" centered >
+                {/* Close Button */}
+                <div className="modal-header">
+                    <Button type="button" onClick={() => setmodal_start(false)} className="btn-close" aria-label="Close"> </Button>
+                </div>
+                {/* The below modal is the pop up bar. Which will taken confirmation one more time from the user before deleting */}
+                <ModalBody>
+                    <div className="mt-2 text-center">
+                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
+                            colors="primary:#f7b84b,secondary:#f06548" style={{ width: "100px", height: "100px" }}></lord-icon>
+                        <div className="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
+                            <h4>Are you Sure ?</h4>
+                            <p className="text-muted mx-4 mb-0">Are you Sure You want to start this booking ?</p>
+                        </div>
+                    </div>
+                    <div className="d-flex gap-2 justify-content-center mt-4 mb-2">
+                        {/* Close Button */}
+                        <button type="button" className="btn w-sm btn-light" onClick={() => setmodal_start(false)}>Close</button>
+                        {/* Start Button */}
+                        <button type="button" className="btn w-sm btn-success " id="start-button">Yes, Start!</button>
+                    </div>
+                </ModalBody>
+            </Modal>
 
 
     </React.Fragment>

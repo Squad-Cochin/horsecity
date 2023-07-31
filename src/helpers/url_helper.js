@@ -84,6 +84,7 @@ export const GET_LATEST_PAYMENT_HISTROY_OF_INVOICE = apiBaseUrl + token + '/sing
 export const GET_SEND_EMAIL_BUTTON_DATA_OF_INVOICE = apiBaseUrl + token + `/email/button/data`
 export const POST_SENT_INVOICE_ON_EMAIL = apiBaseUrl + token + `/send/email`
 export const POST_ADD_AMOUNT_URL = apiBaseUrl + token + `/add/amount`
+export const GET_START_TRIP = apiBaseUrl + token + `/booking/started`
 
 
 /**DRIVERS */

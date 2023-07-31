@@ -295,32 +295,6 @@ import * as url from "../url_helper";
         }
     };
 
-    export async function sendEmailFunction(id, data)
-    {
-        try {
-            const formData = new FormData();
-            // Append the object data to the FormData instance
-            for (const key in data) {
-                formData.append(key, data[key]);
-            }
-            // Send the form data as a POST request using Axios
-            const response = await axios.post(`${url.POST_SEND_QUT_EMAIL_URL}/${id}`, formData, {
-                headers: {
-                'Content-Type': 'multipart/form-data'
-                }
-            });
-            console.log("rss",response)
-            // console.log("response",response)
-            return response
-        } catch (error) {
-            let errObj = {
-                code : 500 , 
-                error : "Faild !"
-            }
-            return errObj;
-        }
-    };
-
 
     /**
      * Sending mail of the invoice
@@ -354,5 +328,49 @@ import * as url from "../url_helper";
                 error : "Failed !"
             }
             return errObj;        
+        }
+    };
+    export async function sendEmailFunction(id, data)
+    {
+        try {
+            const formData = new FormData();
+            // Append the object data to the FormData instance
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+            // Send the form data as a POST request using Axios
+            const response = await axios.post(`${url.POST_SEND_QUT_EMAIL_URL}/${id}`, formData, {
+                headers: {
+                'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log("rss",response)
+            // console.log("response",response)
+            return response
+        } catch (error) {
+            let errObj = {
+                code : 500 , 
+                error : "Faild !"
+            }
+            return errObj;
+        }
+    };
+
+    export async function startTrip(iId)
+    {
+        try
+        {
+            const { data } = await axios.get(`${url.GET_START_TRIP}/${iId}`);
+            console.log("Booking started: ",data)
+            return(data)    
+        }
+        catch(error)
+        {
+            let errObj =
+            {
+                code : 500 ,
+                error : "Failed !"
+            }
+            return errObj;
         }
     };
