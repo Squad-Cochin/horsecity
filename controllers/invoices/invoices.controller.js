@@ -294,8 +294,61 @@ exports.getSendEmailButtonData = async(req, res) =>
 };
 
 
+exports.bookingStarted = async (req, res) =>
+{
+    let invoices = await invoice.bookingstart(req.params.id);
+
+    console.log('Invoice: ', invoices);
+    if(invoices === 'err')
+    {
+        console.log('Internal Server Error from the start button data');
+        return res.status(200).json
+        ({
+            code: 500,
+            status: false,
+            message: constant.responseMessage.universalError,
+        });
+    }
+
+    if(invoices === 'Entered')
+    {
+        console.log('Booking started and data entered into the booking table');
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: `Booking started and data entered into the booking table`,
+        });
+    }
+    
+    if(invoices === 'NotEntered')
+    {
+        console.log('Booking button controller successfully working. But data not entered');
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: `Booking button controller successfully working. But data not entered`,
+        });
+    }
+
+    if(invoices === 'duplicate')
+    {
+        console.log('Booking button controller successfully working. Invoice id is duplicate');
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: `Booking button controller successfully working. Invoice id is duplicate`,
+        });
+    }
 
 
+
+
+
+
+}
 
 
 

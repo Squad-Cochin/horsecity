@@ -88,7 +88,7 @@ exports.getAllInvoice = (data) =>
     ({
       id : item.id,
       iId : item.invoice_no,
-      quotation_id : item.quotation_id,
+      quotation_id : item.quotation_prefix_id,
       customer_name : item.name,
       customer_email : item.email,
     });
