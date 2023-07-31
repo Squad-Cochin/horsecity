@@ -127,16 +127,23 @@ exports.updateStatusQuotation = async(req,res)=>
 /** For Sending email */
 exports.sendMail = async(req,res)=>
 {
-
-    let sendMail = await quotation.sendMail(req.body);
+console.log("hereeeeeeeeeeeee");
+    let sendMail = await quotation.sendMail(req.body,req.params.id);
 
    if(sendMail){
         return res.status(200).send({
             code: 200,
             success: true,
-            message: `Mail success fully sended to ${req.body.reciver_email}`
+            message: `Mail success fully sended to `
 
         });
+   }else{
+    return res.status(200).send({
+        code: 400,
+        success: false,
+        message: `Mail sending faild `
+
+    });
    }
 }
 

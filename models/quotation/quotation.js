@@ -29,7 +29,7 @@ exports.addNewQuotaion = (requestBody, pickup_date, drop_date) => {
                             let qut_id = (quotId[0].latest_id == null) ? 1 : id + 1;
                             let quot_prefix = quotation_prefix[0]?.quotation_prefix
                             let sum_quotId = quot_prefix.concat(qut_id)
-                            console.log("here");
+                       
                             /**For taking tax id in the settings application */
                             let selQuery = `SELECT 	tax_id  FROM ${constants.tableName.application_settings}`
                             con.query(selQuery, async (err, data) => {
@@ -103,9 +103,9 @@ exports.ListQuotation = (requestBody) => {
                     LIMIT ${+limit} OFFSET ${+offset}`;
 
             con.query(selQuery, async (err, quo) => {
-                console.log(quo);
+          console.log(quo);
                 if (quo.length != 0) {
-
+         
                     /**Total count */
                     const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.quotations} quo
                                              WHERE quo.deleted_at IS NULL`
@@ -134,11 +134,18 @@ exports.ListQuotation = (requestBody) => {
 /**For feching particlar quotation basis of quotation id */
 exports.getOneQuotation = (quotId) => {
     return new Promise(async (resolve, reject) => {
-        try {
+        try { 
+            /**For taking tax id in the settings application */
 
+            let selQuery = `SELECT 	tx.id , tx.type,tx.name,tx.value 
+        FROM ${constants.tableName.application_settings} apps 
+        JOIN ${constants.tableName.taxations} tx ON apps.tax_id = tx.id
+        ` 
+            con.query(selQuery, async (err, tax) => {
+                if (tax.length != 0) {
 
-            /***For selecting quotation view details */
-            let selQuery = `SELECT
+                    /***For selecting quotation view details */
+                    let selQuery = `SELECT
             quo.id,
             quo.quotation_id,
             quo.trip_type,
@@ -179,26 +186,31 @@ exports.getOneQuotation = (quotId) => {
         JOIN ${constants.tableName.enquiries} enq ON quo.enquiry_id = enq.id
         JOIN ${constants.tableName.customers} cu ON quo.customer_id = cu.id
         JOIN ${constants.tableName.discount_types} dc ON quo.discount_type_id  = dc.id
-        WHERE quo.quotation_id = '${quotId}'`;
+        WHERE quo.quotation_id = '${quotId}' AND quo.deleted_at IS NULL;`
 
-            con.query(selQuery, async (err, data) => {
-                console.log(err);
-                if (data.length != 0) {
-                    // console.log(data[0].pickup_date);
-                    // console.log(data[0].drop_date);
-                    // console.log(data[0].enquiry_date);
-                    data[0].pickup_date = `${time.formatDateToDDMMYYYY(
-                        data[0].pickup_date
-                    )}`;
-                    data[0].drop_date = `${time.formatDateToDDMMYYYY(
-                        data[0].drop_date
-                    )}`;
-                    data[0].enquiry_date = `${time.formatDateToDDMMYYYY(
-                        data[0].enquiry_date
-                    )}`;
-                    resolve({ quotation: data })
+                    con.query(selQuery, async (err, data) => {
+                        console.log(err);
+                        if (data.length != 0) {
+                            // console.log(data[0].pickup_date);
+                            // console.log(data[0].drop_date);
+                            // console.log(data[0].enquiry_date);
+                            data[0].pickup_date = `${time.formatDateToDDMMYYYY(
+                                data[0].pickup_date
+                            )}`;
+                            data[0].drop_date = `${time.formatDateToDDMMYYYY(
+                                data[0].drop_date
+                            )}`;
+                            data[0].enquiry_date = `${time.formatDateToDDMMYYYY(
+                                data[0].enquiry_date
+                            )}`;
+                            resolve({ quotation: data, tax: tax })
+                        } else {
+                            resolve({ quotation: [], tax: [] })
+                        }
+                    })
+
                 } else {
-                    resolve({ quotation: [] })
+                    resolve(false)
                 }
             })
         } catch (err) {
@@ -224,7 +236,7 @@ exports.updateQuotation = (requestBody, pickup_date, drop_date, quotId) => {
                     let tax_id = tax[0].tax_id
 
                     const { customer_id, enquiry_id, driver_id, vehicle_id, service_provider_id, discount_type_id, trip_type, pickup_location, pickup_country, drop_location, drop_country, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage, driver_amount, vehicle_amount, current_amount, tax_amount, discount_amount, final_amount } = requestBody;
-
+                        console.log(customer_id);
                     /**** Taking last added quotation id  */
                     let selQuery = `SELECT id FROM ${constants.tableName.quotations}  WHERE quotation_id = '${quotId}' ORDER BY id DESC LIMIT 1`
                     con.query(selQuery, async (err, id) => {
@@ -281,7 +293,7 @@ exports.updateQuotation = (requestBody, pickup_date, drop_date, quotId) => {
 
 
 
-/**For listing removed quotations */ 
+/**For listing removed quotations */
 exports.removedQuotations = (quotId) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -308,7 +320,7 @@ exports.removedQuotations = (quotId) => {
            JOIN ${constants.tableName.drivers} dvr ON quo.driver_id  = dvr.id
            JOIN ${constants.tableName.enquiries} enq ON quo.enquiry_id = enq.id
            JOIN ${constants.tableName.customers} cu ON quo.customer_id = cu.id
-           WHERE quo.quotation_id = '${quotId}' AND quo.deleted_at IS NULL`;
+           WHERE quo.quotation_id = '${quotId}' AND quo.deleted_at IS  NULL`;
             con.query(selQuery, async (err, Data) => {
 
                 if (Data.length != 0) {
@@ -428,6 +440,7 @@ exports.updateStatusQuotation = (quotId) => {
                     con.query(selQuery, async (err, qutationsData) => {
 
                         if (qutationsData.length != 0) {
+                            console.log("heyy");
                             let pickup_date = await changeFormat(time.changeDateToSQLFormat(qutationsData[0].pickup_date))
                             let drop_date = await changeFormat(time.changeDateToSQLFormat(qutationsData[0].drop_date))
 
@@ -456,77 +469,50 @@ exports.updateStatusQuotation = (quotId) => {
                                 driver_amount,
                                 vehicle_amount
                             } = qutationsData[0];
-                            /**Checking quataion id allred in the bokking s table if allredy there not will add bookings data */
-                            let checkQutaionIdBokkings = `SELECT * FROM ${constants.tableName.bookings}
+                            /**Checking quataion id allred in the invoices s table if allredy there not will add bookings data */
+                            let checkQutaionIdInvoices = `SELECT * FROM ${constants.tableName.invoices}
                                                           WHERE quotation_prefix_id = '${quotId}'`
-                           con.query(checkQutaionIdBokkings, async (err, checkQutaionId) => {
+                            con.query(checkQutaionIdInvoices, async (err, checkQutaionId) => {
                                 console.log(checkQutaionId.length);
-                           if (checkQutaionId.length === 0) {
-                            console.log("here");
-                            /****************************inserting bokking tables*******************/
-                            let insQuery = `INSERT INTO ${constants.tableName.bookings}
-                        (  customer_id,
-                            quot_id,
-                            quotation_prefix_id,
-                            service_provider_id,
-                            vehicle_id,
-                            driver_id,
-                            status,
-                            taxation_id,
-                            discount_type_id,
-                            payment_type_id,
-                            booking_status,
-                            pickup_location,
-                            pickup_country,
-                            pickup_date,
-                            drop_country,
-                            drop_location,
-                            drop_date,
-                            additional_services,
-                            confirmation_sent,
-                            sub_total,
-                            tax_amount,
-                            discount_amount,
-                            final_amount,
-                            created_at)
-                            VALUES ('${customer_id}', '${id}', '${quotation_id}', '${serviceprovider_id}', '${vehicle_id}', '${driver_id}', '${constants.amound_status.pending}', '${taxation_id}', '${discount_type_id}', '${null}', '${constants.booking_status.confirmed}','${pickup_location}', '${pickup_country}','${pickup_date}', '${drop_country}','${drop_location}','${drop_date}', '${additional_service}','${constants.booking_confirmation_send.no}','${sub_total}','${tax_amount}','${discount_amount}', '${final_amount}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                            con.query(insQuery, async (err, result) => {
+                                if (checkQutaionId.length === 0) {
+                          
+                  
+                                    /****************************inserting bokking tables*******************/
 
-                                if (!err) {
-                                    /*** */
-                                    
-                                        let selQuery = `SELECT MAX(id) AS latest_id FROM ${constants.tableName.invoices}`
-                                        con.query(selQuery, async (err, invoice_no) =>
-                                        {
-                                            if (invoice_no.length != 0) 
-                                            {
-                                                /**If the database is empty take 1 */
-                                                let id = (invoice_no [0].latest_id !== null) ? invoice_no [0].latest_id : 1;
-                                                /***For selecting quotation prefix */
-                                                let selQuery = `SELECT 	apps.invoice_prefix 
+
+                                    let selQuery = `SELECT MAX(id) AS latest_id FROM ${constants.tableName.invoices}`
+                                    con.query(selQuery, async (err, invoice_no) => {
+                               
+                                        if (invoice_no.length != 0) {
+                                  
+                                            /**If the database is empty take 1 */
+                                            let ID = (invoice_no[0].latest_id !== null) ? invoice_no[0].latest_id : 1;
+                                            /***For selecting quotation prefix */
+                                            let selQuery = `SELECT 	apps.invoice_prefix 
                                                 FROM ${constants.tableName.application_settings} apps`
-                                                con.query(selQuery, async (err, result) => 
-                                                {
-                                                    if (result.length != 0)
-                                                    {
-                                                         /**Adding prefix */
-                                                            /** default 1 dont requires to add + 1  */
-                                                            let inv_id = (invoice_no[0].latest_id == null) ? 1 : id + 1;
-                                                            let invoice = result[0]?.invoice_prefix
-                                                            let sum_invId = invoice.concat(inv_id);
-                                                             /**********Last added booking id *********** */                
-                                                            let lasttAddedBokkings_id  = `SELECT id
-                                                                                          FROM ${constants.tableName.bookings}
-                                                                                          ORDER BY id DESC LIMIT 1`
-                                                                                          con.query(lasttAddedBokkings_id, async (err, id) => 
-                                                                                          {
-                                                                                              if (id.length != 0)
-                                                                                              {
-                                                                                                let booking_id = id[0].id;
-                                                                                                 /**********Inserting invoices datas*********** */  
-                                                                                                let insQuery = `INSERT INTO ${constants.tableName.invoices} (
+                                            con.query(selQuery, async (err, result) => {
+                                                console.log("result",result); 
+                                                if (result.length != 0) {
+                                                    /**Adding prefix */
+                                                    /** default 1 dont requires to add + 1  */
+                                                    let inv_id = (invoice_no[0].latest_id == null) ? 1 : ID + 1;
+                                                    let invoice = result[0]?.invoice_prefix
+                                                    let sum_invId = invoice.concat(inv_id);
+                                                    /**********Last added booking id *********** */
+                                                    // let lasttAddedBokkings_id = `SELECT id
+                                                    //                                       FROM ${constants.tableName.bookings}
+                                                    //                                       ORDER BY id DESC LIMIT 1`
+                                                    // con.query(lasttAddedBokkings_id, async (err, id) => {
+                                                    //     if (id.length != 0) {
+                                                    //         let booking_id = id[0].id;
+                                                            /**********Inserting invoices datas*********** */
+                                                            let insQuery = `INSERT INTO ${constants.tableName.invoices} (
                                                                                                     invoice_no,
-                                                                                                    booking_id,
+                                                                                                    quot_id,
+                                                                                                    quotation_prefix_id,
+                                                                                                    service_provider_id,
+                                                                                                    vehicle_id,
+                                                                                                    driver_id,  
                                                                                                     pickup_point,
                                                                                                     drop_point,
                                                                                                     sub_total,
@@ -536,7 +522,11 @@ exports.updateStatusQuotation = (quotId) => {
                                                                                                     created_at
                                                                                                 ) VALUES (
                                                                                                     '${sum_invId}', 
-                                                                                                    '${booking_id}', 
+                                                                                                    '${id}', 
+                                                                                                    '${quotation_id}', 
+                                                                                                    '${serviceprovider_id}', 
+                                                                                                    '${vehicle_id}', 
+                                                                                                    '${driver_id}', 
                                                                                                     '${pickup_location}', 
                                                                                                     '${drop_location}', 
                                                                                                     '${sub_total}', 
@@ -546,90 +536,73 @@ exports.updateStatusQuotation = (quotId) => {
                                                                                                     '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                                                                                 );`;
 
-                                                                                                con.query(insQuery, async (err, result) => {
+                                                            con.query(insQuery, async (err, result) => {
 
-                                                                                                    if (!err) {
-                                                                                                        /**This for feching last added invoice id  */
-                                                                                                        let lasttAddedInvoice_id  = `SELECT id
+                                                                if (!err) {
+                                                                    /**This for feching last added invoice id  */
+                                                                    let lasttAddedInvoice_id = `SELECT id
                                                                                                         FROM ${constants.tableName.invoices}
                                                                                                         ORDER BY id DESC LIMIT 1`
-                                                                                                        con.query(lasttAddedInvoice_id, async (err, invId) => 
-                                                                                                        {
-                                                                                                            if (invId.length != 0)
-                                                                                                            {
-                                                                                                                let invoice_id = invId[0].id;
+                                                                    con.query(lasttAddedInvoice_id, async (err, invId) => {
+                                                                        if (invId.length != 0) {
+                                                                            let invoice_id = invId[0].id;
 
-                                                                                               /********** After Inserting totalamount invoice id in to the payment records********** */  
-                                                                                               let insQuery = `INSERT INTO ${constants.tableName.payment_records} (
+                                                                            /********** After Inserting totalamount invoice id in to the payment records********** */
+                                                                            let insQuery = `INSERT INTO ${constants.tableName.payment_records} (
                                                                                                 invoice_id,
+                                                                                                invoice_prefix_id,
                                                                                                 total_amount,
                                                                                                 remaining_amount
                                                                                                 ) VALUES (
                                                                                                     '${invoice_id}', 
+                                                                                                    '${sum_invId}',
                                                                                                     '${final_amount}',
                                                                                                     '${final_amount}'
-                                                                                                );`;                                                                                            
-                                                                                                con.query(insQuery, async (err, result) => {
+                                                                                                );`;
+                                                                            con.query(insQuery, async (err, result) => {
 
-                                                                                                    if (!err) {
-                                                                                                        resolve(true);
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        resolve(false)
-                                                                                                    }
-                                                                                                });
+                                                                                if (!err) {
+                                                                                    resolve(true);
+                                                                                }
+                                                                                else {
+                                                                                    resolve(false)
+                                                                                }
+                                                                            });
 
-                                                                                            }
-                                                                                            else
-                                                                                            {
-                                                                                                resolve(false)
-                                                                                            }
-                                                                                        });
+                                                                        }
+                                                                        else {
+                                                                            resolve(false)
+                                                                        }
+                                                                    });
 
-                                                                                     
-                                                                                                                   
-                                                                                                    }
-                                                                                                    else
-                                                                                                    {
-                                                                                                        resolve(false)
-                                                                                                    }
-                                                                                                });
-                                                                                                
-                                                                                                
-                                                                                            }
-                                                                                            else
-                                                                                            {
-                                                                                                resolve(false)
-                                                                                            }
-                                                                                        });
-                                                    }
-                                                    else
-                                                    {
-                                                        resolve(false)
-                                                    }
-                                                });
-                                            }
-                                            else
-                                            {
-                                                resolve(false)
-                                            }
-                                        })
 
-        
 
-                                    /**** */
+                                                                }
+                                                                else {
+                                                                    resolve(false)
+                                                                }
+                                                            });
+
+
+                                                }
+                                                else {
+                                                    resolve(false)
+                                                }
+                                            });
+                                        }
+                                        else {
+                                            resolve(false)
+                                        }
+                                    })
+
                                 } else {
-                                    resolve(false)
+                                    console.log("herrrr");
+                                    resolve('QUOTIDALLREDYAVAILABLE')
                                 }
                             })
-                        } else {
-                            console.log("herrrr");
-                            resolve('QUOTIDALLREDYAVAILABLE')
-                        }
-                    })
 
                         } else {
+
                             resolve(false)
                         }
                     })
@@ -649,32 +622,36 @@ exports.updateStatusQuotation = (quotId) => {
 
 
 /** For Sending email */
-exports.sendMail = (requestBody,quot_id) => {
+exports.sendMail = (requestBody, quot_id) => {
     return new Promise(async (resolve, reject) => {
         try {
-                const { reciver_email , subject , body }  = requestBody
-                const sendEmail = await mail.SendEmail(reciver_email,subject,body)
-
-                if(sendEmail){
-                        let updateQuery = `UPDATE ${constants.tableName.bookings} 
+            console.log("",requestBody);
+            const { costomer_email, subject, body } = requestBody
+            console.log(requestBody);
+            console.log("ddd");
+            // const sendEmail = await mail.SendEmail(costomer_email, subject, body)
+       const sendEmail = false
+            if (sendEmail) { 
+                let updateQuery = `UPDATE ${constants.tableName.bookings} 
                                            SET 	confirmation_sent = '${constants.booking_confirmation_send.yes}'
                                            WHERE  quotation_prefix_id = '${quot_id}'`;
 
 
-                                           con.query(updateQuery, async (err, result) => {
+                con.query(updateQuery, async (err, result) => {
 
-                                            if (result.length != 0) {   
-                                                resolve(true)
-                                            } else {
-                                                resolve(false) 
-                                            }
-                                        })
-                }else{
-                    resolve(false);
-                }
-           
+                    if (result.length != 0) {
+                        resolve(true)
+                    } else {
+                        resolve(false)
+                    }
+                })
+            } else {
+                console.log("hello");
+                resolve(false);
+            }
+
         } catch (err) {
-            resolve(false) 
+            resolve(false)
             console.log('Error while sending mail  for  quotations', err);
         }
     })

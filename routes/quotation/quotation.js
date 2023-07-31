@@ -20,10 +20,10 @@ module.exports = function(app)
     //**For listing removed quotaions  */ 
     app.get(`/${process.env.apiToken}/list/quotations/:id`,quotation.removedQuotations);    
 
-    //**For chainging qutaion status    */ 
+    //**For chainging qutation status    */ 
     app.get(`/${process.env.apiToken}/update-status/quotations/:id`,quotation.updateStatusQuotation);   
 
-    //**For chainging qutaion status    */ 
+    //**For sending email qutation     */ 
     app.post(`/${process.env.apiToken}/send-email/quotations/:id`,quotation.sendMail);   
   
   
