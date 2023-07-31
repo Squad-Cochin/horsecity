@@ -570,3 +570,22 @@ export async function getSendEmailButtonData(iId)
         return null        
     }
 }
+
+
+export async function startTrip(iId)
+{
+    try
+    {
+        console.log(`Invoice Id:`, iId);
+        const { data } = await axios.get(`${url.GET_START_TRIP}/${iId}`);
+        console.log("Booking started: ", data);
+        return (data);
+    } catch (error) {
+        console.error("Error occurred:", error);
+        let errObj = {
+            code: error.response ? error.response.status : 500,
+            error: error.message || "Failed!",
+        };
+        return errObj;
+    }
+}

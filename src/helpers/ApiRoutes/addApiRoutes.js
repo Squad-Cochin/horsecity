@@ -356,21 +356,4 @@ import * as url from "../url_helper";
         }
     };
 
-    export async function startTrip(iId)
-    {
-        try
-        {
-            const { data } = await axios.get(`${url.GET_START_TRIP}/${iId}`);
-            console.log("Booking started: ",data)
-            return(data)    
-        }
-        catch(error)
-        {
-            let errObj =
-            {
-                code : 500 ,
-                error : "Failed !"
-            }
-            return errObj;
-        }
-    };
+    
