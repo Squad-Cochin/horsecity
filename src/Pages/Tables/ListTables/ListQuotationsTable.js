@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Alert,
   Button,
   Card,
   CardBody,
@@ -22,201 +23,209 @@ import config from '../../../config';
 
 // import { item } from "../../../CommonData/Data";
 import Logo from "../../../assets/images/black-logo.png";
-import { getQuotationData, getConfirmQut, getSingleQuotationData } from "../../../helpers/ApiRoutes/getApiRoutes";
-import { addNewQuotaion } from "../../../helpers/ApiRoutes/addApiRoutes";
-import { updatQuotaion } from "../../../helpers/ApiRoutes/editApiRoutes";
+import { getQuotationData, getConfirmQut, getSingleQuotationData, getSPVehiclesData, getSPDriverData, getDiscounts, getSPUserName } from "../../../helpers/ApiRoutes/getApiRoutes";
+import { sendEmailFunction } from "../../../helpers/ApiRoutes/addApiRoutes";
+import { updatQuotation, confirmQuotation } from "../../../helpers/ApiRoutes/editApiRoutes";
 import { useFormik } from "formik";
+import { set } from "lodash";
+
 
 const ListQuotationsTable = () => {
-  const [modal_list, setmodal_list] = useState(false);
-  const [view_modal, setView_modal] = useState(false);
-  const [quatlist_modal, setQuatList_modal] = useState(false);
-  const [quotaions, setQuotaions] = useState([]);
-  const [quotaion, setQuotaion] = useState([]);
-  const [add_list, setAdd_list] = useState(false);
-  const [ quotaionListDetails, setQuotaionListDetails ] = useState([])
-  const [ quotaionList, setQuotaionList ] = useState([])
-  const [ enquires, setEnquires] = useState([]);
+  const [ view_modal, setView_modal ] = useState(false);
+  const [ quatlist_modal, setQuatList_modal ] = useState(false);
+  const [ quotations, setQuotations ] = useState([]);
+  const [ quotation, setQuotation ] = useState([]);
+  const [ quotationListDetails, setQuotationListDetails ] = useState([])
+  const [ quotationList, setQuotationList ] = useState([]);
+  const [ modalEmail, setModalEmail] = useState(false)
+  const [ qutId, setQutId ] = useState("");
   const [ pageNumber, setPageNumber ] = useState(1);
   const [ numberOfData, setNumberOfData ] = useState(0);
   const [ errors, setErrors ] = useState("")
   const pageLimit = config.pageLimit;
-  // const [ enquiry_data, setEnquery_data] = useState({})
-  // const [ enquiry, setEnquiry ] = useState("");
-  // function toggleStatus(button, quotationID) {
-  //   var currentStatus = button.innerText.trim();
-  //   if (currentStatus === "ACTIVE") {
-  //     button.innerText = "INACTIVE";
-  //     button.classList.remove("btn-success");
-  //     button.classList.add("btn-danger");
 
-  //     // Find the corresponding customer by ID
-  //     const quotation = quotaions.find((q) => q.id === quotationID);
-  //     console.log("Quotation:", quotation);
-  //     if (quotation) {
-  //       console.log("Came here");
-  //       quotation.status = "INACTIVE";
-  //       console.log("Quotation", quotation);
-  //     }
-  //   } else if (currentStatus === "INACTIVE") {
-  //     button.innerText = "ACTIVE";
-  //     button.classList.remove("btn-danger");
-  //     button.classList.add("btn-success");
-
-  //     // Find the corresponding customer by ID
-  //     const quotation = quotaions.find((q) => q.id === quotationID);
-  //     if (quotation) {
-  //       quotation.status = "ACTIVE";
-  //     }
-  //   }
-  // }
   
-  const initialValues = {
-    quotation_id : quotaions ? quotaions[0]?.quotation_id : "",
-    enquiry_id : quotaions ? quotaions[0]?.enquiry_id : "",
-    customer_name : quotaions ? quotaions[0]?.customer_name : "",
-    customer_email : quotaions ? quotaions[0]?.customer_email : "",
-    status : quotaions ? quotaions[0]?.status : "",
-    // cName: !add_list ? quotaions[0]?.cName : "",
-    // cEmail: !add_list ? quotaions[0]?.cEmail : "",
-    // cUser_name: !add_list ? quotaions[0]?.cUser_name : "",
-    // cPhone: !add_list ? quotaions[0]?.cPhone : "",
-    // cId_proof_no: !add_list ? quotaions[0]?.cId_proof_no : "",
-    // enquiry_id: !add_list ? enquires[0]?.enquiry_id : "",
-    // driver : !add_list ? enquires[0]?.driver : "",
-    // driver_cost : !add_list ? enquires[0]?.driver_cost : "",
-    // enquiry_date: !add_list ? quotaions[0]?.enquiry_date : "",
-    // enquiry_updated_date: !add_list ? quotaions[0]?.enquiry_updated_date : "",
-    // service_provider: !add_list ? quotaions[0]?.Service_provider : "",
-    // Vehicle_number: !add_list ? quotaions[0]?.Vehicle_number : "",
-    // Vehicle_Make: !add_list ? quotaions[0]?.Vehicle_Make : "",
-    // vehicle_cost : !add_list ? enquires[0]?.vehicle_cost : "",
-    // trip_type: !add_list ? quotaions[0]?.trip_type : "",
-    // pickup_location: !add_list ? quotaions[0]?.pickup_location : "",
-    // pickup_country: !add_list ? quotaions[0]?.pickup_country : "",
-    // pickup_date: !add_list ? quotaions[0]?.pickup_date : "",
-    // pickup_time: !add_list ? quotaions[0]?.pickup_time : "",
-    // drop_location: !add_list ? quotaions[0]?.drop_location : "",
-    // drop_country: !add_list ? quotaions[0]?.drop_country : "",
-    // drop_date: !add_list ? quotaions[0]?.drop_date : "",
-    // drop_time: !add_list ? quotaions[0]?.drop_time : "",
-    // no_of_horse: !add_list ? quotaions[0]?.no_of_horse : "",
-    // special_requirement: !add_list
-    //   ? quotaions[0]?.special_requirement
-    //   : ["Washing", "Bathing"],
-    // additional_service: !add_list
-    //   ? quotaions[0]?.additional_service
-    //   : ["Medicine", "Water"],
-    // transportation_insurance_coverage: !add_list
-    //   ? quotaions[0]?.transportation_insurance_coverage
-    //   : "",
-    // tax_amount: !add_list ? quotaions[0]?.tax_amount : "",
-    // discount_amount: !add_list ? quotaions[0]?.discount_amount : "",
-    // final_amount: !add_list ? quotaions[0]?.final_amount : "",
-    // status: !add_list ? quotaions[0]?.status : "",
-    // created_at: !add_list ? quotaions[0]?.created_at : "",
-  };
+  const [ tAmount, setTAmount ] = useState(0)
+  const [ driverAmount, setDriverAmount ] = useState(0)
+  const [ vehicleAmount, setVehicleAmount ] = useState(0)
+  const [ taxation, setTaxation ] = useState([]);
+  const [ taxAmount, setTaxAmount ] = useState(0)
+  const [ taxApplayed, setTaxApplayed ] = useState("NO")
+  const [ finalAmount, setFinalAmount ] = useState(0);
+  const [ modal, setModal ] = useState(false);
+  const [ serviceProviders, setServiceProviders ] = useState([]);
+  const [ sPVechiles, setSPVechiles ] = useState([]);
+  const [ sPDrivers, setSPDrivers ] = useState([]);
+  const [ discounts, setDiscounts ] = useState([]);
+  const [ selectedDiscount, setSelectedDiscount ] = useState("");
+  const [ discountAmount, setDiscountAmount ] = useState(0);
 
-  const enquiry_details = (val) => {
-    const data = enquires ?.find((item) => item?.id === val);
-    if(data && data !== undefined){
-      validation.values.service_provider = data.service_provider;
-      validation.values.Vehicle_number = data.vehicle_number;
-      // validation.values.driver = data.driver;
-      validation.values.pickup_location = data.pickup_location;
-      validation.values.pickup_date = data.pickup_date;
-      validation.values.drop_location = data.drop_location;
-      validation.values.drop_date = data.drop_date;
-      validation.values.no_of_horse = data.no_of_horse;
-      validation.values.trip_type = data.trip_type;
-    }
-    
-  }
+  const initialValues = {
+    quotation_id : quotations ? quotations[0]?.quotation_id : "",
+    enquiry_id : quotations ? quotations[0]?.enquiry_id : "",
+    customer_name : quotations ? quotations[0]?.customer_name : "",
+    customer_email : quotations ? quotations[0]?.customer_email : "",
+    status : quotations ? quotations[0]?.status : "",
+
+    customer_id : quotation ? quotation[0]?.customer_id : "",
+    customer_user_name : quotation ? quotation[0]?.customer_user_name : "",
+    vehicle_id : quotation ? quotation[0]?.vehicle_id : "",
+    vehicle_number : quotation ? quotation[0]?.vehicle_number : "",
+    service_provider_id : quotation ? quotation[0]?.service_provider_id : "",
+    service_provider_name : quotation ? quotation[0]?.service_provider_name : "",
+    trip_type : quotation ? quotation[0]?.trip_type : "",
+    pickup_location : quotation ? quotation[0]?.pickup_location : "",
+    pickup_country : quotation ? quotation[0]?.pickup_country : "",
+    drop_location : quotation ? quotation[0]?.drop_location : "",
+    drop_country : quotation ? quotation[0]?.drop_country : "",
+    no_of_horse : quotation ? quotation[0]?.no_of_horse : "",
+    current_amount : "",
+    tax_amount : quotation ? quotation[0]?.tax_amount : "",
+    discount_amount : quotation ? quotation[0]?.discount_amount : "",
+    vehicle_amount : quotation ? quotation[0]?.vehicle_amount : "",
+    driver_amount : quotation ? quotation[0]?.driver_amount : "",
+    special_requirement : quotation ? quotation[0]?.special_requirement : "",
+    additional_service : quotation ? quotation[0]?.additional_service : "",
+    transportation_insurance_coverage : quotation ? quotation[0]?.transportation_insurance_coverage : "",
+    drop_date : quotation ? quotation[0]?.drop_date : "",
+    pickup_date : quotation ? quotation[0]?.pickup_date : "",
+    discount_type_id : quotation ? quotation[0]?.discount_type_id : "",
+    driver_id : quotation ? quotation[0]?.driver_id : "",
+    final_amount : quotation ? quotation[0]?.final_amount : "",
+
+    subject : "",
+    body : "",
+  };
 
   // Later in your code, when setting the initial state
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
+    
     enableReinitialize: true,
     initialValues,
     onSubmit: (values) => {
-      setmodal_list(false);
-      if (add_list) {
-        //add new
-        console.log("add new");
+      initialValues.current_amount = tAmount
+      if (modalEmail) {
+        //SEND MAIL 
+        console.log("send mail");
         console.log(values);
-        addNewQuotaion(values);
-        setAdd_list(false);
-        setmodal_list(false);
+        sendEmail(values);
       } else {
         //update previes one
         console.log("update previues one ");
         console.log(values);
-        updatQuotaion(values);
-        setAdd_list(false);
-        setmodal_list(false);
+        editQuotation(values);
       }
     },
   });
 
-  /************ */
-  function tog_list(param, productId) {
-    if (param === "ADD") {
-      setAdd_list(!add_list);
-    }
-    const data = quotaions?.find((item) => item?.id === productId);
-    setQuotaion([data]);
-    setmodal_list(!modal_list);
+  function modalClose(){
+    setQuotation(null);
+    setTAmount(0);
+    setDriverAmount(0);
+    setVehicleAmount(0);
+    setTaxAmount(0)
+    setFinalAmount(0);
+    setTaxation([]);
+    setTaxApplayed("NO");
+    setServiceProviders([]);
+    setSPVechiles([]);
+    setSPDrivers([]);
+    setDiscounts([]);
+    setSelectedDiscount("");
+    setDiscountAmount(0);
+    setModal(false);
+    setView_modal(false);
+    setQutId("");
+    setModalEmail(false);
   }
 
-  console.log("modal", modal_list);
+  async function confirmQut(){
+    await confirmQuotation(qutId);
+    setErrors("")
+    setModal(false)
+    modalClose()
+    getAllData(pageNumber)
+  }
+
+  // Update service provider
+  async function editQuotation(data){
+    let updateQut = await updatQuotation(qutId, data);
+    if(updateQut.code === 200){
+        setErrors("")
+        setModal(false)
+        modalClose()
+        getAllData(pageNumber)
+    }else{
+        setErrors("")
+        setErrors(updateQut.message)
+    }
+  }
+  
+  // Update service provider
+  async function sendEmail(data){
+    console.log(data,"SE")
+    let sendEmail = await sendEmailFunction(qutId, data);
+    console.log("es",sendEmail)
+    if(sendEmail.code === 200){
+        setErrors("")
+        setModalEmail(false);
+        modalClose();
+    }else{
+        setErrors("")
+        setErrors(sendEmail.message)
+    }
+  }
+
+  /************ */
+  async function tog_list(id) {
+    setQutId(id)
+    let singleQut = await getConfirmQut(id)
+    let serviceProviderData = await getSPUserName()
+    const sPVechilesData = await getSPVehiclesData(singleQut.quotation[0]?.service_provider_id) 
+    setSPVechiles(sPVechilesData.vehicles)
+    const sPDriverData = await getSPDriverData(singleQut.quotation[0]?.service_provider_id)
+    setSPDrivers(sPDriverData.drivers)
+    const discountsData = await getDiscounts()
+    setDiscounts(discountsData)
+    setServiceProviders(serviceProviderData.serviceProviders)
+    setQuotation(singleQut.quotation);
+    setTaxation(singleQut.tax);
+    setFinalAmount(Number(singleQut.quotation[0]?.final_amount))
+    setTaxAmount(Number(singleQut.quotation[0]?.tax_amount))
+    setDiscountAmount(Number(singleQut.quotation[0]?.discount_amount))
+    setVehicleAmount(Number(singleQut.quotation[0]?.vehicle_amount))
+    setDriverAmount(Number(singleQut.quotation[0]?.driver_amount))
+    setSelectedDiscount(singleQut.quotation[0]?.discount_type_id);
+    setTAmount(Number(singleQut.quotation[0]?.vehicle_amount) + Number(singleQut.quotation[0]?.driver_amount))
+    if(Number(singleQut.quotation[0]?.tax_amount) > 0){
+      setTaxApplayed("YES")
+      console.log("YES")
+    }
+    setModal(!modal);
+  }
+
   //view
   async function tog_view(productId) {
-    console.log("f1",productId)
+    setQutId(productId)
     let confirmData = await getConfirmQut(productId)
-    setQuotaion(confirmData.quotation);
+    setQuotation(confirmData.quotation);
     setView_modal(!view_modal);
   }
 
   async function quat_list(productId) {
     let qutData = await getSingleQuotationData(productId)
-    setQuotaionListDetails(qutData.quotation.details);
-    console.log("qq",qutData.quotation.quotations)
-    setQuotaionList(qutData.quotation.quotations)
+    setQuotationListDetails(qutData.quotation.details);
+    setQuotationList(qutData.quotation.quotations)
     setQuatList_modal(!quatlist_modal);
   }
 
-  const [modal_delete, setmodal_delete] = useState(false);
-  function tog_delete() {
-    setmodal_delete(!modal_delete);
-  }
-
-  
-  function toggleStatus(button, quatationId) {
-    var currentStatus = button.innerText.trim();
-
-    if (currentStatus === 'ACTIVE') {
-        button.innerText = 'INACTIVE';
-        button.classList.remove('btn-success');
-        button.classList.add('btn-danger');
-
-        // Find the corresponding customer by ID
-        const quotaion = quotaions.find((q) => q.id === quatationId);
-        if (quotaion) {
-            quotaion.status = 'INACTIVE';
-        }
-    }
-    else if (currentStatus === 'INACTIVE') {
-        button.innerText = 'ACTIVE';
-        button.classList.remove('btn-danger');
-        button.classList.add('btn-success');
-
-        // Find the corresponding customer by ID
-        const quotaion = quotaions.find((q) => q.id === quatationId);
-        if (quotaion) {
-          quotaion.status = 'ACTIVE';
-        }
-    }
+  // send Mail modal
+  async function tog_sendMail(qId, cEmail) {
+    setQutId(qId)
+    initialValues.customer_email = cEmail
+    setModalEmail(!modalEmail);
   }
 
   useEffect(() => {
@@ -226,9 +235,249 @@ const ListQuotationsTable = () => {
   // function for get data all service provider data
   async function getAllData(page) {
     let quotationData = await getQuotationData(page || 1);
-    setQuotaions(quotationData.quotations);
+    setQuotations(quotationData.quotations);
     setPageNumber(page);
     setNumberOfData(quotationData.totalCount);
+  }
+
+  async function calcDiscount(val){
+    setSelectedDiscount(val);
+    if(val !== ""){
+        let discountType = discounts.find((d) => d.id === Number(val));
+        if(discountType.type === "PERCENTAGE"){
+            let discount = Number(tAmount) * (Number(discountType.rate)/100);
+            setDiscountAmount(discount)
+            setFinalAmount(Number(tAmount) - Number(discount));
+            if(taxApplayed === "YES"){
+                console.log("tt",taxation[0])
+                if(taxation[0]?.type === "PERCENTAGE"){
+                    let taxAmount = (Number(tAmount) - Number(discount)) * (Number(taxation[0].value) / 100)
+                    setTaxAmount(taxAmount)
+                    setFinalAmount(Number(tAmount) - Number(discount) + Number(taxAmount));
+                }else{
+                    if(Number(taxation[0].value) < (Number(tAmount) - Number(discount))){
+                        setTaxAmount(0)
+                        setFinalAmount(Number(tAmount) - Number(discount));
+                    }else {
+                        setTaxAmount(Number(taxation[0].value))
+                        setFinalAmount(Number(tAmount) - Number(discount) + Number(taxation[0].value));
+                    }
+                    
+                }
+            }else{
+                setTaxAmount(0)
+                setFinalAmount(Number(tAmount) - Number(discount));
+            }
+        }else{
+            if(Number(discountType.rate) < Number(tAmount)){
+                setDiscountAmount(Number(discountType.rate))
+                setFinalAmount(Number(tAmount) - Number(discountType.rate));
+                if(taxApplayed === "YES"){
+                    console.log("tt",taxation[0])
+                    if(taxation[0]?.type === "PERCENTAGE"){
+                        let taxAmount = (Number(tAmount) - Number(discountType.rate) ) * (Number(taxation[0].value) / 100)
+                        setTaxAmount(Number(taxAmount))
+                        setFinalAmount(Number(tAmount) - Number(discountType.rate));
+                    }else{
+                        if(Number(taxation[0].value) < (Number(tAmount) - Number(discountType.rate) )){
+                            setTaxAmount(0)
+                            setFinalAmount(Number(tAmount) - Number(discountType.rate));
+                        }else {
+                            setTaxAmount(Number(taxation[0].value))
+                            setFinalAmount(Number(tAmount) - Number(discountType.rate) + Number(taxation[0].value));
+                        }
+                        
+                    }
+                }else{
+                    setTaxAmount(0)
+                    setFinalAmount(Number(tAmount) - Number(discountType.rate))
+                }
+            }else{
+                setDiscountAmount(0)
+                if(taxApplayed === "YES"){
+                    console.log("tt",taxation[0])
+                    if(taxation[0]?.type === "PERCENTAGE"){
+                        let taxAmount = (Number(tAmount)) * (Number(taxation[0].value) / 100)
+                        setTaxAmount(taxAmount)
+                        setFinalAmount(Number(tAmount) + Number(taxAmount));
+                    }else{
+                        if(Number(taxation[0].value) < (Number(tAmount) )){
+                            setTaxAmount(0)
+                            setFinalAmount(Number(tAmount))
+                        }else {
+                            setTaxAmount(taxation[0].value)
+                            setFinalAmount(Number(tAmount) + Number(taxation[0].value));
+                        }
+                    }
+                }else{
+                    setTaxAmount(0)
+                    setFinalAmount(Number(tAmount))
+                }
+            }
+        }
+    }else{
+        setDiscountAmount(0)
+        if(taxApplayed === "YES"){
+            console.log("tt",taxation[0])
+            if(taxation[0]?.type === "PERCENTAGE"){
+                let taxAmount = (Number(tAmount)) * (Number(taxation[0].value) / 100)
+                setTaxAmount(taxAmount)
+                setFinalAmount(Number(tAmount) + Number(taxAmount));
+            }else{
+                if(Number(taxation[0].value) < (Number(tAmount) )){
+                    setTaxAmount(0)
+                    setFinalAmount(Number(tAmount))
+                }else {
+                    setTaxAmount(Number(taxation[0].value))
+                    setFinalAmount(Number(tAmount) + Number(Number(taxation[0].value)))
+                }
+                
+            }
+        }else{
+            setTaxAmount(0)
+            setFinalAmount(Number(tAmount))
+        }
+    }
+  }
+
+  async function totalAmount(val){
+      console.log("total",val,selectedDiscount,taxApplayed, taxAmount)
+      if(selectedDiscount !== ""){
+          let discountType = discounts.find((d) => d.id === Number(selectedDiscount));
+          console.log("ddt",discountType)
+          if(discountType.type === "PERCENTAGE"){
+              let discount = Number(val) * (Number(discountType.rate)/100);
+              setDiscountAmount(Number(discount))
+              setFinalAmount(Number(val) - Number(discount));
+              if(taxApplayed === "YES"){
+                  console.log("tt",taxation[0])
+                  if(taxation[0]?.type === "PERCENTAGE"){
+                      let taxAmount = (Number(val) - Number(discount)) * (Number(taxation[0].value) / 100)
+                      setTaxAmount(Number(taxAmount))
+                      setFinalAmount(Number(val) - Number(discount) + Number(taxAmount));
+                  }else{
+                      if(taxation[0].value < (Number(val) - Number(discount))){
+                          setTaxAmount(0)
+                          setFinalAmount(Number(val) - Number(discount));
+                      }else {
+                          setTaxAmount(Number(taxation[0].value))
+                          setFinalAmount(Number(val) - Number(discount) + Number(taxation[0].value));
+                      }
+                      
+                  }
+              }else{
+                  setTaxAmount(0)
+                  setFinalAmount(Number(val) - Number(discount));
+              }
+          }else{
+              if(Number(discountType.rate) < Number(val)){
+                  setDiscountAmount(Number(discountType.rate))
+                  setFinalAmount(Number(val) - Number(discountType.rate));
+                  if(taxApplayed === "YES"){
+                      console.log("tt",taxation[0])
+                      if(taxation[0]?.type === "PERCENTAGE"){
+                          let taxAmount = (Number(val) - Number(discountType.rate)) * (Number(taxation[0].value) / 100)
+                          setTaxAmount(Number(taxAmount))
+                          setFinalAmount(Number(val) - Number(discountType.rate) + Number(taxAmount));
+                      }else{
+                          if(taxation[0].value < (Number(val) - Number(discountType.rate))){
+                              setTaxAmount(0)
+                              setFinalAmount(Number(val) - Number(discountType.rate));
+                          }else {
+                              setTaxAmount(Number(taxation[0].value))
+                              setFinalAmount(Number(val) - Number(discountType.rate) + Number(taxation[0].value));
+                          }
+                          
+                      }
+                  }else{
+                      setTaxAmount(0)
+                      setFinalAmount(Number(val));
+                  }
+              }else{
+                  setDiscountAmount(0)
+                  if(taxApplayed === "YES"){
+                      console.log("tt",taxation[0])
+                      if(taxation[0]?.type === "PERCENTAGE"){
+                          let taxAmount = Number(val) * (Number(taxation[0].value) / 100)
+                          setTaxAmount(taxAmount)
+                          setFinalAmount(Number(val) + Number(taxAmount));
+                      }else{
+                          if(Number(taxation[0].value) < Number(val)){
+                              setTaxAmount(0)
+                              setFinalAmount(Number(val));
+                          }else {
+                              setTaxAmount(Number(taxation[0].value))
+                              setFinalAmount(Number(val) + Number(taxation[0].value));
+                          }
+                          
+                      }
+                  }else{
+                      setTaxAmount(0)
+                      setFinalAmount(Number(val));
+                  }
+              }
+          }
+      }else{
+          setDiscountAmount(0)
+          setFinalAmount(Number(val));
+          if(taxApplayed === "YES"){
+              console.log("tt",taxation[0])
+              if(taxation[0]?.type === "PERCENTAGE"){
+                  let taxAmount = Number(val) * (Number(taxation[0].value) / 100)
+                  setTaxAmount(taxAmount)
+                  setFinalAmount(Number(val) + taxAmount);
+                  
+              }else{
+                  if(Number(taxation[0].value) < Number(val)){
+                      setTaxAmount(0)
+                      setFinalAmount(Number(val));
+                      
+                  }else {
+                      setTaxAmount(Number(taxation[0].value))
+                      setFinalAmount(Number(val) + Number(taxation[0].value));
+                  }
+                  
+              }
+          }else{
+              setTaxAmount(0)
+              setFinalAmount(Number(val));
+          }
+      }
+      setTAmount(val)
+  }
+
+  async function applyTaxation(val){
+    console.log("1",val)
+    console.log("2",tAmount,"3",Number(taxation[0].value) / 100)
+      setTaxApplayed(val);
+      if(val === "YES"){
+          console.log("tt",taxation[0])
+          if(taxation[0]?.type === "PERCENTAGE"){
+              let taxAmount = (Number(tAmount) - Number(discountAmount)) * (Number(taxation[0].value) / 100)
+              setTaxAmount(taxAmount)
+              setFinalAmount(Number(tAmount) - Number(discountAmount) + Number(taxAmount));
+          }else{
+              if(Number(taxation[0].value) < (Number(tAmount) - Number(discountAmount))){
+                  setTaxAmount(0)
+                  setFinalAmount(Number(tAmount) - Number(discountAmount));
+              }else {
+                  setTaxAmount(Number(taxation[0].value))
+                  setFinalAmount(Number(tAmount) - Number(discountAmount) + Number(taxation[0].value));
+              }
+              
+          }
+      }else{
+          setTaxAmount(0)
+          setFinalAmount(Number(tAmount) - Number(discountAmount))
+      }
+      
+  }
+
+  async function serviceProviderSelected(id){
+    const sPVechilesData = await getSPVehiclesData(id) 
+    const sPDriverData = await getSPDriverData(id)
+    setSPDrivers(sPDriverData.drivers)
+    setSPVechiles(sPVechilesData.vehicles)
   }
 
   return (
@@ -246,22 +495,6 @@ const ListQuotationsTable = () => {
 
                 <CardBody>
                   <div id="customerList">
-                    {/* <Row className="g-4 mb-3">
-                      <Col className="col-sm-auto">
-                        <div className="d-flex gap-1">
-                          <Button
-                            color="success"
-                            className="add-btn"
-                            onClick={() => tog_list("ADD")}
-                            id="create-btn"
-                          >
-                            <i className="ri-add-line align-bottom me-1"></i>{" "}
-                            Add
-                          </Button>
-                        </div>
-                      </Col>
-                    </Row> */}
-
                     <div className="table-responsive table-card mt-3 mb-1">
                       <table
                         className="table align-middle table-nowrap"
@@ -293,7 +526,7 @@ const ListQuotationsTable = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {quotaions?.map((item, index) => (
+                          {quotations?.map((item, index) => (
                             <tr key={index}>
                               <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                               <td className="quatationId">{item?.quotation_id}</td>
@@ -331,7 +564,7 @@ const ListQuotationsTable = () => {
                                       className="btn btn-sm btn-primary edit-item-btn"
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
-                                      onClick={() => tog_list("EDIT", item?.id)}
+                                      onClick={() => tog_list(item?.quotation_id)}
                                     >
                                       Edit
                                     </button>
@@ -341,6 +574,7 @@ const ListQuotationsTable = () => {
                                     className="btn btn-sm btn-success edit-item-btn"
                                     data-bs-toggle="modal"
                                     data-bs-target="#showModal"
+                                    onClick={() => tog_sendMail(item?.quotation_id, item?.customer_email)}
                                   >
                                     Send Email
                                   </button>
@@ -403,608 +637,403 @@ const ListQuotationsTable = () => {
         </Container>
       </div>
 
-      {/* Add Modal */}
-      <Modal
-        className="extra-width"
-        isOpen={modal_list}
-        toggle={() => {
-          tog_list(add_list ? "ADD" : "EDIT");
-        }}
-        centered
-      >
-        <ModalHeader
-          className="bg-light p-3"
-          id="exampleModalLabel"
-          toggle={() => {
-            tog_list(add_list ? "ADD" : "EDIT");
-          }}
-        >
-          {add_list ? "Add Quotaion" : "Edit Quotaion"}
-        </ModalHeader>
-        <form className="tablelist-form" onSubmit={validation.handleSubmit}>
-          <ModalBody>
-            {/* {quotaion?.map((item, index) => (
-                    <div key={index}> */}
-
-            {/* <div className="mb-3">
-              <label htmlFor="customerName-field" className="form-label">
-                Customer Name
-              </label>
-              <input
-                type="text"
-                name="cName"
-                id="customerName-field"
-                className="form-control"
-                value={validation.values.cName || ""}
-                placeholder="Enter Customer Name"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="customerEmail-field" className="form-label">
-                Customer Email
-              </label>
-              <input
-                type="text"
-                name="cEmail"
-                id="customerEmail-field"
-                className="form-control"
-                value={validation.values.cEmail || ""}
-                placeholder="Enter Customer Email"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="customerUsername-field" className="form-label">
-                Customer Username
-              </label>
-              <input
-                type="text"
-                name="cUser_name"
-                id="customerUsername-field"
-                className="form-control"
-                value={validation.values.cUser_name || ""}
-                placeholder="Enter Customer Username"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="customerPhone-field" className="form-label">
-                Customer Contact Number
-              </label>
-              <input
-                type="text"
-                name="cPhone"
-                id="customerPhone-field"
-                className="form-control"
-                value={validation.values.cPhone || ""}
-                placeholder="Enter Customer Contact Number"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="customerIdProofno-field" className="form-label">
-                Customer Id Proof Number
-              </label>
-              <input
-                type="text"
-                name="cId_proof_no"
-                id="customerIdProofno-field"
-                className="form-control"
-                value={validation.values.cId_proof_no || ""}
-                placeholder="Enter Customer Id Proof Number"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="service-provider-field" className="form-label">
-                Service Provider
-              </label>
-              <input
-                type="text"
-                name="service_provider"
-                id="service-provider-field"
-                className="form-control"
-                value={validation.values.service_provider || ""}
-                placeholder="Enter Service Provider Name"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div> */}
-
-            {add_list ?
-            <div className="mb-3">
-              <label htmlFor="trip-type-field" className="form-label">
-                Enquiry Id
-              </label>
-              <select
-                data-trigger
-                name="enquiry_id"
-                id="trip-type-field"
-                className="form-control"
-                value={validation.values.enquiry_id || ""}
-                onSelect={enquiry_details(validation.values.enquiry_id)}
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              >
-                <option value="">Select Enquiry Id</option>
-              {enquires.map((item) => (
-                <option value={item.id}>{item.id}</option>
-              ))}
-              </select>
-            </div> : null}
-
-            {/* {!add_list ? */}
-            <div className="mb-3">
-            <label htmlFor="service-provider-field" className="form-label">
-              Service Provider
-            </label>
-            <input
-              type="text"
-              name="service_provider"
-              id="service-provider-field"
-              className="form-control"
-              value={validation.values.service_provider || ""}
-              placeholder="Enter Service Provider Name"
-              onChange={validation.handleChange}
-              onBlur={validation.handleBlur}
-              required
-            />
-          </div>
-          {/* : null} */}
-
-            <div className="mb-3">
-              <label htmlFor="vehicle-number-field" className="form-label">
-                Vehicle Number
-              </label>
-              <input
-                type="text"
-                name="Vehicle_number"
-                id="vehicle-number-field"
-                className="form-control"
-                value={validation.values.Vehicle_number || ""}
-                placeholder="Enter Vehicle Number"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
-
-            <div className="mb-3">
-              <label htmlFor="trip-type-field" className="form-label">
-                Trip Type
-              </label>
-              <select
-                data-trigger
-                name="trip_type"
-                id="trip-type-field"
-                className="form-control"
-                value={validation.values.trip_type || ""}
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-              >
-                <option value="">Select Trip Type</option>
-                <option value="international">International</option>
-                <option value="private">Private</option>
-                <option value="sharing">Sharing</option>
-              </select>
-            </div>
-
-            {/* <div className="mb-3">
-              <label htmlFor="pickup-country-field" className="form-label">
-                Pickup Country
-              </label>
-              <select
-                data-trigger
-                name="pickup_country"
-                id="pickup-country-field"
-                className="form-control"
-                value={validation.values.pickup_country || ""}
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              >
-                <option value="">Select Country</option>
-                <option value="Abu Dhabi">Abu Dhabi</option>
-                <option value="Dubai">Dubai</option>
-                <option value="Sharjah">Sharjah</option>
-              </select>
-            </div> */}
-
-            <div className="mb-3">
-              <label htmlFor="pickup-location-field" className="form-label">
-                Pickup Location
-              </label>
-              <input
-                type="text"
-                name="pickup_location"
-                id="pickup-location-field"
-                className="form-control"
-                value={validation.values.pickup_location || ""}
-                placeholder="Enter Pickup Location"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
-            <div className="mb-3">
-              <label htmlFor="pickup-date-field" className="form-label">
-                Pickup Date
-              </label>
-              <Flatpickr
-                className="form-control"
-                name="pickup_date"
-                id="pickup-date-field"
-                options={{
-                  dateFormat: "d M, Y",
-                }}
-                value={validation.values.pickup_date || ""}
-                placeholder="Select Drop Date"
-                onChange={(date) =>
-                  validation.setFieldValue("pickup_date", date)
-                }
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
-            {/* <div className="mb-3">
-              <label
-                htmlFor="pickup-time-input"
-                className="col-md-2 col-form-label"
-              >
-                Pickup Time
-              </label>
+      {/* Edit */}
+      <Modal className="extra-width" isOpen={modal} toggle={() => { modalClose() }} centered >
+        <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { modalClose() }}>Edit Quotation</ModalHeader>
+        <form className="tablelist-form"
+            onSubmit={validation.handleSubmit}>
+            <ModalBody>
+                {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
+                <div className="mb-3">
+                <label htmlFor="customerName-field" className="form-label">Customer Name</label>
                 <input
-                  className="form-control"
-                  name="pickup_time"
-                  value={validation.values.pickup_time || ""}
-                  type="time"
-                  id="drop-time-input"
-                  onChange={validation.handleChange}
-                  onBlur={validation.handleBlur}
-                />
-            </div> */}
-            {/* <div className="mb-3">
-              <label htmlFor="drop-country-field" className="form-label">
-                Drop Country
-              </label>
-              <select
-                data-trigger
-                name="drop_country"
-                id="drop-country-field"
-                className="form-control"
-                value={validation.values.drop_country || ""}
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              >
-                <option value="">Select Country</option>
-                <option value="Abu Dhabi">Abu Dhabi</option>
-                <option value="Dubai">Dubai</option>
-                <option value="Sharjah">Sharjah</option>
-              </select>
-            </div> */}
+                    type="text"
+                    name="customer_name"
+                    id="customerName-field"
+                    className="form-control"
+                    value={validation.values.customer_name || ""}
+                    onChange={validation.handleChange}
+                    />
+                </div>
 
-            <div className="mb-3">
-              <label htmlFor="drop-location-field" className="form-label">
-                Drop Location
-              </label>
-              <input
-                type="text"
-                name="drop_location"
-                id="drop-location-field"
-                className="form-control"
-                value={validation.values.drop_location || ""}
-                placeholder="Enter Pickup Location"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
+                <div className="mb-3">
+                    <label htmlFor="service_provider_id-field" className="form-label">Service Provider Name</label>
+                    <select
+                        data-trigger
+                        name="service_provider_id"
+                        id="service_provider_id-field"
+                        className="form-control"
+                        value={validation.values.service_provider_id || ""}
+                        onChange={(e) => {validation.handleChange(e); serviceProviderSelected(e.target.value);}}
+                        onBlur={validation.handleBlur}
+                        required
+                    >
+                        <option value="">Select Service Provider</option>
+                    {serviceProviders.map((item, index) => (
+                        <option key={index} value={item.id}>{item.user_name}</option>
+                    ))}
+                    </select>
+                </div>
+                
+                <div className="mb-3">
+                    <label htmlFor="vehicle_id-field" className="form-label">Vehicle Number</label>
+                    <select
+                        data-trigger
+                        name="vehicle_id"
+                        id="vehicle_id-field"
+                        className="form-control"
+                        value={validation.values.vehicle_id || ""}
+                        // onSelect={enquiry_details(validation.values.service_provider_id)}
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        // required
+                    >
+                        <option value="">Select Any Vehicle Number</option>
+                        {sPVechiles.map((item, index) => (
+                            <option key={index} value={item.id}>{item.vehicle_number}</option>
+                        ))}
+                    </select>
+                </div>
 
-            <div className="mb-3">
-              <label htmlFor="drop-date-field" className="form-label">
-                Drop Date
-              </label>
-              <Flatpickr
-                className="form-control"
-                name="drop_date"
-                id="drop-date-field"
-                options={{
-                  dateFormat: "d M, Y",
-                }}
-                value={validation.values.drop_date || ""}
-                placeholder="Select Drop Date"
-                onChange={(date) => validation.setFieldValue("drop_date", date)}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
+                <div className="mb-3">
+                    <label htmlFor="trip_type-field" className="form-label">Trip Type</label>
+                    <select
+                        data-trigger
+                        name="trip_type"
+                        id="trip_type-field"
+                        className="form-control"
+                        value={validation.values.trip_type || ""}
+                        // onSelect={enquiry_details(validation.values.service_provider_id)}
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        required
+                    >
+                        <option value="">Select Trip Type</option>
+                        <option value="PRIVATE">Private</option>
+                        <option value="GCC">GCC</option>
+                        <option value="SHARING">Sharing</option>
+                    </select>
+                </div>
 
-            {/* <div className="mb-3">
-              <label
-                htmlFor="drop-time-input"
-                className="col-md-2 col-form-label"
-              >
-                Drop Time
-              </label>
-                <input
-                  className="form-control"
-                  name="drop_time"
-                  value={validation.values.drop_time || ""}
-                  type="time"
-                  id="drop-time-input"
-                  onChange={validation.handleChange}
-                  onBlur={validation.handleBlur}
-                />
-            </div> */}
+                <div className="mb-3">
+                    <label htmlFor="pickup_country-field" className="form-label">Pickup Country</label>
+                    <input
+                        type="text"
+                        name="pickup_country"
+                        id="pickup_country-field"
+                        className="form-control"
+                        value={validation.values.pickup_country || ""}
+                        onChange={validation.handleChange}
+                        required
+                    />
+                </div>
 
-            <div className="mb-3">
-              <label htmlFor="no_of_horses-field" className="form-label">
-                No Of Horses
-              </label>
-              <select
-                id="no_of_horses-field"
-                className="form-control"
-                name="no_of_horse"
-                value={validation.values.no_of_horse || ""}
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              >
-                {Array.from({ length: 10 }, (_, index) => (
-                  <option key={index + 1} value={index + 1}>
-                    {index + 1}
-                  </option>
-                ))}
-              </select>
-            </div>
+                <div className="mb-3">
+                    <label htmlFor="pickup_location-field" className="form-label">Pickup Location</label>
+                    <input
+                        type="text"
+                        name="pickup_location"
+                        id="pickup_location-field"
+                        className="form-control"
+                        value={validation.values.pickup_location || ""}
+                        onChange={validation.handleChange}
+                        required
+                    />
+                </div>
 
-            <div className="mb-3">
-              <label htmlFor="special-requirement-field" className="form-label">
-                Special Requirements
-              </label>
-              <div>
-                <input
-                  type="checkbox"
-                  id="washing"
-                  name="special_requirement"
-                  value="Washing"
-                  // checked={validation.values.special_requirement?.includes("Washing")}
-                  onChange={validation.handleChange}
-                  onBlur={validation.handleBlur}
-                />
-                <label htmlFor="washing">Washing</label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  id="bathing"
-                  name="special_requirement"
-                  value="Bathing"
-                  // checked={validation.values.special_requirement?.includes("Bathing")}
-                  onChange={validation.handleChange}
-                  onBlur={validation.handleBlur}
-                />
-                <label htmlFor="bathing">Bathing</label>
-              </div>
-            </div>
+                <div className="mb-3">
+                    <label htmlFor="drop_country-field" className="form-label">Drop Country</label>
+                    <input
+                        type="text"
+                        name="drop_country"
+                        id="drop_country-field"
+                        className="form-control"
+                        value={validation.values.drop_country || ""}
+                        onChange={validation.handleChange}
+                        required
+                    />
+                </div>
 
-            <div className="mb-3">
-              <label htmlFor="additional-service-field" className="form-label">
-                Additional Service
-              </label>
-              <div>
-                <input
-                  type="checkbox"
-                  id="medicine"
-                  name="additional_service"
-                  value="Medicine"
-                  // defaultChecked={validation.values.additional_service.includes("Medicine")}
-                  onChange={validation.handleChange}
-                  onBlur={validation.handleBlur}
-                />
-                <label htmlFor="medicine">Medicine</label>
-              </div>
-              <div>
-                <input
-                  type="checkbox"
-                  id="water"
-                  name="additional_service"
-                  value="Water"
-                  // defaultChecked={validation.values.additional_service.includes("Water")}
-                  onChange={validation.handleChange}
-                  onBlur={validation.handleBlur}
-                />
-                <label htmlFor="water">Water</label>
-              </div>
-            </div>
+                <div className="mb-3">
+                    <label htmlFor="drop_location-field" className="form-label">Drop Location</label>
+                    <input
+                        type="text"
+                        name="drop_location"
+                        id="drop_location-field"
+                        className="form-control"
+                        value={validation.values.drop_location || ""}
+                        onChange={validation.handleChange}
+                        required
+                    />
+                </div>
 
-            <div className="mb-3">
-              <label className="form-label">
-                Transportation Insurance Coverage
-              </label>
-              <div className="form-check">
-                <input
-                  type="radio"
-                  id="transportation-insurance-coverage-yes"
-                  name="transportation_insurance_coverage"
-                  className="form-check-input"
-                  value="YES"
-                  checked={
-                    validation.values.transportation_insurance_coverage ===
-                    "YES"
-                  }
-                  onChange={validation.handleChange}
-                  onBlur={validation.handleBlur}
-                  required
-                />
-                <label
-                  htmlFor="transportation-insurance-coverage-yes"
-                  className="form-check-label"
-                >
-                  YES
-                </label>
-              </div>
-              <div className="form-check">
-                <input
-                  type="radio"
-                  id="transportation-insurance-coverage-no"
-                  name="transportation_insurance_coverage"
-                  className="form-check-input"
-                  value="NO"
-                  checked={
-                    validation.values.transportation_insurance_coverage === "NO"
-                  }
-                  onChange={validation.handleChange}
-                  onBlur={validation.handleBlur}
-                  required
-                />
-                <label
-                  htmlFor="transportation-insurance-coverage-no"
-                  className="form-check-label"
-                >
-                  NO
-                </label>
-              </div>
-            </div>
+                <div className="mb-3">
+                    <label htmlFor="no_of_horse-field" className="form-label">Number of Hourse</label>
+                    <input
+                        type="text"
+                        name="no_of_horse"
+                        id="no_of_horse-field"
+                        className="form-control"
+                        value={validation.values.no_of_horse || ""}
+                        onChange={validation.handleChange}
+                        required
+                    />
+                </div>
 
-            <div className="mb-3">
-              <label htmlFor="driver-field" className="form-label">
-                Driver Name
-              </label>
-              <input
-                type="text"
-                name="driver"
-                id="driver_cost-field"
-                className="form-control"
-                value={validation.values.driver || ""}
-                placeholder="Enter Driver Name"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
-            
-            <div className="mb-3">
-              <label htmlFor="driver_cost-field" className="form-label">
-                Driver Cost
-              </label>
-              <input
-                type="text"
-                name="driver_cost"
-                id="driver_cost-field"
-                className="form-control"
-                value={validation.values.driver_cost || ""}
-                placeholder="Enter Driver Cost"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
+                <div className="mb-3">
+                    <label htmlFor="driver_id-field" className="form-label">Driver</label>
+                    <select
+                        data-trigger
+                        name="driver_id"
+                        id="driver_id-field"
+                        className="form-control"
+                        value={validation.values.driver_id || ""}
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        required
+                    >
+                        <option value="">Select Any Vehicle Number</option>
+                        {sPDrivers.map((item, index) => (
+                            <option key={index} value={item.id}>{item.name}</option>
+                        ))}
+                    </select>
+                </div>
+                
+                <div className="mb-3">
+                    <label htmlFor="discount_type_id-field" className="form-label">Discount</label>
+                    <select
+                        data-trigger
+                        name="discount_type_id"
+                        id="discount_type_id-field"
+                        className="form-control"
+                        value={validation.values.discount_type_id || ""}
+                        onChange={(e)=> { validation.handleChange(e); calcDiscount(e.target.value);}}
+                        onBlur={validation.handleBlur}
+                        // required
+                    >
+                        <option value="">Select Discount</option>
+                        {discounts.map((item, index) => (
+                            <option key={index} value={item.id}>{item.name}</option>
+                        ))}
+                    </select>
+                </div>
 
-            <div className="mb-3">
-              <label htmlFor="Vehicle_cost-field" className="form-label">
-                Vehicle Cost
-              </label>
-              <input
-                type="text"
-                name="vehicle_cost"
-                id="vehicle_cost-field"
-                className="form-control"
-                value={validation.values.vehicle_cost || ""}
-                placeholder="Enter Vehicle Cost"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
+                <div className="mb-3">
+                    <label htmlFor="pickup_date-field" className="form-label">Pickup Date</label>
+                    <Flatpickr
+                        className="form-control"
+                        name='pickup_date'
+                        options={{
+                            dateFormat: "d-m-Y"
+                        }}
+                        value= ""
+                        onChange={(dates) =>validation.setFieldValue('pickup_date', dates[0])}
+                        placeholder={validation.values.pickup_date || "Select Date"}
+                    />
+                </div>
 
-            <div className="mb-3">
-              <label htmlFor="tax-amount-field" className="form-label">
-                Tax Amount
-              </label>
-              <input
-                type="text"
-                name="tax_amount"
-                id="tax-amount-field"
-                className="form-control"
-                value={validation.values.tax_amount || ""}
-                placeholder="Enter Tax Amount"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
+                <div className="mb-3">
+                    <label htmlFor="drop_date-field" className="form-label">Drop Date</label>
+                    <Flatpickr
+                        className="form-control"
+                        name='drop_date'
+                        options={{
+                            dateFormat: "d-m-Y"
+                        }}
+                        value= ""
+                        onChange={(dates) =>validation.setFieldValue('drop_date', dates[0])}
+                        placeholder={validation.values.drop_date || "Select Date"}
+                    />
+                </div>
 
-            <div className="mb-3">
-              <label htmlFor="discount-amount-field" className="form-label">
-                Discount Amount
-              </label>
-              <input
-                type="text"
-                name="discount_amount"
-                id="discount-amount-field"
-                className="form-control"
-                value={validation.values.discount_amount || ""}
-                placeholder="Enter Discount Amount"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
+                <div className="mb-3">
+                    <label className="form-label">
+                        Transportation Insurance Coverage
+                    </label>
+                    <div className="form-check">
+                        <input
+                        type="radio"
+                        id="transportation-insurance-coverage-yes"
+                        name="transportation_insurance_coverage"
+                        className="form-check-input"
+                        value="TRUE"
+                        checked={
+                            validation.values.transportation_insurance_coverage ===
+                            "TRUE"
+                        }
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        required
+                        />
+                        <label
+                        htmlFor="transportation-insurance-coverage-yes"
+                        className="form-check-label"
+                        >
+                        Yes
+                        </label>
+                    </div>
+                    <div className="form-check">
+                        <input
+                        type="radio"
+                        id="transportation-insurance-coverage-no"
+                        name="transportation_insurance_coverage"
+                        className="form-check-input"
+                        value="FALSE"
+                        checked={
+                            validation.values.transportation_insurance_coverage === "FALSE  "
+                        }
+                        onChange={validation.handleChange}
+                        onBlur={validation.handleBlur}
+                        required
+                        />
+                        <label
+                        htmlFor="transportation-insurance-coverage-no"
+                        className="form-check-label"
+                        >
+                        No
+                        </label>
+                    </div>
+                </div>
 
-            <div className="mb-3">
-              <label htmlFor="final-amount-field" className="form-label">
-                Final Amount
-              </label>
-              <input
-                type="text"
-                name="final_amount"
-                id="final-amount-field"
-                className="form-control"
-                value={validation.values.final_amount || ""}
-                placeholder="Enter Final Amount"
-                onChange={validation.handleChange}
-                onBlur={validation.handleBlur}
-                required
-              />
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <div className="hstack gap-2 justify-content-end">
-              <button
-                type="button"
-                className="btn btn-light"
-                onClick={() => {
-                  setmodal_list(false);
-                  setAdd_list(false);
-                }}
-              >
-                Close
-              </button>
-              <button type="submit" className="btn btn-success" id="add-btn">
-                {add_list ? "Add Quotation" : "Edit Quotation"}
-              </button>
-              {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
-            </div>
-          </ModalFooter>
+                <div className="mb-3">
+                    <label htmlFor="additional_service-field" className="form-label">Additional Service</label>
+                    <input
+                        type="text"
+                        name="additional_service"
+                        id="additional_service-field"
+                        className="form-control"
+                        value={validation.values.additional_service || ""}
+                        onChange={validation.handleChange}
+                        required
+                    />
+                </div>
+
+                <div className="mb-3">
+                    <label htmlFor="special_requirement-field" className="form-label">Special Requirement</label>
+                    <input
+                        type="text"
+                        name="special_requirement"
+                        id="special_requirement-field"
+                        className="form-control"
+                        value={validation.values.special_requirement || ""}
+                        onChange={validation.handleChange}
+                        required
+                    />
+                </div>
+
+                <div className="mb-3">
+                    <label htmlFor="vehicle_amount-field" className="form-label">Vehicle Amount</label>
+                    <input
+                        type="text"
+                        name="vehicle_amount"
+                        id="vehicle_amount-field"
+                        className="form-control"
+                        value={validation.values.vehicle_amount || ""}
+                        onChange={(e)=> { validation.handleChange(e); setVehicleAmount(e.target.value); totalAmount(Number(e.target.value) + Number(driverAmount))}}
+                        required
+                    />
+                </div>
+
+                <div className="mb-3">
+                    <label htmlFor="driver_amount-field" className="form-label">Driver Amount</label>
+                    <input
+                        type="text"
+                        name="driver_amount"
+                        id="driver_amount-field"
+                        className="form-control"
+                        value={validation.values.driver_amount || ""}
+                        onChange={(e)=> { validation.handleChange(e); setDriverAmount(e.target.value); totalAmount(Number(e.target.value) + Number(vehicleAmount))}}
+                        required
+                    />
+                </div>
+
+                <div className="mb-3">
+                    <label htmlFor="discount_amount-field" className="form-label">Discount Amount</label>
+                    <input
+                        type="text"
+                        name="discount_amount"
+                        id="discount_amount-field"
+                        className="form-control"
+                        value={discountAmount}
+                        onChange={validation.handleChange}
+                        readOnly
+                    />
+                </div>
+
+                <div className="mb-3">
+                    <label className="form-label">
+                        Applay Tax
+                    </label>
+                    <div className="form-check">
+                        <input
+                        type="radio"
+                        id="tax_applayed-yes"
+                        name="tax_applayed"
+                        className="form-check-input"
+                        value="YES"
+                        // checked={taxApplayed === "YES"}
+                        onChange={(e) => {applyTaxation(e.target.value);}}
+                        onBlur={validation.handleBlur}
+                        />
+                        <label
+                        htmlFor="tax_applayed-yes"
+                        className="form-check-label"
+                        >
+                        Yes
+                        </label>
+                    </div>
+                    <div className="form-check">
+                        <input
+                        type="radio"
+                        id="tax_applayed-no"
+                        name="tax_applayed"
+                        className="form-check-input"
+                        value="NO"
+                        // checked={taxApplayed === "NO"}
+                        onChange={(e) => {applyTaxation(e.target.value);}}
+                        onBlur={validation.handleBlur}
+                        />
+                        <label
+                        htmlFor="tax_applayed-no"
+                        className="form-check-label"
+                        >
+                        No
+                        </label>
+                    </div>
+                </div>
+                <div className="mb-3">
+                    <label htmlFor="tax_amount-field" className="form-label">Tax Amount</label>
+                    <input
+                        type="text"
+                        name="tax_amount"
+                        id="tax_amount-field"
+                        className="form-control"
+                        value={taxAmount}
+                        onChange={validation.handleChange}
+                        readOnly
+                    />
+                </div>
+
+                <div className="mb-3">
+                    <label htmlFor="final_amount-field" className="form-label">Final Amount</label>
+                    <input
+                        type="text"
+                        name="final_amount"
+                        id="final_amount-field"
+                        className="form-control"
+                        value={finalAmount}
+                        onChange={validation.handleChange}
+                        readOnly
+                    />
+                </div>
+                                                
+            </ModalBody>
+            <ModalFooter>
+                <div className="hstack gap-2 justify-content-end">
+                    <button type="button" className="btn btn-light" onClick={() => { modalClose() }}>Close</button>
+                    <button type="submit" className="btn btn-success" id="add-btn">Edit Quotation</button>
+                </div>
+            </ModalFooter>
         </form>
       </Modal>
 
@@ -1028,7 +1057,7 @@ const ListQuotationsTable = () => {
         </ModalHeader>
         <form className="tablelist-form">
           <ModalBody>
-            {quotaionListDetails?.map((item, index) => (
+            {quotationListDetails?.map((item, index) => (
               <div key={index} className="tm_container">
                 <div className="tm_invoice_wrap">
                   <div
@@ -1143,7 +1172,7 @@ const ListQuotationsTable = () => {
                             </tr>
                           </thead>
                           <tbody className="list form-check-all">
-                            {quotaionList.map((item, index)=>{
+                            {quotationList.map((item, index)=>{
                               return(
                                 <tr key={index}>
                                   {/* <td className="index text-center">{index + 1}</td> */}
@@ -1205,7 +1234,7 @@ const ListQuotationsTable = () => {
         </ModalHeader>
         <form className="tablelist-form">
           <ModalBody>
-            {quotaion?.map((item, index) => (
+            {quotation?.map((item, index) => (
               <div key={index} className="tm_container">
                 <div className="tm_invoice_wrap">
                   <div
@@ -1422,64 +1451,64 @@ const ListQuotationsTable = () => {
               >
                 Close
               </button>
-              {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
+              <button type="button" onClick={() => { confirmQut(); }} className="btn btn-success" id="edit-btn">Confirm</button>
             </div>
           </ModalFooter>
         </form>
       </Modal>
+      
+      
+      <Modal className="extra-width" isOpen={modalEmail} toggle={() => { modalClose() }} centered >
+          <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { modalClose() }}>Send Mail</ModalHeader>
+          <form className="tablelist-form" onSubmit={validation.handleSubmit}>
+              <ModalBody>
+              {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
+                <div className="mb-3">
+                  <label htmlFor="customer_email-field" className="form-label">Customer Email</label>
+                  <input
+                      type="text"
+                      name="customer_email"
+                      id="customer_email-field"
+                      className="form-control"
+                      value={validation.values.customer_email || ""}
+                      onChange={validation.handleChange}
+                      required
+                  />
+                </div>
 
-      {/* Remove Modal */}
-      <Modal
-        isOpen={modal_delete}
-        toggle={() => {
-          tog_delete();
-        }}
-        className="modal fade zoomIn"
-        id="deleteRecordModal"
-        centered
-      >
-        <div className="modal-header">
-          <Button
-            type="button"
-            onClick={() => setmodal_delete(false)}
-            className="btn-close"
-            aria-label="Close"
-          >
-            {" "}
-          </Button>
-        </div>
-        <ModalBody>
-          <div className="mt-2 text-center">
-            <lord-icon
-              src="https://cdn.lordicon.com/gsqxdxog.json"
-              trigger="loop"
-              colors="primary:#f7b84b,secondary:#f06548"
-              style={{ width: "100px", height: "100px" }}
-            ></lord-icon>
-            <div className="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-              <h4>Are you Sure ?</h4>
-              <p className="text-muted mx-4 mb-0">
-                Are you Sure You want to Remove this Record ?
-              </p>
-            </div>
-          </div>
-          <div className="d-flex gap-2 justify-content-center mt-4 mb-2">
-            <button
-              type="button"
-              className="btn w-sm btn-light"
-              onClick={() => setmodal_delete(false)}
-            >
-              Close
-            </button>
-            <button
-              type="button"
-              className="btn w-sm btn-danger "
-              id="delete-record"
-            >
-              Yes, Delete It!
-            </button>
-          </div>
-        </ModalBody>
+                <div className="mb-3">
+                  <label htmlFor="subject-field" className="form-label">Subject</label>
+                  <input
+                      type="text"
+                      name="subject"
+                      id="subject-field"
+                      className="form-control"
+                      value={validation.values.subject || ""}
+                      onChange={validation.handleChange}
+                      required
+                  />
+                </div>
+
+                <div className="mb-3">
+                  <label htmlFor="body-field" className="form-label">Body</label>
+                  <textarea
+                      name="body"
+                      id="body-field"
+                      className="form-control"
+                      value={validation.values.body || ""}
+                      onChange={validation.handleChange}
+                      required
+                  />
+                </div>
+                  
+              </ModalBody>
+              <ModalFooter>
+                  <div className="hstack gap-2 justify-content-end">
+                    <button type="button" className="btn btn-light" onClick={() => { modalClose(); }}>Close</button>
+                    <button type="submit" className="btn btn-success" id="add-btn">Send Email</button>
+                  </div>
+              </ModalFooter>
+          </form>
       </Modal>
     </React.Fragment>
   );

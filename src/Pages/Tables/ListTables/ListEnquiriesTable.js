@@ -379,7 +379,7 @@ const ListEnquiriesTable = () => {
         setTAmount(val)
     }
 
-    async function applayTaxation(val){
+    async function applyTaxation(val){
         setTaxApplayed(val);
         if(val === "YES"){
             console.log("tt",taxation[0])
@@ -852,7 +852,7 @@ const ListEnquiriesTable = () => {
                                 name="tax_applayed"
                                 className="form-check-input"
                                 value="YES"
-                                onChange={(e) => {applayTaxation(e.target.value);}}
+                                onChange={(e) => {applyTaxation(e.target.value);}}
                                 onBlur={validation.handleBlur}
                                 required
                                 />
@@ -870,7 +870,7 @@ const ListEnquiriesTable = () => {
                                 name="tax_applayed"
                                 className="form-check-input"
                                 value="NO"
-                                onChange={(e) => {applayTaxation(e.target.value);}}
+                                onChange={(e) => {applyTaxation(e.target.value);}}
                                 onBlur={validation.handleBlur}
                                 required
                                 />

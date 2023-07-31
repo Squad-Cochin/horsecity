@@ -10,8 +10,8 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
 /**
  * The below one is Shaheer's Computer Details
  */
-// export const API_BASE_URL = "http://192.168.200.211:8000";
-// const apiBaseUrl = "http://192.168.200.211:8000";
+export const API_BASE_URL = "http://192.168.200.211:8000";
+const apiBaseUrl = "http://192.168.200.211:8000";
 
 /**
  * The below one is Saurabh's Computer Details
@@ -22,8 +22,8 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
  * The below one is own Computer Details
  */
 
-const apiBaseUrl = "http://localhost:8000";
-export const API_BASE_URL = "http://localhost:8000";
+// const apiBaseUrl = "http://localhost:8000";
+// export const API_BASE_URL = "http://localhost:8000";
 
 const token = "/horsecity661809"
 
@@ -111,6 +111,9 @@ export const POST_ADD_QUOTATION_URL = apiBaseUrl + token + "/add/quotation"
 export const GET_QUOTATION_ALL_DATA_URL = apiBaseUrl + token + "/getAll/quotations"
 export const GET_QUOTATION_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/quotation"
 export const GET_QUOTATION_FULL_DATA_URL = apiBaseUrl + token + "/list/quotations"
+export const PUT_QUOTATION_EDIT_URL = apiBaseUrl + token + "/update/quotation"
+export const POST_SEND_QUT_EMAIL_URL = apiBaseUrl + token + "/send-email/quotations"
+export const PUT_QUOTATION_CONFIRM_URL = apiBaseUrl + token + "/update-status/quotations"
 
 /**TAXATION */
 /**This URL basis of page & limit  */

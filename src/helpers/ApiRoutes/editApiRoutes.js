@@ -144,10 +144,22 @@ export async function updatTripData(data){
 }
 
 /**Update quotaion  */
-export async function updatQuotaion(data){
+export async function updatQuotation(id, data){
   try {
-      // const { data } = await axios.put(`${url.POST_SP_EDIT_URL}`);
-      // return { data };
+    console.log("datas",id,data)
+    const formData = new FormData();
+    // Append the object data to the FormData instance
+    for (const key in data) {
+        formData.append(key, data[key]);
+    }
+    // Send the form data as a POST request using Axios
+    const response = await axios.put(`${url.PUT_QUOTATION_EDIT_URL}/${id}`, formData, {
+        headers: {
+        'Content-Type': 'multipart/form-data'
+        }
+    });
+    console.log("response",response)
+    return response
   } catch (error) {
       return { error : "Faild !"}
   }
@@ -188,6 +200,17 @@ export async function updateSPStatus(id){
 export async function updateCustomerStatus(id){
   try{
     const { data } = await axios.put(`${url.PUT_CUSTOMER_UPDATE_STATUS}/${id}`);
+    console.log("data",data)
+    return data;
+  } catch (error) {
+    return { error : "Faild !"}
+  }
+}
+
+export async function confirmQuotation(id){
+  try{
+    console.log("idd",id)
+    const { data } = await axios.get(`${url.PUT_QUOTATION_CONFIRM_URL}/${id}`);
     console.log("data",data)
     return data;
   } catch (error) {
