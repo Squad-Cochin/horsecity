@@ -45,5 +45,7 @@ require('./routes/applicationSettings/discounts/discounts')(app); //Discounts
 require('./routes/applicationSettings/currencies/currencies')(app); //Currencies
 require('./routes/applicationSettings/language/language')(app) //Languages
 require('./routes/enquiries/enquiries')(app) //Enquiry
-require('./routes/quotation/quotation')(app) //Enquiry
+require('./routes/quotation/quotation')(app) //Quotations
+require('./routes/tripDetails/tripDetails')(app) //Quotations
+
 module.exports = app; // making the app variable for export 

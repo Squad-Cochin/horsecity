@@ -25,7 +25,7 @@ module.exports =
         confirmed : `CONFIRMED`,
         notconfirmed : `NOTCONFIRMED`,
     },
-    amound_status : 
+    amount_status : 
     {
         paid : 'PAID',
         pending : 'PENDING',
@@ -42,6 +42,11 @@ module.exports =
     {
         yes : 'YES',
         no : 'NO'
+    },
+    vehicles_breakouts_status :
+    {
+        break_out  : 'BREAKOUT',
+        compleated : 'COMPLEATED'
     },
     password :
     { 
@@ -177,7 +182,7 @@ module.exports =
         templates : `templates`,
         vehciles_transportation : `vehciles_transportation`,
         vehicles : `vehicles`,
-        vehicles_breakouts : `vehicles_breakout`,
+        vehicles_breakouts : `vehicles_breakouts`,
         vehicles_images : `vehicles_images`,
         assign_drivers : `assign_drivers`,
         payment_records : `payment_records`

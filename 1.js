@@ -1852,14 +1852,40 @@ CREATE TABLE horse_details
     deleted_at DATETIME DEFAULT NULL
 );
 
+
+CREATE TABLE invoices
+(
+    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    invoice_no VARCHAR(6) NOT NULL UNIQUE,
+    quot_id INT(11),
+    FOREIGN KEY (quot_id) REFERENCES quotations(id),
+    quotation_prefix_id VARCHAR(15) NOT NULL,
+    service_provider_id INT(11),
+    FOREIGN KEY(service_provider_id) REFERENCES service_providers(id),
+    vehicle_id INT(11),
+    FOREIGN KEY(vehicle_id) REFERENCES vehicles(id),
+    driver_id INT(11),
+    FOREIGN KEY(driver_id) REFERENCES drivers(id),
+    pickup_point VARCHAR(255),
+    drop_point VARCHAR(255),
+    sub_total DECIMAL(7,2) NOT NULL,
+    tax_amount DECIMAL(4,2) NOT NULL,
+    discount_amount DECIMAL(4,2) NOT NULL,
+    final_amount DECIMAL(4,2) NOT NULL,
+    status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
+    deleted_at DATETIME DEFAULT NULL 
+);
+
 CREATE TABLE bookings
 (
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     customer_id INT(11),
     FOREIGN KEY (customer_id) REFERENCES customers(id),
-    quot_id INT(11),
-    FOREIGN KEY (quot_id) REFERENCES quotations(id),
-    quotation_prefix_id VARCHAR(15) NOT NULL,
+    inv_id INT(11),
+    FOREIGN KEY (inv_id) REFERENCES invoices(id),
+    invoice_prefix_id VARCHAR(15) NOT NULL UNIQUE,
     service_provider_id INT(11),
     FOREIGN KEY(service_provider_id) REFERENCES service_providers(id),
     vehicle_id INT(11),
@@ -1871,8 +1897,6 @@ CREATE TABLE bookings
     FOREIGN KEY (taxation_id) REFERENCES taxations(id),
     discount_type_id INT(11),
     FOREIGN KEY (discount_type_id) REFERENCES discount_types(id),
-    payment_type_id INT(11),
-    FOREIGN KEY(payment_type_id) REFERENCES payment_types(id),
     booking_status ENUM ('PENDING', 'CONFIRMED', 'CANCELLED', 'COMPLETED'),
     pickup_location VARCHAR(255) NOT NULL,
     pickup_country VARCHAR(30) NOT NULL,
@@ -1880,33 +1904,14 @@ CREATE TABLE bookings
     drop_location VARCHAR(255) NOT NULL,
     drop_country VARCHAR(30) NOT NULL,
     drop_date DATETIME,
-    additional_services VARCHAR(255),
     confirmation_sent ENUM('YES','NO'),
     sub_total DECIMAL(7,2) NOT NULL,
     tax_amount DECIMAL(4,2) NOT NULL,
-    discount_amount DECIMAL(4,2) NOT NULL, 
+    discount_amount DECIMAL(4,2) NOT NULL,
     final_amount DECIMAL(4,2) NOT NULL,
     created_at DATETIME ,
     updated_at DATETIME DEFAULT NULL ,
-    deleted_at DATETIME DEFAULT NULL   
-);
-
-CREATE TABLE invoices
-(
-    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    invoice_no VARCHAR(6) NOT NULL UNIQUE,
-    booking_id INT(11),
-    FOREIGN KEY(booking_id) REFERENCES bookings(id),
-    pickup_point VARCHAR(255),
-    drop_point VARCHAR(255),
-    sub_total DECIMAL(7,2) NOT NULL,
-    tax_amount DECIMAL(4,2) NOT NULL,
-    discount_amount DECIMAL(4,2) NOT NULL, 
-    final_amount DECIMAL(4,2) NOT NULL,
-    status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME ,
-    updated_at DATETIME DEFAULT NULL ,
-    deleted_at DATETIME DEFAULT NULL   
+    deleted_at DATETIME DEFAULT NULL  
 );
 
 CREATE TABLE payments
@@ -2093,5 +2098,13 @@ INSERT INTO `payment_records` (`id`, `invoice_id`, `total_amount`, `received_amo
 INSERT INTO `payment_records` (`id`, `invoice_id`, `total_amount`, `received_amount`, `received_date`, `remaining_amount`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES ('10', '2', '162', NULL, NULL, NULL, NULL, '2023-07-29 01:31:28', NULL, NULL);
 
 INSERT INTO `templates` (`id`, `name`, `subject`, `purpose`, `template`, `type`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, 'Invoice email sent', 'Payment Invoice', 'The purpose of this is send email to the customer', 'The below you can find the invoice of your booking.', 'EMAIL', 'ACTIVE', '2023-07-29 20:40:40', NULL, NULL);
+
+*/
+
+
+/**
+ * INSERT INTO `invoices` (`id`, `invoice_no`, `quot_id`, `quotation_prefix_id`, `service_provider_id`, `vehicle_id`, `driver_id`, `pickup_point`, `drop_point`, `sub_total`, `tax_amount`, `discount_amount`, `final_amount`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, '1001', '1', 'QUO1', '1', '5', '2', 'Dubai Marina', 'Burj Khalifa', '1109.00', '54.34', '22.18', '1141.16', 'ACTIVE', '2023-07-31 13:59:10', NULL, NULL);
+INSERT INTO `vehicles_breakouts` (`id`, `booking_id`, `invoice_id`, `service_provider_id`, `vehicle_id`, `driver_id`, `pickup_location`, `drop_location`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, '', '1', '2', '4', '3', 'Bay of Bengal', 'Port Blair', '2023-07-31 17:53:03', NULL, NULL);
+ 
 
 */

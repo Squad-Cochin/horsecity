@@ -24,10 +24,9 @@ module.exports = class invoices
             {
                 const offset = (pageNumber - 1) * pageSize;
 
-                let selQuery = `SELECT i.id, i.invoice_no, q.quotation_id, c.name, c.email
+                let selQuery = `SELECT i.id, i.invoice_no, i.quotation_prefix_id, c.name, c.email
                                 FROM invoices i
-                                JOIN bookings b ON i.booking_id = b.id
-                                JOIN quotations q ON b.quot_id = q.id
+                                JOIN quotations q ON i.quot_id = q.id
                                 JOIN customers c ON q.customer_id = c.id
                                 WHERE i.deleted_at IS NULL
                                 LIMIT ${pageSize} OFFSET ${offset}`;
@@ -62,53 +61,52 @@ module.exports = class invoices
         }
     };
 
-
-
-
-
     static async getone(Id) {
         try {
             return await new Promise((resolve, reject) => {
                 let selQuery = `SELECT i.id,
-                    i.invoice_no AS iId,
-                    DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
-                    c.name AS customer_name,
-                    sp.name AS companyName,
-                    q.pickup_location AS customerAddress,
-                    sp.contact_address AS companyAddress,
-                    q.pickup_country AS cusCountry,
-                    q.drop_country AS comCountry,
-                    c.email AS customer_email,
-                    sp.email AS com_email,
-                    i.sub_total AS iSubTotal,
-                    t.value AS iTaxRate,
-                    i.tax_amount AS iTaxAmount,
-                    d.rate AS iDiscountRate,
-                    i.discount_amount AS iDiscountAmount,
-                    i.final_amount AS iFinalAmount,
-                    sp.name AS service_provider_name,
-                    b.quot_id AS quotation_id,
-                    q.pickup_location,
-                    q.drop_location,
-                    DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date,
-                    DATE_FORMAT(q.drop_date, '%d-%m-%Y') AS drop_date,
-                    q.special_requirement,
-                    e.no_of_horse,
-                    pr.total_amount,
-                    COALESCE(pr.received_amount, 0) AS received_amount,
-                    DATE_FORMAT(pr.received_date, '%d-%m-%Y') AS received_date,
-                    COALESCE(pr.remaining_amount, 0) AS remaining_amount
-             FROM bookings b
-             JOIN invoices i ON i.booking_id = b.id
-             JOIN customers c ON c.id = b.customer_id
-             JOIN quotations q ON b.quot_id = q.id
-             JOIN service_providers sp ON b.service_provider_id = sp.id
-             JOIN taxations t ON t.id = b.taxation_id
-             JOIN discount_types d ON d.id = b.discount_type_id
-             JOIN enquiries e ON e.id = q.enquiry_id
-             JOIN payment_records pr ON pr.invoice_id = i.id
-             WHERE i.id = ${Id}`;
-                // console.log(selQuery);
+                i.invoice_no AS iId,
+                DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
+                v.vehicle_number AS vehicle_no,
+                dr.name AS dName,
+                c.name AS customer_name,
+                sp.name AS companyName,
+                q.pickup_location AS customerAddress,
+                sp.contact_address AS companyAddress,
+                q.pickup_country AS cusCountry,
+                q.drop_country AS comCountry,
+                c.email AS customer_email,
+                sp.email AS com_email,
+                i.sub_total AS iSubTotal,
+                t.value AS iTaxRate,
+                i.tax_amount AS iTaxAmount,
+                d.rate AS iDiscountRate,
+                i.discount_amount AS iDiscountAmount,
+                i.final_amount AS iFinalAmount,
+                sp.name AS service_provider_name,
+                i.quot_id AS quotation_id,
+                q.pickup_location,
+                q.drop_location,
+                DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date,
+                DATE_FORMAT(q.drop_date, '%d-%m-%Y') AS drop_date,
+                q.special_requirement,
+                e.no_of_horse,
+                pr.total_amount,
+                COALESCE(pr.received_amount, 0) AS received_amount,
+                DATE_FORMAT(pr.received_date, '%d-%m-%Y') AS received_date,
+                COALESCE(pr.remaining_amount, 0) AS remaining_amount 
+                FROM invoices i
+                JOIN quotations q ON i.quot_id = q.id
+                JOIN customers c ON c.id = q.customer_id
+                JOIN service_providers sp ON q.serviceprovider_id = sp.id
+                JOIN taxations t ON t.id = q.taxation_id
+                JOIN discount_types d ON d.id = q.discount_type_id
+                JOIN enquiries e ON e.id = q.enquiry_id
+                JOIN payment_records pr ON pr.invoice_id = i.id
+                JOIN vehicles v ON v.id = i.vehicle_id
+                JOIN drivers dr ON dr.id = i.driver_id
+                WHERE i.id = ${Id}`;
+                console.log(selQuery);
                 con.query(selQuery, (err, result) => {
                     if (err) {
                         console.log(err);
@@ -116,12 +114,12 @@ module.exports = class invoices
                     } else {
                         let invoiceResponse = {
                             "invoice": [],
+                            "vehicles" : [],
                             "payment": []
                         };
     
                         if (result.length !== 0) 
-                        {
-                            
+                        {                            
                             // If result has data, populate the invoiceResponse data and payment arrays
                             invoiceResponse.invoice.push({
                                 "id": result[0].id,
@@ -143,25 +141,58 @@ module.exports = class invoices
                                 "iFinalAmount": result[0].iFinalAmount,
                                 "service_provider_name": result[0].service_provider_name,
                                 "quotation_id": result[0].quotation_id,
-                                "pickup_location": result[0].pickup_location,
-                                "drop_location": result[0].drop_location,
                                 "pickup_date": result[0].pickup_date,
                                 "drop_date": result[0].drop_date,
                                 "special_requirement": result[0].special_requirement,
                                 "no_of_horse": result[0].no_of_horse
                             });
     
-                            for (let row of result) {
-                                invoiceResponse.payment.push({
-                                    "id": row.id,
-                                    "total_amount": row.iFinalAmount,
-                                    "received_amount": row.received_amount,
-                                    "received_date": row.received_date,
-                                    "remaining_amount": row.remaining_amount
-                                });
+                                for (let row of result) 
+                                {
+                                    invoiceResponse.payment.push
+                                    ({
+                                        "id": row.id,
+                                        "total_amount": row.iFinalAmount,
+                                        "received_amount": row.received_amount,
+                                        "received_date": row.received_date,
+                                        "remaining_amount": row.remaining_amount
+                                    });
+                                }
+                            
+                                for (let row of result)
+                                {
+                                    invoiceResponse.vehicles.push
+                                    ({
+                                        // "id" : row.id, 
+                                        "vehicle_number" : row.vehicle_no,
+                                        "driver_name" : row.dName,
+                                        "pickup_location": row.pickup_location,
+                                        "drop_location": row.drop_location,
+                                    });
+                                }
+                        }
+                        let selQuery2 = `SELECT vb.vehicle_id, v.vehicle_number AS vehicle_no, vb.driver_id, d.name AS dName, vb.pickup_location, vb.drop_location FROM vehicles_breakouts vb, drivers d, vehicles v WHERE vb.invoice_id = ${Id} AND vb.driver_id = d.id AND vb.vehicle_id = v.id`;
+                        con.query(selQuery2, (err, result2) =>
+                        {
+                            // console.log(`Second Select Query: `, selQuery2);
+                            if (err) {
+                                console.log(err);
+                                resolve('err');
+                            } else {
+                                for (let row of result2)
+                                {
+                                    invoiceResponse.vehicles.push
+                                    ({
+                                        "id": row.id,
+                                        "vehicle_number" : row.vehicle_no,
+                                        "driver_name" : row.dName,
+                                        "pickup_location": row.pickup_location,
+                                        "drop_location": row.drop_location,
+                                    });
+                                }
+                                resolve(invoiceResponse);
                             }
-                        }    
-                        resolve(invoiceResponse);
+                        });
                     }
                 });
             });
@@ -217,58 +248,6 @@ module.exports = class invoices
         }
     };
 
-    // static async enteramountforparticularinvoice(Id, amount) {
-    //     try {
-    //       const data = await commonfetching.dataOnCondition(constants.tableName.invoices, Id, 'id');
-    //       if (data.length === 0) {
-    //         return 'nodata';
-    //       }
-      
-    //       // Fetch the latest payment record for the given invoice Id
-    //       const letPaymentRecord = await commonfetching.dataOnCondition(constants.tableName.payment_records, Id, 'invoice_id');
-    //       if (letPaymentRecord.length === 0 || letPaymentRecord[0].status === constants.status.paid) {
-    //         // No payment record exists or invoice is already paid, update the existing or insert a new record
-    //         const ra = data[0].final_amount - amount;
-    //         const status = (ra === 0) ? constants.status.paid : constants.status.partPaid;
-    //         const received_date = time.getFormattedUTCTime(constants.timeOffSet.UAE);
-      
-    //         let insQuery = '';
-    //         if (letPaymentRecord.length === 0) {
-    //           // Insert a new payment record
-    //           insQuery = `INSERT INTO ${constants.tableName.payment_records} (invoice_id, total_amount, received_amount, received_date, remaining_amount, status) 
-    //                       VALUES (${Id}, ${data[0].final_amount}, ${amount}, '${received_date}', ${ra}, '${status}')`;
-    //         } else {
-    //           // Update the existing payment record
-    //           insQuery = `UPDATE payment_records 
-    //                       SET received_amount = ${amount},
-    //                           received_date = '${received_date}',
-    //                           remaining_amount = ${ra},
-    //                           status = '${status}'
-    //                       WHERE invoice_id = ${Id}`;
-    //         }
-      
-    //         con.query(insQuery, (err, result) => {
-    //           if (err) {
-    //             console.log(err);
-    //             console.log('Error while updating/inserting payment record');
-    //             resolve('err');
-    //           } else {
-    //             console.log('Enter amount data added/updated successfully');
-    //             resolve(result);
-    //           }
-    //         });
-    //       } else {
-    //         // A payment record exists and invoice is not fully paid, handle additional scenarios here if needed
-    //         console.log('Additional handling for non-paid invoice');
-    //         resolve('additional_handling');
-    //       }
-    //     } catch (error) {
-    //       console.log(`Error from invoice.model.js. It is in the folder models > invoices > invoice.model.js. In the static function "enteramountforparticularinvoice". Which is designed to fetch all the data of invoices.`, error);
-    //     }
-    //   };
-      
-
-
     static async enteramountforparticularinvoice(Id, amount)
     {
         try 
@@ -295,7 +274,7 @@ module.exports = class invoices
                         {
                             let ra = paymentRecordData[0].total_amount - amount
                             let upQuery = `UPDATE ${constants.tableName.payment_records} pr SET pr.received_amount = ${amount}, pr.received_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', pr.remaining_amount = ${ra}, pr.status = '${constants.status.partPaid}', pr.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE pr.invoice_id = ${Id}`;
-                            // console.log(upQuery);
+                            console.log(upQuery);
                             con.query(upQuery, (err, result) =>
                             {                            
                                 if(result.affectedRows > 0)
@@ -323,7 +302,7 @@ module.exports = class invoices
                                 if(ra > 0)
                                 {
                                     let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, ${result[0].total_amount}, ${amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${ra}, '${constants.status.partPaid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                                    // console.log(insQuery);
+                                    console.log(insQuery);
                                     con.query(insQuery, (err, result) =>
                                     {
                                         if(result.affectedRows > 0)
@@ -436,6 +415,7 @@ module.exports = class invoices
     {
         try
         {
+            console.log(req.body);
             return await new Promise(async(resolve, reject)=>
             {
                 const emailSent = await SendEmail(to, body, subject);
@@ -458,15 +438,6 @@ module.exports = class invoices
         }
     };
 
-
-
-
-
-
-
-
-
-
     static async getsendemailbuttondata(Id)
     {
         try
@@ -474,8 +445,8 @@ module.exports = class invoices
             return await new Promise(async(resolve, reject)=>
             {
                 let selQuery = `SELECT i.id, i.invoice_no, t.subject, c.email
-                FROM customers c, invoices i, quotations q, templates t, bookings b
-                WHERE i.id = ${Id} AND t.name = 'Invoice email sent' AND c.id = q.customer_id AND b.quot_id = q.id AND i.booking_id = b.id;`;
+                FROM customers c, invoices i, quotations q, templates t
+                WHERE i.id = ${Id} AND t.name = 'Invoice email sent' AND c.id = q.customer_id AND q.id = i.quot_id`;
                 con.query(selQuery,(err, result) =>
                 {
                     // console.log(`Email details: `, result);
@@ -498,6 +469,58 @@ module.exports = class invoices
             
         }
     };
+
+
+    static async bookingstart(Id)
+    {
+        try
+        {
+            return await new Promise(async(resolve, reject)=>
+            {
+                let data = await commonfetching.dataOnCondition(constants.tableName.invoices, Id, 'id')
+                // console.log(`Data at the booking got start button from the invoice table: `, data);
+
+                let data3 = await commonfetching.dataOnCondition(constants.tableName.bookings, data[0].invoice_no, 'invoice_prefix_id')
+                console.log('Data 3: ', data3);
+                if(data3.length != 0)
+                {
+                    console.log(`Duplicate invoice number. Cannot enter`);
+                    resolve('duplicate');
+                }
+                else
+                {
+                    let data2 = await commonfetching.dataOnCondition(constants.tableName.quotations, data[0].quot_id, 'id');
+                    // console.log(`Data at the booking got start button from the quotation table: `, data2);
+
+                    const insQuery = `INSERT INTO bookings(customer_id, inv_id, invoice_prefix_id, service_provider_id, vehicle_id, driver_id, taxation_id, discount_type_id, status, booking_status, pickup_location, pickup_country, pickup_date, drop_location, drop_country, drop_date, confirmation_sent, sub_total, tax_amount, discount_amount, final_amount, created_at) VALUES(${data2[0].customer_id}, ${data[0].id}, '${data[0].invoice_no}', ${data[0].service_provider_id}, ${data[0].vehicle_id}, ${data[0].driver_id}, ${data2[0].taxation_id}, ${data2[0].discount_type_id}, 'PENDING', 'CONFIRMED', '${data[0].pickup_point}', '${data2[0].pickup_country}', '${time.changeDateToSQLFormat(data2[0].pickup_date)}', '${data[0].drop_point}', '${data2[0].drop_country}', '${time.changeDateToSQLFormat(data2[0].drop_date)}', 'YES',  ${data[0].sub_total},  ${data[0].tax_amount},  ${data[0].discount_amount},  ${data[0].final_amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                    con.query(insQuery, (err, result) =>
+                    {
+                        console.log(`Insert result of the booking : `, result);
+                        if(result === 'undefined')
+                        {
+                            resolve('NotEntered')
+                        }
+
+                        if(err)
+                        {
+                            resolve('err')
+                        }
+                        if(result.affectedRows > 0)
+                        {
+                            resolve('Entered')
+                        }
+                    });
+                };
+            });
+        }
+        catch(error)
+        {
+            console.log(`Error form the model function bookingStared`);
+        }
+    }
+
+
+
 
 
 

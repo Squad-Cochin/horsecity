@@ -46,5 +46,9 @@ module.exports = function (app)
     invoiceController.sendEmailAtInvoice);
 
 
+    app.get(`/${process.env.apiToken}/booking/started/:id`, 
+    isValidIdInTheParams(constants.tableName.invoices),
+    invoiceController.bookingStarted);
+
 
 };
