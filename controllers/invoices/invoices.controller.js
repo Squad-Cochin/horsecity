@@ -337,8 +337,8 @@ exports.bookingStarted = async (req, res) =>
         console.log('Booking button controller successfully working. Invoice id is duplicate');
         return res.status(200).json
         ({
-            code: 200,
-            status: true,
+            code: 404,
+            status: false,
             message: `Booking button controller successfully working. Invoice id is duplicate`,
         });
     }

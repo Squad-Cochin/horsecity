@@ -417,7 +417,7 @@ CREATE TABLE horse_details
 
 
 CREATE TABLE bookings (
-  id INT(11) NOT NULL,
+  id INT(11) NOT NULL PRIMARY KEY AUTO_INCREMENT,
   customer_id INT(11) DEFAULT NULL,
   inv_id INT(11) DEFAULT NULL,
   invoice_prefix_id VARCHAR(15) NOT NULL,

@@ -722,13 +722,8 @@ exports.isSafetyCertificateAdded = (req, res, next) =>
         {
             next();
         }
-        // if(req.method === 'POST' && req.url === url.UPDATE_VEHICLE_PAGE_URL + req.params.id && req.files?.licence_img)
-        // {
-        //     next();
-        // }
         if(req.method === 'POST')
         {
-            console.log('4');
             next();
         }
     }

@@ -2038,31 +2038,6 @@ CREATE TABEL payment_records
     status ENUM('PAID', 'PARTIALLY PAID', 'PENDING')
 );
 
-INSERT INTO `currencies` (`id`, `name`, `abbreviation`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, 'Dhiram', 'AED', 'ACTIVE', NULL, NULL, NULL);
-
-INSERT INTO `languages` (`id`, `name`, `file`, `abbreviation`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, 'English', 'englisj.json', 'ENG', 'ACTIVE', '2023-07-28 22:18:40', NULL, NULL);
-
-INSERT INTO `taxations` (`id`, `type`, `name`, `value`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, 'PERCENTAGE', 'VAT', '5', 'ACTIVE', '2023-07-28 22:21:18', NULL, NULL);
-
-INSERT INTO `application_settings` (`id`, `application_title`, `contact_address`, `email`, `phone`, `country_code`, `logo`, `loginpage_logo`, `loginpage_bg_image`, `favicon`, `language_id`, `currency_id`, `tax_id`, `licence_number`, `invoice_prefix`, `quotation_prefix`, `created_at`, `updated_at`, `deleted_at`) VALUES ('', 'Horse city Transportation', '2 Manewada Nagpur', 'so832154@gmail.com', '8421168035', '91', 'aqser.jpg', 'ahsp.jpg', 'asdfg.jpg', 'jhp.jpg', '1', '1', '1', '987654321234', 'IO', 'Qo', '2023-07-28 22:22:23', NULL, NULL);
-
-
-
-INSERT INTO `discount_types` (`id`, `name`, `type`, `rate`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES ('1', 'Id', 'PERCENTAGE', '5', 'ACTIVE', '2023-07-28 22:39:09', NULL, NULL);
-
-INSERT INTO `payment_types` (`id`, `name`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES ('1', 'Cash', 'ACTIVE', '2023-07-28 22:44:42', NULL, NULL);
-ALTER TABLE `quotations` CHANGE `tax_amount` `tax_amount` DECIMAL(15,2) NOT NULL;
-ALTER TABLE `invoices` CHANGE `final_amount` `final_amount` DECIMAL(15,2) NOT NULL;
-ALTER TABLE `bookings` CHANGE `final_amount` `final_amount` DECIMAL(15,2) NOT NULL;
-ALTER TABLE `bookings` CHANGE `sub_total` `sub_total` DECIMAL(15,2) NOT NULL;
-ALTER TABLE `invoices` CHANGE `sub_total` `sub_total` DECIMAL(15,2) NOT NULL;
-ALTER TABLE `bookings` CHANGE `tax_amount` `tax_amount` DECIMAL(15,2) NOT NULL, CHANGE `discount_amount` `discount_amount` DECIMAL(15,2) NOT NULL;
-ALTER TABLE `payment_records` CHANGE `total_amount` `total_amount` DECIMAL(15,2) NULL DEFAULT NULL;
-ALTER TABLE `payment_records` CHANGE `received_amount` `received_amount` DECIMAL(15,2) NULL DEFAULT NULL;
-ALTER TABLE `payment_records` CHANGE `remaining_amount` `remaining_amount` DECIMAL(15,2) NULL DEFAULT NULL;
-ALTER TABLE `invoices` CHANGE `tax_amount` `tax_amount` DECIMAL(15,2) NOT NULL, CHANGE `discount_amount` `discount_amount` DECIMAL(15,2) NOT NULL;
-
-
 INSERT INTO `enquiries` (`id`, `customer_id`, `vehicle_id`, `serviceprovider_id`, `pickup_location`, `drop_location`, `trip_type`, `pickup_country`, `drop_country`, `no_of_horse`, `description`, `status`, `created_at`) VALUES ('1', '1', '1', '4', 'Radisson Blu', 'Hithrow Airport', 'PRIVATE', 'India', 'England', '5', 'I want to ship my horse to UK.', 'NOTCONFIRMED', '2023-07-28 22:27:30');
 
 INSERT INTO `quotations` (`id`, `customer_id`, `enquiry_id`, `serviceprovider_id`, `taxation_id`, `vehicle_id`, `driver_id`, `discount_type_id`, `quotation_id`, `trip_type`, `pickup_location`, `pickup_country`, `pickup_date`, `drop_location`, `drop_country`, `drop_date`, `no_of_horse`, `special_requirement`, `additional_service`, `transportation_insurance_coverage`, `driver_amount`, `vehicle_amount`, `sub_total`, `tax_amount`, `discount_amount`, `final_amount`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES ('1', '1', '1', '4', '1', '1', '1', '1', 'Q001', 'PRIVATE', 'Devi Ahilya Bai Holkar Airport', 'India', '2023-07-29 22:40:51', 'Hithrow Airport', 'England', '2023-07-31 22:40:51', '5', 'Medicine', 'Washing', 'TRUE', '35', '45', '90', '15', '5', '100', 'CONFIRMED', '2023-07-28 22:40:51', NULL, NULL);
