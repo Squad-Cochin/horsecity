@@ -623,7 +623,7 @@ export async function getTripDeatails(pageNumber){
 
 export async function getLIstBreakDownVehicles(bkId){
     try {
-
+        console.log(bkId);
         const { data } = await axios.get(`${url.GET_VEHICLE_BREAKDOWN_ALL_DATA_URL}/${bkId}`);
         console.log(data)
         return(data)

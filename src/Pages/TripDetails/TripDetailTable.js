@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import {
+  Alert,
   Button,
   Card,
   CardBody,
@@ -31,7 +32,7 @@ import {
   getSPDriverData,
 } from "../../helpers/ApiRoutes/getApiRoutes";
 
-import { updatTripData } from "../../helpers/ApiRoutes/editApiRoutes";
+import { updateTripStatus } from "../../helpers/ApiRoutes/addApiRoutes";
 import { useFormik } from "formik";
 import config from "../../config";
 const TripDeatails = () => {
@@ -46,25 +47,28 @@ const TripDeatails = () => {
   const [sPVechiles, setSPVechiles] = useState([]);
   const [sPDrivers, setSPDrivers] = useState([]);
   const [trip_status, setTrip_status] = useState(false);
+  const [ store_trip_status,setStoreTripStatus] = useState("")
+  const [booking_id, setBooking_id ] = useState("");
+  const [invoice_id, setInvoice_id ] = useState("");
+  const [modal_delete, setmodal_delete] = useState(false);
+  const [ errors, setErrors ] = useState("")
   const pageLimit = config.pageLimit;
+
+
+
+
   useEffect(() => {
     getAllData(1);
   }, []);
 
-  async function tog_list(productId) {
-    setTrip_status(false);
-    let serviceProviderData = await getSPUserName();
-    setServiceProviders(serviceProviderData.serviceProviders);
-
-    setmodal_list(!modal_list);
-  }
   const initialValues = {
-    invoice_id: tripData[0]?.service_provider || "",
-    booking_id: tripData[0]?.vehicle_number || "",
-    service_provider_id: tripData[0]?.service_provider || "",
-    driver_id: tripData[0]?.vehicle_number || "",
-    vehicle_id: tripData[0]?.start_location || "",
-    pickup_location: tripData[0]?.end_location || "",
+    invoice_id: invoice_id,
+    booking_id:  booking_id,
+    trip_status : store_trip_status,
+    service_provider_id:  "",
+    driver_id: "",
+    vehicle_id:  "",
+    pickup_location:  "",
   };
 
   // Later in your code, when setting the initial state
@@ -75,25 +79,40 @@ const TripDeatails = () => {
     initialValues,
     onSubmit: (values) => {
       console.log(values);
+      updateTrip(values)
 
-      //update previes one
-      console.log("update previues one ");
-      updatTripData(values);
-
-      setmodal_list(false);
     },
   });
 
-  const [modal_delete, setmodal_delete] = useState(false);
-  function tog_delete() {
-    setmodal_delete(!modal_delete);
+
+
+  async function updateTrip(values){
+  let updateTrip = await   updateTripStatus(values);
+      if(updateTrip.code == 200){
+        getAllData(1);
+        setmodal_list(false);
+      }else{
+        setErrors("")
+        setErrors(updateTrip.message)
+    }
+     
   }
 
   async function breakdown_list(productId) {
+    console.log("here");
     let breakOut = await getLIstBreakDownVehicles(productId);
-    console.log("breakdowns", breakOut);
+
     setBreakdown_list_data(breakOut.vehicles_breakouts);
     setBreakdown_list_modal(!breakdown_list_modal);
+  }
+  async function tog_list(bkId ,invId) {
+    setBooking_id(bkId);
+    setInvoice_id(invId);
+    setTrip_status(false);
+    let serviceProviderData = await getSPUserName();
+    setServiceProviders(serviceProviderData.serviceProviders);
+
+    setmodal_list(!modal_list);
   }
   // function for get data all customer data
   async function getAllData(page) {
@@ -112,6 +131,7 @@ const TripDeatails = () => {
     setSPVechiles(sPVechilesData.vehicles);
   }
    function tripStatusSelected(value) {
+    setStoreTripStatus(value)
     if(value === tripStatus.breakout){
         setTrip_status(true)
     }else if(value === tripStatus.compleated){
@@ -121,7 +141,7 @@ const TripDeatails = () => {
   }
   const tripStatus = {
     breakout: "BREAKOUT",
-    compleated: "COMPLEATED",
+    compleated: "COMPLETED",
   };
   return (
     <React.Fragment>
@@ -148,13 +168,10 @@ const TripDeatails = () => {
                               #
                             </th>
                             <th className="sort" data-sort="service-provider">
+                             Customer Name
+                            </th>
+                            <th className="sort" data-sort="service-provider">
                               Service Provider
-                            </th>
-                            <th className="sort" data-sort="driver-name">
-                              Driver name
-                            </th>
-                            <th className="sort" data-sort="vehicle-number">
-                              Vehicle Number
                             </th>
                             <th className="sort" data-sort="start-location">
                               Start Location
@@ -182,14 +199,11 @@ const TripDeatails = () => {
                               <th scope="row">
                                 {index + 1 + (pageNumber - 1) * pageLimit}
                               </th>
+                              <td className="customer_name">
+                                {item?.customer_name}
+                              </td>
                               <td className="service-provider">
                                 {item?.service_provider}
-                              </td>
-                              <td className="driver-name">
-                                {item?.driver_name}
-                              </td>
-                              <td className="vehicle-number">
-                                {item?.vehicle_number}
                               </td>
                               <td className="start-location">
                                 {item?.pickup_location}
@@ -206,28 +220,32 @@ const TripDeatails = () => {
                               <td className="amount">{item?.trip_status}</td>
                               <td>
                                 <div className="d-flex gap-2">
+                             
+
+                                <div className="edit">
+                                <button
+                                  className="btn btn-sm btn-success edit-item-btn"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#showModal"
+                                  onClick={() => breakdown_list(item?.booking_id)}
+                                  //disabled={breakdown_list_data.length !== 0} // Typo: should be "disabled" instead of "disbled"
+                                >
+                                  View
+                                </button>
+                              </div>
+
+                               {tripDatas[index].trip_status != tripStatus.compleated? (
                                   <div className="edit">
                                     <button
                                       className="btn btn-sm btn-success edit-item-btn"
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
-                                      onClick={() =>
-                                        breakdown_list(item?.booking_id)
-                                      }
-                                    >
-                                      View
-                                    </button>
-                                  </div>
-                                  <div className="edit">
-                                    <button
-                                      className="btn btn-sm btn-success edit-item-btn"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#showModal"
-                                      onClick={() => tog_list(item.id)}
+                                      onClick={() => tog_list(item.booking_id,item.invoice_id)}
                                     >
                                       Edit
                                     </button>
                                   </div>
+                                  ): null }
                                 </div>
                               </td>
                             </tr>
@@ -283,6 +301,7 @@ const TripDeatails = () => {
         </ModalHeader>
         <form className="tablelist-form">
           <ModalBody>
+          {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
             <div className="tm_container">
               <div className="tm_invoice_wrap">
                 <div className="tm_invoice tm_style1" id="tm_download_section">
@@ -515,10 +534,10 @@ const TripDeatails = () => {
                     </label>
                     <input
                       type="text"
-                      name="start_location"
+                      name="pickup_location"
                       id="startLocation-field"
                       className="form-control"
-                      value={validation.values.start_location || ""}
+                      value={validation.values.pickup_location || ""}
                       onChange={validation.handleChange}
                       placeholder="Enter Start Location"
                       required

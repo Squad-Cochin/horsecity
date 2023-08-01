@@ -356,4 +356,27 @@ import * as url from "../url_helper";
         }
     };
 
-    
+    /**Add new service provider */
+    export async function updateTripStatus(data){
+        try {
+            const formData = new FormData();
+            // Append the object data to the FormData instance
+            for (const key in data) {
+                formData.append(key, data[key]);
+            }
+            // Send the form data as a POST request using Axios
+            const response = await axios.post(`${url.POST_VEHICLE_BREAKDOWN_DATA_URL}`, formData, {
+                headers: {
+                'Content-Type': 'multipart/form-data'
+                }
+            });
+            console.log("response",response)
+            return response
+        } catch (error) {
+            let errObj = {
+                code : 500 , 
+                error : "Faild !"
+            }
+            return errObj;
+        }
+    }
