@@ -24,7 +24,7 @@ module.exports = class invoices
             {
                 const offset = (pageNumber - 1) * pageSize;
 
-                let selQuery = `SELECT i.id, i.invoice_no, i.quotation_prefix_id, c.name, c.email
+                let selQuery = `SELECT i.id, i.invoice_no, i.quotation_prefix_id, c.name, c.email, i.status
                                 FROM invoices i
                                 JOIN quotations q ON i.quot_id = q.id
                                 JOIN customers c ON q.customer_id = c.id
@@ -61,92 +61,111 @@ module.exports = class invoices
         }
     };
 
-    static async getone(Id) {
-        try {
-            return await new Promise((resolve, reject) => {
-                let selQuery = `SELECT i.id,
-                i.invoice_no AS iId,
-                DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
-                v.vehicle_number AS vehicle_no,
-                dr.name AS dName,
-                c.name AS customer_name,
-                sp.name AS companyName,
-                q.pickup_location AS customerAddress,
-                sp.contact_address AS companyAddress,
-                q.pickup_country AS cusCountry,
-                q.drop_country AS comCountry,
-                c.email AS customer_email,
-                sp.email AS com_email,
-                i.sub_total AS iSubTotal,
-                t.value AS iTaxRate,
-                i.tax_amount AS iTaxAmount,
-                d.rate AS iDiscountRate,
-                i.discount_amount AS iDiscountAmount,
-                i.final_amount AS iFinalAmount,
-                sp.name AS service_provider_name,
-                i.quot_id AS quotation_id,
-                q.pickup_location,
-                q.drop_location,
-                DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date,
-                DATE_FORMAT(q.drop_date, '%d-%m-%Y') AS drop_date,
-                q.special_requirement,
-                e.no_of_horse,
-                pr.total_amount,
-                COALESCE(pr.received_amount, 0) AS received_amount,
-                DATE_FORMAT(pr.received_date, '%d-%m-%Y') AS received_date,
-                COALESCE(pr.remaining_amount, 0) AS remaining_amount 
-                FROM invoices i
-                JOIN quotations q ON i.quot_id = q.id
-                JOIN customers c ON c.id = q.customer_id
-                JOIN service_providers sp ON q.serviceprovider_id = sp.id
-                JOIN taxations t ON t.id = q.taxation_id
-                JOIN discount_types d ON d.id = q.discount_type_id
-                JOIN enquiries e ON e.id = q.enquiry_id
-                JOIN payment_records pr ON pr.invoice_id = i.id
-                JOIN vehicles v ON v.id = i.vehicle_id
-                JOIN drivers dr ON dr.id = i.driver_id
-                WHERE i.id = ${Id}`;
-                console.log(selQuery);
-                con.query(selQuery, (err, result) => {
-                    if (err) {
-                        console.log(err);
-                        resolve('err');
-                    } else {
-                        let invoiceResponse = {
-                            "invoice": [],
-                            "vehicles" : [],
-                            "payment": []
-                        };
-    
-                        if (result.length !== 0) 
-                        {                            
-                            // If result has data, populate the invoiceResponse data and payment arrays
-                            invoiceResponse.invoice.push({
-                                "id": result[0].id,
-                                "iId": result[0].iId,
-                                "iDate": result[0].iDate,
-                                "customer_name": result[0].customer_name,
-                                "companyName": result[0].companyName,
-                                "customerAddress": result[0].customerAddress,
-                                "companyAddress": result[0].companyAddress,
-                                "cusCountry": result[0].cusCountry,
-                                "comCountry": result[0].comCountry,
-                                "customer_email": result[0].customer_email,
-                                "com_email": result[0].com_email,
-                                "iSubTotal": result[0].iSubTotal,
-                                "iTaxRate": result[0].iTaxRate,
-                                "iTaxAmount": result[0].iTaxAmount,
-                                "iDiscountRate": result[0].iDiscountRate,
-                                "iDiscountAmount": result[0].iDiscountAmount,
-                                "iFinalAmount": result[0].iFinalAmount,
-                                "service_provider_name": result[0].service_provider_name,
-                                "quotation_id": result[0].quotation_id,
-                                "pickup_date": result[0].pickup_date,
-                                "drop_date": result[0].drop_date,
-                                "special_requirement": result[0].special_requirement,
-                                "no_of_horse": result[0].no_of_horse
-                            });
-    
+    static async getone(Id)
+    {
+        try
+        {
+            return await new Promise(async(resolve, reject) =>
+            {
+                // The below one is for the invoice id available in the booking table
+                let data1 = await commonfetching.dataOnCondition(constants.tableName.bookings, Id, 'inv_id');
+                console.log(`The below one is for the invoice id available in the booking table: `, data1);
+                if(data1.length === 0)
+                {
+                    console.log('C++');
+                    let selQuery = `SELECT i.id,
+                                    v.id AS VehicleId,
+                                    i.invoice_no AS iId,
+                                    DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
+                                    v.vehicle_number AS vehicle_no,
+                                    dr.name AS dName,
+                                    c.name AS customer_name,
+                                    q.pickup_time AS Ptime,
+                                    q.drop_time AS Dtime,
+                                    sp.name AS companyName,
+                                    q.pickup_location AS customerAddress,
+                                    sp.contact_address AS companyAddress,
+                                    q.pickup_country AS cusCountry,
+                                    q.drop_country AS comCountry,
+                                    c.email AS customer_email,
+                                    sp.email AS com_email,
+                                    i.sub_total AS iSubTotal,
+                                    t.value AS iTaxRate,
+                                    i.tax_amount AS iTaxAmount,
+                                    d.rate AS iDiscountRate,
+                                    i.discount_amount AS iDiscountAmount,
+                                    i.final_amount AS iFinalAmount,
+                                    sp.name AS service_provider_name,
+                                    i.quot_id AS quotation_id,
+                                    q.pickup_location,
+                                    q.drop_location,
+                                    DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date,
+                                    DATE_FORMAT(q.drop_date, '%d-%m-%Y') AS drop_date,
+                                    q.special_requirement,
+                                    e.no_of_horse,
+                                    pr.total_amount,
+                                    COALESCE(pr.received_amount, 0) AS received_amount,
+                                    DATE_FORMAT(pr.received_date, '%d-%m-%Y') AS received_date,
+                                    COALESCE(pr.remaining_amount, 0) AS remaining_amount 
+                                    FROM invoices i
+                                    JOIN quotations q ON i.quot_id = q.id
+                                    JOIN customers c ON c.id = q.customer_id
+                                    JOIN service_providers sp ON q.serviceprovider_id = sp.id
+                                    JOIN taxations t ON t.id = q.taxation_id
+                                    JOIN discount_types d ON d.id = q.discount_type_id
+                                    JOIN enquiries e ON e.id = q.enquiry_id
+                                    JOIN payment_records pr ON pr.invoice_id = i.id
+                                    JOIN vehicles v ON v.id = i.vehicle_id
+                                    JOIN drivers dr ON dr.id = i.driver_id
+                                    WHERE i.id = ${Id}`;
+                    console.log('Data is not in the booking table query: ',selQuery);
+                    con.query(selQuery, (err, result) =>
+                    {
+                        console.log(`Result of booking id not present: `, result);
+                        if (err)
+                        {
+                            console.log(err);
+                            resolve('err');
+                        } 
+                        else
+                        {
+                            var invoiceResponse =
+                            {
+                                "invoice": [],
+                                "vehicles" : [],
+                                "payment": []
+                            };
+                            if (result.length !== 0) 
+                            {
+                                // If result has data, populate the invoiceResponse data and payment arrays
+                                invoiceResponse.invoice.push
+                                ({
+                                    "id": result[0].id,
+                                    "iId": result[0].iId,
+                                    "iDate": result[0].iDate,
+                                    "pickup_time" : result[0].Ptime,
+                                    "drop_time" : result[0].Dtime,
+                                    "customer_name": result[0].customer_name,
+                                    "companyName": result[0].companyName,
+                                    "customerAddress": result[0].customerAddress,
+                                    "companyAddress": result[0].companyAddress,
+                                    "cusCountry": result[0].cusCountry,
+                                    "comCountry": result[0].comCountry,
+                                    "customer_email": result[0].customer_email,
+                                    "com_email": result[0].com_email,
+                                    "iSubTotal": result[0].iSubTotal,
+                                    "iTaxRate": result[0].iTaxRate,
+                                    "iTaxAmount": result[0].iTaxAmount,
+                                    "iDiscountRate": result[0].iDiscountRate,
+                                    "iDiscountAmount": result[0].iDiscountAmount,
+                                    "iFinalAmount": result[0].iFinalAmount,
+                                    "service_provider_name": result[0].service_provider_name,
+                                    "quotation_id": result[0].quotation_id,
+                                    "pickup_date": result[0].pickup_date,
+                                    "drop_date": result[0].drop_date,
+                                    "special_requirement": result[0].special_requirement,
+                                    "no_of_horse": result[0].no_of_horse
+                                });
                                 for (let row of result) 
                                 {
                                     invoiceResponse.payment.push
@@ -158,32 +177,11 @@ module.exports = class invoices
                                         "remaining_amount": row.remaining_amount
                                     });
                                 }
-                            
                                 for (let row of result)
                                 {
                                     invoiceResponse.vehicles.push
                                     ({
-                                        // "id" : row.id, 
-                                        "vehicle_number" : row.vehicle_no,
-                                        "driver_name" : row.dName,
-                                        "pickup_location": row.pickup_location,
-                                        "drop_location": row.drop_location,
-                                    });
-                                }
-                        }
-                        let selQuery2 = `SELECT vb.vehicle_id, v.vehicle_number AS vehicle_no, vb.driver_id, d.name AS dName, vb.pickup_location, vb.drop_location FROM vehicles_breakouts vb, drivers d, vehicles v WHERE vb.invoice_id = ${Id} AND vb.driver_id = d.id AND vb.vehicle_id = v.id`;
-                        con.query(selQuery2, (err, result2) =>
-                        {
-                            // console.log(`Second Select Query: `, selQuery2);
-                            if (err) {
-                                console.log(err);
-                                resolve('err');
-                            } else {
-                                for (let row of result2)
-                                {
-                                    invoiceResponse.vehicles.push
-                                    ({
-                                        "id": row.id,
+                                        "id" : row.VehicleId, 
                                         "vehicle_number" : row.vehicle_no,
                                         "driver_name" : row.dName,
                                         "pickup_location": row.pickup_location,
@@ -191,62 +189,726 @@ module.exports = class invoices
                                     });
                                 }
                                 resolve(invoiceResponse);
-                            }
-                        });
-                    }
-                });
-            });
-        } catch (error) {
-            console.log(`Error from invoice.model.js. It is in the folder models > invoices > invoice.model.js. In the static function "getone". Which is designed to fetch all the data of invoices.`, error);
-        }
-    };
-    
+                            }                            
+                        }
+                    });
 
-    static async addinvoice(Id)
-    {
-        try 
-        {
-            return await new Promise(async(resolve, reject)=>
-            {
-                let selQuery = `SELECT MAX(id) AS latest_id FROM ${constants.tableName.invoices}`
-                con.query(selQuery, async (err, invoice_no) =>
-                {
-                    if (invoice_no.length != 0) 
+                }
+                else
+                {                    
+                    if(data1[0].booking_status === 'CONFIRM')
                     {
-                        /**If the database is empty take 1 */
-                        let id = (invoice_no [0].latest_id !== null) ? invoice_no [0].latest_id : 1;
-                        /***For selecting quotation prefix */
-                        let selQuery = `SELECT a.invoice_prefix FROM ${constants.tableName.application_settings} a`
-                        con.query(selQuery, async (err, result) => 
-                        {
-                            if (result.length != 0)
+                        console.log('JAVA');
+                        let selQuery = `SELECT i.id,
+                                        i.invoice_no AS iId,
+                                        DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
+                                        v.vehicle_number AS vehicle_no,
+                                        dr.name AS dName,
+                                        q.pickup_time AS Ptime,
+                                        q.drop_time AS Dtime,
+                                        c.name AS customer_name,
+                                        sp.name AS companyName,
+                                        q.pickup_location AS customerAddress,
+                                        sp.contact_address AS companyAddress,
+                                        q.pickup_country AS cusCountry,
+                                        q.drop_country AS comCountry,
+                                        c.email AS customer_email,
+                                        sp.email AS com_email,
+                                        i.sub_total AS iSubTotal,
+                                        sp.name AS companyName,
+                                        q.pickup_time AS Ptime,
+                                        q.drop_time AS Dtime,
+                                        t.value AS iTaxRate,
+                                        i.tax_amount AS iTaxAmount,
+                                        d.rate AS iDiscountRate,
+                                        i.discount_amount AS iDiscountAmount,
+                                        i.final_amount AS iFinalAmount,
+                                        sp.name AS service_provider_name,
+                                        i.quot_id AS quotation_id,
+                                        q.pickup_location,
+                                        q.drop_location,
+                                        DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date,
+                                        DATE_FORMAT(q.drop_date, '%d-%m-%Y') AS drop_date,
+                                        q.special_requirement,
+                                        e.no_of_horse,
+                                        pr.total_amount,
+                                        COALESCE(pr.received_amount, 0) AS received_amount,
+                                        DATE_FORMAT(pr.received_date, '%d-%m-%Y') AS received_date,
+                                        COALESCE(pr.remaining_amount, 0) AS remaining_amount 
+                                        FROM invoices i
+                                        JOIN quotations q ON i.quot_id = q.id
+                                        JOIN customers c ON c.id = q.customer_id
+                                        JOIN service_providers sp ON q.serviceprovider_id = sp.id
+                                        JOIN taxations t ON t.id = q.taxation_id
+                                        JOIN discount_types d ON d.id = q.discount_type_id
+                                        JOIN enquiries e ON e.id = q.enquiry_id
+                                        JOIN payment_records pr ON pr.invoice_id = i.id
+                                        JOIN vehicles v ON v.id = i.vehicle_id
+                                        JOIN drivers dr ON dr.id = i.driver_id
+                                        WHERE i.id = ${Id}`;
+                                        console.log(`Data is present in the booking table query: `, selQuery);
+                            con.query(selQuery, (err, result) =>
                             {
-                                /**Adding prefix */
-                                /** default 1 dont requires to add + 1  */
-                                let invoice_no = (id == 1) ? id : id + 1;
-                                let invoice_prefix = result[0]?.result
-                                let sum_invoice = invoice_prefix.concat(invoice_no);
-                                
-                                let selQuery = ``;
-                            }
+                                var invoiceResponse =
+                                {
+                                    "invoice": [],
+                                    "vehicles" : [],
+                                    "payment": []
+                                };
+                                if (err)
+                                {
+                                    console.log(err);
+                                    resolve('err');
+                                } 
+                                else
+                                {                                   
+                                    if (result.length !== 0) 
+                                    {
+                                        // If result has data, populate the invoiceResponse data and payment arrays
+                                        invoiceResponse.invoice.push
+                                        ({
+                                            "id": result[0].id,
+                                            "iId": result[0].iId,
+                                            "iDate": result[0].iDate,
+                                            "customer_name": result[0].customer_name,
+                                            "companyName": result[0].companyName,
+                                            "customerAddress": result[0].customerAddress,
+                                            "companyAddress": result[0].companyAddress,
+                                            "cusCountry": result[0].cusCountry,
+                                            "comCountry": result[0].comCountry,
+                                            "pickup_time" : result[0].Ptime,
+                                            "drop_time" : result[0].Dtime,
+                                            "customer_email": result[0].customer_email,
+                                            "com_email": result[0].com_email,
+                                            "iSubTotal": result[0].iSubTotal,
+                                            "iTaxRate": result[0].iTaxRate,
+                                            "pickup_time" : result[0].Ptime,
+                                            "drop_time" : result[0].Dtime,
+                                            "iTaxAmount": result[0].iTaxAmount,
+                                            "iDiscountRate": result[0].iDiscountRate,
+                                            "iDiscountAmount": result[0].iDiscountAmount,
+                                            "iFinalAmount": result[0].iFinalAmount,
+                                            "service_provider_name": result[0].service_provider_name,
+                                            "quotation_id": result[0].quotation_id,
+                                            "pickup_date": result[0].pickup_date,
+                                            "drop_date": result[0].drop_date,
+                                            "special_requirement": result[0].special_requirement,
+                                            "no_of_horse": result[0].no_of_horse
+                                        });
+                                        for (let row of result) 
+                                        {
+                                            invoiceResponse.payment.push
+                                            ({
+                                                "id": row.id,
+                                                "total_amount": row.iFinalAmount,
+                                                "received_amount": row.received_amount,
+                                                "received_date": row.received_date,
+                                                "remaining_amount": row.remaining_amount
+                                            });
+                                        }
+                                        for (let row of result)
+                                        {
+                                            invoiceResponse.vehicles.push
+                                            ({
+                                                "id" : row.id, 
+                                                "vehicle_number" : row.vehicle_no,
+                                                "driver_name" : row.dName,
+                                                "pickup_location": row.pickup_location,
+                                                "drop_location": row.drop_location,
+                                            });
+                                        }
+                                    }                                    
+                                    let selQuery2 = `SELECT vb.vehicle_id, v.vehicle_number AS vehicle_no, vb.driver_id, d.name AS dName, vb.pickup_location, vb.drop_location FROM vehicles_breakouts vb, drivers d, vehicles v WHERE vb.invoice_id = ${Id} AND vb.driver_id = d.id AND vb.vehicle_id = v.id`;
+                                    con.query(selQuery2, (err, result2) =>
+                                    {
+                                        // console.log(`Second Select Query: `, selQuery2);
+                                        if (err)
+                                        {
+                                            console.log(err);
+                                            resolve('err');
+                                        }
+                                        else
+                                        {
+                                            for (let row of result2)
+                                            {
+                                                invoiceResponse.vehicles.push
+                                                ({
+                                                    "id": row.id,
+                                                    "vehicle_number" : row.vehicle_no,
+                                                    "driver_name" : row.dName,
+                                                    "pickup_location": row.pickup_location,
+                                                    "drop_location": row.drop_location,
+                                                });
+                                            }
+                                            resolve(invoiceResponse);
+                                        }
+                                    });
+                                }
+                            });
+                    }
+                    /* This Part is Wokrking */
+                    else if(data1[0].booking_status ==='BREAKOUT')
+                    {
+                        console.log('JAVASCRIPT');
+                        let selQuery = `SELECT i.id,
+                        i.invoice_no AS iId,
+                        DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
+                        v.vehicle_number AS vehicle_no,
+                        dr.name AS dName,
+                        c.name AS customer_name,
+c
+                        q.pickup_location AS customerAddress,
+                        sp.contact_address AS companyAddress,
+                        q.pickup_country AS cusCountry,
+                        q.drop_country AS comCountry,
+                        c.email AS customer_email,
+                        sp.email AS com_email,
+                        i.sub_total AS iSubTotal,
+                        t.value AS iTaxRate,
+                        i.tax_amount AS iTaxAmount,
+                        d.rate AS iDiscountRate,
+                        i.discount_amount AS iDiscountAmount,
+                        i.final_amount AS iFinalAmount,
+                        sp.name AS service_provider_name,
+                        i.quot_id AS quotation_id,
+                        q.pickup_location,
+                        q.drop_location,
+                        DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date,
+                        DATE_FORMAT(q.drop_date, '%d-%m-%Y') AS drop_date,
+                        q.special_requirement,
+                        e.no_of_horse,
+                        pr.total_amount,
+                        COALESCE(pr.received_amount, 0) AS received_amount,
+                        DATE_FORMAT(pr.received_date, '%d-%m-%Y') AS received_date,
+                        COALESCE(pr.remaining_amount, 0) AS remaining_amount
+                        FROM invoices i
+                        JOIN quotations q ON i.quot_id = q.id
+                        JOIN customers c ON c.id = q.customer_id
+                        JOIN service_providers sp ON q.serviceprovider_id = sp.id
+                        JOIN taxations t ON t.id = q.taxation_id
+                        JOIN discount_types d ON d.id = q.discount_type_id
+                        JOIN enquiries e ON e.id = q.enquiry_id
+                        JOIN payment_records pr ON pr.invoice_id = i.id
+                        JOIN vehicles v ON v.id = i.vehicle_id
+                        JOIN drivers dr ON dr.id = i.driver_id
+                        WHERE i.id = ${Id}`;
+
+                        console.log(selQuery);
+                        con.query(selQuery, (err, result) =>
+                        {
+                            var invoiceResponse =
+                            {
+                                "invoice": [],
+                                "vehicles" : [],
+                                "payment": []
+                            };
+                            if (err)
+                            {
+                                console.log(err);
+                                resolve('err');
+                            } 
                             else
                             {
-                                resolve(false)
+                                if (result.length !== 0) 
+                                {
+                                    // If result has data, populate the invoiceResponse data and payment arrays
+                                    invoiceResponse.invoice.push
+                                    ({
+                                        "id": result[0].id,
+                                        "iId": result[0].iId,
+                                        "iDate": result[0].iDate,
+                                        "customer_name": result[0].customer_name,
+                                        "companyName": result[0].companyName,
+                                        "customerAddress": result[0].customerAddress,
+                                        "companyAddress": result[0].companyAddress,
+                                        "cusCountry": result[0].cusCountry,
+                                        "comCountry": result[0].comCountry,
+                                        "pickup_time" : result[0].Ptime,
+                                        "drop_time" : result[0].Dtime,
+                                        "customer_email": result[0].customer_email,
+                                        "com_email": result[0].com_email,
+                                        "iSubTotal": result[0].iSubTotal,
+                                        "iTaxRate": result[0].iTaxRate,
+                                        "iTaxAmount": result[0].iTaxAmount,
+                                        "iDiscountRate": result[0].iDiscountRate,
+                                        "iDiscountAmount": result[0].iDiscountAmount,
+                                        "iFinalAmount": result[0].iFinalAmount,
+                                        "service_provider_name": result[0].service_provider_name,
+                                        "quotation_id": result[0].quotation_id,
+                                        "pickup_date": result[0].pickup_date,
+                                        "drop_date": result[0].drop_date,
+                                        "special_requirement": result[0].special_requirement,
+                                        "no_of_horse": result[0].no_of_horse
+                                    });
+                                    for (let row of result) 
+                                    {
+                                        invoiceResponse.payment.push
+                                        ({
+                                            "id": row.id,
+                                            "total_amount": row.iFinalAmount,
+                                            "received_amount": row.received_amount,
+                                            "received_date": row.received_date,
+                                            "remaining_amount": row.remaining_amount
+                                        });
+                                    }
+                                }
+                                let selQuery2 = `SELECT vb.vehicle_id, v.vehicle_number AS vehicle_no, vb.driver_id, d.name AS dName, vb.pickup_location, vb.drop_location FROM vehicles_breakouts vb, drivers d, vehicles v WHERE vb.invoice_id = ${Id} AND vb.driver_id = d.id AND vb.vehicle_id = v.id`;
+                                con.query(selQuery2, (err, result2) =>
+                                {
+                                    console.log(`Second Select Query: `, selQuery2);
+                                    console.log(`Second Select Result: `, result2);
+                                    if (err)
+                                    {
+                                        console.log(err);
+                                        resolve('err');
+                                    }
+                                    else
+                                    {
+                                        for (let row of result2)
+                                        {
+                                            invoiceResponse.vehicles.push
+                                            ({
+                                                "id": row.id,
+                                                "vehicle_number" : row.vehicle_no,
+                                                "driver_name" : row.dName,
+                                                "pickup_location": row.pickup_location,
+                                                "drop_location": row.drop_location,
+                                            });
+                                        }
+                                        resolve(invoiceResponse);
+                                    }
+                                });
                             }
-                        });
+                        });                        
                     }
-                    else
+                    /* This Above Part is Wokrking */
+                    else if(data1[0].booking_status === 'COMPLETED')
                     {
-                        resolve(false)
+                        console.log('NODEJS');
+                        let data3 = await commonfetching.dataOnCondition(constants.tableName.vehicles_breakouts, Id, 'invoice_id')
+                        if(data3[0].length !== 0)
+                        {
+                            let selQuery = `SELECT i.id,
+                            i.invoice_no AS iId,
+                            DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
+                            v.vehicle_number AS vehicle_no,
+                            dr.name AS dName,
+                            c.name AS customer_name,
+                            sp.name AS companyName,
+                            q.pickup_location AS customerAddress,
+                            sp.contact_address AS companyAddress,
+                            q.pickup_country AS cusCountry,
+                            q.drop_country AS comCountry,
+                            c.email AS customer_email,
+                            sp.email AS com_email,
+                            i.sub_total AS iSubTotal,
+                            t.value AS iTaxRate,
+                            i.tax_amount AS iTaxAmount,
+                            d.rate AS iDiscountRate,
+                            i.discount_amount AS iDiscountAmount,
+                            i.final_amount AS iFinalAmount,
+                            sp.name AS service_provider_name,
+                            i.quot_id AS quotation_id,
+                            q.pickup_location,
+                            q.drop_location,
+                            DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date,
+                            DATE_FORMAT(q.drop_date, '%d-%m-%Y') AS drop_date,
+                            q.special_requirement,
+                            e.no_of_horse,
+                            pr.total_amount,
+                            COALESCE(pr.received_amount, 0) AS received_amount,
+                            DATE_FORMAT(pr.received_date, '%d-%m-%Y') AS received_date,
+                            COALESCE(pr.remaining_amount, 0) AS remaining_amount 
+                            FROM vehicles_breakouts vb
+                            JOIN invoices i ON vb.invoice_id = i.id 
+                            JOIN quotations q ON i.quot_id = q.id
+                            JOIN customers c ON c.id = q.customer_id
+                            JOIN service_providers sp ON q.serviceprovider_id = sp.id
+                            JOIN taxations t ON t.id = q.taxation_id
+                            JOIN discount_types d ON d.id = q.discount_type_id
+                            JOIN enquiries e ON e.id = q.enquiry_id
+                            JOIN payment_records pr ON pr.invoice_id = i.id
+                            JOIN vehicles v ON v.id = i.vehicle_id
+                            JOIN drivers dr ON dr.id = i.driver_id
+                            WHERE i.id = ${Id}`;
+                            console.log(selQuery);
+                            con.query(selQuery, (err, result) =>
+                            {
+                                if (err)
+                                {
+                                    console.log(err);
+                                    resolve('err');
+                                } 
+                                else
+                                {
+                                    if (result.length !== 0) 
+                                    {
+                                        // If result has data, populate the invoiceResponse data and payment arrays
+                                        invoiceResponse.invoice.push
+                                        ({
+                                            "id": result[0].id,
+                                            "iId": result[0].iId,
+                                            "iDate": result[0].iDate,
+                                            "customer_name": result[0].customer_name,
+                                            "companyName": result[0].companyName,
+                                            "customerAddress": result[0].customerAddress,
+                                            "companyAddress": result[0].companyAddress,
+                                            "cusCountry": result[0].cusCountry,
+                                            "comCountry": result[0].comCountry,
+                                            "customer_email": result[0].customer_email,
+                                            "com_email": result[0].com_email,
+                                            "iSubTotal": result[0].iSubTotal,
+                                            "iTaxRate": result[0].iTaxRate,
+                                            "iTaxAmount": result[0].iTaxAmount,
+                                            "iDiscountRate": result[0].iDiscountRate,
+                                            "iDiscountAmount": result[0].iDiscountAmount,
+                                            "iFinalAmount": result[0].iFinalAmount,
+                                            "service_provider_name": result[0].service_provider_name,
+                                            "quotation_id": result[0].quotation_id,
+                                            "pickup_date": result[0].pickup_date,
+                                            "drop_date": result[0].drop_date,
+                                            "special_requirement": result[0].special_requirement,
+                                            "no_of_horse": result[0].no_of_horse
+                                        });
+                                        for (let row of result) 
+                                        {
+                                            invoiceResponse.payment.push
+                                            ({
+                                                "id": row.id,
+                                                "total_amount": row.iFinalAmount,
+                                                "received_amount": row.received_amount,
+                                                "received_date": row.received_date,
+                                                "remaining_amount": row.remaining_amount
+                                            });
+                                        }
+                                        for (let row of result)
+                                        {
+                                            invoiceResponse.vehicles.push
+                                            ({
+                                                // "id" : row.id, 
+                                                "vehicle_number" : row.vehicle_no,
+                                                "driver_name" : row.dName,
+                                                "pickup_location": row.pickup_location,
+                                                "drop_location": row.drop_location,
+                                            });
+                                        }
+                                    }
+                                    let selQuery2 = `SELECT vb.vehicle_id, v.vehicle_number AS vehicle_no, vb.driver_id, d.name AS dName, vb.pickup_location, vb.drop_location FROM vehicles_breakouts vb, drivers d, vehicles v WHERE vb.invoice_id = ${Id} AND vb.driver_id = d.id AND vb.vehicle_id = v.id`;
+                                    con.query(selQuery2, (err, result2) =>
+                                    {
+                                        // console.log(`Second Select Query: `, selQuery2);
+                                        if (err)
+                                        {
+                                            console.log(err);
+                                            resolve('err');
+                                        }
+                                        else
+                                        {
+                                            for (let row of result2)
+                                            {
+                                                invoiceResponse.vehicles.push
+                                                ({
+                                                    "id": row.id,
+                                                    "vehicle_number" : row.vehicle_no,
+                                                    "driver_name" : row.dName,
+                                                    "pickup_location": row.pickup_location,
+                                                    "drop_location": row.drop_location,
+                                                });
+                                            }
+                                            resolve(invoiceResponse);
+                                        }
+                                    });
+                                }
+                            });  
+                        }
+                        else
+                        {
+                            let selQuery = `SELECT i.id,
+                                            i.invoice_no AS iId,
+                                            DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
+                                            v.vehicle_number AS vehicle_no,
+                                            dr.name AS dName,
+                                            c.name AS customer_name,
+                                            sp.name AS companyName,
+                                            q.pickup_location AS customerAddress,
+                                            sp.contact_address AS companyAddress,
+                                            q.pickup_country AS cusCountry,
+                                            q.drop_country AS comCountry,
+                                            c.email AS customer_email,
+                                            sp.email AS com_email,
+                                            i.sub_total AS iSubTotal,
+                                            t.value AS iTaxRate,
+                                            i.tax_amount AS iTaxAmount,
+                                            d.rate AS iDiscountRate,
+                                            i.discount_amount AS iDiscountAmount,
+                                            i.final_amount AS iFinalAmount,
+                                            sp.name AS service_provider_name,
+                                            i.quot_id AS quotation_id,
+                                            q.pickup_location,
+                                            q.drop_location,
+                                            DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date,
+                                            DATE_FORMAT(q.drop_date, '%d-%m-%Y') AS drop_date,
+                                            q.special_requirement,
+                                            e.no_of_horse,
+                                            pr.total_amount,
+                                            COALESCE(pr.received_amount, 0) AS received_amount,
+                                            DATE_FORMAT(pr.received_date, '%d-%m-%Y') AS received_date,
+                                            COALESCE(pr.remaining_amount, 0) AS remaining_amount 
+                                            FROM invoices i
+                                            JOIN quotations q ON i.quot_id = q.id
+                                            JOIN customers c ON c.id = q.customer_id
+                                            JOIN service_providers sp ON q.serviceprovider_id = sp.id
+                                            JOIN taxations t ON t.id = q.taxation_id
+                                            JOIN discount_types d ON d.id = q.discount_type_id
+                                            JOIN enquiries e ON e.id = q.enquiry_id
+                                            JOIN payment_records pr ON pr.invoice_id = i.id
+                                            JOIN vehicles v ON v.id = i.vehicle_id
+                                            JOIN drivers dr ON dr.id = i.driver_id
+                                            WHERE i.id = ${Id}`;
+                                        console.log(`Data is present in the booking table query: `, selQuery);
+                            con.query(selQuery, (err, result) =>
+                            {
+                                console.log('NODEJS');
+
+                                if (err)
+                                {
+                                    console.log(err);
+                                    resolve('err');
+                                } 
+                                else
+                                {                                   
+                                    if (result.length !== 0) 
+                                    {
+                                        // If result has data, populate the invoiceResponse data and payment arrays
+                                        invoiceResponse.invoice.push
+                                        ({
+                                            "id": result[0].id,
+                                            "iId": result[0].iId,
+                                            "iDate": result[0].iDate,
+                                            "customer_name": result[0].customer_name,
+                                            "companyName": result[0].companyName,
+                                            "customerAddress": result[0].customerAddress,
+                                            "companyAddress": result[0].companyAddress,
+                                            "cusCountry": result[0].cusCountry,
+                                            "comCountry": result[0].comCountry,
+                                            "customer_email": result[0].customer_email,
+                                            "com_email": result[0].com_email,
+                                            "iSubTotal": result[0].iSubTotal,
+                                            "iTaxRate": result[0].iTaxRate,
+                                            "iTaxAmount": result[0].iTaxAmount,
+                                            "iDiscountRate": result[0].iDiscountRate,
+                                            "iDiscountAmount": result[0].iDiscountAmount,
+                                            "iFinalAmount": result[0].iFinalAmount,
+                                            "service_provider_name": result[0].service_provider_name,
+                                            "quotation_id": result[0].quotation_id,
+                                            "pickup_date": result[0].pickup_date,
+                                            "drop_date": result[0].drop_date,
+                                            "special_requirement": result[0].special_requirement,
+                                            "no_of_horse": result[0].no_of_horse
+                                        });
+                                        for (let row of result) 
+                                        {
+                                            invoiceResponse.payment.push
+                                            ({
+                                                "id": row.id,
+                                                "total_amount": row.iFinalAmount,
+                                                "received_amount": row.received_amount,
+                                                "received_date": row.received_date,
+                                                "remaining_amount": row.remaining_amount
+                                            });
+                                        }
+                                        for (let row of result)
+                                        {
+                                            invoiceResponse.vehicles.push
+                                            ({
+                                                // "id" : row.id, 
+                                                "vehicle_number" : row.vehicle_no,
+                                                "driver_name" : row.dName,
+                                                "pickup_location": row.pickup_location,
+                                                "drop_location": row.drop_location,
+                                            });
+                                        }
+                                    }                                    
+                                    let selQuery2 = `SELECT vb.vehicle_id, v.vehicle_number AS vehicle_no, vb.driver_id, d.name AS dName, vb.pickup_location, vb.drop_location FROM vehicles_breakouts vb, drivers d, vehicles v WHERE vb.invoice_id = ${Id} AND vb.driver_id = d.id AND vb.vehicle_id = v.id`;
+                                    con.query(selQuery2, (err, result2) =>
+                                    {
+                                            console.log('C#');
+
+                                        // console.log(`Second Select Query: `, selQuery2);
+                                        if (err)
+                                        {
+                                            console.log(err);
+                                            resolve('err');
+                                        }
+                                        else
+                                        {
+                                            for (let row of result2)
+                                            {
+                                                invoiceResponse.vehicles.push
+                                                ({
+                                                    "id": row.id,
+                                                    "vehicle_number" : row.vehicle_no,
+                                                    "driver_name" : row.dName,
+                                                    "pickup_location": row.pickup_location,
+                                                    "drop_location": row.drop_location,
+                                                });
+                                            }
+                                            resolve(invoiceResponse);
+                                        }
+                                    });
+                                }
+                            });
+                        }
                     }
-                });
-            });
+                }
+            });            
         }
-        catch(error)
+        catch (error)
         {
-            console.log(`Error from invoice.model.js. It is in the folder models > invoices > invoice.model.js. In the static function "addinvoice". Which is designed to fetch all the data of invoices.`, error);
+            
         }
     };
+
+    // static async getone(Id) {
+    //     try {
+    //         return await new Promise((resolve, reject) => {
+    //             let selQuery = `SELECT i.id,
+    //             i.invoice_no AS iId,
+    //             DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
+    //             v.vehicle_number AS vehicle_no,
+    //             dr.name AS dName,
+    //             c.name AS customer_name,
+    //             sp.name AS companyName,
+    //             q.pickup_location AS customerAddress,
+    //             sp.contact_address AS companyAddress,
+    //             q.pickup_country AS cusCountry,
+    //             q.drop_country AS comCountry,
+    //             c.email AS customer_email,
+    //             sp.email AS com_email,
+    //             i.sub_total AS iSubTotal,
+    //             t.value AS iTaxRate,
+    //             i.tax_amount AS iTaxAmount,
+    //             d.rate AS iDiscountRate,
+    //             i.discount_amount AS iDiscountAmount,
+    //             i.final_amount AS iFinalAmount,
+    //             sp.name AS service_provider_name,
+    //             i.quot_id AS quotation_id,
+    //             q.pickup_location,
+    //             q.drop_location,
+    //             DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date,
+    //             DATE_FORMAT(q.drop_date, '%d-%m-%Y') AS drop_date,
+    //             q.special_requirement,
+    //             e.no_of_horse,
+    //             pr.total_amount,
+    //             COALESCE(pr.received_amount, 0) AS received_amount,
+    //             DATE_FORMAT(pr.received_date, '%d-%m-%Y') AS received_date,
+    //             COALESCE(pr.remaining_amount, 0) AS remaining_amount 
+    //             FROM invoices i
+    //             JOIN quotations q ON i.quot_id = q.id
+    //             JOIN customers c ON c.id = q.customer_id
+    //             JOIN service_providers sp ON q.serviceprovider_id = sp.id
+    //             JOIN taxations t ON t.id = q.taxation_id
+    //             JOIN discount_types d ON d.id = q.discount_type_id
+    //             JOIN enquiries e ON e.id = q.enquiry_id
+    //             JOIN payment_records pr ON pr.invoice_id = i.id
+    //             JOIN vehicles v ON v.id = i.vehicle_id
+    //             JOIN drivers dr ON dr.id = i.driver_id
+    //             WHERE i.id = ${Id}`;
+    //             console.log(selQuery);
+    //             con.query(selQuery, (err, result) => {
+    //                 if (err) {
+    //                     console.log(err);
+    //                     resolve('err');
+    //                 } else {
+    //                     let invoiceResponse = {
+    //                         "invoice": [],
+    //                         "vehicles" : [],
+    //                         "payment": []
+    //                     };
+    
+    //                     if (result.length !== 0) 
+    //                     {                            
+    //                         // If result has data, populate the invoiceResponse data and payment arrays
+    //                         invoiceResponse.invoice.push({
+    //                             "id": result[0].id,
+    //                             "iId": result[0].iId,
+    //                             "iDate": result[0].iDate,
+    //                             "customer_name": result[0].customer_name,
+    //                             "companyName": result[0].companyName,
+    //                             "customerAddress": result[0].customerAddress,
+    //                             "companyAddress": result[0].companyAddress,
+    //                             "cusCountry": result[0].cusCountry,
+    //                             "comCountry": result[0].comCountry,
+    //                             "customer_email": result[0].customer_email,
+    //                             "com_email": result[0].com_email,
+    //                             "iSubTotal": result[0].iSubTotal,
+    //                             "iTaxRate": result[0].iTaxRate,
+    //                             "iTaxAmount": result[0].iTaxAmount,
+    //                             "iDiscountRate": result[0].iDiscountRate,
+    //                             "iDiscountAmount": result[0].iDiscountAmount,
+    //                             "iFinalAmount": result[0].iFinalAmount,
+    //                             "service_provider_name": result[0].service_provider_name,
+    //                             "quotation_id": result[0].quotation_id,
+    //                             "pickup_date": result[0].pickup_date,
+    //                             "drop_date": result[0].drop_date,
+    //                             "special_requirement": result[0].special_requirement,
+    //                             "no_of_horse": result[0].no_of_horse
+    //                         });
+    
+    //                             for (let row of result) 
+    //                             {
+    //                                 invoiceResponse.payment.push
+    //                                 ({
+    //                                     "id": row.id,
+    //                                     "total_amount": row.iFinalAmount,
+    //                                     "received_amount": row.received_amount,
+    //                                     "received_date": row.received_date,
+    //                                     "remaining_amount": row.remaining_amount
+    //                                 });
+    //                             }
+                            
+                                // for (let row of result)
+                                // {
+                                //     invoiceResponse.vehicles.push
+                                //     ({
+                                //         // "id" : row.id, 
+                                //         "vehicle_number" : row.vehicle_no,
+                                //         "driver_name" : row.dName,
+                                //         "pickup_location": row.pickup_location,
+                                //         "drop_location": row.drop_location,
+                                //     });
+                                // }
+    //                     }
+    //                     let selQuery2 = `SELECT vb.vehicle_id, v.vehicle_number AS vehicle_no, vb.driver_id, d.name AS dName, vb.pickup_location, vb.drop_location FROM vehicles_breakouts vb, drivers d, vehicles v WHERE vb.invoice_id = ${Id} AND vb.driver_id = d.id AND vb.vehicle_id = v.id`;
+    //                     con.query(selQuery2, (err, result2) =>
+    //                     {
+    //                         // console.log(`Second Select Query: `, selQuery2);
+    //                         if (err) {
+    //                             console.log(err);
+    //                             resolve('err');
+    //                         } else {
+    //                             for (let row of result2)
+    //                             {
+    //                                 invoiceResponse.vehicles.push
+    //                                 ({
+    //                                     "id": row.id,
+    //                                     "vehicle_number" : row.vehicle_no,
+    //                                     "driver_name" : row.dName,
+    //                                     "pickup_location": row.pickup_location,
+    //                                     "drop_location": row.drop_location,
+    //                                 });
+    //                             }
+    //                             resolve(invoiceResponse);
+    //                         }
+    //                     });
+    //                 }
+    //             });
+    //         });
+    //     } catch (error) {
+    //         console.log(`Error from invoice.model.js. It is in the folder models > invoices > invoice.model.js. In the static function "getone". Which is designed to fetch all the data of invoices.`, error);
+    //     }
+    // };
+    
 
     static async enteramountforparticularinvoice(Id, amount)
     {
@@ -415,7 +1077,7 @@ module.exports = class invoices
     {
         try
         {
-            // console.log(req.body);
+            console.log(req.body);
             return await new Promise(async(resolve, reject)=>
             {
                 const emailSent = await SendEmail(to, body, subject);
@@ -444,10 +1106,9 @@ module.exports = class invoices
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let selQuery = `SELECT i.id, i.invoice_no, t.subject, c.email
+                let selQuery = `SELECT i.id, i.invoice_no, t.subject, c.email, t.template
                 FROM customers c, invoices i, quotations q, templates t
                 WHERE i.id = ${Id} AND t.name = 'Invoice email sent' AND c.id = q.customer_id AND q.id = i.quot_id`;
-                console.log(selQuery)
                 con.query(selQuery,(err, result) =>
                 {
                     // console.log(`Email details: `, result);
@@ -479,11 +1140,10 @@ module.exports = class invoices
             return await new Promise(async(resolve, reject)=>
             {
                 let data = await commonfetching.dataOnCondition(constants.tableName.invoices, Id, 'id')
-                console.log(`Data at the booking got start button from the invoice table: `, data);
+                // console.log(`Data at the booking got start button from the invoice table: `, data);
 
                 let data3 = await commonfetching.dataOnCondition(constants.tableName.bookings, data[0].invoice_no, 'invoice_prefix_id')
-                console.log('Data 3: ', data3);
-                
+                // console.log('Data 3: ', data3);
                 if(data3.length != 0)
                 {
                     console.log(`Duplicate invoice number. Cannot enter`);
@@ -494,10 +1154,12 @@ module.exports = class invoices
                     let data2 = await commonfetching.dataOnCondition(constants.tableName.quotations, data[0].quot_id, 'id');
                     // console.log(`Data at the booking got start button from the quotation table: `, data2);
 
-                    const insQuery = `INSERT INTO bookings(customer_id, inv_id, invoice_prefix_id, service_provider_id, vehicle_id, driver_id, taxation_id, discount_type_id, status, booking_status, pickup_location, pickup_country, pickup_date, drop_location, drop_country, drop_date, confirmation_sent, sub_total, tax_amount, discount_amount, final_amount, created_at) VALUES(${data2[0].customer_id}, ${data[0].id}, '${data[0].invoice_no}', ${data[0].service_provider_id}, ${data[0].vehicle_id}, ${data[0].driver_id}, ${data2[0].taxation_id}, ${data2[0].discount_type_id}, 'PENDING', 'CONFIRMED', '${data[0].pickup_point}', '${data2[0].pickup_country}', '${time.changeDateToSQLFormat(data2[0].pickup_date)}', '${data[0].drop_point}', '${data2[0].drop_country}', '${time.changeDateToSQLFormat(data2[0].drop_date)}', 'YES',  ${data[0].sub_total},  ${data[0].tax_amount},  ${data[0].discount_amount},  ${data[0].final_amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                    const insQuery = `INSERT INTO bookings(customer_id, inv_id, invoice_prefix_id, service_provider_id, vehicle_id, driver_id, taxation_id, discount_type_id, status, booking_status, pickup_location, pickup_country, pickup_date, pickup_time, drop_location, drop_country, drop_date, drop_time ,confirmation_sent, sub_total, tax_amount, discount_amount, final_amount, created_at) VALUES(${data2[0].customer_id}, ${data[0].id}, '${data[0].invoice_no}', ${data[0].service_provider_id}, ${data[0].vehicle_id}, ${data[0].driver_id}, ${data2[0].taxation_id}, ${data2[0].discount_type_id}, 'PENDING', 'CONFIRM', '${data[0].pickup_point}', '${data2[0].pickup_country}', '${time.changeDateToSQLFormat(data2[0].pickup_date)}', '${data2[0].pickup_time}','${data[0].drop_point}', '${data2[0].drop_country}', '${time.changeDateToSQLFormat(data2[0].drop_date)}', '${data2[0].drop_time}', 'YES',  ${data[0].sub_total},  ${data[0].tax_amount},  ${data[0].discount_amount},  ${data[0].final_amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+
+                    console.log('Insert Booking Query: ',insQuery);
                     con.query(insQuery, (err, result) =>
                     {
-                        // console.log(`Insert result of the booking : `, result);
+                        console.log(`Insert result of the booking : `, result);
                         if(result === 'undefined')
                         {
                             resolve('NotEntered')
@@ -507,10 +1169,25 @@ module.exports = class invoices
                         {
                             resolve('err')
                         }
-
                         if(result.affectedRows > 0)
                         {
-                            resolve('Entered')
+                            let upQuery = `UPDATE invoices i SET i.status = 'STARTED' WHERE i.id = ${Id}`;
+                            console.log('Update Query: ', upQuery);
+                            con.query(upQuery, (err, result2) =>
+                            {
+                                if(err)
+                                {
+                                    resolve('err')
+                                }
+                                if(result2.affectedRows > 0)
+                                {
+                                    resolve('Entered')
+                                }
+                                if(result2 === 'undefined')
+                                {
+                                    resolve('NotEntered')
+                                }
+                            });                            
                         }
                     });
                 };
@@ -521,6 +1198,33 @@ module.exports = class invoices
             console.log(`Error form the model function bookingStared`);
         }
     }
+
+    static async getdatafrombookingtable(id)
+    {
+        try
+        {
+            return await new Promise(async(resolve, reject)=>
+            {
+                let data = await commonfetching.dataOnCondition(constants.tableName.bookings, id, 'inv_id')
+                // console.log(`Invoice checking in the booking table`, data);
+                
+                if(data.length !== 0)
+                {
+                    console.log('Invoice number found in the booking table');
+                    resolve(data);
+                }
+                else
+                {
+                    console.log(`Invoice number is not present in the booking table`);
+                    resolve('noData');
+                }
+            });
+        }
+        catch(error)
+        {
+
+        }
+    };
 
 
 

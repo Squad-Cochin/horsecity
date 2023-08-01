@@ -50,5 +50,9 @@ module.exports = function (app)
     isValidIdInTheParams(constants.tableName.invoices),
     invoiceController.bookingStarted);
 
+    app.get(`/${process.env.apiToken}/getInvoice/Data/From/Booking/:id`,
+    isValidIdInTheParams(constants.tableName.invoices),
+    invoiceController.getDataFromBookingTable);
+
 
 };

@@ -2079,7 +2079,5 @@ INSERT INTO `templates` (`id`, `name`, `subject`, `purpose`, `template`, `type`,
 
 /**
  * INSERT INTO `invoices` (`id`, `invoice_no`, `quot_id`, `quotation_prefix_id`, `service_provider_id`, `vehicle_id`, `driver_id`, `pickup_point`, `drop_point`, `sub_total`, `tax_amount`, `discount_amount`, `final_amount`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, '1001', '1', 'QUO1', '1', '5', '2', 'Dubai Marina', 'Burj Khalifa', '1109.00', '54.34', '22.18', '1141.16', 'ACTIVE', '2023-07-31 13:59:10', NULL, NULL);
-INSERT INTO `vehicles_breakouts` (`id`, `booking_id`, `invoice_id`, `service_provider_id`, `vehicle_id`, `driver_id`, `pickup_location`, `drop_location`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, '', '1', '2', '4', '3', 'Bay of Bengal', 'Port Blair', '2023-07-31 17:53:03', NULL, NULL);
- 
-
+ * INSERT INTO `vehicles_breakouts` (`id`, `booking_id`, `invoice_id`, `service_provider_id`, `vehicle_id`, `driver_id`, `pickup_location`, `drop_location`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, '', '1', '2', '4', '3', 'Bay of Bengal', 'Port Blair', '2023-07-31 17:53:03', NULL, NULL);
 */

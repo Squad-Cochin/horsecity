@@ -91,61 +91,21 @@ exports.getAllInvoice = (data) =>
       quotation_id : item.quotation_prefix_id,
       customer_name : item.name,
       customer_email : item.email,
+      status : item.status
     });
   });
   return dataResult;
 };
 
 
-/**
- * Invoice page feild
- *    Invoice Number --> Fetched from the invoice table
- *    Quotation Id --> Quotation id from the quotation table
- *    Customer Name --> Name from the customer (Quotation table have customer Name) q.customer_id = c.id
- *    Customer Email --> Email from the customer (Quotation table have customer Customr) q.customer_id = c.id
- */
 
-/**
- *  Invoice Page (View one invoice)
- *  Invoice No  - invoice number form the invoice table (Generated from the backend part)
- *  Date - Invoice date (Generated from the backend)
- *  Invoice To:
- *                customer name --> From the customer table
- *                customer address --> Pickup Point (Invoice table have this)
- *                customer country --> Pickup country (From the booking table)
- *                customer email --> from the customer tablle
- * 
- * Pay To :
- *                company name or service provider name
- *                company address - From the service provider table
- *                company country - Pick up country
- *                company email - from the service provider
- *                
- * 
- * 
- */
-
-
-
-
-
-/**
- * 
- *    Table feild
- * 
- *  id - primary key
- *  invoice_no - we will also generate from backend
- *  booking_id - We will have this from the booking table
- *  pickup_point - 
- *  drop_point - 
- *  per_unit_price - 
- *  total_distance -
- *  tax_amount -
- *  discount_amount - 
- *  final_amount - 
- *  status
- *  created_at -
- *  updated_at -
- *  deleted_at - 
- * 
- */
+exports.GetOne = () =>
+{
+  const dataResult =
+  {
+    "invoice": [],
+    "vehicles" : [],
+    "payment": []
+  }
+  
+}

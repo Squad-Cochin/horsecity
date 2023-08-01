@@ -288,7 +288,7 @@ exports.getSendEmailButtonData = async(req, res) =>
             code: 200,
             status: true,
             message: 'Data Fetched Succesfully. No data is there for this params id',
-            data : invoice
+            data : invoices
         });
     }
 };
@@ -340,6 +340,7 @@ exports.bookingStarted = async (req, res) =>
             code: 404,
             status: false,
             message: `Booking button controller successfully working. Invoice id is duplicate`,
+            data : []
         });
     }
 
@@ -348,6 +349,36 @@ exports.bookingStarted = async (req, res) =>
 
 
 
+}
+
+
+exports.getDataFromBookingTable = async (req, res, next) =>
+{
+    let invoices = await invoice.getdatafrombookingtable(req.params.id);
+    console.log('Invoices', invoices);
+    if(invoices === 'noData')
+    {
+        console.log(`Invoice data not present in the booking table from the controller table`);
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : 'Data not found',
+            data : invoices
+        })
+    }
+
+    if(invoices.length !== 0)
+    {
+        console.log(`Invoice data present in the booking table from the controller table`);
+        return res.status(200).send
+        ({
+            code : 200,
+            status : true,
+            message : 'Data found',
+            data : invoices
+        })
+    }
 }
 
 

@@ -376,10 +376,12 @@ CREATE TABLE quotations
     trip_type ENUM('PRIVATE','SHARING','GCC'),
     pickup_location VARCHAR(255) NOT NULL,
     pickup_country VARCHAR(30) NOT NULL,
-    pickup_date DATETIME,
+    pickup_date DATE,
+    pickup_time TIME,
     drop_location VARCHAR(255) NOT NULL,
     drop_country VARCHAR(30) NOT NULL,
-    drop_date DATETIME,   
+    drop_date DATE,
+    drop_time TIME, 
     no_of_horse INT(3) NOT NULL,
     special_requirement VARCHAR(255),
     additional_service VARCHAR(255),
@@ -416,43 +418,6 @@ CREATE TABLE horse_details
 );
 
 
-CREATE TABLE bookings (
-  id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  customer_id INT(11) DEFAULT NULL,
-  FOREIGN KEY(customer_id) REFERENCES customers(id),
-  inv_id INT(11) DEFAULT NULL,
-  FOREIGN KEY(inv_id) REFERENCES invoices(id),
-  invoice_prefix_id VARCHAR(15) NOT NULL,
-  service_provider_id INT(11) DEFAULT NULL,
-  FOREIGN KEY(service_provider_id) REFERENCES service_providers(id),
-  vehicle_id INT(11) DEFAULT NULL,
-    FOREIGN KEY(vehicle_id) REFERENCES vehicles(id),
-  driver_id INT(11) DEFAULT NULL,
-    FOREIGN KEY(driver_id) REFERENCES drivers(id),
-  status ENUM('PAID', 'PENDING', 'REFUND') DEFAULT NULL,
-  taxation_id INT(11) DEFAULT NULL,
-      FOREIGN KEY(taxation_id) REFERENCES taxations(id),
-  discount_type_id INT(11) DEFAULT NULL,
-    FOREIGN KEY(discount_type_id) REFERENCES discount_types(id),
-  booking_status ENUM('CONFIRM', 'COMPLETED', 'BREAKOUT') DEFAULT NULL,
-  pickup_location VARCHAR(255) NOT NULL,
-  pickup_country VARCHAR(30) NOT NULL,
-  pickup_date DATETIME DEFAULT NULL,
-  drop_location VARCHAR(255) NOT NULL,
-  drop_country VARCHAR(30) NOT NULL,
-  drop_date DATETIME DEFAULT NULL,
-  confirmation_sent ENUM('YES', 'NO') DEFAULT NULL,
-  sub_total DECIMAL(15,2) NOT NULL,
-  tax_amount DECIMAL(15,2) NOT NULL,
-  discount_amount DECIMAL(15,2) NOT NULL,
-  final_amount DECIMAL(15,2) NOT NULL,
-  created_at DATETIME DEFAULT NULL,
-  updated_at DATETIME DEFAULT NULL,
-  deleted_at DATETIME DEFAULT NULL
-);
-
-
-
 CREATE TABLE invoices
 (
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -477,6 +442,47 @@ CREATE TABLE invoices
     updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL   
 );
+
+
+CREATE TABLE bookings (
+  id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+  customer_id INT(11) DEFAULT NULL,
+  FOREIGN KEY(customer_id) REFERENCES customers(id),
+  inv_id INT(11) DEFAULT NULL,
+  FOREIGN KEY(inv_id) REFERENCES invoices(id),
+  invoice_prefix_id VARCHAR(15) NOT NULL,
+  service_provider_id INT(11) DEFAULT NULL,
+  FOREIGN KEY(service_provider_id) REFERENCES service_providers(id),
+  vehicle_id INT(11) DEFAULT NULL,
+  FOREIGN KEY(vehicle_id) REFERENCES vehicles(id),
+  driver_id INT(11) DEFAULT NULL,
+  FOREIGN KEY(driver_id) REFERENCES drivers(id),
+  status ENUM('PAID', 'PENDING', 'REFUND') DEFAULT NULL,
+  taxation_id INT(11) DEFAULT NULL,
+  FOREIGN KEY(taxation_id) REFERENCES taxations(id),
+  discount_type_id INT(11) DEFAULT NULL,
+  FOREIGN KEY(discount_type_id) REFERENCES discount_types(id),
+  booking_status ENUM('CONFIRM', 'COMPLETED', 'BREAKOUT') DEFAULT NULL,
+  pickup_location VARCHAR(255) NOT NULL,
+  pickup_country VARCHAR(30) NOT NULL,
+  pickup_date DATE DEFAULT NULL,
+  pickup_time TIME DEFAULT NULL,
+  drop_location VARCHAR(255) NOT NULL,
+  drop_country VARCHAR(30) NOT NULL,
+  drop_date DATE DEFAULT NULL,
+  drop_time TIME DEFAULT NULL, 
+  confirmation_sent ENUM('YES', 'NO') DEFAULT NULL,
+  sub_total DECIMAL(15,2) NOT NULL,
+  tax_amount DECIMAL(15,2) NOT NULL,
+  discount_amount DECIMAL(15,2) NOT NULL,
+  final_amount DECIMAL(15,2) NOT NULL,
+  created_at DATETIME DEFAULT NULL,
+  updated_at DATETIME DEFAULT NULL,
+  deleted_at DATETIME DEFAULT NULL
+);
+
+
+
 CREATE TABLE payments (
   id INT(11) PRIMARY KEY NOT NULL,
   customer_id INT(11) DEFAULT NULL,
@@ -563,10 +569,10 @@ CREATE TABLE vehicles_transportation (
   trip_type ENUM('PRIVATE', 'SHARING', 'GCC') DEFAULT NULL,
   pickup_location VARCHAR(255) NOT NULL,
   pickup_country VARCHAR(30) NOT NULL,
-  pickup_date DATETIME DEFAULT NULL,
+  pickup_date DATE DEFAULT NULL,
   drop_location VARCHAR(255) NOT NULL,
   drop_country VARCHAR(30) NOT NULL,
-  drop_date DATETIME DEFAULT NULL,
+  drop_date DATE DEFAULT NULL,
   trip_distance DECIMAL(5,2) NOT NULL,
   status ENUM('COMPLETED', 'ONGOING', 'NOT COMPLETED') DEFAULT NULL
 );
@@ -581,6 +587,9 @@ CREATE TABLE payment_records (
     received_date DATETIME,
     remaining_amount DECIMAL(15,2),
     status ENUM('PAID', 'PARTIALLY PAID', 'PENDING'),
-    FOREIGN KEY (invoice_id) REFERENCES invoices(id)
+    FOREIGN KEY (invoice_id) REFERENCES invoices(id),
+    created_at DATETIME DEFAULT NULL,
+    updated_at DATETIME DEFAULT NULL,
+    deleted_at DATETIME DEFAULT NULL
 );
 

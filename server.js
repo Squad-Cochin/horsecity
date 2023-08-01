@@ -39,9 +39,7 @@ app.listen(process.env.PORT, () =>
  * 
  * INSERT INTO `quotations` (`id`, `customer_id`, `enquiry_id`, `serviceprovider_id`, `taxation_id`, `vehicle_id`, `driver_id`, `discount_type_id`, `quotation_id`, `trip_type`, `pickup_location`, `pickup_country`, `pickup_date`, `drop_location`, `drop_country`, `drop_date`, `no_of_horse`, `special_requirement`, `additional_service`, `transportation_insurance_coverage`, `driver_amount`, `vehicle_amount`, `sub_total`, `tax_amount`, `discount_amount`, `final_amount`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES ('2', '4', '2', '1', '1', '1', '1', '1', 'Q002', 'SHARING', 'Maharaj Bagh', 'India', '2023-07-31 22:34:50', 'Civil Lines', 'India', '2023-07-31 22:34:50', '6', 'Makeup', 'Washing', 'TRUE', '50', '150', '200', '25', '10', '215', 'NOTCONFIRMED', '2023-07-31 22:34:50', NULL, NULL);
  * INSERT INTO `quotations` (`id`, `customer_id`, `enquiry_id`, `serviceprovider_id`, `taxation_id`, `vehicle_id`, `driver_id`, `discount_type_id`, `quotation_id`, `trip_type`, `pickup_location`, `pickup_country`, `pickup_date`, `drop_location`, `drop_country`, `drop_date`, `no_of_horse`, `special_requirement`, `additional_service`, `transportation_insurance_coverage`, `driver_amount`, `vehicle_amount`, `sub_total`, `tax_amount`, `discount_amount`, `final_amount`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES (NULL, '3', '3', '2', '1', '3', '3', '1', 'Q003', 'SHARING', 'Savner bagh', 'India', '2023-07-31 22:37:14', 'Itwari Station', 'England', '2023-07-31 22:37:14', '5', 'Dressing', 'Bathing', 'TRUE', '150', '450', '600', '60', '50', '610', 'NOTCONFIRMED', '2023-07-31 22:37:14', NULL, NULL);
- * ALTER TABLE `payment_records`
- * ADD `created_at` DATETIME AFTER `status`,
- * ADD `updated_at` DATETIME AFTER `created_at`,
- * ADD `deleted_at` DATETIME AFTER `updated_at`;
+ * 
+ * ALTER TABLE `payment_records` ADD `created_at` DATETIME NULL DEFAULT NULL AFTER `status`, ADD `deleted_at` DATETIME NULL DEFAULT NULL AFTER `created_at`, ADD `updated_at` DATETIME NULL DEFAULT NULL AFTER `deleted_at`;
 
  */
