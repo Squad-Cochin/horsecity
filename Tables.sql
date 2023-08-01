@@ -417,17 +417,24 @@ CREATE TABLE horse_details
 
 
 CREATE TABLE bookings (
-  id INT(11) NOT NULL,
+  id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
   customer_id INT(11) DEFAULT NULL,
+  FOREIGN KEY(customer_id) REFERENCES customers(id),
   inv_id INT(11) DEFAULT NULL,
+  FOREIGN KEY(inv_id) REFERENCES invoices(id),
   invoice_prefix_id VARCHAR(15) NOT NULL,
   service_provider_id INT(11) DEFAULT NULL,
+  FOREIGN KEY(service_provider_id) REFERENCES service_providers(id),
   vehicle_id INT(11) DEFAULT NULL,
+    FOREIGN KEY(vehicle_id) REFERENCES vehicles(id),
   driver_id INT(11) DEFAULT NULL,
+    FOREIGN KEY(driver_id) REFERENCES drivers(id),
   status ENUM('PAID', 'PENDING', 'REFUND') DEFAULT NULL,
   taxation_id INT(11) DEFAULT NULL,
+      FOREIGN KEY(taxation_id) REFERENCES taxations(id),
   discount_type_id INT(11) DEFAULT NULL,
-  booking_status ENUM('CANCELLED', 'COMPLETED', 'BREAKOUT') DEFAULT NULL,
+    FOREIGN KEY(discount_type_id) REFERENCES discount_types(id),
+  booking_status ENUM('CONFIRM', 'COMPLETED', 'BREAKOUT') DEFAULT NULL,
   pickup_location VARCHAR(255) NOT NULL,
   pickup_country VARCHAR(30) NOT NULL,
   pickup_date DATETIME DEFAULT NULL,
@@ -471,12 +478,17 @@ CREATE TABLE invoices
     deleted_at DATETIME DEFAULT NULL   
 );
 CREATE TABLE payments (
-  id INT(11) NOT NULL,
+  id INT(11) PRIMARY KEY NOT NULL,
   customer_id INT(11) DEFAULT NULL,
-  service_provider_id INT(11) DEFAULT NULL,
+  FOREIGN KEY(customer_id) REFERENCES customers(id),
+  service_provider_id INT(11),
+  FOREIGN KEY(service_provider_id) REFERENCES service_providers(id),
   booking_id INT(11) DEFAULT NULL,
+  FOREIGN KEY(booking_id) REFERENCES bookings(id),
   invoice_id INT(11) DEFAULT NULL,
+  FOREIGN KEY(invoice_id) REFERENCES invoices(id), 
   payment_type_id INT(11) DEFAULT NULL,
+  FOREIGN KEY(payment_type_id) REFERENCES payment_types(id), 
   paid_amount DECIMAL(15,2) NOT NULL,
   status ENUM('PAID', 'PENDING', 'REFUND') DEFAULT NULL,
   created_at DATETIME DEFAULT NULL,
@@ -485,43 +497,52 @@ CREATE TABLE payments (
 );
 CREATE TABLE vehicles_breakouts
 (
-    id INT(11) NOT NULL,
+    id INT(11)  PRIMARY KEY NOT NULL AUTO_INCREMENT,
     booking_id INT(11) DEFAULT NULL,
+    FOREIGN KEY (booking_id) REFERENCES bookings(id),
     invoice_id INT(11) DEFAULT NULL,
+    FOREIGN KEY (invoice_id) REFERENCES invoices(id),
     service_provider_id INT(11) DEFAULT NULL,
+    FOREIGN KEY (service_provider_id) REFERENCES service_providers(id),
     vehicle_id INT(11) DEFAULT NULL,
+    FOREIGN KEY (vehicle_id) REFERENCES vehicles(id),
     driver_id INT(11) DEFAULT NULL,
+    FOREIGN KEY (driver_id) REFERENCES drivers(id),
     pickup_location VARCHAR(255) NOT NULL,
     drop_location VARCHAR(255) NOT NULL,
     created_at DATETIME DEFAULT NULL,
     updated_at DATETIME DEFAULT NULL,
-    deleted_at DATETIME DEFAULT NULL,
-    PRIMARY KEY (id)
+    deleted_at DATETIME DEFAULT NULL
 );
 
 
 CREATE TABLE reviews
 (
-    id INT(11) NOT NULL,
+    id INT(11)  PRIMARY KEY NOT NULL AUTO_INCREMENT,
     booking_id INT(11) DEFAULT NULL,
+    FOREIGN KEY (booking_id) REFERENCES bookings(id),
     vehicle_id INT(11) DEFAULT NULL,
+    FOREIGN KEY (vehicle_id) REFERENCES vehicles(id),
     vehicle_rating INT(2) DEFAULT NULL,
     vehicle_description VARCHAR(255) DEFAULT NULL,
     driver_id INT(11) DEFAULT NULL,
+    FOREIGN KEY (driver_id) REFERENCES drivers(id),
     driver_rating INT(2) DEFAULT NULL,
     driver_description VARCHAR(255) DEFAULT NULL,
     service_provider_id INT(11) DEFAULT NULL,
+    FOREIGN KEY (service_provider_id) REFERENCES service_providers(id),
     service_provider_rating INT(2) DEFAULT NULL,
     service_provider_description VARCHAR(255) DEFAULT NULL,
     created_at DATETIME DEFAULT NULL,
-    updated_at DATETIME DEFAULT NULL,
-    PRIMARY KEY (id)
+    updated_at DATETIME DEFAULT NULL
 );
 
 CREATE TABLE bookings_logs (
-  id INT(11) NOT NULL,
+  id INT(11)  PRIMARY KEY NOT NULL AUTO_INCREMENT,
   customer_id INT(11) DEFAULT NULL,
+  FOREIGN KEY(customer_id) REFERENCES customers(id),
   booking_id INT(11) DEFAULT NULL,
+  FOREIGN KEY (booking_id) REFERENCES bookings(id),
   booking_status ENUM('CONFIRM', 'PENDING', 'CANCELED', 'COMPLETED', 'ONGOING') DEFAULT NULL,
   created_at DATETIME DEFAULT NULL,
   updated_at DATETIME DEFAULT NULL,
@@ -530,11 +551,15 @@ CREATE TABLE bookings_logs (
 
 
 CREATE TABLE vehicles_transportation (
-  id INT(11) NOT NULL,
+  id INT(11)  PRIMARY KEY NOT NULL AUTO_INCREMENT,
   vehicle_id INT(11) DEFAULT NULL,
+  FOREIGN KEY (vehicle_id) REFERENCES vehicles(id),
   vehicle_owner_id INT(11) DEFAULT NULL,
+  FOREIGN KEY (vehicle_owner_id) REFERENCES service_providers(id),
   driver_id INT(11) DEFAULT NULL,
+  FOREIGN KEY (driver_id) REFERENCES drivers(id),
   booking_id INT(11) DEFAULT NULL,
+  FOREIGN KEY (booking_id) REFERENCES bookings(id),
   trip_type ENUM('PRIVATE', 'SHARING', 'GCC') DEFAULT NULL,
   pickup_location VARCHAR(255) NOT NULL,
   pickup_country VARCHAR(30) NOT NULL,

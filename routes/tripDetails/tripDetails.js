@@ -10,5 +10,5 @@ module.exports = function(app)
     /**For getting one trip details */
     app.post(`/${process.env.apiToken}/add/breakDownVehicles`, tripDetails.addBreakDowns);
 
-    app.post(`/${process.env.apiToken}/list/breakDownVehicles`, tripDetails.listBreakDowns);
+    app.get(`/${process.env.apiToken}/list/breakDownVehicles/:id`, tripDetails.listBreakDowns);
 }
