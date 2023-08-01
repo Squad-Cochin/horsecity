@@ -589,3 +589,54 @@ export async function startTrip(iId)
         return errObj;
     }
 }
+
+
+
+
+export async function getTripDeatails(pageNumber){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = {
+            "page" : pageNumber,
+            "limit" : pageLimit
+        }
+        console.log(reqObj)
+        const { data } = await axios.post(`${url.GET_TRIP_ALL_DATA_URL}`,reqObj);
+        console.log(data)
+        return(data)
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data": {
+                "totalCount": 0,
+                "vehicles": []
+            }
+        }
+        return errorObj.data
+    }
+}
+
+
+
+
+export async function getLIstBreakDownVehicles(bkId){
+    try {
+
+        const { data } = await axios.get(`${url.GET_VEHICLE_BREAKDOWN_ALL_DATA_URL}/${bkId}`);
+        console.log(data)
+        return(data)
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data": {
+                "totalCount": 0,
+                "vehicles": []
+            }
+        }
+        return errorObj.data
+    }
+}

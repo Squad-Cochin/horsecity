@@ -1,464 +1,554 @@
-import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
+import React, { useState, useEffect } from "react";
+import {
+  Button,
+  Card,
+  CardBody,
+  CardHeader,
+  Col,
+  Container,
+  Modal,
+  ModalBody,
+  ModalFooter,
+  Row,
+  ModalHeader,
+} from "reactstrap";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 // import SimpleBar from 'simplebar-react';
-import { Link } from 'react-router-dom';
-import List from 'list.js';
+import { Link } from "react-router-dom";
+import List from "list.js";
 // Import Flatepicker
 import Flatpickr from "react-flatpickr";
 
-// Import Images
-// import avatar1 from "../../assets/images/users/avatar-1.jpg";
-// import avatar2 from "../../assets/images/users/avatar-2.jpg";
-// import avatar3 from "../../assets/images/users/avatar-3.jpg";
-// import avatar4 from "../../assets/images/users/avatar-4.jpg";
-// import avatar5 from "../../assets/images/users/avatar-5.jpg";
+//Import Trip details
+import {
+  getTripDeatails,
+  getSPUserName,
+} from "../../helpers/ApiRoutes/getApiRoutes";
+//Import Trip details
+import {
+  getLIstBreakDownVehicles,
+  getSPVehiclesData,
+  getSPDriverData,
+} from "../../helpers/ApiRoutes/getApiRoutes";
 
-//Import Drivers
-import { getTripDeatails } from '../../helpers/ApiRoutes/authApiRoutes'
-
-import { updatTripData} from '../../helpers/ApiRoutes/editApiRoutes';
+import { updatTripData } from "../../helpers/ApiRoutes/editApiRoutes";
 import { useFormik } from "formik";
+import config from "../../config";
 const TripDeatails = () => {
+  const [modal_list, setmodal_list] = useState(false);
+  const [tripDatas, setTripDatas] = useState([]);
+  const [tripData, setTripData] = useState([]);
+  const [breakdown_list_modal, setBreakdown_list_modal] = useState(false);
+  const [breakdown_list_data, setBreakdown_list_data] = useState([]);
+  const [pageNumber, setPageNumber] = useState(1);
+  const [numberOfData, setNumberOfData] = useState(0);
+  const [serviceProviders, setServiceProviders] = useState([]);
+  const [sPVechiles, setSPVechiles] = useState([]);
+  const [sPDrivers, setSPDrivers] = useState([]);
+  const [trip_status, setTrip_status] = useState(false);
+  const pageLimit = config.pageLimit;
+  useEffect(() => {
+    getAllData(1);
+  }, []);
 
-    const [ modal_list, setmodal_list] = useState(false);
-    const [ tripDatas, setTripDatas] = useState([]);
-    const [ tripData, setTripData] = useState([])
-    function tog_list(productId) {
+  async function tog_list(productId) {
+    setTrip_status(false);
+    let serviceProviderData = await getSPUserName();
+    setServiceProviders(serviceProviderData.serviceProviders);
 
-        const data = tripDatas?.find((item)=>item?.id === productId)
-        setTripData([data]);
-        setmodal_list(!modal_list);
+    setmodal_list(!modal_list);
+  }
+  const initialValues = {
+    invoice_id: tripData[0]?.service_provider || "",
+    booking_id: tripData[0]?.vehicle_number || "",
+    service_provider_id: tripData[0]?.service_provider || "",
+    driver_id: tripData[0]?.vehicle_number || "",
+    vehicle_id: tripData[0]?.start_location || "",
+    pickup_location: tripData[0]?.end_location || "",
+  };
 
+  // Later in your code, when setting the initial state
+
+  const validation = useFormik({
+    // enableReinitialize : use this flag when initial values needs to be changed
+    enableReinitialize: true,
+    initialValues,
+    onSubmit: (values) => {
+      console.log(values);
+
+      //update previes one
+      console.log("update previues one ");
+      updatTripData(values);
+
+      setmodal_list(false);
+    },
+  });
+
+  const [modal_delete, setmodal_delete] = useState(false);
+  function tog_delete() {
+    setmodal_delete(!modal_delete);
+  }
+
+  async function breakdown_list(productId) {
+    let breakOut = await getLIstBreakDownVehicles(productId);
+    console.log("breakdowns", breakOut);
+    setBreakdown_list_data(breakOut.vehicles_breakouts);
+    setBreakdown_list_modal(!breakdown_list_modal);
+  }
+  // function for get data all customer data
+  async function getAllData(page) {
+    let Tripdetails = await getTripDeatails(page || 1);
+    console.log("Tripdetails", Tripdetails);
+    setTripDatas(Tripdetails?.tripDetails);
+    setPageNumber(page);
+    setNumberOfData(Tripdetails?.totalCount);
+  }
+  async function serviceProviderSelected(id) {
+    console.log("d",id);
+    const sPVechilesData = await getSPVehiclesData(id);
+    const sPDriverData = await getSPDriverData(id);
+    console.log("drivers",sPDriverData);
+    setSPDrivers(sPDriverData.drivers);
+    setSPVechiles(sPVechilesData.vehicles);
+  }
+   function tripStatusSelected(value) {
+    if(value === tripStatus.breakout){
+        setTrip_status(true)
+    }else if(value === tripStatus.compleated){
+      setTrip_status(false)
     }
-    const initialValues = {
-        service_provider:  tripData[0]?.service_provider || '',
-        vehicle_number: tripData[0]?.vehicle_number || '',
-        start_location:  tripData[0]?.start_location || '',
-        end_location:  tripData[0]?.end_location || '',
-        booking_date:  tripData[0]?.booking_date || '',
-        quotation_date:  tripData[0]?.quotation_date || '',
-        trip_date:  tripData[0]?.trip_date || '',
-        amount: tripData[0]?.amount || '',
-        payment_status:  tripData[0]?.payment_status || '',
-        trip_status :  tripData[0]?.trip_status || '',
-      };
-      
-      // Later in your code, when setting the initial state
-  
-      
-      
-    const validation = useFormik({
-        // enableReinitialize : use this flag when initial values needs to be changed
-        enableReinitialize: true,
-        initialValues,
-        onSubmit: (values) => {
-                console.log(values);
-        
-                    //update previes one
-                    console.log("update previues one ");
-                    updatTripData(values);
-           
-                    setmodal_list(false);
-                 
-                
-    
-        }
-      });
+ 
+  }
+  const tripStatus = {
+    breakout: "BREAKOUT",
+    compleated: "COMPLEATED",
+  };
+  return (
+    <React.Fragment>
+      <div className="page-content">
+        <Container fluid>
+          <Breadcrumbs title="Tables" breadcrumbItem="Trip details" />
 
-    const [modal_delete, setmodal_delete] = useState(false);
-    function tog_delete() {
-        setmodal_delete(!modal_delete);
-    }
-    useEffect(()=>{
-    // let TripDeatails = getTripDeatails();
-    setTripDatas(getTripDeatails)
-    },[])
-    useEffect(() => {
+          <Row>
+            <Col lg={12}>
+              <Card>
+                <CardHeader>
+                  <h4 className="card-title mb-0"> Edit & View</h4>
+                </CardHeader>
+                <CardBody>
+                  <div id="break-down-list">
+                    <div className="table-responsive table-card mt-3 mb-1">
+                      <table
+                        className="table align-middle table-nowrap"
+                        id="customerTable"
+                      >
+                        <thead className="table-light">
+                          <tr>
+                            <th className="index" data-sort="index">
+                              #
+                            </th>
+                            <th className="sort" data-sort="service-provider">
+                              Service Provider
+                            </th>
+                            <th className="sort" data-sort="driver-name">
+                              Driver name
+                            </th>
+                            <th className="sort" data-sort="vehicle-number">
+                              Vehicle Number
+                            </th>
+                            <th className="sort" data-sort="start-location">
+                              Start Location
+                            </th>
+                            <th className="sort" data-sort="start-date">
+                              Start Date
+                            </th>
+                            <th className="sort" data-sort="end-location">
+                              End Location
+                            </th>
+                            <th className="sort" data-sort="End-date">
+                              End Date
+                            </th>
+                            <th className="sort" data-sort="booking-date">
+                              Trip status
+                            </th>
+                            <th className="sort" data-sort="quotation-date">
+                              Actions
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="list form-check-all">
+                          {tripDatas?.map((item, index) => (
+                            <tr key={index}>
+                              <th scope="row">
+                                {index + 1 + (pageNumber - 1) * pageLimit}
+                              </th>
+                              <td className="service-provider">
+                                {item?.service_provider}
+                              </td>
+                              <td className="driver-name">
+                                {item?.driver_name}
+                              </td>
+                              <td className="vehicle-number">
+                                {item?.vehicle_number}
+                              </td>
+                              <td className="start-location">
+                                {item?.pickup_location}
+                              </td>
+                              <td className="start-date">
+                                {item?.trip_starting_date}
+                              </td>
+                              <td className="end-location">
+                                {item?.drop_location}
+                              </td>
+                              <td className="end-date">
+                                {item?.trip_ending_date}
+                              </td>
+                              <td className="amount">{item?.trip_status}</td>
+                              <td>
+                                <div className="d-flex gap-2">
+                                  <div className="edit">
+                                    <button
+                                      className="btn btn-sm btn-success edit-item-btn"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#showModal"
+                                      onClick={() =>
+                                        breakdown_list(item?.booking_id)
+                                      }
+                                    >
+                                      View
+                                    </button>
+                                  </div>
+                                  <div className="edit">
+                                    <button
+                                      className="btn btn-sm btn-success edit-item-btn"
+                                      data-bs-toggle="modal"
+                                      data-bs-target="#showModal"
+                                      onClick={() => tog_list(item.id)}
+                                    >
+                                      Edit
+                                    </button>
+                                  </div>
+                                </div>
+                              </td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                    <div className="d-flex justify-content-end">
+                      <div className="pagination-wrap hstack gap-2">
+                        {pageNumber > 1 ? (
+                          <Link
+                            className="page-item pagination-prev disabled"
+                            onClick={() => getAllData(pageNumber - 1)}
+                          >
+                            Previous
+                          </Link>
+                        ) : null}
+                        <ul className="pagination listjs-pagination mb-0"></ul>
+                        {numberOfData > pageLimit * pageNumber ? (
+                          <Link
+                            className="page-item pagination-next"
+                            onClick={() => getAllData(pageNumber + 1)}
+                          >
+                            Next
+                          </Link>
+                        ) : null}
+                      </div>
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
+            </Col>
+          </Row>
+        </Container>
+      </div>
 
-        // const attroptions = {
-        //     valueNames: [
-        //         'name',
-        //         'born',
-        //         {
-        //             data: ['id']
-        //         },
-        //         {
-        //             attr: 'src',
-        //             name: 'image'
-        //         },
-        //         {
-        //             attr: 'href',
-        //             name: 'link'
-        //         },
-        //         {
-        //             attr: 'data-timestamp',
-        //             name: 'timestamp'
-        //         }
-        //     ]
-        // };
-        // const attrList = new List('users', attroptions);
-        // attrList.add({
-        //     name: 'Leia',
-        //     born: '1954',
-        //     image: avatar5,
-        //     id: 5,
-        //     timestamp: '67893'
-        // });
+      <Modal
+        className="extra-width"
+        isOpen={breakdown_list_modal}
+        toggle={() => {
+          setBreakdown_list_modal(false);
+        }}
+        centered
+      >
+        <ModalHeader
+          className="bg-light p-3"
+          id="exampleModalLabel"
+          toggle={() => {
+            setBreakdown_list_modal(false);
+          }}
+        >
+          Break Down List
+        </ModalHeader>
+        <form className="tablelist-form">
+          <ModalBody>
+            <div className="tm_container">
+              <div className="tm_invoice_wrap">
+                <div className="tm_invoice tm_style1" id="tm_download_section">
+                  <div className="tm_invoice_in">
+                    <div className="table-responsive table-card mt-3 mb-1">
+                      <table
+                        className="table align-middle table-nowrap"
+                        id="Table"
+                      >
+                        <thead className="table-light">
+                          <tr>
+                            <th className="index" data-sort="index">
+                              #
+                            </th>
+                            <th className="sort" data-sort="customer_name">
+                              Service Provider
+                            </th>
+                            <th
+                              className="sort"
+                              data-sort="service_provider_name"
+                            >
+                              Driver Name
+                            </th>
+                            <th className="sort" data-sort="quotation_id">
+                              Vehicle Number
+                            </th>
+                            <th className="sort" data-sort="view_invoice">
+                              Pickup Location
+                            </th>
+                            <th className="sort" data-sort="send_email">
+                              Drop Location
+                            </th>
+                          </tr>
+                        </thead>
+                        <tbody className="list form-check-all">
+                          {breakdown_list_data?.map((item, index) => {
+                            return (
+                              <tr key={index}>
+                                <th key={index}>{index + 1}</th>
+                                <td className="customer_name">
+                                  {item?.service_provider}
+                                </td>
+                                <td className="service_provider_name">
+                                  {item?.driver_name}
+                                </td>
+                                <td className="quotation_id">
+                                  {item?.vehicle_number}
+                                </td>
+                                <td className="quotation_id">
+                                  {item?.pickup_location}
+                                </td>
+                                <td className="quotation_id">
+                                  {item?.drop_location}
+                                </td>
+                              </tr>
+                            );
+                          })}
+                          {/* Add more rows as needed */}
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </ModalBody>
 
-        // Existing List
-        const existOptionsList = {
-            valueNames: ['contact-name', 'contact-message']
-        };
+          <ModalFooter>
+            <div className="hstack gap-2 justify-content-end">
+              <button
+                type="button"
+                className="btn btn-light"
+                onClick={() => {
+                  setBreakdown_list_modal(false);
+                }}
+              >
+                Close
+              </button>
+              {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
+            </div>
+          </ModalFooter>
+        </form>
+      </Modal>
 
-        new List('contact-existing-list', existOptionsList);
-
-        // Fuzzy Search list
-        new List('fuzzysearch-list', {
-            valueNames: ['name']
-        });
-
-        // pagination list
-
-        new List('pagination-list', {
-            valueNames: ['pagi-list'],
-            page: 3,
-            pagination: true
-        });
-    });
-
-    return (
-        <React.Fragment>
-            <div className="page-content">
-                <Container fluid>
-                    <Breadcrumbs title="Tables" breadcrumbItem="Trip details" />
-
-                    <Row>
-                        <Col lg={12}>
-                            <Card>
-                                <CardHeader>
-                                    <h4 className="card-title mb-0">Add, Edit & Remove</h4>
-                                </CardHeader>
-
-                                <CardBody>
-                                    <div id="customerList">
-                                        {/* <Row className="g-4 mb-3">
-                                  
-                               
-                                        </Row> */}
-
-                                        <div className="table-responsive table-card mt-3 mb-1">
-                                        <table className="table align-middle table-nowrap" id="customerTable">
-                                            <thead className="table-light">
-                                                <tr>
-                                                <th className="index" data-sort="index">#</th>
-                                                <th className="sort" data-sort="service-provider">Service Provider</th>
-                                                <th className="sort" data-sort="vehicle-number">Vehicle Number</th>
-                                                <th className="sort" data-sort="start-location">Start Location</th>
-                                                {/* <th className="sort" data-sort="image">Image</th> */}
-                                                <th className="sort" data-sort="end-location">End Location</th>
-                                                <th className="sort" data-sort="booking-date">Booking Date</th>
-                                                <th className="sort" data-sort="quotation-date">Quotation Date</th>
-                                                <th className="sort" data-sort="trip-date">Trip Date</th>
-                                                {/* <th className="sort" data-sort="licence_img">Licence image</th> */}
-                                                <th className="sort" data-sort="amount">Amount</th>
-                                                <th className="sort" data-sort="payment-status">Payment Status</th>
-                                                <th className="sort" data-sort="trip-status">Trip Status</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody className="list form-check-all">
-                                                {tripDatas.map((item, index) => (
-                                                <tr key={index}>
-                                                      <td className="index">{index + 1}</td>
-                                                  
-                                                    <td className="service-provider">{item.service_provider}</td>
-                                                    <td className="vehicle-number">{item.vehicle_number}</td>
-                                                    <td className="start-location">{item.start_location}</td>
-                                                    {/* <td className="email">{item.profile_image}</td> */}
-                                                    <td className="end-location">{item.end_location}</td>
-                                                    <td className="booking-date">{item.booking_date}</td>
-                                                    <td className="quotation-date">{item.quotation_date}</td>
-                                                    <td className="trip-date">{item.trip_date}</td>
-                                                    {/* <td className="licence_IMG">{item.licence_img}</td> */}
-                                                    <td className="amount">{item.amount}</td>
-                                                    <td className="payment-status">
-                                                    <span className="badge badge-soft-success text-uppercase">{item.payment_status}</span>
-                                                    </td>
-                                                    <td className="trip-status">
-                                                    <span className="badge badge-soft-success text-uppercase">{item.trip_status}</span>
-                                                    </td>
-                                                    <td>
-                                                    <div className="d-flex gap-2">
-                                                        <div className="edit">
-                                                        <button
-                                                            className="btn btn-sm btn-success edit-item-btn"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#showModal"
-                                                            onClick={() => tog_list(item.id)}
-                                                        >
-                                                            Edit
-                                                        </button>
-                                                        </div>
-                                                        <div className="remove">
-                                                        <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">
-                                                            Remove
-                                                        </button>
-                                                        </div>
-                                                    </div>
-                                                    </td>
-                                                </tr>
-                                                ))}
-                                            </tbody>
-                                            </table>
-
-                                            <div className="noresult" style={{ display: "none" }}>
-                                                <div className="text-center">
-                                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                                        colors="primary:#121331,secondary:#08a88a" style={{ width: "75px", height: "75px" }}>
-                                                    </lord-icon>
-                                                    <h5 className="mt-2">Sorry! No Result Found</h5>
-                                                    <p className="text-muted mb-0">We've searched more than 150+ Orders We did not find any
-                                                        orders for you search.</p>
-                                                </div>
-                                            </div>
-                                        </div>
-
-                                        <div className="d-flex justify-content-end">
-                                            <div className="pagination-wrap hstack gap-2">
-                                                <Link className="page-item pagination-prev disabled" to="#">
-                                                    Previous
-                                                </Link>
-                                                <ul className="pagination listjs-pagination mb-0"></ul>
-                                                <Link className="page-item pagination-next" to="#">
-                                                    Next
-                                                </Link>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </CardBody>
-                            </Card>
-                        </Col>
-                    </Row>
-
-                    {/* <Row>
-                 <Col xl={4}>
-                            <Card>
-                           
-                                <CardBody>    
-                                    <div id="users">
-                                        <SimpleBar style={{ height: "242px" }} className="mx-n3">
-                                            <ListGroup className="list mb-0" flush>
-                                                <ListGroupItem data-id="1">
-                                              </ListGroupItem>
-                                            </ListGroup>
-                                        </SimpleBar>
-                                    </div>
-                                </CardBody>
-                            </Card>
-                        </Col>
-
-
-                       
-                    </Row> */}
-
-                
-                </Container>
+      {/* Edit Modal */}
+      <Modal
+        className="extra-width"
+        isOpen={modal_list}
+        toggle={() => {
+          tog_list();
+        }}
+        centered
+      >
+        <ModalHeader
+          className="bg-light p-3"
+          id="exampleModalLabel"
+          toggle={() => {
+            tog_list();
+          }}
+        >
+          {" "}
+          Edit Trip Deatails{" "}
+        </ModalHeader>
+        <form className="tablelist-form" onSubmit={validation.handleSubmit}>
+          <ModalBody>
+            <div className="mb-3">
+              {/* <label className="form-label"></label> */}
+              <div className="form-check">
+                <input
+                  type="radio"
+                  id="air_conditioner-yes"
+                  name="air_conditioner"
+                  className="form-check-input"
+                  value={tripStatus.compleated}
+                  // checked={validation.values.air_conditioner === 'YES'}
+                  onChange={(e) => {
+                    tripStatusSelected(e.target.value);
+                  }}
+                  required
+                />
+                <label
+                  htmlFor="air_conditioner-yes"
+                  className="form-check-label"
+                >
+                  COMPLETE
+                </label>
+              </div>
+              <div className="form-check">
+                <input
+                  type="radio"
+                  id="air_conditioner-no"
+                  name="air_conditioner"
+                  className="form-check-input"
+                  value={tripStatus.breakout}
+                  // checked={validation.values.air_conditioner === 'NO'}
+                  onChange={(e) => {
+                    tripStatusSelected(e.target.value);
+                  }}
+                  required
+                />
+                <label
+                  htmlFor="air_conditioner-no"
+                  className="form-check-label"
+                >
+                  BREAKDOWN
+                </label>
+              </div>
             </div>
 
-            {/* Add Modal */}
-            <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Edit Trip Deatails </ModalHeader>
-                <form className="tablelist-form"
-                onSubmit={validation.handleSubmit}>
-                    <ModalBody   >
-                      {/* Provider Name */}
-                        <div className="mb-3">
-                        <label htmlFor="providerName-field" className="form-label">Provider Name</label>
-                        <input
-                            type="text"
-                            name="service_provider"
-                            id="providerName-field"
-                            className="form-control"
-                            value={validation.values.service_provider || ""}
-                            onChange={validation.handleChange}
-                            placeholder="Enter Provider Name"
-                            required
-                        />
-                        </div>
+            {trip_status ? (
+                <div>
+                  {/* Service Provider */}
+                  <div className="mb-3">
+                    <label htmlFor="service_provider_id-field" className="form-label">
+                      Service Provider Name
+                    </label>
+                    <select
+                      data-trigger
+                      name="service_provider_id"
+                      id="service_provider_id-field"
+                      className="form-control"
+                      value={validation.values.service_provider_id || ""}
+                      onChange={(e) => {
+                        validation.handleChange(e);
+                        serviceProviderSelected(e.target.value);
+                      }}
+                      onBlur={validation.handleBlur}
+                      required
+                    >
+                      <option value="">Select Service Provider</option>
+                      {serviceProviders.map((item, index) => (
+                        <option key={index} value={item.id}>
+                          {item.user_name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-                        {/* Vehicle Number */}
-                        <div className="mb-3">
-                        <label htmlFor="vehicleNumber-field" className="form-label">Vehicle Number</label>
-                        <input
-                            type="text"
-                            name="vehicle_number"
-                            id="vehicleNumber-field"
-                            className="form-control"
-                            value={validation.values.vehicle_number || ""}
-                            onChange={validation.handleChange}
-                            placeholder="Enter Vehicle Number"
-                            required
-                        />
-                        </div>
+                  {/* Vehicle Number */}
+                  <div className="mb-3">
+                    <label htmlFor="vehicle_id-field" className="form-label">
+                      Vehicle Number
+                    </label>
+                    <select
+                      data-trigger
+                      name="vehicle_id"
+                      id="vehicle_id-field"
+                      className="form-control"
+                      value={validation.values.vehicle_id || ""}
+                      onChange={validation.handleChange}
+                      onBlur={validation.handleBlur}
+                      required
+                    >
+                      <option value="">Select Any Vehicle Number</option>
+                      {sPVechiles.map((item, index) => (
+                        <option key={index} value={item.id}>
+                          {item.vehicle_number}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                {/* Driver */}
+                <div className="mb-3">
+                    <label htmlFor="driver_id-field" className="form-label">
+                      Driver
+                    </label>
+                    <select
+                      data-trigger
+                      name="driver_id"
+                      id="driver_id-field"
+                      className="form-control"
+                      value={validation.values.driver_id || ""}
+                      onChange={validation.handleChange}
+                      onBlur={validation.handleBlur}
+                      required
+                    >
+                      <option value="">Select Any Driver</option>
+                      {sPDrivers?.map((item, index) => (
+                        <option key={index} value={item?.id}>
+                          {item?.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
 
-                        {/* Start Location */}
-                        <div className="mb-3">
-                        <label htmlFor="startLocation-field" className="form-label">Start Location</label>
-                        <input
-                            type="text"
-                            name="start_location"
-                            id="startLocation-field"
-                            className="form-control"
-                            value={validation.values.start_location || ""}
-                            onChange={validation.handleChange}
-                            placeholder="Enter Start Location"
-                            required
-                        />
-                        </div>
-
-                        {/* End Location */}
-                        <div className="mb-3">
-                        <label htmlFor="endLocation-field" className="form-label">End Location</label>
-                        <input
-                            type="text"
-                            name="end_location"
-                            id="endLocation-field"
-                            className="form-control"
-                            value={validation.values.end_location || ""}
-                            onChange={validation.handleChange}
-                            placeholder="Enter End Location"
-                            required
-                        />
-                        </div>
-                       {/* Booking Date */}
-                    <div className="mb-3">
-                    <label htmlFor="bookingDate-field" className="form-label">Booking Date</label>
-                    <Flatpickr
-                        className="form-control"
-                        id="bookingDate-field"
-                        name="booking_date"
-                        options={{
-                        dateFormat: "d M, Y"
-                        }}
-                        value={validation.values.booking_date || ""}
-                        onChange={validation.handleChange}
-                        placeholder="Select Date"
-                        required
+                  {/* Start Location */}
+                  <div className="mb-3">
+                    <label htmlFor="startLocation-field" className="form-label">
+                      Start Location
+                    </label>
+                    <input
+                      type="text"
+                      name="start_location"
+                      id="startLocation-field"
+                      className="form-control"
+                      value={validation.values.start_location || ""}
+                      onChange={validation.handleChange}
+                      placeholder="Enter Start Location"
+                      required
                     />
-                    </div>
+                  </div>
 
-                        {/* Quotation Date */}
-                        <div className="mb-3">
-                        <label htmlFor="quotationDate-field" className="form-label">Quotation Date</label>
-                        <Flatpickr
-                        className="form-control"
-                        id="bookingDate-field"
-                        name="booking_date"
-                        options={{
-                        dateFormat: "d M, Y"
-                        }}
-                        value={validation.values.quotation_date || ""}
-                        onChange={validation.handleChange}
-                        placeholder="Select Date"
-                        required
-                    />
-                        </div>
-
-                        {/* Trip Date */}
-                        <div className="mb-3">
-                        <label htmlFor="tripDate-field" className="form-label">Trip Date</label>
-                        <Flatpickr
-                        className="form-control"
-                        id="tripDate-field"
-                        name="booking_date"
-                        options={{
-                        dateFormat: "d M, Y"
-                        }}
-                        value={validation.values.trip_date || ""}
-                            onChange={validation.handleChange}
-                        placeholder="Select Date"
-                        required
-                    />
-                        </div>
-
-                        {/* Amount */}
-                        <div className="mb-3">
-                        <label htmlFor="amount-field" className="form-label">Amount</label>
-                        <input
-                            type="text"
-                            name="amount"
-                            id="amount-field"
-                            className="form-control"
-                            value={validation.values.amount || ""}
-                            onChange={validation.handleChange}
-                            placeholder="Enter Amount"
-                            required
-                        />
-                        </div>
-
-                        {/* Payment Status */}
-                        <div className="mb-3">
-                        <label htmlFor="paymentStatus-field" className="form-label">Payment Status</label>
-                        <input
-                            type="text"
-                            name="payment_status"
-                            id="paymentStatus-field"
-                            className="form-control"
-                            value={validation.values.payment_status || ""}
-                            onChange={validation.handleChange}
-                            placeholder="Enter Payment Status"
-                            required
-                        />
-                        </div>
-
-                        {/* Trip Status */}
-                        <div className="mb-3">
-                        <label htmlFor="tripStatus-field" className="form-label">Trip Status</label>
-                        <input
-                            type="text"
-                            name="trip_status"
-                            id="tripStatus-field"
-                            className="form-control"
-                            value={validation.values.trip_status || ""}
-                            onChange={validation.handleChange}
-                            placeholder="Enter Trip Status"
-                            required
-                        />
-                        </div>
-
-                    </ModalBody>
-                    <ModalFooter>
-                        <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() => setmodal_list(false)}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">Update Trip Deatails</button>
-                            {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
-                        </div>
-                    </ModalFooter>
-                </form>
-            </Modal>
-
-            {/* Remove Modal */}
-            <Modal isOpen={modal_delete} toggle={() => { tog_delete(); }} className="modal fade zoomIn" id="deleteRecordModal" centered >
-                <div className="modal-header">
-                    <Button type="button" onClick={() => setmodal_delete(false)} className="btn-close" aria-label="Close"> </Button>
                 </div>
-                <ModalBody>
-                    <div className="mt-2 text-center">
-                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
-                            colors="primary:#f7b84b,secondary:#f06548" style={{ width: "100px", height: "100px" }}></lord-icon>
-                        <div className="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                            <h4>Are you Sure ?</h4>
-                            <p className="text-muted mx-4 mb-0">Are you Sure You want to Remove this Record ?</p>
-                        </div>
-                    </div>
-                    <div className="d-flex gap-2 justify-content-center mt-4 mb-2">
-                        <button type="button" className="btn w-sm btn-light" onClick={() => setmodal_delete(false)}>Close</button>
-                        <button type="button" className="btn w-sm btn-danger " id="delete-record">Yes, Delete It!</button>
-                    </div>
-                </ModalBody>
-            </Modal>
-        </React.Fragment>
-    );
+              ) : null}
+
+        
+          </ModalBody>
+          <ModalFooter>
+            <div className="hstack gap-2 justify-content-end">
+              <button
+                type="button"
+                className="btn btn-light"
+                onClick={() => setmodal_list(false)}
+              >
+                Close
+              </button>
+              <button type="submit" className="btn btn-success" id="add-btn">
+                Update Trip Deatails
+              </button>
+              {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
+            </div>
+          </ModalFooter>
+        </form>
+      </Modal>
+    </React.Fragment>
+  );
 };
 
 export default TripDeatails;
