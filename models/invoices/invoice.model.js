@@ -415,7 +415,7 @@ module.exports = class invoices
     {
         try
         {
-            console.log(req.body);
+            // console.log(req.body);
             return await new Promise(async(resolve, reject)=>
             {
                 const emailSent = await SendEmail(to, body, subject);
@@ -447,6 +447,7 @@ module.exports = class invoices
                 let selQuery = `SELECT i.id, i.invoice_no, t.subject, c.email
                 FROM customers c, invoices i, quotations q, templates t
                 WHERE i.id = ${Id} AND t.name = 'Invoice email sent' AND c.id = q.customer_id AND q.id = i.quot_id`;
+                console.log(selQuery)
                 con.query(selQuery,(err, result) =>
                 {
                     // console.log(`Email details: `, result);
@@ -478,10 +479,11 @@ module.exports = class invoices
             return await new Promise(async(resolve, reject)=>
             {
                 let data = await commonfetching.dataOnCondition(constants.tableName.invoices, Id, 'id')
-                // console.log(`Data at the booking got start button from the invoice table: `, data);
+                console.log(`Data at the booking got start button from the invoice table: `, data);
 
                 let data3 = await commonfetching.dataOnCondition(constants.tableName.bookings, data[0].invoice_no, 'invoice_prefix_id')
                 console.log('Data 3: ', data3);
+                
                 if(data3.length != 0)
                 {
                     console.log(`Duplicate invoice number. Cannot enter`);
@@ -495,7 +497,7 @@ module.exports = class invoices
                     const insQuery = `INSERT INTO bookings(customer_id, inv_id, invoice_prefix_id, service_provider_id, vehicle_id, driver_id, taxation_id, discount_type_id, status, booking_status, pickup_location, pickup_country, pickup_date, drop_location, drop_country, drop_date, confirmation_sent, sub_total, tax_amount, discount_amount, final_amount, created_at) VALUES(${data2[0].customer_id}, ${data[0].id}, '${data[0].invoice_no}', ${data[0].service_provider_id}, ${data[0].vehicle_id}, ${data[0].driver_id}, ${data2[0].taxation_id}, ${data2[0].discount_type_id}, 'PENDING', 'CONFIRMED', '${data[0].pickup_point}', '${data2[0].pickup_country}', '${time.changeDateToSQLFormat(data2[0].pickup_date)}', '${data[0].drop_point}', '${data2[0].drop_country}', '${time.changeDateToSQLFormat(data2[0].drop_date)}', 'YES',  ${data[0].sub_total},  ${data[0].tax_amount},  ${data[0].discount_amount},  ${data[0].final_amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                     con.query(insQuery, (err, result) =>
                     {
-                        console.log(`Insert result of the booking : `, result);
+                        // console.log(`Insert result of the booking : `, result);
                         if(result === 'undefined')
                         {
                             resolve('NotEntered')
@@ -505,6 +507,7 @@ module.exports = class invoices
                         {
                             resolve('err')
                         }
+
                         if(result.affectedRows > 0)
                         {
                             resolve('Entered')
