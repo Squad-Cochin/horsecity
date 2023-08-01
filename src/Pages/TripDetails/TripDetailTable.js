@@ -66,9 +66,12 @@ const TripDeatails = () => {
     invoice_id: invoice_id,
     booking_id:  booking_id,
     trip_status : store_trip_status,
-    service_provider_id:  "",
-    driver_id: "",
-    vehicle_id:  "",
+    service_provider_id: trip_list_data[0]?.service_provider_id,
+    service_provider: trip_list_data[0]?.service_provider || "",
+    driver_name:trip_list_data[0]?.driver_name || "",
+    driver_id:trip_list_data[0]?.driver_id ,
+    vehicle_number: trip_list_data[0]?.vehicle_number || "",
+    vehicle_id: trip_list_data[0]?.vehicle_id ,
     pickup_location:  "",
   };
 
@@ -116,9 +119,13 @@ const TripDeatails = () => {
     setBreakdown_list_modal(!breakdown_list_modal);
   }
   async function tog_list(bkId ,invId) {
+    setTrip_list_data([]);
     setBooking_id(bkId);
     setInvoice_id(invId);
     setTrip_status(false);
+    let filterTrpDetailsData = tripDatas.filter((item)=> item.booking_id  == bkId)
+    console.log("gtyuy",filterTrpDetailsData[0].service_provider);
+    setTrip_list_data(filterTrpDetailsData);
     let serviceProviderData = await getSPUserName();
     setServiceProviders(serviceProviderData.serviceProviders);
     
@@ -183,17 +190,17 @@ const TripDeatails = () => {
                             <th className="sort" data-sort="service-provider">
                               Service Provider
                             </th>
-                            <th className="sort" data-sort="start-location">
+                            {/* <th className="sort" data-sort="start-location">
                               Start Location
-                            </th>
+                            </th> */}
                             <th className="sort" data-sort="start-date">
-                              Start Date
+                              Started At
                             </th>
-                            <th className="sort" data-sort="end-location">
+                            {/* <th className="sort" data-sort="end-location">
                               End Location
-                            </th>
+                            </th> */}
                             <th className="sort" data-sort="End-date">
-                              End Date
+                              Ended At
                             </th>
                             <th className="sort" data-sort="booking-date">
                               Trip status
@@ -215,17 +222,17 @@ const TripDeatails = () => {
                               <td className="service-provider">
                                 {item?.service_provider}
                               </td>
-                              <td className="start-location">
+                              {/* <td className="start-location">
                                 {item?.pickup_location}
-                              </td>
+                              </td> */}
                               <td className="start-date">
-                                {item?.trip_starting_date}
+                                {item?.trip_starting_date} {item?.pickup_time}
                               </td>
-                              <td className="end-location">
+                              {/* <td className="end-location">
                                 {item?.drop_location}
-                              </td>
+                              </td> */}
                               <td className="end-date">
-                                {item?.trip_ending_date}
+                                {item?.trip_ending_date} {item?.drop_time}
                               </td>
                               <td className="amount">{item?.trip_status}</td>
                               <td>
@@ -481,7 +488,7 @@ const TripDeatails = () => {
                       onBlur={validation.handleBlur}
                       required
                     >
-                      <option value="">Select Service Provider</option>
+                      <option value={validation.values.service_provider_id || ""}>{validation.values.service_provider}</option>
                       {serviceProviders.map((item, index) => (
                         <option key={index} value={item.id}>
                           {item.user_name}
@@ -505,7 +512,7 @@ const TripDeatails = () => {
                       onBlur={validation.handleBlur}
                       required
                     >
-                      <option value="">Select Any Vehicle Number</option>
+                      <option value={validation.values.vehicle_id || ""}>{validation.values.vehicle_number}</option>
                       {sPVechiles.map((item, index) => (
                         <option key={index} value={item.id}>
                           {item.vehicle_number}
@@ -528,7 +535,7 @@ const TripDeatails = () => {
                       onBlur={validation.handleBlur}
                       required
                     >
-                      <option value="">Select Any Driver</option>
+                      <option    value={validation.values.driver_id || ""}>{validation.values.driver_name}</option>
                       {sPDrivers?.map((item, index) => (
                         <option key={index} value={item?.id}>
                           {item?.name}
