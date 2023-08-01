@@ -42,7 +42,7 @@ module.exports = function (app)
 
     app.post(`/${process.env.apiToken}/send/email/:id`,
     isValidIdInTheParams(constants.tableName.invoices),
-    checkInput.checkEmailBody,
+    // checkInput.checkEmailBody,
     invoiceController.sendEmailAtInvoice);
 
 

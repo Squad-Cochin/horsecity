@@ -437,7 +437,7 @@ CREATE TABLE invoices
     tax_amount DECIMAL(15,2) NOT NULL,
     discount_amount DECIMAL(15,2) NOT NULL, 
     final_amount DECIMAL(15,2) NOT NULL,
-    status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
+    status ENUM ('ACTIVE', 'INACTIVE', 'STARTED') DEFAULT 'ACTIVE',
     created_at DATETIME ,
     updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL   
