@@ -46,7 +46,7 @@ module.exports =
     vehicles_breakouts_status :
     {
         break_out  : 'BREAKOUT',
-        compleated : 'COMPLEATED'
+        compleated : 'COMPLETED'
     },
     password :
     { 

@@ -33,6 +33,14 @@ exports.addBreakDowns = async(req,res)=>
         message: constants.responseMessage.insert,
   
     });
+   }else{
+    return res.status(200).send
+    ({
+        code: 400,
+        success: false,
+        message: constants.responseMessage.errorInsert,
+  
+    });
    }
 }
 
@@ -48,6 +56,15 @@ exports.listBreakDowns = async(req,res)=>
         code: 200,
         success: true,
         message: constants.responseMessage.getAll,
+        data  : getAllBreakDowns
+  
+    });
+   }else{
+    return res.status(200).send
+    ({
+        code: 400,
+        success: false,
+        message: 'No data found',
         data  : getAllBreakDowns
   
     });

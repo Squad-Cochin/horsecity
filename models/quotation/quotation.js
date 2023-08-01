@@ -36,11 +36,11 @@ exports.addNewQuotaion = (requestBody, pickup_date, drop_date) => {
                                 if (data.length != 0) {
                                     let tax_id = data[0].tax_id
 
-                                    const { customer_id, enquiry_id, driver_id, vehicle_id, service_provider_id, discount_type_id, trip_type, pickup_location, pickup_country, drop_location, drop_country, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage, driver_amount, vehicle_amount, current_amount, tax_amount, discount_amount, final_amount } = requestBody;
+                                    const { customer_id, enquiry_id, driver_id, vehicle_id, service_provider_id, discount_type_id, trip_type, pickup_location, pickup_country, drop_location, drop_country, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage,pickup_time,drop_time, driver_amount, vehicle_amount, current_amount, tax_amount, discount_amount, final_amount } = requestBody;
 
 
-                                    let insQuery = `INSERT INTO quotations (customer_id,quotation_id, enquiry_id, driver_id, vehicle_id, serviceprovider_id, taxation_id, discount_type_id, trip_type, pickup_location, pickup_country, pickup_date, drop_location, drop_country, drop_date, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage,driver_amount,vehicle_amount,sub_total, tax_amount, discount_amount, final_amount,created_at)
-                                                    VALUES ('${customer_id}', '${sum_quotId}', '${enquiry_id}', '${driver_id}', '${vehicle_id}', '${service_provider_id}', '${tax_id}', '${discount_type_id}', '${trip_type}', '${pickup_location}', '${pickup_country}','${pickup_date}', '${drop_location}','${drop_country}', '${drop_date}','${no_of_horse}','${special_requirement}', '${additional_service}','${transportation_insurance_coverage}','${driver_amount}','${vehicle_amount}','${current_amount}', '${tax_amount}','${discount_amount}','${final_amount}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                                    let insQuery = `INSERT INTO quotations (customer_id,quotation_id, enquiry_id, driver_id, vehicle_id, serviceprovider_id, taxation_id, discount_type_id, trip_type, pickup_location, pickup_country, pickup_date,pickup_time, drop_location, drop_country, drop_date,drop_time, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage,driver_amount,vehicle_amount,sub_total, tax_amount, discount_amount, final_amount,created_at)
+                                                    VALUES ('${customer_id}', '${sum_quotId}', '${enquiry_id}', '${driver_id}', '${vehicle_id}', '${service_provider_id}', '${tax_id}', '${discount_type_id}', '${trip_type}', '${pickup_location}', '${pickup_country}','${pickup_date}','${pickup_time}', '${drop_location}','${drop_country}', '${drop_date}','${drop_time}','${no_of_horse}','${special_requirement}', '${additional_service}','${transportation_insurance_coverage}','${driver_amount}','${vehicle_amount}','${current_amount}', '${tax_amount}','${discount_amount}','${final_amount}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
 
                                     con.query(insQuery, async (err, data) => {
                                         console.log("insert", err);
@@ -96,7 +96,7 @@ exports.ListQuotation = (requestBody) => {
 
 
             /**For listing quotation details */
-            let selQuery = `SELECT quo.id, quo.quotation_id, quo.enquiry_id, cu.name AS customer_name, cu.email AS customer_email, quo.status
+            let selQuery = `SELECT quo.id, quo.quotation_id, quo.enquiry_id,quo.pickup_time,quo.drop_time, cu.name AS customer_name, cu.email AS customer_email, quo.status
                     FROM ${constants.tableName.quotations} quo
                     JOIN ${constants.tableName.customers} cu ON quo.customer_id = cu.id
                     WHERE quo.deleted_at IS NULL
@@ -152,9 +152,11 @@ exports.getOneQuotation = (quotId) => {
             quo.pickup_country,
             quo.pickup_location,
             quo.pickup_date,
+            quo.pickup_time,
             quo.drop_country,
             quo.drop_location,
             quo.drop_date,
+            quo.drop_time,
             quo.no_of_horse,
             quo.special_requirement,
             quo.additional_service,
@@ -235,7 +237,7 @@ exports.updateQuotation = (requestBody, pickup_date, drop_date, quotId) => {
                 if (tax.length != 0) {
                     let tax_id = tax[0].tax_id
 
-                    const { customer_id, enquiry_id, driver_id, vehicle_id, service_provider_id, discount_type_id, trip_type, pickup_location, pickup_country, drop_location, drop_country, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage, driver_amount, vehicle_amount, current_amount, tax_amount, discount_amount, final_amount } = requestBody;
+                    const { customer_id, enquiry_id, driver_id, vehicle_id, service_provider_id, discount_type_id, trip_type, pickup_location, pickup_country,pickup_time, drop_location, drop_country,drop_time, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage, driver_amount, vehicle_amount, current_amount, tax_amount, discount_amount, final_amount } = requestBody;
                         console.log(customer_id);
                     /**** Taking last added quotation id  */
                     let selQuery = `SELECT id FROM ${constants.tableName.quotations}  WHERE quotation_id = '${quotId}' ORDER BY id DESC LIMIT 1`
@@ -246,8 +248,8 @@ exports.updateQuotation = (requestBody, pickup_date, drop_date, quotId) => {
                             time.changeDateToSQLFormat(drop_date)
                             console.log("id", idd, id);
                             /**inserting new quotation same quotation id  */
-                            let insQuery = `INSERT INTO quotations (customer_id,quotation_id, enquiry_id, driver_id, vehicle_id, serviceprovider_id, taxation_id, discount_type_id, trip_type, pickup_location, pickup_country, pickup_date, drop_location, drop_country, drop_date, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage,driver_amount,vehicle_amount,sub_total, tax_amount, discount_amount, final_amount,created_at)
-                                   VALUES ('${customer_id}', '${quotId}', '${enquiry_id}', '${driver_id}', '${vehicle_id}', '${service_provider_id}', '${tax_id}', '${discount_type_id}', '${trip_type}', '${pickup_location}', '${pickup_country}','${pickup_date}', '${drop_location}','${drop_country}', '${drop_date}','${no_of_horse}','${special_requirement}', '${additional_service}','${transportation_insurance_coverage}','${driver_amount}','${vehicle_amount}','${current_amount}', '${tax_amount}','${discount_amount}','${final_amount}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                            let insQuery = `INSERT INTO quotations (customer_id,quotation_id, enquiry_id, driver_id, vehicle_id, serviceprovider_id, taxation_id, discount_type_id, trip_type, pickup_location, pickup_country, pickup_date,pickup_time, drop_location, drop_country, drop_date,drop_time, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage,driver_amount,vehicle_amount,sub_total, tax_amount, discount_amount, final_amount,created_at)
+                                   VALUES ('${customer_id}', '${quotId}', '${enquiry_id}', '${driver_id}', '${vehicle_id}', '${service_provider_id}', '${tax_id}', '${discount_type_id}', '${trip_type}', '${pickup_location}', '${pickup_country}','${pickup_date}','${pickup_time}', '${drop_location}','${drop_country}', '${drop_date}','${drop_time}','${no_of_horse}','${special_requirement}', '${additional_service}','${transportation_insurance_coverage}','${driver_amount}','${vehicle_amount}','${current_amount}', '${tax_amount}','${discount_amount}','${final_amount}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
 
                             con.query(insQuery, async (err, result) => {
                                 console.log("insert", err);
@@ -419,9 +421,11 @@ exports.updateStatusQuotation = (quotId) => {
                         quo.pickup_country,
                         quo.pickup_location,
                         quo.pickup_date,
+                        quo.pickup_time,
                         quo.drop_country,
                         quo.drop_location,
                         quo.drop_date,
+                        quo.drop_time,
                         quo.no_of_horse,
                         quo.special_requirement,
                         quo.additional_service,
@@ -456,8 +460,10 @@ exports.updateStatusQuotation = (quotId) => {
                                 trip_type,
                                 pickup_country,
                                 pickup_location,
+                                pickup_time,
                                 drop_country,
                                 drop_location,
+                                drop_time,
                                 no_of_horse,
                                 special_requirement,
                                 additional_service,
