@@ -577,8 +577,27 @@ export async function startTrip(iId)
     try
     {
         console.log(`Invoice Id:`, iId);
-        const { data } = await axios.get(`${url.GET_START_TRIP}/${iId}`);
+        const data = await axios.get(`${url.GET_START_TRIP}/${iId}`);
         console.log("Booking started: ", data);
+        return (data);
+    } catch (error) {
+        console.error("Error occurred:", error);
+        let errObj = {
+            code: error.response ? error.response.status : 500,
+            error: error.message || "Failed!",
+        };
+        return errObj;
+    }
+}
+
+
+export async function geBookingDataOnInvoiceId(iId)
+{
+    try
+    {
+        console.log(`Invoice Id:`, iId);
+        const data = await axios.get(`${url.GET_BOOKING_DATA_FROM_INVOICE_ID}/${iId}`);
+        console.log("Booking data on invoice id: ", data);
         return (data);
     } catch (error) {
         console.error("Error occurred:", error);

@@ -11,7 +11,7 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
  * The below one is Shaheer's Computer Details
  */
 // export const API_BASE_URL = "http://192.168.200.211:8000";
-const apiBaseUrl = "http://192.168.200.211:8000";
+// const apiBaseUrl = "http://192.168.200.211:8000";
 
 /**
  * The below one is Saurabh's Computer Details
@@ -22,7 +22,7 @@ const apiBaseUrl = "http://192.168.200.211:8000";
  * The below one is own Computer Details
  */
 
-// const apiBaseUrl = "http://localhost:8000";
+const apiBaseUrl = "http://localhost:8000";
 export const API_BASE_URL = "http://localhost:8000";
 
 const token = "/horsecity661809"
@@ -85,7 +85,7 @@ export const GET_SEND_EMAIL_BUTTON_DATA_OF_INVOICE = apiBaseUrl + token + `/emai
 export const POST_SENT_INVOICE_ON_EMAIL = apiBaseUrl + token + `/send/email`
 export const POST_ADD_AMOUNT_URL = apiBaseUrl + token + `/add/amount`
 export const GET_START_TRIP = apiBaseUrl + token + `/booking/started`
-
+export const GET_BOOKING_DATA_FROM_INVOICE_ID = apiBaseUrl + token + '/getInvoice/Data/From/Booking'
 
 /**DRIVERS */
 export const GET_DRIVERS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/drivers"
@@ -157,6 +157,7 @@ export const GET_DISCOUNTS_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/disco
 export const GET_TRIP_ALL_DATA_URL = apiBaseUrl + token + "/getAll/tripDetails"
 export const GET_VEHICLE_BREAKDOWN_ALL_DATA_URL = apiBaseUrl + token + "/list/breakDownVehicles"
 export const POST_VEHICLE_BREAKDOWN_DATA_URL = apiBaseUrl + token + "/add/breakDownVehicles"
+
 
 export const POST_FAKE_LOGIN = "/post-fake-login";
 export const POST_FAKE_JWT_LOGIN = "/post-jwt-login";
