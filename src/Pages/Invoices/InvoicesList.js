@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useRef  } from 'react';
-import { useFormik} from "formik";
-import ReactDOMServer from 'react-dom/server';
 import List from "list.js";
+import { useFormik} from "formik";
 import { Link } from 'react-router-dom';
 import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
@@ -16,33 +15,27 @@ import { addAmount, sendEmail } from '../../helpers/ApiRoutes/addApiRoutes';
  
 const InvoiceDetails = () =>
 {
-    const [ledger, setLedger] = useState([])
+    const [ledger, setLedger] = useState([]);
     const [ledg, setLedg] = useState([]);
     const [vehicles, setVehicles] = useState([]);
     const [paymentHistroy, setPaymentHistroy] = useState([]);
     const [sendEmailButtonData, setsendEmailButtonData] = useState([]);
     const [modal_list, setmodal_list] = useState(false);
     const [view_modal, setView_modal] = useState(false);
-    const [emailContent, setEmailContent] = useState('');
     const [modal, setModal] = useState(false);
     const [invoices, setInvoices] = useState([]);
     const [invoice, setInvoice] = useState([]);
     const [modalOpen, setModalOpen] = useState(false);
     const [pageNumber, setPageNumber] = useState(1);
     const [numberOfData, setNumberOfData] = useState(0);
-    const [errors, setErrors] = useState("")
+    const [errors, setErrors] = useState("");
     const [showEnterAmountModal, setShowEnterAmountModal] = useState(false);
     const [downloadingPDF, setDownloadingPDF] = useState(false);
-    const [recipientEmail, setRecipientEmail] = useState('');
-    const [modal_start, setmodal_start] = useState(false); // State variable to control delete modal visibility
     const [modalOpen2, setModalOpen2] = useState(false);
     const [startedTrips, setStartedTrips] = useState([]);
-
     const [selectedInvoiceData, setSelectedInvoiceData] = useState(null);
     const invoiceRef = useRef(null); // Reference to the invoice section for PDF generation
     const pageLimit = config.pageLimit;
- 
-
 
     useEffect(() => 
     {
@@ -75,7 +68,8 @@ const InvoiceDetails = () =>
                         recepientEmail: sendEmailButtonData[0]?.email,
                         invoiceSubject:`${sendEmailButtonData[0]?.subject} - ${sendEmailButtonData[0]?.invoice_no}`,
                         invoiceBody:sendEmailButtonData[0]?.template
-                      };  
+                      };
+                      
   const handleCloseModal = () => {
     setModalOpen(false);
   };
@@ -277,8 +271,7 @@ const InvoiceDetails = () =>
                                   <td className="customer_email">{item.customer_email}</td>
                                   <td className="view_invoice"> <button type="button" className="btn btn-success" id="add-btn" onClick={() => tog_view(item.id)}> View Invoice </button> </td>
                                   <td className="send_email"> <button type="button" className="btn btn-success" id="add-btn" onClick={() => handleOpenModal(item.id)}> Send Mail </button> </td>
-                                  <td className="start_booking"> <button onClick={() => handleStartTrip(item.id)}
-        disabled={!isTripActive(item.status) || isTripStarted(item.id)} className="btn btn-success" id="add-btn">Trip</button> </td>
+                                  <td className="start_booking"> <button onClick={() => handleStartTrip(item.id)} disabled={!isTripActive(item.status) || isTripStarted(item.id)} className="btn btn-success" id="add-btn">Trip</button> </td>
                                 </tr>
                               ))}
                             </tbody>
@@ -469,6 +462,7 @@ const InvoiceDetails = () =>
             </form>        
       </Modal>
       </Modal>
+      
       <Modal className="extra-width" isOpen={modalOpen} toggle={handleCloseModal} centered>
       <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={handleCloseModal}>Send Email</ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
