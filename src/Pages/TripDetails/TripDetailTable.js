@@ -35,12 +35,12 @@ import {
 import { updateTripStatus } from "../../helpers/ApiRoutes/addApiRoutes";
 import { useFormik } from "formik";
 import config from "../../config";
+import { filter } from "lodash";
 const TripDeatails = () => {
   const [modal_list, setmodal_list] = useState(false);
   const [tripDatas, setTripDatas] = useState([]);
-  const [tripData, setTripData] = useState([]);
   const [breakdown_list_modal, setBreakdown_list_modal] = useState(false);
-  const [breakdown_list_data, setBreakdown_list_data] = useState([]);
+  const [trip_list_data, setTrip_list_data] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [numberOfData, setNumberOfData] = useState(0);
   const [serviceProviders, setServiceProviders] = useState([]);
@@ -51,6 +51,7 @@ const TripDeatails = () => {
   const [booking_id, setBooking_id ] = useState("");
   const [invoice_id, setInvoice_id ] = useState("");
   const [modal_delete, setmodal_delete] = useState(false);
+  const [list_or_view, setListOrView ] = useState(false);
   const [ errors, setErrors ] = useState("")
   const pageLimit = config.pageLimit;
 
@@ -99,10 +100,19 @@ const TripDeatails = () => {
   }
 
   async function breakdown_list(productId) {
-    console.log("here");
+    setTrip_list_data([]);
     let breakOut = await getLIstBreakDownVehicles(productId);
+    console.log("here",breakOut);
+    if(breakOut.vehicles_breakouts.length != 0){
+      setTrip_list_data(breakOut.vehicles_breakouts);
+      setListOrView(true)
+    }else{
+      let filterTrpDetailsData = tripDatas.filter((item)=> item.booking_id  == productId)
+      setTrip_list_data(filterTrpDetailsData);
+      setListOrView(false)
+    }
 
-    setBreakdown_list_data(breakOut.vehicles_breakouts);
+    
     setBreakdown_list_modal(!breakdown_list_modal);
   }
   async function tog_list(bkId ,invId) {
@@ -111,13 +121,13 @@ const TripDeatails = () => {
     setTrip_status(false);
     let serviceProviderData = await getSPUserName();
     setServiceProviders(serviceProviderData.serviceProviders);
-
+    
     setmodal_list(!modal_list);
   }
   // function for get data all customer data
   async function getAllData(page) {
     let Tripdetails = await getTripDeatails(page || 1);
-    console.log("Tripdetails", Tripdetails);
+  
     setTripDatas(Tripdetails?.tripDetails);
     setPageNumber(page);
     setNumberOfData(Tripdetails?.totalCount);
@@ -228,7 +238,7 @@ const TripDeatails = () => {
                                   data-bs-toggle="modal"
                                   data-bs-target="#showModal"
                                   onClick={() => breakdown_list(item?.booking_id)}
-                                  //disabled={breakdown_list_data.length !== 0} // Typo: should be "disabled" instead of "disbled"
+                                  //disabled={trip_list_data.length !== 0} // Typo: should be "disabled" instead of "disbled"
                                 >
                                   View
                                 </button>
@@ -297,7 +307,7 @@ const TripDeatails = () => {
             setBreakdown_list_modal(false);
           }}
         >
-          Break Down List
+        {list_or_view ? 'Break Down List' : 'Trip Details'}  
         </ModalHeader>
         <form className="tablelist-form">
           <ModalBody>
@@ -337,7 +347,7 @@ const TripDeatails = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {breakdown_list_data?.map((item, index) => {
+                          {trip_list_data?.map((item, index) => {
                             return (
                               <tr key={index}>
                                 <th key={index}>{index + 1}</th>
