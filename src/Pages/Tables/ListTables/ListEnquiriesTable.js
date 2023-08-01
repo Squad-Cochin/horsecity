@@ -79,6 +79,8 @@ const ListEnquiriesTable = () => {
         additional_service : "",
         transportation_insurance_coverage : "",
         drop_date : "",
+        pickup_time : "",
+        drop_time : "",
         pickup_date : "",
         discount_type_id : "",
         driver_id : "",
@@ -714,6 +716,20 @@ const ListEnquiriesTable = () => {
                         </div>
 
                         <div className="mb-3">
+                            <label htmlFor="pickup_time-field" className="form-label">Pickup Time</label>
+                            <input
+                                type="time"
+                                name="pickup_time"
+                                id="pickup_time-field"
+                                className="form-control"
+                                value={validation.values.pickup_time || ""}
+                                onChange={validation.handleChange}
+                                required
+                            />
+                        </div>
+
+
+                        <div className="mb-3">
                             <label htmlFor="drop_date-field" className="form-label">Drop Date</label>
                             <Flatpickr
                                 className="form-control"
@@ -724,6 +740,19 @@ const ListEnquiriesTable = () => {
                                 value= ""
                                 onChange={(dates) =>validation.setFieldValue('drop_date', dates[0])}
                                 placeholder={validation.values.drop_date || "Select Date"}
+                            />
+                        </div>
+
+                        <div className="mb-3">
+                            <label htmlFor="drop_time-field" className="form-label">Drop Time</label>
+                            <input
+                                type="time"
+                                name="drop_time"
+                                id="drop_time-field"
+                                className="form-control"
+                                value={validation.values.drop_time || ""}
+                                onChange={validation.handleChange}
+                                required
                             />
                         </div>
 

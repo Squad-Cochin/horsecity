@@ -659,3 +659,123 @@ export async function getLIstBreakDownVehicles(bkId){
         return errorObj.data
     }
 }
+
+export async function getSeviceProviderData(pageNumber, val){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = val;
+        reqObj.page = pageNumber
+        reqObj.limit = pageLimit
+        console.log("reachapi",reqObj)
+        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
+        // console.log(data)
+        // return(data)
+    } catch (error) {
+        // let errorObj =  {
+        //     "code": 500,
+        //     "status": false,
+        //     "message": "Server error",
+        //     "data": {
+        //         "totalCount": 0,
+        //         "vehicles": []
+        //     }
+        // }
+        // return errorObj.data
+    }
+}
+
+export async function getCustomerData(pageNumber, val){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = val;
+        reqObj.page = pageNumber
+        reqObj.limit = pageLimit
+        console.log("reachapi",reqObj)
+        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
+        // console.log(data)
+        // return(data)
+    } catch (error) {
+        // let errorObj =  {
+        //     "code": 500,
+        //     "status": false,
+        //     "message": "Server error",
+        //     "data": {
+        //         "totalCount": 0,
+        //         "vehicles": []
+        //     }
+        // }
+        // return errorObj.data
+    }
+}
+
+export async function getDriverData(pageNumber, val){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = val;
+        reqObj.page = pageNumber
+        reqObj.limit = pageLimit
+        console.log("reachapi",reqObj)
+        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
+        // console.log(data)
+        // return(data)
+    } catch (error) {
+        // let errorObj =  {
+        //     "code": 500,
+        //     "status": false,
+        //     "message": "Server error",
+        //     "data": {
+        //         "totalCount": 0,
+        //         "vehicles": []
+        //     }
+        // }
+        // return errorObj.data
+    }
+}
+
+export async function getVehicleData(pageNumber, val){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = val;
+        reqObj.page = pageNumber
+        reqObj.limit = pageLimit
+        console.log("reachapi",reqObj)
+        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
+        // console.log(data)
+        // return(data)
+    } catch (error) {
+        // let errorObj =  {
+        //     "code": 500,
+        //     "status": false,
+        //     "message": "Server error",
+        //     "data": {
+        //         "totalCount": 0,
+        //         "vehicles": []
+        //     }
+        // }
+        // return errorObj.data
+    }
+}
+
+export async function getEnquiryData(pageNumber, val){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = val;
+        reqObj.page = pageNumber
+        reqObj.limit = pageLimit
+        console.log("reachapi",reqObj)
+        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
+        // console.log(data)
+        // return(data)
+    } catch (error) {
+        // let errorObj =  {
+        //     "code": 500,
+        //     "status": false,
+        //     "message": "Server error",
+        //     "data": {
+        //         "totalCount": 0,
+        //         "vehicles": []
+        //     }
+        // }
+        // return errorObj.data
+    }
+}

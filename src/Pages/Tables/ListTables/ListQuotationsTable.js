@@ -89,6 +89,8 @@ const ListQuotationsTable = () => {
     transportation_insurance_coverage : quotation ? quotation[0]?.transportation_insurance_coverage : "",
     drop_date : quotation ? quotation[0]?.drop_date : "",
     pickup_date : quotation ? quotation[0]?.pickup_date : "",
+    pickup_time : quotation ? quotation[0]?.pickup_time : "",
+    drop_time : quotation ? quotation[0]?.drop_time : "",
     discount_type_id : quotation ? quotation[0]?.discount_type_id : "",
     driver_id : quotation ? quotation[0]?.driver_id : "",
     final_amount : quotation ? quotation[0]?.final_amount : "",
@@ -833,6 +835,19 @@ const ListQuotationsTable = () => {
                 </div>
 
                 <div className="mb-3">
+                    <label htmlFor="pickup_time-field" className="form-label">Pickup Time</label>
+                    <input
+                        type="time"
+                        name="pickup_time"
+                        id="pickup_time-field"
+                        className="form-control"
+                        value={validation.values.pickup_time || ""}
+                        onChange={validation.handleChange}
+                        required
+                    />
+                </div>
+
+                <div className="mb-3">
                     <label htmlFor="drop_date-field" className="form-label">Drop Date</label>
                     <Flatpickr
                         className="form-control"
@@ -843,6 +858,19 @@ const ListQuotationsTable = () => {
                         value= ""
                         onChange={(dates) =>validation.setFieldValue('drop_date', dates[0])}
                         placeholder={validation.values.drop_date || "Select Date"}
+                    />
+                </div>
+
+                <div className="mb-3">
+                    <label htmlFor="drop_time-field" className="form-label">Drop Time</label>
+                    <input
+                        type="time"
+                        name="drop_time"
+                        id="drop_time-field"
+                        className="form-control"
+                        value={validation.values.drop_time || ""}
+                        onChange={validation.handleChange}
+                        required
                     />
                 </div>
 
@@ -1365,20 +1393,28 @@ const ListQuotationsTable = () => {
                               </div>
                               <div className="tm_card_item">
                                 <span className="tm_card_label">
+                                  Pickup Time:
+                                </span>
+                                <span className="tm_card_value">
+                                  {item?.pickup_time}
+                                </span>
+                              </div>
+                              <div className="tm_card_item">
+                                <span className="tm_card_label">
                                   Drop Location:
                                 </span>
                                 <span className="tm_card_value">
                                   {item?.drop_location}, {item?.drop_country}
                                 </span>
                               </div>
-                              {/* <div className="tm_card_item">
+                              <div className="tm_card_item">
                                 <span className="tm_card_label">
                                   Drop Time:
                                 </span>
                                 <span className="tm_card_value">
                                   {item?.drop_time}
                                 </span>
-                              </div> */}
+                              </div>
                               <div className="tm_card_item">
                                 <span className="tm_card_label">
                                   Drop Date:

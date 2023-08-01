@@ -26,6 +26,12 @@ import TripDeatails from "../Pages/TripDetails/TripDetailTable";
 
 //Import monthly reports
 import MonthlyReports  from "../Pages/Reports/ReportTable";
+import ServiceProviderReport  from "../Pages/Reports/ServiceProviderReport";
+import CustomerReport from "../Pages/Reports/CustomerReport";
+import DriverReport from "../Pages/Reports/DriversReport";
+import VehicleReport from "../Pages/Reports/VehiclesReport";
+
+
 
 //Import Accounts
 import Accounts  from "../Pages/Accounts/AccountsList";
@@ -156,7 +162,16 @@ const authProtectedRoutes = [
 
   //Monthly reports
   { path: "/monthly-reports", component: <MonthlyReports /> },
+  { path: "/serviceprovider-reports", component: <ServiceProviderReport /> },
+  { path: "/customer-reports", component: <CustomerReport /> },
+  { path: "/vehicle-reports", component: <VehicleReport /> },
+  { path: "/driver-reports", component: <DriverReport /> },
 
+
+
+
+
+  
   //Accounts
   { path: "/accounts", component: <Accounts /> },
   /**Image gallery */
