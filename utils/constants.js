@@ -106,7 +106,6 @@ module.exports =
                 upload : `${__dirname}../../Attachements/applicationSettings/settings/`,
                 view : `/applicationSettings/settings/`
             }
-            // settings : `/applicationSettings/settings/`
         }
     },
 
@@ -134,8 +133,7 @@ module.exports =
         vehicleImgSuccess : "Images fetched succesfully",
         imageFormat : 'Only PNG and JPG formats are allowed',
         particularVehicleImageSuccess : 'Particular vehicle image succesfully uploaded',
-        particularVehicleImageError : 'Error while uploading the particular vehicle image',
-        
+        particularVehicleImageError : 'Error while uploading the particular vehicle image',       
         
     },
 
