@@ -30,7 +30,10 @@ import ServiceProviderReport  from "../Pages/Reports/ServiceProviderReport";
 import CustomerReport from "../Pages/Reports/CustomerReport";
 import DriverReport from "../Pages/Reports/DriversReport";
 import VehicleReport from "../Pages/Reports/VehiclesReport";
-
+import EnquiryReport from "../Pages/Reports/EnquiriesReport";
+import QuotationReport from "../Pages/Reports/QuotationsReport";
+import TripDetailsReport from "../Pages/Reports/TripDetailsReport";
+import AccountsReport from "../Pages/Reports/AccountsReport";
 
 
 //Import Accounts
@@ -55,6 +58,7 @@ import Register from "../Pages/Authentication/Register";
 import UserProfile from "../Pages/Authentication/user-profile";
 import ListEnquiriesTable from "../Pages/Tables/ListTables/ListEnquiriesTable";
 import ListQuotationsTable from "../Pages/Tables/ListTables/ListQuotationsTable";
+import InvoiceReport from "../Pages/Reports/InvoiceReport";
 
 // Import Authentication Inner Pages
 // import Login1 from "../Pages/AuthenticationPages/Login";
@@ -161,15 +165,15 @@ const authProtectedRoutes = [
   { path: "/trip-deatails", component: <TripDeatails /> },
 
   //Monthly reports
-  { path: "/monthly-reports", component: <MonthlyReports /> },
   { path: "/serviceprovider-reports", component: <ServiceProviderReport /> },
   { path: "/customer-reports", component: <CustomerReport /> },
   { path: "/vehicle-reports", component: <VehicleReport /> },
   { path: "/driver-reports", component: <DriverReport /> },
-
-
-
-
+  { path: "/enquiry-reports", component: <EnquiryReport /> },
+  { path: "/quotation-reports", component: <QuotationReport /> },
+  { path: "/tripDetail-reports", component: <TripDetailsReport /> },
+  { path: "/account-reports", component: <AccountsReport /> },
+  { path: "/invoice-reports", component: <InvoiceReport /> },
 
   
   //Accounts

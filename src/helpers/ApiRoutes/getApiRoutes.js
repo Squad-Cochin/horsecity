@@ -10,7 +10,8 @@ import * as url from "../url_helper";
 import config from "../../config";
 // import { serviceProviders} from "../../CommonData/Data";
 
-  /** get service provider details */
+  /** get roughts */
+  
 export async function getSPAllData(pageNumber){
     try {
         let pageLimit = config.pageLimit;
@@ -311,7 +312,7 @@ export async function getInvoicesData(pageNumber)
         }
         return errorObj.data
     }
-};
+}
 
 export async function getDriversData(pageNumber){
     try {
@@ -404,7 +405,6 @@ export async function getSingleInvoiceData(iId){
     }
 }
 
-
 export async function getSPDriverData(dId){
     try {
         const { data } = await axios.get(`${url.GET_SP_DRIVER_DATA_URL}/${dId}`);
@@ -461,7 +461,6 @@ export async function getSingleInvoicePaymentHistroy(pId)
         return errorObj.data      
     }
 }
-
 
 export async function getLanguagesPageData(pageNumber){
     try {
@@ -571,7 +570,6 @@ export async function getSendEmailButtonData(iId)
     }
 }
 
-
 export async function startTrip(iId)
 {
     try
@@ -590,7 +588,6 @@ export async function startTrip(iId)
     }
 }
 
-
 export async function geBookingDataOnInvoiceId(iId)
 {
     try
@@ -608,9 +605,6 @@ export async function geBookingDataOnInvoiceId(iId)
         return errObj;
     }
 }
-
-
-
 
 export async function getTripDeatails(pageNumber){
     try {
@@ -637,9 +631,6 @@ export async function getTripDeatails(pageNumber){
     }
 }
 
-
-
-
 export async function getLIstBreakDownVehicles(bkId){
     try {
         console.log(bkId);
@@ -660,7 +651,7 @@ export async function getLIstBreakDownVehicles(bkId){
     }
 }
 
-export async function getSeviceProviderData(pageNumber, val){
+export async function getSeviceProviderReport(pageNumber, val){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = val;
@@ -684,7 +675,7 @@ export async function getSeviceProviderData(pageNumber, val){
     }
 }
 
-export async function getCustomerData(pageNumber, val){
+export async function getCustomerReport(pageNumber, val){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = val;
@@ -708,7 +699,7 @@ export async function getCustomerData(pageNumber, val){
     }
 }
 
-export async function getDriverData(pageNumber, val){
+export async function getDriverReport(pageNumber, val){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = val;
@@ -732,7 +723,7 @@ export async function getDriverData(pageNumber, val){
     }
 }
 
-export async function getVehicleData(pageNumber, val){
+export async function getVehicleReport(pageNumber, val){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = val;
@@ -756,7 +747,103 @@ export async function getVehicleData(pageNumber, val){
     }
 }
 
-export async function getEnquiryData(pageNumber, val){
+export async function getEnquiryReport(pageNumber, val){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = val;
+        reqObj.page = pageNumber
+        reqObj.limit = pageLimit
+        console.log("reachapi",reqObj)
+        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
+        // console.log(data)
+        // return(data)
+    } catch (error) {
+        // let errorObj =  {
+        //     "code": 500,
+        //     "status": false,
+        //     "message": "Server error",
+        //     "data": {
+        //         "totalCount": 0,
+        //         "vehicles": []
+        //     }
+        // }
+        // return errorObj.data
+    }
+}
+
+export async function getQuotationReport(pageNumber, val){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = val;
+        reqObj.page = pageNumber
+        reqObj.limit = pageLimit
+        console.log("reachapi",reqObj)
+        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
+        // console.log(data)
+        // return(data)
+    } catch (error) {
+        // let errorObj =  {
+        //     "code": 500,
+        //     "status": false,
+        //     "message": "Server error",
+        //     "data": {
+        //         "totalCount": 0,
+        //         "vehicles": []
+        //     }
+        // }
+        // return errorObj.data
+    }
+}
+
+export async function getTripDetailsReport(pageNumber, val){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = val;
+        reqObj.page = pageNumber
+        reqObj.limit = pageLimit
+        console.log("reachapi",reqObj)
+        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
+        // console.log(data)
+        // return(data)
+    } catch (error) {
+        // let errorObj =  {
+        //     "code": 500,
+        //     "status": false,
+        //     "message": "Server error",
+        //     "data": {
+        //         "totalCount": 0,
+        //         "vehicles": []
+        //     }
+        // }
+        // return errorObj.data
+    }
+}
+
+export async function getAccountsReport(pageNumber, val){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = val;
+        reqObj.page = pageNumber
+        reqObj.limit = pageLimit
+        console.log("reachapi",reqObj)
+        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
+        // console.log(data)
+        // return(data)
+    } catch (error) {
+        // let errorObj =  {
+        //     "code": 500,
+        //     "status": false,
+        //     "message": "Server error",
+        //     "data": {
+        //         "totalCount": 0,
+        //         "vehicles": []
+        //     }
+        // }
+        // return errorObj.data
+    }
+}
+
+export async function getInvoiceReport(pageNumber, val){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = val;

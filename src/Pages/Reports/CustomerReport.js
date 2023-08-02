@@ -9,7 +9,7 @@ import Flatpickr from "react-flatpickr";
 /**Using for form validation */
 import { useFormik } from "formik";
 
-import { getCustomerData } from '../../helpers/ApiRoutes/getApiRoutes';
+import { getCustomerReport } from '../../helpers/ApiRoutes/getApiRoutes';
 import config from '../../config';
 
 //Import reports
@@ -49,7 +49,7 @@ const CustomerReport  = () => {
     async function getData(page, val){
         setSearchDate(val)
         console.log("val",val)
-        // let getAllData = await getCustomerData(page || 1, val)
+        // let getAllData = await getCustomerReport(page || 1, val)
         // setCustomerReport(getAllData?.customers);
         // setPageNumber(page);
         // setNumberOfData(getAllData?.totalCount);

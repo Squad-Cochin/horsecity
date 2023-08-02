@@ -9,7 +9,7 @@ import Flatpickr from "react-flatpickr";
 /**Using for form validation */
 import { useFormik } from "formik";
 
-import { getVehicleData } from '../../helpers/ApiRoutes/getApiRoutes';
+import { getVehicleReport } from '../../helpers/ApiRoutes/getApiRoutes';
 import config from '../../config';
 
 //Import reports
@@ -49,7 +49,7 @@ const VehicleReport  = () => {
     async function getData(page, val){
         setSearchDate(val)
         console.log("val",val)
-        // let getAllData = await getVehicleData(page || 1, val)
+        // let getAllData = await getVehicleReport(page || 1, val)
         // setVehicleReport(getAllData?.vehicles);
         // setPageNumber(page);
         // setNumberOfData(getAllData?.totalCount);
@@ -59,7 +59,7 @@ const VehicleReport  = () => {
         <React.Fragment>
             <div className="page-content">
                 <Container fluid>
-                    <Breadcrumbs title="Tables" breadcrumbItem="Driver Reports" />
+                    <Breadcrumbs title="Tables" breadcrumbItem="Vehicles Reports" />
 
                     <Row>
                         <Col lg={12}>
@@ -118,7 +118,7 @@ const VehicleReport  = () => {
                                                         <th className="sort" data-sort="number">Vehicle Number</th>
                                                         <th className="sort" data-sort="number">Make</th>
                                                         <th className="sort" data-sort="number">Model</th>
-                                                        <th className="sort" data-sort="number">Registration Date</th>
+                                                        <th className="sort" data-sort="number">Horse Capacity</th>
                                                         <th className="sort" data-sort="number">Vehicle Added On</th>
                                                         <th className="sort" data-sort="number">Status</th>
                                                     </tr>
@@ -131,7 +131,7 @@ const VehicleReport  = () => {
                                                         <td className="phone">{item.vechile_number}</td>
                                                         <td className="phone">{item.make}</td>
                                                         <td className="phone">{item.model}</td>
-                                                        <td className="date">{item.registration_date}</td>
+                                                        <td className="date">{item.max_no_horse}</td>
                                                         <td className="date">{item.created_at}</td>
                                                         <td className="phone">{item.status}</td>
                                                     </tr>

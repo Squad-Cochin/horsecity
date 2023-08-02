@@ -9,7 +9,7 @@ import Flatpickr from "react-flatpickr";
 /**Using for form validation */
 import { useFormik } from "formik";
 
-import { getDriverData } from '../../helpers/ApiRoutes/getApiRoutes';
+import { getDriverReport } from '../../helpers/ApiRoutes/getApiRoutes';
 import config from '../../config';
 
 //Import reports
@@ -49,7 +49,7 @@ const DriverReport  = () => {
     async function getData(page, val){
         setSearchDate(val)
         console.log("val",val)
-        // let getAllData = await getDriverData(page || 1, val)
+        // let getAllData = await getDriverReport(page || 1, val)
         // setDriverReport(getAllData?.drivers);
         // setPageNumber(page);
         // setNumberOfData(getAllData?.totalCount);
