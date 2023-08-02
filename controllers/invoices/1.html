@@ -446,7 +446,7 @@
               <div class="tm_invoice_section tm_invoice_to">
                 <p class="tm_mb2"><b class="tm_primary_color">Invoice To:</b></p>
                 <div>
-                    <p id="customerName" style="margin: 0;">{invoice.customer_name}
+                    <p id="customerName" style="margin: 0;" >{invoice.customer_name}
                     <p id="customerAddress" style="margin: 0;">{invoice.customerAddress}</p>
                     <p id="cusCountry" style="margin: 0;">{invoice.cusCountry}</p>
                     <p id="customerEmail" style="margin: 0;">{invoice.customer_email}</p>
@@ -516,11 +516,11 @@
                           </tr>
                           <tr>
                             <td class="tm_width_3 tm_primary_color tm_border_none tm_bold">Tax - <span class="tm_ternary_color" id="taxRate">{invoice.iTaxRate}%</span></td>
-                            <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_bold" colspan="3" id="taxAmount">+ {invoice.iTaxAmount} AED</td>
+                            <td class="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_bold" colspan="3" id="taxAmount">+ {invoice.iTaxAmount}</td>
                           </tr>
                           <tr class="tm_border_top tm_border_bottom">
                             <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color">Grand Total</td>
-                            <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right" colspan="3" id="finalAmount">{invoice.iFinalAmount} AED</td>
+                            <td class="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right" colspan="3" id="finalAmount">{invoice.iFinalAmount}</td>
                           </tr>
                         </tbody>                      
                       </table>
