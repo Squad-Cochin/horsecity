@@ -5,7 +5,7 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 const objectConvertor = require('../../utils/objectConvertor');
-const { SendEmail } = require('../../utils/mailer');
+const mail = require('../../utils/mailer');
 const commonfetching = require('../../utils/helper/commonfetching');
 const commonoperation = require('../../utils/helper/commonoperation');
 const constants = require('../../utils/constants');
@@ -1069,14 +1069,13 @@ module.exports = class invoices
 
 
 
-    static async sendemailatinvoice(to, subject, body)
+    static async sendemailatinvoice(id, to, subject, body)
     {
         try
         {
-            console.log(req.body);
             return await new Promise(async(resolve, reject)=>
             {
-                const emailSent = await SendEmail(to, body, subject);
+                const emailSent = await mail.SendEmailOfQuotation(id, to, body, subject);
                 if(emailSent === false)
                 {
                     console.log(`Error while sending the email from the model function`);

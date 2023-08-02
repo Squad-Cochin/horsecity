@@ -224,11 +224,9 @@ exports.getLatestPaymentHistroy = async (req, res) =>
     }
 };
 
-
-
 exports.sendEmailAtInvoice = async(req, res) =>
 {
-    const invoices = await invoice.sendemailatinvoice(req.body.email, req.body.subject, req.body.body);
+    const invoices = await invoice.sendemailatinvoice(req.params.id,req.body.email, req.body.subject);
     // console.log('Invoices: ', invoices);
     if(invoices === false)
     {
