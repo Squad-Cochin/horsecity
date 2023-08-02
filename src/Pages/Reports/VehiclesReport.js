@@ -15,7 +15,8 @@ import config from '../../config';
 //Import reports
 const VehicleReport  = () => {
     const [ vehicleReport, setVehicleReport ] = useState([])
-    const [ searchDate, setSearchDate ] = useState({})
+    const [ fromDate, setFromDate ] = useState("");
+    const [ toDate, setToDate ] = useState("");
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const pageLimit = config.pageLimit;
@@ -47,12 +48,13 @@ const VehicleReport  = () => {
     });
 
     async function getData(page, val){
-        setSearchDate(val)
+        setFromDate(val.from_date)
+        setToDate(val.to_date)
         console.log("val",val)
-        // let getAllData = await getVehicleReport(page || 1, val)
-        // setVehicleReport(getAllData?.vehicles);
-        // setPageNumber(page);
-        // setNumberOfData(getAllData?.totalCount);
+        let getAllData = await getVehicleReport(page || 1, val)
+        setVehicleReport(getAllData?.vehicles);
+        setPageNumber(page);
+        setNumberOfData(getAllData?.totalCount);
     }
 
     return (
@@ -75,11 +77,12 @@ const VehicleReport  = () => {
                                                     className="form-control"
                                                     name='from_date'
                                                     options={{
-                                                        dateFormat: "d-m-Y"
+                                                        dateFormat: "d-m-Y",
+                                                        maxDate :new Date()
                                                     }}
-                                                    value= ""
-                                                    onChange={(dates) =>validation.setFieldValue('from_date', dates[0])}
-                                                    placeholder="Select from date"
+                                                    value= {fromDate}
+                                                    onChange={(dates) => {validation.setFieldValue('from_date', dates[0]); setFromDate(dates[0])}}
+                                                    placeholder= "Select from date"
                                                     required
                                                 />
                                             </div>
@@ -91,10 +94,12 @@ const VehicleReport  = () => {
                                                     className="form-control"
                                                     name='to_date'
                                                     options={{
-                                                        dateFormat: "d-m-Y"
+                                                        dateFormat: "d-m-Y",
+                                                        maxDate :new Date(),
+                                                        minDate : fromDate
                                                     }}
-                                                    value= ""
-                                                    onChange={(dates) =>validation.setFieldValue('to_date', dates[0])}
+                                                    value= { toDate }
+                                                    onChange={(dates) => {validation.setFieldValue('to_date', dates[0]); setToDate(dates[0])}}
                                                     placeholder="Select to date"
                                                     required
                                                 />
@@ -126,9 +131,9 @@ const VehicleReport  = () => {
                                                 <tbody className="list form-check-all">
                                                     {vehicleReport.map((item, index)=>(
                                                     <tr key={index}> 
-                                                        <th scope="row">{index + 1}</th>
+                                                        <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                         <td className="customer_name">{item.service_provider_name}</td>
-                                                        <td className="phone">{item.vechile_number}</td>
+                                                        <td className="phone">{item.vehicle_number}</td>
                                                         <td className="phone">{item.make}</td>
                                                         <td className="phone">{item.model}</td>
                                                         <td className="date">{item.max_no_horse}</td>
@@ -146,14 +151,14 @@ const VehicleReport  = () => {
                                                 {pageNumber > 1 ?
                                                     <Link 
                                                         className="page-item pagination-prev disabled" 
-                                                        onClick={()=> getData(pageNumber - 1, searchDate)}
+                                                        onClick={()=> getData(pageNumber - 1, { from_date : fromDate, to_date : toDate })}
                                                     >
                                                         Previous
                                                     </Link>
                                                 : null }
                                                 <ul className="pagination listjs-pagination mb-0"></ul>
                                                 {numberOfData > pageLimit * pageNumber ? 
-                                                    <Link className="page-item pagination-next" onClick={() => getData(pageNumber + 1, searchDate)}>
+                                                    <Link className="page-item pagination-next" onClick={() => getData(pageNumber + 1, { from_date : fromDate, to_date : toDate })}>
                                                         Next
                                                     </Link> 
                                                 : null }

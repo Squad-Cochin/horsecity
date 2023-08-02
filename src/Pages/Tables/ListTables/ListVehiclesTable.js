@@ -678,7 +678,8 @@ const ListVehiclesTable = () =>
                             <Flatpickr
                                 className="form-control"
                                 options={{
-                                    dateFormat: "d-m-Y"
+                                    dateFormat: "d-m-Y",
+                                    maxDate :new Date(),
                                 }}
                                 name='insurance_date'
                                 value={validation.values.insurance_date || ""}
@@ -725,7 +726,8 @@ const ListVehiclesTable = () =>
                             <Flatpickr
                                 className="form-control"
                                 options={{
-                                    dateFormat: "d-m-Y"
+                                    dateFormat: "d-m-Y",
+                                    maxDate :new Date(),
                                 }}
                                 name='insurance_expiry_date'
                                 value={validation.values.insurance_expiry_date || ""}
@@ -787,7 +789,8 @@ const ListVehiclesTable = () =>
                             <Flatpickr
                                 className="form-control"
                                 options={{
-                                    dateFormat: "d-m-Y"
+                                    dateFormat: "d-m-Y",
+                                    maxDate :new Date(),
                                 }}
                                 name='vehicle_registration_date'
                                 value={validation.values.vehicle_registration_date || ""}
@@ -802,7 +805,8 @@ const ListVehiclesTable = () =>
                             <Flatpickr
                                 className="form-control"
                                 options={{
-                                    dateFormat: "d-m-Y"
+                                    dateFormat: "d-m-Y",
+                                    maxDate :new Date(),
                                 }}
                                 name='vehicle_exipration_date'
                                 value={validation.values.vehicle_exipration_date || ""}

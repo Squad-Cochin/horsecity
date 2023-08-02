@@ -11,7 +11,7 @@ import config from "../../config";
 // import { serviceProviders} from "../../CommonData/Data";
 
   /** get roughts */
-  
+
 export async function getSPAllData(pageNumber){
     try {
         let pageLimit = config.pageLimit;
@@ -651,15 +651,17 @@ export async function getLIstBreakDownVehicles(bkId){
     }
 }
 
-export async function getSeviceProviderReport(pageNumber, val){
+
+
+export async function getAccountsData(pageNumber){
     try {
         let pageLimit = config.pageLimit;
-        let reqObj = val;
-        reqObj.page = pageNumber
-        reqObj.limit = pageLimit
-        console.log("reachapi",reqObj)
-        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
-        // console.log(data)
+        let reqObj = {
+            "page" : pageNumber,
+            "limit" : pageLimit
+        }
+        // const { data } = await axios.post(`${url.GET_QUOTATION_ALL_DATA_URL}`,reqObj);
+        // console.log("QUOTATIONS",data);
         // return(data)
     } catch (error) {
         // let errorObj =  {
@@ -668,10 +670,46 @@ export async function getSeviceProviderReport(pageNumber, val){
         //     "message": "Server error",
         //     "data": {
         //         "totalCount": 0,
-        //         "vehicles": []
+        //         "serviceProvider": []
         //     }
         // }
         // return errorObj.data
+    }
+}
+
+export async function getSingleAccountsData(id){
+    try {
+        // const { data } = await axios.get(`${url.GET_QUOTATION_FULL_DATA_URL}/${id}`);
+        // console.log("SD",data)
+        // return(data)
+    } catch (error) {
+        // return null
+    }
+}
+
+
+
+export async function getSeviceProviderReport(pageNumber, val){
+    try {
+        let pageLimit = config.pageLimit;
+        let reqObj = val;
+        reqObj.page = pageNumber
+        reqObj.limit = pageLimit
+        console.log("reachapi",reqObj)
+        const { data } = await axios.post(`${url.POST_SERVICE_PROVIDER_REPORT_URL}`,reqObj);
+        console.log(data)
+        return(data)
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+            "data": {
+                "totalCount": 0,
+                "serviceProviders": []
+            }
+        }
+        return errorObj.data
     }
 }
 
@@ -682,9 +720,9 @@ export async function getCustomerReport(pageNumber, val){
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
-        // console.log(data)
-        // return(data)
+        const { data } = await axios.post(`${url.POST_CUSTOMER_REPORT_URL}`,reqObj);
+        console.log(data)
+        return(data)
     } catch (error) {
         // let errorObj =  {
         //     "code": 500,
@@ -706,9 +744,9 @@ export async function getDriverReport(pageNumber, val){
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
-        // console.log(data)
-        // return(data)
+        const { data } = await axios.post(`${url.POST_DRIVERS_REPORT_URL}`,reqObj);
+        console.log(data)
+        return(data)
     } catch (error) {
         // let errorObj =  {
         //     "code": 500,
@@ -730,9 +768,9 @@ export async function getVehicleReport(pageNumber, val){
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
-        // console.log(data)
-        // return(data)
+        const { data } = await axios.post(`${url.POST_VEHICLES_REPORT_URL}`,reqObj);
+        console.log(data)
+        return(data)
     } catch (error) {
         // let errorObj =  {
         //     "code": 500,
@@ -754,9 +792,9 @@ export async function getEnquiryReport(pageNumber, val){
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
-        // console.log(data)
-        // return(data)
+        const { data } = await axios.post(`${url.POST_ENQUIRIES_REPORT_URL}`,reqObj);
+        console.log(data)
+        return(data)
     } catch (error) {
         // let errorObj =  {
         //     "code": 500,
@@ -778,9 +816,9 @@ export async function getQuotationReport(pageNumber, val){
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
-        // console.log(data)
-        // return(data)
+        const { data } = await axios.post(`${url.POST_QUOTATIONS_REPORT_URL}`,reqObj);
+        console.log(data)
+        return(data)
     } catch (error) {
         // let errorObj =  {
         //     "code": 500,
@@ -802,9 +840,9 @@ export async function getTripDetailsReport(pageNumber, val){
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
-        // console.log(data)
-        // return(data)
+        const { data } = await axios.post(`${url.POST_TRIP_DETAILS_REPORT_URL}`,reqObj);
+        console.log(data)
+        return(data)
     } catch (error) {
         // let errorObj =  {
         //     "code": 500,
@@ -826,9 +864,9 @@ export async function getAccountsReport(pageNumber, val){
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
-        // console.log(data)
-        // return(data)
+        const { data } = await axios.post(`${url.POST_ACCOUNTS_REPORT_URL}`,reqObj);
+        console.log(data)
+        return(data)
     } catch (error) {
         // let errorObj =  {
         //     "code": 500,
@@ -850,9 +888,9 @@ export async function getInvoiceReport(pageNumber, val){
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        // const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
-        // console.log(data)
-        // return(data)
+        const { data } = await axios.post(`${url.POST_INVOICE_REPORT_URL}`,reqObj);
+        console.log(data)
+        return(data)
     } catch (error) {
         // let errorObj =  {
         //     "code": 500,
