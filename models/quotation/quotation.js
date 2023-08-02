@@ -166,6 +166,7 @@ exports.getOneQuotation = (quotId) => {
             quo.discount_amount,
             quo.final_amount,
             cu.id AS customer_id,
+            cu.name AS customer_name,
             cu.email AS customer_email,
             cu.user_name AS customer_user_name,
             cu.contact_no AS customer_contact_no,

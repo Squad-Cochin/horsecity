@@ -10,7 +10,7 @@ module.exports = function (app)
         checkInput.isPageNumberEntered,
         checkInput.isPageSizeEntered,
         invoiceController.getAll
-        );
+        ); 
 
     app.get(
             `/${process.env.apiToken}/getOne/invoice/:id`, 
