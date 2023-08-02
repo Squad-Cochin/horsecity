@@ -116,6 +116,18 @@ export const PUT_QUOTATION_EDIT_URL = apiBaseUrl + token + "/update/quotation"
 export const POST_SEND_QUT_EMAIL_URL = apiBaseUrl + token + "/send-email/quotations"
 export const PUT_QUOTATION_CONFIRM_URL = apiBaseUrl + token + "/update-status/quotations"
 
+/**REPORTS */
+
+export const POST_SERVICE_PROVIDER_REPORT_URL = apiBaseUrl + token + "/reports/serviceproviders"
+export const POST_CUSTOMER_REPORT_URL = apiBaseUrl + token + "/reports/customers"
+export const POST_VEHICLES_REPORT_URL = apiBaseUrl + token + "/reports/vehicles"
+export const POST_DRIVERS_REPORT_URL = apiBaseUrl + token + "/reports/drivers"
+export const POST_ENQUIRIES_REPORT_URL = apiBaseUrl + token + "/reports/enquiries"
+export const POST_QUOTATIONS_REPORT_URL = apiBaseUrl + token + "/reports/quotations"
+export const POST_TRIP_DETAILS_REPORT_URL = apiBaseUrl + token + "/reports/tripDetails"
+export const POST_INVOICE_REPORT_URL = apiBaseUrl + token + "/reports/invoices"
+export const POST_ACCOUNTS_REPORT_URL = apiBaseUrl + token + "/reports/accounts"
+
 /**TAXATION */
 /**This URL basis of page & limit  */
 export const POST_TAXATION_ALL_DATA_URL = apiBaseUrl + token + "/getAll/tax"

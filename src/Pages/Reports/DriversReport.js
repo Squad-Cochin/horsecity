@@ -15,7 +15,8 @@ import config from '../../config';
 //Import reports
 const DriverReport  = () => {
     const [ driverReport, setDriverReport ] = useState([])
-    const [ searchDate, setSearchDate ] = useState({})
+    const [ fromDate, setFromDate ] = useState("");
+    const [ toDate, setToDate ] = useState("");
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const pageLimit = config.pageLimit;
@@ -29,7 +30,7 @@ const DriverReport  = () => {
             from_date : sixtyDaysAgo,
             to_date : today,
         }
-        getData(value)
+        getData(1, value)
     },[])
 
     const initialValues = { 
@@ -47,12 +48,13 @@ const DriverReport  = () => {
     });
 
     async function getData(page, val){
-        setSearchDate(val)
+        setFromDate(val.from_date)
+        setToDate(val.to_date)
         console.log("val",val)
-        // let getAllData = await getDriverReport(page || 1, val)
-        // setDriverReport(getAllData?.drivers);
-        // setPageNumber(page);
-        // setNumberOfData(getAllData?.totalCount);
+        let getAllData = await getDriverReport(page || 1, val)
+        setDriverReport(getAllData?.drivers);
+        setPageNumber(page);
+        setNumberOfData(getAllData?.totalCount);
     }
 
     return (
@@ -66,7 +68,7 @@ const DriverReport  = () => {
                             <Card>
                                 <CardHeader>
                                     <form className="tablelist-form" onSubmit={validation.handleSubmit} >
-                                        <Row className="align-items-md-center">
+                                    <Row className="align-items-md-center">
                                             <Col lg={5}>
                                             {/* <h4 className="card-title mb-0">Add, Edit & Remove</h4> */}
                                             <div className="mb-3">
@@ -75,11 +77,12 @@ const DriverReport  = () => {
                                                     className="form-control"
                                                     name='from_date'
                                                     options={{
-                                                        dateFormat: "d-m-Y"
+                                                        dateFormat: "d-m-Y",
+                                                        maxDate :new Date()
                                                     }}
-                                                    value= ""
-                                                    onChange={(dates) =>validation.setFieldValue('from_date', dates[0])}
-                                                    placeholder="Select from date"
+                                                    value= {fromDate}
+                                                    onChange={(dates) => {validation.setFieldValue('from_date', dates[0]); setFromDate(dates[0])}}
+                                                    placeholder= "Select from date"
                                                     required
                                                 />
                                             </div>
@@ -91,10 +94,12 @@ const DriverReport  = () => {
                                                     className="form-control"
                                                     name='to_date'
                                                     options={{
-                                                        dateFormat: "d-m-Y"
+                                                        dateFormat: "d-m-Y",
+                                                        maxDate :new Date(),
+                                                        minDate : fromDate
                                                     }}
-                                                    value= ""
-                                                    onChange={(dates) =>validation.setFieldValue('to_date', dates[0])}
+                                                    value= { toDate }
+                                                    onChange={(dates) => {validation.setFieldValue('to_date', dates[0]); setToDate(dates[0])}}
                                                     placeholder="Select to date"
                                                     required
                                                 />
@@ -124,7 +129,7 @@ const DriverReport  = () => {
                                                 <tbody className="list form-check-all">
                                                     {driverReport.map((item, index)=>(
                                                     <tr key={index}> 
-                                                        <th scope="row">{index + 1}</th>
+                                                        <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                         <td className="customer_name">{item.driver_name}</td>
                                                         <td className="phone">{item.email}</td>
                                                         <td className="phone">{item.contact_number}</td>
@@ -142,14 +147,14 @@ const DriverReport  = () => {
                                                 {pageNumber > 1 ?
                                                     <Link 
                                                         className="page-item pagination-prev disabled" 
-                                                        onClick={()=> getData(pageNumber - 1, searchDate)}
+                                                        onClick={()=> getData(pageNumber - 1, { from_date : fromDate, to_date : toDate })}
                                                     >
                                                         Previous
                                                     </Link>
                                                 : null }
                                                 <ul className="pagination listjs-pagination mb-0"></ul>
                                                 {numberOfData > pageLimit * pageNumber ? 
-                                                    <Link className="page-item pagination-next" onClick={() => getData(pageNumber + 1, searchDate)}>
+                                                    <Link className="page-item pagination-next" onClick={() => getData(pageNumber + 1, { from_date : fromDate, to_date : toDate })}>
                                                         Next
                                                     </Link> 
                                                 : null }

@@ -449,7 +449,8 @@ const ListTables = () =>
                                 className="form-control"
                                 name='date_of_birth'
                                 options={{
-                                dateFormat: "d-m-Y"
+                                    dateFormat: "d-m-Y",
+                                    maxDate :new Date(),
                                 }}
                                 value={validation.values.date_of_birth || ""}
                                 onChange={(dates) =>validation.setFieldValue('date_of_birth', dates[0])}
