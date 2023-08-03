@@ -4,28 +4,132 @@ import * as url from "../url_helper";
 import MockAdapter from "axios-mock-adapter";
 // import * as url from "../url_helper";
 import accessToken from "../jwt-token-access/accessToken";
-import { calenderDefaultCategories, events } from "../../CommonData/Data";
+import { calenderDefaultCategories, events, Drivers, Customers, Vehicles ,TripDetails, quotationData, enquiriesData, Reports, Languages, Discounts, Accounts, Taxations, Invoices,Ledger, settings} from "../../CommonData/Data";
 import { APIClient } from "../api_helper";
 
 
-
-const loginAPI = async (userdata) => {
+  /**Add new service provider */
+  export async function updateDiscounts(value){
     try {
-        console.log(userdata)
-        const data = await axios.post(`${url.LOGIN_URL}`, userdata);
-        console.log(data);
+        console.log("api", value)
+        // const { data } = await axios.post(`${url.POST_SP_ADD_URL}`);
+        // return { data };
+    } catch (error) {
+        return { error : "Faild !"}
     }
-    catch(error){
-        console.log("err",error);
+}
+
+
+
+  export function getDriversData(){
+
+    if(Drivers){
+          return Drivers ;
     }
+    return null ;
   }
   
   
-  
-  
-export {loginAPI};
+  export function getCustomersData(){
 
+    if(Customers){
+          return Customers ;
+    }
+    return null ;
+  }
+  
+  export function getVehiclesData(){
 
+    if(Vehicles){
+          return Vehicles ;
+    }
+    return null ;
+  }
+
+  export function getTripDeatails(){
+    if(TripDetails){
+      return TripDetails ;
+}
+    return null ;
+  }
+  
+
+  export function getQuotationData(){
+    if(quotationData){
+      return quotationData ;
+    }
+    return null ;
+  }
+
+  //Get enguiries
+  export function getEnquiriesData(){
+    if(enquiriesData){
+      return enquiriesData
+    }
+    return null ;
+  }
+
+  //Get monthly reports
+  export function getMonthlyReports(){
+    if(Reports){
+      return Reports ;
+    }
+    return null ;
+  }
+
+  //Get all languagess
+  export function getLanguages(){
+    if(Languages){
+      return Languages ;
+    }
+    return null ;
+  }
+
+  //Get all Invoices
+  export function getInvoicesData(){
+    if(Invoices){
+      return Languages ;
+    }
+    return null ;
+  }
+
+  //Get all discounts
+  export function getDiscounts(){
+    if(Discounts){
+      return Discounts ;
+    }
+    return null ;
+  }
+  //Get all taxations
+  export function getTaxations(){
+    if(Taxations){
+      return Taxations ;
+    }
+    return null ;
+  }
+
+  //Get all Accounts
+  export function getAccounts(){
+    if(Accounts){
+      return Accounts ;
+    }
+    return null ;
+  }
+
+    //Get all Accounts
+    export function getSettingsPageData(){
+      if(settings){
+        return settings ;
+      }
+      return null ;
+    }
+
+    export function getLedgerData(){
+      if(Ledger){
+        return Ledger ;
+      }
+      return null ;
+    }
 
 
 // import * as url from "./url_helper";
@@ -70,6 +174,7 @@ const fakeBackend = () => {
 
   mock.onPost(url.POST_FAKE_LOGIN).reply(async (config) => {
     const user = JSON.parse(config["data"]);
+    console.log("req",user)
     const data = await axios.post(`${url.LOGIN_URL}`, user);
     console.log("RES",data)
     return new Promise((resolve, reject) => {
@@ -287,6 +392,8 @@ const fakeBackend = () => {
       });
     });
   });
+
+
 
   mock.onPost(url.ADD_NEW_EVENT).reply((event) => {
     return new Promise((resolve, reject) => {

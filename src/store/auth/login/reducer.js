@@ -10,6 +10,7 @@ import {
 const initialState = {
   error: "",
   user : "",
+  role: "",
   loading: false,
 };
 

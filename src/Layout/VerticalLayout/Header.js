@@ -1,19 +1,18 @@
-import React, { useState } from "react";
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                         //
+//                                           Header page after login                                       //
+//                                                                                                         //
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Import modules and files
+import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-
 import LanguageDropdown from "../../components/Common/TopbarDropdown/LanguageDropdown";
-import NotificationDropdown from "../../components/Common/TopbarDropdown/NotificationDropdown";
-
-//i18n
 import { withTranslation } from "react-i18next";
-
-//import images
-// import logoSm from "../../assets/images/logo-sm.png";
-// import logoDark from "../../assets/images/logo-dark.png";
-import logo from "../../assets/images/logo.png";
-
+import logo from "../../assets/images/white-logo.png";
+import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 
+import { useSelector } from "react-redux";
 // Redux Store
 import {
   showRightSidebarAction,
@@ -21,11 +20,23 @@ import {
   changeSidebarType,
 } from "../../store/actions";
 import ProfileMenu from "../../components/Common/TopbarDropdown/ProfileMenu";
-import AppsDropdown from "../../components/Common/TopbarDropdown/AppsDropdown";
 
+// Header function
 const Header = (props) => {
   const [search, setsearch] = useState(false);
-
+  const [menulogo,setMenuLogo] = useState('')
+  useEffect(()=>{
+    getAllData()
+  },[])
+  const { file } = useSelector(state => ({
+    file: state.settings.file,
+  }));
+ 
+  async function getAllData() {
+    let settingsData = await getSettingsPageData();
+    setMenuLogo(settingsData?.settingsPageData[0]?.logo);
+   }
+  // Toggle screen function
   function toggleFullscreen() {
     if (
       !document.fullscreenElement &&
@@ -71,19 +82,19 @@ const Header = (props) => {
             <div className="navbar-brand-box text-center">
               <Link to="/" className="logo logo-dark">
                 <span className="logo-sm">
-                  <img src={logo} alt="logo-sm-dark" height="22" />
+                  <img src={menulogo || logo} alt="logo-sm-dark" height="22" />
                 </span>
                 <span className="logo-lg">
-                  <img src={logo} alt="logo-dark" height="24" />
+                  <img src={menulogo || logo} alt="logo-dark" height="24" />
                 </span>
               </Link>
 
               <Link to="/" className="logo logo-light">
                 <span className="logo-sm">
-                  <img src={logo} alt="logo-sm-light" height="60" />
+                <img src={menulogo || logo} alt="logo-sm-dark" height="22" />
                 </span>
                 <span className="logo-lg">
-                  <img src={logo} alt="logo-light" height="60" />
+                  <img src={menulogo || logo} alt="logo-light" height="60" />
                 </span>
               </Link>
             </div>
@@ -98,17 +109,6 @@ const Header = (props) => {
             >
               <i className="ri-menu-2-line align-middle"></i>
             </button>
-
-            <form className="app-search d-none d-lg-block">
-              <div className="position-relative">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Search..."
-                />
-                <span className="ri-search-line"></span>
-              </div>
-            </form>
           </div>
 
           <div className="d-flex">
@@ -151,8 +151,8 @@ const Header = (props) => {
               </div>
             </div>
 
-            <LanguageDropdown />
-            <AppsDropdown />
+            {/* <LanguageDropdown /> */}
+            {/* <AppsDropdown /> */}
 
             <div className="dropdown d-none d-lg-inline-block ms-1">
               <button
@@ -167,23 +167,9 @@ const Header = (props) => {
               </button>
             </div>
 
-            <NotificationDropdown />
+            {/* <NotificationDropdown /> */}
 
             <ProfileMenu />
-
-            <div
-              className="dropdown d-inline-block"
-              onClick={() => {
-                props.showRightSidebarAction(!props.showRightSidebar);
-              }}
-            >
-              <button
-                type="button"
-                className="btn header-item noti-icon right-bar-toggle waves-effect"
-              >
-                <i className="mdi mdi-cog"></i>
-              </button>
-            </div>
           </div>
         </div>
       </header>
@@ -191,12 +177,14 @@ const Header = (props) => {
   );
 };
 
+// Maping state to props function
 const mapStatetoProps = (state) => {
   const { layoutType, showRightSidebar, leftMenu, leftSideBarType } =
     state.Layout;
   return { layoutType, showRightSidebar, leftMenu, leftSideBarType };
 };
 
+// Default export
 export default connect(mapStatetoProps, {
   showRightSidebarAction,
   toggleLeftmenu,

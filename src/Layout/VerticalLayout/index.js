@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react';
+import React, { useCallback, useEffect , useState} from 'react';
 import PropTypes from "prop-types";
 import withRouter from "../../components/Common/withRouter";
 
@@ -37,6 +37,7 @@ const Layout = props => {
     leftSideBarTheme: state.Layout.leftSideBarTheme,
   }));
 
+  // const [headerLogo, setHeaderLogo] = useState("white-logo.png");
   const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
   const toggleMenuCallback = () => {

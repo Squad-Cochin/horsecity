@@ -7,11 +7,47 @@ import Dashboard from "../Pages/Dashboard";
 // Import Calender
 import Calender from "../Pages/Calender";
 
+import ListCustomerTable from "../Pages/Tables/ListTables/ListCustomerTable";
+import ListVehiclesTable from "../Pages/Tables/ListTables/ListVehiclesTable";
 
 // Import E-mail
 import Inbox from "../Pages/E-mail/Inbox";
 import ReadEmail from "../Pages/E-mail/ReadEmail";
 import EmailCompose from "../Pages/E-mail/EmailCompose";
+
+// Import service providers
+import ServiceProviders from "../Pages/ServiceProviders/ServiceProviderTable";
+
+// Import drivers
+import Drivers from "../Pages/Drivers/DriverTable";
+
+//Import trip deatails
+import TripDeatails from "../Pages/TripDetails/TripDetailTable";
+
+//Import monthly reports
+import MonthlyReports  from "../Pages/Reports/ReportTable";
+import ServiceProviderReport  from "../Pages/Reports/ServiceProviderReport";
+import CustomerReport from "../Pages/Reports/CustomerReport";
+import DriverReport from "../Pages/Reports/DriversReport";
+import VehicleReport from "../Pages/Reports/VehiclesReport";
+import EnquiryReport from "../Pages/Reports/EnquiriesReport";
+import QuotationReport from "../Pages/Reports/QuotationsReport";
+import TripDetailsReport from "../Pages/Reports/TripDetailsReport";
+import AccountsReport from "../Pages/Reports/AccountsReport";
+
+
+//Import Accounts
+import Accounts  from "../Pages/Accounts/AccountsList";
+
+//Languages
+import Language from "../Pages/Languages/ListLanguage";
+import SettingPage from "../Pages/Settings/settings";
+
+//Tax listing 
+import TaxListing from "../Pages/Taxation/TaxationList";
+
+//Discount listing 
+import DiscountListing from "../Pages/Discounts/DiscountsList";
 
 // Import Authentication pages
 import Login from "../Pages/Authentication/Login";
@@ -20,6 +56,9 @@ import ForgetPasswordPage from "../Pages/Authentication/ForgetPassword";
 import Logout from "../Pages/Authentication/Logout";
 import Register from "../Pages/Authentication/Register";
 import UserProfile from "../Pages/Authentication/user-profile";
+import ListEnquiriesTable from "../Pages/Tables/ListTables/ListEnquiriesTable";
+import ListQuotationsTable from "../Pages/Tables/ListTables/ListQuotationsTable";
+import InvoiceReport from "../Pages/Reports/InvoiceReport";
 
 // Import Authentication Inner Pages
 // import Login1 from "../Pages/AuthenticationPages/Login";
@@ -74,9 +113,9 @@ import FormWizard from "../Pages/Forms/FormWizard";
 
 // Import Tables
 import BasicTable from "../Pages/Tables/BasicTable.js";
-import ListJs from "../Pages/Tables/ListTables/ListTables";
+import ListJs from "../Pages/ServiceProviders/ServiceProviderTable";
 import DataTable from "../Pages/Tables/DataTables/DataTables";
-
+import ImageGallery from "..//Pages/Tables/ListTables/ListVehicleImages"
 
 // Import Charts
 import ApexCharts from "../Pages/Charts/ApexCharts";
@@ -97,6 +136,8 @@ import GoogleMap from "../Pages/Maps/GoogleMap";
 
 //Profile page
 import Profile from "../Pages/ProfilePage";
+import InvoiceDetails from "../Pages/Invoices/InvoicesList";
+
 
 const authProtectedRoutes = [
   //dashboard
@@ -112,6 +153,39 @@ const authProtectedRoutes = [
   { path: "/inbox", component: <Inbox /> },
   { path: "/read-email", component: <ReadEmail /> },
   { path: "/compose-email", component: <EmailCompose /> },
+
+// **************************
+  //ServiceProvider
+  { path: "/service-providers", component: <ServiceProviders /> },
+
+  //Driver
+  { path: "/drivers", component: <Drivers /> },
+
+  //Trip Deatails
+  { path: "/trip-deatails", component: <TripDeatails /> },
+
+  //Monthly reports
+  { path: "/serviceprovider-reports", component: <ServiceProviderReport /> },
+  { path: "/customer-reports", component: <CustomerReport /> },
+  { path: "/vehicle-reports", component: <VehicleReport /> },
+  { path: "/driver-reports", component: <DriverReport /> },
+  { path: "/enquiry-reports", component: <EnquiryReport /> },
+  { path: "/quotation-reports", component: <QuotationReport /> },
+  { path: "/tripDetail-reports", component: <TripDetailsReport /> },
+  { path: "/account-reports", component: <AccountsReport /> },
+  { path: "/invoice-reports", component: <InvoiceReport /> },
+
+  
+  //Accounts
+  { path: "/accounts", component: <Accounts /> },
+  /**Image gallery */
+    { path: "/image-gallery/:id", component: <ImageGallery /> },
+
+  //Language
+  { path: "/languages", component: <Language /> },   
+  { path : "/taxation-list", component : <TaxListing />},
+  { path : "/discount-list", component : <DiscountListing />},
+  { path: "/setting-page", component: <SettingPage /> },
 
   // Utility Pages
   { path: "/pages-starter", component: <StarterPage /> },
@@ -154,10 +228,15 @@ const authProtectedRoutes = [
   { path: "/form-wizard", component: <FormWizard /> },
   { path: "/form-mask", component: <FormMask /> },
 
-  // Tables pages
+// Tables pages
+
   { path: "/tables-basic", component: <BasicTable /> },
-  { path: "/tables-listjs", component: <ListJs /> },
+  { path: "/service-providers", component: <ListJs /> },
+  { path: "/customers", component: <ListCustomerTable /> },
+  { path: "/vehicles", component: <ListVehiclesTable /> },
   { path: "/table-datatables", component: <DataTable /> },
+  { path: "/enquires", component: <ListEnquiriesTable /> },
+  { path: "/quotations", component: <ListQuotationsTable /> },
 
   // Charts Pages
   { path: "/chart-apexcharts", component: <ApexCharts /> },
@@ -177,6 +256,8 @@ const authProtectedRoutes = [
   { path: "/maps-google", component: <GoogleMap /> },
 
 
+  // Invoice Page
+  { path : "/invoices", component : <InvoiceDetails />},
 
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name

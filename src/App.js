@@ -1,35 +1,41 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import Routes from "./Routes/index";
 
+import { getSettingsPageData } from './helpers/ApiRoutes/getApiRoutes'; 
 // Import Scss
 import './assets/scss/theme.scss';
 
 // Fake Backend 
-import fakeBackend from "./helpers/AuthType/apiRoutes";
+import fakeBackend from "./helpers/ApiRoutes/authApiRoutes";
 
 // Activating fake backend
 fakeBackend();
 
-// Firebase
-// Import Firebase Configuration file
-// import { initFirebaseBackend } from "./helpers/firebase_helper"
-
-// const firebaseConfig = {
-//   apiKey: process.env.REACT_APP_APIKEY,
-//   authDomain: process.env.REACT_APP_AUTHDOMAIN,
-//   databaseURL: process.env.REACT_APP_DATABASEURL,
-//   projectId: process.env.REACT_APP_PROJECTID,
-//   storageBucket: process.env.REACT_APP_STORAGEBUCKET,
-//   messagingSenderId: process.env.REACT_APP_MESSAGINGSENDERID,
-//   appId: process.env.REACT_APP_APPID,
-//   measurementId: process.env.REACT_APP_MEASUREMENTID,
-// }
-
-// init firebase backend
-// initFirebaseBackend(firebaseConfig)
 
 
 function App() {
+  const [pageTitle, setPageTitle] = useState('HORSCITY');
+  const [favicon, setFavicon] = useState('');
+useEffect(() => {
+  getAllData()
+  document.title = pageTitle;
+}, [pageTitle]);
+
+useEffect(() => {
+  const link = document.querySelector("link[rel='icon']") || document.createElement('link');
+  link.type = 'image/x-icon';
+  link.rel = 'icon';
+  link.href = favicon;
+  // Replace the existing favicon or add the new favicon to the document head
+  document.head.appendChild(link);
+}, [favicon]);
+
+
+async function getAllData() {
+  let settingsData = await getSettingsPageData();
+  setPageTitle(settingsData?.settingsPageData[0]?.application_title);
+  setFavicon(settingsData?.settingsPageData[0]?.favicon)
+ }
   return (
     <React.Fragment>
       <Routes />

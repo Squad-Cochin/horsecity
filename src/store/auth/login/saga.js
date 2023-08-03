@@ -39,7 +39,14 @@ function* loginUser({ payload: { user, history } }) {
         userName: user.userName,
         password: user.password,
       });
+      console.log("response",response)
+      // const valueFromHeader = response?.headers['header-name'];
+      // console.log("Header",valueFromHeader);
+      let role = {role : "Admin"}
+      response.push(role)
       localStorage.setItem("authUser", JSON.stringify(response));
+
+
       yield put(loginSuccess(response));
     }
     const data = new Promise((resolve, reject)=>{
@@ -49,8 +56,7 @@ function* loginUser({ payload: { user, history } }) {
     })
 
     data.then((e) => {
-      console.log(e)
-      console.log("hi")
+
       if(e === `"expired"`){
         history("/change-password");
       }else{
@@ -80,6 +86,7 @@ function* recoverNewPassword({ payload: { user } }) {
 /**rECOVER NEW PASSWORD */
 function* updateNewPassword({ payload: { user } }) {
   try{
+    console.log("yy")
    const response =   yield call(changePassword, user);
       yield put(updatePWDSuccess(response));
 }catch (error) {

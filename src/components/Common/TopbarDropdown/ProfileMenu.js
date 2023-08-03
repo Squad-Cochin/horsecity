@@ -15,7 +15,7 @@ import { Link } from "react-router-dom";
 import withRouter from "../withRouter";
 
 // users
-import user1 from "../../../assets/images/users/avatar-1.jpg";
+import user1 from "../../../assets/images/users/profile.png";
 
 const ProfileMenu = props => {
   // Declare a new state variable, which we'll call "menu"
@@ -59,24 +59,24 @@ const ProfileMenu = props => {
           <i className="mdi mdi-chevron-down d-none d-xl-inline-block" />
         </DropdownToggle>
         <DropdownMenu className="dropdown-menu-end">
-          <DropdownItem tag="a" href="/userprofile">
+          <DropdownItem tag="a" href="/dashboard">
             {" "}
             <i className="ri-user-line align-middle me-2" />
             {props.t("Profile")}{" "}
           </DropdownItem>
-          <DropdownItem tag="a" href="#">
+          <DropdownItem tag="a" href="/change-password">
             <i className="ri-wallet-2-line align-middle me-2" />
-            {props.t("My Wallet")}
+            {props.t("Change password")}
           </DropdownItem>
-          <DropdownItem tag="a" href="#">
+          {/* <DropdownItem tag="a" href="#">
             <span className="badge bg-success float-end mt-1">11</span>
             <i className="ri-settings-2-line align-middle me-2" />
             {props.t("Settings")}
-          </DropdownItem>
-          <DropdownItem tag="a" href="auth-lock-screen">
+          </DropdownItem> */}
+          {/* <DropdownItem tag="a" href="auth-lock-screen">
             <i className="ri-lock-unlock-line align-middle me-2" />
             {props.t("Lock screen")}
-          </DropdownItem>
+          </DropdownItem> */}
           <div className="dropdown-divider" />
           <Link to="/logout" className="dropdown-item">
             <i className="ri-shut-down-line align-middle me-2 text-danger" />

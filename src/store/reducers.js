@@ -11,7 +11,7 @@ import forgetPassword from "./auth/forgetpwd/reducer";
 import login from "./auth/login/reducer";
 import profile from "./auth/profile/reducer";
 import account from "./auth/register/reducer";
-
+import settings from "./dashboard/settings/reducer";
 const rootReducer = combineReducers({
   // public
   Layout,
@@ -20,6 +20,7 @@ const rootReducer = combineReducers({
   login,
   profile,
   account,
+  settings
 });
 
 export default rootReducer;

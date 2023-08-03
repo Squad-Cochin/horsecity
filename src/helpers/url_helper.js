@@ -1,20 +1,180 @@
 //REGISTER
 export const POST_FAKE_REGISTER = "/post-fake-register";
 
-//LOGIN
+/**
+ * The below one is Hari's Computer Details
+ */
+// export const API_BASE_URL = "http://192.168.200.88:8080";
+// const apiBaseUrl = "http://192.168.200.88:8080";
 
-export const API_BASE_URL = "http://192.168.200.130:8080";
+/**
+ * The below one is Shaheer's Computer Details
+ */
+// export const API_BASE_URL = "http://192.168.200.211:8000";
+// const apiBaseUrl = "http://192.168.200.211:8000";
 
-const apiBaseUrl = "http://192.168.200.130:8080";
-// const apiBaseUrl = "http://localhost:8080";
+/**
+ * The below one is Saurabh's Computer Details
+ */
+// export const API_BASE_URL = "http://192.168.200.130:8000";
+// const apiBaseUrl = "http://192.168.200.130:8000";
+/**
+ * The below one is own Computer Details
+ */
+
+const apiBaseUrl = "http://localhost:8000";
+export const API_BASE_URL = "http://localhost:8000";
+
 const token = "/horsecity661809"
+
+// image path
+
+export const IMAGE_PATH = "http://192.168.200.211:8000/serviceProvider/licenceImage/"
 
 export const LOGIN_URL = apiBaseUrl + token + "/login"
 export const RECOVER_PWD_URL = apiBaseUrl + token + "/recoveryPassword"
 export const CHANGE_PASSWORD_URL = apiBaseUrl + token + "/changePassword"
+
 /**NEW */
 export const RECOVER_PASSWORD = "/fake-recover-password";
 export const POST_FAKE_CHANGE_PWD = "/post-fake-change-password";
+
+/**SERVICE PROVIDER */
+export const GET_SP_ALL_DATA_URL = apiBaseUrl + token + "/getAll/serviceproviders"
+export const GET_SP_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/serviceprovider"
+export const POST_SP_ADD_URL = apiBaseUrl + token + "/add/serviceprovider"
+export const PUT_SP_UPDATE_STATUS = apiBaseUrl + token + "/update-status/serviceprovider"
+export const POST_SP_EDIT_URL = apiBaseUrl + token + "/update/serviceprovider"
+export const PUT_SP_REMOVE = apiBaseUrl + token + "/remove/serviceprovider"
+export const GET_SP_USER_NAME = apiBaseUrl + token + "/getAll/serviceprovidersName"
+
+// Discount
+export const GET_DISCOUNTS = apiBaseUrl + token + "/getAll/active/discounts"
+
+
+/**CUSTOMER */
+export const GET_CUSTOMER_ALL_DATA_URL = apiBaseUrl + token + "/getAll/customers"
+export const GET_CUSTOMER_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/customer"
+export const POST_CUSTOMER_ADD_URL = apiBaseUrl + token + "/add/customer"
+export const PUT_CUSTOMER_UPDATE_STATUS = apiBaseUrl + token + "/update/customer"
+export const POST_CUSTOMER_EDIT_URL = apiBaseUrl + token + "/edit/customer"
+export const PUT_CUSTOMER_REMOVE = apiBaseUrl + token + "/remove/customer"
+
+/**VEHICLES */
+export const GET_VEHICLES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/vehicles"
+export const GET_VEHICLES_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/vehicle"
+export const POST_VEHICLES_ADD_URL = apiBaseUrl + token + "/addNew/vehicle"
+export const PUT_VEHICLES_UPDATE_STATUS = apiBaseUrl + token + "/updateStatus/vehicle"
+export const POST_VEHICLES_EDIT_URL = apiBaseUrl + token + "/edit/vehicle"
+export const PUT_VEHICLES_REMOVE = apiBaseUrl + token + "/removeVehicle"
+export const GET_SP_VEHICLES_DATA_URL = apiBaseUrl + token + "/serviceprovider/vehicle"
+export const GET_SP_DRIVER_DATA_URL = apiBaseUrl + token + "/serviceprovider/driver"
+
+/**VEHICLES_IMAGES */
+export const GET_VEHICLES_IMAGES_DATA_URL = apiBaseUrl + token + "/getAllImages/vehicle"
+export const POST_VEHICLES_IMAGES_ADD_URL = apiBaseUrl + token + "/addImage/vehicle"
+export const PUT_VEHICLES_IMAGE_UPDATE_STATUS = apiBaseUrl + token + "/updateStatus/vehicle/image"
+export const PUT_VEHICLES_IMAGES_REMOVE = apiBaseUrl + token + "/removeImage/vehicle/image"
+
+// INVOICE PAGE
+export const POST_INVOICE_ALL_DATA_URL = apiBaseUrl + token + "/getAll/invoices"
+export const GET_INVOICE_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/invoice"
+export const GET_INVOICE_SINGLE_INVOICE_PAYMENT_HISTROY = apiBaseUrl + token + '/payment/histroy'
+export const GET_LATEST_PAYMENT_HISTROY_OF_INVOICE = apiBaseUrl + token + '/single/payment/histroy'
+export const GET_SEND_EMAIL_BUTTON_DATA_OF_INVOICE = apiBaseUrl + token + `/email/button/data`
+export const POST_SENT_INVOICE_ON_EMAIL = apiBaseUrl + token + `/send/email`
+export const POST_ADD_AMOUNT_URL = apiBaseUrl + token + `/add/amount`
+export const GET_START_TRIP = apiBaseUrl + token + `/booking/started`
+export const GET_BOOKING_DATA_FROM_INVOICE_ID = apiBaseUrl + token + '/getInvoice/Data/From/Booking'
+
+/**DRIVERS */
+export const GET_DRIVERS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/drivers"
+export const GET_DRIVERS_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/driver"
+export const POST_DRIVERS_ADD_URL = apiBaseUrl + token + "/add/driver"
+export const PUT_DRIVERS_UPDATE_STATUS = apiBaseUrl + token + "/update/driver"
+export const POST_DRIVERS_EDIT_URL = apiBaseUrl + token + "/edit/driver"
+export const PUT_DRIVERS_REMOVE = apiBaseUrl + token + "/remove/driver"
+
+// ASSIGN_DRIVERS
+export const POST_ASSIGN_DRIVERS = apiBaseUrl + token + "/assign/driver"
+export const GET_ASSIGNED_DRIVERS = apiBaseUrl + token + "/past/service/provider/driver"
+export const PUT_ASSIGN_DRIVERS_REMOVE = apiBaseUrl + token + "/unassign/driver"
+
+/**ENQUIRY */
+export const GET_ENQUIRY_ALL_DATA_URL = apiBaseUrl + token + "/getAll/enquiries"
+export const GET_ENQUIRY_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/enquiry"
+export const POST_ADD_QUOTATION_URL = apiBaseUrl + token + "/add/quotation"
+// export const PUT_DRIVERS_UPDATE_STATUS = apiBaseUrl + token + "/update/driver"
+// export const POST_DRIVERS_EDIT_URL = apiBaseUrl + token + "/edit/driver"
+// export const PUT_DRIVERS_REMOVE = apiBaseUrl + token + "/remove/driver"
+
+/**QUOTATION */
+export const GET_QUOTATION_ALL_DATA_URL = apiBaseUrl + token + "/getAll/quotations"
+export const GET_QUOTATION_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/quotation"
+export const GET_QUOTATION_FULL_DATA_URL = apiBaseUrl + token + "/list/quotations"
+export const PUT_QUOTATION_EDIT_URL = apiBaseUrl + token + "/update/quotation"
+export const POST_SEND_QUT_EMAIL_URL = apiBaseUrl + token + "/send-email/quotations"
+export const PUT_QUOTATION_CONFIRM_URL = apiBaseUrl + token + "/update-status/quotations"
+
+
+
+/**ACCOUNTS */
+export const POST_ACCOUNTS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/accounts"
+export const GET_ACCOUNTS_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/accountsDetails"
+
+/**REPORTS */
+export const POST_SERVICE_PROVIDER_REPORT_URL = apiBaseUrl + token + "/reports/serviceproviders"
+export const POST_CUSTOMER_REPORT_URL = apiBaseUrl + token + "/reports/customers"
+export const POST_VEHICLES_REPORT_URL = apiBaseUrl + token + "/reports/vehicles"
+export const POST_DRIVERS_REPORT_URL = apiBaseUrl + token + "/reports/drivers"
+export const POST_ENQUIRIES_REPORT_URL = apiBaseUrl + token + "/reports/enquiries"
+export const POST_QUOTATIONS_REPORT_URL = apiBaseUrl + token + "/reports/quotations"
+export const POST_TRIP_DETAILS_REPORT_URL = apiBaseUrl + token + "/reports/tripDetails"
+export const POST_INVOICE_REPORT_URL = apiBaseUrl + token + "/reports/invoices"
+export const POST_ACCOUNTS_REPORT_URL = apiBaseUrl + token + "/reports/accounts"
+
+/**TAXATION */
+/**This URL basis of page & limit  */
+export const POST_TAXATION_ALL_DATA_URL = apiBaseUrl + token + "/getAll/tax"
+export const GET_TAXATION_ALL_DATA_URL = apiBaseUrl + token + "/getAll/taxations"
+export const GET_TAXATION_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/taxations"
+export const POST_TAXATION_ADD_URL = apiBaseUrl + token + "/add/taxation"
+export const PUT_TAXATION_UPDATE_STATUS = apiBaseUrl + token + "/update-status/taxation"
+export const POST_TAXATION_EDIT_URL = apiBaseUrl + token + "/update/taxation"
+export const PUT_TAXATION_REMOVE = apiBaseUrl + token + "/remove/taxation"
+
+
+/**SETTINGS*/
+export const POST_SETTINGS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/settings"
+export const PUT_SETTINGS_EDIT_URL = apiBaseUrl + token + "/update/settings"
+
+/**CURRENCIES */
+export const GET_CURRENCIES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/currencies"
+
+/**LANGUAGES */
+export const GET_LANGUAGES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/languages"
+export const GET_LANGUAGES_FILE = apiBaseUrl + token + "/getFile/lngFile"
+/**This URL basis of page & limit  */
+export const POST_LANGUAGES_ALL_DATA_URL = apiBaseUrl + token + "/getAll/languages"
+export const GET_LANGUAGES_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/languages"
+export const POST_LANGUAGES_ADD_URL = apiBaseUrl + token + "/add/languages"
+export const PUT_LANGUAGES_UPDATE_STATUS = apiBaseUrl + token + "/update-status/languages"
+export const PUT_LANGUAGES_EDIT_URL = apiBaseUrl + token + "/update/languages"
+export const PUT_LANGUAGES_REMOVE = apiBaseUrl + token + "/remove/languages"
+
+/**DISCOUNTS */
+export const GET_DISCOUNTS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/discounts"
+export const PUT_DISCOUNTS_UPDATE_STATUS = apiBaseUrl + token + "/update-status/discounts"
+export const POST_DISCOUNTS_ADD_URL = apiBaseUrl + token + "/add/discount"
+export const PUT_DISCOUNTS_EDIT_URL = apiBaseUrl + token + "/update/discount"
+export const PUT_DISCOUNTS_REMOVE = apiBaseUrl + token + "/remove/discount"
+export const GET_DISCOUNTS_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/discounts"
+
+/**TRIP DETAILS  */
+export const GET_TRIP_ALL_DATA_URL = apiBaseUrl + token + "/getAll/tripDetails"
+export const GET_VEHICLE_BREAKDOWN_ALL_DATA_URL = apiBaseUrl + token + "/list/breakDownVehicles"
+export const POST_VEHICLE_BREAKDOWN_DATA_URL = apiBaseUrl + token + "/add/breakDownVehicles"
+
 
 export const POST_FAKE_LOGIN = "/post-fake-login";
 export const POST_FAKE_JWT_LOGIN = "/post-jwt-login";
@@ -32,4 +192,5 @@ export const ADD_NEW_EVENT = "/add/event";
 export const UPDATE_EVENT = "/update/event";
 export const DELETE_EVENT = "/delete/event";
 export const GET_CATEGORIES = "/categories";
+
 

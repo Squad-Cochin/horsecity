@@ -1,223 +1,311 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                                   //
+//                              This file is for implementing CRUD operations for customers                          //
+//                                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
-// import SimpleBar from 'simplebar-react';
+//IMPORTED FROM REACT BOOTSTRAP
+import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import List from 'list.js';
-// Import Flatepicker
+
+/**Navigation UI element */
+import Breadcrumbs from "../../../components/Common/Breadcrumb";
+
+/**Using for form validation */
+import { useFormik } from "formik";
+
+// Import Flatepicker for using  date pick
 import Flatpickr from "react-flatpickr";
 
-// Import Images
-// import avatar1 from "../../../assets/images/users/avatar-1.jpg";
-// import avatar2 from "../../../assets/images/users/avatar-2.jpg";
-// import avatar3 from "../../../assets/images/users/avatar-3.jpg";
-// import avatar4 from "../../../assets/images/users/avatar-4.jpg";
-// import avatar5 from "../../../assets/images/users/avatar-5.jpg";
+/**IMPORTED APIs */
+// import { getCustomersData } from '../../../helpers/ApiRoutes/authApiRoutes'; //For getting all customers
+import { removeCustomer } from '../../../helpers/ApiRoutes/removeApiRoutes'; //For removing customers
+import { addNewCustomer } from '../../../helpers/ApiRoutes/addApiRoutes'; //For adding new customer
+import { updateCustomer, updateCustomerStatus } from '../../../helpers/ApiRoutes/editApiRoutes'; //For updating  customer
+import { getSingleCustomerData, getCustomersData } from '../../../helpers/ApiRoutes/getApiRoutes';
+import config from '../../../config';
 
-
+// Function for customer page
 const ListCustomerTable = () => {
 
-    const [modal_list, setmodal_list] = useState(false);
-    function tog_list() {
+    const [modal_list, setmodal_list] = useState(false); /**Using for showing ADD & EDIT modal */
+    const [view_modal, setView_modal] = useState(false); /**Using for showing VIEW modal */
+    const [add_list, setAdd_list] = useState(false); /**Using for controlling ADD & EDIT modal */
+    const [customers, setCustomers] = useState([]); /**Using for storing All customers */
+    const [customer, setCustomer] = useState([]); /**Using for storing All particul  customer based of thair ID */
+    const [updateImage, setUpdateImage] = useState(""); /**Using for storing id proof image file */
+    const [idProofPreview, setIdProofPreview] = useState(null);  /**Using for storing idproof image URL*/
+    const [ pageNumber, setPageNumber ] = useState(1);
+    const [ numberOfData, setNumberOfData ] = useState(0);
+    const [ errors, setErrors ] = useState("")
+    const pageLimit = config.pageLimit;
+
+    /**This hook is used to fetch customers data */
+    useEffect(() => {
+        getAllData(1)
+    }, [])
+
+    /**This object sets the initial values for the form fields managed by formik */
+    const initialValues = {
+        name: !add_list ? customer[0]?.name : '',
+        email: !add_list ? customer[0]?.email : '',
+        userName: !add_list ? customer[0]?.user_name : '',
+        password: !add_list ? customer[0]?.password : '',
+        contact_no: !add_list ? customer[0]?.contact_no : '',
+        date_of_birth: !add_list ? customer[0]?.date_of_birth : '',
+        id_proof_no: !add_list ? customer[0]?.id_proof_no : '',
+        id_proof_image: !add_list ? customer[0]?.id_proof_image : '',
+    };
+
+    // Later in your code, when setting the initial state
+    const validation = useFormik({
+        // enableReinitialize : use this flag when initial values needs to be changed
+        enableReinitialize: true,
+        initialValues,
+        onSubmit: (values) => {
+            values.id_proof_image = updateImage;
+            console.log(values);
+            if (add_list) {
+                //add new customer
+                addCustomer(values)
+            } else {
+                //update previes customer
+                console.log("update previues one ");
+                editCustomer(values)
+            }
+        }
+    });
+
+    // function for add customer
+    async function addCustomer(values){
+        let addCustomer = await addNewCustomer(values);
+        if(addCustomer.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+            setUpdateImage("")
+        }else{
+            setErrors("")
+            setErrors(addCustomer.message)
+        }
+    }
+
+    // Update customer
+    async function editCustomer(data){
+        let updatedCustomer = await updateCustomer(customer[0]?.id, data);
+        if(updatedCustomer.code === 200){
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+            setUpdateImage("")
+        }else{
+            setErrors("")
+            setErrors(updatedCustomer.message)
+        }
+    }
+
+    /**This function is an event handler that triggers when the user
+     *  selects a file for the idproof image */
+    const handleIdProofImageChange = (event) => {
+        const file = event.target.files[0];
+        setUpdateImage(file)
+        setIdProofPreview(URL.createObjectURL(file));
+    };
+
+    /**This function is used to toggle the modal for adding/editing customers 
+    * and set the selected customer */
+    async function tog_list(param, productId) {
+        setErrors("")
+        if (param === 'ADD') {
+            setAdd_list(!add_list);
+        }else{
+            let singleCustomer = await getSingleCustomerData(productId)
+            setCustomer(singleCustomer);
+            setIdProofPreview(singleCustomer[0]?.id_proof_image)
+        }
         setmodal_list(!modal_list);
     }
 
-    const [modal_delete, setmodal_delete] = useState(false);
-    function tog_delete() {
-        setmodal_delete(!modal_delete);
+    /**This function toggles the view modal for displaying details
+    *  of a customer */
+    async function tog_view(productId) {
+        let singleCustomer = await getSingleCustomerData(productId)
+        setCustomer(singleCustomer)
+        setView_modal(!view_modal);
     }
 
-    useEffect(() => {
+    /**This function is used to remove a service provider*/
+    async function remove_data(id) {
+        await removeCustomer(id);
+        getAllData(pageNumber)
+    }
 
-        // const attroptions = {
-        //     valueNames: [
-        //         'name',
-        //         'born',
-        //         {
-        //             data: ['id']
-        //         },
-        //         {
-        //             attr: 'src',
-        //             name: 'image'
-        //         },
-        //         {
-        //             attr: 'href',
-        //             name: 'link'
-        //         },
-        //         {
-        //             attr: 'data-timestamp',
-        //             name: 'timestamp'
-        //         }
-        //     ]
-        // };
-        // const attrList = new List('users', attroptions);
-        // attrList.add({
-        //     name: 'Leia',
-        //     born: '1954',
-        //     image: avatar5,
-        //     id: 5,
-        //     timestamp: '67893'
-        // });
+    /**Function for changing customers status */
+    function toggleStatus(button, customerId) {
+        var currentStatus = button.innerText.trim();
+        const customerData = customers.find((s) => s.id === customerId);
+        updateCustomerStatus(customerData.id)
+        if (currentStatus === 'ACTIVE') {
+            button.innerText = 'INACTIVE';
+            button.classList.remove('btn-success');
+            button.classList.add('btn-danger');
+            if (customerData) {
+                customerData.status = 'INACTIVE';
+            }
+        }
+        else if (currentStatus === 'INACTIVE') {
+            button.innerText = 'ACTIVE';
+            button.classList.remove('btn-danger');
+            button.classList.add('btn-success');
+            if (customerData) {
+                customerData.status = 'ACTIVE';
+            }
+        }
+    }
 
-        // Existing List
-        const existOptionsList = {
-            valueNames: ['contact-name', 'contact-message']
-        };
-
-        new List('contact-existing-list', existOptionsList);
-
-        // Fuzzy Search list
-        new List('fuzzysearch-list', {
-            valueNames: ['name']
-        });
-
-        // pagination list
-
-        new List('pagination-list', {
-            valueNames: ['pagi-list'],
-            page: 3,
-            pagination: true
-        });
-    });
+    // function for get data all customer data
+    async function getAllData(page) {
+        let getCustomers = await getCustomersData(page || 1);
+        console.log(getCustomers)
+        setCustomers(getCustomers?.customer);
+        setPageNumber(page);
+        setNumberOfData(getCustomers?.totalCount);
+    }
 
     return (
         <React.Fragment>
             <div className="page-content">
                 <Container fluid>
                     <Breadcrumbs title="Tables" breadcrumbItem="Customers" />
-
                     <Row>
                         <Col lg={12}>
                             <Card>
                                 <CardHeader>
                                     <h4 className="card-title mb-0">Add, Edit & Remove</h4>
                                 </CardHeader>
-
                                 <CardBody>
                                     <div id="customerList">
                                         <Row className="g-4 mb-3">
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
-                                                    <Button color="success" className="add-btn" onClick={() => tog_list()} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
-                                                    <Button color="soft-danger"
-                                                    // onClick="deleteMultiple()"
-                                                    ><i className="ri-delete-bin-2-line"></i></Button>
-                                                </div>
-                                            </Col>
-                                            <Col className="col-sm">
-                                                <div className="d-flex justify-content-sm-end">
-                                                    <div className="search-box ms-2">
-                                                        <input type="text" className="form-control search" placeholder="Search..." />
-                                                        <i className="ri-search-line search-icon"></i>
-                                                    </div>
+                                                    <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
                                                 </div>
                                             </Col>
                                         </Row>
-
                                         <div className="table-responsive table-card mt-3 mb-1">
-                                            <table className="table align-middle table-nowrap" id="customerTable">
-                                                <thead className="table-light">
-                                                    <tr>
-                                                        <th scope="col" style={{ width: "50px" }}>
-                                                            <div className="form-check">
-                                                                <input className="form-check-input" type="checkbox" id="checkAll" value="option" />
-                                                            </div>
-                                                        </th>
-                                                        <th className="sort" data-sort="customer_name">Name</th>
-                                                        <th className="sort" data-sort="email">Email</th>
-                                                        <th className="sort" data-sort="username">Username</th>
-                                                        <th className="sort" data-sort="contact_no">Contact Number</th>
-                                                        <th className="sort" data-sort="date_of_birth">Date Of Birth</th>
-                                                        <th className="sort" data-sort="id_proof">Id Proof</th>
-                                                        <th className="sort" data-sort="status">Status</th>
-                                                        <th className="sort" data-sort="contact_number_verified">Contact Number Verified</th>
-                                                        <th className="sort" data-sort="email_verified">Email Verified</th>
-                                                        <th className="sort" data-sort="registered_date">Registered Date</th>
-                                                        <th className="sort" data-sort="action">Action</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className="list form-check-all">
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <div className="form-check">
-                                                                <input className="form-check-input" type="checkbox" name="chk_child" value="option1" />
-                                                            </div>
-                                                        </th>
-                                                        <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
-                                                        <td className="customer_name">Mary Cousar</td>
-                                                        <td className="email">marycousar@velzon.com</td>
-                                                        <td className="username">marycou1</td>
-                                                        <td className="contact_no">580-464-4694</td>
-                                                        <td className="date_of_birth">1997-11-06</td>
-                                                        <td className="id_proof">1234567895142</td>
-                                                        <td className="status"><span className="badge badge-soft-success text-uppercase">ACTIVE</span></td>
-                                                        <td className="contact_number_verified"><span className="badge badge-soft-success text-uppercase">TRUE</span></td>
-                                                        <td className="email_verified"><span className="badge badge-soft-success text-uppercase">FALSE</span></td>
-                                                        <td className="registered_date">2023-07-06 10:21:52</td>
-                                                        <td>
-                                                            <div className="d-flex gap-2">
-                                                                <div className="edit">
-                                                                    <button className="btn btn-sm btn-success edit-item-btn"
-                                                                        data-bs-toggle="modal" data-bs-target="#showModal">Edit</button>
-                                                                </div>
-                                                                <div className="remove">
-                                                                    <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                    <tr>
-                                                        <th scope="row">
-                                                            <div className="form-check">
-                                                                <input className="form-check-input" type="checkbox" name="checkAll" value="option2" />
-                                                            </div>
-                                                        </th>
-                                                        <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2102</Link></td>
-                                                        <td className="customer_name">Jeff Taylor</td>
-                                                        <td className="email">jefftaylor@velzon.com</td>
-                                                        <td className="username">jefftaylor1</td>
-                                                        <td className="contact_no">863-577-5537</td>
-                                                        <td className="date_of_birth">1997-11-06</td>
-                                                        <td className="id_proof">1234567895142</td>
-                                                        <td className="status"><span className="badge badge-soft-success text-uppercase">ACTIVE</span></td>
-                                                        <td className="contact_number_verified"><span className="badge badge-soft-success text-uppercase">FALSE</span></td>
-                                                        <td className="email_verified"><span className="badge badge-soft-success text-uppercase">TRUE</span></td>
-                                                        <td className="registered_date">2023-09-22 10:21:52</td>
-                                                        <td>
-                                                            <div className="d-flex gap-2">
-                                                                <div className="edit">
-                                                                    <button className="btn btn-sm btn-success edit-item-btn"
-                                                                        data-bs-toggle="modal" data-bs-target="#showModal">Edit</button>
-                                                                </div>
-                                                                <div className="remove">
-                                                                    <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
-                                                                </div>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </tbody>
-                                            </table>
-                                            <div className="noresult" style={{ display: "none" }}>
-                                                <div className="text-center">
-                                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                                        colors="primary:#121331,secondary:#08a88a" style={{ width: "75px", height: "75px" }}>
-                                                    </lord-icon>
-                                                    <h5 className="mt-2">Sorry! No Result Found</h5>
-                                                    <p className="text-muted mb-0">We've searched more than 150+ Orders We did not find any
-                                                        orders for you search.</p>
-                                                </div>
-                                            </div>
-                                        </div>
+                                        <table className="table align-middle table-nowrap" id="customerTable">
+                                        <thead className="table-light">
+                                            <tr>
+                                            <th className="index" data-sort="customer_name">
+                                                #
+                                            </th>
+                                            <th className="customer_name" data-sort="customer_name">
+                                                Name
+                                            </th>
+                                            <th className="email" data-sort="email">
+                                                Email
+                                            </th>
+                                            <th className="contact_no" data-sort="contact_no">
+                                                Contact Number
+                                            </th>
+                                            <th className="registered_date" data-sort="registered_date">
+                                                Registered Date
+                                            </th>
+                                            <th className="status" data-sort="status">
+                                                Status
+                                            </th>
+                                            <th className="action" data-sort="action">
+                                                Action
+                                            </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className="list form-check-all">
+                                            {customers.map((item, index) => (
+                                            <tr key={item.id}>
+                                                <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
+                                                <td className="customer_name">{item.name}</td>
+                                                <td className="email">{item.email}</td>
+                                                <td className="contact_no">{item.contact_no}</td>
+                                                <td className="registered_date">{item.created_at}</td>
+                                                <td>
+                                                    {item.status === "ACTIVE" ?
+                                                        <button
+                                                            className="btn btn-sm btn-success status-item-btn"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#showModal"
+                                                            onClick={(event) => toggleStatus(event.target, item.id)}
+                                                        >
+                                                            {item.status}
+                                                        </button> :
+                                                        <button
+                                                            className="btn btn-sm btn-danger status-item-btn"
+                                                            data-bs-toggle="modal"
+                                                            data-bs-target="#showModal"
+                                                            onClick={(event) => toggleStatus(event.target, item.id)}
+                                                        >
+                                                            {item.status}
+                                                        </button>
 
-                                        <div className="d-flex justify-content-end">
+                                                    }
+                                                </td>
+                                                <td>
+                                                <div className="d-flex gap-2">
+                                                    <div className="view">
+                                                    <button
+                                                        className="btn btn-sm btn-success edit-item-btn"
+                                                        onClick={() => tog_view(item.id)}
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#showModal"
+                                                    >
+                                                        View
+                                                    </button>
+                                                    </div>
+                                                    <div className="edit">
+                                                    <button
+                                                        className="btn btn-sm btn-primary edit-item-btn"
+                                                        onClick={() => tog_list("EDIT", item.id)}
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#showModal"
+                                                    >
+                                                        Edit
+                                                    </button>
+                                                    </div>
+                                                    <div className="remove">
+                                                    <button
+                                                        className="btn btn-sm btn-danger remove-item-btn"
+                                                        onClick={() => remove_data(item.id)}
+                                                        data-bs-toggle="modal"
+                                                        data-bs-target="#deleteRecordModal"
+                                                    >
+                                                        Remove
+                                                    </button>
+                                                    </div>
+                                                </div>
+                                                </td>
+                                            </tr>
+                                            ))}
+                                        </tbody>
+                                        </table>
+                                         </div>
+                                         <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">
-                                                <Link className="page-item pagination-prev disabled" to="#">
-                                                    Previous
-                                                </Link>
-                                                <ul className="pagination customers-pagination mb-0"></ul>
-                                                <Link className="page-item pagination-next" to="#">
-                                                    Next
-                                                </Link>
+                                                {pageNumber > 1 ?
+                                                    <Link 
+                                                        className="page-item pagination-prev disabled" 
+                                                        onClick={()=> getAllData(pageNumber - 1)}
+                                                    >
+                                                        Previous
+                                                    </Link>
+                                                : null }
+                                                <ul className="pagination listjs-pagination mb-0"></ul>
+                                                {numberOfData > pageLimit * pageNumber ? 
+                                                    <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}>
+                                                        Next
+                                                    </Link> 
+                                                : null }
                                             </div>
                                         </div>
                                     </div>
@@ -225,426 +313,244 @@ const ListCustomerTable = () => {
                             </Card>
                         </Col>
                     </Row>
-
-                    {/* <Row> */}
-                        {/* <Col xl={4}>
-                            <Card>
-                                
-                                <CardBody>
-                                    <p className="text-muted">Use data attributes and other custom attributes as keys</p>
-                                    <div id="users">
-                                        
-
-                                        <SimpleBar style={{ height: "242px" }} className="mx-n3">
-                                            <ListGroup className="list mb-0" flush>
-                                                <ListGroupItem data-id="1">
-                                                    <div className="d-flex">
-                                                        <div className="flex-grow-1">
-                                                            <h5 className="fs-14 mb-1"><Link to="#" className="link name text-dark">Jonny Stromberg</Link></h5>
-                                                            <p className="born timestamp text-muted mb-0" data-timestamp="12345">1986</p>
-                                                        </div>
-                                                        <div className="flex-shrink-0">
-                                                            <div>
-                                                                <img className="avatar-xs rounded-circle" alt="" src={avatar1} />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </ListGroupItem>
-
-                                                <ListGroupItem data-id="2">
-                                                    <div className="d-flex">
-                                                        <div className="flex-grow-1">
-                                                            <h5 className="fs-14 mb-1"><Link to="#" className="link name text-dark">Jonas Arnklint</Link></h5>
-                                                            <p className="born timestamp text-muted mb-0" data-timestamp="23456">1985</p>
-                                                        </div>
-                                                        <div className="flex-shrink-0">
-                                                            <div>
-                                                                <img className="avatar-xs rounded-circle" alt="" src={avatar2} />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </ListGroupItem>
-
-                                                <ListGroupItem data-id="3">
-                                                    <div className="d-flex">
-                                                        <div className="flex-grow-1">
-                                                            <h5 className="fs-14 mb-1"><Link to="#" className="link name text-dark">Martina Elm</Link></h5>
-                                                            <p className="born timestamp text-muted mb-0" data-timestamp="34567">1986</p>
-                                                        </div>
-                                                        <div className="flex-shrink-0">
-                                                            <div>
-                                                                <img className="avatar-xs rounded-circle" alt="" src={avatar3} />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </ListGroupItem>
-
-                                                <ListGroupItem data-id="4">
-                                                    <div className="d-flex">
-                                                        <div className="flex-grow-1">
-                                                            <h5 className="fs-14 mb-1"><Link to="#" className="link name text-dark">Gustaf Lindqvist</Link></h5>
-                                                            <p className="born timestamp text-muted mb-0" data-timestamp="45678">1983</p>
-                                                        </div>
-                                                        <div className="flex-shrink-0">
-                                                            <div>
-                                                                <img className="avatar-xs rounded-circle" alt="" src={avatar4} />
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </ListGroupItem>
-
-                                            </ListGroup>
-                                        </SimpleBar>
-                                    </div>
-                                </CardBody>
-                            </Card>
-                        </Col> */}
-
-                        {/* <Col xl={4}>
-                            <Card>
-                                <CardHeader>
-                                    <h4 className="card-title mb-0">Existing List</h4>
-                                </CardHeader>
-
-                                <CardBody>
-                                    <p className="text-muted">Basic Example with Existing List</p>
-                                    <div id="contact-existing-list">
-                                        <Row className="mb-2">
-                                            <Col>
-                                                <div>
-                                                    <input className="search form-control" placeholder="Search" />
-                                                </div>
-                                            </Col>
-                                            <Col className="col-auto">
-                                                <button className="btn btn-light sort" data-sort="contact-name">
-                                                    Sort by name
-                                                </button>
-                                            </Col>
-                                        </Row>
-
-                                        <SimpleBar style={{ height: "242px" }} className="mx-n3">
-                                            <ListGroup className="list mb-0" flush>
-                                                <ListGroupItem data-id="01">
-                                                    <div className="d-flex align-items-start">
-                                                        <div className="flex-shrink-0 me-3">
-                                                            <div>
-                                                                <img className="avatar-xs rounded-circle" alt="" src={avatar1} />
-                                                            </div>
-                                                        </div>
-
-                                                        <div className="flex-grow-1 overflow-hidden">
-                                                            <h5 className="contact-name fs-14 mb-1"><Link to="#" className="link text-dark">Jonny Stromberg</Link></h5>
-                                                            <p className="contact-born text-muted mb-0">New updates for ABC Theme</p>
-                                                        </div>
-
-                                                        <div className="flex-shrink-0 ms-2">
-                                                            <div className="fs-11 text-muted">06 min</div>
-                                                        </div>
-                                                    </div>
-                                                </ListGroupItem>
-                                                <ListGroupItem data-id="02">
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="flex-shrink-0 me-3">
-                                                            <div>
-                                                                <img className="avatar-xs rounded-circle" alt="" src={avatar2} />
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex-grow-1 overflow-hidden">
-                                                            <h5 className="contact-name fs-14 mb-1"><Link to="#" className="link text-dark">Jonas Arnklint</Link></h5>
-                                                            <p className="contact-born text-muted mb-0">Bug Report - abc theme</p>
-                                                        </div>
-                                                        <div className="flex-shrink-0 ms-2">
-                                                            <div className="fs-12 text-muted">12 min</div>
-                                                        </div>
-                                                    </div>
-                                                </ListGroupItem>
-                                                <ListGroupItem data-id="03">
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="flex-shrink-0 me-3">
-                                                            <div>
-                                                                <img className="avatar-xs rounded-circle" alt="" src={avatar3} />
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex-grow-1">
-                                                            <h5 className="contact-name fs-14 mb-1"><Link to="#" className="link text-dark">Martina Elm</Link></h5>
-                                                            <p className="contact-born text-muted mb-0">Nice to meet you</p>
-                                                        </div>
-                                                        <div className="flex-shrink-0 ms-2">
-                                                            <div className="fs-12 text-muted">28 min</div>
-                                                        </div>
-                                                    </div>
-                                                </ListGroupItem>
-                                                <ListGroupItem data-id="04">
-                                                    <div className="d-flex align-items-center">
-                                                        <div className="flex-shrink-0 me-3">
-                                                            <div>
-                                                                <img className="avatar-xs rounded-circle" alt="" src={avatar4} />
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex-grow-1">
-                                                            <h5 className="contact-name fs-13 mb-1"><Link to="#" className="link text-dark">Gustaf Lindqvist</Link></h5>
-                                                            <p className="contact-born text-muted mb-0">I've finished it! See you so</p>
-                                                        </div>
-                                                        <div className="flex-shrink-0 ms-2">
-                                                            <div className="fs-12 text-muted">01 hrs</div>
-                                                        </div>
-                                                    </div>
-                                                </ListGroupItem>
-                                            </ListGroup>
-                                        </SimpleBar>
-                                    </div>
-                                </CardBody>
-                            </Card>
-                        </Col> */}
-
-                        {/* <Col xl={4}>
-                            <Card>
-                                <CardHeader>
-                                    <h4 className="card-title mb-0">Fuzzy Search</h4>
-                                </CardHeader>
-                                <CardBody>
-                                    <p className="text-muted">Example of how to use the fuzzy search plugin</p>
-                                    <div id="fuzzysearch-list">
-                                        <input type="text" className="fuzzy-search form-control mb-2" placeholder="Search" />
-
-                                        <SimpleBar style={{ height: "242px" }}>
-                                            <ul className="list mb-0">
-                                                <li><p className="name">Guybrush Threepwood</p></li>
-                                                <li><p className="name">Elaine Marley</p></li>
-                                                <li><p className="name">LeChuck</p></li>
-                                                <li><p className="name">Stan</p></li>
-                                                <li><p className="name">Voodoo Lady</p></li>
-                                                <li><p className="name">Herman Toothrot</p></li>
-                                                <li><p className="name">Meathook</p></li>
-                                                <li><p className="name">Carla</p></li>
-                                                <li><p className="name">Otis</p></li>
-                                                <li><p className="name">Rapp Scallion</p></li>
-                                                <li><p className="name">Rum Rogers Sr.</p></li>
-                                                <li><p className="name">Men of Low Moral Fiber</p></li>
-                                                <li><p className="name">Murray</p></li>
-                                                <li><p className="name">Cannibals</p></li>
-                                            </ul>
-                                        </SimpleBar>
-                                    </div>
-                                </CardBody>
-                            </Card>
-                        </Col> */}
-                    {/* </Row> */}
-
-                    {/* <Row>
-                        <Col xl={4}>
-                            <Card>
-                                <CardHeader>
-                                    <h4 className="card-title mb-0">Pagination</h4>
-                                </CardHeader>
-
-                                <CardBody>
-                                    <p className="text-muted">Example of how to use the pagination plugin</p>
-
-                                    <div id="pagination-list">
-                                        <div className="mb-2">
-                                            <input className="search form-control" placeholder="Search" />
-                                        </div>
-
-                                        <div className="mx-n3">
-                                            <ListGroup className="list mb-0" flush>
-                                                <ListGroupItem>
-                                                    
-                                                </ListGroupItem>
-
-                                                <ListGroupItem>
-                                                    <div className="d-flex align-items-center pagi-list">
-                                                        <div className="flex-shrink-0 me-3">
-                                                            <div>
-                                                                <img className="avatar-xs rounded-circle" alt="" src={avatar2} />
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex-grow-1 overflow-hidden">
-                                                            <h5 className="fs-14 mb-1"><Link to="#" className="link text-dark">Jonas Arnklint</Link></h5>
-                                                            <p className="born fs-12 timestamp text-muted mb-0">Backend Developer</p>
-                                                        </div>
-                                                        <div className="flex-shrink-0 ms-2">
-                                                            <div>
-                                                                <button type="button" className="btn btn-sm btn-light"><i className="ri-mail-line align-bottom"></i> Message</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </ListGroupItem>
-
-                                                <ListGroupItem>
-                                                    <div className="d-flex align-items-center pagi-list">
-                                                        <div className="flex-shrink-0 me-3">
-                                                            <div>
-                                                                <img className="avatar-xs rounded-circle" alt="" src={avatar3} />
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex-grow-1">
-                                                            <h5 className="fs-14 mb-1"><Link to="#" className="link text-dark">Martina Elm</Link></h5>
-                                                            <p className="born fs-12 timestamp text-muted mb-0">UI/UX Designer</p>
-                                                        </div>
-                                                        <div className="flex-shrink-0 ms-2">
-                                                            <div>
-                                                                <button type="button" className="btn btn-sm btn-light"><i className="ri-mail-line align-bottom"></i> Message</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </ListGroupItem>
-
-                                                <ListGroupItem>
-                                                    <div className="d-flex align-items-center pagi-list">
-                                                        <div className="flex-shrink-0 me-3">
-                                                            <div>
-                                                                <img className="avatar-xs rounded-circle" alt="" src={avatar4} />
-                                                            </div>
-                                                        </div>
-                                                        <div className="flex-grow-1">
-                                                            <h5 className="fs-14 mb-1"><Link to="#" className="link text-dark">Gustaf Lindqvist</Link></h5>
-                                                            <p className="born fs-12 timestamp text-muted mb-0">Full Stack Developer</p>
-                                                        </div>
-                                                        <div className="flex-shrink-0 ms-2">
-                                                            <div>
-                                                                <button type="button" className="btn btn-sm btn-light"><i className="ri-mail-line align-bottom"></i> Message</button>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </ListGroupItem>
-
-                                              
-
-                                               
-                                            </ListGroup>
-
-                                            <div className="d-flex justify-content-center">
-                                                <div className="pagination-wrap hstack gap-2">
-                                                    <Link className="page-item pagination-prev disabled" to="#">
-                                                        Previous
-                                                    </Link>
-                                                    <ul className="pagination customers-pagination mb-0"></ul>
-                                                    <Link className="page-item pagination-next" to="#">
-                                                        Next
-                                                    </Link>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </CardBody>
-                            </Card>
-                        </Col>
-                    </Row> */}
                 </Container>
             </div>
 
-            {/* Add Modal */}
-            <Modal isOpen={modal_list} toggle={() => { tog_list(); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_list(); }}> Add Customer </ModalHeader>
-                <form className="tablelist-form">
+            {/********* Add Modal*************** */}
+            <Modal className="extra-width" isOpen={modal_list} toggle={() => { setmodal_list(false); setAdd_list(false); setIdProofPreview(null) }} centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); setAdd_list(false); setIdProofPreview(null); setUpdateImage("")}}>{add_list ? 'Add Customer' : 'Edit Customer'} </ModalHeader>
+                <form className="tablelist-form"
+                    onSubmit={validation.handleSubmit}>
                     <ModalBody>
-                        <div className="mb-3" id="modal-id" style={{ display: "none" }}>
-                            <label htmlFor="id-field" className="form-label">ID</label>
-                            <input type="text" id="id-field" className="form-control" placeholder="ID" readOnly />
-                        </div>
-
+                        {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
+                        {/** Customer name */}
                         <div className="mb-3">
-                            <label htmlFor="customername-field" className="form-label">Name </label>
-                            <input type="text" id="customername-field" className="form-control" placeholder="Enter Name" required />
+                            <label htmlFor="customername-field" className="form-label">Name</label>
+                            <input
+                                type="text"
+                                name='name'
+                                id="customername-field"
+                                className="form-control"
+                                value={validation.values.name || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Name"
+                                required
+                            />
                         </div>
-
+                        {/** Customer email */}
+                        {add_list ?
                         <div className="mb-3">
                             <label htmlFor="email-field" className="form-label">Email</label>
-                            <input type="email" id="email-field" className="form-control" placeholder="Enter Email" required />
+                            <input
+                                type="email"
+                                name='email'
+                                id="email-field"
+                                value={validation.values.email || ""}
+                                onChange={validation.handleChange}
+                                className="form-control"
+                                placeholder="Enter Email"
+                                required
+                            />
                         </div>
-
+                        : null}
+                        {/** Customer username */}
                         <div className="mb-3">
                             <label htmlFor="username-field" className="form-label">Username</label>
-                            <input type="username" id="username-field" className="form-control" placeholder="Enter Username" required />
+                            <input
+                                type="text"
+                                name='userName'
+                                id="username-field"
+                                value={validation.values.userName || ""}
+                                onChange={validation.handleChange}
+                                className="form-control"
+                                placeholder="Enter Username"
+                                required
+                            />
                         </div>
-
+                        {/** Customer Password */}
+                        {add_list ?
+                            <div className="mb-3">
+                                <label htmlFor="password-field" className="form-label">Password</label>
+                                <input
+                                    type="password"
+                                    name='password'
+                                    id="password-field"
+                                    value={validation.values.password || ""}
+                                    onChange={validation.handleChange}
+                                    className="form-control"
+                                    placeholder="Enter Password"
+                                    required
+                                />
+                            </div>
+                        : null }
+                        {/** Customer contact_no number */}
                         <div className="mb-3">
                             <label htmlFor="contact_no-field" className="form-label">Contact Number</label>
-                            <input type="text" id="contact_no-field" className="form-control" placeholder="Enter Contact Number" required />
+                            <input
+                                type="text"
+                                name='contact_no'
+                                id="contact_no-field"
+                                value={validation.values.contact_no || ""}
+                                onChange={validation.handleChange}
+                                className="form-control"
+                                placeholder="Enter Contact Number"
+                                required
+                            />
                         </div>
-                        
+                        {/** Customer Date of Birth */}
                         <div className="mb-3">
                             <label htmlFor="date_of_birth-field" className="form-label">Date Of Birth</label>
-                            <input type="date_of_birth" id="date_of_birth-field" className="form-control" placeholder="Enter Date Of Birth" required />
-                        </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="id_proof-field" className="form-label">Id Proof</label>
-                            <input type="id_proof" id="id_proof-field" className="form-control" placeholder="Enter Id Proof" required />
-                        </div>
-
-                        <div>
-                            <label htmlFor="status-field" className="form-label">Status</label>
-                            <select className="form-control" data-trigger name="status-field" id="status-field" >
-                                <option value="">Status</option>
-                                <option value="active">ACTIVE</option>
-                                <option value="inactive">INACTIVE</option>
-                            </select>
-                        </div>
-
-                        <div>
-                            <label htmlFor="contact_number_verified-field" className="form-label" s>Contact Number Verified</label>
-                            <select className="form-control" data-trigger name="contact_number_verified-field" id="contact_number_verified-field" >
-                                <option value="">Status</option>
-                                <option value="true">TRUE</option>
-                                <option value="false">FALSE</option>
-                            </select>
-                        </div>
-
-
-                        <div>
-                            <label htmlFor="email_verified-field" className="form-label">Email Verified</label>
-                            <select className="form-control" data-trigger name="email_verified-field" id="email_verified-field" >
-                                <option value="">Status</option>
-                                <option value="true">TRUE</option>
-                                <option value="false">FALSE</option>
-                            </select>
-                        </div>
-
-                        <div className="mb-3">
-                            <label htmlFor="registered_date-field" className="form-label">Registered Date</label>
                             <Flatpickr
                                 className="form-control"
+                                name='date_of_birth'
                                 options={{
-                                    dateFormat: "d M, Y"
+                                    dateFormat: "d-m-Y",
+                                    maxDate :new Date(),
                                 }}
-                                placeholder="Select Date"
+                                value= ""
+                                onChange={(dates) =>validation.setFieldValue('date_of_birth', dates[0])}
+                                placeholder={validation.values.date_of_birth || "Select Date"}
+                            />
+                        </div>
+                        {/** Customer Id proof no */}
+                        <div className="mb-3">
+                            <label htmlFor="id_proof_no-field" className="form-label">Id Proof Number</label>
+                            <input
+                                type="text"
+                                id="id_proof_no-field"
+                                name='id_proof_no'
+                                className="form-control"
+                                value={validation.values.id_proof_no || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Id Proof Number"
+                                required
                             />
                         </div>
 
-                        
+                        {/* Id proof Image */}
+                        <div className="mb-3">
+                            <label htmlFor="id_proof-field" className="form-label">Id Proof Image</label>
+                            <div className="col-md-10">
+                                {idProofPreview && (
+                                    <div>
+                                        <img name="id_proof_image" src={idProofPreview} alt="Id Proof Preview" style={{ maxWidth: '100px' }} />
+                                    </div>
+                                )}
+
+                                <input
+                                    className="form-control"
+                                    name="id_proof_image"
+                                    type="file"
+                                    placeholder="Certificate Image"
+                                    onChange={handleIdProofImageChange}
+                                />
+
+                            </div>
+                        </div>
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() => setmodal_list(false)}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">Add 
+                            <button type="button" className="btn btn-light" onClick={() => { setUpdateImage(""); setmodal_list(false); setAdd_list(false); setIdProofPreview(null) }}>Close</button>
+                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ? 'Add Customer' : 'Update Customer'}
                             </button>
-                            {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>
                 </form>
             </Modal>
 
-            {/* Remove Modal */}
-            <Modal isOpen={modal_delete} toggle={() => { tog_delete(); }} className="modal fade zoomIn" id="deleteRecordModal" centered >
-                <div className="modal-header">
-                    <Button type="button" onClick={() => setmodal_delete(false)} className="btn-close" aria-label="Close"> </Button>
-                </div>
-                <ModalBody>
-                    <div className="mt-2 text-center">
-                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
-                            colors="primary:#f7b84b,secondary:#f06548" style={{ width: "100px", height: "100px" }}></lord-icon>
-                        <div className="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                            <h4>Are you Sure ?</h4>
-                            <p className="text-muted mx-4 mb-0">Are you Sure You want to Remove this Record ?</p>
+            {/***************** View Modal *************/}
+            <Modal className="extra-width" isOpen={view_modal} toggle={() => { tog_view('view'); }}>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setView_modal(false);}}>View Customer</ModalHeader>
+                <form className="tablelist-form"
+                    onSubmit={validation.handleSubmit}>
+                    <ModalBody>
+                        {/** Customer name */}
+                        <div className="mb-3">
+                            <label htmlFor="customername-field" className="form-label">Name</label>
+                            <input
+                                type="text"
+                                name='name'
+                                id="customername-field"
+                                className="form-control"
+                                value={validation.values.name || ""}
+                                readOnly
+                            />
                         </div>
-                    </div>
-                    <div className="d-flex gap-2 justify-content-center mt-4 mb-2">
-                        <button type="button" className="btn w-sm btn-light" onClick={() => setmodal_delete(false)}>Close</button>
-                        <button type="button" className="btn w-sm btn-danger " id="delete-record">Yes, Delete It!</button>
-                    </div>
-                </ModalBody>
+                        {/** Customer email */}
+                        <div className="mb-3">
+                            <label htmlFor="email-field" className="form-label">Email</label>
+                            <input
+                                type="email"
+                                name='email'
+                                id="email-field"
+                                value={validation.values.email || ""}
+                                className="form-control"
+                                readOnly
+                            />
+                        </div>
+                        {/** Customer username */}
+                        <div className="mb-3">
+                            <label htmlFor="username-field" className="form-label">Username</label>
+                            <input
+                                type="text"
+                                name='username'
+                                id="username-field"
+                                value={validation.values.userName || ""}
+                                className="form-control"
+                                readOnly
+                            />
+                        </div>
+                        {/** Customer contact_no number */}
+                        <div className="mb-3">
+                            <label htmlFor="contact_no-field" className="form-label">Contact Number</label>
+                            <input
+                                type="text"
+                                name='contact_no'
+                                id="contact_no-field"
+                                value={validation.values.contact_no || ""}
+                                className="form-control"
+                                readOnly
+                            />
+                        </div>
+                        {/** Customer Date of Birth */}
+                        <div className="mb-3">
+                            <label htmlFor="date_of_birth-field" className="form-label">Date Of Birth</label>
+                            <input
+                                type="text"
+                                id="date_of_birth-field"
+                                name='date_of_birth'
+                                className="form-control"
+                                value={validation.values.date_of_birth || ""}
+                                readOnly
+                            />
+                        </div>
+                        {/** Customer Id proof no */}
+                        <div className="mb-3">
+                            <label htmlFor="id_proof_no-field" className="form-label">Id Proof Number</label>
+                            <input
+                                type="text"
+                                id="id_proof_no-field"
+                                name='id_proof_no'
+                                className="form-control"
+                                value={validation.values.id_proof_no || ""}
+                                readOnly
+                            />
+                        </div>
+
+                        {/* certificate image */}
+                        <div className="mb-3">
+                            <label htmlFor="id_proof_image-field" className="form-label">Id Proof Image</label>
+                            <div>
+                                <img src={validation.values.id_proof_image || ""} alt="id_proof Image" style={{ maxWidth: '100px' }} />
+                            </div>
+                        </div>
+                    </ModalBody>
+                    <ModalFooter>
+                        <div className="hstack gap-2 justify-content-end">
+                            <button type="button" className="btn btn-light" onClick={() => { setView_modal(false); }}>Close</button>
+                        </div>
+                    </ModalFooter>
+                </form>
             </Modal>
         </React.Fragment>
     );
