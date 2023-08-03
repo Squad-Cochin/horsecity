@@ -408,7 +408,7 @@ const TripDeatails = () => {
         className="extra-width"
         isOpen={modal_list}
         toggle={() => {
-          tog_list();
+          setmodal_list(false)
         }}
         centered
       >
@@ -416,7 +416,7 @@ const TripDeatails = () => {
           className="bg-light p-3"
           id="exampleModalLabel"
           toggle={() => {
-            tog_list();
+            setmodal_list(false)
           }}
         >
           {" "}
