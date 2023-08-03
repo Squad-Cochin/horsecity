@@ -6,16 +6,14 @@ exports.SendEmail = async (id, to, text, subject) =>
 {
     return new Promise(async (resolve, reject) =>
     {
-
       let invoiceData = await commonfetching.getOneInvoice(id);
-      console.log('Invoice Data: ', invoiceData);
-
+      //console.log('Invoice Data: ', invoiceData);
       // Function to generate the table rows for vehicle details
       function generateVehicleRows(vehicles) {
         let vehicleRows = '';
         vehicles.forEach((vehicle, index) => {
           vehicleRows += `
-            <tr>
+            <tr style="text-align: center; height: 40px;">
               <td class="text-center">${index + 1}</td>
               <td class="text-center">${vehicle.pickup_location}</td>
               <td class="text-center">${vehicle.vehicle_number}</td>
@@ -32,126 +30,200 @@ exports.SendEmail = async (id, to, text, subject) =>
         let paymentRows = '';
         if (payments.length > 0) {
         paymentRows += `
-        <tr>
-        <td class="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center" style="padding: 10px 0px; line-height: 1.55em; text-align: left;">#</td>
-        <td class="tm_width_5 tm_semi_bold tm_primary_color tm_gray_bg text-center" style="width: 16.33333333%; padding: 10px 0px; line-height: 1.55em; text-align: center;">Total Amount</td>
-        <td class="tm_width_5 tm_semi_bold tm_primary_color tm_gray_bg text-center" style="width: 16.33333333%; padding: 10px 0px; line-height: 1.55em; text-align: center;">Recieved Money</td>
-        <td class="tm_width_5 tm_semi_bold tm_primary_color tm_gray_bg text-center" style="width: 16.33333333%; padding: 10px 0px; line-height: 1.55em; text-align: center;">Received Date</td>
-        <td class="tm_width_5 tm_semi_bold tm_primary_color tm_gray_bg text-center" style="width: 16.33333333%; padding: 10px 0px; line-height: 1.55em; text-align: center;">Remaining Amount</td>
+        <tr style="background-color: #cecccc;height: 50px; text-align: center; ">
+            <th>#</th>
+            <th>Recieved Money</th>
+            <th>Received Date</th>
+            <th>Remaining Amount</th>
       </tr>
     `;
     payments.forEach((payment, index) => {
       paymentRows += `
-        <tr key=${index}>
-          <td class="tm_width_3 text-center" style="width: 8.33333333%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">${index + 1}</td>
-          <td class="tm_width_5 text-center" style="width: 16.66666667%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">${payment.total_amount} AED</td>
-          <td class="tm_width_5 text-center" style="width: 16.66666667%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">${payment.received_amount} AED</td>
-          <td class="tm_width_5 text-center" style="width: 16.66666667%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">${payment.received_date}</td>
-          <td class="tm_width_5 text-center" style="width: 16.66666667%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">${payment.remaining_amount} AED</td>
+        <tr style="text-align: center; height: 40px;" key=${index}>
+          <td>${index + 1}</td>
+          <td>${payment.received_amount} AED</td>
+          <td>${payment.received_date}</td>
+          <td>${payment.remaining_amount} AED</td>
         </tr>
       `;
     });
   }
-
   return paymentRows;
 }
-
-
-      function generateInvoiceHTML(invoiceData) {
+      function generateInvoiceHTML(invoiceData)
+      {
         // Call the functions to generate vehicle and payment details
         const vehicleRows = generateVehicleRows(invoiceData.vehicles);
-        const paymentDetails = generatePaymentDetails(invoiceData.payment);
-      
+        const paymentDetails = generatePaymentDetails(invoiceData.payment);      
         // Generate the complete HTML content using the provided invoiceData and the generated vehicleRows and paymentDetails
         const htmlContent = `
-          <!DOCTYPE html>
-          <html>
-          <head>
-          <meta charset="UTF-8">
-          <title>Invoice</title>
-          </head>
-          <body style="color: #666; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.6em; overflow-x: hidden; background-color: #f5f6fa;">
-    <div class="tm_container" style="max-width: 880px; margin-left: auto; margin-right: auto; position: relative;">
-        <div class="tm_invoice_wrap" style="position: relative;">
-            <div class="tm_invoice tm_style1" id="tm_download_section">
-                <div class="tm_invoice_in" style="position: relative; z-index: 100;">
-                    <div class="tm_invoice_head tm_align_center tm_mb20">
-                        <div class="tm_invoice_left">
-                            <div class="tm_logo">
-                                <img src="D:\Saurabh Own Assignments\Horsecity\download.png" alt="Logo" style="height: 50px; width: 50px;" />
-                            </div>
-                        </div>
-                        <div class="tm_invoice_right tm_text_right">
-                            <div class="tm_primary_color tm_f50 tm_text_uppercase" style="font-size: 50px;">
-                                <font size="6">INVOICE</font>
-                                </div>
-                                </div>
-                              </div>
-                          <div class="tm_invoice_info tm_mb20">
-                            <div class="tm_invoice_seperator tm_gray_bg"></div>
-                              <div class="tm_invoice_info_list">
-                                <!-- Add this in your HTML where you want to display the Invoice Number -->
-                                <p class="tm_invoice_number tm_m0">Invoice No: <b class="tm_primary_color" id="invoiceNumber">${invoiceData.invoice[0].iId}</b></p>&nbsp;&nbsp;&nbsp;
-                                <p class="tm_invoice_date tm_m0"> Date: <b class="tm_primary_color" id="invoiceDate">${invoiceData.invoice[0].iDate}</b></p>
-                              </div>
-                            </div>
-                    <div class="tm_invoice_head tm_mb10">
-                        <div class="tm_invoice_section tm_invoice_to" style="-webkit-box-align: center; -ms-flex-align: center; align-items: center;">
-                            <p class="tm_mb2" style="display: block; margin-block-start: 0.5em; margin-block-end: 0.5em; margin-inline-start: 0px; margin-inline-end: 0px;"><b class="tm_primary_color">Invoice To:</b></p>
-                            <div style="display: block;">
-                                <p id="customerName" style="margin: 0; display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px;">${invoiceData.invoice[0].customer_name}</p>
-                                <p id="customerAddress" style="margin: 0; display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px;">${invoiceData.invoice[0].customerAddress}</p>
-                                <p id="cusCountry" style="margin: 0; display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px;">${invoiceData.invoice[0].cusCountry}</p>
-                                <p id="customerEmail" style="margin: 0; display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px;">${invoiceData.invoice[0].customer_email}</p>
-                            </div>                  
-                        </div>
-                        <div class="tm_invoice_section tm_pay_to" style="-webkit-box-align: center; -ms-flex-align: center; align-items: center;">
-                            <p class="tm_mb2" style="display: block; margin-block-start: 0.5em; margin-block-end: 0.5em; margin-inline-start: 0px; margin-inline-end: 0px;"><b class="tm_primary_color">Pay To:</b></p>
-                            <div style="display: block;">
-                                <p id="companyName" style="margin: 0; display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px;">${invoiceData.invoice[0].companyName}</p>
-                                <p id="companyAddress" style="margin: 0; display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px;">${invoiceData.invoice[0].companyAddress}</p>
-                                <p id="comCountry" style="margin: 0; display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px;">${invoiceData.invoice[0].comCountry}</p>
-                                <p id="comEmail" style="margin: 0; display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px;">${invoiceData.invoice[0].com_email}</p>
-                            </div> 
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="tm_table tm_style1 tm_mb3">
-                <div class="tm_round_border" style="border: 1px solid #dbdfea; overflow: hidden; border-radius: 6px;">
-                    <div class="tm_table_responsive" style="overflow-x: auto;">
-                        <table style="width: 100%; caption-side: bottom; border-collapse: collapse;">
-                            <thead>
-                                <tr>
-                                    <th class="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd " style="padding: 10px 0px; line-height: 1.55em; text-align: left;">#</th>
-                                    <th class="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center" style="width: 25%; padding: 10px 0px; line-height: 1.55em; text-align: center;">Pick Up Location</th>
-                                    <th class="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center" style="width: 25%; padding: 10px 0px; line-height: 1.55em; text-align: center;">Vehicle Number</th>
-                                    <th class="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center" style="width: 25%; padding: 10px 0px; line-height: 1.55em; text-align: center;">Driver Name</th>
-                                    <th class="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center" style="width: 25%; padding: 10px 0px; line-height: 1.55em; text-align: center;">Drop Location</th>
-                                </tr>
-                            </thead>
-                            <tbody id="vehicleDetailsTableBody">
-                            ${vehicleRows}
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-            <div class="tm_padd_15_20 no-padding tm_round_border .tm_table_responsive" style="padding: 10px 31px; line-height: 1.55em;">
-                <p class="tm_mb5"><b class="tm_primary_color"></b></p>
-                <table style="width: 100%; caption-side: bottom; border-collapse: collapse;">
-                <div class="tm_invoice_footer">
-                  <div style="display: flex; justify-content: space-between;">
+        <!DOCTYPE html>
+        <html>
+        <head>
+        <meta charset="UTF-8">
+        <title>Invoice</title>
+        </head>
+        <body style="color: #666; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.6em; overflow-x: hidden; background-color: #ffffff;">
+        <table width="600" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 0pt auto; padding: 0px; font-family: Arial,Helvetica,sans-serif; font-size: 13px;border: 1px solid;padding: 5px 5px;">
+        <tbody>
+        <tr>
+            <td valign="top" bgcolor="#ffffff">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="padding: 8px; text-align:left;"><a target="_blank" title="Horse City" href=""><img  border="0" height="50"  alt="Horse City" src="D:\Saurabh Own Assignments\Horsecity\download.png" /></a></div>
+                            </td>
+                            <td>
+                                <div style="padding: 8px; text-align:right;color: #000;font-size:30px;">INVOICE</div>
+                            </td>                  
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" bgcolor="#ffffff">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="width: 285px;background-color: #bdbababd;border-radius: 15px; margin: 0 15px;">&nbsp;</div>
+                            </td>
+                            <td>
+                                <div style="padding: 3px; text-align:right;color: #000;font-size:15px;">Invoice No : <b>${invoiceData.invoice[0].iId}</b></div>
+                            </td>
+                            <td>
+                                <div style="padding: 8px; text-align:right;color: #000;font-size:15px;">Date : <b>${invoiceData.invoice[0].iDate}</b></div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" bgcolor="#ffffff">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                    <tbody>
+                        <tr>
+                            <td>
+                                <div style="padding: 8px; text-align:left;color: #000;font-size:15px;"><b>Invoice To :</b></div>
+                            </td>
+                            <td>
+                                <div style="padding: 8px; text-align:right;color: #000;font-size:15px;"><b>Pay To :</b></div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="padding: 0 10px; text-align:left;color: #000;font-size:13px;">${invoiceData.invoice[0].customer_name}</div>
+                            </td>
+                            <td>
+                                <div style="padding:0 10px; text-align:right;color: #000;font-size:13px;">${invoiceData.invoice[0].service_provider_name}</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="padding: 0 10px; text-align:left;color: #000;font-size:13px;">${invoiceData.invoice[0].customerAddress}</div>
+                            </td>
+                            <td>
+                                <div style="padding: 0 10px; text-align:right;color: #000;font-size:13px;">${invoiceData.invoice[0].companyAddress}</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="padding: 0 10px; text-align:left;color: #000;font-size:13px;">${invoiceData.invoice[0].cusCountry}</div>
+                            </td>
+                            <td>
+                                <div style="padding: 0 10px; text-align:right;color: #000;font-size:13px;">${invoiceData.invoice[0].comCountry}</div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <div style="padding: 0 10px 25px; text-align:left;color: #000;font-size:13px;">${invoiceData.invoice[0].customer_email}</div>
+                            </td>
+                            <td>
+                                <div style="padding: 0 10px 25px; text-align:right;color: #000;font-size:13px;">${invoiceData.invoice[0].com_email}</div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+        <tr>
+            <td valign="top" style="background-color: #ffffff; color: #000;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #b7a2a2; border-radius: 4px;">
+                    <tr style="background-color: #cecccc;height: 50px; text-align: center; ">
+                        <th>#</th>
+                        <th>Pick Up Location</th>
+                        <th>Vehicle Number</th>
+                        <th>Driver Name</th>
+                        <th>Drop Location</th>
+                    </tr>
+                    ${vehicleRows}         
+                </table>
+            </td>
+        </tr>
+        <tr style="padding-top: 10px;">&nbsp;</tr>
+            <tr>      
+                <td valign="top" style="background-color: #ffffff; color: #000;">
+                    <table width="100%" cellspacing="0" cellpadding="0" border="0" >
+                        <tr style="text-align: center; height: 60px;">
+                            <td>
+                                <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                                    <tr>&nbsp;</tr>
+                                    <tr style="text-align: left; ">
+                                        <th><b>Other Information</b> </th>
+                                    </tr>       
+                                    <tr style="text-align: left;">
+                                        <td> <div style="padding: 0 10px;">Horse - ${invoiceData.invoice[0].no_of_horse}</div></td>
+                                    </tr>        
+                                    <tr style="text-align: left;">
+                                        <td><div style="padding: 0 10px;"> Special Requirement : ${invoiceData.invoice[0].special_requirement} </div> </td>
+                                    </tr>
+                              </table>
+                            </td>
+                            <td>
+                                <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                                    <tr>&nbsp;</tr>
+                                    <td>
+                                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
+                                            <tr>&nbsp;</tr>
+                                            <tr>
+                                                <th><div style="padding: 0 10px;"><b>Subtotal</b></div></th>
+                                                <th><div style="padding: 0 10px;"><b>${invoiceData.invoice[0].iSubTotal} AED</b></div></th>
+                                            </tr>
+                                            <tr style="text-align: center;">
+                                                <td><div style="padding: 0 10px;">Discount <span style="color: #9d9d9d;;">(${invoiceData.invoice[0].iDiscountRate} %)</span></div></td>
+                                                <td><div style="padding: 0 10px;">- ${invoiceData.invoice[0].iDiscountAmount} AED </div></td>
+                                            </tr>
+                                            <tr style="text-align: center;">
+                                                <td>Tax <span style="color: #9d9d9d;;">(${invoiceData.invoice[0].iTaxRate} %)</span></td>
+                                                <td>+ ${invoiceData.invoice[0].iTaxAmount} AED </td>
+                                            </tr>
+                                            <tr style="text-align: center;">
+                                                <td><div style="font-size: 15px; margin-bottom: 20px;"><b>Grand Total </b></div></td>
+                                                <td><div style="font-size: 15px; margin-bottom: 20px;"><b>${invoiceData.invoice[0].iFinalAmount} AED</b></div> </td>
+                                            </tr>
+                                        </table>
+                                    </td>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>     
+            </tr>
+            <tr style="padding-top: 10px;">&nbsp;</tr>
+            <tr>
+                <td valign="top" style="background-color: #ffffff; color: #000;">
+                    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #b7a2a2; border-radius: 4px;">
                     ${paymentDetails}
-                  </div>
-                        </div>
-                      </table>
-                    </div>  
-                </div>
-            </div>
-          </body>
-          </html>
-        `;
+                    </table>
+                </td>
+            </tr>
+        </tbody>
+        </table>
+        </body>
+        </html>`;
       
         return htmlContent;
       }
@@ -159,7 +231,7 @@ exports.SendEmail = async (id, to, text, subject) =>
       // Example usage: Assuming you have the invoiceData object containing invoice, vehicles, and payment details.
       
       const htmlContent = generateInvoiceHTML(invoiceData);
-      console.log(htmlContent)
+    //   console.log(htmlContent)
         const transporter = nodemailer.createTransport 
         ({
             // service: 'Gmail', // replace with your email service provider
@@ -180,8 +252,6 @@ exports.SendEmail = async (id, to, text, subject) =>
             html : htmlContent
             // text : 'Hello' 
         };
-        console.log(process.env.EMAIL_PWD);
-        console.log(process.env.EMAIL);
         transporter.sendMail(mailOptions, (error, info) => 
         {
             if(error)
@@ -873,10 +943,7 @@ exports.SendEmailOfQuotation = async (id, to, text, subject) =>
             to : to, // recipient's email address
             subject : subject,
             html : htmlContent
-            // text : 'Hello' 
         };
-        console.log(process.env.EMAIL_PWD);
-        console.log(process.env.EMAIL);
         transporter.sendMail(mailOptions, (error, info) => 
         {
             if(error)

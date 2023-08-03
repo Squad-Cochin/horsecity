@@ -98,7 +98,6 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
         });
     }
     
-
     if(invoices === 'err')
     {
         console.log('Internal server error from the enter amount for particular invoice');
@@ -226,7 +225,7 @@ exports.getLatestPaymentHistroy = async (req, res) =>
 
 exports.sendEmailAtInvoice = async(req, res) =>
 {
-    const invoices = await invoice.sendemailatinvoice(req.params.id,req.body.email, req.body.subject);
+    const invoices = await invoice.sendemailatinvoice(req.params.id,req.body.recepientEmail, req.body.invoiceSubject);
     // console.log('Invoices: ', invoices);
     if(invoices === false)
     {

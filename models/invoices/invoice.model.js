@@ -841,7 +841,7 @@ module.exports = class invoices
                                 if(ra == 0)
                                 {
                                     let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, ${result[0].total_amount}, ${amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${ra}, '${constants.status.paid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                                    // console.log(insQuery);
+                                    console.log(insQuery);
                                     con.query(insQuery, (err, result) =>
                                     {
                                         if(result.affectedRows > 0)
