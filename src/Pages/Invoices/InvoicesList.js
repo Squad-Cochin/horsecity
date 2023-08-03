@@ -8,7 +8,6 @@ import Logo from "../../assets/images/black-logo.png";
 import { getLedgerData } from '../../helpers/ApiRoutes/authApiRoutes';
 import html2pdf from 'html2pdf.js'; // Make sure to include the library properly
 import config from '../../config';
-/**IMPORTED APIs */
 import { getInvoicesData, getSingleInvoiceData, getLatestPayementHistroy, getSendEmailButtonData , startTrip} from '../../helpers/ApiRoutes/getApiRoutes'; 
 import { addAmount, sendEmail } from '../../helpers/ApiRoutes/addApiRoutes';
 
@@ -79,6 +78,7 @@ const InvoiceDetails = () =>
     setModal(!modal);
     setModalOpen2(!modalOpen2);
   };
+
   const validation = useFormik
   ({
     enableReinitialize: true,
@@ -204,19 +204,6 @@ const InvoiceDetails = () =>
     setNumberOfData(getInvoices.totalCount);
   }
 
-  const buttonStyle = {
-    position: 'absolute',
-    top: '8px',
-    right: '362px',
-    textDecoration: 'underline',
-    cursor: 'pointer',
-    background: 'none',
-    border: 'none',
-    padding: 0,
-    font: 'inherit',
-    color: 'blue',
-  };
-
   useEffect(() =>
   {
     const existOptionsList =
@@ -340,20 +327,20 @@ const InvoiceDetails = () =>
                           <table>
                             <thead>
                               <tr>
-                                <th className="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd ">#</th>
-                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Pick Up Location</th>
-                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Vehicle Number</th>
-                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Driver Name</th>
-                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Drop Location</th>
+                                <th className="tm_width_6 tm_semi_bold tm_primary_color tm_gray_bg text-center ">#</th>
+                                <th className="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg text-center">Pick Up Location</th>
+                                <th className="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg text-center">Vehicle Number</th>
+                                <th className="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg text-center">Driver Name</th>
+                                <th className="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg text-center">Drop Location</th>
                               </tr>
                             </thead>
                             <tbody>
                             {vehicles.map((item, index) => (
                               <tr key={index}>
-                                <td className="tm_width_3">{index + 1}</td>
-                                <td className="tm_width_4 text-center">{item.pickup_location}</td>
-                                <td className="tm_width_2 text-center">{item.vehicle_number}</td>
-                                <td className="tm_width_2 text-center">{item.driver_name}</td>
+                                <td className="tm_width_6 text-center">{index + 1}</td>
+                                <td className="tm_width_3 text-center">{item.pickup_location}</td>
+                                <td className="tm_width_3 text-center">{item.vehicle_number}</td>
+                                <td className="tm_width_3 text-center">{item.driver_name}</td>
                                 <td className="tm_width_1 text-center">{item.drop_location}</td>
                               </tr>
                               ))}
@@ -452,11 +439,10 @@ const InvoiceDetails = () =>
                   placeholder="Enter Received Amount" 
                   required
                   />
-                  <input type="hidden" name="invoiceId" value="1" />
                 </div>
               </ModalBody>
               <ModalFooter>
-              <Button color="primary" type='submit'>Save</Button>
+              <Button color="primary" type='submit' >Save</Button>
               <Button color="secondary" onClick={toggleModal}>Cancel</Button>
             </ModalFooter>
             </form>        
@@ -477,25 +463,6 @@ const InvoiceDetails = () =>
                     <label htmlFor="subject-field">Subject:</label>
                     <input type="text" id="subject-field" name="subject email" className="form-control" value={validation.values.invoiceSubject || ""} onChange={validation.handleChange} onBlur={validation.handleBlur} />
                   </div>
-                 <div className="mb-3" ref={invoiceRef}>
-                    <label htmlFor="body-field">Body:</label>
-                    <div style={{ position: 'relative' }}>
-                      <textarea
-                        type="text"
-                        id="email-body-field"
-                        name="invoiceBody"
-                        className="form-control"
-                        value={validation.values.invoiceBody}
-                        readOnly
-                      />
-                      <button
-                        onClick={handleDownloadPDF}
-                        style={buttonStyle} // Assume buttonStyle is an object with the styles
-                      >
-                        Click Here
-                      </button>
-                    </div>
-                  </div> 
                </div>
               ) : (
                 <div className="tm_container">
@@ -506,10 +473,6 @@ const InvoiceDetails = () =>
                   <div className="mb-3">
                     <label htmlFor="subject-field">Subject:</label>
                     <input type="text" id="subject-field" name="subject email" className="form-control" value={validation.values.subject || ""} onChange={validation.handleChange} onBlur={validation.handleBlur} />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="body-field">Body:</label>
-                    <textarea type="text" id="email-body-field" name="email body" className="form-control" value={validation.values.body || ""} onChange={validation.handleChange} onBlur={validation.handleBlur}></textarea>
                   </div>
                 </div>
               )}

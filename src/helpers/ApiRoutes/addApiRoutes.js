@@ -273,10 +273,10 @@ import * as url from "../url_helper";
             console.log("Data: ",data)
             console.log(`Invoice id at the time of adding the payment data in the table`, id);
             const formData = new FormData();
-            for (const key in data) {
-                formData.append(key, data[key]);
-            }
-            // formData.append('totalRecievedAmount', data);
+            // for (const key in data) {
+            //     formData.append(key, data[key]);
+            // }
+            formData.append('totalRecievedAmount', data);
             const response = await axios.post(`${url.POST_ADD_AMOUNT_URL}/${id}`, formData,
             {
                 headers:
