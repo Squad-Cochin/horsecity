@@ -8,6 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const auth = require('../../models/auth/auth.model'); // Impoting the auth models details
+const constants = require('../../utils/constants');
 
 
 /**
@@ -20,8 +21,7 @@ const auth = require('../../models/auth/auth.model'); // Impoting the auth model
 exports.serviceProviderLogin = async(req, res)=>
 {
     // We are calling the function. Which will look for login functionality. We are sending username and password because it is needed
-    let loginauth = await auth.serviceproviderlogin(req.body.userName, req.body.password);
-    
+    let loginauth = await auth.serviceproviderlogin(req.body.userName, req.body.password)
     // If no service provider user found with entered username, then this if block code will be executed
     if(loginauth === 'noserviceprovider')
     {
@@ -81,14 +81,30 @@ exports.serviceProviderLogin = async(req, res)=>
     // else(loginauth === 'true')
     else
     {
-        console.log('Login Successful');
-        return res.status(200).send
-        ({
-            status : "success",
-            code : 200,
-            message : "Sigin in successfull",
-            data : loginauth
-        });
+        if(loginauth[0].role_name === constants.roles.admin)
+        {
+            console.log('Admin login Successful');
+            res.header('role', constants.roles.admin);
+            return res.status(200).send
+            ({
+                status : "success",
+                code : 200,
+                message : "Admin login Successful",
+                data : loginauth
+            });
+        }
+        if(loginauth[0].role_name === constants.roles.service_provider)
+        {
+            console.log('Service provider login successful');
+            res.header('role', constants.roles.service_provider);
+            return res.status(200).send
+            ({
+                status : "success",
+                code : 200,
+                message : "Service provider login successful",
+                data : loginauth
+            });
+        }        
     }
 };
 

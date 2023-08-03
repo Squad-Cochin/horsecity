@@ -184,6 +184,12 @@ module.exports =
         vehicles_images : `vehicles_images`,
         assign_drivers : `assign_drivers`,
         payment_records : `payment_records`
+    },
+
+    roles :
+    {
+        admin : "ADMIN",
+        service_provider : "SERVICE PROVIDER"
     }
   
 }
