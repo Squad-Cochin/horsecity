@@ -43,7 +43,7 @@ const Accounts  = () => {
         <React.Fragment>
             <div className="page-content">
                 <Container fluid>
-                    <Breadcrumbs title="Tables" breadcrumbItem="Trip Details Reports" />
+                    <Breadcrumbs title="Tables" breadcrumbItem="Accounts " />
 
                     <Row>
                         <Col lg={12}>
