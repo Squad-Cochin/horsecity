@@ -7,6 +7,7 @@
 //                                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+const { checkValueEntered } = require('../../middlewares/validateInput/checkRequestBodyInput');
 const auth = require('../../models/auth/auth.model'); // Impoting the auth models details
 const constants = require('../../utils/constants');
 
@@ -84,7 +85,8 @@ exports.serviceProviderLogin = async(req, res)=>
         if(loginauth[0].role_name === constants.roles.admin)
         {
             console.log('Admin login Successful');
-            res.header('role', constants.roles.admin);
+            const check = await res.set('role', constants.roles.admin);
+            console.log(check);
             return res.status(200).send
             ({
                 status : "success",
@@ -96,7 +98,7 @@ exports.serviceProviderLogin = async(req, res)=>
         if(loginauth[0].role_name === constants.roles.service_provider)
         {
             console.log('Service provider login successful');
-            res.header('role', constants.roles.service_provider);
+            res.set('role', constants.roles.service_provider);
             return res.status(200).send
             ({
                 status : "success",
