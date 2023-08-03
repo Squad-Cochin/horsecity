@@ -66,7 +66,6 @@ const InvoiceDetails = () =>
                         invoiceId:invoice[0]?.id,
                         recepientEmail: sendEmailButtonData[0]?.email,
                         invoiceSubject:`${sendEmailButtonData[0]?.subject} - ${sendEmailButtonData[0]?.invoice_no}`,
-                        invoiceBody:sendEmailButtonData[0]?.template
                       };
                       
   const handleCloseModal = () => {
@@ -101,9 +100,9 @@ const InvoiceDetails = () =>
         setErrors("")
         setErrors(addedData.message)
       }
-      let sendEmail = await sendEmail(values.invoiceId, values.email, values.subject, values.body);
+      let sendEmail = await sendEmail(values.invoiceId, values.email, values.subject);
       console.log(`Send Email Response`, sendEmail);
-      if(addedData.code === 200)
+      if(sendEmail.code === 200)
       {
         setErrors("")
         getAllData(pageNumber)
@@ -112,7 +111,7 @@ const InvoiceDetails = () =>
       else
       {
         setErrors("")
-        setErrors(addedData.message)
+        setErrors(sendEmail.message)
       }
     }
   });
@@ -457,11 +456,11 @@ const InvoiceDetails = () =>
                  <div className="tm_container">
                  <div className="mb-3">
                    <label htmlFor="recipient-email-field" className="form-label">To:</label>
-                   <input type="text" id="recipient-email-field" name="emailInvoice" className="form-control" value={validation.values.recepientEmail|| ""} onChange={validation.handleChange} onBlur={validation.handleBlur} />
+                   <input type="text" id="recipient-email-field" name="emailInvoice" className="form-control" value={validation.values.recepientEmail|| ""} onChange={validation.handleChange} required />
                  </div>
                  <div className="mb-3">
                     <label htmlFor="subject-field">Subject:</label>
-                    <input type="text" id="subject-field" name="subject email" className="form-control" value={validation.values.invoiceSubject || ""} onChange={validation.handleChange} onBlur={validation.handleBlur} />
+                    <input type="text" id="subject-field" name="subject email" className="form-control" value={validation.values.invoiceSubject || ""} onChange={validation.handleChange} required />
                   </div>
                </div>
               ) : (
