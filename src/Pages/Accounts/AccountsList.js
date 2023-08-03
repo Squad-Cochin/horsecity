@@ -35,7 +35,7 @@ const Accounts  = () => {
 
     async function tog_view(productId) {
         let singleAccount = await getSingleAccountsData(productId)
-        setSingleData(singleAccount.payments)
+        setSingleData(singleAccount?.accounts)
         setView_modal(!view_modal);
     }
 
@@ -78,7 +78,7 @@ const Accounts  = () => {
                                                             <div className="edit">
                                                                 <button
                                                                     className="btn btn-sm btn-success edit-item-btn"
-                                                                    onClick={() => tog_view(item.id)}
+                                                                    onClick={() => tog_view(item.quotation_id)}
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#showModal"
                                                                 >
@@ -139,8 +139,8 @@ const Accounts  = () => {
                                 {singleData.map((item, index)=>(
                                 <tr key={index}> 
                                     <th scope="row">{index + 1}</th>
-                                    <td className="recived_amount">{item.recived_amount}</td>
-                                    <td className="recived_date">{item.recived_date}</td>
+                                    <td className="recived_amount">{item.received_amount}</td>
+                                    <td className="recived_date">{item.received_date}</td>
                                     <td className="pending_amount">{item.pending_amount}</td>
                                 </tr>
                                 ))}

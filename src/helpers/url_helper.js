@@ -116,8 +116,13 @@ export const PUT_QUOTATION_EDIT_URL = apiBaseUrl + token + "/update/quotation"
 export const POST_SEND_QUT_EMAIL_URL = apiBaseUrl + token + "/send-email/quotations"
 export const PUT_QUOTATION_CONFIRM_URL = apiBaseUrl + token + "/update-status/quotations"
 
-/**REPORTS */
 
+
+/**ACCOUNTS */
+export const POST_ACCOUNTS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/accounts"
+export const GET_ACCOUNTS_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/accountsDetails"
+
+/**REPORTS */
 export const POST_SERVICE_PROVIDER_REPORT_URL = apiBaseUrl + token + "/reports/serviceproviders"
 export const POST_CUSTOMER_REPORT_URL = apiBaseUrl + token + "/reports/customers"
 export const POST_VEHICLES_REPORT_URL = apiBaseUrl + token + "/reports/vehicles"

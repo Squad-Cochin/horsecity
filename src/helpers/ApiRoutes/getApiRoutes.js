@@ -660,9 +660,9 @@ export async function getAccountsData(pageNumber){
             "page" : pageNumber,
             "limit" : pageLimit
         }
-        // const { data } = await axios.post(`${url.GET_QUOTATION_ALL_DATA_URL}`,reqObj);
-        // console.log("QUOTATIONS",data);
-        // return(data)
+        const { data } = await axios.post(`${url.POST_ACCOUNTS_ALL_DATA_URL}`,reqObj);
+        console.log("QUOTATIONS",data);
+        return(data)
     } catch (error) {
         // let errorObj =  {
         //     "code": 500,
@@ -679,9 +679,11 @@ export async function getAccountsData(pageNumber){
 
 export async function getSingleAccountsData(id){
     try {
-        // const { data } = await axios.get(`${url.GET_QUOTATION_FULL_DATA_URL}/${id}`);
-        // console.log("SD",data)
-        // return(data)
+
+        
+        const { data } = await axios.get(`${url.GET_ACCOUNTS_SINGLE_DATA_URL}/${id}`);
+        console.log("SD",data)
+        return(data)
     } catch (error) {
         // return null
     }
