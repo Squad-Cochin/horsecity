@@ -39,7 +39,6 @@ exports.changePasswordToSQLHashing = (password) =>
     });
 };
 
-
 exports.changePasswordOfUser = (tablename, username, password) => 
 {
     return new Promise((resolve, reject) => 
@@ -104,7 +103,6 @@ exports.fileUpload = (attachments, path) =>
     });
 }
 
-
 exports.fileNameUpload = (attachments) =>
 { 
     // console.log(attachments);
@@ -141,6 +139,7 @@ exports.fileNameUpload = (attachments) =>
         }
     });
 }
+
 exports.updateUserStatus = (tablename, Id) =>
 {
     return new Promise((resolve, reject) => 
@@ -334,7 +333,6 @@ exports.fileUploadTwo = async (attachments, path) =>
     });
 }
 
-
 exports.getFileNameFromURL = async (url) =>
 {
     // Split the URL by slashes ('/') to get an array of path components
@@ -352,9 +350,4 @@ exports.getFileNameFromURL = async (url) =>
     console.log('Filename: ', fileNameWithExtension)
     return fileNameWithExtension;
 }
-  
-// Example usage:
-// const url = 'http://192.168.200.130:8000/Drivers/Licence/736895_a.png';
-// const fileName = getFileNameFromURL(url);
-// console.log(fileName); // Output: 736895_a.png
   

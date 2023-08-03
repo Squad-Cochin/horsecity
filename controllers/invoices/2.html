@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+          <html>
+          <head>
+          <meta charset="UTF-8">
+          <title>Invoice</title>
+          </head>
+          <body style="color: #666; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.6em; overflow-x: hidden; background-color: #f5f6fa;">
+    <div class="tm_container" style="max-width: 880px; margin-left: auto; margin-right: auto; position: relative;">
+        <div class="tm_invoice_wrap" style="position: relative;">
+            <div class="tm_invoice tm_style1" id="tm_download_section">
+                <div class="tm_invoice_in" style="position: relative; z-index: 100;">
+                    <div class="tm_invoice_head tm_align_center tm_mb20">
+                        <div class="tm_invoice_left">
+                            <div class="tm_logo">
+                                <img src="D:Saurabh Own AssignmentsHorsecitydownload.png" alt="Logo" style="height: 50px; width: 50px;" />
+                            </div>
+                        </div>
+                        <div class="tm_invoice_right tm_text_right">
+                            <div class="tm_primary_color tm_f50 tm_text_uppercase" style="font-size: 50px;">
+                                <font size="6">INVOICE</font>
+                                </div>
+                                </div>
+                              </div>
+                          <div class="tm_invoice_info tm_mb20">
+                            <div class="tm_invoice_seperator tm_gray_bg"></div>
+                              <div class="tm_invoice_info_list">
+                                <!-- Add this in your HTML where you want to display the Invoice Number -->
+                                <p class="tm_invoice_number tm_m0">Invoice No: <b class="tm_primary_color" id="invoiceNumber">INV6</b></p>&nbsp;&nbsp;&nbsp;
+                                <p class="tm_invoice_date tm_m0"> Date: <b class="tm_primary_color" id="invoiceDate">01-08-2023</b></p>
+                              </div>
+                            </div>
+                    <div class="tm_invoice_head tm_mb10">
+                        <div class="tm_invoice_section tm_invoice_to" style="-webkit-box-align: center; -ms-flex-align: center; align-items: center;">
+                            <p class="tm_mb2" style="display: block; margin-block-start: 0.5em; margin-block-end: 0.5em; margin-inline-start: 0px; margin-inline-end: 0px;"><b class="tm_primary_color">Invoice To:</b></p>
+                            <div style="display: block;">
+                                <p id="customerName" style="margin: 0; display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px;">Shubman Gill</p>
+                                <p id="customerAddress" style="margin: 0; display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px;">Dubai </p>
+                                <p id="cusCountry" style="margin: 0; display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px;">UAE</p>
+                                <p id="customerEmail" style="margin: 0; display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px;">sg@gmail.com</p>
+                            </div>
+                        </div>
+                        <div class="tm_invoice_section tm_pay_to" style="-webkit-box-align: center; -ms-flex-align: center; align-items: center;">
+                            <p class="tm_mb2" style="display: block; margin-block-start: 0.5em; margin-block-end: 0.5em; margin-inline-start: 0px; margin-inline-end: 0px;"><b class="tm_primary_color">Pay To:</b></p>
+                            <div style="display: block;">
+                                <p id="companyName" style="margin: 0; display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px;">Admin</p>
+                                <p id="companyAddress" style="margin: 0; display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px;">78 SAKET NAGAR NEAR NARENDRA NAGAR</p>
+                                <p id="comCountry" style="margin: 0; display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px;">UAE</p>
+                                <p id="comEmail" style="margin: 0; display: block; margin-block-start: 1em; margin-block-end: 1em; margin-inline-start: 0px; margin-inline-end: 0px;">admin123@gmail.com</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="tm_table tm_style1 tm_mb3">
+                <div class="tm_round_border" style="border: 1px solid #dbdfea; overflow: hidden; border-radius: 6px;">
+                    <div class="tm_table_responsive" style="overflow-x: auto;">
+                        <table style="width: 100%; caption-side: bottom; border-collapse: collapse;">
+                            <thead>
+                                <tr>
+                                    <th class="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd " style="padding: 10px 0px; line-height: 1.55em; text-align: left;">#</th>
+                                    <th class="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center" style="width: 25%; padding: 10px 0px; line-height: 1.55em; text-align: center;">Pick Up Location</th>
+                                    <th class="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center" style="width: 25%; padding: 10px 0px; line-height: 1.55em; text-align: center;">Vehicle Number</th>
+                                    <th class="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center" style="width: 25%; padding: 10px 0px; line-height: 1.55em; text-align: center;">Driver Name</th>
+                                    <th class="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center" style="width: 25%; padding: 10px 0px; line-height: 1.55em; text-align: center;">Drop Location</th>
+                                </tr>
+                            </thead>
+                            <tbody id="vehicleDetailsTableBody">
+
+            <tr>
+              <td class="text-center">1</td>
+              <td class="text-center">Dubai </td>
+              <td class="text-center">MH01 GH 1410</td>
+              <td class="text-center">john</td>
+              <td class="text-center">Burj Khalifa</td>
+            </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="tm_padd_15_20 no-padding tm_round_border .tm_table_responsive" style="padding: 10px 31px; line-height: 1.55em;">
+                <p class="tm_mb5"><b class="tm_primary_color"></b></p>
+                <table style="width: 100%; caption-side: bottom; border-collapse: collapse;">
+                <div class="tm_invoice_footer">
+                  <div style="display: flex; justify-content: space-between;">
+
+        <tr>
+        <td class="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center" style="padding: 10px 0px; line-height: 1.55em; text-align: left;">#</td>
+        <td class="tm_width_5 tm_semi_bold tm_primary_color tm_gray_bg text-center" style="width: 16.33333333%; padding: 10px 0px; line-height:
+1.55em; text-align: center;">Total Amount</td>
+        <td class="tm_width_5 tm_semi_bold tm_primary_color tm_gray_bg text-center" style="width: 16.33333333%; padding: 10px 0px; line-height:
+1.55em; text-align: center;">Recieved Money</td>
+        <td class="tm_width_5 tm_semi_bold tm_primary_color tm_gray_bg text-center" style="width: 16.33333333%; padding: 10px 0px; line-height:
+1.55em; text-align: center;">Received Date</td>
+        <td class="tm_width_5 tm_semi_bold tm_primary_color tm_gray_bg text-center" style="width: 16.33333333%; padding: 10px 0px; line-height:
+1.55em; text-align: center;">Remaining Amount</td>
+      </tr>
+
+        <tr key=0>
+          <td class="tm_width_3 text-center" style="width: 8.33333333%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea;
+text-align: center;">1</td>
+          <td class="tm_width_5 text-center" style="width: 16.66666667%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">1131.90 AED</td>
+          <td class="tm_width_5 text-center" style="width: 16.66666667%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">9.00 AED</td>
+          <td class="tm_width_5 text-center" style="width: 16.66666667%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">02-08-2023</td>
+          <td class="tm_width_5 text-center" style="width: 16.66666667%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">1122.90 AED</td>
+        </tr>
+
+        <tr key=1>
+          <td class="tm_width_3 text-center" style="width: 8.33333333%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea;
+text-align: center;">2</td>
+          <td class="tm_width_5 text-center" style="width: 16.66666667%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">1131.90 AED</td>
+          <td class="tm_width_5 text-center" style="width: 16.66666667%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">9.00 AED</td>
+          <td class="tm_width_5 text-center" style="width: 16.66666667%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">02-08-2023</td>
+          <td class="tm_width_5 text-center" style="width: 16.66666667%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">1122.90 AED</td>
+        </tr>
+
+        <tr key=2>
+          <td class="tm_width_3 text-center" style="width: 8.33333333%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea;
+text-align: center;">3</td>
+          <td class="tm_width_5 text-center" style="width: 16.66666667%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">1131.90 AED</td>
+          <td class="tm_width_5 text-center" style="width: 16.66666667%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">12.00 AED</td>
+          <td class="tm_width_5 text-center" style="width: 16.66666667%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">02-08-2023</td>
+          <td class="tm_width_5 text-center" style="width: 16.66666667%; padding: 10px 15px; line-height: 1.55em; border-top: 1px solid #dbdfea; text-align: center;">1110.90 AED</td>
+        </tr>
+
+                  </div>
+                        </div>
+                      </table>
+                    </div>
+                </div>
+            </div>
+          </body>
+          </html>

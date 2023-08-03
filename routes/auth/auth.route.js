@@ -5,11 +5,11 @@ const constants = require("../../utils/constants");
 
 module.exports = function(app)
 {
-    // The below route is for login of service provider user.
-    app.post(`/${process.env.apiToken}/login`,
-    // checkInput.usernameValidation(constants.tableName.service_providers),
-    // checkInput.passwordValidation,
-    authcontroller.serviceProviderLogin);
+  // The below route is for login of service provider user.
+   app.post(`/${process.env.apiToken}/login`,
+   // checkInput.usernameValidation(constants.tableName.service_providers),
+   // checkInput.passwordValidation,
+   authcontroller.serviceProviderLogin);
     
     // app.post(`/${process.env.apiToken}/login`, (req, res)=>{ console.log("Came here"); });
     
@@ -29,5 +29,18 @@ module.exports = function(app)
     authcontroller.serviceProviderLogout); 
 
     // app.post(`/${process.env.apiToken}/recoveryPassword`,checkInput.emailvalidation, authcontroller.resetPasswordUsingEmail);  
+
+    app.get(`/${process.env.apiToken}/check-header`, (req, res) => {
+      // Check if the 'Authorization' header is set
+      const authorizationHeader = req.get('role');
+      console.log(authorizationHeader);
+      if (authorizationHeader) {
+        // The 'Authorization' header is set, do something with the value
+        res.send('Authorization header is set: ' + authorizationHeader);
+      } else {
+        // The 'Authorization' header is not set
+        res.send('Authorization header is not set.');
+      }
+    });
 
 }

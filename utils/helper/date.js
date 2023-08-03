@@ -56,7 +56,6 @@ const getFormattedUTCTime = (utcOffset) =>
 
   const changeDateToSQLFormat = (dateString) =>
   {
-
     // Check if the input date string is in the format "DD-MM-YYYY"
     if (/^\d{2}-\d{2}-\d{4}$/.test(dateString))
     {
@@ -82,8 +81,6 @@ const getFormattedUTCTime = (utcOffset) =>
     const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     return formattedDate;
 };
-
-
 
 
 function formatDateToDDMMYYYY(inputDate) 
