@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef } from "react";
+import React, { useCallback, useEffect, useRef ,useState} from "react";
 import PropTypes from "prop-types";
 import sidebarData from "./SidebarData";
 //Simple bar
@@ -7,9 +7,19 @@ import SimpleBar from "simplebar-react";
 import MetisMenu from "metismenujs";
 import withRouter from "../../components/Common/withRouter";
 import { Link } from "react-router-dom";
+
 //i18n
 import { withTranslation } from "react-i18next";
 const Sidebar = (props) => {
+  
+  const [modules, setModules] =  useState([]);
+    /**This hook is used to fetch service provider data */
+    useEffect(() => {
+      const modules = JSON.parse(localStorage.getItem("authUser"))[1]?.modules;
+      setModules(modules)
+
+  }, [])
+  
   const ref = useRef();
   const activateParentDropdown = useCallback(item => {
     item.classList.add("active");
@@ -44,6 +54,15 @@ const Sidebar = (props) => {
     scrollElement(item);
     return false;
   }, []);
+
+
+   
+    const sidebarItems = sidebarData.filter((element) => 
+    modules.some((value) => element.id === value.module_id)
+      
+    );
+    
+
   const removeActivation = items => {
     for (var i = 0; i < items.length; ++i) {
       var item = items[i];
@@ -126,9 +145,10 @@ const Sidebar = (props) => {
         <SimpleBar className="h-100" ref={ref}>
           <div id="sidebar-menu">
             <ul className="metismenu list-unstyled" id="side-menu-item">
-              {(sidebarData || []).map((item, key) => (
+              {(sidebarItems || []).map((item, key) => (
                 <React.Fragment key={key}>
                   {item.isMainMenu ? (
+                      
                     <li className="menu-title">{props.t(item.label)}</li>
                   ) : (
                     <li key={key}>

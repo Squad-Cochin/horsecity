@@ -32,15 +32,23 @@ const ListTables = () => {
     const [licenscePreview, setLicenscePreview] = useState(null);  /**Using for storing licensce image URL*/
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
-    const [ errors, setErrors ] = useState("")
+    const [userId, setUserId ] = useState("");
+    const [ role, setRole ] = useState(false);
+    const [module,setModule] = useState({});
+    const [ errors, setErrors ] = useState("");
     const pageLimit = config.pageLimit;
+    const roles = config.roles ;
 
     /**This hook is used to fetch service provider data */
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem("authUser"));
-        console.log("user",user);
+        const data = JSON.parse(localStorage.getItem("authUser"));
+    
+            let userIdd = data[0]?.user[0]?.id
+
+        setUserId(userIdd);
         getAllData(1)
-    }, [])
+    }, [userId])
+    console.log("module",module);
 
     /**This object sets the initial values for the form fields managed by formik */
     const initialValues = {
@@ -132,7 +140,7 @@ const ListTables = () => {
             }
         }
     }
-
+console.log("MMMM",module.create);
     /**This function is used to toggle the modal for adding/editing service providers 
      * and set the selected service provider */
     async function tog_list(param, productId) {
@@ -162,8 +170,9 @@ const ListTables = () => {
 
     // function for get data all service provider data
     async function getAllData(page) {
-        let getSPdataNext = await getSPAllData(page || 1);
+        let getSPdataNext = await getSPAllData(page || 1, userId);
         setSproviders(getSPdataNext.serviceProviders);
+        setModule(getSPdataNext.module[0])
         setPageNumber(page);
         setNumberOfData(getSPdataNext.totalCount);
     }
@@ -185,7 +194,9 @@ const ListTables = () => {
                                         <Row className="g-4 mb-3">
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
+                                                    {parseInt(module?.create) ? (
                                                     <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
+                                                      ) : null}
                                                 </div>
                                             </Col>
                                         </Row>
@@ -254,6 +265,7 @@ const ListTables = () => {
                                                         </button>
                                                     </div>
                                                     <div className="remove">
+                                                        {parseInt(module?.delete) ?(
                                                     <button
                                                         className="btn btn-sm btn-danger remove-item-btn"
                                                         onClick={() => remove_data(value?.id)}
@@ -262,6 +274,7 @@ const ListTables = () => {
                                                     >
                                                         Remove
                                                     </button>
+                                                       ) : null }
                                                     </div>
                                                 </div>
                                                 </td>

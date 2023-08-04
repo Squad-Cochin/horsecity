@@ -1,9 +1,13 @@
+
+
 const SidebarData = [
-    {
+    {   
+        id : 1,
         label: "Menu",
         isMainMenu: true,
     },
     {
+        id : 2,
         label: "Dashboard",
         icon: "mdi mdi-home-variant-outline",
         url: "/dashboard",
@@ -12,60 +16,69 @@ const SidebarData = [
         // badgeValue: "3"
     },
     {
-        label: "Service providers",
+        id : 3,
+        label: "Service providers",       
         icon: "mdi mdi-account-hard-hat",
         isHasArrow: true,
         url: "/service-providers",
     },
     {
+        id: 4 ,
         label: "Customers",
         icon: "mdi mdi-account-group-outline",
         isHasArrow: true,
         url: "/customers",
     },
     {
+        id : 5,
         label: "Vehicles",
         icon: "mdi mdi-rv-truck",
         isHasArrow: true,
         url: "/vehicles",
     },
     {
+        id: 6,
         label: "Drivers",
         icon: "mdi mdi-card-account-details-outline",
         isHasArrow: true,
         url: "/drivers",
     },
     {
+        id : 7,
         label: "Enquiries",
         icon: "mdi mdi-phone-plus",
         isHasArrow: true,
         url: "/enquires",
     },
     {
+        id : 8,
         label: "Quotations",
         icon: "mdi mdi-handshake-outline",
         isHasArrow: true,
         url: "/quotations",
     },
     {
+        id :9,
         label: "Trip details",
         icon: "mdi mdi-chevron-triple-right",
         isHasArrow: true,
         url: "/trip-deatails",
     },    
-    {
+    {   id: 10,
         label: "Invoice",
         icon: "mdi mdi-cash-usd",
         isHasArrow: true,
         url: "/invoices",
     },
     {
+        id : 11,
         label: "Accounts",
         icon: "mdi mdi-cash-multiple",
         isHasArrow: true,
         url: "/accounts",
     },
     {
+        id : 12,
         label: "Reports",
         icon: "mdi mdi-finance",
         subItem: [
@@ -81,6 +94,7 @@ const SidebarData = [
         ],
     },
     {
+        id : 13,
         label: "Application Setting",
         icon: "mdi mdi-cogs",
         subItem: [
@@ -89,7 +103,9 @@ const SidebarData = [
             { sublabel: "Taxations", link: "/taxation-list" },
             { sublabel: "Settings", link: "/setting-page" },
         ],
-    },
+    }
+
+
     // {
     //     label: "Logout",
     //     icon: "mdi mdi-logout-variant",
