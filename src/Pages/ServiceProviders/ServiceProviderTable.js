@@ -32,13 +32,19 @@ const ListTables = () => {
     const [licenscePreview, setLicenscePreview] = useState(null);  /**Using for storing licensce image URL*/
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
-    const [ errors, setErrors ] = useState("")
+    const [ role, setRole ] = useState(false);
+    const [ errors, setErrors ] = useState("");
     const pageLimit = config.pageLimit;
+    const roles = config.roles ;
 
     /**This hook is used to fetch service provider data */
     useEffect(() => {
-        const user = JSON.parse(localStorage.getItem("authUser"));
-        console.log("user",user);
+        const role = JSON.parse(localStorage.getItem("authUser"))[0].role_name;
+        if(role === roles.admin){
+            setRole(true)
+        }else if( role === roles.service_provider){
+            setRole(false)
+        }
         getAllData(1)
     }, [])
 
@@ -185,7 +191,9 @@ const ListTables = () => {
                                         <Row className="g-4 mb-3">
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
+                                                    {role ? (
                                                     <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
+                                                      ) : null}
                                                 </div>
                                             </Col>
                                         </Row>

@@ -40,10 +40,8 @@ function* loginUser({ payload: { user, history } }) {
         password: user.password,
       });
       console.log("response",response)
-      // const valueFromHeader = response?.headers['header-name'];
-      // console.log("Header",valueFromHeader);
-      let role = {role : "Admin"}
-      response.push(role)
+
+   
       localStorage.setItem("authUser", JSON.stringify(response));
 
 
