@@ -6,7 +6,7 @@ module.exports = function(app)
 {
 
     /**For geting all service provider  */
-    app.post(`/${process.env.apiToken}/getAll/serviceproviders`,spcontroller.getAllServiceProviders); 
+    app.post(`/${process.env.apiToken}/getAll/serviceproviders/:id`,spcontroller.getAllServiceProviders); 
 
     /**For geting all service provider username  */
     app.get(`/${process.env.apiToken}/getAll/serviceprovidersName`,spcontroller.getNameServiceProviders); 

@@ -4,6 +4,7 @@
 //                                                                                     //
 /////////////////////////////////////////////////////////////////////////////////////////
 
+const con = require('../../configs/db.configs');
 const constants = require('../../utils/constants');
 const constant = require('../../utils/constants');
 const commonfetching = require('../../utils/helper/commonfetching');
@@ -18,13 +19,17 @@ module.exports = class authentication
      */
     static async serviceproviderlogin(username, password) 
     {
+        return new Promise(async(resolve, reject) =>
+        {
         try
         {
+            // console.log("hello");
             const userData = await commonfetching.dataOnCondition(constants.tableName.service_providers, username, 'user_name');
             // console.log("User data:", userData);
             if (userData.length === 0) 
             {
-                return 'noserviceprovider';
+
+                resolve('noserviceprovider')
             } 
             else
             {
@@ -35,7 +40,8 @@ module.exports = class authentication
                 { 
                     if(userData[0].status === constant.status.inactive)
                     {
-                        return 'serviceproviderinactive';
+                       
+                        resolve('serviceproviderinactive')
                     }
                     else
                     {
@@ -43,17 +49,37 @@ module.exports = class authentication
                         const expiryDate = new Date(userData[0].expiry_at).getTime();
                         if(givenDate > expiryDate)
                         {    
-                            return 'passwordexpired';
+                       
+                            resolve('passwordexpired')
                         }
                         else
                         {
-                            return userData;
+                            let selQuery = `SELECT md.name AS module_name ,md.id AS module_id 
+                            FROM ${constants.tableName.permissions} AS pm
+                            JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+                            JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
+                            WHERE pm.role_id = '${userData[0].role_Id}'
+                           `;
+                         
+                    con.query(selQuery, async (err, data) => {
+                        console.log(err);
+                        if (data.length != 0) {
+                   
+
+                            resolve ([{user : userData},{modules : data}])
+
+
+                        } else {
+                            resolve(false)
+                        }
+                    })
                         }
                     }
                 }
                 else
                 {
-                    return 'passwordnotmatched';
+                 
+                    resolve('passwordnotmatched')
                 }
             }
         }
@@ -62,6 +88,7 @@ module.exports = class authentication
           console.log('Error while user login from the backend', error);
           throw error; // re-throw the error to be handled by the calling code
         }
+    })   
     }
 
 

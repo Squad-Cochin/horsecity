@@ -6,7 +6,7 @@ const commonoperation = require('../../utils/helper/commonoperation');
 /**For gitting all data  */
 exports.getAllServiceProviders = async(req,res)=>
 {
-    let getAllSProviders = await serviceProvider.getAllServiceProviders(req.body);
+    let getAllSProviders = await serviceProvider.getAllServiceProviders(req.body,req.params.id);
 
    if(getAllSProviders){
     return res.status(200).send
