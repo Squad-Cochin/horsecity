@@ -12,14 +12,15 @@ import config from "../../config";
 
   /** get roughts */
 
-export async function getSPAllData(pageNumber){
+export async function getSPAllData(pageNumber,userId){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = {
             "page" : pageNumber,
             "limit" : pageLimit
         }
-        const { data } = await axios.post(`${url.GET_SP_ALL_DATA_URL}`,reqObj);
+        console.log("userid",userId);
+        const { data } = await axios.post(`${url.GET_SP_ALL_DATA_URL}/1`,reqObj);
         console.log(data);
         return(data)
     } catch (error) {
