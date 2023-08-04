@@ -120,7 +120,7 @@ const ListVehiclesTable = () =>
     async function remove_data(id)
     {
         await removeVehicle(id); // Call the 'removeVehicle' function with 'id' parameter
-        getAllData(pageNumber)
+        getAllData(id, pageNumber)
     }
 
     // The below function is for delete button of a particular vehicle.
@@ -177,8 +177,8 @@ const ListVehiclesTable = () =>
     });
 
     // function for get data all Vechile data
-    async function getAllData(page) {
-        let getvehicles = await getVehiclesData(page || 1);
+    async function getAllData(id, page) {
+        let getvehicles = await getVehiclesData(id, page || 1);
         let getSP = await getSPUserName();
         console.log("ss",getSP)
         console.log("ssv",getvehicles)
@@ -265,7 +265,7 @@ const ListVehiclesTable = () =>
                                                     {vehicles.map((item, index) => (
                                                         <tr key={item.id}>
                                                             {/* Below we are intialize the vehicle data */}
-                                                            <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">#VZ2101</Link></td>
+                                                            {/* <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">{index + 1}</Link></td> */}
                                                             <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th> {/* Serial Number */}
                                                             <td className="name">{item.service_provider}</td> {/* Name of the service provider */}
                                                             <td className="vhnumber">{item.vehicle_number}</td> {/* Vehicle number of the vehicle */}

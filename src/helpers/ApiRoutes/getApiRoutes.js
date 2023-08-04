@@ -101,14 +101,15 @@ export async function getSingleCustomerData(cId){
     }
 }
 
-export async function getVehiclesData(pageNumber){
+export async function getVehiclesData(pageNumber, vId){
     try {
+        
         let pageLimit = config.pageLimit;
         let reqObj = {
             "page" : pageNumber,
             "limit" : pageLimit
         }
-        const { data } = await axios.post(`${url.GET_VEHICLES_ALL_DATA_URL}`,reqObj);
+        const { data } = await axios.post(`${url.GET_VEHICLES_ALL_DATA_URL}/${vId}`,reqObj);
         return(data.vehicles)
     } catch (error) {
         let errorObj =  {
