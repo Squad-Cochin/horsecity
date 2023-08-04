@@ -103,7 +103,12 @@ CREATE TABLE permissions
     role_id INT(11),
     FOREIGN KEY (role_id) REFERENCES roles(id),
     module_id INT(11),
-    FOREIGN KEY (module_id) REFERENCES modules(id)
+    FOREIGN KEY (module_id) REFERENCES modules(id),
+  	`create` ENUM('true', 'false'),
+    `update` ENUM('true', 'false'),
+    `read` ENUM('true', 'false'),
+    `delete` ENUM('true', 'false'),
+   
 );
 
 
@@ -135,8 +140,8 @@ CREATE TABLE service_providers
     user_name VARCHAR(100) UNIQUE,
     password VARCHAR(255) NOT NULL,
     contact_person VARCHAR(255) NOT NULL,
-    role_id INT(11),
-    FOREIGN KEY(role_id) REFERENCES roles(id),
+    role_Id INT(11),
+    FOREIGN KEY (role_Id) REFERENCES roles(id),
     contact_no VARCHAR(15) NOT NULL,
     contact_address VARCHAR(255) NOT NULL,
     emergency_contact_no VARCHAR(15) NOT NULL,
@@ -592,4 +597,3 @@ CREATE TABLE payment_records (
     updated_at DATETIME DEFAULT NULL,
     deleted_at DATETIME DEFAULT NULL
 );
-

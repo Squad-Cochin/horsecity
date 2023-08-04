@@ -20,7 +20,7 @@ const time = require('../../utils/helper/date'); // All the time related formati
 exports.getAll = async (req, res) =>
 {
     // The below line is for going to the model function to implement the code for get all drivers logic.
-    const drivers = await driver.getall(req.body.page, req.body.limit);
+    const drivers = await driver.getall(req.body.page, req.body.limit, req.params.id);
     // console.log(drivers);
     if(drivers.length == 0)
     {

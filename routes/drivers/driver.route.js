@@ -7,9 +7,10 @@ module.exports = function(app)
 {
     // Below route is for getting data of all the drivers
     app.post(
-        `/${process.env.apiToken}/getAll/drivers`, 
+        `/${process.env.apiToken}/getAll/drivers/:id`,
         checkInput.isPageNumberEntered,
         checkInput.isPageSizeEntered,
+        isValidIdInTheParams(constants.tableName.service_providers),
         driverController.getAll
         );
 

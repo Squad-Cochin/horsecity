@@ -1,14 +1,16 @@
 const vehicleController = require('../../controllers/vehicles/vehicles.controller');
 const { isValidIdInTheParams } = require('../../middlewares/validateInput/checkRequestparams');
 const checkInput = require(`../../middlewares/validateInput/checkRequestInputVehicles`);
+const checkInputGetAll = require(`../../middlewares/validateInput/checkRequestBodyInput`);
 const constants = require('../../utils/constants');
 
 module.exports = (app) =>
 {
     // The below route is for adding the new vehicle data.
-    app.post(`/${process.env.apiToken}/addNew/vehicle`,
-    checkInput.isServiceProviderIdEntered(constants.tableName.service_providers),
-    checkInput.isValidVehicleNumberEntered(constants.tableName.vehicles),
+    app.post(`/${process.env.apiToken}/addNew/vehicle/:id`,
+    isValidIdInTheParams(constants.tableName.service_providers),
+    checkInput.isServiceProviderIdEntered,
+    checkInput.isValidVehicleNumberEntered,
     checkInput.isInsurancePolicyNumberEntered,
     checkInput.isVehicleRegistrationNumberEntered,
     checkInput.isManufacturerEntered,
@@ -32,7 +34,11 @@ module.exports = (app) =>
     vehicleController.addNew);
     
     // The below route is for getting all the vehicles data.
-    app.post(`/${process.env.apiToken}/getAll/vehicles`, vehicleController.getAll);
+    app.post(`/${process.env.apiToken}/getAll/vehicles/:id`, 
+    isValidIdInTheParams(constants.tableName.service_providers),
+    checkInputGetAll.isPageNumberEntered,
+    checkInputGetAll.isPageSizeEntered,
+    vehicleController.getAll);
     
     // the below route is for updating the status of the vehicle data.
     app.put(`/${process.env.apiToken}/updateStatus/vehicle/:id`, 
@@ -46,8 +52,8 @@ module.exports = (app) =>
 
     // The below route is for updating particular vehicle data.
     app.put(`/${process.env.apiToken}/edit/vehicle/:id`,
-    checkInput.isServiceProviderIdEntered(constants.tableName.service_providers),
-    checkInput.isValidVehicleNumberEntered(constants.tableName.vehicles),
+    checkInput.isServiceProviderIdEntered,
+    checkInput.isValidVehicleNumberEntered,
     checkInput.isVehicleRegistrationNumberEntered,
     checkInput.isInsurancePolicyNumberEntered,
     isValidIdInTheParams(constants.tableName.vehicles), 

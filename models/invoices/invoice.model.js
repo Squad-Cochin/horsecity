@@ -16,42 +16,89 @@ module.exports = class invoices
 {
     constructor(){}
 
-    static async getall(pageNumber, pageSize)
+    static async getall(pageNumber, pageSize, Id)
     {
         try 
         {
             return await new Promise(async(resolve, reject)=>
             {
-                const offset = (pageNumber - 1) * pageSize;
-
-                let selQuery = `SELECT i.id, i.invoice_no, i.quotation_prefix_id, c.name, c.email, i.status
-                                FROM invoices i
-                                JOIN quotations q ON i.quot_id = q.id
-                                JOIN customers c ON q.customer_id = c.id
-                                WHERE i.deleted_at IS NULL
-                                LIMIT ${pageSize} OFFSET ${offset}`;
-
-                // console.log('Selquery of invoice: ',selQuery);
-
-                const count = await commonoperation.totalCount(constants.tableName.invoices);
-                con.query(selQuery, async (err, result) =>
+                let checkRole = `SELECT sp.id , r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
+                // console.log('Check Role Data: ', checkRole);
+                con.query(checkRole, async (err, result) =>
                 {
+                    // console.log(`Role: `, result);
                     if(err)
                     {
-                        console.error(err);
-                        resolve('err');
+                       console.log('Error while checking the role at the time of invoice');
+                       resolve('err') 
                     }
-                    const data =  objectConvertor.getAllInvoice(result)
-                    if(result.length === 0)
+                    if(result[0].name === constants.roles.admin || result[0].name === constants.roles.superAdmin)
                     {
-                        // console.log(`totalCount = ${count}, invoices = ${data}`);
-                        resolve ({totalCount : count[0]['count(t.id)'], invoices : data});
+                        const offset = (pageNumber - 1) * pageSize;
+                        let selQuery = `SELECT i.id, i.invoice_no, i.quotation_prefix_id, c.name, c.email, i.status
+                                        FROM invoices i
+                                        JOIN quotations q ON i.quot_id = q.id
+                                        JOIN customers c ON q.customer_id = c.id
+                                        WHERE i.deleted_at IS NULL
+                                        LIMIT ${pageSize} OFFSET ${offset}`;
+                        // console.log('Selquery of invoice when user is admin or suport admin: ',selQuery);
+                        const count = await commonoperation.totalCount(constants.tableName.invoices);
+                        con.query(selQuery, async (err, result) =>
+                        {
+                            if(err)
+                            {
+                                console.error(err);
+                                resolve('err');
+                            }
+                            const data =  objectConvertor.getAllInvoice(result)
+                            if(result.length === 0)
+                            {
+                                // console.log(`totalCount = ${count}, invoices = ${data}`);
+                                resolve ({totalCount : count[0]['count(t.id)'], invoices : data});
+                            }
+                            else
+                            {
+                                // console.log(`totalCount = ${count}, invoices = ${data}`);
+                                resolve ({totalCount : count[0]['count(t.id)'], invoices : data});
+                            }
+                        });
+                    }
+                    else if(result[0].name === constants.roles.service_provider)
+                    {
+                        const offset = (pageNumber - 1) * pageSize;
+                        let selQuery = `SELECT i.id, i.invoice_no, i.quotation_prefix_id, c.name, c.email, i.status
+                                        FROM invoices i
+                                        JOIN quotations q ON i.quot_id = q.id
+                                        JOIN customers c ON q.customer_id = c.id
+                                        WHERE i.deleted_at IS NULL AND i.service_provider_id = ${Id}
+                                        LIMIT ${pageSize} OFFSET ${offset}`;
+                        // console.log('Selquery of invoice when user is service provider: ',selQuery);
+                        const count = await commonoperation.totalCountParticularServiceProvider(constants.tableName.invoices, Id);
+                        con.query(selQuery, async (err, result) =>
+                        {
+                            if(err)
+                            {
+                                console.error(err);
+                                resolve('err');
+                            }
+                            const data =  objectConvertor.getAllInvoice(result)
+                            if(result.length === 0)
+                            {
+                                // console.log(`totalCount = ${count}, invoices = ${data}`);
+                                resolve ({totalCount : count[0]['count(t.id)'], invoices : data});
+                            }
+                            else
+                            {
+                                // console.log(`totalCount = ${count}, invoices = ${data}`);
+                                resolve ({totalCount : count[0]['count(t.id)'], invoices : data});
+                            }
+                        });
                     }
                     else
                     {
-                        // console.log(`totalCount = ${count}, invoices = ${data}`);
-                        resolve ({totalCount : count[0]['count(t.id)'], invoices : data});
-                    }
+                        console.log('I think the role name which we got is not present in the database at the time of invoice');
+                        resolve('err') 
+                    }                    
                 });
             });            
         }
@@ -203,7 +250,7 @@ module.exports = class invoices
                                         resolve(invoiceResponse);
                                     }
                                 });
-                            }                            
+                            }
                         }
                     });
                 }
@@ -758,7 +805,7 @@ module.exports = class invoices
                         }
                     }
                 }
-            });            
+            });
         }
         catch (error)
         {

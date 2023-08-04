@@ -85,7 +85,6 @@ module.exports =
                 upload : `${__dirname}../../Attachements/serviceProvider/licenceImage/`,
                 view : `/serviceProvider/licenceImage/`
             }
-            // licenceImage : `/serviceProvider/licenceImage/`
         },
         vehicle :
         {
@@ -188,8 +187,14 @@ module.exports =
 
     roles :
     {
-        admin : "ADMIN",
-        service_provider : "SERVICE PROVIDER"
+        service_provider : 'SERVICE PROVIDER',
+        admin : 'ADMIN',
+        superAdmin : 'SUPER ADMIN'
     }
   
+
+
+
+
+
 }

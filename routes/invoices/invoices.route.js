@@ -6,9 +6,10 @@ const constants = require('../../utils/constants');
 module.exports = function (app)
 {
     app.post(
-        `/${process.env.apiToken}/getAll/invoices`, 
+        `/${process.env.apiToken}/getAll/invoices/:id`,
         checkInput.isPageNumberEntered,
         checkInput.isPageSizeEntered,
+        isValidIdInTheParams(constants.tableName.service_providers),
         invoiceController.getAll
         ); 
 

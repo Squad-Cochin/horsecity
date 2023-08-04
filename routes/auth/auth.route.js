@@ -3,7 +3,6 @@ const authcontroller = require(`../../controllers/auth/auth.controller`);   // i
 const checkInput = require(`../../middlewares/validateInput/checkRequestBodyInput`);
 const constants = require("../../utils/constants");
 
-const checkHeaders = require('../../middlewares/validateInput/checkRequestHeader');
 
 module.exports = function(app)
 {

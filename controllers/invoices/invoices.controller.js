@@ -15,7 +15,7 @@ const time = require('../../utils/helper/date'); // All the time related formati
 
 exports.getAll = async (req, res) =>
 {
-    const invoices = await invoice.getall(req.body.page, req.body.limit);
+    const invoices = await invoice.getall(req.body.page, req.body.limit, req.params.id);
     
     if(invoices === 'err')
     {

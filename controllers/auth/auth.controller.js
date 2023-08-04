@@ -82,31 +82,38 @@ exports.serviceProviderLogin = async(req, res)=>
     // else(loginauth === 'true')
     else
     {
-        if(loginauth[0].role_name === constants.roles.admin)
-        {
-            console.log('Admin login Successful');
-            const check = await res.set('role', constants.roles.admin);
-            console.log(check);
-            return res.status(200).send
-            ({
-                status : "success",
-                code : 200,
-                message : "Admin login Successful",
-                data : loginauth
-            });
-        }
-        if(loginauth[0].role_name === constants.roles.service_provider)
-        {
-            console.log('Service provider login successful');
-            res.set('role', constants.roles.service_provider);
-            return res.status(200).send
-            ({
-                status : "success",
-                code : 200,
-                message : "Service provider login successful",
-                data : loginauth
-            });
-        }        
+        return res.status(200).send
+        ({
+            status : "success",
+            code : 200,
+            message : "Login successful",
+            data : loginauth
+        });
+        // if(loginauth[0].role_name === constants.roles.admin)
+        // {
+        //     console.log('Admin login Successful');
+        //     const check = await res.set('role', constants.roles.admin);
+        //     console.log(check);
+        //     return res.status(200).send
+        //     ({
+        //         status : "success",
+        //         code : 200,
+        //         message : "Admin login Successful",
+        //         data : loginauth
+        //     });
+        // }
+        // if(loginauth[0].role_name === constants.roles.service_provider)
+        // {
+        //     console.log('Service provider login successful');
+        //     res.set('role', constants.roles.service_provider);
+        //     return res.status(200).send
+        //     ({
+        //         status : "success",
+        //         code : 200,
+        //         message : "Service provider login successful",
+        //         data : loginauth
+        //     });
+        // }        
     }
 };
 

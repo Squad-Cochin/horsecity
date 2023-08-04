@@ -16,22 +16,86 @@ module.exports = class drivers
 {
     constructor(){}
 
-    static async getall(pageNumber, pageSize)
+    static async getall(pageNumber, pageSize, Id)
     {
         try
         {
-            const data = await commonfetching.getAllDataOfDriverAndCustomer(constants.tableName.drivers, pageNumber, pageSize);
-            // console.log('Data', data);
-            const count = await commonoperation.totalCount(constants.tableName.drivers)
-            // console.log('Total Data', count[0]['count(t.id)']);
-            if(data.length === 0)
+            return await new Promise(async(resolve, reject)=>
             {
-                return ({totalCount : count[0]['count(t.id)'], drivers : data});
-            }
-            else
-            {
-                return ({totalCount : count[0]['count(t.id)'], drivers : data});
-            }                     
+                let checkRole = `SELECT sp.id , r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
+                // console.log('Check Role Data At The Get All Driver : ', checkRole);
+                con.query(checkRole, async (err, result) =>
+                {
+                    // console.log(`Role: `, result);
+                    if(err)
+                    {
+                       console.log('Error while checking the role at the time of driver');
+                       resolve('err') 
+                    }
+                    if(result[0].name === constants.roles.admin || result[0].name === constants.roles.superAdmin)
+                    {
+                        const offset = (pageNumber - 1) * pageSize;
+                        let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, cd.status FROM ${constants.tableName.drivers} cd WHERE cd.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;                        
+                        // console.log('Selquery of driver when user is admin or suport admin: ',selQuery);
+                        const count = await commonoperation.totalCount(constants.tableName.drivers);
+                        con.query(selQuery, async (err, result) =>
+                        {
+                            if(err)
+                            {
+                                console.error(err);
+                                resolve('err');
+                            }
+
+                            if(result.length === 0)
+                            {
+                                resolve ({totalCount : count[0]['count(t.id)'], drivers : result});
+                            }
+                            else
+                            {
+                                resolve ({totalCount : count[0]['count(t.id)'], drivers : result});
+                            } 
+                            
+                        });
+                    }
+                    else if(result[0].name === constants.roles.service_provider)
+                    {
+                        const offset = (pageNumber - 1) * pageSize;
+                        
+                        let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, cd.status FROM drivers cd, assign_drivers ad WHERE ad.service_provider_id = ${Id} AND ad.deleted_at IS NULL AND ad.driver_id = cd.id AND cd.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
+                        
+                        // console.log('Selquery of driver when user is service provider: ',selQuery);
+                        
+                        con.query(selQuery, async (err, result) =>
+                        {
+                            if(err)
+                            {
+                                console.error(err);
+                                resolve('err');
+                            }
+                            else
+                            {
+                                const count = `SELECT count(t.id) FROM assign_drivers t WHERE t.deleted_at IS NULL AND t.service_provider_id = ${Id}`;
+                                con.query(count, (err, resultcount) =>
+                                {
+                                    if(result.length === 0)
+                                    {
+                                        resolve ({totalCount : resultcount[0]['count(t.id)'], drivers : result});
+                                    }
+                                    else
+                                    {
+                                        resolve ({totalCount : resultcount[0]['count(t.id)'], drivers : result});
+                                    }
+                                });
+                            }                            
+                        });
+                    }
+                    else
+                    {
+                        console.log('I think the role name which we got is not present in the database at the time of driver');
+                        resolve('err') 
+                    }                    
+                });
+            });                              
         }
         catch(error)
         {
@@ -352,7 +416,7 @@ module.exports = class drivers
                         });
                     }
                 }
-            });            
+            });
         }
         catch (error)
         {
