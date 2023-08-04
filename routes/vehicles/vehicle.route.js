@@ -7,7 +7,8 @@ const constants = require('../../utils/constants');
 module.exports = (app) =>
 {
     // The below route is for adding the new vehicle data.
-    app.post(`/${process.env.apiToken}/addNew/vehicle`,
+    app.post(`/${process.env.apiToken}/addNew/vehicle/:id`,
+    isValidIdInTheParams(constants.tableName.service_providers),
     checkInput.isServiceProviderIdEntered,
     checkInput.isValidVehicleNumberEntered,
     checkInput.isInsurancePolicyNumberEntered,
