@@ -24,6 +24,7 @@ exports.serviceProviderLogin = async(req, res)=>
     // We are calling the function. Which will look for login functionality. We are sending username and password because it is needed
     let loginauth = await auth.serviceproviderlogin(req.body.userName, req.body.password)
     // If no service provider user found with entered username, then this if block code will be executed
+    // console.log('Login Auth from Controller', loginauth);
     if(loginauth === 'noserviceprovider')
     {
         console.log('Unavailable username or incorrect username. While service provider login');
@@ -82,31 +83,39 @@ exports.serviceProviderLogin = async(req, res)=>
     // else(loginauth === 'true')
     else
     {
-        if(loginauth[0].role_name === constants.roles.admin)
-        {
-            console.log('Admin login Successful');
-            const check = await res.set('role', constants.roles.admin);
-            console.log(check);
-            return res.status(200).send
-            ({
-                status : "success",
-                code : 200,
-                message : "Admin login Successful",
-                data : loginauth
-            });
-        }
-        if(loginauth[0].role_name === constants.roles.service_provider)
-        {
-            console.log('Service provider login successful');
-            res.set('role', constants.roles.service_provider);
-            return res.status(200).send
-            ({
-                status : "success",
-                code : 200,
-                message : "Service provider login successful",
-                data : loginauth
-            });
-        }        
+        return res.status(200).send
+        ({
+            status : "success",
+            code : 200,
+            message : "Login Successful",
+            data : loginauth
+        });
+        
+        // if(loginauth[0].role_name === constants.roles.admin)
+        // {
+        //     console.log('Admin login Successful');
+        //     const   check = await res.set('role', constants.roles.admin);
+        //     console.log(check);
+        //     return res.status(200).send
+        //     ({
+        //         status : "success",
+        //         code : 200,
+        //         message : "Admin login Successful",
+        //         data : loginauth
+        //     });
+        // }
+        // if(loginauth[0].role_name === constants.roles.service_provider)
+        // {
+        //     console.log('Service provider login successful');
+        //     res.set('role', constants.roles.service_provider);
+        //     return res.status(200).send
+        //     ({
+        //         status : "success",
+        //         code : 200,
+        //         message : "Service provider login successful",
+        //         data : loginauth
+        //     });
+        // }        
     }
 };
 

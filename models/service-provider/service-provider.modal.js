@@ -6,31 +6,78 @@ const time = require('../../utils/helper/date');
 require('dotenv').config()
 
 
-exports.getAllServiceProviders = (requestBody) =>
+exports.getAllServiceProviders = (requestBody,spId) =>
 {
     return new Promise((resolve, reject) =>
     {
         try
         {       
+            
             const {page, limit} = requestBody;
             const offset = (page - 1) * limit; 
+            const selRoleName = `SELECT rl.name AS role_name,rl.id
+            FROM service_providers AS sp          
+            JOIN ${constants.tableName.roles} AS rl ON sp.role_Id   = rl.id
+            WHERE sp.id = '${spId}'`;
+            console.log(selRoleName); 
+            con.query(selRoleName,(err,data)=>{ 
+                console.log(err);
+           if(!err){ 
+        //     let sellQuery = `SELECT md.name AS module_name ,md.id AS module_id ,pm.create,pm.update,pm.read,pm.delete
+        //     FROM ${constants.tableName.permissions} AS pm
+        //     JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+        //     JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
+        //     WHERE pm.role_id = '${userData[0].role_Id}' 
+        //    `;
+         
+                let role = data[0].role_name ;
+                let role_id = data[0].id
+                    console.log(role);
+                    const selQuery = `
+                    SELECT sp.id, sp.name, sp.email, sp.contact_person, sp.contact_no, sp.status
+                    FROM service_providers AS sp
+                    JOIN ${constants.tableName.roles} rl ON sp.role_Id = rl.id
+                    WHERE sp.deleted_at IS NULL
+                    AND (
+                        ('${role}' = '${constants.roles.admin}')
+                        OR
+                        (
+                            '${role}' = '${constants.roles.service_provider}'
+                            AND sp.id = '${spId}'
+                        )
+                    )
+                    LIMIT ${+limit} OFFSET ${+offset};
+                `;
+                
+                
+                con.query(selQuery,(err,data)=>{
+                    console.log(err);
 
-            const selQuery = `SELECT sp.id, sp.name, sp.email, sp.contact_person, sp.contact_no, sp.status
-            FROM service_providers AS sp
-            WHERE sp.deleted_at IS NULL
-            LIMIT ${+limit} OFFSET ${+offset}`;
-            con.query(selQuery,(err,data)=>{
+                    if(!err){
+                        const totalCountQuery = `SELECT count(*) FROM service_providers sp
+                                                WHERE sp.deleted_at IS NULL`
+                        con.query(totalCountQuery,(err,result)=>{
+                            if(!err){
+                                const count = result[0]['count(*)'];
+                                        let Query = `SELECT md.name AS module_name ,md.id AS module_id ,pm.create,pm.update,pm.read,pm.delete
+                                FROM ${constants.tableName.permissions} AS pm
+                                JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+                                JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
+                                WHERE pm.role_id = '${role_id}'  AND md.name = 'SERVICE PROVIDER'
+                               `;
+                                    con.query(Query,(err,result)=>{
+                                        if(!err){
+                                  
+                                            resolve({totalCount : count, serviceProviders : data ,module : result})
+                                        }
+                                })
+                 
+                            }
+                    })
+                }})
 
-                if(!err){
-                    const totalCountQuery = `SELECT count(*) FROM service_providers sp
-                                             WHERE sp.deleted_at IS NULL`
-                    con.query(totalCountQuery,(err,result)=>{
-                        if(!err){
-                            const count = result[0]['count(*)'];
-                            resolve({totalCount : count, serviceProviders : data})
-                        }
-                })
-            }})
+        }})
+            
         }catch(err){
             console.log('Error while feching service providers', err);
         }
