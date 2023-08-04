@@ -46,31 +46,70 @@ module.exports = class vehicles
         }
     };
 
-    static async getall(pageNumber, pageSize)
+    static async getall(pageNumber, pageSize, Id)
     {
         try
         {
             return await new Promise(async(resolve, reject)=>
             {
-                const offset = (pageNumber - 1) * pageSize;
-
-                let selQuery = `SELECT v.id, sp.name AS service_provider, v.vehicle_number, v.make, v.no_of_horse, v.status FROM  ${constants.tableName.service_providers} sp, ${constants.tableName.vehicles} v WHERE sp.id = v.service_provider_id AND v.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
-                // console.log(selQuery);
-                const count = await commonoperation.totalCount(constants.tableName.vehicles)
-                // console.log('Total Data', count[0]['count(t.id)']);
-                con.query(selQuery, (err, result) =>
+                let checkRole = `SELECT sp.id , r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
+                // console.log('Check Role Data: ', checkRole);
+                con.query(checkRole, async (err, result) =>
                 {
-                    // console.log(result);
+                    // console.log(`Role: `, result);
                     if(err)
                     {
-                        
-                        resolve(err);
+                       console.log('Error while checking the role');
+                       resolve('err') 
+                    }
+                    if(result[0].name === constants.roles.admin || result[0].name === constants.roles.superAdmin)
+                    {
+                        const offset = (pageNumber - 1) * pageSize;
+                        let selQuery = `SELECT v.id, sp.name AS service_provider, v.vehicle_number, v.make, v.no_of_horse, v.status FROM  ${constants.tableName.service_providers} sp, ${constants.tableName.vehicles} v WHERE sp.id = v.service_provider_id AND v.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
+                        // console.log(selQuery);
+                        const count = await commonoperation.totalCount(constants.tableName.vehicles)
+                        // console.log('Total Data', count[0]['count(t.id)']);
+                        con.query(selQuery, (err, result) =>
+                        {
+                            // console.log(result);
+                            if(err)
+                            {
+                                resolve(err);
+                            }
+                            else
+                            {
+                                resolve ({totalCount : count[0]['count(t.id)'], vehicles : result});
+                                // resolve(result)
+                            }
+                        });
+                    }
+                    else if(result[0].name === constants.roles.service_provider)
+                    {
+                        const offset = (pageNumber - 1) * pageSize;
+                        let selQuery = `SELECT v.id, v.vehicle_number, v.make, v.no_of_horse, v.status FROM  ${constants.tableName.service_providers} sp, ${constants.tableName.vehicles} v WHERE sp.id = v.service_provider_id AND v.service_provider_id = ${Id} AND v.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
+                        // console.log(selQuery);
+                        const count = await commonoperation.totalCountParticularServiceProvider(constants.tableName.vehicles, Id)
+                        // console.log('Total Data', count[0]['count(t.id)']);
+                        con.query(selQuery, (err, result) =>
+                        {
+                            // console.log(result);
+                            if(err)
+                            {
+                                resolve(err);
+                            }
+                            else
+                            {
+                                resolve ({totalCount : count[0]['count(t.id)'], vehicles : result});
+                                // resolve(result)
+                            }
+                        });
                     }
                     else
                     {
-                        resolve ({totalCount : count[0]['count(t.id)'], vehicles : result});
-                        // resolve(result)
+                        console.log('I think the role name which we got is not present in the database');
+                        resolve('err') 
                     }
+                    
                 });
             });
         }

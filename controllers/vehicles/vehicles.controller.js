@@ -90,7 +90,7 @@ exports.addNew = async (req, res, next) =>
 exports.getAll = async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for get all vehicles logic.
-    const vehicles = await vehicle.getall(req.body.page, req.body.limit)
+    const vehicles = await vehicle.getall(req.body.page, req.body.limit, req.params.id)
     // console.log(vehicles);
 
     // If any unwanted, unencounter, or unconventionaal error came then this else if block of code will be executed.

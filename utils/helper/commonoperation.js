@@ -287,6 +287,41 @@ exports.totalCount = async (tablename) =>
     }
 }
 
+
+exports.totalCountParticularServiceProvider = async (tablename, Id) =>
+{
+    try 
+    {
+        return new Promise((resolve, reject) => 
+        {
+            let selQuery = `SELECT count(t.id) FROM ${tablename} t WHERE t.deleted_at IS NULL AND t.service_provider_id = ${Id}`;
+            // console.log('Query :', selQuery);
+            con.query(selQuery, (err, result) =>
+            {
+                if (err)
+                {
+                    // console.log('Error while executing the query:', err);
+                    reject(err);
+                }
+                if (result.length > 0)
+                {
+                    // console.log('Data present and fetched');
+                    resolve(result);
+                }
+                else
+                {
+                    // console.log('Query executed but data not present in the table.');
+                    resolve([]);
+                } 
+        
+            });
+        });      
+    }
+    catch (error)
+    {        
+    }
+}
+
 exports.fileUploadTwo = async (attachments, path) =>
 { 
     // console.log(attachments);

@@ -103,7 +103,17 @@ CREATE TABLE permissions
     role_id INT(11),
     FOREIGN KEY (role_id) REFERENCES roles(id),
     module_id INT(11),
-    FOREIGN KEY (module_id) REFERENCES modules(id)
+    FOREIGN KEY (module_id) REFERENCES modules(id),
+  	`add` ENUM('TRUE', 'FALSE'),
+    `edit` ENUM('TRUE', 'FALSE'),
+    `view` ENUM('TRUE', 'FALSE'),
+    `delete` ENUM('TRUE', 'FALSE'),
+    `status` ENUM('TRUE', 'FALSE'),
+    `confirm` ENUM('TRUE', 'FALSE'),
+    `send_email` ENUM('TRUE', 'FALSE'),
+    `setting` ENUM('TRUE', 'FALSE'),
+    `start_trip` ENUM('TRUE', 'FALSE'),
+    `view_all` ENUM('TRUE', 'FALSE')   
 );
 
 
@@ -135,7 +145,8 @@ CREATE TABLE service_providers
     user_name VARCHAR(100) UNIQUE,
     password VARCHAR(255) NOT NULL,
     contact_person VARCHAR(255) NOT NULL,
-    role_name VARCHAR(100),
+    role_Id INT(11),
+    FOREIGN KEY (role_Id) REFERENCES roles(id),
     contact_no VARCHAR(15) NOT NULL,
     contact_address VARCHAR(255) NOT NULL,
     emergency_contact_no VARCHAR(15) NOT NULL,

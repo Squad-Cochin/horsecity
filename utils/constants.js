@@ -188,7 +188,8 @@ module.exports =
     roles :
     {
         service_provider : 'SERVICE PROVIDER',
-        admin : 'ADMIN'
+        admin : 'ADMIN',
+        superAdmin : 'SUPER ADMIN'
     }
   
 

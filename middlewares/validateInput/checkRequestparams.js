@@ -2,7 +2,7 @@ const commonfetching = require(`../../utils/helper/commonfetching`);
 
 exports.isValidIdInTheParams = (tableName) => async(req, res, next) =>
 {
-    console.log(req.params.id);
+    // console.log(req.params.id);
     if (!req.params.id) 
     {
         return res.status(200).send
