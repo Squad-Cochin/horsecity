@@ -102,12 +102,12 @@ CREATE TABLE permissions
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     role_id INT(11),
     FOREIGN KEY (role_id) REFERENCES roles(id),
-    module_id INT(11),
+    module_id INT(11), 
     FOREIGN KEY (module_id) REFERENCES modules(id),
-  	`create` ENUM('true', 'false'),
-    `update` ENUM('true', 'false'),
-    `read` ENUM('true', 'false'),
-    `delete` ENUM('true', 'false'),
+  	`create` ENUM('true', 'false') DEFAULT 'false',
+    `update` ENUM('true', 'false') DEFAULT 'false',
+    `read` ENUM('true', 'false') DEFAULT 'false',
+    `delete` ENUM('true', 'false') DEFAULT 'false' 
    
 );
 

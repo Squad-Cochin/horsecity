@@ -6,7 +6,7 @@ const time = require('../../utils/helper/date');
 require('dotenv').config()
 
 
-exports.getAllEnquiries = (requestBody) =>
+exports.getAllEnquiries = (requestBody,spId) =>
 {
     return new Promise((resolve, reject) =>
     {
@@ -16,30 +16,80 @@ exports.getAllEnquiries = (requestBody) =>
        
             const offset = (page - 1) * limit; 
 
+            const selRoleName = `SELECT rl.name AS role_name,rl.id
+            FROM ${constants.tableName.enquiries} AS enq  
+            JOIN ${constants.tableName.service_providers} AS sp ON enq.	serviceprovider_id    = sp.id       
+            JOIN ${constants.tableName.roles} AS rl ON sp.role_Id   = rl.id
+            WHERE enq.serviceprovider_id = '${spId}'`;
+            
+            con.query(selRoleName,(err,data)=>{ 
+    
+                if(!err){ 
+
+                    let role_name = data[0].role_name ;
+                    let role_id = data[0].id
+
             const selQuery = `SELECT enq.id, cu.name AS customer_name,sp.name AS service_provider,enq.status,enq.created_at
             FROM ${constants.tableName.enquiries} AS enq
             JOIN ${constants.tableName.customers} cu ON enq.customer_id = cu.id
             JOIN ${constants.tableName.service_providers} sp ON enq.serviceprovider_id = sp.id
+            WHERE  ('${role_name}' = '${constants.roles.admin}')
+            OR
+            ('${role_name}' = '${constants.roles.admin}')
+            OR
+            (
+              '${role_name}' = '${constants.roles.service_provider}'
+              AND enq.serviceprovider_id = '${spId}'
+            )
             LIMIT ${+limit} OFFSET ${+offset}`;
             con.query(selQuery,(err,data)=>{
 
                 if(!err){
 
-                    const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.enquiries}`
+                    const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.enquiries} enq
+                    JOIN ${constants.tableName.service_providers} sp ON enq.serviceprovider_id = sp.id
+                                            WHERE  ('${role_name}' = '${constants.roles.admin}')
+                                            OR
+                                            ('${role_name}' = '${constants.roles.admin}')
+                                            OR
+                                            (
+                                            '${role_name}' = '${constants.roles.service_provider}'
+                                            AND enq.serviceprovider_id = '${spId}'
+                                            )`
                     // resolve(result);
                     con.query(totalCountQuery,(err,result)=>{
+                        console.log(err);
                         if(!err){
+
                             const count = result[0]['count(*)'];
                             for (let i = 0; i < data.length; i++) {
                                 data[i].created_at = `${time.formatDateToDDMMYYYY(
                                   data[i].created_at
                                 )}`;
                               }
-                              console.log("data",data);
-                            resolve({totalCount : count, enquiries : data})
+
+                                      /**CHECKING basis of role id module name */
+                                      let Query = `SELECT md.name AS module_name ,md.id AS module_id ,pm.create,pm.update,pm.read,pm.delete
+                                      FROM ${constants.tableName.permissions} AS pm
+                                      JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+                                      JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
+                                      WHERE pm.role_id = '${role_id}'  AND md.name = 'ENQUIRIES'
+                                     `;
+                                     con.query(Query,(err,result)=>{
+                                        // console.log("result",result);
+                                        if(!err){
+                                  
+                                            console.log("data",data);
+                                            resolve({totalCount : count, enquiries : data,module : result})
+                                        }
+                                })
+                            
                         }
                 })
             }})
+
+            
+        }})
           
         }catch(err){
             console.log('Error while feching equiries', err);

@@ -62,9 +62,9 @@ module.exports = async function()
                                     );
                                     `;
                                     // console.log(insQueryPP); 
-                                    con.query(insQueryApp, (err, result2)=> // Executing the above query
+                                    con.query(insQueryApp, (err, result22)=> // Executing the above query
                                     {
-                                        if(result2) 
+                                        if(result22) 
                                         {
                                             console.log("All the data is been entered in the database from the backend");
                                             // resolve('true');

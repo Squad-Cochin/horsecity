@@ -19,26 +19,22 @@ exports.getAllServiceProviders = (requestBody,spId) =>
             FROM service_providers AS sp          
             JOIN ${constants.tableName.roles} AS rl ON sp.role_Id   = rl.id
             WHERE sp.id = '${spId}'`;
-            console.log(selRoleName); 
+  
             con.query(selRoleName,(err,data)=>{ 
-                console.log(err);
+    
            if(!err){ 
-        //     let sellQuery = `SELECT md.name AS module_name ,md.id AS module_id ,pm.create,pm.update,pm.read,pm.delete
-        //     FROM ${constants.tableName.permissions} AS pm
-        //     JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
-        //     JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-        //     WHERE pm.role_id = '${userData[0].role_Id}' 
-        //    `;
          
                 let role = data[0].role_name ;
                 let role_id = data[0].id
-                    console.log(role);
+        
                     const selQuery = `
                     SELECT sp.id, sp.name, sp.email, sp.contact_person, sp.contact_no, sp.status
                     FROM service_providers AS sp
                     JOIN ${constants.tableName.roles} rl ON sp.role_Id = rl.id
                     WHERE sp.deleted_at IS NULL
                     AND (
+                        ('${role}' = '${constants.roles.admin}')
+                        OR
                         ('${role}' = '${constants.roles.admin}')
                         OR
                         (
@@ -51,21 +47,35 @@ exports.getAllServiceProviders = (requestBody,spId) =>
                 
                 
                 con.query(selQuery,(err,data)=>{
-                    console.log(err);
+           
 
                     if(!err){
                         const totalCountQuery = `SELECT count(*) FROM service_providers sp
-                                                WHERE sp.deleted_at IS NULL`
+                                                WHERE sp.deleted_at IS NULL
+                                                AND (
+                                                    ('${role}' = '${constants.roles.admin}')
+                                                    OR
+                                                    (
+                                                        '${role}' = '${constants.roles.service_provider}'
+                                                        AND sp.id = '${spId}'
+                                                    )
+                                                )`
                         con.query(totalCountQuery,(err,result)=>{
                             if(!err){
+                            
                                 const count = result[0]['count(*)'];
+
+                                 /**CHECKING basis of role id module name */
                                         let Query = `SELECT md.name AS module_name ,md.id AS module_id ,pm.create,pm.update,pm.read,pm.delete
                                 FROM ${constants.tableName.permissions} AS pm
                                 JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                                 JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                                WHERE pm.role_id = '${role_id}'  AND md.name = 'SERVICE PROVIDER'
+                                WHERE pm.role_id = '${role_id}'  AND md.name = 'SERVICE PROVIDERS'
                                `;
+                              
+                               console.log(role_id);
                                     con.query(Query,(err,result)=>{
+                                        // console.log("result",result);
                                         if(!err){
                                   
                                             resolve({totalCount : count, serviceProviders : data ,module : result})
