@@ -20,7 +20,7 @@ export async function getSPAllData(pageNumber,userId){
             "limit" : pageLimit
         }
         console.log("userid",userId);
-        const { data } = await axios.post(`${url.GET_SP_ALL_DATA_URL}/1`,reqObj);
+        const { data } = await axios.post(`${url.GET_SP_ALL_DATA_URL}/${userId}`,reqObj);
         console.log(data);
         return(data)
     } catch (error) {
@@ -510,7 +510,7 @@ export async function getVehicleImageData(id){
     }
 }
 
-export async function getEnquiriesData(pageNumber){
+export async function getEnquiriesData(pageNumber,userId){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = {
@@ -518,7 +518,7 @@ export async function getEnquiriesData(pageNumber){
             "limit" : pageLimit
         }
         console.log(reqObj)
-        const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}`,reqObj);
+        const { data } = await axios.post(`${url.GET_ENQUIRY_ALL_DATA_URL}/${userId}`,reqObj);
         console.log(data)
         return(data)
     } catch (error) {

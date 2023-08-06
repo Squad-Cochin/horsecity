@@ -42,9 +42,9 @@ const ListTables = () => {
     /**This hook is used to fetch service provider data */
     useEffect(() => {
         const data = JSON.parse(localStorage.getItem("authUser"));
-    
+        
             let userIdd = data[0]?.user[0]?.id
-
+            console.log(userIdd);
         setUserId(userIdd);
         getAllData(1)
     }, [userId])
@@ -140,7 +140,7 @@ const ListTables = () => {
             }
         }
     }
-console.log("MMMM",module.create);
+console.log("MMMM",userId);
     /**This function is used to toggle the modal for adding/editing service providers 
      * and set the selected service provider */
     async function tog_list(param, productId) {
@@ -170,11 +170,16 @@ console.log("MMMM",module.create);
 
     // function for get data all service provider data
     async function getAllData(page) {
+        
+        if(userId){ 
+            console.log("uu",userId);
         let getSPdataNext = await getSPAllData(page || 1, userId);
         setSproviders(getSPdataNext.serviceProviders);
+        console.log("spa",getSPdataNext.module);
         setModule(getSPdataNext.module[0])
         setPageNumber(page);
         setNumberOfData(getSPdataNext.totalCount);
+        }
     }
 
     return (
@@ -194,9 +199,13 @@ console.log("MMMM",module.create);
                                         <Row className="g-4 mb-3">
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
-                                                    {parseInt(module?.create) ? (
-                                                    <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
-                                                      ) : null}
+                                                {
+                                            JSON.parse(module?.create ||  'true') ? (
+                                                <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn">
+                                                <i className="ri-add-line align-bottom me-1"></i> Add
+                                                </Button>
+                                            ) : null
+                                            }
                                                 </div>
                                             </Col>
                                         </Row>
@@ -244,6 +253,7 @@ console.log("MMMM",module.create);
                                                 </td>
                                                 <td>
                                                 <div className="d-flex gap-2">
+                                                {JSON.parse(module?.read ||  'true') ?(
                                                     <div className="edit">
                                                     <button
                                                         className="btn btn-sm btn-success edit-item-btn"
@@ -254,7 +264,9 @@ console.log("MMMM",module.create);
                                                         View
                                                     </button>
                                                     </div>
+                                                     ) : null }
                                                     <div className="edit">
+                                                    {JSON.parse(module?.update ||  'true') ?(
                                                         <button
                                                             className="btn btn-sm btn-primary edit-item-btn"
                                                             onClick={() => tog_list("EDIT", value.id)}
@@ -263,9 +275,10 @@ console.log("MMMM",module.create);
                                                         >
                                                             Edit
                                                         </button>
+                                                         ) : null }
                                                     </div>
                                                     <div className="remove">
-                                                        {parseInt(module?.delete) ?(
+                                                        {JSON.parse(module?.delete ||  'true') ?(
                                                     <button
                                                         className="btn btn-sm btn-danger remove-item-btn"
                                                         onClick={() => remove_data(value?.id)}

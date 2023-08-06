@@ -47,14 +47,22 @@ const ListEnquiriesTable = () => {
     const [ discountAmount, setDiscountAmount ] = useState(0);
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
+    const [module,setModule] = useState({});
+    const [userId, setUserId ] = useState("");
     const [ errors, setErrors ] = useState("")
+
     const pageLimit = config.pageLimit;
 
     //  The useEffect hook is used to perform some initialization logic when the component mounts
 
     useEffect(() => {
+        const data = JSON.parse(localStorage.getItem("authUser"));
+        
+        let userIdd = data[0]?.user[0]?.id
+        console.log(userIdd);
+    setUserId(userIdd);
         getAllData(1)
-    }, []);
+    }, [userId]);
 
     const initialValues = {
         customer_id : enquiry ? enquiry[0]?.customer_id : "",
@@ -136,10 +144,13 @@ const ListEnquiriesTable = () => {
 
     // function for get data all service provider data
     async function getAllData(page) {
-        let getEnqData = await getEnquiriesData(page || 1);
+        if(userId){ 
+        let getEnqData = await getEnquiriesData(page || 1,userId);
         setEnquiries(getEnqData.enquiries);
+        setModule(getEnqData.module[0])
         setPageNumber(page);
         setNumberOfData(getEnqData.totalCount);
+        }
     }
 
     /**
@@ -455,6 +466,7 @@ const ListEnquiriesTable = () => {
                                                             {/* This is the place from where we are calling he view button and function. Which is used to show
                                                             particular enquiry data fully. */}
                                                             <td>
+                                                            {JSON.parse(module?.read ||  'true') ?(
                                                                 <div className="d-flex gap-2">
                                                                     <div className="edit">
                                                                         <button className="btn btn-sm btn-success edit-item-btn" onClick={() => tog_view(item.id)}
@@ -463,9 +475,11 @@ const ListEnquiriesTable = () => {
                                                                         </button>
                                                                     </div>
                                                                 </div>
+                                                                    ) : null }
                                                             </td>
                                                             { item.status !== "CONFIRMED" ?
                                                             <td>
+                                                                    {JSON.parse(module?.update ||  'true') ?(
                                                                 <div className="d-flex gap-2">
                                                                     <div className="edit">
                                                                         <button className="btn btn-sm btn-primary edit-item-btn" onClick={() => tog_confirm(item.id)}
@@ -474,6 +488,7 @@ const ListEnquiriesTable = () => {
                                                                         </button>
                                                                     </div>
                                                                 </div>
+                                                                     ) : null }
                                                             </td> : null }
                                                         </tr>
                                                     ))}
