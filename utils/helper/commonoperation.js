@@ -287,7 +287,6 @@ exports.totalCount = async (tablename) =>
     }
 }
 
-
 exports.totalCountParticularServiceProvider = async (tablename, Id) =>
 {
     try 

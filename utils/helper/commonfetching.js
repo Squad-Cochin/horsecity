@@ -47,7 +47,6 @@ exports.getAllDataOfDriverAndCustomer = (tablename, pageNumber, pageSize) =>
     }
 }
 
-
 exports.dataOnCondition = async (tableName, Value, feildName) =>
 {
     try 
@@ -125,9 +124,7 @@ exports.dataOnConditionUpdate = async(tableName, feildName, Value, id, messageFe
     {
         console.log(`Error from the commonfetching.js file from the helper folder. The function is the dataOnConditionUpdate`, error);                
     }
-}; 
-
-
+};
 
 exports.getOneInvoice = async (Id) =>
 {
@@ -833,91 +830,3 @@ exports.getOneInvoice = async (Id) =>
             
         }
 }
-
-
-
-// return new Promise(async (resolve, reject) => {
-//     try { 
-//         /**For taking tax id in the settings application */
-
-//         let selQuery = `SELECT 	tx.id , tx.type,tx.name,tx.value 
-//     FROM ${constants.tableName.application_settings} apps 
-//     JOIN ${constants.tableName.taxations} tx ON apps.tax_id = tx.id
-//     ` 
-//         con.query(selQuery, async (err, tax) => {
-//             if (tax.length != 0) {
-
-//                 /***For selecting quotation view details */
-//                 let selQuery = `SELECT
-//         quo.id,
-//         quo.quotation_id,
-//         quo.trip_type,
-//         quo.pickup_country,
-//         quo.pickup_location,
-//         quo.pickup_date,
-//         quo.pickup_time,
-//         quo.drop_country,
-//         quo.drop_location,
-//         quo.drop_date,
-//         quo.drop_time,
-//         quo.no_of_horse,
-//         quo.special_requirement,
-//         quo.additional_service,
-//         quo.transportation_insurance_coverage,
-//         quo.sub_total,
-//         quo.tax_amount,
-//         quo.discount_amount,
-//         quo.final_amount,
-//         cu.id AS customer_id,
-//         cu.name AS customer_name,
-//         cu.email AS customer_email,
-//         cu.user_name AS customer_user_name,
-//         cu.contact_no AS customer_contact_no,
-//         cu.id_proof_no AS customer_id_proof_no,
-//         sp.name AS service_provider_name,
-//         sp.id AS service_provider_id,
-//         enq.created_at AS enquiry_date,
-//         vh.vehicle_number AS vehicle_number,
-//         vh.make,
-//         vh.id AS vehicle_id,
-//         dvr.id AS driver_id,
-//         dvr.name AS driver_name, 
-//         dc.id AS discount_type_id,
-//         quo.driver_amount,
-//         quo.vehicle_amount
-//     FROM ${constants.tableName.quotations} AS quo
-//     JOIN ${constants.tableName.service_providers} sp ON quo.serviceprovider_id = sp.id
-//     JOIN ${constants.tableName.vehicles} vh ON quo.vehicle_id = vh.id
-//     JOIN ${constants.tableName.drivers} dvr ON quo.driver_id  = dvr.id
-//     JOIN ${constants.tableName.enquiries} enq ON quo.enquiry_id = enq.id
-//     JOIN ${constants.tableName.customers} cu ON quo.customer_id = cu.id
-//     JOIN ${constants.tableName.discount_types} dc ON quo.discount_type_id  = dc.id
-//     WHERE quo.quotation_id = '${quotId}' AND quo.deleted_at IS NULL;`
-
-//                 con.query(selQuery, async (err, data) => {
-//                     console.log(err);
-//                     if (data.length != 0) {
-//                         data[0].pickup_date = `${time.formatDateToDDMMYYYY(
-//                             data[0].pickup_date
-//                         )}`;
-//                         data[0].drop_date = `${time.formatDateToDDMMYYYY(
-//                             data[0].drop_date
-//                         )}`;
-//                         data[0].enquiry_date = `${time.formatDateToDDMMYYYY(
-//                             data[0].enquiry_date
-//                         )}`;
-//                         resolve({ quotation: data, tax: tax })
-//                     } else {
-//                         resolve({ quotation: [], tax: [] })
-//                     }
-//                 })
-
-//             } else {
-//                 resolve(false)
-//             }
-//         })
-//     } catch (err) {
-//         resolve(false)
-//         console.log('Error while fetching  quotations', err);
-//     }
-// })
