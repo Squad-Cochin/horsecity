@@ -67,7 +67,7 @@ exports.SendEmail = async (id, to, text, subject) =>
         <title>Invoice</title>
         </head>
         <body style="color: #666; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.6em; overflow-x: hidden; background-color: #ffffff;">
-        <table width="600" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 0pt auto; padding: 0px; font-family: Arial,Helvetica,sans-serif; font-size: 13px;border: 1px solid;padding: 5px 5px;">
+        <table width="600" cellspacing="0" cellpadding="0" border="0" align="center" style="min-width:100%; margin: 0pt auto; padding: 0px; font-family: Arial,Helvetica,sans-serif; font-size: 13px;border: 1px solid;padding: 5px 5px;">
         <tbody>
         <tr>
             <td valign="top" bgcolor="#ffffff">
@@ -226,9 +226,8 @@ exports.SendEmail = async (id, to, text, subject) =>
         </tbody>
         </table>
         </body>
-            </html>`;
-      
-            return htmlContent;
+        </html>`;
+        return htmlContent;
         }
       
       // Example usage: Assuming you have the invoiceData object containing invoice, vehicles, and payment details.

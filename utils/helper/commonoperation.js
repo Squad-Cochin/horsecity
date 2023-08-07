@@ -294,7 +294,7 @@ exports.totalCountParticularServiceProvider = async (tablename, Id) =>
         return new Promise((resolve, reject) => 
         {
             let selQuery = `SELECT count(t.id) FROM ${tablename} t WHERE t.deleted_at IS NULL AND t.service_provider_id = ${Id}`;
-            console.log('Query :', selQuery);
+            // console.log('Query :', selQuery);
             con.query(selQuery, (err, result) =>
             {
                 if (err)

@@ -22,11 +22,11 @@ module.exports = class invoices
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let checkRole = `SELECT sp.id , r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
-                // console.log('Check Role Data: ', checkRole);
+                let checkRole = `SELECT sp.id, r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
+                // console.log('Check Role Data from the invoice model: ', checkRole);
                 con.query(checkRole, async (err, result) =>
                 {
-                    // console.log(`Role: `, result);
+                    // console.log(`Role from the invoice model: `, result);
                     if(err)
                     {
                        console.log('Error while checking the role at the time of invoice');
@@ -43,28 +43,47 @@ module.exports = class invoices
                                         LIMIT ${pageSize} OFFSET ${offset}`;
                         // console.log('Selquery of invoice when user is admin or suport admin: ',selQuery);
                         const count = await commonoperation.totalCount(constants.tableName.invoices);
-                        con.query(selQuery, async (err, result) =>
+                        // console.log('Total Data', count[0]['count(t.id)']);
+                        con.query(selQuery, async (err, result2) =>
                         {
                             if(err)
                             {
                                 console.error(err);
                                 resolve('err');
                             }
-                            const data =  objectConvertor.getAllInvoice(result)
-                            if(result.length === 0)
+                            let Query = `SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
+                            FROM ${constants.tableName.permissions} AS pm
+                            JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+                            JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
+                            WHERE pm.role_id = '${result[0].role_id}' AND md.name = 'INVOICES' `;
+                            // console.log(Query);
+                            con.query(Query, (err, moduleResult) =>
                             {
-                                // console.log(`totalCount = ${count}, invoices = ${data}`);
-                                resolve ({totalCount : count[0]['count(t.id)'], invoices : data});
-                            }
-                            else
-                            {
-                                // console.log(`totalCount = ${count}, invoices = ${data}`);
-                                resolve ({totalCount : count[0]['count(t.id)'], invoices : data});
-                            }
+                                if(err)
+                                {
+                                    console.log('Error while fetching the module name at the time of getall vehicles');
+                                    resolve('err') 
+                                }
+                                else
+                                {
+                                    const data =  objectConvertor.getAllInvoice(result2)
+                                    if(result2.length === 0)
+                                    {
+                                        // console.log(`totalCount = ${count}, invoices = ${data}`);
+                                        resolve ({totalCount : count[0]['count(t.id)'], invoices : data, module : moduleResult});
+                                    }
+                                    else
+                                    {
+                                        // console.log(`totalCount = ${count}, invoices = ${data}`);
+                                        resolve ({totalCount : count[0]['count(t.id)'], invoices : data, module : moduleResult});
+                                    }
+                                }
+                            });
                         });
                     }
                     else if(result[0].name === constants.roles.service_provider)
                     {
+                        // console.log(`CAME TO SERVICE PROVIDER`);
                         const offset = (pageNumber - 1) * pageSize;
                         let selQuery = `SELECT i.id, i.invoice_no, i.quotation_prefix_id, c.name, c.email, i.status
                                         FROM invoices i
@@ -74,24 +93,42 @@ module.exports = class invoices
                                         LIMIT ${pageSize} OFFSET ${offset}`;
                         // console.log('Selquery of invoice when user is service provider: ',selQuery);
                         const count = await commonoperation.totalCountParticularServiceProvider(constants.tableName.invoices, Id);
-                        con.query(selQuery, async (err, result) =>
+                        // console.log('Total Data', count[0]['count(t.id)']);
+                        con.query(selQuery, async (err, result2) =>
                         {
                             if(err)
                             {
-                                console.error(err);
+                                console.log(err);
                                 resolve('err');
                             }
-                            const data =  objectConvertor.getAllInvoice(result)
-                            if(result.length === 0)
+                            let Query = `SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
+                            FROM ${constants.tableName.permissions} AS pm
+                            JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+                            JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
+                            WHERE pm.role_id = '${result[0].role_id}' AND md.name = 'INVOICES' `;
+                            // console.log(Query);
+                            con.query(Query, (err, moduleResult) =>
                             {
-                                // console.log(`totalCount = ${count}, invoices = ${data}`);
-                                resolve ({totalCount : count[0]['count(t.id)'], invoices : data});
-                            }
-                            else
-                            {
-                                // console.log(`totalCount = ${count}, invoices = ${data}`);
-                                resolve ({totalCount : count[0]['count(t.id)'], invoices : data});
-                            }
+                                if(err)
+                                {
+                                    console.log('Error while fetching the module name at the time of getall vehicles');
+                                    resolve('err') 
+                                }
+                                else
+                                {
+                                    const data =  objectConvertor.getAllInvoice(result2)
+                                    if(result2.length === 0)
+                                    {
+                                        // console.log(`totalCount = ${count}, invoices = ${data}`);
+                                        resolve ({totalCount : count[0]['count(t.id)'], invoices : data, module : moduleResult});
+                                    }
+                                    else
+                                    {
+                                        // console.log(`totalCount = ${count}, invoices = ${data}`);
+                                        resolve ({totalCount : count[0]['count(t.id)'], invoices : data, module : moduleResult});
+                                    }
+                                }
+                            });
                         });
                     }
                     else
@@ -306,7 +343,7 @@ module.exports = class invoices
                                         JOIN vehicles v ON v.id = i.vehicle_id
                                         JOIN drivers dr ON dr.id = i.driver_id
                                         WHERE i.id = ${Id}`;
-                        // console.log('Data is not in the booking table query: ',selQuery);
+                        console.log('Data is not in the booking table query: ',selQuery);
                         con.query(selQuery, (err, result) =>
                         {
                             // console.log(`Result of booking id not present: `, result);

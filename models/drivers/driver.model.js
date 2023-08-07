@@ -22,11 +22,11 @@ module.exports = class drivers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let checkRole = `SELECT sp.id , r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
+                let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
                 // console.log('Check Role Data At The Get All Driver : ', checkRole);
                 con.query(checkRole, async (err, result) =>
                 {
-                    // console.log(`Role: `, result);
+                    // console.log(`Roles at the time of the get all of the drivers: `, result);
                     if(err)
                     {
                        console.log('Error while checking the role at the time of driver');
@@ -34,42 +34,62 @@ module.exports = class drivers
                     }
                     if(result[0].name === constants.roles.admin || result[0].name === constants.roles.superAdmin)
                     {
+                        console.log(`Role name is admin at the time of the drivers`);
                         const offset = (pageNumber - 1) * pageSize;
                         let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, cd.status FROM ${constants.tableName.drivers} cd WHERE cd.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;                        
                         // console.log('Selquery of driver when user is admin or suport admin: ',selQuery);
                         const count = await commonoperation.totalCount(constants.tableName.drivers);
-                        con.query(selQuery, async (err, result) =>
+                        // console.log('Total Data', count[0]['count(t.id)']);
+                        con.query(selQuery, async (err, result2) =>
                         {
                             if(err)
                             {
                                 console.error(err);
                                 resolve('err');
                             }
-
-                            if(result.length === 0)
-                            {
-                                resolve ({totalCount : count[0]['count(t.id)'], drivers : result});
-                            }
                             else
                             {
-                                resolve ({totalCount : count[0]['count(t.id)'], drivers : result});
-                            } 
-                            
+                                let Query = `SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
+                                FROM ${constants.tableName.permissions} AS pm
+                                JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+                                JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
+                                WHERE pm.role_id = '${result[0].role_id}' AND md.name = 'DRIVERS'
+                               `;
+                                // console.log(Query);
+                                con.query(Query, (err, moduleResult) =>
+                                {
+                                    if(err)
+                                    {
+                                        console.log('Error while fetching the module name at the time of getall driver');
+                                        resolve('err') 
+                                    }
+                                    else
+                                    {                                     
+                                        if(result.length === 0)
+                                        {
+                                            resolve ({totalCount : count[0]['count(t.id)'], drivers : result2, module : moduleResult});
+                                        }
+                                        else
+                                        {
+                                            resolve ({totalCount : count[0]['count(t.id)'], drivers : result2, module : moduleResult});
+                                        }
+                                    }
+                                });
+                            }                           
                         });
                     }
                     else if(result[0].name === constants.roles.service_provider)
                     {
+                        console.log(`Role name is service provider at the time of drivers`);
                         const offset = (pageNumber - 1) * pageSize;
-                        
                         let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, cd.status FROM drivers cd, assign_drivers ad WHERE ad.service_provider_id = ${Id} AND ad.deleted_at IS NULL AND ad.driver_id = cd.id AND cd.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
-                        
                         // console.log('Selquery of driver when user is service provider: ',selQuery);
                         
-                        con.query(selQuery, async (err, result) =>
+                        con.query(selQuery, async (err, resultSel) =>
                         {
                             if(err)
                             {
-                                console.error(err);
+                                console.log(err);
                                 resolve('err');
                             }
                             else
@@ -77,14 +97,36 @@ module.exports = class drivers
                                 const count = `SELECT count(t.id) FROM assign_drivers t WHERE t.deleted_at IS NULL AND t.service_provider_id = ${Id}`;
                                 con.query(count, (err, resultcount) =>
                                 {
-                                    if(result.length === 0)
+                                    if(err)
                                     {
-                                        resolve ({totalCount : resultcount[0]['count(t.id)'], drivers : result});
+                                        console.log(err);
+                                        resolve('err');
                                     }
-                                    else
+                                    let Query = `SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
+                                    FROM ${constants.tableName.permissions} AS pm
+                                    JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+                                    JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
+                                    WHERE pm.role_id = '${result[0].role_id}' AND md.name = 'DRIVERS' `;
+                                    // console.log(Query);
+                                    con.query(Query, (err, moduleResult) =>
                                     {
-                                        resolve ({totalCount : resultcount[0]['count(t.id)'], drivers : result});
-                                    }
+                                        if(err)
+                                        {
+                                            console.log('Error while fetching the module name at the time of getall driver');
+                                            resolve('err') 
+                                        }
+                                        else
+                                        { 
+                                            if(resultSel.length === 0)
+                                            {
+                                                resolve ({totalCount : resultcount[0]['count(t.id)'], drivers : resultSel, module : moduleResult});
+                                            }
+                                            else
+                                            {
+                                                resolve ({totalCount : resultcount[0]['count(t.id)'], drivers : resultSel, module : moduleResult});
+                                            }
+                                        }
+                                    });
                                 });
                             }                            
                         });

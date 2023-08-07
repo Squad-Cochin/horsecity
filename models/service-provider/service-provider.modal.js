@@ -66,13 +66,12 @@ exports.getAllServiceProviders = (requestBody,spId) =>
                                 const count = result[0]['count(*)'];
 
                                  /**CHECKING basis of role id module name */
-                                        let Query = `SELECT md.name AS module_name ,md.id AS module_id ,pm.create,pm.update,pm.read,pm.delete
+                                let Query = `SELECT md.name AS module_name ,md.id AS module_id ,pm.create,pm.update,pm.read,pm.delete
                                 FROM ${constants.tableName.permissions} AS pm
                                 JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                                 JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                                WHERE pm.role_id = '${role_id}'  AND md.name = 'SERVICE PROVIDER'
-                               `;
-                              
+                                WHERE pm.role_id = '${role_id}'  AND md.name = 'SERVICE PROVIDER' `;
+                              console.log(Query);
                                console.log(role_id);
                                     con.query(Query,(err,result)=>{
                                         // console.log("result",result);

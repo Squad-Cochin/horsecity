@@ -46,13 +46,16 @@ module.exports = class vehicles
         }
     };
 
+
+
+
     static async getall(pageNumber, pageSize, Id)
     {
         try
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let checkRole = `SELECT sp.id , r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
+                var checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
                 // console.log('Check Role Data: ', checkRole);
                 con.query(checkRole, async (err, result) =>
                 {
@@ -62,6 +65,7 @@ module.exports = class vehicles
                        console.log('Error while checking the role');
                        resolve('err') 
                     }
+
                     if(result[0].name === constants.roles.admin || result[0].name === constants.roles.superAdmin)
                     {
                         const offset = (pageNumber - 1) * pageSize;
@@ -69,38 +73,75 @@ module.exports = class vehicles
                         // console.log(selQuery);
                         const count = await commonoperation.totalCount(constants.tableName.vehicles)
                         // console.log('Total Data', count[0]['count(t.id)']);
-                        con.query(selQuery, (err, result) =>
+                        con.query(selQuery, (err, result2) =>
                         {
-                            // console.log(result);
+                            // console.log(result2);
                             if(err)
                             {
                                 resolve(err);
                             }
                             else
                             {
-                                resolve ({totalCount : count[0]['count(t.id)'], vehicles : result});
-                                // resolve(result)
+                                let Query = `SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
+                                FROM ${constants.tableName.permissions} AS pm
+                                JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+                                JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
+                                WHERE pm.role_id = '${result[0].role_id}' AND md.name = 'VEHICLES' `;
+                                // console.log(Query);
+                                con.query(Query, (err, moduleResult) =>
+                                {
+                                    if(err)
+                                    {
+                                        console.log('Error while fetching the module name at the time of getall vehicles');
+                                        resolve('err') 
+                                    }
+                                    else
+                                    {
+                                        resolve ({totalCount : count[0]['count(t.id)'], vehicles : result2, module : moduleResult});
+                                        // resolve(result)
+                                    }
+                                });
                             }
                         });
                     }
                     else if(result[0].name === constants.roles.service_provider)
                     {
+                        // console.log(`SERVICE PROVIDER`);
+                        // console.log(result[0].role_id);
                         const offset = (pageNumber - 1) * pageSize;
                         let selQuery = `SELECT v.id, v.vehicle_number, v.make, v.no_of_horse, v.status FROM  ${constants.tableName.service_providers} sp, ${constants.tableName.vehicles} v WHERE sp.id = v.service_provider_id AND v.service_provider_id = ${Id} AND v.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
                         // console.log(selQuery);
                         const count = await commonoperation.totalCountParticularServiceProvider(constants.tableName.vehicles, Id)
                         // console.log('Total Data', count[0]['count(t.id)']);
-                        con.query(selQuery, (err, result) =>
+                        con.query(selQuery, (err, result2) =>
                         {
-                            // console.log(result);
+                            // console.log(result2);
                             if(err)
                             {
                                 resolve(err);
                             }
                             else
                             {
-                                resolve ({totalCount : count[0]['count(t.id)'], vehicles : result});
-                                // resolve(result)
+                                let Query = `SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
+                                FROM ${constants.tableName.permissions} AS pm
+                                JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+                                JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
+                                WHERE pm.role_id = '${result[0].role_id}' AND md.name = 'VEHICLES'
+                               `;
+                                // console.log(Query);
+                                con.query(Query, (err, moduleResult) =>
+                                {
+                                    if(err)
+                                    {
+                                        console.log('Error while fetching the module name at the time of getall vehicles');
+                                        resolve('err') 
+                                    }
+                                    else
+                                    {
+                                        resolve ({totalCount : count[0]['count(t.id)'], vehicles : result2, module : moduleResult});
+                                        // resolve(result)
+                                    }
+                                });
                             }
                         });
                     }
@@ -117,6 +158,9 @@ module.exports = class vehicles
             return console.log(`Error from the vehicle.model.js file from the models > vehicles folder. In the static function "getall". Which is designed to fetch all the data of vehicles.`);            
         }
     };
+
+
+
 
 
     static async updatestatus(id)
