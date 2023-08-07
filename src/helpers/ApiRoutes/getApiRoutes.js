@@ -655,14 +655,14 @@ export async function getLIstBreakDownVehicles(bkId){
 
 
 
-export async function getAccountsData(pageNumber){
+export async function getAccountsData(pageNumber,spId){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = {
             "page" : pageNumber,
             "limit" : pageLimit
         }
-        const { data } = await axios.post(`${url.POST_ACCOUNTS_ALL_DATA_URL}`,reqObj);
+        const { data } = await axios.post(`${url.POST_ACCOUNTS_ALL_DATA_URL}/${spId}`,reqObj);
         console.log("QUOTATIONS",data);
         return(data)
     } catch (error) {

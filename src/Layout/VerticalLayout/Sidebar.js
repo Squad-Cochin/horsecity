@@ -10,16 +10,48 @@ import { Link } from "react-router-dom";
 
 //i18n
 import { withTranslation } from "react-i18next";
+import { findIndex } from "lodash";
 const Sidebar = (props) => {
   
   const [modules, setModules] =  useState([]);
+  const [sidebar_items,setSidebar_items] = useState([]);
+
     /**This hook is used to fetch service provider data */
     useEffect(() => {
       const modules = JSON.parse(localStorage.getItem("authUser"))[1]?.modules;
       setModules(modules)
+      const sidebarItems = sidebarData.filter((element) => 
+      modules.some((value) => element.id === value.module_id)
+      );
+
+
+      let customer_id = 4
+      const check = sidebarItems.find((value) =>
+         value.id  == customer_id 
+      );
+  
+
+      if(!check){
+        const updatedSidebarItem = {
+          ...sidebarData[11],
+          subItem: sidebarData[11]?.subItem.filter(sub => sub.sublabel !== 'Customers')
+        };
+        const updatedSidebarItems = [...sidebarItems];
+        const find_index = updatedSidebarItems.findIndex((value) => value.label === 'Reports');
+
+        updatedSidebarItems[find_index] = updatedSidebarItem;
+        setSidebar_items(updatedSidebarItems);
+      }else{
+        setSidebar_items(sidebarItems)
+      }
+
 
   }, [])
-  
+
+
+
+
+
   const ref = useRef();
   const activateParentDropdown = useCallback(item => {
     item.classList.add("active");
@@ -57,10 +89,7 @@ const Sidebar = (props) => {
 
 
    
-    const sidebarItems = sidebarData.filter((element) => 
-    modules.some((value) => element.id === value.module_id)
-      
-    );
+
     
 
   const removeActivation = items => {
@@ -139,13 +168,15 @@ const Sidebar = (props) => {
       }
     }
   }
+  // console.log("SIDE",sidebar_items);
+  // console.log("side22",sidebarData);
   return (
     <React.Fragment>
       <div className="vertical-menu">
         <SimpleBar className="h-100" ref={ref}>
           <div id="sidebar-menu">
             <ul className="metismenu list-unstyled" id="side-menu-item">
-              {(sidebarItems || []).map((item, key) => (
+              {(sidebar_items || []).map((item, key) => (
                 <React.Fragment key={key}>
                   {item.isMainMenu ? (
                       
@@ -153,7 +184,7 @@ const Sidebar = (props) => {
                   ) : (
                     <li key={key}>
                       <Link
-                        to={item.url ? item.url : "/#"}
+                            to={item.url ? item.url : "/#"}
                         className={
                           (item.issubMenubadge || item.isHasArrow)
                             ? " "
@@ -178,22 +209,22 @@ const Sidebar = (props) => {
                       </Link>
                       {item.subItem && (
                         <ul className="sub-menu">
-                          {item.subItem.map((item, key) => (
+                          {item.subItem.map((items, key) => (
                             <li key={key}>
                               <Link
-                                to={item.link}
+                                to={items.link}
                                 className={
-                                  item.subMenu && "has-arrow waves-effect"
+                                  items.subMenu && "has-arrow waves-effect"
                                 }
                               >
-                                {props.t(item.sublabel)}
+                                {props.t(items.sublabel)}
                               </Link>
-                              {item.subMenu && (
+                              {items.subMenu && (
                                 <ul className="sub-menu">
-                                  {item.subMenu.map((item, key) => (
+                                  {items.subMenu.map((item, key) => (
                                     <li key={key}>
                                       <Link to="#">
-                                        {props.t(item.title)}
+                                        {props.t(items.title)}
                                       </Link>
                                     </li>
                                   ))}

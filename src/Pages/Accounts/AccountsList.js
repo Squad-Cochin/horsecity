@@ -19,18 +19,32 @@ const Accounts  = () => {
     const [ view_modal, setView_modal ] = useState(false); /**Using for showing VIEW modal */
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
-    const pageLimit = config.pageLimit;
+    const [module,setModule] = useState({});
+    const [ role, setRole] =useState("")
+    const [userId, setUserId ] = useState("");
 
+    const pageLimit = config.pageLimit;
+    const role_name  = config.roles
     useEffect(()=>{
+        const data = JSON.parse(localStorage.getItem("authUser"));
+        console.log("UUUU",data);
+        let userIdd = data[0]?.user[0]?.id
+        let role_name = data[0]?.user[0]?.role_name
+        setRole(role_name)
+        console.log(userIdd);
+        setUserId(userIdd);
         getAllData(1)
-    },[])
+    },[userId,role])
 
 
     async function getAllData(page) {
-        let getAccountsdata = await getAccountsData(page || 1);
+        if(userId){ 
+        let getAccountsdata = await getAccountsData(page || 1,userId);
         setAccounts(getAccountsdata.accounts);
+        setModule(getAccountsdata?.module[0])
         setPageNumber(page);
         setNumberOfData(getAccountsdata.totalCount);
+    }
     }
 
     async function tog_view(productId) {
@@ -56,7 +70,9 @@ const Accounts  = () => {
                                                     <tr>
                                                     <th className="index" data-sort="index">#</th>
                                                         <th className="sort" data-sort="month">Customer Name</th>
+                                                        { !(role === role_name.service_provider)  ?(
                                                         <th className="sort" data-sort="month">Service Provider Name</th>
+                                                        ): null}
                                                         <th className="sort" data-sort="number">Quotation Id</th>
                                                         <th className="sort" data-sort="number">Total Amount</th>
                                                         <th className="sort" data-sort="number">Pending Amount</th>
@@ -69,12 +85,15 @@ const Accounts  = () => {
                                                     <tr key={index}> 
                                                         <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                         <td className="customer_name">{item.customer_name}</td>
+                                                        {!(role === role_name.service_provider)   ?(
                                                         <td className="service_provider_name">{item.service_provider_name}</td>
+                                                        ): null}
                                                         <td className="phone">{item.quotation_id}</td>
                                                         <td className="date">{item.total_amount}</td>
                                                         <td className="date">{item.pending_amount}</td>
                                                         <td className="phone">{item.status}</td>
                                                         <td>
+                                                        {JSON.parse(module?.read ||  'true') ?(
                                                             <div className="edit">
                                                                 <button
                                                                     className="btn btn-sm btn-success edit-item-btn"
@@ -85,6 +104,7 @@ const Accounts  = () => {
                                                                     View
                                                                 </button>
                                                             </div>
+                                                    ) : null }
                                                         </td>
                                                     </tr>
                                                  ))}
