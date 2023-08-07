@@ -20,7 +20,8 @@ module.exports = function(app)
     driverController.getOne);
 
     // Below route is for adding the driver data
-    app.post(`/${process.env.apiToken}/add/driver`,
+    app.post(`/${process.env.apiToken}/add/driver/:id`,
+    isValidIdInTheParams(constants.tableName.service_providers),
     checkInput.nameValidation,
     checkInput.emailValidation(constants.tableName.drivers),
     checkInput.contactNumberValidation(constants.tableName.drivers),
@@ -34,7 +35,7 @@ module.exports = function(app)
     );
 
     // Below route is for updating the customer status
-    app.put(`/${process.env.apiToken}/update/driver/:id`, 
+    app.put(`/${process.env.apiToken}/update/driver/:id`,
     isValidIdInTheParams(constants.tableName.drivers), 
     driverController.updateStatus);
 
@@ -73,6 +74,10 @@ module.exports = function(app)
 
     app.put(`/${process.env.apiToken}/unassign/driver/:id`,
     isValidIdInTheParams(constants.tableName.assign_drivers), 
-    driverController.UnAssignServiceProvider)
-    
+    driverController.UnAssignServiceProvider);
+
+    app.put(`/${process.env.apiToken}/un/assign/serviceProvider`,
+    checkInput.isDriverIdEntered,
+    checkInput.isServiceProviderIdEntered,
+    driverController.UnAssignServiceProviderAndDriverBoth);    
 }

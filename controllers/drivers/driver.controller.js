@@ -101,6 +101,7 @@ exports.addDriver = async (req, res, next) =>
     // The below line is for going to the model function to implement the code for adding or registering the new driver.
     const drivers = await driver.adddriver
     (
+        req.params.id,
         req.body.name, // Name of the driver, 
         req.body.email, // Email fo the driver, 
         req.body.contact_no, // Contact number of the driver, 
@@ -305,12 +306,12 @@ exports.AssignServiceProvider = async (req, res, next) =>
     // If the submitted driver id is already associated with some service provider id and not left the job, then this else if block of code will be executed.
     else if(drivers === 'notallowed')
     {
-        console.log('Internal server error. The driver is already working under a service provider. We cannot allow them to work here.');
+        console.log('Internal server error. The driver is already working under this service provider. We cannot allow them to work here.');
         res.status(200).send
         ({
             code : 400,
             success : false,
-            message : 'Error the driver is already working under a service provider. We cannot allow them to work here as per now.'
+            message : 'Error the driver is already working under this service provider. We cannot allow them to work here as per now.'
         });
     }
     // If every thing went well and no issue came then,  this else if block of code will be executed.
@@ -415,6 +416,78 @@ exports.UnAssignServiceProvider = async (req, res, next) =>
             code : 200,
             status : true,
             message : "Driver is already unassigned to their particular service provider"
+        });
+    }
+};
+
+
+
+exports.UnAssignServiceProviderAndDriverBoth = async (req, res, next) =>
+{
+    // The below line is for going to the model function to implement the code for unassigning the driver from a service provider.
+    // We need to give assign_drivers table id in the params to remove this otherwise it will not work
+    const drivers = await driver.unassignserviceproviderandboth
+    (
+        req.body.driver_id, // Driver id in the request body
+        req.body.serviceProvider_id // Service Provider id in the request body
+    );
+    // console.log(drivers);
+
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
+    if(drivers === 'err')
+    {
+        console.log('Error while driver is unassigned to their particular service provider');
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : "Error while driver is unassigned to their particular service provider"
+        });
+    }
+    // If driver is successfully unassigned to the respective service provider then this if block of code will be executed.
+    // We need to give assign_drivers table id in the params to remove this otherwise it will not work
+    if(drivers === 'unassigned')
+    {
+        console.log('Driver is unassigned to their particular service provider');
+        return res.status(200).send
+        ({
+            code : 200,
+            status : true,
+            message : "Driver is unassigned to their particular service provider"
+        });
+    }
+    // If driver is already unassigned to the respective service provider then this if block of code will be executed.
+    // We need to give assign_drivers table id in the params to remove this otherwise it will not work
+    if(drivers === 'alreadyunassigned')
+    {
+        console.log('Driver is already unassigned to their particular service provider');
+        return res.status(200).send
+        ({
+            code : 200,
+            status : true,
+            message : "Driver is already unassigned to their particular service provider"
+        });
+    }
+
+    if(drivers === 'noDriver')
+    {
+        console.log('Error while assigning service provider to a driver. Because the driver id. Which is submitted is not available');
+        res.status(200).send
+        ({
+            code : 400,
+            success : false,
+            message : 'Error while assigning service provider to a driver. Because the driver id. Which is submitted is not available'
+        });
+    }
+    // If the entered service provider id in the request body is not available in the database then this else if block of code will be executed.
+    if(drivers === 'noServiceProvider')
+    {
+        console.log('Error while assigning service provider to a driver. Because the service provider id. Which is submitted is not available');
+        res.status(200).send
+        ({
+            code : 400,
+            success : false,
+            message : 'Error while assigning service provider to a driver. Because the service provider id. Which is submitted is not available'
         });
     }
 };

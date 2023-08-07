@@ -23,9 +23,6 @@ module.exports = class authentication
         {
         try
         {
-            // console.log("hello");
-            // const userData = await commonfetching.dataOnCondition(constants.tableName.service_providers, username, 'user_name');
-            // console.log("User data:", userData);
             let selQuery = `SELECT s.id, s.name, s.email, s.role_Id, s.password, r.name AS role_name, s.user_name, s.contact_person, s.contact_no, s.contact_address, s.licence_no, s.licence_image, s.expiry_at, s.status  FROM service_providers s, roles r WHERE s.user_name = '${username}' AND s.role_Id = r.id`
             // console.log(selQuery);
             con.query(selQuery, async(err, userData) =>

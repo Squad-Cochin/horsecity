@@ -1,8 +1,9 @@
 const vehicleController = require('../../controllers/vehicles/vehicles.controller');
-const { isValidIdInTheParams } = require('../../middlewares/validateInput/checkRequestparams');
 const checkInput = require(`../../middlewares/validateInput/checkRequestInputVehicles`);
 const checkInputGetAll = require(`../../middlewares/validateInput/checkRequestBodyInput`);
 const constants = require('../../utils/constants');
+const { isValidIdInTheParams } = require('../../middlewares/validateInput/checkRequestparams');
+
 
 module.exports = (app) =>
 {

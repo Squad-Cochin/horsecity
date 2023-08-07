@@ -985,7 +985,7 @@ exports.isDriverIdEntered = (req, res, next) =>
 
 exports.isServiceProviderIdEntered = (req, res, next) =>
 {
-    if(!req.body.service_provider_id)
+    if(!req.body.serviceProvider_id)
     {
         console.log(`Service provider id is not entered`);
         return res.status(200).json

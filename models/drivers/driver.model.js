@@ -173,29 +173,93 @@ module.exports = class drivers
         }
     }
 
-    static async adddriver(name, email, contact_no, emergency_contact_no, date_of_birth, licence_no, description, profile_image, licence_img)
+    static async adddriver(Id, name, email, contact_no, emergency_contact_no, date_of_birth, licence_no, description, profile_image, licence_img)
     {
         try
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.upload.profilephoto);
-                // console.log(uploadprofile_image);
-                let uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.upload.licence);
-                // console.log(uploadprofile_image);
-                let insQuery = `INSERT INTO ${constants.tableName.drivers}(name, email, contact_no, emergency_contact_no, date_of_birth, profile_image, licence_no , licence_img , description, created_at) VALUES('${name}', '${email}', '${contact_no}', '${emergency_contact_no}', '${date_of_birth}', '${uploadprofile_image}', '${licence_no}', '${uploadlicence_img}', '${description}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                // console.log(insQuery);
-                con.query(insQuery, (err, result) =>
+                let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
+                // console.log(checkRole);
+                con.query(checkRole, async (err, resultRole) =>
                 {
-                    // console.log(result);
-                    if(result.affectedRows > 0)
+                    // console.log(resultRole);
+                    if(err)
                     {
-                        console.log('Driver data added successfully');
-                        resolve(result);
+                        console.log('Error while fetching the role name at the time of add driver');
+                        resolve('err') 
                     }
                     else
                     {
-                        resolve('err')
+                        var uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.upload.profilephoto);
+                        // console.log(uploadprofile_image);
+                        var uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.upload.licence);
+                        // console.log(uploadprofile_image);
+                        if(resultRole[0].name === constants.roles.admin)
+                        {
+                            console.log('Admin block when adding of the driving');
+                            let insQuery = `INSERT INTO ${constants.tableName.drivers}(name, email, contact_no, emergency_contact_no, date_of_birth, profile_image, licence_no , licence_img , description, created_at) VALUES('${name}', '${email}', '${contact_no}', '${emergency_contact_no}', '${date_of_birth}', '${uploadprofile_image}', '${licence_no}', '${uploadlicence_img}', '${description}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                            // console.log(insQuery);
+                            con.query(insQuery, (err, result) =>
+                            {
+                                // console.log(result);
+                                if(result.affectedRows > 0)
+                                {
+                                    console.log('Driver data added successfully');
+                                    resolve(result);
+                                }
+                                else
+                                {
+                                    resolve('err')
+                                }
+                            });
+
+                        }
+                        else if(resultRole[0].name === constants.roles.service_provider)
+                        {
+                            console.log('Service provider block when adding of the driving');
+                            let insQuery = `INSERT INTO ${constants.tableName.drivers}(name, email, contact_no, emergency_contact_no, date_of_birth, profile_image, licence_no , licence_img , description, created_at) VALUES('${name}', '${email}', '${contact_no}', '${emergency_contact_no}', '${date_of_birth}', '${uploadprofile_image}', '${licence_no}', '${uploadlicence_img}', '${description}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                            // console.log(insQuery);
+                            con.query(insQuery, async (err, result) =>
+                            {
+                                // console.log(result);
+                                if(result.affectedRows > 0)
+                                {
+                                    console.log('Driver data added successfully');
+                                    let recentAddedDriverData = await commonfetching.dataOnCondition(constants.tableName.drivers, email, 'email');
+                                    // console.log('Data of the recently added driver: ', recentAddedDriverData);
+                                    if(recentAddedDriverData.length > 0)
+                                    {
+                                        let assignDriverWhileAdd = await this.assignserviceprovider(recentAddedDriverData[0].id, Id)
+                                        if(assignDriverWhileAdd === 'datainserted')
+                                        {
+                                            console.log(`Driver is assigned as well.`);
+                                            resolve(result);
+                                        }   
+                                        else
+                                        {
+                                            console.log(` Error while assigning the driver to a service provider at the time of adding a new driver`);  
+                                            resolve('err')
+                                        }
+                                    }
+                                    else
+                                    {
+                                        console.log(`Error while fetching the recently added driver data in the service provider side.`);
+                                        resolve('err');
+                                    }
+                                }
+                                if(err)
+                                {
+                                    console.log('Error while adding the driver in the service provider');
+                                    resolve('err');
+                                }
+                            });                            
+                        }
+                        else
+                        {
+                            console.log('I think the role name which we got is not present in the database at the time of driver');
+                            resolve('err');
+                        }
                     }
                 });                
             });            
@@ -248,104 +312,6 @@ module.exports = class drivers
             console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "removedriver". Which is designed to remove particular driver.');            
         }
     };
-
-    // static async editdriver(id, name, email, contact_no, emergency_contact_no, date_of_birth, licence_no, description, profile_image, licence_img)
-    // {
-    //     try
-    //     {
-    //         return await new Promise(async(resolve, reject)=>
-    //         {
-    //             console.log('Licence Image', licence_img);
-    //             console.log('Profile Image', profile_image);
-    //             if(profile_image === null || profile_image === undefined && licence_img === null || licence_img === undefined )
-    //             {
-    //                 console.log('Idhar');
-    //                 let upQuery = `UPDATE ${constants.tableName.drivers} d SET d.name = '${name}', d.email = '${email}', d.contact_no = '${contact_no}', d.emergency_contact_no = '${emergency_contact_no}', d.date_of_birth = '${date_of_birth}', d.licence_no = '${licence_no}', d.description = '${description}', d.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE d.id = '${id}'`;
-    //                 // console.log(upQuery);
-    //                 con.query(upQuery, (err, result) =>
-    //                 {
-    //                     // console.log(result);
-    //                     if(result.affectedRows > 0)
-    //                     {
-    //                         console.log('Driver data updated successfully');
-    //                         resolve(result);
-    //                     }
-    //                     else
-    //                     {
-    //                         resolve('err')
-    //                     }
-    //                 });
-    //             }
-    //             if(licence_img === null || licence_img === undefined)
-    //             {
-    //                 console.log('I');
-    //                 let uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.upload.profilephoto);
-    //                 let upQuery = `UPDATE ${constants.tableName.drivers} d SET d.name = '${name}', d.email = '${email}', d.contact_no = '${contact_no}', d.emergency_contact_no = '${emergency_contact_no}', d.date_of_birth = '${date_of_birth}', d.licence_no = '${licence_no}', d.description = '${description}', d.profile_image = '${uploadprofile_image}', d.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE d.id = '${id}'`;
-    //                 // console.log(upQuery);
-    //                 con.query(upQuery, (err, result) =>
-    //                 {
-    //                     // console.log(result);
-    //                     if(result.affectedRows > 0)
-    //                     {
-    //                         console.log('Driver data updated successfully');
-    //                         resolve(result);
-    //                     }
-    //                     else
-    //                     {
-    //                         resolve('err')
-    //                     }
-    //                 });
-    //             }
-    //             if(profile_image === null || profile_image === undefined)
-    //             {
-    //                 console.log('Idhar Udhar');
-    //                 let uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.upload.licence);
-    //                 let upQuery = `UPDATE ${constants.tableName.drivers} d SET d.name = '${name}', d.email = '${email}', d.contact_no = '${contact_no}', d.emergency_contact_no = '${emergency_contact_no}', d.date_of_birth = '${date_of_birth}', d.licence_no = '${licence_no}', d.description = '${description}', d.licence_img  = '${uploadlicence_img}', d.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE d.id = '${id}'`;
-    //                 // console.log(upQuery);
-    //                 con.query(upQuery, (err, result) =>
-    //                 {
-    //                     // console.log(result);
-    //                     if(result.affectedRows > 0)
-    //                     {
-    //                         console.log('Driver data updated successfully');
-    //                         resolve(result);
-    //                     }
-    //                     else
-    //                     {
-    //                         resolve('err')
-    //                     }
-    //                 });
-    //             }
-    //             else 
-    //             {
-    //                 console.log('Idhar Udhar ADhar');
-    //                 let uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.upload.profilephoto);
-    //                 // console.log(uploadprofile_image);
-    //                 let uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.upload.licence);
-    //                 // console.log(uploadprofile_image);
-    //                 let upQuery = `UPDATE ${constants.tableName.drivers} d SET d.name = '${name}', d.email = '${email}', d.contact_no = '${contact_no}', d.emergency_contact_no = '${emergency_contact_no}', d.date_of_birth = '${date_of_birth}', d.licence_no = '${licence_no}', d.description = '${description}', d.licence_img  = '${uploadlicence_img}', d.profile_image = '${uploadprofile_image}', d.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE d.id = '${id}'`;
-    //                 // console.log(upQuery);
-    //                 con.query(upQuery, (err, result) =>
-    //                 {
-    //                     // console.log(result);
-    //                     if(result.affectedRows > 0)
-    //                     {
-    //                         console.log('Driver data updated successfully');
-    //                         resolve(result);
-    //                     }
-    //                     else
-    //                     {
-    //                         resolve('err')
-    //                     }
-    //                 });
-    //             }               
-    //         });            
-    //     }
-    //     catch (error)
-    //     {
-    //         console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "editdriver". Which is designed to edit particular data of the driver.');            
-    //     }
-    // }
 
     static async editdriver(id, name, email, contact_no, emergency_contact_no, date_of_birth, licence_no, description, profile_image, licence_img) {
         try {
@@ -423,7 +389,7 @@ module.exports = class drivers
                             // console.log('Select query error',  error)
                             if(error)
                             {
-                                // console.log('Error while fetching the information of driver. Whether the driver left the last work place', error);
+                                console.log('Error while fetching the information of driver. Whether the driver left the last work place', error);
                                 resolve('lastworkplaceerror')
                             }
                             else
@@ -443,7 +409,7 @@ module.exports = class drivers
                                         }
                                         else
                                         {
-                                            // console.log('Error while inserting the data into the assign driver table');
+                                            console.log('Error while inserting the data into the assign driver table');
                                             // console.log(err);
                                             resolve('err')
                                         }
@@ -451,7 +417,7 @@ module.exports = class drivers
                                 }
                                 else
                                 {
-                                    // console.log('The driver is already working under a service provider. We cannot allow them to work here.');
+                                    console.log('The driver is already working under a service provider. We cannot allow them to work here.');
                                     resolve('notallowed')
                                 }
                             }
@@ -465,8 +431,6 @@ module.exports = class drivers
             console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "assignserviceprovider". Which is designed to assigne the driver to service provider.');            
         }
     }
-
-    // 
 
     static async getworkpastserviceprovider(id)
     {
@@ -547,6 +511,55 @@ module.exports = class drivers
         catch (error)
         {
             console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "unassignserviceprovider". Which is designed to unassigned particular driver to their service provider.', error);            
+        }        
+    }
+
+
+    static async unassignserviceproviderandboth(dId,sId)
+    {
+        try
+        {
+            return await new Promise(async(resolve, reject)=>
+            {
+                let upQuery = `UPDATE ${constants.tableName.assign_drivers} t SET t.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE t.service_provider_id = ${sId} AND t.driver_id = '${dId}' AND t.deleted_at IS NULL `;
+                // console.log(upQuery);
+                con.query(upQuery, (err, result) =>
+                {
+                    if(result.affectedRows > 0)
+                    {
+                        // c onsole.log(`Unassigned of the driver ${Id} id done `);
+                        resolve('unassigned');
+                    }
+                    else
+                    {
+                        if(result.affectedRows === 0)
+                        {
+                            console.log(`The id's which is submitted is already unassigned`);
+                            resolve('alreadyunassigned');
+                        }
+
+                        if(driverId.length === 0)
+                        {
+                            resolve('noDriver')
+                        }
+
+                        if(serproviderId.length === 0)
+                        {
+                            resolve('noServiceProvider')
+                        }
+
+                        if(err)
+                        {
+                            console.log(err);
+                            resolve('err');
+                        }
+                    }
+                });
+            });      
+        }
+        catch (error)
+        {
+            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "unassignserviceproviderandboth". Which is designed to unassigned particular driver to their service provider.', error);            
         }        
     }
 
