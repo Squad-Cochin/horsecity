@@ -19,7 +19,7 @@ import { useFormik } from "formik";
 
 /**IMPORTED APIs */
 import { addNewDriver, assignNewSP } from '../../helpers/ApiRoutes/addApiRoutes';
-import { removeDriver, removeAssignedDriver } from '../../helpers/ApiRoutes/removeApiRoutes';
+import { removeDriver, removeAssignedDriver, removeDriverWithServiceProvider } from '../../helpers/ApiRoutes/removeApiRoutes';
 import { updateDriver , updateDriverStatus } from '../../helpers/ApiRoutes/editApiRoutes'; 
 import { getDriversData, getSingleDriverData, getAssignedProviders } from '../../helpers/ApiRoutes/getApiRoutes'; 
 import config from '../../config';
@@ -45,16 +45,29 @@ const ListTables = () =>
     const [ selectedDriver, setSelectedDriver ] = useState();
     const [sproviders, setSproviders] = useState([]);
     const [ pageNumber, setPageNumber ] = useState(1);
+    const [userId, setUserId ] = useState("");
+    const [role, setRole ] = useState(false);
+    const [module, setModule] = useState({});
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("")
     const pageLimit = config.pageLimit;
+    const role_name  = config.roles
 
      
     // The below effect for displaying the overall data of the driver page in the front.
     useEffect(() =>
     {
+        const data = JSON.parse(localStorage.getItem("authUser"));
+        console.log('Data from the list invoice page', data);
+        let user_Id = data[0]?.user[0]?.id
+        console.log('User id from the drivers page: ', user_Id);
+        let role_Name = data[0]?.user[0]?.role_name
+        console.log('Role name from the drivers page: ', role_Name);
+        setUserId(user_Id);
+        setRole(role_Name);
         getAllData(1)
-    }, []);
+    }, [userId, role]);
+    console.log(`Module list at the driver page: `, module);
 
     // The below intialValues variable is used for having the data the driver. When we will use the edit button.
     // We are usign the add module for editing the driver. That is why if we are having data of a particular then
@@ -179,16 +192,22 @@ const ListTables = () =>
     }
 
      // function for get data all drivers data
-    async function getAllData(page) {
-        let getDrivers = await getDriversData(page || 1);
-        setDrivers(getDrivers.drivers);
-        setPageNumber(page);
-        setNumberOfData(getDrivers.totalCount);
+    async function getAllData(page)
+    {
+        if(userId)
+        {
+            console.log(`User id at the time of getall function in the driver page`, userId);
+            let getDrivers = await getDriversData(page || 1, userId);
+            setDrivers(getDrivers.drivers);
+            setModule(getDrivers.module[0]);
+            setPageNumber(page);
+            setNumberOfData(getDrivers.totalCount);
+        }        
     }
 
     // function for add Driver
     async function addDriver(val){
-        let addDriver = await addNewDriver(val);
+        let addDriver = await addNewDriver(val, userId);
         if(addDriver.code === 200){
             setErrors("")
             setAdd_list(false);
@@ -220,6 +239,13 @@ const ListTables = () =>
     {
         // Call the 'removeDriver' function with 'id' parameter
         await removeDriver(id);
+        window.location.reload();
+    }
+
+    async function uassign_remove_data(dId)
+    {
+        // Call the 'removeDriver' function with 'id' parameter
+        await removeDriverWithServiceProvider(dId, userId);
         window.location.reload();
     }
 
@@ -284,8 +310,12 @@ const ListTables = () =>
                                                         <th className="sort" data-sort="driver_email">Email</th>
                                                         <th className="sort" data-sort="driver_phone">Contact Number</th>
                                                         <th className="sort" data-sort="registered_date">Registered Date</th>
+                                                        { (role !== role_name.service_provider)  ? (
                                                         <th className="sort" data-sort="status">Assign To</th>
+                                                        ): null}
+                                                        { (role !== role_name.service_provider)  ? (
                                                         <th className="sort" data-sort="status">Status</th>
+                                                        ): null}
                                                         <th className="sort" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
@@ -302,6 +332,7 @@ const ListTables = () =>
                                                             <td className="driver_email">{item.email}</td> {/* // Driver Email */}
                                                             <td className="driver_phone">{item.contact_no}</td> {/* // Driver Contact Number */}
                                                             <td className="registered_date">{item.created_at}</td> {/* // Driver Created Time */}
+                                                            { (role !== role_name.service_provider)  ? (
                                                             <td className="status">
                                                                 <button
                                                                     className="btn btn-sm btn-success status-item-btn"
@@ -312,7 +343,9 @@ const ListTables = () =>
                                                                     Assign
                                                                 </button>
                                                             </td>
+                                                            ): null}
                                                             {/* This is the place from where we are calling the status button and function */}
+                                                            { (role !== role_name.service_provider)  ? (
                                                             <td className="status">
                                                                 {item.status === "ACTIVE" ?
                                                                     <button
@@ -334,6 +367,7 @@ const ListTables = () =>
 
                                                                 }
                                                             </td>
+                                                            ): null}
                                                             {/* The below column will have the 3 buttons
                                                                 1. View button
                                                                 2. Edit button
@@ -353,7 +387,9 @@ const ListTables = () =>
                                                                     </div>
                                                                     {/* This is the place from where we are calling he remove button and function. */}
                                                                     <div className="remove">
+                                                                        { (role === role_name.admin)  ? (
                                                                         <button className="btn btn-sm btn-danger remove-item-btn" onClick={() => remove_data(item.id)} data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
+                                                                        ): <button className="btn btn-sm btn-danger remove-item-btn" onClick={() => uassign_remove_data(item.id)} data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>};
                                                                     </div>
                                                                 </div>
                                                             </td>

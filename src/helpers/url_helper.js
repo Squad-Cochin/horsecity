@@ -11,7 +11,7 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
  * The below one is Shaheer's Computer Details
  */
 // export const API_BASE_URL = "http://192.168.200.211:8000";
-const apiBaseUrl = "http://192.168.200.211:8000";
+// const apiBaseUrl = "http://192.168.200.211:8000";
 
 /**
  * The below one is Saurabh's Computer Details
@@ -22,7 +22,7 @@ const apiBaseUrl = "http://192.168.200.211:8000";
  * The below one is own Computer Details
  */
 
-// const apiBaseUrl = "http://localhost:8000";
+const apiBaseUrl = "http://localhost:8000";
 export const API_BASE_URL = "http://localhost:8000";
 
 const token = "/horsecity661809"
@@ -94,6 +94,7 @@ export const POST_DRIVERS_ADD_URL = apiBaseUrl + token + "/add/driver"
 export const PUT_DRIVERS_UPDATE_STATUS = apiBaseUrl + token + "/update/driver"
 export const POST_DRIVERS_EDIT_URL = apiBaseUrl + token + "/edit/driver"
 export const PUT_DRIVERS_REMOVE = apiBaseUrl + token + "/remove/driver"
+export const PUT_DRIVERS__SERVICE_PROVIDER_REMOVE = apiBaseUrl + token + "/un/assign/serviceProvider"
 
 // ASSIGN_DRIVERS
 export const POST_ASSIGN_DRIVERS = apiBaseUrl + token + "/assign/driver"

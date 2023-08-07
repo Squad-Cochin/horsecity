@@ -285,7 +285,7 @@ export async function getTaxationsNames(){
     }
 }
 
-export async function getInvoicesData(pageNumber)
+export async function getInvoicesData(pageNumber, uId)
 {
     try 
     {
@@ -295,7 +295,7 @@ export async function getInvoicesData(pageNumber)
             "page" : pageNumber,
             "limit" : pageLimit
         }
-        const { data } = await axios.post(`${url.POST_INVOICE_ALL_DATA_URL}`, reqObj);
+        const { data } = await axios.post(`${url.POST_INVOICE_ALL_DATA_URL}/${uId}`, reqObj);
         console.log("Invoices: ",data);
         return(data)
     }
@@ -316,15 +316,15 @@ export async function getInvoicesData(pageNumber)
     }
 }
 
-export async function getDriversData(pageNumber){
+export async function getDriversData(pageNumber, uId){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = {
             "page" : pageNumber,
             "limit" : pageLimit
         }
-        const { data } = await axios.post(`${url.GET_DRIVERS_ALL_DATA_URL}`,reqObj);
-        console.log("drivers",data);
+        const { data } = await axios.post(`${url.GET_DRIVERS_ALL_DATA_URL}/${uId}`,reqObj);
+        console.log("Drivers: ",data);
         return(data)
     } catch (error) {
         let errorObj =  {

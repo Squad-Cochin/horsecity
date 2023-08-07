@@ -159,7 +159,7 @@ import * as url from "../url_helper";
     }
       
     /**Add new driver */
-    export async function addNewDriver(data){
+    export async function addNewDriver(data, uId){
         try {
             console.log("dd1",data)
             const formData = new FormData();
@@ -169,7 +169,7 @@ import * as url from "../url_helper";
             }
             
             // Send the form data as a POST request using Axios
-            const response = await axios.post(`${url.POST_DRIVERS_ADD_URL}`, formData, {
+            const response = await axios.post(`${url.POST_DRIVERS_ADD_URL}/${uId}`, formData, {
                 headers: {
                 'Content-Type': 'multipart/form-data'
                 }
@@ -179,7 +179,7 @@ import * as url from "../url_helper";
         } catch (error) {
             let errObj = {
                 code : 500 , 
-                error : "Faild !"
+                error : "Failed !"
             }
             return errObj;
         }

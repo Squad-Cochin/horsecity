@@ -33,19 +33,32 @@ const InvoiceDetails = () =>
     const [downloadingPDF, setDownloadingPDF] = useState(false);
     const [modalOpen2, setModalOpen2] = useState(false);
     const [startedTrips, setStartedTrips] = useState([]);
+    const [userId, setUserId ] = useState("");
+    const [role, setRole ] = useState(false);
+    const [module, setModule] = useState({});
     const [selectedInvoiceData, setSelectedInvoiceData] = useState(null);
     const invoiceRef = useRef(null); // Reference to the invoice section for PDF generation
     const pageLimit = config.pageLimit;
+    const role_name  = config.roles.service_provider
+
 
     useEffect(() => 
     {
+      const data = JSON.parse(localStorage.getItem("authUser"));
+      console.log('Data from the list invoice page', data);
+      let user_Id = data[0]?.user[0]?.id
+      let role_Name = data[0]?.user[0]?.role_name
+      console.log(`Role name from the invoice page`, role_Name);
+      console.log('User id from the invoice page: ', user_Id);
+      setUserId(user_Id);
       setLedger(getLedgerData());
       getAllData(1);  
-    }, []);
+    }, [userId]);
+
+    console.log(`Module list at the invoice page: `, module);
 
     const handleOpenModal = async (productId) =>
     {
-      console.log('Invoice Id from the send email button: ', productId);
       let sendEmailbuttondata = await getSendEmailButtonData(productId);
       console.log(`Send Email Button Data: `, sendEmailbuttondata);
       setsendEmailButtonData(sendEmailbuttondata);     
@@ -57,18 +70,21 @@ const InvoiceDetails = () =>
       setSelectedInvoiceData(invoiceData);
       setModalOpen(true);    
     };
+
     const toggleEnterAmountModal = () => 
     {
       setShowEnterAmountModal(!showEnterAmountModal);
     }
-    const initialValues = {
-                        totalInvoiceAmount: "",
-                        totalRecievedAmount: "",
-                        invoiceId:invoice[0]?.id,
-                        recepientEmail: sendEmailButtonData[0]?.email,
-                        invoiceSubject:`${sendEmailButtonData[0]?.subject} - ${sendEmailButtonData[0]?.invoice_no}`,
-                        invoiceBody:sendEmailButtonData[0]?.template
-                      };
+
+    const initialValues =
+    {
+      totalInvoiceAmount: "",
+      totalRecievedAmount: "",
+      invoiceId:invoice[0]?.id,
+      recepientEmail: sendEmailButtonData[0]?.email,
+      invoiceSubject:`${sendEmailButtonData[0]?.subject} - ${sendEmailButtonData[0]?.invoice_no}`,
+      invoiceBody:sendEmailButtonData[0]?.template
+    };
                       
   const handleCloseModal = () => {
     setModalOpen(false);
@@ -101,8 +117,8 @@ const InvoiceDetails = () =>
         setErrors("")
         setErrors(addedData.message)
       }
-      let sendEmail = await sendEmail(values.invoiceId, values.email, values.subject, values.body);
-      console.log(`Send Email Response`, sendEmail);
+      let email = await sendEmail(values.invoiceId, values.email, values.subject, values.body);
+      console.log(`Send Email Response`, email);
       if(addedData.code === 200)
       {
         setErrors("")
@@ -196,26 +212,19 @@ const InvoiceDetails = () =>
     setView_modal(!view_modal);
   }  
   // function for get data all drivers data
-  async function getAllData(page) {
-    let getInvoices = await getInvoicesData(page);
-    console.log("Get Invoice Date",getInvoices)
-    setInvoices(getInvoices.invoices);
-    setPageNumber(page);
-    setNumberOfData(getInvoices.totalCount);
+  async function getAllData(page)
+  {
+    if(userId)
+    {
+      console.log(`User id at the time of getall function in the invoice page`, userId);
+      let getInvoices = await getInvoicesData(page || 1, userId);
+      console.log("Get Invoice Date: ",getInvoices)
+      setInvoices(getInvoices.invoices);
+      setModule(getInvoices.module[0]);
+      setPageNumber(page);
+      setNumberOfData(getInvoices.totalCount);    
+    }
   }
-
-  const buttonStyle = {
-    position: 'absolute',
-    top: '8px',
-    right: '362px',
-    textDecoration: 'underline',
-    cursor: 'pointer',
-    background: 'none',
-    border: 'none',
-    padding: 0,
-    font: 'inherit',
-    color: 'blue',
-  };
 
   useEffect(() =>
   {
@@ -477,25 +486,6 @@ const InvoiceDetails = () =>
                     <label htmlFor="subject-field">Subject:</label>
                     <input type="text" id="subject-field" name="subject email" className="form-control" value={validation.values.invoiceSubject || ""} onChange={validation.handleChange} onBlur={validation.handleBlur} />
                   </div>
-                 <div className="mb-3" ref={invoiceRef}>
-                    <label htmlFor="body-field">Body:</label>
-                    <div style={{ position: 'relative' }}>
-                      <textarea
-                        type="text"
-                        id="email-body-field"
-                        name="invoiceBody"
-                        className="form-control"
-                        value={validation.values.invoiceBody}
-                        readOnly
-                      />
-                      <button
-                        onClick={handleDownloadPDF}
-                        style={buttonStyle} // Assume buttonStyle is an object with the styles
-                      >
-                        Click Here
-                      </button>
-                    </div>
-                  </div> 
                </div>
               ) : (
                 <div className="tm_container">
@@ -506,10 +496,6 @@ const InvoiceDetails = () =>
                   <div className="mb-3">
                     <label htmlFor="subject-field">Subject:</label>
                     <input type="text" id="subject-field" name="subject email" className="form-control" value={validation.values.subject || ""} onChange={validation.handleChange} onBlur={validation.handleBlur} />
-                  </div>
-                  <div className="mb-3">
-                    <label htmlFor="body-field">Body:</label>
-                    <textarea type="text" id="email-body-field" name="email body" className="form-control" value={validation.values.body || ""} onChange={validation.handleChange} onBlur={validation.handleBlur}></textarea>
                   </div>
                 </div>
               )}

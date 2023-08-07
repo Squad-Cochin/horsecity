@@ -60,6 +60,21 @@ export async function removeDriver(driver_id){
     }
 }
 
+/**Remove Driver in the service provider time  */
+export async function removeDriverWithServiceProvider(driver_id, sprovider_Id){
+    try {
+        let reqObj = {
+            "driver_id": driver_id,
+            "serviceProvider_id": sprovider_Id
+        }
+        const { data } = await axios.put(`${url.PUT_DRIVERS__SERVICE_PROVIDER_REMOVE}`, reqObj);
+        console.log("Data while Removing the data for the service provider",data)
+        return data;
+    } catch (error) {
+        return { error : "Failed !"}
+    }
+}
+
 /**Remove assigned Driver  */
 export async function removeAssignedDriver(id){
     try {

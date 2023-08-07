@@ -14,13 +14,10 @@ import {Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalB
 import Flatpickr from "react-flatpickr";
 import {useNavigate} from "react-router-dom"
 import { Link } from 'react-router-dom';
-
 // The code you provided imports the useFormik hook from the "formik" library. The useFormik hook is a custom hook provided by Formik, which is a popular form library for React.
 import { useFormik } from "formik";
-
 //The purpose of the Breadcrumbs component is to display a breadcrumb navigation element. 
 import Breadcrumbs from "../../../components/Common/Breadcrumb";
-
 //Get vehicles data
 import { removeVehicle } from '../../../helpers/ApiRoutes/removeApiRoutes';
 import { getVehiclesData, getSPUserName, getSingleVechileData } from '../../../helpers/ApiRoutes/getApiRoutes'
@@ -42,9 +39,13 @@ const ListVehiclesTable = () =>
     const [certificateImage, setCertificateImage] = useState("");
     const [sproviders, setSproviders] = useState([]);
     const [ pageNumber, setPageNumber ] = useState(1);
+    const [userId, setUserId ] = useState("");
+    const [ role, setRole ] = useState(false);
+    const [module,setModule] = useState({});
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("")
     const pageLimit = config.pageLimit;
+    const role_name  = config.roles
 
     const navigate = useNavigate(); // Use the 'useNavigate' hook from React Router
 
@@ -78,17 +79,29 @@ const ListVehiclesTable = () =>
      };
 
     // Execute the code inside the useEffect hook when the component mounts
-    useEffect(() => {
+    useEffect(() => 
+    {
+        const data = JSON.parse(localStorage.getItem("authUser"));
+        let user_Id = data[0]?.user[0]?.id
+        console.log('User id from the vehicles page: ', user_Id);
+        let role_Name = data[0]?.user[0]?.role_name
+        console.log('Role name from the drivers page: ', role_Name);
+        setUserId(user_Id);
+        setRole(role_Name);
         getAllData(1)
-    }, []);
+    }, [userId, role]);
+    console.log("Modules List: ",module);
 
     /**This function is an event handler that triggers when the user
      *  selects a file for the idproof image */
-    const handleIdProofImageChange = (event) => {
+    const handleIdProofImageChange = (event) => 
+    {
         const file = event.target.files[0];
         setCertificateImage(file)
         setCertificatePreview(URL.createObjectURL(file));
     };
+
+
 
     // The Below function is used when we are adding the vehicle
     async function tog_list(param, productId) 
@@ -107,7 +120,8 @@ const ListVehiclesTable = () =>
     }
 
     // The Below function is used when we are displaying the particular vehicle data.
-    async function tog_view(productId) {
+    async function tog_view(productId)
+    {
         console.log("rr",productId)
         let data = await getSingleVechileData(productId)
         console.log("DD",data)
@@ -158,6 +172,9 @@ const ListVehiclesTable = () =>
         }
     }
 
+    
+    console.log("MMMM: ",userId);
+
     const validation = useFormik
     ({
         // enableReinitialize: use this flag when initial values need to be changed
@@ -177,20 +194,27 @@ const ListVehiclesTable = () =>
     });
 
     // function for get data all Vechile data
-    async function getAllData(id, page) {
-        let getvehicles = await getVehiclesData(id, page || 1);
-        let getSP = await getSPUserName();
-        console.log("ss",getSP)
-        console.log("ssv",getvehicles)
-        setSproviders(getSP.serviceProviders);
-        setVehicles(getvehicles?.vehicles);
-        setPageNumber(page);
-        setNumberOfData(getvehicles?.totalCount);
+    async function getAllData(page)
+    {
+        if(userId)
+        {
+            console.log(`User id at the time of getall function`, userId);
+            let getvehicles = await getVehiclesData(page || 1, userId);
+            let getSP = await getSPUserName();
+            console.log("ss",getSP)
+            console.log("ssv",getvehicles)
+            setSproviders(getSP.serviceProviders);
+            setVehicles(getvehicles?.vehicles);
+            setModule(getvehicles.module[0]);
+            setPageNumber(page);
+            setNumberOfData(getvehicles?.totalCodunt);
+        }
     }
 
     // Update vehicle
-    async function editVehicles(data){
-        console.log("reachx")
+    async function editVehicles(data)
+    {
+        console.log("Reach vehicle at the time of edit vehicle")
         let updatedVehicle = await updateVehicle(vehicle[0]?.id, data);
         if(updatedVehicle.code === 200){
             setErrors("")
@@ -198,7 +222,9 @@ const ListVehiclesTable = () =>
             setmodal_list(false);
             getAllData(pageNumber)
             setCertificateImage("")
-        }else{
+        }
+        else
+        {
             setErrors("")
             setErrors(updatedVehicle.message)
         }
@@ -246,10 +272,13 @@ const ListVehiclesTable = () =>
                                         <div className="table-responsive table-card mt-3 mb-1">
                                             <table className="table align-middle table-nowrap" id="vehiclesTable">
                                                 <thead className="table-light">
+                                                    
                                                     <tr>
                                                         {/* This are the columns and column heading in the enquiry page */}
                                                         <th className="index" data-sort="index">#</th>
-                                                        <th className="sort" data-sort="customer_name">Provider</th>
+                                                        { (role !== role_name.service_provider)  ? (
+                                                            <th className="sort" data-sort="customer_name">Provider</th>
+                                                        ): null}
                                                         <th className="sort" data-sort="vNumber">Vehicle Number</th>
                                                         <th className="sort" data-sort="email">Make</th>
                                                         <th className="sort" data-sort="no_of_horse">Number of Horse</th>
@@ -267,7 +296,10 @@ const ListVehiclesTable = () =>
                                                             {/* Below we are intialize the vehicle data */}
                                                             {/* <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">{index + 1}</Link></td> */}
                                                             <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th> {/* Serial Number */}
-                                                            <td className="name">{item.service_provider}</td> {/* Name of the service provider */}
+                                                            { (role !== role_name.service_provider)  ? (
+                                                                <td className="name">{item.service_provider}</td>
+                                                            ): null}
+                                                            {/* <td className="name">{item.service_provider}</td> Name of the service provider */}
                                                             <td className="vhnumber">{item.vehicle_number}</td> {/* Vehicle number of the vehicle */}
                                                             <td className="make">{item.make}</td> {/* Manufaturer of the vehicle */}
                                                             <td className="no_of_horse text-center">{item.no_of_horse}</td> {/* Maximum number of horses a vehicle can carry */}
