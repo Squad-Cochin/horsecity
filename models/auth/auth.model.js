@@ -54,12 +54,12 @@ module.exports = class authentication
                         }
                         else
                         {
-                            console.log("user",userData[0].role_id);
+                            console.log("user",userData[0].role_Id);
                             let selQuery = `SELECT md.name AS module_name ,md.id AS module_id 
                             FROM ${constants.tableName.permissions} AS pm
                             JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                             JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                            WHERE pm.role_id = '${userData[0].role_id}'
+                            WHERE pm.role_id = '${userData[0].role_Id}'
                            `;
                          
                     con.query(selQuery, async (err, data) => {
