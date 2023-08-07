@@ -22,7 +22,7 @@ exports.addNewQuotation = async(req,res)=>
 exports.ListQuotation = async(req,res)=>
 {
 
-    let ListQuotation = await quotation.ListQuotation(req.body);
+    let ListQuotation = await quotation.ListQuotation(req.body,req.params.id);
 
    if(ListQuotation){
     return res.status(200).send

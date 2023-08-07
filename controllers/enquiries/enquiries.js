@@ -14,7 +14,7 @@ exports.getAllEnquiries = async(req,res)=>
         code: 200,
         success: true,
         message: constants.responseMessage.getAll,
-        data : getAllEnquiries
+        data : getAllEnquiries 
     });
    }
 }

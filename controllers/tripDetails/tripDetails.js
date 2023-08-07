@@ -6,7 +6,7 @@ const commonoperation = require('../../utils/helper/commonoperation');
 /**For gitting all trip details  */
 exports.getAllTripDetails = async(req,res)=>
 {
-    let getAllTripDetails = await tripDetails.getAllTripDetails(req.body);
+    let getAllTripDetails = await tripDetails.getAllTripDetails(req.body,req.params.id);
 
    if(getAllTripDetails){
     return res.status(200).send

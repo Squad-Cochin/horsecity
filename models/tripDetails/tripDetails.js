@@ -6,13 +6,27 @@ const time = require('../../utils/helper/date');
 require('dotenv').config()
 
 
-exports.getAllTripDetails = (requestBody) => {
+exports.getAllTripDetails = (requestBody,spId) => {
     return new Promise((resolve, reject) => {
         try {
-            console.log("hello");
+
             const { page, limit } = requestBody;
 
             const offset = (page - 1) * limit;
+            /**For selecting role name and role id  */
+            const selRoleName = `SELECT rl.name AS role_name,rl.id
+            FROM ${constants.tableName.bookings} AS bk
+            JOIN ${constants.tableName.service_providers} AS sp ON bk.service_provider_id     = sp.id            
+            JOIN ${constants.tableName.roles} AS rl ON sp.role_Id   = rl.id
+            WHERE sp.id = '${spId}'`;
+
+            
+            con.query(selRoleName,(err,data)=>{ 
+              
+                if(data.length != 0){ 
+                    let role_name = data[0].role_name ;
+
+                    let role_id = data[0].id
 
             const selQuery = `SELECT bk.id AS booking_id,bk.inv_id  AS invoice_id, sp.name AS service_provider,sp.id AS service_provider_id,vh.id AS vehicle_id,dvr.id AS driver_id ,cu.name AS customer_name,dvr.name AS driver_name,vh.vehicle_number ,bk.pickup_location, bk.drop_location,bk.pickup_date  AS trip_starting_date,bk.drop_date  AS trip_ending_date, bk.booking_status  AS trip_status ,bk.pickup_time,bk.drop_time
             FROM ${constants.tableName.bookings} AS bk
@@ -21,13 +35,34 @@ exports.getAllTripDetails = (requestBody) => {
             JOIN ${constants.tableName.drivers} dvr ON bk.driver_id   = dvr.id
             JOIN ${constants.tableName.service_providers} sp ON bk.service_provider_id  = sp.id
             WHERE bk.deleted_at IS NULL
+            AND (
+                ('${role_name}' = '${constants.roles.admin}')
+                OR
+                ('${role_name}' = '${constants.roles.admin}')
+                OR
+                (
+                    '${role_name}' = '${constants.roles.service_provider}'
+                    AND sp.id = '${spId}'
+                )
+            )
             LIMIT ${+limit} OFFSET ${+offset} `;
             con.query(selQuery, (err, data) => {
-                console.log(err);
+     
                 if (!err) {
 
-                    const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.bookings}
-                                            WHERE deleted_at IS NULL`
+                    const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.bookings} bk
+                    JOIN ${constants.tableName.service_providers} sp ON bk.service_provider_id = sp.id
+                    WHERE bk.deleted_at IS NULL
+                    AND (
+                       ('${role_name}' = '${constants.roles.admin}')
+                       OR
+                       ('${role_name}' = '${constants.roles.admin}')
+                       OR
+                       (
+                           '${role_name}' = '${constants.roles.service_provider}'
+                           AND sp.id = '${spId}'
+                       )
+                   )`
                     // resolve(result);
                     con.query(totalCountQuery, (err, result) => {
                         if (!err) {
@@ -43,11 +78,31 @@ exports.getAllTripDetails = (requestBody) => {
                                 )}`;
                             }
 
-                            resolve({ totalCount: count, tripDetails: data })
+                         /**CHECKING basis of role id module name */
+                         let Query = `SELECT md.name AS module_name ,md.id AS module_id ,pm.create,pm.update,pm.read,pm.delete
+                         FROM ${constants.tableName.permissions} AS pm
+                         JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+                         JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
+                         WHERE pm.role_id = '${role_id}'  AND md.id = '${constants.modules.trip_details}'
+                         `;
+
+                         con.query(Query,(err,modules)=>{
+                            // console.log("result",result);
+                            if(!err){
+                            resolve({ totalCount: count, tripDetails: data,module: modules })
+                                
+                           
+                             }
+                            })
                         }
                     })
                 }
             })
+
+        }else {
+            resolve({totalCount : 0, tripDetails : [],module : []})
+        }
+    })
 
         } catch (err) {
             console.log('Error while feching equiries', err);

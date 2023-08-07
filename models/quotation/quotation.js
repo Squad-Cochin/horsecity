@@ -87,32 +87,84 @@ exports.addNewQuotaion = (requestBody, pickup_date, drop_date) => {
 
 
 /**Listing quotation */
-exports.ListQuotation = (requestBody) => {
+exports.ListQuotation = (requestBody,spId) => {
     return new Promise(async (resolve, reject) => {
         try {
             const { page, limit } = requestBody;
 
             const offset = (page - 1) * limit;
 
+            const selRoleName = `SELECT rl.name AS role_name,rl.id
+            FROM ${constants.tableName.quotations} AS quo  
+            JOIN ${constants.tableName.service_providers} AS sp ON quo.serviceprovider_id     = sp.id            
+            JOIN ${constants.tableName.roles} AS rl ON sp.role_Id   = rl.id
+            WHERE sp.id = '${spId}'`;
 
+            con.query(selRoleName,(err,data)=>{ 
+              
+                if(data.length != 0){ 
+                    let role_name = data[0].role_name ;
+
+                    let role_id = data[0].id
             /**For listing quotation details */
             let selQuery = `SELECT quo.id, quo.quotation_id, quo.enquiry_id,quo.pickup_time,quo.drop_time, cu.name AS customer_name, cu.email AS customer_email, quo.status
                     FROM ${constants.tableName.quotations} quo
                     JOIN ${constants.tableName.customers} cu ON quo.customer_id = cu.id
+                    JOIN ${constants.tableName.service_providers} sp ON quo.serviceprovider_id  = sp.id
                     WHERE quo.deleted_at IS NULL
+                    AND (
+                        ('${role_name}' = '${constants.roles.admin}')
+                        OR
+                        ('${role_name}' = '${constants.roles.admin}')
+                        OR
+                        (
+                            '${role_name}' = '${constants.roles.service_provider}'
+                            AND sp.id = '${spId}'
+                        )
+                    )
                     LIMIT ${+limit} OFFSET ${+offset}`;
 
             con.query(selQuery, async (err, quo) => {
-          console.log(quo);
+              
                 if (quo.length != 0) {
          
                     /**Total count */
                     const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.quotations} quo
-                                             WHERE quo.deleted_at IS NULL`
+                    JOIN ${constants.tableName.service_providers} sp ON quo.serviceprovider_id = sp.id
+                                             WHERE quo.deleted_at IS NULL
+                                             AND (
+                                                ('${role_name}' = '${constants.roles.admin}')
+                                                OR
+                                                ('${role_name}' = '${constants.roles.admin}')
+                                                OR
+                                                (
+                                                    '${role_name}' = '${constants.roles.service_provider}'
+                                                    AND sp.id = '${spId}'
+                                                )
+                                            )`
                     con.query(totalCountQuery, (err, result) => {
+ 
                         if (!err) {
                             const count = result[0]['count(*)'];
-                            resolve({ totalCount: count, quotations: quo })
+
+                                       /**CHECKING basis of role id module name */
+                         let Query = `SELECT md.name AS module_name ,md.id AS module_id ,pm.create,pm.update,pm.read,pm.delete
+                                      FROM ${constants.tableName.permissions} AS pm
+                                      JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+                                      JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
+                                      WHERE pm.role_id = '${role_id}'  AND md.id = '${constants.modules.quotations}'
+                                      `;
+
+
+                                      con.query(Query,(err,modules)=>{
+                                        // console.log("result",result);
+                                        if(!err){
+                                  
+                                  
+                                            resolve({ totalCount: count, quotations: quo ,module : modules})
+                                        }
+                                })
+             
                         }
                     })
 
@@ -121,7 +173,10 @@ exports.ListQuotation = (requestBody) => {
                 }
             })
 
-
+        }else {
+            resolve({totalCount : 0, quotations : [],module : []})
+        }
+    })
         } catch (err) {
             resolve(false)
             console.log('Error while fetching  quotations', err);
@@ -142,6 +197,7 @@ exports.getOneQuotation = (quotId) => {
         JOIN ${constants.tableName.taxations} tx ON apps.tax_id = tx.id
         ` 
             con.query(selQuery, async (err, tax) => {
+ 
                 if (tax.length != 0) {
 
                     /***For selecting quotation view details */
@@ -149,7 +205,7 @@ exports.getOneQuotation = (quotId) => {
             quo.id,
             quo.quotation_id,
             quo.trip_type,
-            quo.pickup_country,
+            quo.pickup_country,  
             quo.pickup_location,
             quo.pickup_date,
             quo.pickup_time,

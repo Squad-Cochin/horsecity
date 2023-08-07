@@ -70,7 +70,7 @@ exports.getAllServiceProviders = (requestBody,spId) =>
                                 FROM ${constants.tableName.permissions} AS pm
                                 JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                                 JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                                WHERE pm.role_id = '${role_id}'  AND md.name = 'SERVICE PROVIDER' `;
+                                WHERE pm.role_id = '${role_id}'  AND md.id = '${constants.modules.service_provider}'`;
                               console.log(Query);
                                console.log(role_id);
                                     con.query(Query,(err,result)=>{

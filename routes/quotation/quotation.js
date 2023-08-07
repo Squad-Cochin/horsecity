@@ -9,7 +9,7 @@ module.exports = function(app)
     app.post(`/${process.env.apiToken}/add/quotation`,validator.checkValuesEnteredInTheQuotationBody,quotation.addNewQuotation); 
     
     /**List quotation basis of page & limit */
-    app.post(`/${process.env.apiToken}/getAll/quotations`,quotation.ListQuotation);  
+    app.post(`/${process.env.apiToken}/getAll/quotations/:id`,quotation.ListQuotation);  
 
     /**For feching particlar quotation basis of quotation id */
     app.get(`/${process.env.apiToken}/getOne/quotation/:id`,quotation.getOneQuotation);  

@@ -6,7 +6,7 @@ const time = require('../../utils/helper/date');
 require('dotenv').config()
 
 
-exports.getAllAcounts = (requestBody) =>
+exports.getAllAcounts = (requestBody,spId) =>
 {
     return new Promise((resolve, reject) =>
     {
@@ -14,6 +14,20 @@ exports.getAllAcounts = (requestBody) =>
         {     
             const {page, limit} = requestBody;
             const offset = (page - 1) * limit; 
+
+
+            const selRoleName = `SELECT rl.name AS role_name,rl.id
+            FROM ${constants.tableName.payment_records} AS pr  
+            JOIN ${constants.tableName.invoices} AS inv ON pr.invoice_id     = inv.id  
+            JOIN ${constants.tableName.service_providers} AS sp ON inv.service_provider_id   = sp.id            
+            JOIN ${constants.tableName.roles} AS rl ON sp.role_Id   = rl.id
+            WHERE sp.id = '${spId}'`;
+            con.query(selRoleName,(err,data)=>{ 
+              
+                if(data.length != 0){ 
+                    let role_name = data[0].role_name ;
+
+                    let role_id = data[0].id
 
             const selQuery = `SELECT pr.id, inv.quotation_prefix_id AS quotation_id, cu.name AS customer_name, sp.name AS service_provider_name,
                         pr.total_amount AS total_amount, pr.remaining_amount AS pending_amount,pr.status
@@ -27,11 +41,19 @@ exports.getAllAcounts = (requestBody) =>
                             FROM payment_records
                             GROUP BY invoice_id
                         ) max_pr ON pr.id = max_pr.max_id
+                        WHERE  ('${role_name}' = '${constants.roles.admin}')
+                        OR
+                        ('${role_name}' = '${constants.roles.admin}')
+                        OR
+                        (
+                          '${role_name}' = '${constants.roles.service_provider}'
+                          AND inv.service_provider_id = '${spId}'
+                        )
                         ORDER BY pr.invoice_id DESC
                         LIMIT ${+limit} OFFSET ${+offset};`
                                                   
             con.query(selQuery,(err,data)=>{
-                console.log(err);
+                console.log("data",data);
                 if(!err){
                     if(data.length != 0 ){
 
@@ -39,27 +61,60 @@ exports.getAllAcounts = (requestBody) =>
                         for(let i = 0;i<data.length;i++){
                             data[i].created_at = `${time.formatDateToDDMMYYYY(data[i].created_at)}`;
                         }
-                        const totalCountQuery = `SELECT COUNT(*)
-                        FROM ${constants.tableName.payment_records} pr
-                        WHERE pr.id IN (
-                            SELECT MAX(id)
-                            FROM ${constants.tableName.payment_records}
-                            GROUP BY invoice_id
-                        )`
+                        const totalCountQuery = `SELECT COUNT(*) FROM (
+                            SELECT MAX(pr.id) AS max_id
+                            FROM ${constants.tableName.payment_records} AS pr
+                            JOIN ${constants.tableName.invoices} AS inv ON pr.invoice_id = inv.id
+                            JOIN ${constants.tableName.service_providers} AS sp ON inv.service_provider_id = sp.id
+                            WHERE (
+                                '${role_name}' = '${constants.roles.admin}'
+                                OR
+                                (
+                                    '${role_name}' = '${constants.roles.service_provider}'
+                                    AND sp.id = '${spId}'
+                                )
+                            )
+                            GROUP BY inv.id
+                        ) AS latest_payment_records
+                        `
                         con.query(totalCountQuery,(err,result)=>{
                             console.log(result);
                             if(!err){
                                 const count = result[0]['COUNT(*)'];
-                                console.log(count);
-                                resolve({totalCount : count, accounts : data})
+
+
+                                              /**CHECKING basis of role id module name */
+                         let Query = `SELECT md.name AS module_name ,md.id AS module_id ,pm.create,pm.update,pm.read,pm.delete
+                                      FROM ${constants.tableName.permissions} AS pm
+                                      JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+                                      JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
+                                      WHERE pm.role_id = '${role_id}'  AND md.id = '${constants.modules.accounts}'
+                                      `;
+
+
+                                      con.query(Query,(err,modules)=>{
+                                        // console.log("result",result);
+                                        if(!err){
+                                  
+                                  
+                                            resolve({ totalCount: count, accounts: data ,module : modules})
+                                        }
+                                })
+             
                             }
                     })
 
             }else{
-                    resolve({totalCount : 0, accounts : []})
+                    resolve({totalCount : 0, accounts : [],module : []})
             }
             }
         })
+
+        
+    }else {
+        resolve({totalCount : 0, accounts : [],module : []})
+    }
+})
         }catch(err){
             console.log('Error while feching equiries', err);
         }

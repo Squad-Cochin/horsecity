@@ -53,3 +53,58 @@ app.listen(process.env.PORT, () =>
  * INSERT INTO `payment_types` (`id`, `name`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES ('1', 'Cash', 'ACTIVE', '2023-07-28 22:44:42', NULL, NULL);
  * INSERT INTO `templates` (`id`, `name`, `subject`, `purpose`, `template`, `type`, `status`, `created_at`, `updated_at`, `deleted_at`) VALUES (1, 'Invoice Email', 'Payment Invoice', 'This is used for sending the invoice on email', 'You can download the invoice by clicking on this - ', 'EMAIL', 'ACTIVE', '2023-08-02 00:48:04', NULL, NULL);
  */
+
+
+/**
+ * 
+INSERT INTO currencies (name, abbreviation, status, created_at)
+VALUES
+    ('US Dollar', 'USD', 'ACTIVE', NOW()
+
+INSERT INTO languages (name, file, abbreviation, status, created_at)
+VALUES
+    ('English', 'english.json', 'en', 'ACTIVE', NOW());
+
+INSERT INTO taxations (type, name, value, status, created_at)
+VALUES
+    ('FLAT', 'Flat Tax', 10.00, 'ACTIVE', NOW());
+
+
+INSERT INTO application_settings (
+    id,
+    application_title,
+    contact_address,
+    email,
+    phone,
+    country_code,
+    logo,
+    loginpage_logo,
+    loginpage_bg_image,
+    favicon,
+    language_id,
+    currency_id,
+    tax_id,
+    licence_number,
+    invoice_prefix,
+    quotation_prefix,
+    deleted_at
+) VALUES (
+    1,
+    'Your Application Title',
+    '123 Main Street, City, Country',
+    'contact@example.com',
+    '1234567890',
+    '+1',
+    'logo.png',
+    'login_logo.png',
+    'bg_image.jpg',
+    'favicon.ico',
+    1,  
+    1,  
+    1, 
+    '12345-ABC',
+    'INV',
+    'QUO',
+    NULL    -- Deleted_at is initially NULL
+);
+ */

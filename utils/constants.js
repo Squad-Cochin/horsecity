@@ -107,6 +107,23 @@ module.exports =
             }
         }
     },
+    modules :
+    {
+        	menu : 1,
+            dashboard : 2,
+            service_provider : 3,
+            customers : 4,
+            vehicles : 5,
+            drivers : 6,
+            enquiries : 7,
+            quotations : 8,
+            trip_details :9,
+            invoices : 10, 
+            accounts :11,
+            reports : 12,
+            applicationSettings : 13
+
+    },
 
     responseMessage :
     {

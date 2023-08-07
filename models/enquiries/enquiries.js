@@ -24,9 +24,10 @@ exports.getAllEnquiries = (requestBody,spId) =>
             
             con.query(selRoleName,(err,data)=>{ 
     
-                if(!err){ 
-
+                if(data.length != 0){ 
+                    console.log(data); 
                     let role_name = data[0].role_name ;
+
                     let role_id = data[0].id
 
             const selQuery = `SELECT enq.id, cu.name AS customer_name,sp.name AS service_provider,enq.status,enq.created_at
@@ -73,7 +74,7 @@ exports.getAllEnquiries = (requestBody,spId) =>
                                       FROM ${constants.tableName.permissions} AS pm
                                       JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                                       JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                                      WHERE pm.role_id = '${role_id}'  AND md.name = 'ENQUIRIES'
+                                      WHERE pm.role_id = '${role_id}'  AND md.id = '${constants.modules.enquiries}'
                                      `;
                                      con.query(Query,(err,result)=>{
                                         // console.log("result",result);
@@ -89,6 +90,8 @@ exports.getAllEnquiries = (requestBody,spId) =>
             }})
 
             
+        }else{
+            resolve({totalCount : 0, enquiries : [],module : []})
         }})
           
         }catch(err){
