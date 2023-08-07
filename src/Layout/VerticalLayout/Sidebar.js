@@ -176,7 +176,9 @@ const Sidebar = (props) => {
         <SimpleBar className="h-100" ref={ref}>
           <div id="sidebar-menu">
             <ul className="metismenu list-unstyled" id="side-menu-item">
-              {(sidebar_items || []).map((item, key) => (
+              {/* {(sidebar_items || []).map((item, key) => ( */}
+                {/* sidebarData */}
+                {sidebarData.map((item, key) => (
                 <React.Fragment key={key}>
                   {item.isMainMenu ? (
                       

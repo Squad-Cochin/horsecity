@@ -12,7 +12,7 @@ module.exports = {
   modules : [
   {
     id : 1,
-    name : 'MENU'
+    name : '  '
   },    
   {
     id : 2,

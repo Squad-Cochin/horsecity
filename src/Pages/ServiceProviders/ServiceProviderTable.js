@@ -40,11 +40,11 @@ const ListTables = () => {
     const roles = config.roles ;
 
     /**This hook is used to fetch service provider data */
-    useEffect(() => {
+    useEffect(() =>
+    {
         const data = JSON.parse(localStorage.getItem("authUser"));
-        
-            let userIdd = data[0]?.user[0]?.id
-            console.log(userIdd);
+        let userIdd = data[0]?.user[0]?.id
+        console.log(userIdd);
         setUserId(userIdd);
         getAllData(1)
     }, [userId])

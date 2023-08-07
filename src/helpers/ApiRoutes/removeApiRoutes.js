@@ -67,6 +67,7 @@ export async function removeDriverWithServiceProvider(driver_id, sprovider_Id){
             "driver_id": driver_id,
             "serviceProvider_id": sprovider_Id
         }
+        console.log('Input from the front end', reqObj);
         const { data } = await axios.put(`${url.PUT_DRIVERS__SERVICE_PROVIDER_REMOVE}`, reqObj);
         console.log("Data while Removing the data for the service provider",data)
         return data;

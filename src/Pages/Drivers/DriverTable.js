@@ -389,7 +389,7 @@ const ListTables = () =>
                                                                     <div className="remove">
                                                                         { (role === role_name.admin)  ? (
                                                                         <button className="btn btn-sm btn-danger remove-item-btn" onClick={() => remove_data(item.id)} data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
-                                                                        ): <button className="btn btn-sm btn-danger remove-item-btn" onClick={() => uassign_remove_data(item.id)} data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>};
+                                                                        ): <button className="btn btn-sm btn-danger remove-item-btn" onClick={() => uassign_remove_data(item.id)} data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>}
                                                                     </div>
                                                                 </div>
                                                             </td>

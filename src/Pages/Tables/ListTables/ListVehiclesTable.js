@@ -417,9 +417,9 @@ const ListVehiclesTable = () =>
                                 required
                             >
                                 <option value="">Select Service Provider</option>
-                            {sproviders.map((item, index) => (
-                                <option key={index} value={item.id}>{item.user_name}</option>
-                            ))}
+                                {sproviders.map((item, index) => (
+                                    <option key={index} value={item.id}>{item.user_name}</option>
+                                ))}
                             </select>
                         </div>
 
