@@ -41,6 +41,8 @@ const ListQuotationsTable = () => {
   const [ qutId, setQutId ] = useState("");
   const [ pageNumber, setPageNumber ] = useState(1);
   const [ numberOfData, setNumberOfData ] = useState(0);
+  const [userId, setUserId ] = useState("");
+  const [module,setModule] = useState({});
   const [ errors, setErrors ] = useState("")
   const pageLimit = config.pageLimit;
 
@@ -231,15 +233,22 @@ const ListQuotationsTable = () => {
   }
 
   useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("authUser"));
+    
+    let userIdd = data[0]?.user[0]?.id
+    setUserId(userIdd);
     getAllData(1)
-  }, []);
+}, [userId])
 
   // function for get data all service provider data
   async function getAllData(page) {
-    let quotationData = await getQuotationData(page || 1);
+    if(userId){ 
+    let quotationData = await getQuotationData(page || 1,userId);
     setQuotations(quotationData.quotations);
+    setModule(quotationData.module[0])
     setPageNumber(page);
     setNumberOfData(quotationData.totalCount);
+  }
   }
 
   async function calcDiscount(val){
@@ -538,7 +547,7 @@ const ListQuotationsTable = () => {
                               <td className="customer_email">{item?.status}</td>
                               <td>
                                 <div className="d-flex gap-2">
-
+                                {JSON.parse(module?.update ||  'true') ?(
                                 <div className="edit">
                                     <button
                                       className="btn btn-sm btn-success edit-item-btn"
@@ -549,7 +558,8 @@ const ListQuotationsTable = () => {
                                       Confirm
                                     </button>
                                   </div>
-
+                                  ) : null }
+                                  {JSON.parse(module?.read ||  'true') ?(
                                   <div className="edit">
                                     <button
                                       className="btn btn-sm btn-success edit-item-btn"
@@ -560,7 +570,8 @@ const ListQuotationsTable = () => {
                                       Quot List
                                     </button>
                                   </div>
-
+                                 ) : null }
+                                {JSON.parse(module?.update ||  'true') ?(
                                   <div className="edit">
                                     <button
                                       className="btn btn-sm btn-primary edit-item-btn"
@@ -571,7 +582,7 @@ const ListQuotationsTable = () => {
                                       Edit
                                     </button>
                                   </div>
-
+                               ) : null }
                                   <button
                                     className="btn btn-sm btn-success edit-item-btn"
                                     data-bs-toggle="modal"

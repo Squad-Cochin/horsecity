@@ -51,6 +51,8 @@ const TripDeatails = () => {
   const [booking_id, setBooking_id ] = useState("");
   const [invoice_id, setInvoice_id ] = useState("");
   const [modal_delete, setmodal_delete] = useState(false);
+  const [userId, setUserId ] = useState("");
+  const [module,setModule] = useState({});
   const [list_or_view, setListOrView ] = useState(false);
   const [ errors, setErrors ] = useState("")
   const pageLimit = config.pageLimit;
@@ -59,8 +61,12 @@ const TripDeatails = () => {
 
 
   useEffect(() => {
+    const data = JSON.parse(localStorage.getItem("authUser"));
+        
+    let userIdd = data[0]?.user[0]?.id
+    setUserId(userIdd);
     getAllData(1);
-  }, []);
+  }, [userId]);
 
   const initialValues = {
     invoice_id: invoice_id,
@@ -133,11 +139,14 @@ const TripDeatails = () => {
   }
   // function for get data all customer data
   async function getAllData(page) {
-    let Tripdetails = await getTripDeatails(page || 1);
+    if(userId){ 
+    let Tripdetails = await getTripDeatails(page || 1,userId);
   
     setTripDatas(Tripdetails?.tripDetails);
+    setModule(Tripdetails?.module[0])
     setPageNumber(page);
     setNumberOfData(Tripdetails?.totalCount);
+    }
   }
   async function serviceProviderSelected(id) {
     console.log("d",id);
@@ -238,7 +247,7 @@ const TripDeatails = () => {
                               <td>
                                 <div className="d-flex gap-2">
                              
-
+                                {JSON.parse(module?.read ||  'true') ?(
                                 <div className="edit">
                                 <button
                                   className="btn btn-sm btn-success edit-item-btn"
@@ -250,9 +259,11 @@ const TripDeatails = () => {
                                   View
                                 </button>
                               </div>
-
+                               ) : null }
+                         
                                {tripDatas[index].trip_status != tripStatus.compleated? (
                                   <div className="edit">
+                                          {JSON.parse(module?.read ||  'true') ?(
                                     <button
                                       className="btn btn-sm btn-success edit-item-btn"
                                       data-bs-toggle="modal"
@@ -261,8 +272,10 @@ const TripDeatails = () => {
                                     >
                                       Edit
                                     </button>
+                                         ): null }
                                   </div>
-                                  ): null }
+                       
+                                  ) : null }
                                 </div>
                               </td>
                             </tr>

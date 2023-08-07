@@ -340,14 +340,14 @@ export async function getDriversData(pageNumber){
     }
 }
 
-export async function getQuotationData(pageNumber){
+export async function getQuotationData(pageNumber,userId){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = {
             "page" : pageNumber,
             "limit" : pageLimit
         }
-        const { data } = await axios.post(`${url.GET_QUOTATION_ALL_DATA_URL}`,reqObj);
+        const { data } = await axios.post(`${url.GET_QUOTATION_ALL_DATA_URL}/${userId}`,reqObj);
         console.log("QUOTATIONS",data);
         return(data)
     } catch (error) {
@@ -608,7 +608,7 @@ export async function geBookingDataOnInvoiceId(iId)
     }
 }
 
-export async function getTripDeatails(pageNumber){
+export async function getTripDeatails(pageNumber,userId){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = {
@@ -616,7 +616,7 @@ export async function getTripDeatails(pageNumber){
             "limit" : pageLimit
         }
         console.log(reqObj)
-        const { data } = await axios.post(`${url.GET_TRIP_ALL_DATA_URL}`,reqObj);
+        const { data } = await axios.post(`${url.GET_TRIP_ALL_DATA_URL}/${userId}`,reqObj);
         console.log(data)
         return(data)
     } catch (error) {

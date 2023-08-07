@@ -48,22 +48,24 @@ const ListEnquiriesTable = () => {
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [module,setModule] = useState({});
+    const [ role, setRole] =useState("")
     const [userId, setUserId ] = useState("");
     const [ errors, setErrors ] = useState("")
 
     const pageLimit = config.pageLimit;
-    const role_name  = config.roles.service_provider
-
+    const role_name  = config.roles
     //  The useEffect hook is used to perform some initialization logic when the component mounts
 
     useEffect(() => {
         const data = JSON.parse(localStorage.getItem("authUser"));
-        
+        console.log("UUUU",data);
         let userIdd = data[0]?.user[0]?.id
+        let role_name = data[0]?.user[0]?.role_name
+        setRole(role_name)
         console.log(userIdd);
-    setUserId(userIdd);
+        setUserId(userIdd);
         getAllData(1)
-    }, [userId]);
+    }, [userId,role]);
 
     const initialValues = {
         customer_id : enquiry ? enquiry[0]?.customer_id : "",
@@ -445,7 +447,7 @@ const ListEnquiriesTable = () => {
                                                         {/* This are the columns and column heading in the enquiry page */}
                                                         <th className="index" data-sort="index">#</th>
                                                         <th className="sort" data-sort="customer_name">Customer Name</th>
-                                                        {enquiries.length > 2 ?(
+                                                        { !(role === role_name.service_provider)  ?(
                                                         <th className="sort" data-sort="service_provider">Service Provider Name</th>
                                                         ): null}
                                                         <th className="sort" data-sort="status">Status</th>
@@ -463,7 +465,7 @@ const ListEnquiriesTable = () => {
                                                         {/* Below we are intialize the enquiry data */}
                                                             <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th> {/* // Serial Number */}
                                                             <td className="customer_name">{item.customer_name}</td> {/* Customer name */}
-                                                            {enquiries.length > 2 ?(
+                                                            {!(role === role_name.service_provider)   ?(
                                                             <td className="service_provider">{item.service_provider}</td> 
                                                             ): null}
                                                             <td className="status">{item.status}</td> {/* Customer Phone */}
