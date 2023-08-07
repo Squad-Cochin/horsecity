@@ -685,15 +685,18 @@ exports.updateStatusQuotation = (quotId) => {
 
 
 /** For Sending email */
-exports.sendMail = (requestBody, quot_id) => {
-    return new Promise(async (resolve, reject) => {
-        try {
+exports.sendMail = (requestBody, quot_id) => 
+{
+    return new Promise(async (resolve, reject) =>
+    {
+        try
+        {
             console.log("",requestBody);
             const { costomer_email, subject, body } = requestBody
             console.log(requestBody);
             console.log("ddd");
-            // const sendEmail = await mail.SendEmail(costomer_email, subject, body)
-       const sendEmail = false
+            const sendEmail = await mail.SendEmailOfQuotation(quot_id, costomer_email, subject)
+            //    const sendEmail = false
             if (sendEmail) { 
                 let updateQuery = `UPDATE ${constants.tableName.bookings} 
                                            SET 	confirmation_sent = '${constants.booking_confirmation_send.yes}'

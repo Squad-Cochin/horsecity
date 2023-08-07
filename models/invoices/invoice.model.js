@@ -1013,13 +1013,13 @@ module.exports = class invoices
 
 
 
-    static async sendemailatinvoice(id, to, subject, body)
+    static async sendemailatinvoice(id, to, subject)
     {
         try
         {
             return await new Promise(async(resolve, reject)=>
             {
-                const emailSent = await mail.SendEmail(id, to, body, subject);
+                const emailSent = await mail.SendEmail(id, to, subject);
                 if(emailSent === false)
                 {
                     console.log(`Error while sending the email from the model function`);

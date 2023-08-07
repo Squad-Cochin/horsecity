@@ -1,9 +1,9 @@
 const nodemailer = require('nodemailer');
 const commonfetching = require('../utils/helper/commonfetching');
-// const quote = require('../../horsecity/models/quotation/quotation');
+const quote = require('../../horsecity/models/quotation/quotation');
 require('dotenv').config()
 
-exports.SendEmail = async (id, to, text, subject) =>
+exports.SendEmail = async (id, to, subject) =>
 {
     return new Promise(async (resolve, reject) =>
     {
@@ -61,19 +61,19 @@ exports.SendEmail = async (id, to, text, subject) =>
             const paymentDetails = generatePaymentDetails(invoiceData.payment);      
             // Generate the complete HTML content using the provided invoiceData and the generated vehicleRows and paymentDetails
             const htmlContent = `
-        <!DOCTYPE html>
-        <html>
-        <head>
-        <meta charset="UTF-8">
-        <title>Invoice</title>
-        </head>
-        <body style="color: #666; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.6em; overflow-x: hidden; background-color: #ffffff;">
-        <table width="600" cellspacing="0" cellpadding="0" border="0" align="center" style="min-width:100%; margin: 0pt auto; padding: 0px; font-family: Arial,Helvetica,sans-serif; font-size: 13px;border: 1px solid;padding: 5px 5px;">
-        <tbody>
-        <tr>
-            <td valign="top" bgcolor="#ffffff">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+            <!DOCTYPE html>
+            <html>
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Invoice</title>
+                </head>
+                <body style="color: #666; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.6em; overflow-x: hidden; background-color: #ffffff;">
+                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center" style="min-width:100%; margin: 0pt auto; padding: 0px; font-family: Arial,Helvetica,sans-serif; font-size: 13px;border: 1px solid;padding: 5px 5px;">
                     <tbody>
+                <tr>
+                <td valign="top" bgcolor="#ffffff">
+                   <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                <tbody>
                         <tr>
                             <td>
                                 <div style="padding: 8px; text-align:left;"><a target="_blank" title="Horse City" href=""><img  border="0" height="50"  alt="Horse City" src="D:\Saurabh Own Assignments\Horsecity\download.png" /></a></div>
@@ -155,7 +155,7 @@ exports.SendEmail = async (id, to, text, subject) =>
         </tr>
         <tr>
             <td valign="top" style="background-color: #ffffff; color: #000;">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #b7a2a2; border-radius: 4px;">
+            <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center" style="min-width:100%; margin: 0pt auto; padding: 0px; font-family: Arial,Helvetica,sans-serif; font-size: 13px;border: 1px solid;padding: 5px 5px;">
                     <tr style="background-color: #cecccc;height: 50px; text-align: center; ">
                         <th>#</th>
                         <th>Pick Up Location</th>
@@ -269,11 +269,9 @@ exports.SendEmail = async (id, to, text, subject) =>
             }
         });
     });
-};  
+};
 
-
-
-exports.SendEmailOfQuotation = async (id, to, text, subject) =>
+exports.SendEmailOfQuotation = async (id, to, subject) =>
 {
     return new Promise(async (resolve, reject) =>
     {
@@ -307,8 +305,7 @@ exports.SendEmailOfQuotation = async (id, to, text, subject) =>
                             </td>
                             <td>
                                 <div style="padding: 8px; text-align:right;color: #000;font-size:30px;">QUOTATION</div>
-                             </td>
-                          
+                             </td>                          
                          </tr>
                       </tbody>
                    </table>
@@ -323,10 +320,10 @@ exports.SendEmailOfQuotation = async (id, to, text, subject) =>
                                 <div style="width: 250px;background-color: #bdbababd;border-radius: 15px; margin: 0 15px;">&nbsp;</div>
                             </td>
                             <td>
-                                <div style="padding: 8px; text-align:right;color: #000;font-size:15px;">Quotation No : <b>INV6</b></div>
+                                <div style="padding: 8px; text-align:right;color: #000;font-size:15px;">Quotation No : <b>${quoteData.quotation[0].quotation_id}</b></div>
                              </td>
                              <td>
-                                <div style="padding: 8px; text-align:right;color: #000;font-size:15px;">Date : <b>03-08-2023 </b></div>
+                                <div style="padding: 8px; text-align:right;color: #000;font-size:15px;">Date : <b>${quoteData.quotation[0].enquiry_date} </b></div>
                              </td>
                           
                          </tr>
@@ -521,25 +518,16 @@ exports.SendEmailOfQuotation = async (id, to, text, subject) =>
         
                                       </tbody>
                                     </table> 
-                                   </td> 
-        
+                                   </td>         
                                  </tr>
-        
-        
-        
                               </tbody>
                            </table>
                         </td>
                      </tr>
-                  
                     </tbody>
                   </table>    
                 </td>
              </tr>
-        
-            
-             
-            
                <tr style="padding-top: 10px;">&nbsp;</tr>
             </tbody>
          </table>
@@ -552,7 +540,7 @@ exports.SendEmailOfQuotation = async (id, to, text, subject) =>
       // Example usage: Assuming you have the invoiceData object containing invoice, vehicles, and payment details.
       
       const htmlContent = generateInvoiceHTML(quoteData);
-      console.log(htmlContent)
+    //   console.log(htmlContent)
         const transporter = nodemailer.createTransport 
         ({
             // service: 'Gmail', // replace with your email service provider
@@ -570,6 +558,7 @@ exports.SendEmailOfQuotation = async (id, to, text, subject) =>
             from : process.env.EMAIL, // replace with your email address
             to : to, // recipient's email address
             subject : subject,
+            // text : "Hello"
             html : htmlContent
         };
         transporter.sendMail(mailOptions, (error, info) => 

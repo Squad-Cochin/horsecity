@@ -107,8 +107,7 @@ CREATE TABLE permissions
   	`create` ENUM('true', 'false') DEFAULT 'false',
     `update` ENUM('true', 'false') DEFAULT 'false',
     `read` ENUM('true', 'false') DEFAULT 'false',
-    `delete` ENUM('true', 'false') DEFAULT 'false' 
-   
+    `delete` ENUM('true', 'false') DEFAULT 'false'  
 );
 
 
@@ -166,6 +165,17 @@ CREATE TABLE password_policies
     updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL
 );
+CREATE TABLE assign_drivers
+(
+    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    service_provider_id INT(11),
+    FOREIGN KEY (service_provider_id) REFERENCES service_providers(id),
+    driver_id INT(11),
+    FOREIGN KEY (driver_id) REFERENCES drivers(id),
+    created_at DATETIME ,
+    deleted_at DATETIME DEFAULT NULL
+);
+
 
 CREATE TABLE customer_logs
 (
