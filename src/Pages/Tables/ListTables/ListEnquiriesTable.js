@@ -52,6 +52,7 @@ const ListEnquiriesTable = () => {
     const [ errors, setErrors ] = useState("")
 
     const pageLimit = config.pageLimit;
+    const role_name  = config.roles.service_provider
 
     //  The useEffect hook is used to perform some initialization logic when the component mounts
 
@@ -94,7 +95,7 @@ const ListEnquiriesTable = () => {
         driver_id : "",
         final_amount : "",
     };
-
+    console.log("length",enquiries.length );
     // validation function
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
@@ -444,7 +445,9 @@ const ListEnquiriesTable = () => {
                                                         {/* This are the columns and column heading in the enquiry page */}
                                                         <th className="index" data-sort="index">#</th>
                                                         <th className="sort" data-sort="customer_name">Customer Name</th>
+                                                        {enquiries.length > 2 ?(
                                                         <th className="sort" data-sort="service_provider">Service Provider Name</th>
+                                                        ): null}
                                                         <th className="sort" data-sort="status">Status</th>
                                                         <th className="sort" data-sort="created_date">Created At</th>
                                                         <th className="sort" colSpan={2} data-sort="action">Action</th>
@@ -460,7 +463,9 @@ const ListEnquiriesTable = () => {
                                                         {/* Below we are intialize the enquiry data */}
                                                             <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th> {/* // Serial Number */}
                                                             <td className="customer_name">{item.customer_name}</td> {/* Customer name */}
-                                                            <td className="service_provider">{item.service_provider}</td> {/* Customer Email */}
+                                                            {enquiries.length > 2 ?(
+                                                            <td className="service_provider">{item.service_provider}</td> 
+                                                            ): null}
                                                             <td className="status">{item.status}</td> {/* Customer Phone */}
                                                             <td className="created_date">{item.created_at}</td> {/* Enquiry Time */}
                                                             {/* This is the place from where we are calling he view button and function. Which is used to show
