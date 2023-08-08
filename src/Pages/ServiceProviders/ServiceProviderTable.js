@@ -33,7 +33,7 @@ const ListTables = () => {
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [userId, setUserId ] = useState("");
-    const [ role, setRole ] = useState(false);
+    const [ role, setRole ] = useState('');
     const [module,setModule] = useState({});
     const [ errors, setErrors ] = useState("");
     const pageLimit = config.pageLimit;
@@ -44,10 +44,12 @@ const ListTables = () => {
     {
         const data = JSON.parse(localStorage.getItem("authUser"));
         let userIdd = data[0]?.user[0]?.id
-        console.log("data",data);
+        const user_role = data[0]?.user[0]?.role_Id
+
+        setRole(user_role)
         setUserId(userIdd);
         getAllData(1)
-    }, [userId])
+    }, [userId,role])
     console.log("module",module);
 
     /**This object sets the initial values for the form fields managed by formik */
@@ -218,7 +220,7 @@ console.log("MMMM",userId);
                                             <th className="email" data-sort="email">Email</th>
                                             <th className="contactperson" data-sort="contactperson">Contact Person</th>
                                             <th className="phone" data-sort="phone">Contact Number</th>
-                                            {JSON.parse(module?.create ||  'true') ? (
+                                            {(!config.Role.service_provider  === role)? (
                                             <th className="status" data-sort="status">Status</th>
                                             ) : null
                                             }
