@@ -128,7 +128,7 @@ const AccountsReport  = () => {
                                                     <tr>
                                                     <th className="index" data-sort="index">#</th>
                                                         <th className="sort" data-sort="month">Customer Name</th>
-                                                        {(!role  === config.Role.service_provider)? (
+                                                        {!(config.Role.service_provider  === role)? (
                                                         <th className="sort" data-sort="month">Service Provider Name</th>
                                                         ) : null
                                                     }
@@ -142,7 +142,7 @@ const AccountsReport  = () => {
                                                     <tr key={index}> 
                                                         <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                         <td className="customer_name">{item.customer_name}</td>
-                                                        {(!config.Role.service_provider  === role)? (
+                                                        {!(config.Role.service_provider  === role)? (
                                                         <td className="service_provider_name">{item.service_provider_name}</td>
                                                         ) : null
                                                     }

@@ -64,7 +64,7 @@ const VehicleReport  = () => {
         setNumberOfData(getAllData?.totalCount);
         }
     }
-
+    console.log("rolee",!(config.Role.service_provider  === 2));
     return (
         <React.Fragment>
             <div className="page-content">
@@ -127,7 +127,7 @@ const VehicleReport  = () => {
                                                 <thead className="table-light">
                                                     <tr>
                                                     <th className="index" data-sort="index">#</th>
-                                                    {(!config.Role.service_provider  === role)? (
+                                                    {!(config.Role.service_provider  === role)? (
                                                         <th className="sort" data-sort="month">Service Provider Name</th>
                                                         ) : null
                                                     }
@@ -143,7 +143,7 @@ const VehicleReport  = () => {
                                                     {vehicleReport.map((item, index)=>(
                                                     <tr key={index}> 
                                                         <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
-                                                        {(!config.Role.service_provider  === role)? (
+                                                        {!(config.Role.service_provider  === role)? (
                                                         <td className="customer_name">{item.service_provider_name}</td>
                                                         ) : null
                                                     }
