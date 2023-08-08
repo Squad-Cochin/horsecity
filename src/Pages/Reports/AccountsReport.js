@@ -19,6 +19,7 @@ const AccountsReport  = () => {
     const [ toDate, setToDate ] = useState("");
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
+    const [ role, setRole ] = useState('');
     const pageLimit = config.pageLimit;
 
     useEffect(()=>{
@@ -32,6 +33,9 @@ const AccountsReport  = () => {
         }
         const data = JSON.parse(localStorage.getItem("authUser"));
         let userId = data[0]?.user[0]?.id ;
+        const user_role = data[0]?.user[0]?.role_Id
+
+        setRole(user_role)
         getData(1, value,userId)
     },[])
 
@@ -124,7 +128,10 @@ const AccountsReport  = () => {
                                                     <tr>
                                                     <th className="index" data-sort="index">#</th>
                                                         <th className="sort" data-sort="month">Customer Name</th>
+                                                        {(!role  === config.Role.service_provider)? (
                                                         <th className="sort" data-sort="month">Service Provider Name</th>
+                                                        ) : null
+                                                    }
                                                         <th className="sort" data-sort="number">Quotation Id</th>
                                                         <th className="sort" data-sort="number">Total Amount</th>
                                                         <th className="sort" data-sort="number">Pending Amount</th>
@@ -135,7 +142,10 @@ const AccountsReport  = () => {
                                                     <tr key={index}> 
                                                         <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                         <td className="customer_name">{item.customer_name}</td>
+                                                        {(!config.Role.service_provider  === role)? (
                                                         <td className="service_provider_name">{item.service_provider_name}</td>
+                                                        ) : null
+                                                    }
                                                         <td className="phone">{item.quotation_id}</td>
                                                         <td className="date">{item.total_amount}</td>
                                                         <td className="date">{item.pending_amount}</td>

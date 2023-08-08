@@ -20,7 +20,7 @@ const VehicleReport  = () => {
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const pageLimit = config.pageLimit;
-
+    const [ role, setRole ] = useState('');
     useEffect(()=>{
         const today = new Date();
         const sixtyDaysAgo = new Date(today);
@@ -32,6 +32,9 @@ const VehicleReport  = () => {
         }
         const data = JSON.parse(localStorage.getItem("authUser"));
         let userId = data[0]?.user[0]?.id ;
+        const user_role = data[0]?.user[0]?.role_Id
+
+        setRole(user_role)
         getData(1, value,userId)
     },[])
 
@@ -124,7 +127,10 @@ const VehicleReport  = () => {
                                                 <thead className="table-light">
                                                     <tr>
                                                     <th className="index" data-sort="index">#</th>
+                                                    {(!config.Role.service_provider  === role)? (
                                                         <th className="sort" data-sort="month">Service Provider Name</th>
+                                                        ) : null
+                                                    }
                                                         <th className="sort" data-sort="number">Vehicle Number</th>
                                                         <th className="sort" data-sort="number">Make</th>
                                                         <th className="sort" data-sort="number">Model</th>
@@ -137,7 +143,10 @@ const VehicleReport  = () => {
                                                     {vehicleReport.map((item, index)=>(
                                                     <tr key={index}> 
                                                         <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
+                                                        {(!config.Role.service_provider  === role)? (
                                                         <td className="customer_name">{item.service_provider_name}</td>
+                                                        ) : null
+                                                    }
                                                         <td className="phone">{item.vehicle_number}</td>
                                                         <td className="phone">{item.make}</td>
                                                         <td className="phone">{item.model}</td>

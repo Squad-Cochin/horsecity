@@ -235,7 +235,7 @@ console.log("MMMM",userId);
                                                 <td className="email">{value.email}</td>
                                                 <td className="contact_person">{value.contact_person}</td>
                                                 <td className="phone">{value.contact_no}</td>
-                                                {JSON.parse(module?.create ||  'true') ?(
+                                                {(!config.Role.service_provider  === role)? (
                                                 <td className="status">
                                                     {value.status === "ACTIVE" ?
                                                         <button

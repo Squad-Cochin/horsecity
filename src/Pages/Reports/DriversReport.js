@@ -17,6 +17,7 @@ const DriverReport  = () => {
     const [ driverReport, setDriverReport ] = useState([])
     const [ fromDate, setFromDate ] = useState("");
     const [ toDate, setToDate ] = useState("");
+
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const pageLimit = config.pageLimit;
@@ -32,6 +33,7 @@ const DriverReport  = () => {
         }
         const data = JSON.parse(localStorage.getItem("authUser"));
         let userId = data[0]?.user[0]?.id ;
+
         getData(1, value,userId)
     },[])
 
