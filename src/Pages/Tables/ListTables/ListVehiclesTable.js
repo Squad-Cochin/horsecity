@@ -42,6 +42,7 @@ const ListVehiclesTable = () =>
     const [userId, setUserId ] = useState("");
     const [ role, setRole ] = useState(false);
     const [module,setModule] = useState({});
+    const [user_name, setuser_name] = useState(false)
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("")
     const pageLimit = config.pageLimit;
@@ -85,9 +86,12 @@ const ListVehiclesTable = () =>
         let user_Id = data[0]?.user[0]?.id
         console.log('User id from the vehicles page: ', user_Id);
         let role_Name = data[0]?.user[0]?.role_name
-        console.log('Role name from the drivers page: ', role_Name);
+        console.log('Role name from the vehicles page: ', role_Name);
+        let userName = data[0]?.user[0]?.user_name
+        console.log('user name from the vehicles page: ', role_Name);
         setUserId(user_Id);
         setRole(role_Name);
+        setuser_name(userName);
         getAllData(1)
     }, [userId, role]);
     console.log("Modules List: ",module);
@@ -232,7 +236,7 @@ const ListVehiclesTable = () =>
 
     async function addVechile(values){
         console.log("va",values)
-        let addedVechile = await addNewVehicle(values);
+        let addedVechile = await addNewVehicle(values, userId);
         if(addedVechile.code === 200){
             setErrors("")
             setAdd_list(false);
@@ -406,21 +410,38 @@ const ListVehiclesTable = () =>
                             <label htmlFor="serviceprovider-field" className="form-label">
                                 Service Provider
                             </label>
-                            <select
-                                data-trigger
-                                name="service_provider_id"
-                                id="serviceprovider-field"
+                            {role === role_name.admin ? (
+                                <select
+                                    data-trigger
+                                    name="service_provider_id"
+                                    id="serviceprovider-field"
+                                    className="form-control"
+                                    value={validation.values.service_provider_id || ""}
+                                    onChange={validation.handleChange}
+                                    onBlur={validation.handleBlur}
+                                    required
+                                >
+                                    <option value="">Select Service Provider</option>
+                                    {sproviders.map((item, index) => (
+                                        <option key={index} value={item.id}>
+                                            {item.user_name}
+                                        </option>
+                                    ))}
+                                </select>
+                            ) : (
+                                // <input type="text" value={user_name || ""} />
+                                <input
+                                type="text"
+                                id="user_name-field"
+                                name='make'
                                 className="form-control"
-                                value={validation.values.service_provider_id || ""}
-                                onChange={validation.handleChange}
-                                onBlur={validation.handleBlur}
-                                required
-                            >
-                                <option value="">Select Service Provider</option>
-                                {sproviders.map((item, index) => (
-                                    <option key={index} value={item.id}>{item.user_name}</option>
-                                ))}
-                            </select>
+                                value={user_name || ""}
+                                // onChange={validation.handleChange}
+                                placeholder="Enter Vehicle Company"                                
+                            />
+                            
+                            )}
+
                         </div>
 
                         {/* The below element is adding the number of the number plate of the vehcile */}

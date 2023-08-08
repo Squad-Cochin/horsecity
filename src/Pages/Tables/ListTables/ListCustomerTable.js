@@ -38,13 +38,25 @@ const ListCustomerTable = () => {
     const [idProofPreview, setIdProofPreview] = useState(null);  /**Using for storing idproof image URL*/
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
+    const [userId, setUserId ] = useState("");
+    const [role, setRole ] = useState(false);
+    const [module, setModule] = useState({});
     const [ errors, setErrors ] = useState("")
     const pageLimit = config.pageLimit;
 
     /**This hook is used to fetch customers data */
-    useEffect(() => {
+    useEffect(() =>
+    {
+        const data = JSON.parse(localStorage.getItem("authUser"));
+        console.log('Data from the list invoice page', data);
+        let user_Id = data[0]?.user[0]?.id
+        console.log('User id from the drivers page: ', user_Id);
+        let role_Name = data[0]?.user[0]?.role_name
+        console.log('Role name from the drivers page: ', role_Name);
+        setUserId(user_Id);
+        setRole(role_Name);
         getAllData(1)
-    }, [])
+    }, [userId, role]);
 
     /**This object sets the initial values for the form fields managed by formik */
     const initialValues = {
@@ -167,12 +179,18 @@ const ListCustomerTable = () => {
     }
 
     // function for get data all customer data
-    async function getAllData(page) {
-        let getCustomers = await getCustomersData(page || 1);
-        console.log(getCustomers)
-        setCustomers(getCustomers?.customer);
-        setPageNumber(page);
-        setNumberOfData(getCustomers?.totalCount);
+    async function getAllData(page) 
+    {
+        if(userId)
+        {
+            console.log(`User id at the time of getall function in the customer page`, userId);
+            let getCustomers = await getCustomersData(page || 1, userId);
+            console.log(getCustomers)
+            setCustomers(getCustomers?.customer);
+            setModule(getCustomers.module[0]);
+            setPageNumber(page);
+            setNumberOfData(getCustomers?.totalCount);
+        }
     }
 
     return (

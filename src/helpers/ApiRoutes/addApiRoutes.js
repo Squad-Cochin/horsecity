@@ -106,8 +106,9 @@ import * as url from "../url_helper";
       }
     
     /**Add new vehicle */
-    export async function addNewVehicle(data){
+    export async function addNewVehicle(data, Id){
         try {
+            console.log('User Id at the time of adding the new vehicle: ', Id);
             console.log("dd1",data)
             const formData = new FormData();
             // Append the object data to the FormData instance
@@ -116,7 +117,7 @@ import * as url from "../url_helper";
             }
             
             // Send the form data as a POST request using Axios
-            const response = await axios.post(`${url.POST_VEHICLES_ADD_URL}`, formData, {
+            const response = await axios.post(`${url.POST_VEHICLES_ADD_URL}/${Id}`, formData, {
                 headers: {
                 'Content-Type': 'multipart/form-data'
                 }
