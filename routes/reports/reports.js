@@ -7,31 +7,31 @@ module.exports = function(app)
 
  
     // /**For geting all service provider basis of from date to date */
-    app.post(`/${process.env.apiToken}/reports/serviceproviders`,controller.getReportsServiceProviders); 
+    app.post(`/${process.env.apiToken}/reports/serviceproviders/:id`,controller.getReportsServiceProviders); 
 
     // /**For geting all customers basis of from date to date */
-    app.post(`/${process.env.apiToken}/reports/customers`,controller.getReportsCustomers); 
+    app.post(`/${process.env.apiToken}/reports/customers/:id`,controller.getReportsCustomers); 
     
     // /**For geting all vehicles basis of from date to date */
-    app.post(`/${process.env.apiToken}/reports/vehicles`,controller.getReportsVehicles); 
+    app.post(`/${process.env.apiToken}/reports/vehicles/:id`,controller.getReportsVehicles); 
 
     // /**For geting all drivers basis of from date to date */
-    app.post(`/${process.env.apiToken}/reports/drivers`,controller.getReportsDrivers); 
+    app.post(`/${process.env.apiToken}/reports/drivers/:id`,controller.getReportsDrivers); 
 
    // /**For geting all enquiries basis of from date to date */
-   app.post(`/${process.env.apiToken}/reports/enquiries`,controller.getReportsEnquiries); 
+   app.post(`/${process.env.apiToken}/reports/enquiries/:id`,controller.getReportsEnquiries); 
 
    // /**For geting all quatations reports basis of from date to date */
-   app.post(`/${process.env.apiToken}/reports/quotations`,controller.getReportsQuotations); 
+   app.post(`/${process.env.apiToken}/reports/quotations/:id`,controller.getReportsQuotations); 
 
    /**For geting all trip details reports basis of from date to date */
-   app.post(`/${process.env.apiToken}/reports/tripDetails`,controller.getReportsTripDetails); 
+   app.post(`/${process.env.apiToken}/reports/tripDetails/:id`,controller.getReportsTripDetails); 
 
    
    /**For geting all invoices reports basis of from date to date */
-   app.post(`/${process.env.apiToken}/reports/invoices`,controller.getReportsInvoices); 
+   app.post(`/${process.env.apiToken}/reports/invoices/:id`,controller.getReportsInvoices); 
 
    /**For geting all invoices reports basis of from date to date */
-   app.post(`/${process.env.apiToken}/reports/accounts`,controller.getAccountsReports); 
+   app.post(`/${process.env.apiToken}/reports/accounts/:id`,controller.getAccountsReports); 
 
 }

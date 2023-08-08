@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer');
 const commonfetching = require('../utils/helper/commonfetching');
-const quote = require('../../horsecity/models/quotation/quotation');
+const quote = require('../models/quotation/quotation');
 require('dotenv').config()
 
 exports.SendEmail = async (id, to, subject) =>

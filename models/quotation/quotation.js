@@ -115,7 +115,7 @@ exports.ListQuotation = (requestBody,spId) => {
                     AND (
                         ('${role_name}' = '${constants.roles.admin}')
                         OR
-                        ('${role_name}' = '${constants.roles.admin}')
+                        ('${role_name}' = '${constants.roles.superAdmin}')
                         OR
                         (
                             '${role_name}' = '${constants.roles.service_provider}'
@@ -125,7 +125,7 @@ exports.ListQuotation = (requestBody,spId) => {
                     LIMIT ${+limit} OFFSET ${+offset}`;
 
             con.query(selQuery, async (err, quo) => {
-              
+                console.log(err);
                 if (quo.length != 0) {
          
                     /**Total count */
@@ -169,7 +169,7 @@ exports.ListQuotation = (requestBody,spId) => {
                     })
 
                 } else {
-                    resolve({ quotations: [] })
+                    resolve({totalCount : 0, quotations : [],module : []})
                 }
             })
 
