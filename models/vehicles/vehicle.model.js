@@ -89,9 +89,6 @@ module.exports = class vehicles
         }
     };
 
-
-
-
     static async getall(pageNumber, pageSize, Id)
     {
         try
@@ -202,10 +199,6 @@ module.exports = class vehicles
             return console.log(`Error from the vehicle.model.js file from the models > vehicles folder. In the static function "getall". Which is designed to fetch all the data of vehicles.`);            
         }
     };
-
-
-    
-
 
     static async updatestatus(id)
     {

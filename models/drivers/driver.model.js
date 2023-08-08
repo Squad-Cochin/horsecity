@@ -306,12 +306,12 @@ module.exports = class drivers
                 }
                 else
                 {
-                    console.log('Came inside');
+                    // console.log('Came inside');
                     let selQueryAssign = `SELECT * FROM assign_drivers ad WHERE ad.driver_id = ${Id} AND ad.deleted_at IS NULL`
                     // console.log(selQueryAssign);
                     con.query(selQueryAssign, async (err, result2) =>
                     {
-                        console.log(`Result 2: `, result2);
+                        // console.log(`Result 2: `, result2);
                         if(result2.length != 0) 
                         {
                             let upQuery = `UPDATE assign_drivers ad
@@ -346,9 +346,10 @@ module.exports = class drivers
     };    
 
     static async editdriver(id, name, email, contact_no, emergency_contact_no, date_of_birth, licence_no, description, profile_image, licence_img) {
-        try {
-            console.log('Licence Image', licence_img);
-            console.log('Profile Image', profile_image);
+    try 
+    {
+            // console.log('Licence Image', licence_img);
+            // console.log('Profile Image', profile_image);
     
             let uploadprofile_image, uploadlicence_img;
     

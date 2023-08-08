@@ -890,7 +890,7 @@ exports.isCustomerIdProofImageSubmitted2 = async (req, res, next) =>
 
 exports.isDriverProfileImageSubmitted = (req, res, next) =>
 {
-    if(!req.files?.profile_image && req.method === 'POST' && req.url === url.ADD_DRIVER_PAGE_URL)
+    if(!req.files?.profile_image && req.method === 'POST' && req.url === `${url.ADD_DRIVER_PAGE_URL}/${req.params.id}`)
     {
         console.log(`Driver profile image is not uploaded`);
         return res.status(200).json
@@ -919,7 +919,7 @@ exports.isDriverProfileImageSubmitted = (req, res, next) =>
 
 exports.isDriverLicenceImageSubmitted = (req, res, next) =>
 {
-    if(!req.files?.licence_img && req.method === 'POST' && req.url === url.ADD_DRIVER_PAGE_URL)
+    if(!req.files?.licence_img && req.method === 'POST' && req.url === `${url.ADD_DRIVER_PAGE_URL}/${req.params.id}`)
     {
         console.log(`Driver licence image is not uploaded`);
         return res.status(200).json
