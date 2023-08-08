@@ -205,10 +205,10 @@ exports.removeUser = (tablename, Id) =>
     return new Promise((resolve, reject) => 
     {
         let selQuery = `SELECT * FROM ${tablename} WHERE ${tablename}.id = '${Id}' `;
-        console.log(selQuery);
+        // console.log(selQuery);
         con.query(selQuery, (err, result) =>
         {
-            console.log(result);
+            // console.log(result);
             if (err)
             {
                 console.log('Error while executing the query:', err);

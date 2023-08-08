@@ -14,28 +14,71 @@ module.exports = class vehicles
 {
     constructor(){}
 
-    static async addnew(serviceProviderId, vehicle_number, make, model, color, length, breadth, height, max_no_of_horse, air_conditioner, temp_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date)
+    static async addnew(Id, serviceProviderId, vehicle_number, make, model, color, length, breadth, height, max_no_of_horse, air_conditioner, temp_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date)
     { 
         try
         { 
             return await new Promise(async(resolve, reject)=>
             {
-                let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);
-                // console.log(uploadSafetyCertificate);
-                let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${serviceProviderId}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
-                // console.log(insQuery);
-                con.query(insQuery, (err, result) =>
+                let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
+                // console.log(checkRole);
+                con.query(checkRole, async (err, resultRole) =>
                 {
-                    // console.log(result);
-                    if(result.affectedRows > 0) 
+                    // console.log(resultRole);
+                    if(err)
                     {
-                        console.log('Vehicles data added successfully');
-                        resolve(result);
+                        console.log('Error while fetching the role name at the time of add vehicle');
+                        resolve('err') 
                     }
                     else
                     {
-                        console.log(err);
-                        resolve('err');
+                        let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);
+                        // console.log(uploadSafetyCertificate);
+                        if(resultRole[0].name === constants.roles.admin)
+                        {
+                            console.log('Admin block when adding of the vehicles');
+                            let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${serviceProviderId}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
+                            // console.log(insQuery);
+                            con.query(insQuery, (err, result) =>
+                            {
+                                // console.log(result);
+                                if(result.affectedRows > 0) 
+                                {
+                                    console.log('Vehicles data added successfully');
+                                    resolve(result);
+                                }
+                                else
+                                {
+                                    console.log(err);
+                                    resolve('err');
+                                }
+                            });
+                        }
+                        else if(resultRole[0].name === constants.roles.service_provider)
+                        {
+                            console.log('Service provider block when adding of the vehicle');
+                            let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${Id}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
+                            // console.log(insQuery);
+                            con.query(insQuery, (err, result) =>
+                            {
+                                // console.log(result);
+                                if(result.affectedRows > 0) 
+                                {
+                                    console.log('Vehicles data added successfully');
+                                    resolve(result);
+                                }
+                                else
+                                {
+                                    console.log(err);
+                                    resolve('err');
+                                }
+                            });
+                        }
+                        else
+                        {
+                            console.log('I think the role name which we got is not present in the database at the time of vehicle');
+                            resolve('err');
+                        }                       
                     }
                 });
             });        

@@ -10,7 +10,7 @@ module.exports = (app) =>
     // The below route is for adding the new vehicle data.
     app.post(`/${process.env.apiToken}/addNew/vehicle/:id`,
     isValidIdInTheParams(constants.tableName.service_providers),
-    checkInput.isServiceProviderIdEntered,
+    checkInput.isServiceProviderIdEntered(constants.tableName.service_providers),
     checkInput.isValidVehicleNumberEntered,
     checkInput.isInsurancePolicyNumberEntered,
     checkInput.isVehicleRegistrationNumberEntered,
@@ -53,11 +53,11 @@ module.exports = (app) =>
 
     // The below route is for updating particular vehicle data.
     app.put(`/${process.env.apiToken}/edit/vehicle/:id`,
-    checkInput.isServiceProviderIdEntered,
+    isValidIdInTheParams(constants.tableName.vehicles), 
+    checkInput.isServiceProviderIdEntered(constants.tableName.service_providers),
     checkInput.isValidVehicleNumberEntered,
     checkInput.isVehicleRegistrationNumberEntered,
     checkInput.isInsurancePolicyNumberEntered,
-    isValidIdInTheParams(constants.tableName.vehicles), 
     checkInput.isManufacturerEntered,
     checkInput.isColorEntered,
     checkInput.isModelEntered,

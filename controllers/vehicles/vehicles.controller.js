@@ -21,6 +21,7 @@ exports.addNew = async (req, res, next) =>
     // The below line is for going to the model function to implement the code for adding or registering the new vehcile.
     const vehicles = await vehicle.addnew
     (
+        req.params.id,
         req.body.service_provider_id, // Already registered service provider id
         req.body.vehicle_number, // Vehicle number of the new vehicle
         req.body.make, // Manufacturer of the vehicle

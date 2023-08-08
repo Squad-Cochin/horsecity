@@ -20,7 +20,7 @@ const time = require('../../utils/helper/date'); // All the time relateed format
 exports.getAll = async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for get all customer logic.
-    const customers = await customer.getall(req.body.page, req.body.limit);
+    const customers = await customer.getall(req.body.page, req.body.limit, req.params.id);
     // console.log("Customer :", customers);
     if(customers.length === 0)
     {
@@ -28,8 +28,8 @@ exports.getAll = async (req, res, next) =>
         console.log('No Customer data present');
         return res.status(200).send
         ({
-            code : 400,
-            status : false,
+            code : 200,
+            status : true,
             message : constant.responseMessage.getAll,
             data : customers
         });
@@ -106,7 +106,8 @@ exports.addCustomer = async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for adding or regitring the new customer.
     const customers = await customer.addcustomer
-    ( 
+    (
+        req.params.id,
         req.body.name, // Name of the customer
         req.body.email, // Email of the customer
         req.body.userName, // userName of the customer
@@ -138,7 +139,7 @@ exports.addCustomer = async (req, res, next) =>
         return res.status(200).send
         ({
             code : 400,
-            status : true,
+            status : false,
             message : "Invalid Format of file submit for upload",
         });
     }
@@ -149,8 +150,18 @@ exports.addCustomer = async (req, res, next) =>
         return res.status(200).send
         ({
             code : 400,
-            status : true,
+            status : false,
             message : "No image uploaded for customer",
+        });
+    }
+    else if(customers.length === 0)
+    {
+        console.log('Service provider is not allowed to add customer');
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : "Service provider is not allowed to add customer",
         });
     }
     // If input feild are in correct format and not already presnet in the database, then this else block of code will be executed.

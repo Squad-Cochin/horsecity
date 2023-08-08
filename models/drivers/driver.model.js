@@ -270,7 +270,6 @@ module.exports = class drivers
         }
     }
 
-
     static async updatestatus(Id)
     {
         try
@@ -294,24 +293,57 @@ module.exports = class drivers
 
     static async removedriver(Id)
     {
-        try
+        return await new Promise(async(resolve, reject)=>
         {
-            const data = await commonoperation.removeUser(constants.tableName.drivers, Id);
-            // console.log('Data', data);
-            if(data.length === 0)
+            try
             {
-                return data
+                // console.log(Id);
+                const data = await commonoperation.removeUser(constants.tableName.drivers, Id);
+                // console.log('Data: ', data);
+                if(data.affectedRows === 0)
+                {
+                    resolve(data)
+                }
+                else
+                {
+                    console.log('Came inside');
+                    let selQueryAssign = `SELECT * FROM assign_drivers ad WHERE ad.driver_id = ${Id} AND ad.deleted_at IS NULL`
+                    // console.log(selQueryAssign);
+                    con.query(selQueryAssign, async (err, result2) =>
+                    {
+                        console.log(`Result 2: `, result2);
+                        if(result2.length != 0) 
+                        {
+                            let upQuery = `UPDATE assign_drivers ad
+                            SET ad.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                            WHERE ad.driver_id = ${Id}
+                            AND ad.deleted_at IS NULL`;
+                            // console.log(upQuery);
+                            con.query(upQuery, async (err, result) =>
+                            {
+                                if(result.affectedRows > 0)
+                                {                               
+                                    resolve(data)
+                                }
+                                else
+                                {                        
+                                    resolve(data)
+                                }
+                            });
+                        }
+                        if(result2.length == 0)
+                        {                            
+                            resolve(data)
+                        }
+                    });
+                }            
             }
-            else
+            catch (error)
             {
-                return data;
-            }            
-        }
-        catch (error)
-        {
-            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "removedriver". Which is designed to remove particular driver.');            
-        }
-    };
+                console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "removedriver". Which is designed to remove particular driver.', error);            
+            }
+        });
+    };    
 
     static async editdriver(id, name, email, contact_no, emergency_contact_no, date_of_birth, licence_no, description, profile_image, licence_img) {
         try {
@@ -357,7 +389,6 @@ module.exports = class drivers
             console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "editdriver". Which is designed to edit particular data of the driver.');
         }
     }
-    
 
     static async assignserviceprovider(dId, sId)
     {
@@ -514,7 +545,6 @@ module.exports = class drivers
         }        
     }
 
-
     static async unassignserviceproviderandboth(dId,sId)
     {
         try
@@ -547,7 +577,7 @@ module.exports = class drivers
                         {
                             resolve('noServiceProvider')
                         }
-
+                        
                         if(err)
                         {
                             console.log(err);

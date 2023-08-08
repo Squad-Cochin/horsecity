@@ -1,6 +1,6 @@
 const driverController = require(`../../controllers/drivers/driver.controller`);
 const checkInput = require(`../../middlewares/validateInput/checkRequestBodyInput`);
-const { isValidIdInTheParams } = require(`../../middlewares/validateInput/checkRequestparams`);
+const { isValidIdInTheParams, CheckRole } = require(`../../middlewares/validateInput/checkRequestparams`);
 const constants = require(`../../utils/constants`);
 
 module.exports = function(app)
@@ -22,6 +22,7 @@ module.exports = function(app)
     // Below route is for adding the driver data
     app.post(`/${process.env.apiToken}/add/driver/:id`,
     isValidIdInTheParams(constants.tableName.service_providers),
+    CheckRole,
     checkInput.nameValidation,
     checkInput.emailValidation(constants.tableName.drivers),
     checkInput.contactNumberValidation(constants.tableName.drivers),

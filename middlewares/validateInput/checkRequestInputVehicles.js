@@ -4,7 +4,7 @@ const checkInput = require(`./checkRequestBodyInput`);
 const url = require(`../../utils/url_helper`);
 
 
-exports.isServiceProviderIdEntered = (tableName) =>async (req, res, next) =>
+exports.isServiceProviderIdEntered = (tableName) => async (req, res, next) =>
 {
     if (!req.body.service_provider_id) 
     {
@@ -30,7 +30,7 @@ exports.isServiceProviderIdEntered = (tableName) =>async (req, res, next) =>
         }
         else if(data.length > 0)
         {
-            // console.log('service provider id Present');
+            console.log('service provider id Present');
             next()          
         }
         else
@@ -641,7 +641,7 @@ function hasOnlyNonSpaces(str)
     }
 }
 
-exports.isValidVehicleNumberEntered = (tableName) => async (req, res, next) =>
+exports.isValidVehicleNumberEntered =  async (req, res, next) =>
 {
     if (!req.body.vehicle_number) 
     {

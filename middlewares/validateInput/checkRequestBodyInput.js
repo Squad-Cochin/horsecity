@@ -99,6 +99,7 @@ const validDatePassword = (password) =>
 exports.validateCommonInputAtStartingTime = (tableName, feildName, Value, id, messageFeild) => async (req, res, next) =>
 {
     let checkEntry = await commonfetching.dataOnCondition(tableName, Value, feildName, id, messageFeild);
+    // console.log(`Check Entry: `, checkEntry);
     if(checkEntry === `err`)
     {
         return res.status(500).json

@@ -174,7 +174,7 @@ exports.updateStatus= async (req, res) =>
 exports.removeDriver = async (req, res) =>
 {
     const drivers = await driver.removedriver(req.params.id);
-    // console.log(drivers);
+    // console.log('Here: ',drivers);
     if(drivers.length === 0)
     {
         console.log('No driver data present and remove is not done');
