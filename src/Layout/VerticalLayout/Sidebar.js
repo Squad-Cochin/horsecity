@@ -11,39 +11,60 @@ import { Link } from "react-router-dom";
 //i18n
 import { withTranslation } from "react-i18next";
 import { findIndex } from "lodash";
+import config from '../../config'
 const Sidebar = (props) => {
   
   const [modules, setModules] =  useState([]);
   const [sidebar_items,setSidebar_items] = useState([]);
 
+  const module_items = config.modules
     /**This hook is used to fetch service provider data */
     useEffect(() => {
-      const modules = JSON.parse(localStorage.getItem("authUser"))[1]?.modules;
-      setModules(modules)
+      const data = JSON.parse(localStorage.getItem("authUser"))
+      const modules = data[1]?.modules;
       const sidebarItems = sidebarData.filter((element) => 
       modules.some((value) => element.id === value.module_id)
       );
 
 
-      let customer_id = 4
-      const check = sidebarItems.find((value) =>
-         value.id  == customer_id 
-      );
-  
+      const role = config.Role
+      const user_role = data[0]?.user[0]?.role_Id
 
-      if(!check){
+      // if(user_role === role.service_provider){
+
+      //   const updatedSidebarItem = {
+      //     ...sidebarData[11],
+      //     subItem: sidebarData[11]?.subItem.filter(sub => sub.id !== 1) //Sub modules reports customer id 
+      //   };
+      //   console.log("uppp",updatedSidebarItem);
+      //   const updatedSidebarItems = [...sidebarItems];
+      //   const find_index = updatedSidebarItems.findIndex((value) => value.id === 12);
+
+      //   updatedSidebarItems[find_index] = updatedSidebarItem;
+      //   setSidebar_items(updatedSidebarItems);
+      // }
+      /**Checking customer */
+      const checkCustomer = sidebarItems.find((value) =>
+      value.id  == module_items.customers
+       );
+   
         const updatedSidebarItem = {
           ...sidebarData[11],
-          subItem: sidebarData[11]?.subItem.filter(sub => sub.sublabel !== 'Customers')
+          subItem: sidebarData[11]?.subItem.filter(sub => {
+            // sub.id !== 2 && sub.id !== 1
+            if(!checkCustomer && user_role === role.service_provider ){
+              return sub.id !== 2 && sub.id !== 1
+            }else{
+              return true ;
+            }
+          }) 
         };
         const updatedSidebarItems = [...sidebarItems];
-        const find_index = updatedSidebarItems.findIndex((value) => value.label === 'Reports');
+        const find_index = updatedSidebarItems.findIndex((value) => value.id === 12);
 
         updatedSidebarItems[find_index] = updatedSidebarItem;
         setSidebar_items(updatedSidebarItems);
-      }else{
-        setSidebar_items(sidebarItems)
-      }
+
 
 
   }, [])
@@ -168,12 +189,15 @@ const Sidebar = (props) => {
       }
     }
   }
-  // console.log("SIDE",sidebar_items);
-  // console.log("side22",sidebarData);
+  const isDropdown = () =>{
+
+  }
+  console.log("SIDE",sidebar_items);
+  console.log("side22",sidebarData);
   return (
     <React.Fragment>
       <div className="vertical-menu">
-        <SimpleBar className="h-100" ref={ref}> 
+        <SimpleBar className="h-100" ref={ref}>
           <div id="sidebar-menu">
             <ul className="metismenu list-unstyled" id="side-menu-item">
               {/* {(sidebar_items || []).map((item, key) => ( */}
@@ -187,6 +211,7 @@ const Sidebar = (props) => {
                     <li key={key}>
                       <Link
                             to={item.url ? item.url : "/#"}
+                            onClick={isDropdown()}
                         className={
                           (item.issubMenubadge || item.isHasArrow)
                             ? " "

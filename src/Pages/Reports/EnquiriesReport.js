@@ -20,7 +20,7 @@ const EnquiryReport  = () => {
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const pageLimit = config.pageLimit;
-
+    
     useEffect(()=>{
         const today = new Date();
         const sixtyDaysAgo = new Date(today);
@@ -30,7 +30,10 @@ const EnquiryReport  = () => {
             from_date : sixtyDaysAgo,
             to_date : today,
         }
-        getData(1, value)
+        const data = JSON.parse(localStorage.getItem("authUser"));
+        let userID = data[0]?.user[0]?.id ;
+      
+        getData(1, value,userID)
     },[])
 
     const initialValues = { 
@@ -47,14 +50,16 @@ const EnquiryReport  = () => {
         }
     });
 
-    async function getData(page, val){
+    async function getData(page, val,spId){
         setFromDate(val.from_date)
         setToDate(val.to_date)
-        console.log("val",val)
-        let getAllData = await getEnquiryReport(page || 1, val)
+
+        let getAllData = await getEnquiryReport(page || 1, val,spId)
+        console.log("DATA",getAllData);
         setEnquiryReport(getAllData?.enquiries);
         setPageNumber(page);
         setNumberOfData(getAllData?.totalCount);
+
     }
 
     return (

@@ -30,7 +30,9 @@ const TripDetailsReport  = () => {
             from_date : sixtyDaysAgo,
             to_date : today,
         }
-        getData(1, value)
+        const data = JSON.parse(localStorage.getItem("authUser"));
+        let userId = data[0]?.user[0]?.id ;
+        getData(1, value,userId)
     },[])
 
     const initialValues = { 
@@ -47,14 +49,17 @@ const TripDetailsReport  = () => {
         }
     });
 
-    async function getData(page, val){
+    async function getData(page, val,spId){
         setFromDate(val.from_date)
         setToDate(val.to_date)
         console.log("val",val)
-        let getAllData = await getTripDetailsReport(page || 1, val)
+        if(spId){
+        let getAllData = await getTripDetailsReport(page || 1, val,spId)
         setTripDetailsReport(getAllData?.tripDetails);
         setPageNumber(page);
         setNumberOfData(getAllData?.totalCount);
+
+        }
     }
 
     return (

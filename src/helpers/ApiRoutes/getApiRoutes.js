@@ -693,14 +693,14 @@ export async function getSingleAccountsData(id){
 
 
 
-export async function getSeviceProviderReport(pageNumber, val){
+export async function getSeviceProviderReport(pageNumber, val,spId){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = val;
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        const { data } = await axios.post(`${url.POST_SERVICE_PROVIDER_REPORT_URL}`,reqObj);
+        const { data } = await axios.post(`${url.POST_SERVICE_PROVIDER_REPORT_URL}/${spId}`,reqObj);
         console.log(data)
         return(data)
     } catch (error) {
@@ -717,14 +717,14 @@ export async function getSeviceProviderReport(pageNumber, val){
     }
 }
 
-export async function getCustomerReport(pageNumber, val){
+export async function getCustomerReport(pageNumber, val,spId){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = val;
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        const { data } = await axios.post(`${url.POST_CUSTOMER_REPORT_URL}`,reqObj);
+        const { data } = await axios.post(`${url.POST_CUSTOMER_REPORT_URL}/${spId}`,reqObj);
         console.log(data)
         return(data)
     } catch (error) {
@@ -741,14 +741,14 @@ export async function getCustomerReport(pageNumber, val){
     }
 }
 
-export async function getDriverReport(pageNumber, val){
+export async function getDriverReport(pageNumber, val,spId){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = val;
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        const { data } = await axios.post(`${url.POST_DRIVERS_REPORT_URL}`,reqObj);
+        const { data } = await axios.post(`${url.POST_DRIVERS_REPORT_URL}/${spId}`,reqObj);
         console.log(data)
         return(data)
     } catch (error) {
@@ -765,14 +765,15 @@ export async function getDriverReport(pageNumber, val){
     }
 }
 
-export async function getVehicleReport(pageNumber, val){
+export async function getVehicleReport(pageNumber, val,spId){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = val;
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        const { data } = await axios.post(`${url.POST_VEHICLES_REPORT_URL}`,reqObj);
+        console.log("spId",spId);
+        const { data } = await axios.post(`${url.POST_VEHICLES_REPORT_URL}/${spId}`,reqObj);
         console.log(data)
         return(data)
     } catch (error) {
@@ -789,14 +790,14 @@ export async function getVehicleReport(pageNumber, val){
     }
 }
 
-export async function getEnquiryReport(pageNumber, val){
+export async function getEnquiryReport(pageNumber, val,spId){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = val;
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        const { data } = await axios.post(`${url.POST_ENQUIRIES_REPORT_URL}`,reqObj);
+        const { data } = await axios.post(`${url.POST_ENQUIRIES_REPORT_URL}/${spId}`,reqObj);
         console.log(data)
         return(data)
     } catch (error) {
@@ -813,14 +814,14 @@ export async function getEnquiryReport(pageNumber, val){
     }
 }
 
-export async function getQuotationReport(pageNumber, val){
+export async function getQuotationReport(pageNumber, val,spId){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = val;
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        const { data } = await axios.post(`${url.POST_QUOTATIONS_REPORT_URL}`,reqObj);
+        const { data } = await axios.post(`${url.POST_QUOTATIONS_REPORT_URL}/${spId}`,reqObj);
         console.log(data)
         return(data)
     } catch (error) {
@@ -837,14 +838,14 @@ export async function getQuotationReport(pageNumber, val){
     }
 }
 
-export async function getTripDetailsReport(pageNumber, val){
+export async function getTripDetailsReport(pageNumber, val,spId){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = val;
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        const { data } = await axios.post(`${url.POST_TRIP_DETAILS_REPORT_URL}`,reqObj);
+        const { data } = await axios.post(`${url.POST_TRIP_DETAILS_REPORT_URL}/${spId}`,reqObj);
         console.log(data)
         return(data)
     } catch (error) {
@@ -861,14 +862,14 @@ export async function getTripDetailsReport(pageNumber, val){
     }
 }
 
-export async function getAccountsReport(pageNumber, val){
+export async function getAccountsReport(pageNumber, val,spId){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = val;
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        const { data } = await axios.post(`${url.POST_ACCOUNTS_REPORT_URL}`,reqObj);
+        const { data } = await axios.post(`${url.POST_ACCOUNTS_REPORT_URL}/${spId}`,reqObj);
         console.log(data)
         return(data)
     } catch (error) {
@@ -885,14 +886,14 @@ export async function getAccountsReport(pageNumber, val){
     }
 }
 
-export async function getInvoiceReport(pageNumber, val){
+export async function getInvoiceReport(pageNumber, val,spId){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = val;
         reqObj.page = pageNumber
         reqObj.limit = pageLimit
         console.log("reachapi",reqObj)
-        const { data } = await axios.post(`${url.POST_INVOICE_REPORT_URL}`,reqObj);
+        const { data } = await axios.post(`${url.POST_INVOICE_REPORT_URL}/${spId}`,reqObj);
         console.log(data)
         return(data)
     } catch (error) {
