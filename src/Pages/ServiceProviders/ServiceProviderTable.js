@@ -44,7 +44,7 @@ const ListTables = () => {
     {
         const data = JSON.parse(localStorage.getItem("authUser"));
         let userIdd = data[0]?.user[0]?.id
-        console.log(userIdd);
+        console.log("data",data);
         setUserId(userIdd);
         getAllData(1)
     }, [userId])
@@ -218,7 +218,10 @@ console.log("MMMM",userId);
                                             <th className="email" data-sort="email">Email</th>
                                             <th className="contactperson" data-sort="contactperson">Contact Person</th>
                                             <th className="phone" data-sort="phone">Contact Number</th>
+                                            {JSON.parse(module?.create ||  'true') ? (
                                             <th className="status" data-sort="status">Status</th>
+                                            ) : null
+                                            }
                                             <th className="action" data-sort="action">Action</th>
                                             </tr>
                                         </thead>
@@ -230,6 +233,7 @@ console.log("MMMM",userId);
                                                 <td className="email">{value.email}</td>
                                                 <td className="contact_person">{value.contact_person}</td>
                                                 <td className="phone">{value.contact_no}</td>
+                                                {JSON.parse(module?.create ||  'true') ?(
                                                 <td className="status">
                                                     {value.status === "ACTIVE" ?
                                                         <button
@@ -251,6 +255,7 @@ console.log("MMMM",userId);
 
                                                     }
                                                 </td>
+                                                ) : null }
                                                 <td>
                                                 <div className="d-flex gap-2">
                                                 {JSON.parse(module?.read ||  'true') ?(
