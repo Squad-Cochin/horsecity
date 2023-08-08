@@ -134,13 +134,13 @@ const InvoiceDetails = () =>
   });
 
     const handleSendEmail = async () => {
-      const { recepientEmail, invoiceSubject, invoiceBody } = validation.values;
+      const { recepientEmail, invoiceSubject} = validation.values;
       console.log("values", validation.values);
-      const sendEmailResponse = await sendEmail(
+      const sendEmailResponse = await sendEmail
+      (
         sendEmailButtonData[0]?.id, // Pass the invoice number as an argument
         recepientEmail,
-        invoiceSubject,
-        invoiceBody
+        invoiceSubject
       );  
       console.log('Send Email Response:', sendEmailResponse);
     };
@@ -480,18 +480,18 @@ const InvoiceDetails = () =>
                  <div className="tm_container">
                  <div className="mb-3">
                    <label htmlFor="recipient-email-field" className="form-label">To:</label>
-                   <input type="text" id="recipient-email-field" name="emailInvoice" className="form-control" value={validation.values.recepientEmail|| ""} onChange={validation.handleChange} onBlur={validation.handleBlur} />
+                   <input type="text" id="recipient-email-field" name="recepientEmail" className="form-control" value={validation.values.recepientEmail|| ""} onChange={validation.handleChange} />
                  </div>
                  <div className="mb-3">
                     <label htmlFor="subject-field">Subject:</label>
-                    <input type="text" id="subject-field" name="subject email" className="form-control" value={validation.values.invoiceSubject || ""} onChange={validation.handleChange} onBlur={validation.handleBlur} />
+                    <input type="text" id="subject-field" name="invoiceSubject" className="form-control" value={validation.values.invoiceSubject || ""} onChange={validation.handleChange} onBlur={validation.handleBlur} />
                   </div>
                </div>
               ) : (
                 <div className="tm_container">
                   <div className="mb-3">
                     <label htmlFor="recipient-email-field" className="form-label">To:</label>
-                    <input type="text" id="recipient-email-field" name="recipient email" className="form-control" value={validation.values.email || ""} onChange={validation.handleChange} onBlur={validation.handleBlur} />
+                    <input type="text" id="recipient-email-field" name="recipientemail" className="form-control" value={validation.values.email || ""} onChange={validation.handleChange} onBlur={validation.handleBlur} />
                   </div>
                   <div className="mb-3">
                     <label htmlFor="subject-field">Subject:</label>

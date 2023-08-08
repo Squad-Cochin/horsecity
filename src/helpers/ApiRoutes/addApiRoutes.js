@@ -312,7 +312,6 @@ import * as url from "../url_helper";
             console.log(`Id we got from the front end while sending the invoice at email`, id);
             console.log(`Email we got from the front end while sending the invoice at email`, email);
             console.log(`Subject we got from the front end while sending the invoice at email`, subject);
-            console.log(`Body we got from the front end while sending the invoice at email`, body);
             const formData = new FormData();
             const response = await axios.post(`${url.POST_SENT_INVOICE_ON_EMAIL}/${id}`, formData,
             {

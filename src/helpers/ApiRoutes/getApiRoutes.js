@@ -69,15 +69,15 @@ export async function getSPUserName(){
     }
 }
 
-export async function getCustomersData(pageNumber){
+export async function getCustomersData(pageNumber, uId){
     try {
         let pageLimit = config.pageLimit;
         let reqObj = {
             "page" : pageNumber,
             "limit" : pageLimit
         }
-        const { data } = await axios.post(`${url.GET_CUSTOMER_ALL_DATA_URL}`,reqObj);
-        console.log("ddd",data)
+        const { data } = await axios.post(`${url.GET_CUSTOMER_ALL_DATA_URL}/${uId}`,reqObj);
+        console.log("Get all customers",data)
         return(data)
     } catch (error) {
         let errorObj =  {
