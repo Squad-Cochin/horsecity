@@ -113,6 +113,7 @@ exports.addNewServiceProviders = (requestBody,file) =>
         VALUES ('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}','${role_id}', '${contact_person}', '${contact_no}', '${contact_address}', '${emergency_contact_no}', '${uploadAttachment}', '${licence_no}', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
          
         con.query(insQuery,async(err,data)=>{
+            console.log("data",data);
             if(!err){
                 resolve(true)
             }

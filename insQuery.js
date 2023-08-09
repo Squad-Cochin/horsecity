@@ -78,7 +78,6 @@ INSERT INTO `permissions` (`role_id`, `module_id`, `create`, `update`, `read`, `
 (2, 10, 'false', 'true', 'true', 'false'),
 (2, 11, 'false', 'false', 'true', 'false'),
 (2, 12, 'false', 'false', 'false', 'false'),
-(2, 13, 'false', 'false', 'false', 'false'),
 (3, 1, 'false', 'false', 'true', 'false'),
 (3, 2, 'false', 'false', 'false', 'false'),
 (3, 3, 'true', 'true', 'true', 'true'),
