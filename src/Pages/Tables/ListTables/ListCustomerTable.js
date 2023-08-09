@@ -185,7 +185,8 @@ const ListCustomerTable = () => {
         {
             console.log(`User id at the time of getall function in the customer page`, userId);
             let getCustomers = await getCustomersData(page || 1, userId);
-            console.log(getCustomers)
+            console.log('Id:', userId);
+            console.log('Customers: ', getCustomers)
             setCustomers(getCustomers?.customer);
             setModule(getCustomers.module[0]);
             setPageNumber(page);

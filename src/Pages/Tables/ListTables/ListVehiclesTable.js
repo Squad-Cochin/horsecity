@@ -42,7 +42,7 @@ const ListVehiclesTable = () =>
     const [userId, setUserId ] = useState("");
     const [ role, setRole ] = useState(false);
     const [module,setModule] = useState({});
-    const [user_name, setuser_name] = useState(false)
+    const [user_name, setuser_name] = useState('')
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("")
     const pageLimit = config.pageLimit;
@@ -54,7 +54,7 @@ const ListVehiclesTable = () =>
      const initialValues = 
      {
          service_provider: !add_list ? vehicle[0]?.service_provider : '',
-         service_provider_id: !add_list ? vehicle[0]?.service_provider_id : '',
+         service_provider_id:  !add_list ? vehicle[0]?.service_provider_id : '',
          vehicle_number: !add_list ? vehicle[0]?.vehicle_number : '',
          make: !add_list ? vehicle[0]?.make : '',
          model: !add_list ? vehicle[0]?.model : '',
@@ -186,6 +186,9 @@ const ListVehiclesTable = () =>
         initialValues, // Initial values for the form
         onSubmit: (values) =>{
             values.safety_certicate = certificateImage
+            if(role === role_name.service_provider){
+                values.service_provider_id = userId
+            }
             if (add_list) 
             {   
                 addVechile(values);
@@ -407,9 +410,15 @@ const ListVehiclesTable = () =>
                         {/* The below element is adding the name of the service provider. Whose vehicle is being added */}
                         {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
                         <div className="mb-3">
+                        {role === role_name.admin ? (
                             <label htmlFor="serviceprovider-field" className="form-label">
                                 Service Provider
                             </label>
+                                      ) : (
+                                        // <input type="text" value={user_name || ""} />
+                                        null
+                                    
+                                    )}
                             {role === role_name.admin ? (
                                 <select
                                     data-trigger
@@ -430,15 +439,7 @@ const ListVehiclesTable = () =>
                                 </select>
                             ) : (
                                 // <input type="text" value={user_name || ""} />
-                                <input
-                                type="text"
-                                id="user_name-field"
-                                name='make'
-                                className="form-control"
-                                value={user_name || ""}
-                                // onChange={validation.handleChange}
-                                placeholder="Enter Vehicle Company"                                
-                            />
+                                null
                             
                             )}
 

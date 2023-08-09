@@ -27,8 +27,6 @@ import { getQuotationData, getConfirmQut, getSingleQuotationData, getSPVehiclesD
 import { sendEmailFunction } from "../../../helpers/ApiRoutes/addApiRoutes";
 import { updatQuotation, confirmQuotation } from "../../../helpers/ApiRoutes/editApiRoutes";
 import { useFormik } from "formik";
-import { set } from "lodash";
-
 
 const ListQuotationsTable = () => {
   const [ view_modal, setView_modal ] = useState(false);

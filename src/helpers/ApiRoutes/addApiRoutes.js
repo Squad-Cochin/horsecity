@@ -301,63 +301,65 @@ import * as url from "../url_helper";
 
 
     /**
-     * Sending mail of the invoice
-     */
+ * Sending mail of the invoice
+ */
 
-    export async function sendEmail(id, email, subject, body)
+export async function sendEmail(id, email, subject)
+{
+    try
     {
-        try
+        console.log("Data we got from in the sendEmail")
+        console.log(`Id we got from the front end while sending the invoice at email`, id);
+        console.log(`Email we got from the front end while sending the invoice at email`, email);
+        console.log(`Subject we got from the front end while sending the invoice at email`, subject);
+        const formData = new FormData();
+        formData.append('recepientEmail', email);
+        formData.append('invoiceSubject', subject);
+        const response = await axios.post(`${url.POST_SENT_INVOICE_ON_EMAIL}/${id}`, formData,
         {
-            console.log("Data we got from in the sendEmail")
-            console.log(`Id we got from the front end while sending the invoice at email`, id);
-            console.log(`Email we got from the front end while sending the invoice at email`, email);
-            console.log(`Subject we got from the front end while sending the invoice at email`, subject);
-            const formData = new FormData();
-            const response = await axios.post(`${url.POST_SENT_INVOICE_ON_EMAIL}/${id}`, formData,
+            headers:
             {
-                headers:
-                {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            console.log("Response from the send email: ",response)
-            return response;            
-        }
-        catch (error)
-        {
-            let errObj =
-            {
-                code : 500 , 
-                error : "Failed !"
-            }
-            return errObj;        
-        }
-    };
-    export async function sendEmailFunction(id, data)
-    {
-        try {
-            const formData = new FormData();
-            // Append the object data to the FormData instance
-            for (const key in data) {
-                formData.append(key, data[key]);
-            }
-            // Send the form data as a POST request using Axios
-            const response = await axios.post(`${url.POST_SEND_QUT_EMAIL_URL}/${id}`, formData, {
-                headers: {
                 'Content-Type': 'multipart/form-data'
-                }
-            });
-            console.log("rss",response)
-            // console.log("response",response)
-            return response
-        } catch (error) {
-            let errObj = {
-                code : 500 , 
-                error : "Faild !"
             }
-            return errObj;
+        });
+        console.log("Response from the send email: ",response)
+        return response;            
+    }
+    catch (error)
+    {
+        let errObj =
+        {
+            code : 500 , 
+            error : "Failed !"
         }
-    };
+        return errObj;        
+    }
+};
+export async function sendEmailFunction(id, data)
+{
+    try {
+        const formData = new FormData();
+        // Append the object data to the FormData instance
+        for (const key in data) {
+            formData.append(key, data[key]);
+        }
+        // Send the form data as a POST request using Axios
+        const response = await axios.post(`${url.POST_SEND_QUT_EMAIL_URL}/${id}`, formData, {
+            headers: {
+            'Content-Type': 'multipart/form-data'
+            }
+        });
+        console.log("rss",response)
+        // console.log("response",response)
+        return response
+    } catch (error) {
+        let errObj = {
+            code : 500 , 
+            error : "Faild !"
+        }
+        return errObj;
+    }
+};
 
     /**Add new service provider */
     export async function updateTripStatus(data){

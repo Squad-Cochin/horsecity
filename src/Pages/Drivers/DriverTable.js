@@ -443,7 +443,7 @@ const ListTables = () =>
             {/* The below line is for the pop up of edit and add driver */}
             <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
                 {/* The below line is for the heading of pop up of edit and add driver */}
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); tog_list(add_list ? 'ADD' : 'EDIT'); }}>{add_list ? 'Add Driver' : 'Edit Driver'} </ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); setAdd_list(false); }}>{add_list ? 'Add Driver' : 'Edit Driver'} </ModalHeader>
                 <form className="tablelist-form"
                  onSubmit={validation.handleSubmit}>
                     <ModalBody>
@@ -561,7 +561,7 @@ const ListTables = () =>
             {/* This is the view button model. We will get all the details of a particular driver */}
             <Modal className="extra-width" isOpen={view_modal} toggle={() => { tog_view('view'); }} >
                 {/* The below line is for the heading of pop up of view driver */}
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel"toggle={() => { setView_modal(false); tog_view('view'); }}>View Driver</ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel"toggle={() => { setView_modal(false); }}>View Driver</ModalHeader>
                 <form className="tablelist-form"
                  onSubmit={validation.handleSubmit}>
                     <ModalBody>
