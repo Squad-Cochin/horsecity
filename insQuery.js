@@ -1,38 +1,16 @@
-/**
- * 
- * INSERT INTO currencies (name, abbreviation, created_at)
-VALUES
-    ('US Dollar', 'USD', NOW())
+INSERT INTO currencies (name, abbreviation, created_at)
+VALUES ('Dirham', 'AED', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}')
+
 INSERT INTO languages (name, file, abbreviation, created_at)
-VALUES
-    ('English', 'en_us.json', 'EN', NOW())
+VALUES ('English', 'en_us.json', 'EN', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}')
 
 INSERT INTO taxations (type, name, value, created_at)
-VALUES
-    ('FLAT', 'Fixed Tax', 10.00, NOW()),
-    ('PERCENTAGE', 'Sales Tax', 7.5, NOW())
+VALUES ('FLAT', 'Fixed Tax', 10.00, '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'), ('PERCENTAGE', 'Sales Tax', 7.5, '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}')
 
 INSERT INTO discount_types (name, type, rate, created_at)
-VALUES ('EID OFFER', 'PERCENTAGE', 15.00, NOW());
+VALUES ('EID OFFER', 'PERCENTAGE', 15.00, '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}');
 
-INSERT INTO application_settings (
-    id,
-    application_title,
-    contact_address,
-    email,
-    phone,
-    country_code,
-    logo,
-    loginpage_logo,
-    loginpage_bg_image,
-    favicon,
-    language_id,
-    currency_id,
-    tax_id,
-    licence_number,
-    invoice_prefix,
-    quotation_prefix,
-    deleted_at
+INSERT INTO application_settings (id,application_title, contact_address, email, phone, country_code, logo, loginpage_logo, loginpage_bg_image, favicon, language_id, currency_id, tax_id, licence_number, invoice_prefix, quotation_prefix, created_at
 ) VALUES (
     1,
     'Your Application Title',
@@ -50,30 +28,29 @@ INSERT INTO application_settings (
     '12345-ABC',
     'INV',
     'QUO',
-    NULL    -- Deleted_at is initially NULL
+    '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'
 );
 
 INSERT INTO roles (name, created_at)
 VALUES
-    ('SERVICE PROVIDER', NOW()),
-    ('ADMIN', NOW()),
-    ('SUPER ADMIN', NOW());
+    ('SERVICE PROVIDER', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
+    ('ADMIN', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
+    ('SUPER ADMIN', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}');
 
-INSERT INTO modules (name, created_at)
-VALUES
-    ('MENU', NOW()),
-    ('DASHBOARD', NOW()),
-    ('SERVICE PROVIDER', NOW()),
-    ('CUSTOMERS', NOW()),
-    ('VEHICLES', NOW()),
-    ('DRIVERS', NOW()),
-    ('ENQUIRIES', NOW()),
-    ('QUOTATIONS', NOW()),
-    ('TRIP DETAILS', NOW()),
-    ('INVOICES', NOW()),
-    ('ACCOUNTS', NOW()),
-    ('REPORTS', NOW()),
-    ('APPLICATION SETTINGS', NOW());
+INSERT INTO modules (name, created_at) VALUES
+    ('MENU', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
+    ('DASHBOARD', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
+    ('SERVICE PROVIDER', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
+    ('CUSTOMERS', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
+    ('VEHICLES', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
+    ('DRIVERS', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
+    ('ENQUIRIES', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
+    ('QUOTATIONS', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
+    ('TRIP DETAILS', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
+    ('INVOICES', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
+    ('ACCOUNTS', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
+    ('REPORTS', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
+    ('APPLICATION SETTINGS', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}');
 
 
 INSERT INTO `permissions` (`role_id`, `module_id`, `create`, `update`, `read`, `delete`) VALUES
@@ -115,6 +92,6 @@ INSERT INTO `permissions` (`role_id`, `module_id`, `create`, `update`, `read`, `
 (3, 11, 'false', 'false', 'true', 'false'),
 (3, 12, 'false', 'false', 'false', 'false'),
 (3, 13, 'false', 'false', 'false', 'false');
- * 
- * 
- */
+
+// We need to enter the service provider first one
+// Password Policies are also nee to be updated from the backend
