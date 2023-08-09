@@ -105,10 +105,10 @@ exports.addNewServiceProviders = (requestBody,file) =>
         {  
        
         let uploadAttachment = await commonoperation.fileUpload(file, constants.attachmentLocation.serviceProvider.licenceImage.upload);
-        const {name,email,user_name,password,contact_person,contact_no,emergency_contact_no,contact_address,licence_no} = requestBody ;
+        const {name,email,user_name,password,contact_person,contact_no,emergency_contact_no,contact_address,licence_no,role_id} = requestBody ;
 
-        let insQuery = `INSERT INTO ${constants.tableName.service_providers} (name, email, user_name, password, contact_person, contact_no, contact_address, emergency_contact_no, licence_image, licence_no, expiry_at, created_at)
-        VALUES ('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_person}', '${contact_no}', '${contact_address}', '${emergency_contact_no}', '${uploadAttachment}', '${licence_no}', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+        let insQuery = `INSERT INTO ${constants.tableName.service_providers} (name, email, user_name, password,role_Id , contact_person, contact_no, contact_address, emergency_contact_no, licence_image, licence_no, expiry_at, created_at)
+        VALUES ('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}','${role_id}', '${contact_person}', '${contact_no}', '${contact_address}', '${emergency_contact_no}', '${uploadAttachment}', '${licence_no}', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
          
         con.query(insQuery,async(err,data)=>{
             if(!err){
@@ -135,11 +135,13 @@ exports.updateServiceProvider = (requestBody,file,id) =>
         }else if(uploadLicence.message == invalidAttachment ||
                 uploadLicence ){
 
-        const {name,email,user_name,contact_person,contact_no,emergency_contact_no,contact_address,licence_no} = requestBody ;
+        const {name,email,user_name,contact_person,contact_no,emergency_contact_no,contact_address,licence_no,role_id,service_provider_id} = requestBody ;
+        console.log(constants.Roles.service_provider,service_provider_id);
         let updateQuery = `UPDATE ${constants.tableName.service_providers} SET 
         name = '${name}',
         email = '${email}',
         user_name = '${user_name}',
+        ${constants.Roles.service_provider == service_provider_id ? '' :  `role_Id = ${role_id}`},
         contact_person = '${contact_person}',
         contact_no = '${contact_no}',
         contact_address = '${contact_address}',
@@ -151,6 +153,7 @@ exports.updateServiceProvider = (requestBody,file,id) =>
         WHERE id = '${id}'`;
     
         con.query(updateQuery,async(err,data)=>{
+            console.log(data,err);
             if(data?.length != 0 ){
                 resolve({status : "SUCCESS"})
             }else{
@@ -172,8 +175,9 @@ exports.getOneServiceProvider = (id) =>
     {
         try
         {   
-            const selQuery = `SELECT sp.id, sp.name, sp.email, sp.user_name, sp.contact_person, sp.contact_no, sp.contact_address, sp.emergency_contact_no, sp.licence_no, sp.licence_image
+            const selQuery = `SELECT sp.id, sp.name, sp.email,rl.name AS role_name,sp.role_Id AS role_id, sp.user_name, sp.contact_person, sp.contact_no, sp.contact_address, sp.emergency_contact_no, sp.licence_no, sp.licence_image
             FROM ${constants.tableName.service_providers} AS sp
+            JOIN ${constants.tableName.roles} AS rl ON sp.role_Id   = rl.id
             WHERE sp.id = '${id}'`
 
             con.query(selQuery,async(err,data)=>{

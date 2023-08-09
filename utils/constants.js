@@ -207,8 +207,13 @@ module.exports =
         service_provider : 'SERVICE PROVIDER',
         admin : 'ADMIN',
         superAdmin : 'SUPER ADMIN'
+    },
+    Roles : 
+    {
+      admin : 1,
+      service_provider : 2,
+      super_admin : 3
     }
-  
 
 
 

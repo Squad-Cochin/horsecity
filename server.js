@@ -109,47 +109,7 @@ INSERT INTO application_settings (
 );
  */
 
-
-/**
-     * Adding amount to the invoice
-     */
-
-export async function addAmount(id, amount)
-{
-    try
-    {
-        console.log("Amount : ",amount)
-        console.log(`Invoice id at the time of adding the payment data in the table`, id);
-        const formData = new FormData();
-        // for (const key in data) {
-        //     formData.append(key, data[key]);
-        // }
-        formData.append('totalRecievedAmount', amount);
-        const response = await axios.post(`${url.POST_ADD_AMOUNT_URL}/${id}`, formData,
-        {
-            headers:
-            {
-                'Content-Type': 'multipart/form-data'
-            }
-        });
-        console.log("Response from the add amount: ",response)
-        return response;            
-    }
-    catch (error) 
-    {
-        let errObj =
-        {
-            code : 500 , 
-            error : "Failed !"
-        }
-        return errObj;        
-    }
-};
-
-
-/**
- * Sending mail of the invoice
- */
+ 
 
 // export async function sendEmail(id, email, subject)
 // {
