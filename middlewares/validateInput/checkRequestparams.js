@@ -202,6 +202,7 @@ exports.CheckRole = async (req, res, next) =>
                 }
                 else 
                 {
+                    console.log(`Are we coming over here`);
                     if (result[0].name === constants.roles.service_provider) 
                     {
                         const selQuery = `SELECT * FROM drivers d WHERE d.name = '${req.body.name}' AND d.email = '${req.body.email}' AND d.contact_no = '${req.body.contact_no}' AND d.emergency_contact_no = '${req.body.emergency_contact_no}' AND d.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}' AND d.description = '${req.body.description}' AND d.licence_no = '${req.body.licence_no}' AND d.deleted_at IS NOT NULL`; // Your query here
@@ -209,11 +210,11 @@ exports.CheckRole = async (req, res, next) =>
                         const result22 = await queryAsync(selQuery);
                         if (result22.length != 0)
                         {
-                            // console.log('result22');
+                            console.log('result22');
                             uploadlicence_img = await commonoperation.fileUploadTwo(req.files.licence_img, constants.attachmentLocation.driver.upload.licence);                        
                             uploadprofile_image = await commonoperation.fileUploadTwo(req.files.profile_image, constants.attachmentLocation.driver.upload.profilephoto);                                                
                             const upQuery = `UPDATE drivers d SET d.deleted_at = NULL, d.licence_img = '${uploadlicence_img}', d.profile_image = '${uploadprofile_image}' WHERE d.id = ${result22[0].id}`;
-                            // console.log(upQuery);
+                            console.log(upQuery);
                             const result23 = await queryAsync(upQuery);
                             if (result23.affectedRows > 0)
                             {
@@ -251,7 +252,7 @@ exports.CheckRole = async (req, res, next) =>
                         }
                         else 
                         {
-                            // console.log(`else condtion`);
+                            console.log(`else condtion`);
                             const selQuery2 = `SELECT * FROM drivers d WHERE d.name = '${req.body.name}' AND d.email = '${req.body.email}' AND d.contact_no = '${req.body.contact_no}' AND d.emergency_contact_no = '${req.body.emergency_contact_no}' AND d.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}' AND d.description = '${req.body.description}' AND d.licence_no = '${req.body.licence_no}' AND d.deleted_at IS NULL`;
 
                             // console.log('Second sel query: ',selQuery2);
@@ -290,7 +291,7 @@ exports.CheckRole = async (req, res, next) =>
                             }
                             else
                             {
-                                // console.log(`else condtion 3`);
+                                console.log(`else condtion 3`);
                                 const selQuery4 = `SELECT * FROM drivers d WHERE d.email = '${req.body.email}' AND d.contact_no = '${req.body.contact_no}' AND d.licence_no = '${req.body.licence_no}' AND d.deleted_at IS NOT NULL`;   
                                 uploadlicence_img = await commonoperation.fileUploadTwo(req.files.licence_img, constants.attachmentLocation.driver.upload.licence);
                                 uploadprofile_image = await commonoperation.fileUploadTwo(req.files.profile_image, constants.attachmentLocation.driver.upload.profilephoto); 
@@ -313,7 +314,7 @@ exports.CheckRole = async (req, res, next) =>
                                     const upResult4 = await queryAsync(upQuery);
                                     if(upResult4.affectedRows > 0)
                                     {
-                                        // console.log(`upResult4`);
+                                        console.log(`upResult4`);
                                         const assign = await assignserviceprovider(result4[0].id, req.params.id);
                                         if (assign === 'datainserted')
                                         {
@@ -330,7 +331,7 @@ exports.CheckRole = async (req, res, next) =>
                                 }
                                 else
                                 {
-                                    // console.log(`else condtion 4`);
+                                    console.log(`else condtion 4`);
                                     const selQuery5 = `SELECT * FROM drivers d WHERE d.contact_no = '${req.body.contact_no}' AND d.licence_no = '${req.body.licence_no}' AND d.deleted_at IS NOT NULL`;
                                     // console.log(selQuery5);
                                     const result5 = await queryAsync(selQuery5);
@@ -370,7 +371,7 @@ exports.CheckRole = async (req, res, next) =>
                                     }
                                     else
                                     {
-                                        // console.log(`Else Condition 5`);
+                                        console.log(`Else Condition 5`);
                                         const selQuery6 = `SELECT * FROM drivers d WHERE d.email = '${req.body.email}' AND d.licence_no = '${req.body.licence_no}' AND d.deleted_at IS NOT NULL`;
                                         // console.log(`Select query 6: `, selQuery6);
                                         const result6 = await queryAsync(selQuery6);
@@ -395,7 +396,7 @@ exports.CheckRole = async (req, res, next) =>
                                             const upResult6 = await queryAsync(upQuery);
                                             if(upResult6.affectedRows > 0)
                                             {
-                                                // console.log(`upResult6`);
+                                                console.log(`upResult6`);
                                                 const assign = await assignserviceprovider(result6[0].id, req.params.id);
                                                 if (assign === 'datainserted')
                                                 {
@@ -410,10 +411,52 @@ exports.CheckRole = async (req, res, next) =>
                                                 }
                                             }
                                         }
-                                        else    
+                                        else
                                         {
-                                            console.log('else inside else');
-                                            next();
+                                            console.log(`Else Condition 6`);
+                                            const selQuery7 = `SELECT * FROM drivers d WHERE d.email = '${req.body.email}' AND  d.contact_no = '${req.body.contact_no}' AND d.deleted_at IS NOT NULL`;
+                                            console.log(`Select query 7: `, selQuery7);
+                                            const result7 = await queryAsync(selQuery7);
+                                            console.log('Result 7: ', result7);
+                                            if(result7.length != 0)
+                                            {
+                                                let uploadlicence_img = await commonoperation.fileUploadTwo(req.files.licence_img, constants.attachmentLocation.driver.upload.licence);
+                                                let uploadprofile_image = await commonoperation.fileUploadTwo(req.files.profile_image, constants.attachmentLocation.driver.upload.profilephoto);
+                                                let upQuery = `UPDATE drivers d 
+                                                            SET d.name ='${req.body.name}',
+                                                            d.licence_no = '${req.body.licence_no}',
+                                                            d.emergency_contact_no = '${req.body.emergency_contact_no}',
+                                                            d.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
+                                                            d.profile_image = '${uploadprofile_image}',
+                                                            d.licence_img = '${uploadlicence_img}',
+                                                            d.description = '${req.body.description}',
+                                                            d.status = '${constants.status.active}',
+                                                            d.deleted_at = NULL
+                                                            WHERE d.id = ${result7[0].id}`;
+                                                console.log(upQuery);
+                                                const upResult7 = await queryAsync(upQuery);
+                                                if(upResult7.affectedRows > 0)
+                                                {
+                                                    console.log(`upResult7`);
+                                                    const assign = await assignserviceprovider(result7[0].id, req.params.id);
+                                                    if (assign === 'datainserted')
+                                                    {
+                                                        // console.log(assign);
+                                                        console.log('Driver data inserted successfully');
+                                                        return res.status(200).send
+                                                        ({
+                                                            code: 200,
+                                                            status: true,
+                                                            message: ` Driver ${constants.responseMessage.insert}`,
+                                                        });
+                                                    }
+                                                }
+                                            }
+                                            else    
+                                            {
+                                                console.log('else inside else');
+                                                next();
+                                            }
                                         }
                                     }                   
                                 }

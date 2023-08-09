@@ -34,6 +34,7 @@ module.exports = class invoices
                     }
                     if(result[0].name === constants.roles.admin || result[0].name === constants.roles.superAdmin)
                     {
+
                         const offset = (pageNumber - 1) * pageSize;
                         let selQuery = `SELECT i.id, i.invoice_no, i.quotation_prefix_id, c.name, c.email, i.status
                                         FROM invoices i
@@ -188,6 +189,7 @@ module.exports = class invoices
                                     DATE_FORMAT(q.drop_date, '%d-%m-%Y') AS drop_date,
                                     q.special_requirement,
                                     e.no_of_horse,
+                                    pr.id AS paymentId,
                                     pr.total_amount,
                                     COALESCE(pr.received_amount, 0) AS received_amount,
                                     DATE_FORMAT(pr.received_date, '%d-%m-%Y') AS received_date,
@@ -202,7 +204,8 @@ module.exports = class invoices
                                     JOIN payment_records pr ON pr.invoice_id = i.id
                                     JOIN vehicles v ON v.id = i.vehicle_id
                                     JOIN drivers dr ON dr.id = i.driver_id
-                                    WHERE i.id = ${Id}`;
+                                    WHERE i.id = ${Id} ORDER BY
+                                    remaining_amount DESC;`;
                     // console.log('Data is not in the booking table query: ',selQuery);
                     con.query(selQuery, (err, result) =>
                     {
@@ -256,6 +259,7 @@ module.exports = class invoices
                                     invoiceResponse.payment.push
                                     ({
                                         "id": row.id,
+                                        "paymentRecord_Id" : row.paymentId,
                                         "total_amount": row.iFinalAmount,
                                         "received_amount": row.received_amount,
                                         "received_date": row.received_date,
@@ -326,6 +330,7 @@ module.exports = class invoices
                                         q.drop_location,
                                         DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date,
                                         DATE_FORMAT(q.drop_date, '%d-%m-%Y') AS drop_date,
+                                        pr.id AS paymentId,
                                         q.special_requirement,
                                         e.no_of_horse,
                                         pr.total_amount,
@@ -342,7 +347,7 @@ module.exports = class invoices
                                         JOIN payment_records pr ON pr.invoice_id = i.id
                                         JOIN vehicles v ON v.id = i.vehicle_id
                                         JOIN drivers dr ON dr.id = i.driver_id
-                                        WHERE i.id = ${Id}`;
+                                        WHERE i.id = ${Id} ORDER BY remaining_amount DESC; `;
                         // console.log('Data is not in the booking table query: ',selQuery);
                         con.query(selQuery, (err, result) =>
                         {
@@ -396,6 +401,7 @@ module.exports = class invoices
                                         invoiceResponse.payment.push
                                         ({
                                             "id": row.id,
+                                            "paymentRecord_Id" : row.paymentId,
                                             "total_amount": row.iFinalAmount,
                                             "received_amount": row.received_amount,
                                             "received_date": row.received_date,
@@ -459,6 +465,7 @@ module.exports = class invoices
                         sp.name AS service_provider_name,
                         i.quot_id AS quotation_id,
                         q.pickup_location,
+                        pr.id AS paymentId,
                         q.drop_location,
                         DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date,
                         DATE_FORMAT(q.drop_date, '%d-%m-%Y') AS drop_date,
@@ -478,7 +485,7 @@ module.exports = class invoices
                         JOIN payment_records pr ON pr.invoice_id = i.id
                         JOIN vehicles v ON v.id = i.vehicle_id
                         JOIN drivers dr ON dr.id = i.driver_id
-                        WHERE i.id = ${Id}`;
+                        WHERE i.id = ${Id} ORDER BY remaining_amount DESC;`;
                         // console.log(selQuery);
                         con.query(selQuery, (err, result) =>
                         {
@@ -531,6 +538,7 @@ module.exports = class invoices
                                         invoiceResponse.payment.push
                                         ({
                                             "id": row.id,
+                                            "paymentRecord_Id" : row.paymentId,
                                             "total_amount": row.iFinalAmount,
                                             "received_amount": row.received_amount,
                                             "received_date": row.received_date,
@@ -581,6 +589,7 @@ module.exports = class invoices
                             DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
                             v.vehicle_number AS vehicle_no,
                             dr.name AS dName,
+                            pr.id AS paymentId,
                             c.name AS customer_name,
                             q.pickup_time AS Ptime,
                             q.drop_time AS Dtime,
@@ -619,7 +628,7 @@ module.exports = class invoices
                             JOIN payment_records pr ON pr.invoice_id = i.id
                             JOIN vehicles v ON v.id = i.vehicle_id
                             JOIN drivers dr ON dr.id = i.driver_id
-                            WHERE i.id = ${Id}`;
+                            WHERE i.id = ${Id} ORDER BY remaining_amount DESC;`;
                             // console.log('Data is not in the booking table query: ',selQuery);
                             con.query(selQuery, (err, result) =>
                             {
@@ -673,6 +682,7 @@ module.exports = class invoices
                                             invoiceResponse.payment.push
                                             ({
                                                 "id": row.id,
+                                                "paymentRecord_Id" : row.paymentId,
                                                 "total_amount": row.iFinalAmount,
                                                 "received_amount": row.received_amount,
                                                 "received_date": row.received_date,
@@ -727,6 +737,7 @@ module.exports = class invoices
                             t.value AS iTaxRate,
                             i.tax_amount AS iTaxAmount,
                             d.rate AS iDiscountRate,
+                            pr.id AS paymentId,
                             i.discount_amount AS iDiscountAmount,
                             i.final_amount AS iFinalAmount,
                             sp.name AS service_provider_name,
@@ -751,7 +762,7 @@ module.exports = class invoices
                             JOIN payment_records pr ON pr.invoice_id = i.id
                             JOIN vehicles v ON v.id = i.vehicle_id
                             JOIN drivers dr ON dr.id = i.driver_id
-                            WHERE i.id = ${Id}`;
+                            WHERE i.id = ${Id} ORDER BY remaining_amount DESC;`;
                             // console.log(selQuery);
                             con.query(selQuery, (err, result) =>
                             {
@@ -804,6 +815,7 @@ module.exports = class invoices
                                             invoiceResponse.payment.push
                                             ({
                                                 "id": row.id,
+                                                "paymentRecord_Id" : row.paymentId,
                                                 "total_amount": row.iFinalAmount,
                                                 "received_amount": row.received_amount,
                                                 "received_date": row.received_date,
