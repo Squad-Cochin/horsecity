@@ -153,9 +153,11 @@ const Sidebar = (props) => {
   const activeMenu = useCallback(() => {
     const pathName = props.router.location.pathname;
     const fullPath = pathName;
+    console.log("fullpath",fullPath)
     let matchingMenuItem = null;
     const ul = document.getElementById("side-menu-item");
     const items = ul.getElementsByTagName("a");
+    console.log("items",items)
     removeActivation(items);
     for (let i = 0; i < items.length; ++i) {
       if (fullPath === items[i].pathname) {
@@ -177,10 +179,10 @@ const Sidebar = (props) => {
     new MetisMenu("#side-menu-item");
     activeMenu();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-  useEffect(() => {
-    activeMenu();
-  }, [activeMenu]);
+  }, [sidebar_items]);
+  // useEffect(() => {
+  //   activeMenu();
+  // }, [activeMenu]);
   function scrollElement(item) {
     if (item) {
       const currentPosition = item.offsetTop;
@@ -192,8 +194,8 @@ const Sidebar = (props) => {
   const isDropdown = () =>{
 
   }
-  console.log("SIDE",sidebar_items);
-  console.log("side22",sidebarData);
+  //console.log("SIDE",sidebar_items);
+  //console.log("side22",sidebarData);
   return (
     <React.Fragment>
       <div className="vertical-menu">
@@ -210,13 +212,13 @@ const Sidebar = (props) => {
                   ) : (
                     <li key={key}>
                       <Link
-                            to={item.url ? item.url : "/#"}
+                            to={item.url ? item.url : null}
                             onClick={isDropdown()}
-                        className={
-                          (item.issubMenubadge || item.isHasArrow)
-                            ? " "
-                            : "has-arrow"
-                        }
+                            className={
+                              (item.issubMenubadge || item.isHasArrow)
+                                ? " "
+                                : "has-arrow"
+                            }
                       >
                         <i
                           className={item.icon}

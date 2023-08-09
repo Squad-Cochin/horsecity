@@ -220,7 +220,7 @@ console.log("MMMM",userId);
                                             <th className="email" data-sort="email">Email</th>
                                             <th className="contactperson" data-sort="contactperson">Contact Person</th>
                                             <th className="phone" data-sort="phone">Contact Number</th>
-                                            {(!config.Role.service_provider  === role)? (
+                                            {!(config.Role.service_provider  === role)? (
                                             <th className="status" data-sort="status">Status</th>
                                             ) : null
                                             }
@@ -235,7 +235,7 @@ console.log("MMMM",userId);
                                                 <td className="email">{value.email}</td>
                                                 <td className="contact_person">{value.contact_person}</td>
                                                 <td className="phone">{value.contact_no}</td>
-                                                {(!config.Role.service_provider  === role)? (
+                                                {!(config.Role.service_provider  === role)? (
                                                 <td className="status">
                                                     {value.status === "ACTIVE" ?
                                                         <button
