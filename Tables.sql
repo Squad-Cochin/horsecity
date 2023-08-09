@@ -2,21 +2,6 @@
 						================================
 
 
-
-CREATE TABLE application_tokens 
-(
-    id INT(11) PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    token VARCHAR(55),
-    type ENUM('MOBILE','WEB','PWA'),
-    status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    token_generated_date DATETIME ,
-    token_expiry_date DATETIME DEFAULT NULL,
-    created_at DATETIME ,
-    updated_at DATETIME DEFAULT NULL 
-);
-
 CREATE TABLE currencies 
 (
     id INT(11) AUTO_INCREMENT PRIMARY KEY,
@@ -51,6 +36,32 @@ CREATE TABLE taxations
     updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL 
 );
+
+CREATE TABLE discount_types
+(
+    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    name CHAR(50) NOT NULL,
+    type ENUM('PERCENTAGE', 'FLAT'),
+    rate DECIMAL(15,2) NOT NULL,
+    status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
+    deleted_at DATETIME DEFAULT NULL   
+);
+CREATE TABLE application_tokens 
+(
+    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    username VARCHAR(50) NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    token VARCHAR(55),
+    type ENUM('MOBILE','WEB','PWA'),
+    status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
+    token_generated_date DATETIME ,
+    token_expiry_date DATETIME DEFAULT NULL,
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL 
+);
+
 
 CREATE TABLE application_settings (
     id INT(11) PRIMARY KEY,
@@ -165,6 +176,24 @@ CREATE TABLE password_policies
     updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL
 );
+
+CREATE TABLE drivers
+(
+    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    name VARCHAR(155) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    contact_no VARCHAR(15) UNIQUE NOT NULL,
+    emergency_contact_no VARCHAR(15),
+    date_of_birth VARCHAR(15) NOT NULL,
+    profile_image VARCHAR(255),
+    licence_no VARCHAR(100) NOT NULL UNIQUE,
+    licence_img VARCHAR(255) NOT NULL UNIQUE,
+    status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
+    description VARCHAR(255),
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL ,
+    deleted_at DATETIME DEFAULT NULL   
+);
 CREATE TABLE assign_drivers
 (
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -172,9 +201,10 @@ CREATE TABLE assign_drivers
     FOREIGN KEY (service_provider_id) REFERENCES service_providers(id),
     driver_id INT(11),
     FOREIGN KEY (driver_id) REFERENCES drivers(id),
-    created_at DATETIME ,
+    created_at DATETIME,
     deleted_at DATETIME DEFAULT NULL
 );
+
 
 
 CREATE TABLE customer_logs
@@ -307,34 +337,6 @@ CREATE TABLE calculate_amount_types
     deleted_at DATETIME DEFAULT NULL   
 );
 
-CREATE TABLE discount_types
-(
-    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    name CHAR(50) NOT NULL,
-    type ENUM('PERCENTAGE', 'FLAT'),
-    rate DECIMAL(15,2) NOT NULL,
-    status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME ,
-    updated_at DATETIME DEFAULT NULL ,
-    deleted_at DATETIME DEFAULT NULL   
-);
-CREATE TABLE drivers
-(
-    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    name VARCHAR(155) NOT NULL,
-    email VARCHAR(150) UNIQUE NOT NULL,
-    contact_no VARCHAR(15) UNIQUE NOT NULL,
-    emergency_contact_no VARCHAR(15),
-    date_of_birth VARCHAR(15) NOT NULL,
-    profile_image VARCHAR(255),
-    licence_no VARCHAR(100) NOT NULL UNIQUE,
-    licence_img VARCHAR(255) NOT NULL UNIQUE,
-    status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    description VARCHAR(255),
-    created_at DATETIME ,
-    updated_at DATETIME DEFAULT NULL ,
-    deleted_at DATETIME DEFAULT NULL   
-);
 
 CREATE TABLE vehicles_images
 (
