@@ -33,12 +33,12 @@ exports.getAllServiceProviders = (requestBody,spId) =>
                     JOIN ${constants.tableName.roles} rl ON sp.role_Id = rl.id
                     WHERE sp.deleted_at IS NULL
                     AND (
-                        ('${role}' = '${constants.roles.admin}')
+                        ('${role_id}' = '${constants.Roles.admin}')
                         OR
-                        ('${role}' = '${constants.roles.admin}')
+                        ('${role_id}' = '${constants.Roles.super_admin}')
                         OR
                         (
-                            '${role}' = '${constants.roles.service_provider}'
+                            '${role_id}' = '${constants.Roles.service_provider}'
                             AND sp.id = '${spId}'
                         )
                     )
@@ -53,10 +53,12 @@ exports.getAllServiceProviders = (requestBody,spId) =>
                         const totalCountQuery = `SELECT count(*) FROM service_providers sp
                                                 WHERE sp.deleted_at IS NULL
                                                 AND (
-                                                    ('${role}' = '${constants.roles.admin}')
+                                                    ('${role_id}' = '${constants.Roles.admin}')
+                                                    OR
+                                                    ('${role_id}' = '${constants.Roles.super_admin}')
                                                     OR
                                                     (
-                                                        '${role}' = '${constants.roles.service_provider}'
+                                                        '${role_id}' = '${constants.Roles.service_provider}'
                                                         AND sp.id = '${spId}'
                                                     )
                                                 )`
@@ -76,7 +78,7 @@ exports.getAllServiceProviders = (requestBody,spId) =>
                                     con.query(Query,(err,result)=>{
                                         // console.log("result",result);
                                         if(!err){
-                                  
+                        
                                             resolve({totalCount : count, serviceProviders : data ,module : result})
                                         }
                                 })

@@ -25,10 +25,10 @@ exports.getAllAcounts = (requestBody,spId) =>
             con.query(selRoleName,(err,data)=>{ 
               
                 if(data.length != 0){ 
-                    let role_name = data[0].role_name ;
+                
 
                     let role_id = data[0].id
-
+   
             const selQuery = `SELECT pr.id, inv.quotation_prefix_id AS quotation_id, cu.name AS customer_name, sp.name AS service_provider_name,
                         pr.total_amount AS total_amount, pr.remaining_amount AS pending_amount,pr.status
                         FROM payment_records AS pr
@@ -41,12 +41,13 @@ exports.getAllAcounts = (requestBody,spId) =>
                             FROM payment_records
                             GROUP BY invoice_id
                         ) max_pr ON pr.id = max_pr.max_id
-                        WHERE  ('${role_name}' = '${constants.roles.admin}')
+                        WHERE 
+                         ('${role_id}' = '${constants.Roles.admin}')
                         OR
-                        ('${role_name}' = '${constants.roles.admin}')
+                        ('${role_id}' = '${constants.Roles.super_admin}')
                         OR
                         (
-                          '${role_name}' = '${constants.roles.service_provider}'
+                          '${role_id}' = '${constants.Roles.service_provider}'
                           AND inv.service_provider_id = '${spId}'
                         )
                         ORDER BY pr.invoice_id DESC
@@ -67,18 +68,18 @@ exports.getAllAcounts = (requestBody,spId) =>
                             JOIN ${constants.tableName.invoices} AS inv ON pr.invoice_id = inv.id
                             JOIN ${constants.tableName.service_providers} AS sp ON inv.service_provider_id = sp.id
                             WHERE (
-                                '${role_name}' = '${constants.roles.admin}'
-                                OR
+                                ${role_id} = '${constants.Roles.admin}' OR
+                                ${role_id} = '${constants.Roles.super_admin}' OR
                                 (
-                                    '${role_name}' = '${constants.roles.service_provider}'
-                                    AND sp.id = '${spId}'
+                                    ${role_id} = '${constants.Roles.service_provider}' AND
+                                    sp.id = ${spId}
                                 )
                             )
                             GROUP BY inv.id
                         ) AS latest_payment_records
-                        `
+                         `
                         con.query(totalCountQuery,(err,result)=>{
-                            console.log(result);
+                            console.log(err);
                             if(!err){
                                 const count = result[0]['COUNT(*)'];
 
@@ -93,7 +94,7 @@ exports.getAllAcounts = (requestBody,spId) =>
 
 
                                       con.query(Query,(err,modules)=>{
-                                        // console.log("result",result);
+                                        console.log("result",modules);
                                         if(!err){
                                   
                                   

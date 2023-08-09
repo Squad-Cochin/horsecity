@@ -25,7 +25,7 @@ exports.getAllEnquiries = (requestBody,spId) =>
             con.query(selRoleName,(err,data)=>{ 
     
                 if(data.length != 0){ 
-                    console.log(data); 
+          
                     let role_name = data[0].role_name ;
 
                     let role_id = data[0].id
@@ -34,12 +34,12 @@ exports.getAllEnquiries = (requestBody,spId) =>
             FROM ${constants.tableName.enquiries} AS enq
             JOIN ${constants.tableName.customers} cu ON enq.customer_id = cu.id
             JOIN ${constants.tableName.service_providers} sp ON enq.serviceprovider_id = sp.id
-            WHERE  ('${role_name}' = '${constants.roles.admin}')
+            WHERE  ('${role_id}' = '${constants.Roles.admin}')
             OR
-            ('${role_name}' = '${constants.roles.admin}')
+            ('${role_id}' = '${constants.Roles.super_admin}')
             OR
             (
-              '${role_name}' = '${constants.roles.service_provider}'
+              '${role_id}' = '${constants.Roles.service_provider}'
               AND enq.serviceprovider_id = '${spId}'
             )
             LIMIT ${+limit} OFFSET ${+offset}`;
@@ -49,12 +49,12 @@ exports.getAllEnquiries = (requestBody,spId) =>
 
                     const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.enquiries} enq
                     JOIN ${constants.tableName.service_providers} sp ON enq.serviceprovider_id = sp.id
-                                            WHERE  ('${role_name}' = '${constants.roles.admin}')
+                                            WHERE  ('${role_id}' = '${constants.Roles.admin}')
                                             OR
-                                            ('${role_name}' = '${constants.roles.admin}')
+                                            ('${role_id}' = '${constants.Roles.super_admin}')
                                             OR
                                             (
-                                            '${role_name}' = '${constants.roles.service_provider}'
+                                            '${role_id}' = '${constants.Roles.service_provider}'
                                             AND enq.serviceprovider_id = '${spId}'
                                             )`
                     // resolve(result);
@@ -80,7 +80,7 @@ exports.getAllEnquiries = (requestBody,spId) =>
                                         // console.log("result",result);
                                         if(!err){
                                   
-                                            console.log("data",data);
+                                            console.log("dataaa",data);
                                             resolve({totalCount : count, enquiries : data,module : result})
                                         }
                                 })

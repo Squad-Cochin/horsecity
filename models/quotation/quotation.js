@@ -113,12 +113,12 @@ exports.ListQuotation = (requestBody,spId) => {
                     JOIN ${constants.tableName.service_providers} sp ON quo.serviceprovider_id  = sp.id
                     WHERE quo.deleted_at IS NULL
                     AND (
-                        ('${role_name}' = '${constants.roles.admin}')
+                        ('${role_id}' = '${constants.Roles.admin}')
                         OR
-                        ('${role_name}' = '${constants.roles.superAdmin}')
+                        ('${role_id}' = '${constants.Roles.super_admin}')
                         OR
                         (
-                            '${role_name}' = '${constants.roles.service_provider}'
+                            '${role_id}' = '${constants.Roles.service_provider}'
                             AND sp.id = '${spId}'
                         )
                     )
@@ -133,12 +133,12 @@ exports.ListQuotation = (requestBody,spId) => {
                     JOIN ${constants.tableName.service_providers} sp ON quo.serviceprovider_id = sp.id
                                              WHERE quo.deleted_at IS NULL
                                              AND (
-                                                ('${role_name}' = '${constants.roles.admin}')
+                                                ('${role_id}' = '${constants.Roles.admin}')
                                                 OR
-                                                ('${role_name}' = '${constants.roles.admin}')
+                                                ('${role_id}' = '${constants.Roles.admin}')
                                                 OR
                                                 (
-                                                    '${role_name}' = '${constants.roles.service_provider}'
+                                                    '${role_id}' = '${constants.Roles.service_provider}'
                                                     AND sp.id = '${spId}'
                                                 )
                                             )`
@@ -160,7 +160,7 @@ exports.ListQuotation = (requestBody,spId) => {
                                         // console.log("result",result);
                                         if(!err){
                                   
-                                  
+                                  console.log("donnee");
                                             resolve({ totalCount: count, quotations: quo ,module : modules})
                                         }
                                 })

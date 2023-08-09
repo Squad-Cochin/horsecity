@@ -28,16 +28,16 @@ exports.getReportsServiceProviders = (requestBody,fromDate,toDate,spID) =>
             con.query(selRoleName,(err,data)=>{ 
               
                 if(data.length != 0){ 
-                    let role_name = data[0].role_name ;
-
-
+                 
+                    let role_id  = data[0].id
+                        console.log(data[0]);
             const selQuery = `SELECT sp.id, sp.name AS service_provider_name, sp.contact_person, sp.contact_address, sp.contact_no AS contact_number, sp.created_at, sp.status
             FROM ${constants.tableName.service_providers} AS sp
             WHERE sp.deleted_at IS NULL AND sp.created_at BETWEEN '${fromDate}' AND '${toDate}'
             AND (
-                ('${role_name}' = '${constants.roles.admin}')
+                ('${role_id}' = '${constants.Roles.admin}')
                 OR
-                ('${role_name}' = '${constants.roles.superAdmin}')
+                ('${role_id}' = '${constants.Roles.super_admin}')
             )
             LIMIT ${+limit} OFFSET ${+offset}`;
         
@@ -51,9 +51,9 @@ exports.getReportsServiceProviders = (requestBody,fromDate,toDate,spID) =>
                     const totalCountQuery = `SELECT count(*) FROM service_providers sp
                                              WHERE sp.deleted_at IS NULL AND sp.created_at BETWEEN '${fromDate}' AND '${toDate}'
                                              AND (
-                                                ('${role_name}' = '${constants.roles.admin}')
+                                                ('${role_id}' = '${constants.Roles.admin}')
                                                 OR
-                                                ('${role_name}' = '${constants.roles.superAdmin}')
+                                                ('${role_id}' = '${constants.Roles.super_admin}')
                                              )`
                              con.query(totalCountQuery,(err,result)=>{
                         if(!err){
@@ -96,14 +96,14 @@ exports.getReportsCustomers = (requestBody,fromDate,toDate,spID) =>
             con.query(selRoleName,(err,data)=>{ 
               
                 if(data.length != 0){ 
-                    let role_name = data[0].role_name ;
-
+            
+                    let role_id  = data[0].id
 
             const selQuery = `SELECT cu.id, cu.name AS customer_name, cu.email,cu.contact_no AS contact_number,cu.created_at, cu.status
             FROM ${constants.tableName.customers} AS cu
-            WHERE cu.deleted_at IS NULL AND cu.created_at BETWEEN '${fromDate}' AND '${toDate}' AND ('${role_name}' = '${constants.roles.admin}' 
+            WHERE cu.deleted_at IS NULL AND cu.created_at BETWEEN '${fromDate}' AND '${toDate}' AND ('${role_id}' = '${constants.Roles.admin}' 
             OR 
-            '${role_name}' = '${constants.roles.superAdmin}' )
+            '${role_id}' = '${constants.Roles.super_admin}' )
             LIMIT ${+limit} OFFSET ${+offset}`;
             con.query(selQuery,(err,data)=>{
 
@@ -113,9 +113,9 @@ exports.getReportsCustomers = (requestBody,fromDate,toDate,spID) =>
                         data[i].created_at = `${time.formatDateToDDMMYYYY(data[i].created_at)}`;
                     }
                     const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.customers} cu
-                                             WHERE cu.deleted_at IS NULL AND cu.created_at BETWEEN '${fromDate}' AND '${toDate}' AND ('${role_name}' = '${constants.roles.admin}' 
+                                             WHERE cu.deleted_at IS NULL AND cu.created_at BETWEEN '${fromDate}' AND '${toDate}' AND ('${role_id}' = '${constants.Roles.admin}' 
                                              OR 
-                                             '${role_name}' = '${constants.roles.superAdmin}' )`
+                                             '${role_id}' = '${constants.Roles.super_admin}' )`
                     con.query(totalCountQuery,(err,result)=>{
                         if(!err){
                             const count = result[0]['count(*)'];
@@ -158,19 +158,20 @@ exports.getReportsVehicles = (requestBody,fromDate,toDate,spID) =>
             con.query(selRoleName,(err,data)=>{ 
               
                 if(data.length != 0){ 
-                    let role_name = data[0].role_name ;
-
+          
+                    let role_id  = data[0].id
+                    console.log(data[0].id);
                     const selQuery = `SELECT vh.id, sp.name AS service_provider_name,vh.make,vh.model,vh.no_of_horse AS max_no_horse, vh.vehicle_number ,vh.vehicle_registration_date,vh.created_at,vh.status
                     FROM ${constants.tableName.vehicles} AS vh
                     JOIN ${constants.tableName.service_providers} sp ON vh.service_provider_id  = sp.id
                     WHERE vh.deleted_at IS NULL AND vh.created_at BETWEEN '${fromDate}' AND '${toDate}'
                     AND (
-                        ('${role_name}' = '${constants.roles.admin}')
+                        ('${role_id}' = '${constants.Roles.admin}')
                         OR
-                        ('${role_name}' = '${constants.roles.superAdmin}')
+                        ('${role_id}' = '${constants.Roles.super_admin}')
                         OR
                         (
-                            '${role_name}' = '${constants.roles.service_provider}'
+                            '${role_id}' = '${constants.Roles.service_provider}'
                             AND sp.id = '${spID}'
                         )
                     )
@@ -188,12 +189,12 @@ exports.getReportsVehicles = (requestBody,fromDate,toDate,spID) =>
                             JOIN ${constants.tableName.service_providers} sp ON vh.service_provider_id  = sp.id
                                                     WHERE vh.deleted_at IS NULL AND vh.created_at BETWEEN '${fromDate}' AND '${toDate}'
                                                     AND (
-                                                        ('${role_name}' = '${constants.roles.admin}')
+                                                        ('${role_id}' = '${constants.Roles.admin}')
                                                         OR
-                                                        ('${role_name}' = '${constants.roles.superAdmin}')
+                                                        ('${role_id}' = '${constants.Roles.super_admin}')
                                                         OR
                                                         (
-                                                            '${role_name}' = '${constants.roles.service_provider}'
+                                                            '${role_id}' = '${constants.Roles.service_provider}'
                                                              AND sp.id = '${spID}'
                                                         )
                                                      )`
@@ -238,20 +239,20 @@ exports.getReportsDrivers = (requestBody,fromDate,toDate,spID) =>
             con.query(selRoleName,(err,data)=>{ 
               
                 if(data.length != 0){ 
-                    let role_name = data[0].role_name ;
 
+                    let role_id  = data[0].id
             const selQuery = `SELECT dvr.id,dvr.name AS driver_name,dvr.email,dvr.contact_no AS contact_number,dvr.created_at,dvr.status
             FROM ${constants.tableName.drivers} dvr
             JOIN ${constants.tableName.assign_drivers} asd ON dvr.id  = asd.driver_id
             JOIN ${constants.tableName.service_providers} sp ON asd.service_provider_id   = sp.id
             WHERE dvr.deleted_at IS NULL AND dvr.created_at BETWEEN '${fromDate}' AND '${toDate}'
             AND (
-                ('${role_name}' = '${constants.roles.admin}')
+                ('${role_id}' = '${constants.Roles.admin}')
                 OR
-                ('${role_name}' = '${constants.roles.superAdmin}')
+                ('${role_id}' = '${constants.Roles.super_admin}')
                 OR
                 (
-                    '${role_name}' = '${constants.roles.service_provider}'
+                    '${role_id}' = '${constants.Roles.service_provider}'
                     AND sp.id = '${spID}'
                 )
             ) AND asd.deleted_at IS NULL
@@ -269,12 +270,12 @@ exports.getReportsDrivers = (requestBody,fromDate,toDate,spID) =>
                     JOIN ${constants.tableName.service_providers} sp ON asd.service_provider_id   = sp.id
                         WHERE dvr.deleted_at IS NULL AND dvr.created_at BETWEEN '${fromDate}' AND '${toDate}'
                         AND (
-                            ('${role_name}' = '${constants.roles.admin}')
+                            ('${role_id}' = '${constants.Roles.admin}')
                             OR
-                            ('${role_name}' = '${constants.roles.superAdmin}')
+                            ('${role_id}' = '${constants.Roles.super_admin}')
                             OR
                             (
-                                '${role_name}' = '${constants.roles.service_provider}'
+                                '${role_id}' = '${constants.Roles.service_provider}'
                                 AND sp.id = '${spID}'
                             )
                         ) AND asd.deleted_at IS NULL`
@@ -319,20 +320,20 @@ exports.getReportsEnquiries = (requestBody,fromDate,toDate,spID) =>
             con.query(selRoleName,(err,data)=>{ 
               
                 if(data.length != 0){ 
-                    let role_name = data[0].role_name ;
-
+           
+                    let role_id  = data[0].id
             const selQuery = `SELECT enq.id AS enquiry_id, cu.name AS customer_name,sp.name AS service_provider_name,enq.created_at,enq.status
             FROM ${constants.tableName.enquiries} AS enq
             JOIN ${constants.tableName.service_providers} sp ON enq.serviceprovider_id  = sp.id
             JOIN ${constants.tableName.customers} cu ON enq.customer_id  = cu.id
             WHERE  enq.created_at BETWEEN '${fromDate}' AND '${toDate}'
             AND (
-                ('${role_name}' = '${constants.roles.admin}')
+                ('${role_id}' = '${constants.Roles.admin}')
                 OR
-                ('${role_name}' = '${constants.roles.superAdmin}')
+                ('${role_id}' = '${constants.Roles.super_admin}')
                 OR
                 (
-                    '${role_name}' = '${constants.roles.service_provider}'
+                    '${role_id}' = '${constants.Roles.service_provider}'
                     AND sp.id = '${spID}'
                 )
             )
@@ -349,12 +350,12 @@ exports.getReportsEnquiries = (requestBody,fromDate,toDate,spID) =>
                     JOIN ${constants.tableName.service_providers} sp ON enq.serviceprovider_id   = sp.id
                                              WHERE enq.created_at BETWEEN '${fromDate}' AND '${toDate}'
                                              AND (
-                                                ('${role_name}' = '${constants.roles.admin}')
+                                                ('${role_id}' = '${constants.Roles.admin}')
                                                 OR
-                                                ('${role_name}' = '${constants.roles.superAdmin}')
+                                                ('${role_id}' = '${constants.Roles.super_admin}')
                                                 OR
                                                 (
-                                                    '${role_name}' = '${constants.roles.service_provider}'
+                                                    '${role_id}' = '${constants.Roles.service_provider}'
                                                     AND sp.id = '${spID}'
                                                 )
                                             )`
@@ -400,20 +401,20 @@ exports.getReportsQuotations = (requestBody,fromDate,toDate,spID) =>
             con.query(selRoleName,(err,data)=>{ 
               
                 if(data.length != 0){ 
-                    let role_name = data[0].role_name ;
-
+             
+                    let role_id  = data[0].id
             const selQuery = `SELECT quo.id,quo.quotation_id AS quotation_id , cu.name AS customer_name,sp.name AS service_provider_name,quo.created_at,quo.status
             FROM ${constants.tableName.quotations} AS quo
             JOIN ${constants.tableName.service_providers} sp ON quo.serviceprovider_id  = sp.id
             JOIN ${constants.tableName.customers} cu ON quo.customer_id  = cu.id
             WHERE quo.deleted_at IS NULL  AND  quo.created_at BETWEEN '${fromDate}' AND '${toDate}'
             AND (
-                ('${role_name}' = '${constants.roles.admin}')
+                ('${role_id}' = '${constants.Roles.admin}')
                 OR
-                ('${role_name}' = '${constants.roles.superAdmin}')
+                ('${role_id}' = '${constants.Roles.super_admin}')
                 OR
                 (
-                    '${role_name}' = '${constants.roles.service_provider}'
+                    '${role_id}' = '${constants.Roles.service_provider}'
                     AND sp.id = '${spID}'
                 )
             )
@@ -430,12 +431,12 @@ exports.getReportsQuotations = (requestBody,fromDate,toDate,spID) =>
                     JOIN ${constants.tableName.service_providers} sp ON quo.serviceprovider_id  = sp.id
                                              WHERE quo.deleted_at IS NULL AND quo.created_at BETWEEN '${fromDate}' AND '${toDate}'
                                              AND (
-                                                ('${role_name}' = '${constants.roles.admin}')
+                                                ('${role_id}' = '${constants.Roles.admin}')
                                                 OR
-                                                ('${role_name}' = '${constants.roles.superAdmin}')
+                                                ('${role_id}' = '${constants.Roles.super_admin}')
                                                 OR
                                                 (
-                                                    '${role_name}' = '${constants.roles.service_provider}'
+                                                    '${role_id}' = '${constants.Roles.service_provider}'
                                                     AND sp.id = '${spID}'
                                                 )
                                             )`
@@ -482,8 +483,8 @@ exports.getReportsTripDetails = (requestBody,fromDate,toDate,spID) =>
             con.query(selRoleName,(err,data)=>{ 
               
                 if(data.length != 0){ 
-                    let role_name = data[0].role_name ;
 
+                    let role_id  = data[0].id
             const selQuery = `SELECT td.id,inv.quotation_prefix_id AS quotation_id , cu.name AS customer_name,sp.name AS service_provider_name,td.pickup_date AS start_date ,td.drop_date AS end_date,td.created_at,td.booking_status AS status
             FROM ${constants.tableName.bookings} AS td
             JOIN ${constants.tableName.service_providers} sp ON td.service_provider_id   = sp.id
@@ -491,12 +492,12 @@ exports.getReportsTripDetails = (requestBody,fromDate,toDate,spID) =>
             JOIN ${constants.tableName.invoices} inv ON td.inv_id   = inv.id
             WHERE td.deleted_at IS NULL AND td.created_at BETWEEN '${fromDate}' AND '${toDate}' 
                                              AND (
-                                                ('${role_name}' = '${constants.roles.admin}')
+                                                ('${role_id}' = '${constants.Roles.admin}')
                                                 OR
-                                                ('${role_name}' = '${constants.roles.superAdmin}')
+                                                ('${role_id}' = '${constants.Roles.superAdmin}')
                                                 OR
                                                 (
-                                                    '${role_name}' = '${constants.roles.service_provider}'
+                                                    '${role_id}' = '${constants.Roles.service_provider}'
                                                     AND sp.id = '${spID}'
                                                 )
                                             )
@@ -515,12 +516,12 @@ exports.getReportsTripDetails = (requestBody,fromDate,toDate,spID) =>
                     JOIN ${constants.tableName.service_providers} sp ON bk.service_provider_id  = sp.id
                                              WHERE bk.deleted_at IS NULL AND bk.created_at BETWEEN '${fromDate}' AND '${toDate}' 
                                              AND (
-                                                ('${role_name}' = '${constants.roles.admin}')
+                                                ('${role_id}' = '${constants.Roles.admin}')
                                                 OR
-                                                ('${role_name}' = '${constants.roles.superAdmin}')
+                                                ('${role_id}' = '${constants.Roles.superAdmin}')
                                                 OR
                                                 (
-                                                    '${role_name}' = '${constants.roles.service_provider}'
+                                                    '${role_id}' = '${constants.Roles.service_provider}'
                                                     AND sp.id = '${spID}'
                                                 )
                                             )`
@@ -566,8 +567,8 @@ exports.getReportsInvoices = (requestBody,fromDate,toDate,spID) =>
             con.query(selRoleName,(err,data)=>{ 
               
                 if(data.length != 0){ 
-                    let role_name = data[0].role_name ;
-
+  
+                    let role_id  = data[0].id
              const selQuery = `SELECT inv.id, inv.invoice_no  AS invoice_id, cu.name AS customer_name, sp.name AS service_provider_name,inv.created_at
                                FROM ${constants.tableName.invoices} AS inv
                                JOIN ${constants.tableName.service_providers} sp ON inv.service_provider_id = sp.id
@@ -575,12 +576,12 @@ exports.getReportsInvoices = (requestBody,fromDate,toDate,spID) =>
                                JOIN ${constants.tableName.customers} cu ON quo.customer_id = cu.id
                                WHERE inv.deleted_at IS NULL AND inv.created_at BETWEEN '${fromDate}' AND '${toDate}'
                                AND (
-                                  ('${role_name}' = '${constants.roles.admin}')
+                                  ('${role_id}' = '${constants.Roles.admin}')
                                   OR
-                                  ('${role_name}' = '${constants.roles.superAdmin}')
+                                  ('${role_id}' = '${constants.Roles.super_admin}')
                                   OR
                                   (
-                                      '${role_name}' = '${constants.roles.service_provider}'
+                                      '${role_id}' = '${constants.Roles.service_provider}'
                                       AND sp.id = '${spID}'
                                   )
                               )
@@ -599,12 +600,12 @@ exports.getReportsInvoices = (requestBody,fromDate,toDate,spID) =>
                     JOIN ${constants.tableName.service_providers} sp ON inv.service_provider_id  = sp.id
                                              WHERE inv.deleted_at IS NULL AND inv.created_at BETWEEN '${fromDate}' AND '${toDate}'
                                              AND (
-                                                ('${role_name}' = '${constants.roles.admin}')
+                                                ('${role_id}' = '${constants.Roles.admin}')
                                                 OR
-                                                ('${role_name}' = '${constants.roles.superAdmin}')
+                                                ('${role_id}' = '${constants.Roles.super_admin}')
                                                 OR
                                                 (
-                                                    '${role_name}' = '${constants.roles.service_provider}'
+                                                    '${role_id}' = '${constants.Roles.service_provider}'
                                                     AND sp.id = '${spID}'
                                                 )
                                             )`
@@ -652,7 +653,7 @@ exports.getAccountsReports = (requestBody,fromDate,toDate,spID) =>
               
                 if(data.length != 0){ 
                     let role_name = data[0].role_name ;
-
+                    let role_id  = data[0].id
             const selQuery = `SELECT pr.id, inv.quotation_prefix_id AS quotation_id, cu.name AS customer_name, sp.name AS service_provider_name,
                         pr.total_amount AS final_amount, pr.remaining_amount,
                         pr.created_at
@@ -668,12 +669,12 @@ exports.getAccountsReports = (requestBody,fromDate,toDate,spID) =>
                         ) max_pr ON pr.id = max_pr.max_id
                         WHERE pr.created_at BETWEEN '${fromDate}' AND '${toDate}'
                         AND (
-                            ('${role_name}' = '${constants.roles.admin}')
+                            ('${role_id}' = '${constants.Roles.admin}')
                             OR
-                            ('${role_name}' = '${constants.roles.superAdmin}')
+                            ('${role_id}' = '${constants.Roles.super_admin}')
                             OR
                             (
-                                '${role_name}' = '${constants.roles.service_provider}'
+                                '${role_id}' = '${constants.Roles.service_provider}'
                                 AND sp.id = '${spID}'
                             )
                         )
@@ -698,12 +699,12 @@ exports.getAccountsReports = (requestBody,fromDate,toDate,spID) =>
                     ) max_pr ON pr.id = max_pr.max_id
                                              WHERE  pr.created_at BETWEEN '${fromDate}' AND '${toDate}'
                                              AND (
-                                                ('${role_name}' = '${constants.roles.admin}')
+                                                ('${role_id}' = '${constants.Roles.admin}')
                                                 OR
-                                                ('${role_name}' = '${constants.roles.superAdmin}')
+                                                ('${role_id}' = '${constants.Roles.super_admin}')
                                                 OR
                                                 (
-                                                    '${role_name}' = '${constants.roles.service_provider}'
+                                                    '${role_id}' = '${constants.Roles.service_provider}'
                                                     AND sp.id = '${spID}'
                                                 )
                                             )`

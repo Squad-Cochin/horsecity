@@ -36,12 +36,12 @@ exports.getAllTripDetails = (requestBody,spId) => {
             JOIN ${constants.tableName.service_providers} sp ON bk.service_provider_id  = sp.id
             WHERE bk.deleted_at IS NULL
             AND (
-                ('${role_name}' = '${constants.roles.admin}')
+                ('${role_id}' = '${constants.Roles.admin}')
                 OR
-                ('${role_name}' = '${constants.roles.admin}')
+                ('${role_id}' = '${constants.Roles.admin}')
                 OR
                 (
-                    '${role_name}' = '${constants.roles.service_provider}'
+                    '${role_id}' = '${constants.Roles.service_provider}'
                     AND sp.id = '${spId}'
                 )
             )
@@ -54,12 +54,12 @@ exports.getAllTripDetails = (requestBody,spId) => {
                     JOIN ${constants.tableName.service_providers} sp ON bk.service_provider_id = sp.id
                     WHERE bk.deleted_at IS NULL
                     AND (
-                       ('${role_name}' = '${constants.roles.admin}')
+                       ('${role_id}' = '${constants.Roles.admin}')
                        OR
-                       ('${role_name}' = '${constants.roles.admin}')
+                       ('${role_id}' = '${constants.Roles.admin}')
                        OR
                        (
-                           '${role_name}' = '${constants.roles.service_provider}'
+                           '${role_id}' = '${constants.Roles.service_provider}'
                            AND sp.id = '${spId}'
                        )
                    )`
@@ -89,6 +89,7 @@ exports.getAllTripDetails = (requestBody,spId) => {
                          con.query(Query,(err,modules)=>{
                             // console.log("result",result);
                             if(!err){
+                 
                             resolve({ totalCount: count, tripDetails: data,module: modules })
                                 
                            
