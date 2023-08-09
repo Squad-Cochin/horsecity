@@ -94,10 +94,12 @@ const ListTables = () =>
         initialValues,
         onSubmit: (values) =>
         {
+            values.licence_img = updateLiscenceImage;
+            values.profile_image = updateProfileImage;
             if (add_list) {
                 //add new
-                values.licence_img = updateLiscenceImage;
-                values.profile_image = updateProfileImage;
+                // values.licence_img = updateLiscenceImage;
+                // values.profile_image = updateProfileImage;
                 addDriver(values)
             } else if(assignSP){
                 assignNewProvider(values)
@@ -114,6 +116,7 @@ const ListTables = () =>
         // Get the selected file from the event
         const file = event.target.files[0];    
         // Update the state variable 'updateImage' with the selected file
+        console.log(`Profile Image Chnage Data: `, file);
         setUpdateProfileImage(file);
         // Generate a preview URL for the selected image using the URL.createObjectURL method
         const previewURL = URL.createObjectURL(file); 
@@ -125,6 +128,7 @@ const ListTables = () =>
     const handleLicenceImageChange = (event) => 
     {
       const file = event.target.files[0];
+      console.log(`Licence Image File Data: `, file);
       setUpdateLiscenceImage(file)
       setLicenceImagePreview(URL.createObjectURL(file));
     };   
@@ -221,7 +225,7 @@ const ListTables = () =>
 
     // function for edit driver
     async function editDriver(data){
-        console.log("first",data)
+        console.log("Data at the editing",data)
         let updatedDriver = await updateDriver(driver[0]?.id, data);
         if(updatedDriver.code === 200){
             setErrors("")

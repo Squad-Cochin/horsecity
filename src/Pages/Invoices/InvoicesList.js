@@ -923,7 +923,7 @@ const InvoiceDetails = () =>
                       </div>
                     </div>
                   </div>
-                  {!downloadingPDF && ( <Button color="primary" style={{ marginBottom: '1rem' }} onClick={toggleModal}> Enter Amount </Button> )}
+                  {downloadingPDF || ledg[ledg.length - 1].remaining_amount == 0  ? null :  ( <Button color="primary" style={{ marginBottom: '1rem' }} onClick={toggleModal}> Enter Amount </Button> )}
                     <div className="tm_padd_15_20 no-padding tm_round_border .tm_table_responsive">
                       <p className="tm_mb5"><b className="tm_primary_color"></b></p>
                         <table>
@@ -991,7 +991,7 @@ const InvoiceDetails = () =>
                 </div>
               </ModalBody>
               <ModalFooter>
-              <Button color="primary" type='submit'>Save</Button>
+              <Button color="primary" type='submit'> Save </Button>
               <Button color="secondary" onClick={toggleModal}>Cancel</Button>
             </ModalFooter>
             </form>        
