@@ -53,15 +53,15 @@ const ListEnquiriesTable = () => {
     const [ errors, setErrors ] = useState("")
 
     const pageLimit = config.pageLimit;
-    const role_name  = config.roles
+    const role_id  = config.Role
     //  The useEffect hook is used to perform some initialization logic when the component mounts
 
     useEffect(() => {
         const data = JSON.parse(localStorage.getItem("authUser"));
         console.log("UUUU",data);
         let userIdd = data[0]?.user[0]?.id
-        let role_name = data[0]?.user[0]?.role_name
-        setRole(role_name)
+        let role_id = data[0]?.user[0]?.role_Id
+        setRole(role_id)
         console.log(userIdd);
         setUserId(userIdd);
         getAllData(1)
@@ -447,7 +447,7 @@ const ListEnquiriesTable = () => {
                                                         {/* This are the columns and column heading in the enquiry page */}
                                                         <th className="index" data-sort="index">#</th>
                                                         <th className="sort" data-sort="customer_name">Customer Name</th>
-                                                        { !(role === role_name.service_provider)  ?(
+                                                        {!(role === role_id.service_provider)   ?(
                                                         <th className="sort" data-sort="service_provider">Service Provider Name</th>
                                                         ): null}
                                                         <th className="sort" data-sort="status">Status</th>
@@ -465,7 +465,7 @@ const ListEnquiriesTable = () => {
                                                         {/* Below we are intialize the enquiry data */}
                                                             <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th> {/* // Serial Number */}
                                                             <td className="customer_name">{item.customer_name}</td> {/* Customer name */}
-                                                            {!(role === role_name.service_provider)   ?(
+                                                            {!(role === role_id.service_provider)   ?(
                                                             <td className="service_provider">{item.service_provider}</td> 
                                                             ): null}
                                                             <td className="status">{item.status}</td> {/* Customer Phone */}

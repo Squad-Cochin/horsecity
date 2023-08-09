@@ -37,7 +37,7 @@ const ListTables = () => {
     const [module,setModule] = useState({});
     const [ errors, setErrors ] = useState("");
     const pageLimit = config.pageLimit;
-    const roles = config.roles ;
+
 
     /**This hook is used to fetch service provider data */
     useEffect(() =>
@@ -125,7 +125,7 @@ const ListTables = () => {
 
     /**Function for changing service provider status */
     function toggleStatus(button, serviceProviderId) {
-        var currentStatus = button.innerText.trim();
+        var currentStatus  = button.innerText.trim();
         const service_provider = sproviders.find((s) => s.id === serviceProviderId);
         updateSPStatus(service_provider.id)
         if (currentStatus === 'ACTIVE') {

@@ -24,13 +24,13 @@ const Accounts  = () => {
     const [userId, setUserId ] = useState("");
 
     const pageLimit = config.pageLimit;
-    const role_name  = config.roles
+    const role_id  = config.Role
     useEffect(()=>{
         const data = JSON.parse(localStorage.getItem("authUser"));
         console.log("UUUU",data);
         let userIdd = data[0]?.user[0]?.id
-        let role_name = data[0]?.user[0]?.role_name
-        setRole(role_name)
+        let role_id = data[0]?.user[0]?.role_Id
+        setRole(role_id)
         console.log(userIdd);
         setUserId(userIdd);
         getAllData(1)
@@ -70,7 +70,7 @@ const Accounts  = () => {
                                                     <tr>
                                                     <th className="index" data-sort="index">#</th>
                                                         <th className="sort" data-sort="month">Customer Name</th>
-                                                        { !(role === role_name.service_provider)  ?(
+                                                        { !(role === role_id.service_provider)  ?(
                                                         <th className="sort" data-sort="month">Service Provider Name</th>
                                                         ): null}
                                                         <th className="sort" data-sort="number">Quotation Id</th>
@@ -85,7 +85,7 @@ const Accounts  = () => {
                                                     <tr key={index}> 
                                                         <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                         <td className="customer_name">{item.customer_name}</td>
-                                                        {!(role === role_name.service_provider)   ?(
+                                                        {!(role === role_id.service_provider)   ?(
                                                         <td className="service_provider_name">{item.service_provider_name}</td>
                                                         ): null}
                                                         <td className="phone">{item.quotation_id}</td>
