@@ -50,9 +50,9 @@ const ListCustomerTable = () => {
         const data = JSON.parse(localStorage.getItem("authUser"));
         console.log('Data from the list invoice page', data);
         let user_Id = data[0]?.user[0]?.id
-        console.log('User id from the drivers page: ', user_Id);
+        console.log('User id from the customer page: ', user_Id);
         let role_Name = data[0]?.user[0]?.role_name
-        console.log('Role name from the drivers page: ', role_Name);
+        console.log('Role name from the customer page: ', role_Name);
         setUserId(user_Id);
         setRole(role_Name);
         getAllData(1)
@@ -91,7 +91,7 @@ const ListCustomerTable = () => {
 
     // function for add customer
     async function addCustomer(values){
-        let addCustomer = await addNewCustomer(values);
+        let addCustomer = await addNewCustomer(values, userId);
         if(addCustomer.code === 200){
             setErrors("")
             setAdd_list(false);
@@ -243,7 +243,7 @@ const ListCustomerTable = () => {
                                         </thead>
                                         <tbody className="list form-check-all">
                                             {customers.map((item, index) => (
-                                            <tr key={item.id}>
+                                            <tr key={item?.id}>
                                                 <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                 <td className="customer_name">{item.name}</td>
                                                 <td className="email">{item.email}</td>

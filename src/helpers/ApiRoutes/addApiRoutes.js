@@ -79,8 +79,9 @@ import * as url from "../url_helper";
     }
 
     /**Add new Customer */
-    export async function addNewCustomer(data){
+    export async function addNewCustomer(data, Id){
         try {
+            console.log(`User Id: `, Id);
             console.log(data)
             const formData = new FormData();
             // Append the object data to the FormData instance
@@ -89,7 +90,7 @@ import * as url from "../url_helper";
             }
             
             // Send the form data as a POST request using Axios
-            const response = await axios.post(`${url.POST_CUSTOMER_ADD_URL}`, formData, {
+            const response = await axios.post(`${url.POST_CUSTOMER_ADD_URL}/${Id}`, formData, {
                 headers: {
                 'Content-Type': 'multipart/form-data'
                 }
