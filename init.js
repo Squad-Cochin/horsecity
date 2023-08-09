@@ -19,6 +19,8 @@ module.exports = async function()
         // console.log(selQuery);
         con.query(selQuery, function (err, result)  // Executing the above query
         {
+            // console.log(err);
+            // console.log(result);
             if(result.length != 0)
             {
                  

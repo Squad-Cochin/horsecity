@@ -108,3 +108,127 @@ INSERT INTO application_settings (
     NULL    -- Deleted_at is initially NULL
 );
  */
+
+
+/**
+     * Adding amount to the invoice
+     */
+
+export async function addAmount(id, amount)
+{
+    try
+    {
+        console.log("Amount : ",amount)
+        console.log(`Invoice id at the time of adding the payment data in the table`, id);
+        const formData = new FormData();
+        // for (const key in data) {
+        //     formData.append(key, data[key]);
+        // }
+        formData.append('totalRecievedAmount', amount);
+        const response = await axios.post(`${url.POST_ADD_AMOUNT_URL}/${id}`, formData,
+        {
+            headers:
+            {
+                'Content-Type': 'multipart/form-data'
+            }
+        });
+        console.log("Response from the add amount: ",response)
+        return response;            
+    }
+    catch (error) 
+    {
+        let errObj =
+        {
+            code : 500 , 
+            error : "Failed !"
+        }
+        return errObj;        
+    }
+};
+
+
+/**
+ * Sending mail of the invoice
+ */
+
+// export async function sendEmail(id, email, subject)
+// {
+//     try
+//     {
+//         console.log("Data we got from in the sendEmail")
+//         console.log(`Id we got from the front end while sending the invoice at email`, id);
+//         console.log(`Email we got from the front end while sending the invoice at email`, email);
+//         console.log(`Subject we got from the front end while sending the invoice at email`, subject);
+//         const formData = new FormData();
+//         formData.append('recepientEmail', email);
+//         formData.append('invoiceSubject', subject);
+//         const response = await axios.post(`${url.POST_SENT_INVOICE_ON_EMAIL}/${id}`, formData,
+//         {
+//             headers:
+//             {
+//                 'Content-Type': 'multipart/form-data'
+//             }
+//         });
+//         console.log("Response from the send email: ",response)
+//         return response;            
+//     }
+//     catch (error)
+//     {
+//         let errObj =
+//         {
+//             code : 500 , 
+//             error : "Failed !"
+//         }
+//         return errObj;        
+//     }
+// };
+// export async function sendEmailFunction(id, data)
+// {
+//     try {
+//         const formData = new FormData();
+//         // Append the object data to the FormData instance
+//         for (const key in data) {
+//             formData.append(key, data[key]);
+//         }
+//         // Send the form data as a POST request using Axios
+//         const response = await axios.post(`${url.POST_SEND_QUT_EMAIL_URL}/${id}`, formData, {
+//             headers: {
+//             'Content-Type': 'multipart/form-data'
+//             }
+//         });
+//         console.log("rss",response)
+//         // console.log("response",response)
+//         return response
+//     } catch (error) {
+//         let errObj = {
+//             code : 500 , 
+//             error : "Faild !"
+//         }
+//         return errObj;
+//     }
+// };
+
+
+// export async function getCustomersData(pageNumber, uId){
+//     try {
+//         let pageLimit = config.pageLimit;
+//         let reqObj = {
+//             "page" : pageNumber,
+//             "limit" : pageLimit
+//         }
+//         const { data } = await axios.post(`${url.GET_CUSTOMER_ALL_DATA_URL}/${uId}`,reqObj);
+//         console.log("Get all customers",data)
+//         return(data)
+//     } catch (error) {
+//         let errorObj =  {
+//             "code": 500,
+//             "status": false,
+//             "message": "Server error",
+//             "data": {
+//                 "totalCount": 0,
+//                 "customers": []
+//             }
+//         }
+//         return errorObj.data
+//     }
+// }
