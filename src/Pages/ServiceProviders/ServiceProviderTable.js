@@ -54,11 +54,13 @@ const ListTables = () => {
 
     /**This object sets the initial values for the form fields managed by formik */
     const initialValues = {
+        service_provider_id : userId,
         name: !add_list ? sprovider[0]?.name : '',
         email: !add_list ? sprovider[0]?.email : '',
         user_name: !add_list ? sprovider[0]?.user_name : '',
         password: !add_list ? sprovider[0]?.password : '',
-        // role_name: !add_list ? sprovider[0]?.role_name : '',
+        role_id: !add_list ? sprovider[0]?.role_id : '',
+        role_name: !add_list ? sprovider[0]?.role_name : '',
         contact_person: !add_list ? sprovider[0]?.contact_person : '',
         contact_no: !add_list ? sprovider[0]?.contact_no : '',
         emergency_contact_no: !add_list ? sprovider[0]?.emergency_contact_no : '',
@@ -75,10 +77,11 @@ const ListTables = () => {
         onSubmit: (values) => {
             values.licence_image = updateImage;
             if (add_list) {
+                console.log("added new0 ",values);
                 addProvider(values)
             } else {
                 //update previes SProvider
-                console.log("update previues one ");
+                console.log("update previues one ",values);
                 editProvider(values);
             }
         }
@@ -183,6 +186,14 @@ console.log("MMMM",userId);
         setNumberOfData(getSPdataNext.totalCount);
         }
     }
+
+    const role_items = 
+    [
+        { id: '1', name : 'ADMIN' },
+        { id: '2', name : 'SERVICE PROVIDER' },
+        { id: '3', name : 'SUPER ADMIN' },
+
+      ];
 
     return (
         <React.Fragment>
@@ -336,8 +347,7 @@ console.log("MMMM",userId);
                     onSubmit={validation.handleSubmit}>
                     <ModalBody>
                         {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
-                        {/* {sprovider?.map((item, index) => ( */}
-                            {/* <div key={index}> */}
+         
                                 {/* Provider Name */}
                                 <div className="mb-3">
                                     <label htmlFor="providerName-field" className="form-label">Provider Name</label>
@@ -396,31 +406,36 @@ console.log("MMMM",userId);
                                         required
                                     />
                                 </div>: null}
-                                {/* Role */}
-                                {/* <div className="mb-3">
-                                    <label htmlFor="status-field" className="form-label">Role</label>
-                                    <select
-                                        className="form-control"
-                                        data-trigger
-                                        name="role_name"
-                                        id="status-field"
-                                        value={validation.values.role_name || ""}
-                                        onChange={validation.handleChange}
-                                    >
-                                        {!add_list ? (
-                                            <>
-                                                <option value="service provider">{item?.role_name}</option>
-                                                <option value="super admin">super admin</option>
-                                            </>
-                                        ) : (
-                                            <>
-                                                <option value="">Select Role</option>
-                                                <option value="service provider">service provider</option>
-                                                <option value="super admin">super admin</option>
-                                            </>
-                                        )}
-                                    </select>
-                                </div> */}
+                                {!(config.Role.service_provider === role) ? (
+                            <div className="mb-3">
+                                <label htmlFor="status-field" className="form-label">Role</label>
+                                <select
+                                className="form-control"
+                                data-trigger
+                                name="role_id"
+                                id="status-field"
+                                value={validation.values.role_id || ""}
+                                onChange={validation.handleChange}
+                                onBlur={validation.handleBlur}
+                                >
+                                {!add_list ? (
+                                    <>
+                                    {role_items.map((item) => (
+                                        <option key={item?.id} value={item?.id}> {item?.name} </option>
+                                    ))}
+                                    </>
+                                ) : (
+                                    <>
+                                    <option value="">Select Role</option>
+                                    {role_items.map((item) => (
+                                        <option key={item.id} value={item.id}> {item.name} </option>
+                                    ))}
+                                    </>
+                                )}
+                                </select>
+                            </div>
+                            ) : null }
+
                                 {/* Contact Person */}
                                 <div className="mb-3">
                                     <label htmlFor="contactPerson-field" className="form-label">Contact Person</label>
@@ -509,8 +524,8 @@ console.log("MMMM",userId);
                                             />
                                     </div>
                                 </div>
-                            {/* </div> */}
-                        {/* ))} */}
+         
+              
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
@@ -568,7 +583,7 @@ console.log("MMMM",userId);
                                 </div>
 
                                 {/* Role */}
-                                {/* <div className="mb-3">
+                                <div className="mb-3">
                                     <label htmlFor="role-field" className="form-label">Role</label>
                                     <input
                                         type="text"
@@ -578,7 +593,7 @@ console.log("MMMM",userId);
                                         value={validation.values.role_name || ""}
                                         readOnly
                                     />
-                                </div> */}
+                                </div>
                                 {/* Contact Person */}
                                 <div className="mb-3">
                                     <label htmlFor="contactPerson-field" className="form-label">Contact Person</label>
