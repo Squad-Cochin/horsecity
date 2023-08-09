@@ -607,5 +607,4 @@ CREATE TABLE payment_records (
     FOREIGN KEY (invoice_id) REFERENCES invoices(id),
     created_at DATETIME DEFAULT NULL,
     updated_at DATETIME DEFAULT NULL,
-    deleted_at DATETIME DEFAULT NULL
 );

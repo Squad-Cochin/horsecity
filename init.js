@@ -272,7 +272,7 @@ module.exports = async function()
                                                                                                                 (${resultRoleData[2].rID}, ${resultModuleData[3].mID}, 'true', 'true', 'true', 'true'),
                                                                                                                 (${resultRoleData[2].rID}, ${resultModuleData[4].mID}, 'true', 'true', 'true', 'true'),
                                                                                                                 (${resultRoleData[2].rID}, ${resultModuleData[5].mID}, 'true', 'true', 'true', 'true'),
-                                                                                                                 (${resultRoleData[2].rID}, ${resultModuleData[6].mID}, 'false', 'true', 'true', 'false'),
+                                                                                                                (${resultRoleData[2].rID}, ${resultModuleData[6].mID}, 'false', 'true', 'true', 'false'),
                                                                                                                 (${resultRoleData[2].rID}, ${resultModuleData[7].mID}, 'false', 'true', 'true', 'false'),
                                                                                                                 (${resultRoleData[2].rID}, ${resultModuleData[8].mID}, 'false', 'true', 'true', 'false'),
                                                                                                                 (${resultRoleData[2].rID}, ${resultModuleData[9].mID}, 'false', 'true', 'true', 'false'),
