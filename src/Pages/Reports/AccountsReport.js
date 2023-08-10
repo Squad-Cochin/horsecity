@@ -147,8 +147,8 @@ const AccountsReport  = () => {
                                                         ) : null
                                                     }
                                                         <td className="phone">{item.quotation_id}</td>
-                                                        <td className="date">{item.total_amount}</td>
-                                                        <td className="date">{item.pending_amount}</td>
+                                                        <td className="date">{item.final_amount}</td>
+                                                        <td className="date">{item.remaining_amount}</td>
                                                     </tr>
                                                  ))}
                                                 
