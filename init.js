@@ -114,7 +114,7 @@ module.exports = async function()
             {
                 if(resultCurrency.length != 0)
                 {
-                    console.log(`Currency data may be available in the database`);
+                    // console.log(`Currency data may be available in the database`);
                 }
                 else
                 {
