@@ -26,5 +26,8 @@ module.exports = function(app)
     //**For sending email qutation     */ 
     app.post(`/${process.env.apiToken}/send-email/quotations/:id`,quotation.sendMail);   
   
+
+     //**For taking quotation templates subjuct     */ 
+     app.get(`/${process.env.apiToken}/template/quotaion`,quotation.getsendemailbuttondata);   
   
 }

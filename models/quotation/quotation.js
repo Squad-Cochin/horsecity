@@ -695,7 +695,7 @@ exports.sendMail = (requestBody, quot_id) =>
     {
         try
         {
-            console.log("",requestBody);
+      
             const { costomer_email, subject, body } = requestBody
             console.log(requestBody);
             console.log("ddd");
@@ -726,6 +726,40 @@ exports.sendMail = (requestBody, quot_id) =>
         }
     })
 }
+
+
+
+
+exports.getsendemailbuttondata= () =>
+{
+    
+        return new Promise(async (resolve, reject) =>
+    {
+        try
+        {   let selQuery = `SELECT id,subject
+        FROM ${constants.tableName.templates}
+        WHERE id = '${constants.templates.quotaions}'`;
+        con.query(selQuery,(err, result) =>
+        {
+           if(result.length !=0){
+       
+
+            resolve({templates_quotation : result})
+           }else{
+            resolve({templates_quotation : []})
+           }
+        });
+
+        } catch (err) {
+            resolve(false)
+            console.log('Error while sending mail  for  quotations', err);
+        }
+    })         
+  
+};
+
+
+
 
 
 

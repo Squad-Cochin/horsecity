@@ -213,6 +213,11 @@ module.exports =
       admin : 1,
       service_provider : 2,
       super_admin : 3
+    },
+    templates :
+    {
+        invoice : 1,
+        quotaions : 2
     }
 
 

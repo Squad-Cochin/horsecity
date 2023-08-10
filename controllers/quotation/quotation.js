@@ -127,7 +127,7 @@ exports.updateStatusQuotation = async(req,res)=>
 /** For Sending email */
 exports.sendMail = async(req,res)=>
 {
-console.log("hereeeeeeeeeeeee");
+
     let sendMail = await quotation.sendMail(req.body,req.params.id);
 
    if(sendMail){
@@ -144,6 +144,25 @@ console.log("hereeeeeeeeeeeee");
         message: `Mail sending faild `
 
     });
+   }
+}
+
+
+
+/** For feching quotations */
+exports.getsendemailbuttondata = async(req,res)=>
+{
+
+    let templates = await quotation.getsendemailbuttondata();
+
+   if(templates){
+        return res.status(200).send({
+            code: 200,
+            success: true,
+            message: constants.responseMessage.getOne,
+            data : templates
+
+        });
    }
 }
 
