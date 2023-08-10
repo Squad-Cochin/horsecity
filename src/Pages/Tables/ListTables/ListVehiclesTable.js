@@ -62,6 +62,7 @@ const ListVehiclesTable = () =>
          length: !add_list ? vehicle[0]?.length : '',
          breadth: !add_list ? vehicle[0]?.breadth : '',
          height: !add_list ? vehicle[0]?.height : '',
+         price: !add_list ? vehicle[0]?.price : '',
          no_of_horse: !add_list ? vehicle[0]?.no_of_horse : '',
          air_conditioner: !add_list ? vehicle[0]?.air_conditioner : '',
          temperature_manageable: !add_list ? vehicle[0]?.temperature_manageable : '',
@@ -104,8 +105,6 @@ const ListVehiclesTable = () =>
         setCertificateImage(file)
         setCertificatePreview(URL.createObjectURL(file));
     };
-
-
 
     // The Below function is used when we are adding the vehicle
     async function tog_list(param, productId) 
@@ -549,8 +548,24 @@ const ListVehiclesTable = () =>
                             />
                         </div>
 
-                        {/* The below element is for adding the maximum number of horses a vehicle can carry. */}
+                        {/* The below element is for adding the price of the vehicle */}
                         <div className="mb-3">
+                            <label htmlFor="vehicle_price-field" className="form-label">Vehicle Minimum Price</label>
+                            <input
+                                type="text"
+                                id="vehicle_price-field"
+                                className="form-control"
+                                name='price'
+                                value={validation.values.price || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Vehicle Minimum Price"
+                                required
+                            />
+                        </div>
+
+                        {/* The below element is for adding the maximum number of horses a vehicle can carry. */}
+                        
+                        {/* <div className="mb-3">
                             <label htmlFor="no_of_horses-field" className="form-label">Number Of Horses</label>
                             <select
                                 id="no_of_horses-field"
@@ -564,7 +579,29 @@ const ListVehiclesTable = () =>
                                     <option key={index + 1} value={index + 1}>{index + 1}</option>
                                 ))}
                             </select>
-                        </div>
+                        </div> */}
+
+                            <div className="mb-3">
+                                <label htmlFor="no_of_horses-field" className="form-label">
+                                    Number Of Horses
+                                </label>
+                                <select
+                                    id="no_of_horses-field"
+                                    className="form-control"
+                                    name="no_of_horse"
+                                    value={validation.values.no_of_horse || ""}
+                                    onChange={validation.handleChange}
+                                    required
+                                >
+                                    {Array.from({ length: 10 }, (_, index) => (
+                                        // The value attribute of each option should range from 1 to 10
+                                        <option key={index + 1} value={index + 1}>
+                                            {index + 1}
+                                        </option>
+                                    ))}
+                                </select>
+                            </div>
+
 
                         {/* The below element is for select. Whether the vehicle have a air conditioner or not. */}
                         <div className="mb-3">
@@ -1025,6 +1062,19 @@ const ListVehiclesTable = () =>
                                 className="form-control"
                                 name='height'
                                 value={validation.values.height || ""}
+                                readOnly
+                            />
+                        </div>
+
+                        {/* The below element is for displaying the minimum price of the vehicle */}                        
+                        <div className="mb-3">
+                            <label htmlFor="vehicle_price-field" className="form-label">Vehicle Minimum Price </label>
+                            <input
+                                type="text"
+                                id="vehicle_price-field"
+                                className="form-control"
+                                name='price'
+                                value={validation.values.price || ""}
                                 readOnly
                             />
                         </div>
