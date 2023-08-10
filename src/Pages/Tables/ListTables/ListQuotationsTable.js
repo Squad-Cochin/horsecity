@@ -96,7 +96,7 @@ const ListQuotationsTable = () => {
     final_amount : quotation ? quotation[0]?.final_amount : "",
 
     subject : "",
-    body : "",
+    // body : "",
   };
 
   // Later in your code, when setting the initial state
@@ -1534,7 +1534,7 @@ const ListQuotationsTable = () => {
                   />
                 </div>
 
-                <div className="mb-3">
+                {/* <div className="mb-3">
                   <label htmlFor="body-field" className="form-label">Body</label>
                   <textarea
                       name="body"
@@ -1544,7 +1544,7 @@ const ListQuotationsTable = () => {
                       onChange={validation.handleChange}
                       required
                   />
-                </div>
+                </div> */}
                   
               </ModalBody>
               <ModalFooter>
