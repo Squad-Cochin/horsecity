@@ -606,5 +606,7 @@ CREATE TABLE payment_records (
     status ENUM('PAID', 'PARTIALLY PAID', 'PENDING'),
     FOREIGN KEY (invoice_id) REFERENCES invoices(id),
     created_at DATETIME DEFAULT NULL,
-    updated_at DATETIME DEFAULT NULL,
+    updated_at DATETIME DEFAULT NULL
 );
+
+ALTER TABLE vehicles ADD `price` DECIMAL(15.0) NULL AFTER `height`;
