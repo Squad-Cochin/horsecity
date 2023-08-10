@@ -620,7 +620,7 @@ exports.passwordValidation = async (req, res, next) =>
             console.log('Regex Result from password validation', result);
             if (result)
             {
-                const isValidPassword = (password) =>
+                const isValidPassword = (password) => 
                 {
                     const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
                     const regex = new RegExp(regexPattern);

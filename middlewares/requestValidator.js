@@ -667,6 +667,7 @@ exports.passwordValidation = async (req, res, next) => {
                 });
         }
         else {
+            console.log('Password: ', password);
             let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
             con.query(selQuery, (err, result) => {
                 //console.log(result); 
@@ -674,7 +675,7 @@ exports.passwordValidation = async (req, res, next) => {
                     const isValidPassword = (password) => {
                         const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
                         const regex = new RegExp(regexPattern);
-                        //console.log(regex);
+                        console.log(regex);
                         return regex.test(password); // Use the test() method to check if the password matches the regex pattern
                     };
 

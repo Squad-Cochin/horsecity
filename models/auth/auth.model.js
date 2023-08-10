@@ -34,8 +34,8 @@ module.exports = class authentication
                 else
                 {
                     const passwordHashed = await commonoperation.changePasswordToSQLHashing(password);
-                    // console.log(passwordHashed);
-                    // console.log(userData[0].password);
+                    console.log(passwordHashed);
+                    console.log(userData[0].password);
                     if (userData[0].password === passwordHashed)
                     { 
                         if(userData[0].status === constant.status.inactive)
