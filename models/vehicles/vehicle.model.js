@@ -126,7 +126,7 @@ module.exports = class vehicles
                                 FROM ${constants.tableName.permissions} AS pm
                                 JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                                 JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                                WHERE pm.role_id = '${result[0].role_id}' AND md.name = 'VEHICLES'
+                                WHERE pm.role_id = '${result[0].role_id}' AND md.id = '${constants.modules.vehicles}'
                                `;
                                 // console.log(Query);
                                 con.query(Query, (err, moduleResult) =>
