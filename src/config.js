@@ -8,7 +8,9 @@ module.exports = {
     
      status : {
         TRUE : 'TRUE',
-        FALSE : 'FALSE'
+        FALSE : 'FALSE',
+        confirmed : `CONFIRMED`,
+        notconfirmed : `NOTCONFIRMED`
       },
   // modules : [
   // {

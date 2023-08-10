@@ -1496,7 +1496,11 @@ const ListQuotationsTable = () => {
               >
                 Close
               </button>
-              <button type="button" onClick={() => { confirmQut(); }} className="btn btn-success" id="edit-btn">Confirm</button>
+              {quotation?.map((item, index) => (
+              <div key={index} className="tm_container">
+              <button type="button" disabled = {item.status==config.status.confirmed} onClick={() => { confirmQut(); }} className="btn btn-success" id="edit-btn">Confirm</button>
+              </div>
+            ))}
             </div>
           </ModalFooter>
         </form>

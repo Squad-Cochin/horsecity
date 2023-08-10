@@ -572,6 +572,7 @@ const ListEnquiriesTable = () => {
                                 onChange={(e) => {validation.handleChange(e); serviceProviderSelected(e.target.value);}}
                                 onBlur={validation.handleBlur}
                                 required
+                                disabled = {role == role_id.service_provider}
                             >
                                 <option value="">Select Service Provider</option>
                             {serviceProviders.map((item, index) => (
