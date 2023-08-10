@@ -37,14 +37,6 @@ const isValidUsername = (username) =>
     return username.match(new RegExp(process.env.DOBREGEX));
 }
 
-const isValidPasswordTestWithRegex = (result, password) => 
-{
-    const regexPattern = result.replace(/^\/|\/$/g, ``); // Remove leading and trailing slashes
-    const regex = new RegExp(regexPattern);
-    //console.log(regex);
-    return regex.test(password); // Use the test() method to check if the password matches the regex pattern
-};
-
 const isvalidEmail = (email) => 
 {
     if (new RegExp(process.env.EMAILREGEX).test(email))
@@ -69,32 +61,6 @@ const isvalidEmail = (email) =>
     }
 };
 
-const validDatePassword = (password) =>
-{
-    let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
-    con.query(selQuery, (err, result) => 
-    {
-        //console.log(result); 
-        if (result)
-        {
-            if (isValidPasswordTestWithRegex(result[0].value, password) )
-            {
-                console.log(`Password validation done`);
-                return `validPassword`
-            }
-            else 
-            {
-                console.log(`Invalid Password`);
-                return `invalidPassword`
-            }
-        }
-        else
-        {
-            console.log(`Error while fetchig the regex from the password policies table`);
-            return `notfoundRegex`;
-        }
-    });
-};
 
 exports.validateCommonInputAtStartingTime = (tableName, feildName, Value, id, messageFeild) => async (req, res, next) =>
 {
@@ -252,9 +218,9 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
             // }
             // else
             // {
-                if(req.method === `POST`)
+                if(req.method === `POST` && req.url === url.UPDATE_SERVICE_PROVIDER_PASSWORD)
                 {
-                    this.validateCommonInputAtStartingTime(tableName, `user_name`, req.body.userName, req.params.id, 'Username')(req, res, next);
+                    next();
                 }
                 else if(req.method === `PUT` && req.url === url.UPDATE_CUSTOMER_PAGE_URL + req.params.id)
                 {
@@ -264,7 +230,11 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
                 {
                     this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params.id, 'Username')(req, res, next);
                 }
-                else
+                else if(req.method === `POST`)
+                {
+                    this.validateCommonInputAtStartingTime(tableName, `user_name`, req.body.userName, req.params.id, 'Username')(req, res, next);
+                }
+                else 
                 {
                     return res.status(500).json
                     ({
@@ -583,139 +553,39 @@ exports.isValidDescription = (req, res, next) =>
     }    
 };
 
-exports.newpassword = async (req, res, next) => 
+exports.passwordsimilarity = async (req, res, next) =>
 {
-    const password = await req.body.newpassword
-    if (!password)
-    {
-        return res.status(200).send
-        ({
-                code : 400,
-                status : false,
-                message : `New password is required`
-        });
-    }
-    else
-    {
-        if (hasOnlyNonSpaces(password) === true)
-        {
-            return res.status(200).send
-            ({
-                code : 400,
-                status : false,
-                message : `New password contain space. It is not allowed.`
-            });
-        }
-        else
-        {
-            if(validDatePassword(password) === `invalidPassword`)
-            {
-                return res.status(200).json
-                ({
-                    success: false,
-                    code : 400,
-                    message : `Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character(#, $, ?, /)`,
-                });
-            }
-            else if(password === `notfoundRegex`)
-            {
-                return res.status(200).json
-                ({
-                    code : 500,
-                    success: false,
-                    message : `Internal Server Error`
-                });
-            }   
-            else
-            {
-                // console.log(`Password Matched`);
-                next();
-            }  
-        }
-    }
-}
-
-exports.confirmnewpassword = async (req, res, next) =>
-{
-    const password = await req.body.confirmnewpassword
-    if (!password)
+    if (req.body.confirmnewpassword !== req.body.newpassword)
     {
         return res.status(200).send
         ({
             code : 400,
             status : false,
-            message : `Confirm new password is required`
+            message : `Password and confirm password are not similar`
         });
     }
     else
     {
-        if(hasOnlyNonSpaces(password) === true)
+        if (req.body.password === req.body.newpassword)
         {
             return res.status(200).send
             ({
                 code : 400,
                 status : false,
-                message : `Confirm new password contain space. It is not allowed.`
+                message : `New password similar with old password. It is not allowed.`
+            });
+        }
+        else if (req.body.confirmnewpassword === req.body.password)
+        {
+            return res.status(200).send
+            ({
+                code : 400,
+                status : false,
+                message : `Confirm new password similar with old password. It is not allowed.`
             });
         }
         else
         {
-            
-            if(validDatePassword(password) === `invalidPassword`)
-            {
-                return res.status(200).json
-                ({
-                    success: false,
-                    code : 400,
-                    message : `Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character(#, $, ?, /)`,
-                });
-            }
-            else if(password === `notfoundRegex`)
-            {
-                return res.status(200).json
-                ({
-                    code : 500,
-                    success: false,
-                    message : `Internal Server Error`
-                });
-            }   
-            else
-            {
-                // console.log(`Password Matched`);
-                next();
-            }  
-        }
-    }
-}
-
-exports.passwordsimilarity = async (req, res, next) => {
-    if (req.body.confirmnewpassword !== req.body.newpassword) {
-        return res.status(200).send
-            ({
-                code : 400,
-                status : false,
-                message : `Both the new password are not similar`
-            });
-    }
-    else {
-        if (req.body.password === req.body.newpassword) {
-            return res.status(200).send
-                ({
-                    code : 400,
-                    status : false,
-                    message : `New password similar with old password. It is not allowed.`
-                });
-        }
-        else if (req.body.confirmnewpassword === req.body.password) {
-            return res.status(200).send
-                ({
-                    code : 400,
-                    status : false,
-                    message : `Confirm new password similar with old password. It is not allowed.`
-
-                });
-        }
-        else {
             next();
         }
     }
@@ -733,45 +603,194 @@ exports.passwordValidation = async (req, res, next) =>
             message : `Password is required`
         });
     }
+    else if(hasOnlyNonSpaces(password) === true)
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : `Password contain space. It is not allowed.`
+        });
+    }
     else
     {
-        if(hasOnlyNonSpaces(password) === true)
+        let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
+        con.query(selQuery, (err, result) =>
         {
-            return res.status(200).send
-            ({
-                code : 400,
-                status : false,
-                message : `Password contain space. It is not allowed.`
-            });
-        }
-        else
-        {
-            if(validDatePassword(password) === `invalidPassword`)
+            console.log('Regex Result from password validation', result);
+            if (result)
             {
-                return res.status(200).json
-                ({
-                    success: false,
-                    code : 400,
-                    message : `Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character(#, $, ?, /)`,
-                });
-            }
-            else if(password === `notfoundRegex`)
-            {
-                return res.status(200).json
-                ({
-                    code : 500,
-                    success: false,
-                    message : `Internal Server Error`
-                });
-            }   
-            else
-            {
-                // console.log(`Password Matched`);
-                next();
-            }      
-        }
-    }
+                const isValidPassword = (password) =>
+                {
+                    const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
+                    const regex = new RegExp(regexPattern);
+                    console.log('Regex after replacing the slashes: ', regex);
+                    return regex.test(password); // Use the test() method to check if the password matches the regex pattern
+                };
+                if (isValidPassword(password))
+                {
+                    //console.log('here');
+                    console.log("password validation done");
+                    next();
+                }
+                else
+                {
+                    return res.status(200).json
+                    ({
+                        success: false,
+                        code: 400,
+                        message: "Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character except '@'  ",
+                    });
+                }
+            }    
+        });
+    };
 };
+exports.newpassword = async (req, res, next) => 
+{
+    const password = await req.body.newpassword
+    if (!password) 
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : `New password is required`
+        });
+    }
+    else if(hasOnlyNonSpaces(password) === true)
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : `New password contain space. It is not allowed.`
+        });
+    }
+    else
+    {
+        let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
+        con.query(selQuery, (err, result) =>
+        {
+            console.log('Regex Result from password validation', result);
+            if (result)
+            {
+                const isValidPassword = (password) =>
+                {
+                    const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
+                    const regex = new RegExp(regexPattern);
+                    console.log('Regex after replacing the slashes: ', regex);
+                    return regex.test(password); // Use the test() method to check if the password matches the regex pattern
+                };
+                if (isValidPassword(password))
+                {
+                    console.log("password validation done");
+                    next();
+                }
+                else
+                {
+                    return res.status(200).json
+                    ({
+                        success: false,
+                        code: 400,
+                        message: "Failed! Not a valid new password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character except '@'  ",
+                    });
+                }
+            }    
+        });
+    };    
+}
+
+exports.confirmnewpassword = async (req, res, next) =>
+{
+    const password = await req.body.confirmnewpassword
+    if (!password) 
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : `Confirm password is required`
+        });
+    }
+    else if(hasOnlyNonSpaces(password) === true)
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : `Confirm password contain space. It is not allowed.`
+        });
+    }
+    else
+    {
+        let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
+        con.query(selQuery, (err, result) =>
+        {
+            console.log('Regex Result from password validation', result);
+            if (result)
+            {
+                const isValidPassword = (password) =>
+                {
+                    const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
+                    const regex = new RegExp(regexPattern);
+                    console.log('Regex after replacing the slashes: ', regex);
+                    return regex.test(password); // Use the test() method to check if the password matches the regex pattern
+                };
+                if (isValidPassword(password))
+                {
+                    console.log("password validation done");
+                    next();
+                }
+                else
+                {
+                    return res.status(200).json
+                    ({
+                        success: false,
+                        code: 400,
+                        message: "Failed! Not a valid confirm password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character except '@'  ",
+                    });
+                }
+            }    
+        });
+    };
+}
+
+// const validDatePassword = async (password) =>
+// {
+//     let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
+//     con.query(selQuery, (err, result) => 
+//     {
+//         console.log('Validate Password function Regex Result:- ', result); 
+//         if (result)
+//         {
+//             // console.log('Validate Password Function after checking the password result',isValidPasswordTestWithRegex(result[0].value, password));
+//             // if (isValidPasswordTestWithRegex(result[0].value, password))
+//             {
+//                 console.log(`Password validation done`);
+//                 return `validPassword`
+//             }
+//             else 
+//             {
+//                 console.log(`Invalid Password`);
+//                 return `invalidPassword`
+//             }
+//         }
+//         else
+//         {
+//             console.log(`Error while fetchig the regex from the password policies table`);
+//             return `notfoundRegex`;
+//         }
+//     });
+// };
+
+// const isValidPasswordTestWithRegex = (result, password) => 
+// {
+//     const regexPattern = result.replace(/^\/|\/$/g, ``); // Remove leading and trailing slashes
+//     const regex = new RegExp(regexPattern);
+//     console.log('Regex from next funtion: ',regex);
+//     return regex.test(password); // Use the test() method to check if the password matches the regex pattern
+// };
 
 
 

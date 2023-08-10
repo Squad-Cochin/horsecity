@@ -19,7 +19,8 @@ const EDIT_CUSTOMER_PAGE_URL = token + `/edit/customer/`
 const UPDATE_CUSTOMER_PAGE_URL = token + `/edit/customer/` 
 const UPDATE_DRIVER_PAGE_URL = token + `/edit/driver/` 
 const UPDATE_VEHICLE_PAGE_URL = token + `/edit/vehicle/` 
-const ADD_SERVICEPROVIDER__URL = token + `/add/serviceprovider` 
+const ADD_SERVICEPROVIDER__URL = token + `/add/serviceprovider`
+const UPDATE_SERVICE_PROVIDER_PASSWORD = token + `/changePassword`
 
 module.exports = 
 { 
@@ -34,5 +35,6 @@ module.exports =
     ADD_DRIVER_PAGE_URL, // Add driver link
     ADD_CUSTOMER_PAGE_URL, // Add customer link
     ADD_VEHICLE_PAGE_URL, // Add vehicle link
-    EDIT_VEHICLE_PAGE_URL // Edit vehicle link
+    EDIT_VEHICLE_PAGE_URL, // Edit vehicle link
+    UPDATE_SERVICE_PROVIDER_PASSWORD
 }

@@ -261,7 +261,7 @@ module.exports = async function()
                                                                                                                 (${resultRoleData[1].rID}, ${resultModuleData[4].mID}, 'true', 'true', 'true', 'true'),
                                                                                                                 (${resultRoleData[1].rID}, ${resultModuleData[5].mID}, 'true', 'false', 'true', 'false'),
                                                                                                                 (${resultRoleData[1].rID}, ${resultModuleData[6].mID}, 'false', 'true', 'true', 'false'),
-                                                                                                                (${resultRoleData[1].rID}, ${resultModuleData[7].mID}, 'false', 'false', 'false', 'false'),
+                                                                                                                (${resultRoleData[1].rID}, ${resultModuleData[7].mID}, 'false', 'true', 'true', 'false'),
                                                                                                                 (${resultRoleData[1].rID}, ${resultModuleData[8].mID}, 'false', 'true', 'true', 'false'),
                                                                                                                 (${resultRoleData[1].rID}, ${resultModuleData[9].mID}, 'false', 'true', 'true', 'false'),
                                                                                                                 (${resultRoleData[1].rID}, ${resultModuleData[10].mID}, 'false', 'false', 'true', 'false'),
@@ -301,14 +301,30 @@ module.exports = async function()
                                                                                                                                 if(result2)
                                                                                                                                 {
                                                                                                                                     console.log(`Data inserted into the password policies table`);
-                                                                                                                                    let insDiscountType = `INSERT INTO discount_types (name, type, rate, created_at) VALUES('${process.env.discountName}', '${process.env.discountType}', '${process.env.dicountRate}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                                                                                                                                    let insDiscountType = `INSERT INTO ${constants.tableName.discount_types} (name, type, rate, created_at) VALUES('${process.env.discountName}', '${process.env.discountType}', '${process.env.dicountRate}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                                                                                                                                     console.log(`Insert Discount Table Query: `, insDiscountType);
                                                                                                                                     con.query(insDiscountType, (err, resultInsDiscountType)=> // Executing the above query
                                                                                                                                     {
                                                                                                                                         if(resultInsDiscountType)
                                                                                                                                         {
                                                                                                                                             console.log(`Discount insert data is successfully inserted from the backend`);
-                                                                                                                                            console.log(`All the data are successfully inserted`);
+                                                                                                                                            let insTemplate = `INSERT INTO ${constants.tableName.templates} (name, subject, purpose, type) VALUES
+                                                                                                                                            ('${process.env.templateFirstInvoiceName}', '${process.env.templateFirstInvoiceSubject}', '${process.env.templateFirstInvoicePurpose}', '${process.env.templateFirstInvoiceType}'),
+                                                                                                                                            ('${process.env.templateSecondQuotationName}', '${process.env.templateSecondQuotationSubject}', '${process.env.templateSecondQuotationPurpose}', '${process.env.templateSecondQuotationType}')`;
+                                                                                                                                            console.log(`Insert Template Table Query: `, insTemplate);
+                                                                                                                                            con.query(insTemplate, (err, resultInsTemplate)=> // Executing the above query
+                                                                                                                                            {
+                                                                                                                                                if(resultInsTemplate)
+                                                                                                                                                {
+                                                                                                                                                    console.log(`Data inserted into the templates table`);
+                                                                                                                                                    console.log(`All the data are successfully inserted`);
+                                                                                                                                                }
+                                                                                                                                                else
+                                                                                                                                                {
+                                                                                                                                                    return console.log(`Error while inserting the data into the discount types table from the backend.`, err);
+                                                                                                                                                }
+                                                                                                                                            });
+
                                                                                                                                         }
                                                                                                                                         else
                                                                                                                                         {

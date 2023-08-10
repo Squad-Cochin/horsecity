@@ -16,10 +16,10 @@ module.exports = function(app)
       // The below route is for changing the password of the service provider user.
     app.post(`/${process.env.apiToken}/changePassword`, 
     checkInput.usernameValidation(constants.tableName.service_providers),
-    checkInput.passwordValidation, 
+    checkInput.passwordValidation,
     checkInput.newpassword,
     checkInput.confirmnewpassword,
-    checkInput.passwordsimilarity,
+    checkInput.passwordsimilarity, 
     authcontroller.serviceProviderChangePassword); 
     
     // The below route is for logout of the service provider user. 

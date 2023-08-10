@@ -1059,7 +1059,7 @@ module.exports = class invoices
             {
                 let selQuery = `SELECT i.id, i.invoice_no, t.subject, c.email, t.template
                 FROM customers c, invoices i, quotations q, templates t
-                WHERE i.id = ${Id} AND c.id = q.customer_id AND q.id = i.quot_id`;
+                WHERE i.id = ${Id} AND c.id = q.customer_id AND q.id = i.quot_id AND t.subject = '${process.env.templateFirstInvoiceSubject}'`;
                 con.query(selQuery,(err, result) =>
                 {
                     // console.log(`Email details: `, result);

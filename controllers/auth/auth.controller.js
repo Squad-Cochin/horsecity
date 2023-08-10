@@ -7,7 +7,6 @@
 //                                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const { checkValueEntered } = require('../../middlewares/validateInput/checkRequestBodyInput');
 const auth = require('../../models/auth/auth.model'); // Impoting the auth models details
 const constants = require('../../utils/constants');
 
@@ -129,7 +128,7 @@ exports.serviceProviderLogin = async(req, res)=>
 
 exports.serviceProviderChangePassword = async(req, res, next)=>
 {
-    let loginauth = await auth.serviceproviderchangepassword(req.body.userName, req.body.password, req.body.newpassword);
+    let loginauth = await auth.serviceproviderchangepassword(req.body.userName, req.body.password, req.body.newpassword, req.body.confirmnewpassword);
     // console.log('Login Auth', loginauth );
     
     // The below if block will execute. when the entered username is not correct
