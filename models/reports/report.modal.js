@@ -677,7 +677,7 @@ exports.getAccountsReports = (requestBody,fromDate,toDate,spID) =>
                                 '${role_id}' = '${constants.Roles.service_provider}'
                                 AND sp.id = '${spID}'
                             )
-                        )
+                        ) AND pr.updated_at IS NOT NULL
                         ORDER BY pr.invoice_id DESC
                         LIMIT ${+limit} OFFSET ${+offset};`
                                                   
@@ -707,7 +707,7 @@ exports.getAccountsReports = (requestBody,fromDate,toDate,spID) =>
                                                     '${role_id}' = '${constants.Roles.service_provider}'
                                                     AND sp.id = '${spID}'
                                                 )
-                                            )`
+                                            ) AND pr.updated_at IS NOT NULL`
                     con.query(totalCountQuery,(err,result)=>{
                         if(!err){
                             const count = result[0]['count(*)'];

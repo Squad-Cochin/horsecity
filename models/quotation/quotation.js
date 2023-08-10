@@ -619,12 +619,14 @@ exports.updateStatusQuotation = (quotId) => {
                                                                                                 invoice_id,
                                                                                                 invoice_prefix_id,
                                                                                                 total_amount,
-                                                                                                remaining_amount
+                                                                                                remaining_amount,
+                                                                                                created_at
                                                                                                 ) VALUES (
                                                                                                     '${invoice_id}', 
                                                                                                     '${sum_invId}',
                                                                                                     '${final_amount}',
-                                                                                                    '${final_amount}'
+                                                                                                    '${final_amount}'.
+                                                                                                    '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                                                                                 );`;
                                                                             con.query(insQuery, async (err, result) => {
 
