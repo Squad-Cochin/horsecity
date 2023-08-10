@@ -682,7 +682,7 @@ exports.getAccountsReports = (requestBody,fromDate,toDate,spID) =>
                         LIMIT ${+limit} OFFSET ${+offset};`
                                                   
             con.query(selQuery,(err,data)=>{
-                console.log(err);
+                console.log(data);
                 if(!err){
 
 
