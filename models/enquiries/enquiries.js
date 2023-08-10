@@ -16,11 +16,13 @@ exports.getAllEnquiries = (requestBody,spId) =>
        
             const offset = (page - 1) * limit; 
 
-            const selRoleName = `SELECT rl.name AS role_name,rl.id
-            FROM ${constants.tableName.enquiries} AS enq  
-            JOIN ${constants.tableName.service_providers} AS sp ON enq.	serviceprovider_id    = sp.id       
-            JOIN ${constants.tableName.roles} AS rl ON sp.role_Id   = rl.id
-            WHERE enq.serviceprovider_id = '${spId}'`;
+            const selRoleName = `
+            SELECT rl.name AS role_name, rl.id
+            FROM ${constants.tableName.service_providers} AS sp 
+            JOIN ${constants.tableName.roles} AS rl ON sp.role_Id = rl.id
+            WHERE sp.id = '${spId}';
+        `;
+        
             
             con.query(selRoleName,(err,data)=>{ 
     

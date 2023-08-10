@@ -130,10 +130,11 @@ exports.updateServiceProvider = (requestBody,file,id) =>
     {
         try
         {  
+            console.log("hereee");
         let uploadLicence = await commonoperation.fileUpload(file?.licence_image, constants.attachmentLocation.serviceProvider.licenceImage.upload);
         const invalidFormat = "INVALIDFORMAT";
         const invalidAttachment = 'INVALIDATTACHMENT'
-        if(uploadLicence.message == invalidFormat ){
+        if(uploadLicence.message == invalidFormat ){  
             resolve({ status: invalidFormat });
         }else if(uploadLicence.message == invalidAttachment ||
                 uploadLicence ){
@@ -144,7 +145,7 @@ exports.updateServiceProvider = (requestBody,file,id) =>
         name = '${name}',
         email = '${email}',
         user_name = '${user_name}',
-        ${constants.Roles.service_provider == service_provider_id ? '' :  `role_Id = ${role_id}`},
+        ${constants.Roles.service_provider == service_provider_id ? '' :  `role_Id = ${role_id},`}
         contact_person = '${contact_person}',
         contact_no = '${contact_no}',
         contact_address = '${contact_address}',
@@ -156,7 +157,7 @@ exports.updateServiceProvider = (requestBody,file,id) =>
         WHERE id = '${id}'`;
     
         con.query(updateQuery,async(err,data)=>{
-            console.log(data,err);
+            console.log(err);
             if(data?.length != 0 ){
                 resolve({status : "SUCCESS"})
             }else{
@@ -206,10 +207,16 @@ exports.getNameServiceProviders = () =>
     {
         try
         {       
-            const selQuery = `SELECT sp.id,sp.user_name
+            const selQuery = `
+            SELECT sp.id, sp.user_name
             FROM service_providers AS sp
-            WHERE sp.deleted_at IS NULL AND sp.status = '${constants.status.active}'
-            `;
+            JOIN ${constants.tableName.roles} AS rl ON sp.role_Id = rl.id
+            WHERE sp.deleted_at IS NULL 
+                AND sp.status = '${constants.status.active}'
+                AND rl.id <> '${constants.Roles.admin}' 
+                AND rl.id <> '${constants.Roles.super_admin}';
+        `;
+        
             con.query(selQuery,(err,data)=>{
                 if(!err){
                      resolve({serviceProviders : data})

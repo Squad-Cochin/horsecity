@@ -93,19 +93,21 @@ exports.ListQuotation = (requestBody,spId) => {
             const { page, limit } = requestBody;
 
             const offset = (page - 1) * limit;
+     
+            const selRoleName = `
+            SELECT rl.name AS role_name, rl.id
+            FROM ${constants.tableName.service_providers} AS sp 
+            JOIN ${constants.tableName.roles} AS rl ON sp.role_Id = rl.id
+            WHERE sp.id = '${spId}';
+        `;
+        
 
-            const selRoleName = `SELECT rl.name AS role_name,rl.id
-            FROM ${constants.tableName.quotations} AS quo  
-            JOIN ${constants.tableName.service_providers} AS sp ON quo.serviceprovider_id     = sp.id            
-            JOIN ${constants.tableName.roles} AS rl ON sp.role_Id   = rl.id
-            WHERE sp.id = '${spId}'`;
+            con.query(selRoleName,async(err,data)=>{ 
 
-            con.query(selRoleName,(err,data)=>{ 
-              
-                if(data.length != 0){ 
-                    let role_name = data[0].role_name ;
-
-                    let role_id = data[0].id
+                if(!err){ 
+            
+                    var role_id  = await data[0]?.id;
+           
             /**For listing quotation details */
             let selQuery = `SELECT quo.id, quo.quotation_id, quo.enquiry_id,quo.pickup_time,quo.drop_time, cu.name AS customer_name, cu.email AS customer_email, quo.status
                     FROM ${constants.tableName.quotations} quo
@@ -124,8 +126,10 @@ exports.ListQuotation = (requestBody,spId) => {
                     )
                     LIMIT ${+limit} OFFSET ${+offset}`;
 
+
+
             con.query(selQuery, async (err, quo) => {
-                console.log(err);
+   
                 if (quo.length != 0) {
          
                     /**Total count */
@@ -159,8 +163,7 @@ exports.ListQuotation = (requestBody,spId) => {
                                       con.query(Query,(err,modules)=>{
                                         // console.log("result",result);
                                         if(!err){
-                                  
-                                  console.log("donnee");
+                      
                                             resolve({ totalCount: count, quotations: quo ,module : modules})
                                         }
                                 })
