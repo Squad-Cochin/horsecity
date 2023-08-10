@@ -23,7 +23,7 @@ import config from '../../../config';
 
 // import { item } from "../../../CommonData/Data";
 import Logo from "../../../assets/images/black-logo.png";
-import { getQuotationData, getConfirmQut, getSingleQuotationData, getSPVehiclesData, getSPDriverData, getDiscounts, getSPUserName } from "../../../helpers/ApiRoutes/getApiRoutes";
+import { getQuotationData, getConfirmQut, getSingleQuotationData,getTemplateQuotationData, getSPVehiclesData, getSPDriverData, getDiscounts, getSPUserName } from "../../../helpers/ApiRoutes/getApiRoutes";
 import { sendEmailFunction } from "../../../helpers/ApiRoutes/addApiRoutes";
 import { updatQuotation, confirmQuotation } from "../../../helpers/ApiRoutes/editApiRoutes";
 import { useFormik } from "formik";
@@ -41,6 +41,7 @@ const ListQuotationsTable = () => {
   const [ numberOfData, setNumberOfData ] = useState(0);
   const [userId, setUserId ] = useState("");
   const [module,setModule] = useState({});
+  const [ template_data ,setTemplateData] = useState({});
   const [ errors, setErrors ] = useState("")
   const pageLimit = config.pageLimit;
 
@@ -95,7 +96,7 @@ const ListQuotationsTable = () => {
     driver_id : quotation ? quotation[0]?.driver_id : "",
     final_amount : quotation ? quotation[0]?.final_amount : "",
 
-    subject : "",
+    subject : template_data.subject,
     // body : "",
   };
 
@@ -179,7 +180,7 @@ const ListQuotationsTable = () => {
         setErrors(sendEmail.message)
     }
   }
-
+console.log("FADA",template_data.subject);
   /************ */
   async function tog_list(id) {
     setQutId(id)
@@ -226,7 +227,9 @@ const ListQuotationsTable = () => {
   // send Mail modal
   async function tog_sendMail(qId, cEmail) {
     setQutId(qId)
-    initialValues.customer_email = cEmail
+    let temp_data = await getTemplateQuotationData()
+ console.log("FSS",temp_data.templates_quotation[0]);
+    setTemplateData(temp_data.templates_quotation[0])
     setModalEmail(!modalEmail);
   }
 

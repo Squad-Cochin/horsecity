@@ -395,6 +395,16 @@ export async function getSingleQuotationData(id){
     }
 }
 
+export async function getTemplateQuotationData(id){
+    try {
+        const { data } = await axios.get(`${url.GET_QUOTATION_TEMPLATE_URL}`);
+        console.log("SD",data)
+        return(data)
+    } catch (error) {
+        return null
+    }
+}
+
 export async function getSingleInvoiceData(iId){
     try
     {

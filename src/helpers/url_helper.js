@@ -116,7 +116,7 @@ export const GET_QUOTATION_FULL_DATA_URL = apiBaseUrl + token + "/list/quotation
 export const PUT_QUOTATION_EDIT_URL = apiBaseUrl + token + "/update/quotation"
 export const POST_SEND_QUT_EMAIL_URL = apiBaseUrl + token + "/send-email/quotations"
 export const PUT_QUOTATION_CONFIRM_URL = apiBaseUrl + token + "/update-status/quotations"
-
+export const GET_QUOTATION_TEMPLATE_URL = apiBaseUrl + token + "/template/quotaion"
 
 
 /**ACCOUNTS */

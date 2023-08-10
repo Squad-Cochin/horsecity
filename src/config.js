@@ -10,7 +10,9 @@ module.exports = {
         TRUE : 'TRUE',
         FALSE : 'FALSE',
         confirmed : `CONFIRMED`,
-        notconfirmed : `NOTCONFIRMED`
+        notconfirmed : `NOTCONFIRMED`,
+        yes : 'YES',
+        no : 'NO'
       },
   // modules : [
   // {
