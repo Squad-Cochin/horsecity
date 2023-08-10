@@ -12,7 +12,17 @@ module.exports = function(app)
     app.get(`/${process.env.apiToken}/getAll/serviceprovidersName`,spcontroller.getNameServiceProviders); 
 
     /**For adding new service provider  */
-    app.post(`/${process.env.apiToken}/add/serviceprovider`,verifyBody.nameAvailable,verifyBody.emailValidation,verifyBody.usernamevalidation,verifyBody.contactPersonAvailable,verifyBody.validateUAEMobileNumber,verifyBody.contactAddressAvailable,verifyBody.validateUAELicenseNumber,verifyBody.licenceImageAvailable,spcontroller.addNewServiceProvider);
+    app.post(`/${process.env.apiToken}/add/serviceprovider`,
+    verifyBody.nameAvailable,
+    verifyBody.emailValidation,
+    verifyBody.usernamevalidation,
+    verifyBody.passwordValidation,
+    verifyBody.contactPersonAvailable,
+    verifyBody.validateUAEMobileNumber,
+    verifyBody.contactAddressAvailable,
+    verifyBody.validateUAELicenseNumber,
+    verifyBody.licenceImageAvailable,
+    spcontroller.addNewServiceProvider);
 
     app.put(`/${process.env.apiToken}/update/serviceprovider/:id`,verifyBody.nameAvailable,verifyBody.emailValidation,verifyBody.usernamevalidation,verifyBody.contactPersonAvailable,verifyBody.validateUAEMobileNumber,verifyBody.contactAddressAvailable,verifyBody.validateUAELicenseNumber,spcontroller.updateServiceProvider);
 

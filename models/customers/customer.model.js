@@ -183,7 +183,7 @@ module.exports = class customers
             return await new Promise(async(resolve, reject)=>
             {
                 let uploadAttachment = await commonoperation.fileUploadTwo(files, constants.attachmentLocation.customer.upload.idProof);
-                console.log(uploadAttachment);
+                // console.log(uploadAttachment);
                 if(uploadAttachment === 'INVALIDFORMAT')
                 {
                     resolve('INVALIDFORMAT');

@@ -79,7 +79,7 @@ const validDatePassword = (password) =>
         {
             if (isValidPasswordTestWithRegex(result[0].value, password) )
             {
-                // console.log(`Password validation done`);
+                console.log(`Password validation done`);
                 return `validPassword`
             }
             else 
