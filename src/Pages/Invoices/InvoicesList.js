@@ -872,11 +872,11 @@ const InvoiceDetails = () =>
                           <table>
                             <thead>
                               <tr>
-                                <th className="tm_width_6 tm_semi_bold tm_primary_color tm_gray_bg text-center">#</th>
-                                <th className="tm_width_5 tm_semi_bold tm_primary_color tm_gray_bg text-center">Pick Up Location</th>
-                                <th className="tm_width_5 tm_semi_bold tm_primary_color tm_gray_bg text-center">Vehicle Number</th>
-                                <th className="tm_width_5 tm_semi_bo ld tm_primary_color tm_gray_bg text-center">Driver Name</th>
-                                <th className="tm_width_5 tm_semi_bold tm_primary_color tm_gray_bg text-center">Drop Location</th>
+                                <th className="tm_width_6 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center">#</th>
+                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center">Pick Up Location</th>
+                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center">Vehicle Number</th>
+                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center">Driver Name</th>
+                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center">Drop Location</th>
                               </tr>
                             </thead>
                             <tbody>
