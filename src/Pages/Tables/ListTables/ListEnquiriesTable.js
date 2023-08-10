@@ -305,7 +305,7 @@ const ListEnquiriesTable = () => {
                         setTaxAmount(Number(taxAmount))
                         setFinalAmount(Number(val) - Number(discount) + Number(taxAmount));
                     }else{
-                        if(taxation[0].value < (Number(val) - Number(discount))){
+                        if(taxation[0].value > (Number(val) - Number(discount))){
                             setTaxAmount(0)
                             setFinalAmount(Number(val) - Number(discount));
                         }else {
@@ -329,7 +329,7 @@ const ListEnquiriesTable = () => {
                             setTaxAmount(Number(taxAmount))
                             setFinalAmount(Number(val) - Number(discountType.rate) + Number(taxAmount));
                         }else{
-                            if(taxation[0].value < (Number(val) - Number(discountType.rate))){
+                            if(taxation[0].value > (Number(val) - Number(discountType.rate))){
                                 setTaxAmount(0)
                                 setFinalAmount(Number(val) - Number(discountType.rate));
                             }else {
@@ -351,7 +351,7 @@ const ListEnquiriesTable = () => {
                             setTaxAmount(taxAmount)
                             setFinalAmount(Number(val) + Number(taxAmount));
                         }else{
-                            if(Number(taxation[0].value) < Number(val)){
+                            if(Number(taxation[0].value) > Number(val)){
                                 setTaxAmount(0)
                                 setFinalAmount(Number(val));
                             }else {
@@ -377,7 +377,7 @@ const ListEnquiriesTable = () => {
                     setFinalAmount(Number(val) + taxAmount);
                     
                 }else{
-                    if(Number(taxation[0].value) < Number(val)){
+                    if(Number(taxation[0].value) > Number(val)){
                         setTaxAmount(0)
                         setFinalAmount(Number(val));
                         
@@ -404,7 +404,7 @@ const ListEnquiriesTable = () => {
                 setTaxAmount(taxAmount)
                 setFinalAmount(Number(tAmount) - Number(discountAmount) + Number(taxAmount));
             }else{
-                if(Number(taxation[0].value) < (Number(tAmount) - Number(discountAmount))){
+                if(Number(taxation[0].value) > (Number(tAmount) - Number(discountAmount))){
                     setTaxAmount(0)
                     setFinalAmount(Number(tAmount) - Number(discountAmount));
                 }else {
@@ -729,7 +729,8 @@ const ListEnquiriesTable = () => {
                                 className="form-control"
                                 name='pickup_date'
                                 options={{
-                                    dateFormat: "d-m-Y"
+                                    dateFormat: "d-m-Y",
+                                    minDate : new Date()
                                 }}
                                 value= ""
                                 onChange={(dates) =>validation.setFieldValue('pickup_date', dates[0])}

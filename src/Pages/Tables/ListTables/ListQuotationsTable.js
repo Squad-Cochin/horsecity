@@ -365,7 +365,7 @@ const ListQuotationsTable = () => {
                       setTaxAmount(Number(taxAmount))
                       setFinalAmount(Number(val) - Number(discount) + Number(taxAmount));
                   }else{
-                      if(taxation[0].value < (Number(val) - Number(discount))){
+                      if(taxation[0].value > (Number(val) - Number(discount))){
                           setTaxAmount(0)
                           setFinalAmount(Number(val) - Number(discount));
                       }else {
@@ -389,7 +389,7 @@ const ListQuotationsTable = () => {
                           setTaxAmount(Number(taxAmount))
                           setFinalAmount(Number(val) - Number(discountType.rate) + Number(taxAmount));
                       }else{
-                          if(taxation[0].value < (Number(val) - Number(discountType.rate))){
+                          if(taxation[0].value > (Number(val) - Number(discountType.rate))){
                               setTaxAmount(0)
                               setFinalAmount(Number(val) - Number(discountType.rate));
                           }else {
@@ -411,7 +411,7 @@ const ListQuotationsTable = () => {
                           setTaxAmount(taxAmount)
                           setFinalAmount(Number(val) + Number(taxAmount));
                       }else{
-                          if(Number(taxation[0].value) < Number(val)){
+                          if(Number(taxation[0].value) > Number(val)){
                               setTaxAmount(0)
                               setFinalAmount(Number(val));
                           }else {
@@ -437,7 +437,7 @@ const ListQuotationsTable = () => {
                   setFinalAmount(Number(val) + taxAmount);
                   
               }else{
-                  if(Number(taxation[0].value) < Number(val)){
+                  if(Number(taxation[0].value) > Number(val)){
                       setTaxAmount(0)
                       setFinalAmount(Number(val));
                       
@@ -466,7 +466,7 @@ const ListQuotationsTable = () => {
               setTaxAmount(taxAmount)
               setFinalAmount(Number(tAmount) - Number(discountAmount) + Number(taxAmount));
           }else{
-              if(Number(taxation[0].value) < (Number(tAmount) - Number(discountAmount))){
+              if(Number(taxation[0].value) > (Number(tAmount) - Number(discountAmount))){
                   setTaxAmount(0)
                   setFinalAmount(Number(tAmount) - Number(discountAmount));
               }else {
