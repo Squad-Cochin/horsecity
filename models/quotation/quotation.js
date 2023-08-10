@@ -240,7 +240,8 @@ exports.getOneQuotation = (quotId) => {
             dvr.name AS driver_name, 
             dc.id AS discount_type_id,
             quo.driver_amount,
-            quo.vehicle_amount
+            quo.vehicle_amount,
+            quo.status
         FROM ${constants.tableName.quotations} AS quo
         JOIN ${constants.tableName.service_providers} sp ON quo.serviceprovider_id = sp.id
         JOIN ${constants.tableName.vehicles} vh ON quo.vehicle_id = vh.id
