@@ -643,6 +643,7 @@ function hasOnlyNonSpaces(str)
 
 exports.isValidVehicleNumberEntered =  async (req, res, next) =>
 {
+    let vehicleNumber = await req.body.vehicle_number
     if (!req.body.vehicle_number) 
     {
         return res.status(200).send
@@ -653,51 +654,70 @@ exports.isValidVehicleNumberEntered =  async (req, res, next) =>
         });
     }
     else
-    {        
-        if(req.method === 'POST')
+    {   
+        var isValidVehicleNumber = (number) =>
         {
-            checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params.id, 'Vehicle number')(req, res, next);                        
+            const regex = new RegExp(process.env.VEHICLENUMBERREGEX);
+            // console.log('Regex valuie at the checking the vehicle number: ', regex);
+            return regex.test(number); // Use the test() method to check if the vehicle number matches the regex pattern
         }
-        else if(req.method === `PUT` && req.url === url.UPDATE_VEHICLE_PAGE_URL + req.params.id)
+        // console.log(isValidVehicleNumber(vehicleNumber));
+        if(!isValidVehicleNumber(vehicleNumber))
         {
-            checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params.id, 'Vehicle number')(req, res, next);
+            return res.status(200).json
+            ({
+                success: false,
+                code: 400,
+                message: "Failed! Not a valid vehicle number. The entered vehicle must be containing symbols please check and enter again",
+            });
         }
         else
         {
-            return res.status(500).json
-            ({
-                code : 500,
-                status : false, 
-                message : `Internal server error. While checking the vehicle number.` 
-            });
-        }
+            if(req.method === 'POST')
+            {
+                checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params.id, 'Vehicle number')(req, res, next);                        
+            }
+            else if(req.method === `PUT` && req.url === url.UPDATE_VEHICLE_PAGE_URL + req.params.id)
+            {
+                checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params.id, 'Vehicle number')(req, res, next);
+            }
+            else
+            {
+                return res.status(200).json
+                ({
+                    code : 500,
+                    status : false, 
+                    message : `Internal server error. While checking the vehicle number.` 
+                });
+            }
 
-        // const data = await commonfetching.dataOnCondition(tableName, req.body.vehicle_number, 'vehicle_number')
-        // console.log('Data while cheking vehicle number plate:', data);
-        // if(data === 'err' || !data)
-        // {
-        //     return res.status(500).json
-        //     ({
-        //         code: 400,
-        //         status : "failed",
-        //         error: 'Internal server error while number plate' 
-        //     });
-        // }
-        // else if(data.length > 0)
-        // {
-        //     console.log('Vehicle number already Present');
-        //     return res.status(200).send
-        //     ({
-        //         code: 400,
-        //         status: false,
-        //         message: "This vehicle number already exists in the database"
-        //     });
-        // }
-        // else
-        // {
-        //     console.log(`Vehicle number doesn't exist`);
-        //     next();           
-        // }
+            // const data = await commonfetching.dataOnCondition(tableName, req.body.vehicle_number, 'vehicle_number')
+            // console.log('Data while cheking vehicle number plate:', data);
+            // if(data === 'err' || !data)
+            // {
+            //     return res.status(500).json
+            //     ({
+            //         code: 400,
+            //         status : "failed",
+            //         error: 'Internal server error while number plate' 
+            //     });
+            // }
+            // else if(data.length > 0)
+            // {
+            //     console.log('Vehicle number already Present');
+            //     return res.status(200).send
+            //     ({
+            //         code: 400,
+            //         status: false,
+            //         message: "This vehicle number already exists in the database"
+            //     });
+            // }
+            // else
+            // {
+            //     console.log(`Vehicle number doesn't exist`);
+            //     next();           
+            // }
+        }
     }
 }
 

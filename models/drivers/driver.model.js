@@ -32,7 +32,7 @@ module.exports = class drivers
                        console.log('Error while checking the role at the time of driver');
                        resolve('err') 
                     }
-                    if(result[0].name === constants.roles.admin || result[0].name === constants.roles.superAdmin)
+                    if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
                     {
                         console.log(`Role name is admin at the time of the drivers`);
                         const offset = (pageNumber - 1) * pageSize;
@@ -53,7 +53,7 @@ module.exports = class drivers
                                 FROM ${constants.tableName.permissions} AS pm
                                 JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                                 JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                                WHERE pm.role_id = '${result[0].role_id}' AND md.name = 'DRIVERS'
+                                WHERE pm.role_id = '${result[0].role_id}' AND md.id = '${constants.modules.drivers}'
                                `;
                                 // console.log(Query);
                                 con.query(Query, (err, moduleResult) =>
@@ -78,13 +78,12 @@ module.exports = class drivers
                             }                           
                         });
                     }
-                    else if(result[0].name === constants.roles.service_provider)
+                    else if(result[0].id === constants.Roles.service_provider)
                     {
                         console.log(`Role name is service provider at the time of drivers`);
                         const offset = (pageNumber - 1) * pageSize;
                         let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, cd.status FROM drivers cd, assign_drivers ad WHERE ad.service_provider_id = ${Id} AND ad.deleted_at IS NULL AND ad.driver_id = cd.id AND cd.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
                         // console.log('Selquery of driver when user is service provider: ',selQuery);
-                        
                         con.query(selQuery, async (err, resultSel) =>
                         {
                             if(err)
@@ -106,7 +105,7 @@ module.exports = class drivers
                                     FROM ${constants.tableName.permissions} AS pm
                                     JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                                     JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                                    WHERE pm.role_id = '${result[0].role_id}' AND md.name = 'DRIVERS' `;
+                                    WHERE pm.role_id = '${result[0].role_id}' AND md.id = '${constants.modules.drivers}' `;
                                     // console.log(Query);
                                     con.query(Query, (err, moduleResult) =>
                                     {
@@ -195,7 +194,7 @@ module.exports = class drivers
                         // console.log(uploadprofile_image);
                         var uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.upload.licence);
                         // console.log(uploadprofile_image);
-                        if(resultRole[0].name === constants.roles.admin)
+                        if(resultRole[0].role_id === constants.Roles.admin)
                         {
                             console.log('Admin block when adding of the driving');
                             let insQuery = `INSERT INTO ${constants.tableName.drivers}(name, email, contact_no, emergency_contact_no, date_of_birth, profile_image, licence_no , licence_img , description, created_at) VALUES('${name}', '${email}', '${contact_no}', '${emergency_contact_no}', '${date_of_birth}', '${uploadprofile_image}', '${licence_no}', '${uploadlicence_img}', '${description}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
@@ -215,7 +214,7 @@ module.exports = class drivers
                             });
 
                         }
-                        else if(resultRole[0].name === constants.roles.service_provider)
+                        else if(resultRole[0].role_id === constants.Roles.service_provider)
                         {
                             console.log('Service provider block when adding of the driving');
                             let insQuery = `INSERT INTO ${constants.tableName.drivers}(name, email, contact_no, emergency_contact_no, date_of_birth, profile_image, licence_no , licence_img , description, created_at) VALUES('${name}', '${email}', '${contact_no}', '${emergency_contact_no}', '${date_of_birth}', '${uploadprofile_image}', '${licence_no}', '${uploadlicence_img}', '${description}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;

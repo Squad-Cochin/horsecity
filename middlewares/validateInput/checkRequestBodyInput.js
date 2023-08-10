@@ -513,24 +513,23 @@ exports.idProofValidationWhileUpdate = async(req, res, next) =>
         }
         
         if(checkIdProofNumber === `valuenotavailable`)
-                {
-                    return res.status(200).send
-                    ({
-                        code : 400,
-                        status : false,
-                        message : `This id proof number already exists in the database. Someone is already registered with this id proof number`
-                    });
-                }
-                
-                if(checkIdProofNumber === `valuenotchanged`)
-                {
-                    next();
-                }
+        {
+            return res.status(200).send
+            ({
+                code : 400,
+                status : false,
+                message : `This id proof number already exists in the database. Someone is already registered with this id proof number`
+            });
+        }
+        if(checkIdProofNumber === `valuenotchanged`)
+        {
+            next();
+        }
 
-                if(checkIdProofNumber === `true`)
-                {
-                    next();
-                }        
+        if(checkIdProofNumber === `true`)
+        {
+            next();
+        }        
     }    
 };
 
@@ -620,7 +619,7 @@ exports.passwordValidation = async (req, res, next) =>
             console.log('Regex Result from password validation', result);
             if (result)
             {
-                const isValidPassword = (password) => 
+                const isValidPassword = (password) =>
                 {
                     const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
                     const regex = new RegExp(regexPattern);
@@ -646,6 +645,8 @@ exports.passwordValidation = async (req, res, next) =>
         });
     };
 };
+
+
 exports.newpassword = async (req, res, next) => 
 {
     const password = await req.body.newpassword
@@ -1100,3 +1101,42 @@ exports.checkEmailBody = async (req, res, next) =>
         console.log(`Error from the 'checkRequestBodyInput' file in validator. Which is inside the middlewares. While checking the email body`, error);
     }
 };
+
+
+
+
+// module.exports.emailvalidation = async (req, res, next) => {
+//     const email = await req.body.email // Assigning the user entered email to email variable
+//     // //console.log(req.body)
+//     const isvalidEmail = (email) => {
+//         const regex = (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?$/);
+//         if (regex.test(email)) {
+//             const domain = email.split('@')[1]; // get domain name after '@' symbol
+//             const domainParts = domain.split('.'); // split domain name by '.' separator
+//             // //console.log(domainParts); // output: ['gmail', 'com', 'com']
+//             if (domainParts[1] === domainParts[2]) {
+//                 // //console.log('Both the domain names are same. It is not a valid email');
+//                 return false
+//             }
+//             else {
+//                 // //console.log('Valid Email');
+//                 return true;
+//             }
+//         }
+//         else {
+//             // //console.log('Invalid Email');
+//             return false
+//         }
+//     };
+//     //checking
+//     if (isvalidEmail(email)) // Here the checking of the email value is done
+//     {
+//         next();  // If correct then next()
+//     }
+//     else {
+//         res.status(401).json
+//             ({
+//                 message: "Invalid email"   // Or error message
+//             });
+//     }
+// };

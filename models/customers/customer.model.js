@@ -54,7 +54,7 @@ module.exports = class customers
                        console.log('Error while checking the role at the time of Customer');
                        resolve('err') 
                     }
-                    if(result[0].name === constants.roles.admin || result[0].name === constants.roles.superAdmin)
+                    if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
                     {
                         // console.log(`Role name is admin at the time of the Customer`);
                         const offset = (pageNumber - 1) * pageSize;
@@ -75,7 +75,7 @@ module.exports = class customers
                                 FROM ${constants.tableName.permissions} AS pm
                                 JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                                 JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                                WHERE pm.role_id = '${result[0].role_id}' AND md.name = 'CUSTOMERS'
+                                WHERE pm.role_id = '${result[0].role_id}' AND md.id = '${constants.modules.customers}'
                                `;
                                 // console.log(Query);
                                 con.query(Query, (err, moduleResult) =>
@@ -106,7 +106,7 @@ module.exports = class customers
                                 FROM ${constants.tableName.permissions} AS pm
                                 JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                                 JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                                WHERE pm.role_id = '${result[0].role_id}' AND md.name = 'CUSTOMERS'`;
+                                WHERE pm.role_id = '${result[0].role_id}' AND md.id = '${constants.modules.customers}'`;
                                 // console.log(Query);
                                 con.query(Query, (err, moduleResult) =>
                                 {
@@ -175,7 +175,6 @@ module.exports = class customers
         }
     };
 
-    
     static async addcustomer(Id, name, email, user_name, password, contact_no, date_of_birth, id_proof_no, files)
     {
         try
@@ -210,7 +209,7 @@ module.exports = class customers
                         }
                         else
                         {
-                            if(resultRole[0].name === constants.roles.admin)
+                            if(resultRole[0].role_id === constants.Roles.admin)
                             {
                                 console.log(`Add customer with the admin side`);
                                 let insQuery = `INSERT INTO customers(name, email, user_name, password, contact_no, date_of_birth, id_proof_no, id_proof_image, phone_verified, email_verified, expiry_at, created_at) VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', '${id_proof_no}', '${uploadAttachment}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
@@ -229,7 +228,7 @@ module.exports = class customers
                                     }
                                 });
                             }
-                            else if(resultRole[0].name === constants.roles.service_provider)
+                            else if(resultRole[0].role_id === constants.Roles.service_provider)
                             {
                                 console.log(`Add customer with the service provider side`);
                                 resolve([]);
@@ -359,39 +358,6 @@ module.exports = class customers
             console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getone". Which is designed to fetch particular data of the customers.');            
         }
     };
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     
 };
 

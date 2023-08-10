@@ -10,101 +10,14 @@ const timeCalculate = require('./utils/helper/date'); // This variable will have
 require('dotenv').config(); // Importing the dotenv library
 const constants = require('./utils/constants'); // Importing the constants variables data
 
-// module.exports = async function() 
-// {
-//     // making the connection with the database
-//     con.connect(function(err)
-//     {
-//         let selQuery = `SELECT * FROM ${constants.tableName.service_providers} sp WHERE sp.user_name = '${process.env.SPUSERNAME}' OR sp.email = '${process.env.EMAIL}' OR sp.contact_no = '${process.env.CONTACT_NO}' `;
-//         // console.log(selQuery);
-//         con.query(selQuery, function (err, result)  // Executing the above query
-//         {
-//             // console.log(err);
-//             // console.log(result);
-//             if(result.length != 0)
-//             {
-                 
-//             }
-//             else
-//             {    
-//                 new Promise(async (resolve, reject)=> 
-//                 {  
-                    // let insQuery = `INSERT INTO ${constants.tableName.service_providers}(name, email, user_name, password, contact_person, contact_no, contact_address, emergency_contact_no, licence_image, licence_no, phone_verified, email_verified, expiry_at, created_at) VALUES ('${process.env.NAME}', '${process.env.EMAIL}', '${process.env.SPUSERNAME}', SHA2('${process.env.PASSWORD}', 256), '${process.env.CONTACT_PERSON}', '${process.env.CONTACT_NO}', '${process.env.CONTACT_ADDRESS}', '${process.env.EMERGENCY_CONTACT_NO}', '${process.env.CERTIFICATION_OR_LICENSE_IMG}', '${process.env.CERTIFICATION_OR_LICENSE_NO}', 'TRUE', 'TRUE', '${timeCalculate.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'                     )`; 
-                    // // console.log(insQuery);
-                    // con.query(insQuery, (err, result1)=> // Executing the above query
-                    // {
-                    //     if(result1) // if inserion happend correctly then if block
-                    //     {
-                    //         // The belwo query is for add the data into the password policies table
-                    //         let insQueryPP = `INSERT INTO ${constants.tableName.password_policies}(name, value) VALUES ('${process.env.pname}', '${process.env.regex}')`;
-                    //         // console.log(insQueryPP); 
-                    //         con.query(insQueryPP, (err, result2)=> // Executing the above query
-                    //         {
-                    //             if(result2)
-                    //             {
-//                                     let insQueryApp = `INSERT INTO ${constants.tableName.application_settings} (id,application_title,contact_address,email,phone,country_code,logo,loginpage_logo,loginpage_bg_image,favicon,language_id,currency_id,tax_id,licence_number,invoice_prefix,quotation_prefix,created_at)
-//                                     VALUES (
-//                                         1,
-//                                         'My Application',
-//                                         '123 Main Street, City, Country',
-//                                         'contact@example.com',
-//                                         '+1234567890',
-//                                         'US',
-//                                         'logo.png',
-//                                         'login_logo.png',
-//                                         'login_bg_image.jpg',
-//                                         'favicon.ico',
-//                                         1,
-//                                         1,
-//                                         1,
-//                                         'ABC12345',
-//                                         'INV',
-//                                         'QUO',
-//                                         NOW()
-//                                     );
-//                                     `;
-//                                     // console.log(insQueryPP); 
-//                                     con.query(insQueryApp, (err, result22)=> // Executing the above query
-//                                     {
-//                                         if(result22) 
-//                                         {
-//                                             console.log("All the data is been entered in the database from the backend");
-//                                             // resolve('true');
-//                                         }
-//                                         else
-//                                         {  
-//                                             console.log("#### Error while entereing the password policies data from the backend #### ", err)
-//                                         }
-//                                     });
-//                                 }
-//                                 else
-//                                 { 
-//                                     console.log("#### Error while entereing the password policies data from the backend #### ", err)
-//                                 }
-//                             });
-//                         }
-//                         else // if error happend then else block
-//                         {
-//                             console.log("#### Error while entereing the username data from the backend #### ")
-//                             // reject(err);
-//                         } 
-//                     });
-//                 });
-//             }
-//         });
-//     });
-// }
- 
-
-
-module.exports = async function() 
+module.exports = async function () 
 {
     // making the connection with the database
     con.connect(function(err)
     {
         if(err)
         {
-            console.log('Error while connecting to the databse at the time of inserting data from the backend(init.js).');
+            console.log('Error while connecting to the database at the time of inserting data from the backend(init.js).');
         }
         else
         {
@@ -119,14 +32,14 @@ module.exports = async function()
                 else
                 {
                     let insCurrency = `INSERT INTO ${constants.tableName.currencies}(name, abbreviation, created_at) VALUES ('${process.env.currenciesName}', '${process.env.currenciesAbbreviation}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                    console.log('Insert Currecny Query: ', insCurrency);
+                    // console.log('Insert Currecny Query: ', insCurrency);
                     con.query(insCurrency, (err , resultInsCurrency)=>
                     {
                         if(resultInsCurrency)
                         {
                             console.log('Currency entered from the backend');
                             let insLanguage = `INSERT INTO languages (name, file, abbreviation, created_at) VALUES ('${process.env.languageName}', '${process.env.fileName}', '${process.env.langaugeAbbreviation}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                            console.log('Insert Language Query: ', insLanguage);
+                            // console.log('Insert Language Query: ', insLanguage);
                             con.query(insLanguage, (err , resultInsLanguage)=>
                             {
                                 if(resultInsLanguage)
@@ -135,34 +48,35 @@ module.exports = async function()
                                     let insTaxation = `INSERT INTO taxations (type, name, value, created_at) VALUES 
                                     ('${process.env.taxatationTypeOne}', '${process.env.taxatationNameOne}', '${process.env.taxatationValueOne}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
                                     ('${process.env.taxatationTypeTwo}', '${process.env.taxatationNameTwo}', '${process.env.taxatationValueTwo}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                                    // console.log(`Insert taxation query: `, insTaxation);
                                     con.query(insTaxation, (err , insTaxation)=>
                                     {
                                         if(insTaxation)
                                         {
                                             console.log('Taxation data entered from the backend');
                                             let getCurrencyData = `SELECT * FROM ${constants.tableName.currencies} c WHERE c.name = '${process.env.currenciesName}' `;
-                                            console.log('Get currecny data query: ', getCurrencyData);
+                                            // console.log('Get currecny data query: ', getCurrencyData);
                                             con.query(getCurrencyData, (err, resultGetCurrecnyData) =>
                                             {
                                                 if(resultGetCurrecnyData)
                                                 {
-                                                    console.log('Currecny Data: ', resultGetCurrecnyData);
+                                                    // console.log('Currecny Data: ', resultGetCurrecnyData);
                                                     console.log('Currecny data successfully fetched');
                                                     let getTaxData = `SELECT * FROM ${constants.tableName.taxations} t WHERE t.name = '${process.env.taxatationNameOne}'`;
-                                                    console.log('Get taxation data query: ', getTaxData);
+                                                    // console.log('Get taxation data query: ', getTaxData);
                                                     con.query(getTaxData, (err, resultGetTaxationData) =>
                                                     {
                                                         if(resultGetTaxationData)
                                                         {
-                                                            console.log('Taxation Data: ', resultGetTaxationData);
+                                                            // console.log('Taxation Data: ', resultGetTaxationData);
                                                             console.log('Taxation data successfully fetched');
                                                             let getLanguageData = `SELECT * FROM ${constants.tableName.languages} l WHERE l.name = '${process.env.languageName}'`;
-                                                            console.log('Get language data query: ', getLanguageData);
+                                                            // console.log('Get language data query: ', getLanguageData);
                                                             con.query(getLanguageData, async (err, resultGetLanguageData) =>
                                                             {
                                                                 if(resultGetLanguageData)
                                                                 {
-                                                                    console.log('Languages Data: ', resultGetLanguageData);
+                                                                    // console.log('Languages Data: ', resultGetLanguageData);
                                                                     console.log('Language data successfully fetched');
                                                                     let insApplicationData = `INSERT INTO application_settings (id, application_title, contact_address, email, phone, country_code, logo, loginpage_logo, loginpage_bg_image, favicon, language_id, currency_id, tax_id, licence_number, invoice_prefix, quotation_prefix, created_at)
                                                                                               VALUES (
@@ -184,7 +98,7 @@ module.exports = async function()
                                                                                                 '${process.env.applicationQuotationPrefix}',
                                                                                                 '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                                                                               )`;
-                                                                    console.log('Insert Application Settings Query: ', insApplicationData);
+                                                                    // console.log('Insert Application Settings Query: ', insApplicationData);
                                                                     con.query(insApplicationData, (err , resultInsApplicationSetting)=>
                                                                     {
                                                                         if(resultInsApplicationSetting)
@@ -194,7 +108,7 @@ module.exports = async function()
                                                                             ('${process.env.roleOne}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
                                                                             ('${process.env.roleTwo}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
                                                                             ('${process.env.roleThree}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                                                                            console.log('Insert data into the role table query: ', insRole);
+                                                                            // console.log('Insert data into the role table query: ', insRole);
                                                                             con.query(insRole, (err , resultInsRole)=>
                                                                             {
                                                                                 if(resultInsRole)
@@ -214,14 +128,14 @@ module.exports = async function()
                                                                                     ('${process.env.moduleEleven}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
                                                                                     ('${process.env.moduleTwelve}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
                                                                                     ('${process.env.moduleThirteen}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}') `;
-                                                                                    console.log('Insert data into the module table query: ', insModules);
+                                                                                    // console.log('Insert data into the module table query: ', insModules);
                                                                                     con.query(insModules, (err , resultinsModules)=>
                                                                                     {
                                                                                         if(resultinsModules)
                                                                                         {
                                                                                             console.log(`Modules are inserted from the backend`);
                                                                                             let moduleData = `SELECT m.id AS mID, m.name AS ModuleName FROM ${constants.tableName.modules} m`;
-                                                                                            console.log(`Fetching module data query: `, moduleData);
+                                                                                            // console.log(`Fetching module data query: `, moduleData);
                                                                                             con.query(moduleData, (err, resultModuleData) =>
                                                                                             {
                                                                                                 if(resultModuleData.length == 0) // If the module table is not filled with module name. then this if block code will be executed.
@@ -239,8 +153,7 @@ module.exports = async function()
                                                                                                             console.log(' #### Admin Role is not available in the table #### ', err);
                                                                                                         }
                                                                                                         else
-                                                                                                        {
-                                                                                                            
+                                                                                                        {                                                                                                           
                                                                                                                 let InsQuery = `INSERT INTO permissions (role_id, module_id, \`create\`, \`update\`, \`read\`, \`delete\`) VALUES 
                                                                                                                 (${resultRoleData[0].rID}, ${resultModuleData[0].mID}, 'false', 'false', 'true', 'false'),
                                                                                                                 (${resultRoleData[0].rID}, ${resultModuleData[1].mID}, 'false', 'false', 'false', 'false'),
@@ -280,38 +193,38 @@ module.exports = async function()
                                                                                                                 (${resultRoleData[2].rID}, ${resultModuleData[11].mID}, 'false', 'false', 'false', 'false'),
                                                                                                                 (${resultRoleData[2].rID}, ${resultModuleData[12].mID}, 'false', 'false', 'false', 'false')
                                                                                                                 `;
-                                                                                                            console.log('Insert Permission Table Query: ', InsQuery);
+                                                                                                            // console.log('Insert Permission Table Query: ', InsQuery);
                                                                                                             con.query(InsQuery, (err, insPermissionResult) =>
                                                                                                             {
                                                                                                                 if(insPermissionResult)
                                                                                                                 {
                                                                                                                     console.log(`Data Inserted into the permission table: `);
-                                                                                                                    let insQuery = `INSERT INTO ${constants.tableName.service_providers}(name, email, user_name, password, contact_person, role_Id, contact_no, contact_address, emergency_contact_no, licence_image, licence_no, phone_verified, email_verified, expiry_at, created_at) VALUES ('${process.env.NAME}', '${process.env.EMAIL}', '${process.env.SPUSERNAME}', SHA2('${process.env.PASSWORD}', 256), '${process.env.CONTACT_PERSON}', ${resultRoleData[0].rID}, '${process.env.CONTACT_NO}', '${process.env.CONTACT_ADDRESS}', '${process.env.EMERGENCY_CONTACT_NO}', '${process.env.CERTIFICATION_OR_LICENSE_IMG}', '${process.env.CERTIFICATION_OR_LICENSE_NO}', 'TRUE', 'TRUE', '${timeCalculate.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'                     )`; 
-                                                                                                                    console.log('Inserting data into the service provider table query', insQuery);
+                                                                                                                    let insQuery = `INSERT INTO ${constants.tableName.service_providers}(name, email, user_name, password, contact_person, role_Id, contact_no, contact_address, emergency_contact_no, licence_image, licence_no, phone_verified, email_verified, expiry_at, created_at) VALUES ('${process.env.NAME}', '${process.env.EMAIL}', '${process.env.SPUSERNAME}', SHA2('${process.env.PASSWORD}', 256), '${process.env.CONTACT_PERSON}', ${resultRoleData[0].rID}, '${process.env.CONTACT_NO}', '${process.env.CONTACT_ADDRESS}', '${process.env.EMERGENCY_CONTACT_NO}', '${process.env.CERTIFICATION_OR_LICENSE_IMG}', '${process.env.CERTIFICATION_OR_LICENSE_NO}', 'TRUE', 'TRUE', '${timeCalculate.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}' )`; 
+                                                                                                                    // console.log('Inserting data into the service provider table query', insQuery);
                                                                                                                     con.query(insQuery, (err, result1)=> // Executing the above query
                                                                                                                     {
                                                                                                                         if(result1) // if inserion happend correctly then if block
                                                                                                                         {
                                                                                                                             // The belwo query is for add the data into the password policies table
                                                                                                                             console.log(`Service provider data inserted successfully`);
-                                                                                                                            let insQueryPP = `INSERT INTO ${constants.tableName.password_policies}(name, value) VALUES ('${process.env.pname}', '${process.env.regex}')`;
-                                                                                                                            console.log(`Inserting the data into the password policies table query`, insQueryPP); 
+                                                                                                                            let insQueryPP = `INSERT INTO ${constants.tableName.password_policies}(name, value, created_at) VALUES ('${process.env.pname}', '${process.env.regex}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                                                                                                                            // console.log(`Inserting the data into the password policies table query`, insQueryPP); 
                                                                                                                             con.query(insQueryPP, (err, result2)=> // Executing the above query
                                                                                                                             {
                                                                                                                                 if(result2)
                                                                                                                                 {
                                                                                                                                     console.log(`Data inserted into the password policies table`);
                                                                                                                                     let insDiscountType = `INSERT INTO ${constants.tableName.discount_types} (name, type, rate, created_at) VALUES('${process.env.discountName}', '${process.env.discountType}', '${process.env.dicountRate}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                                                                                                                                    console.log(`Insert Discount Table Query: `, insDiscountType);
+                                                                                                                                    // console.log(`Insert Discount Table Query: `, insDiscountType);
                                                                                                                                     con.query(insDiscountType, (err, resultInsDiscountType)=> // Executing the above query
                                                                                                                                     {
                                                                                                                                         if(resultInsDiscountType)
                                                                                                                                         {
                                                                                                                                             console.log(`Discount insert data is successfully inserted from the backend`);
-                                                                                                                                            let insTemplate = `INSERT INTO ${constants.tableName.templates} (name, subject, purpose, type) VALUES
-                                                                                                                                            ('${process.env.templateFirstInvoiceName}', '${process.env.templateFirstInvoiceSubject}', '${process.env.templateFirstInvoicePurpose}', '${process.env.templateFirstInvoiceType}'),
-                                                                                                                                            ('${process.env.templateSecondQuotationName}', '${process.env.templateSecondQuotationSubject}', '${process.env.templateSecondQuotationPurpose}', '${process.env.templateSecondQuotationType}')`;
-                                                                                                                                            console.log(`Insert Template Table Query: `, insTemplate);
+                                                                                                                                            let insTemplate = `INSERT INTO ${constants.tableName.templates} (name, subject, purpose, type, created_at) VALUES
+                                                                                                                                            ('${process.env.templateFirstInvoiceName}', '${process.env.templateFirstInvoiceSubject}', '${process.env.templateFirstInvoicePurpose}', '${process.env.templateFirstInvoiceType}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
+                                                                                                                                            ('${process.env.templateSecondQuotationName}', '${process.env.templateSecondQuotationSubject}', '${process.env.templateSecondQuotationPurpose}', '${process.env.templateSecondQuotationType}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                                                                                                                                            // console.log(`Insert Template Table Query: `, insTemplate);
                                                                                                                                             con.query(insTemplate, (err, resultInsTemplate)=> // Executing the above query
                                                                                                                                             {
                                                                                                                                                 if(resultInsTemplate)

@@ -32,7 +32,7 @@ module.exports = class invoices
                        console.log('Error while checking the role at the time of invoice');
                        resolve('err') 
                     }
-                    if(result[0].name === constants.roles.admin || result[0].name === constants.roles.superAdmin)
+                    if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.superAdmin)
                     {
 
                         const offset = (pageNumber - 1) * pageSize;
@@ -82,7 +82,7 @@ module.exports = class invoices
                             });
                         });
                     }
-                    else if(result[0].name === constants.roles.service_provider)
+                    else if(result[0].role_id === constants.Roles.service_provider)
                     {
                         // console.log(`CAME TO SERVICE PROVIDER`);
                         const offset = (pageNumber - 1) * pageSize;
@@ -1059,7 +1059,7 @@ module.exports = class invoices
             {
                 let selQuery = `SELECT i.id, i.invoice_no, t.subject, c.email, t.template
                 FROM customers c, invoices i, quotations q, templates t
-                WHERE i.id = ${Id} AND c.id = q.customer_id AND q.id = i.quot_id AND t.subject = '${process.env.templateFirstInvoiceSubject}'`;
+                WHERE i.id = ${Id} AND c.id = q.customer_id AND q.id = i.quot_id AND t.subject = '${process.env.TemplateInvoiceConditionName}'`;
                 con.query(selQuery,(err, result) =>
                 {
                     // console.log(`Email details: `, result);

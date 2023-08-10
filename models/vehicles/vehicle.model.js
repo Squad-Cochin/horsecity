@@ -34,9 +34,9 @@ module.exports = class vehicles
                     {
                         let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);
                         // console.log(uploadSafetyCertificate);
-                        if(resultRole[0].name === constants.roles.admin)
+                        if(resultRole[0].role_id === constants.Roles.admin)
                         {
-                            // console.log('Admin block when adding of the vehicles');
+                            console.log('Admin block when adding of the vehicles');
                             let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, price,no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${serviceProviderId}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${price}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
                             // console.log(insQuery);
                             con.query(insQuery, (err, result) =>
@@ -54,7 +54,7 @@ module.exports = class vehicles
                                 }
                             });
                         }
-                        else if(resultRole[0].name === constants.roles.service_provider)
+                        else if(resultRole[0].role_id === constants.Roles.service_provider)
                         {
                             console.log('Service provider block when adding of the vehicle');
                             let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, price, no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${Id}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${price}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
@@ -106,7 +106,7 @@ module.exports = class vehicles
                        resolve('err') 
                     }
 
-                    if(result[0].name === constants.roles.admin || result[0].name === constants.roles.superAdmin)
+                    if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
                     {
                         const offset = (pageNumber - 1) * pageSize;
                         let selQuery = `SELECT v.id, sp.name AS service_provider, v.vehicle_number, v.make, v.no_of_horse, v.status FROM  ${constants.tableName.service_providers} sp, ${constants.tableName.vehicles} v WHERE sp.id = v.service_provider_id AND v.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
@@ -145,7 +145,7 @@ module.exports = class vehicles
                             }
                         });
                     }
-                    else if(result[0].name === constants.roles.service_provider)
+                    else if(result[0].role_id === constants.Roles.service_provider)
                     {
                         // console.log(`SERVICE PROVIDER`);
                         // console.log(result[0].role_id);
