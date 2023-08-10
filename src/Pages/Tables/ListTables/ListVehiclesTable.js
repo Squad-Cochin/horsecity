@@ -638,13 +638,13 @@ const ListVehiclesTable = () =>
                                     <img name="id_proof_image" src={certificatePreview} alt="Id Proof Preview" style={{ maxWidth: '100px' }} />
                                 </div>
                             )}  
-                            <label htmlFor="vehicle_image-field" className="form-label">Safty Certificate Image</label>
+                            <label htmlFor="vehicle_image-field" className="form-label">Safety Certificate Image</label>
                             <input
                                 type="file"
                                 name='safety_certicate'
                                 id="vehicle_image-field"
                                 className="form-control"
-                                placeholder="Upload Safty Certificate Image"
+                                placeholder="Upload Safety Certificate Image"
                                 onChange={handleIdProofImageChange}
                             />
                         </div>
@@ -775,7 +775,7 @@ const ListVehiclesTable = () =>
                         </div>
 
                         {/* The below element is for adding the date. When the insurance of the vehicle will expire. */} 
-                        <div className="mb-3">
+                        {/* <div className="mb-3">
                             <label htmlFor="insurance_expiry_date-field" className="form-label">Insurance Expiry Date</label>
                             <Flatpickr
                                 className="form-control"
@@ -788,7 +788,23 @@ const ListVehiclesTable = () =>
                                 onChange={(dates) =>validation.setFieldValue('insurance_expiry_date', dates[0])}
                                 placeholder="Select Insurance Expiry Date"
                             />
+                        </div> */}
+
+                        <div className="mb-3">
+                            <label htmlFor="insurance_expiry_date-field" className="form-label">Insurance Expiry Date</label>
+                            <Flatpickr
+                                className="form-control"
+                                options={{
+                                    dateFormat: "d-m-Y",
+                                    minDate: "today", // Set the minimum date to today
+                                }}
+                                name='insurance_expiry_date'
+                                value={validation.values.insurance_expiry_date || ""}
+                                onChange={(dates) => validation.setFieldValue('insurance_expiry_date', dates[0])}
+                                placeholder="Select Insurance Expiry Date"
+                            />
                         </div>
+
 
                         {/* The below element is for seleting the type of vehicle. */} 
                         <div className="mb-3">
@@ -854,7 +870,7 @@ const ListVehiclesTable = () =>
                         </div>
 
                         {/* The below element is for seleting the vehicle expiration date. */} 
-                        <div className="mb-3">
+                        {/* <div className="mb-3">
                             <label htmlFor="vehicle_exipration_date-field" className="form-label">Vehicle Expiration Date</label>
                             <Flatpickr
                                 className="form-control"
@@ -867,7 +883,26 @@ const ListVehiclesTable = () =>
                                 onChange={(dates) =>validation.setFieldValue('vehicle_exipration_date', dates[0])}
                                 placeholder="Select Vehicle Expiration Date"
                             />
+                        </div> */}
+
+                        <div className="mb-3">
+                            <label htmlFor="vehicle_exipration_date-field" className="form-label">Vehicle Expiration Date</label>
+                            <Flatpickr
+                                className="form-control"
+                                options={{
+                                    dateFormat: "d-m-Y",
+                                    minDate: "today", // Set the minimum date to today
+                                }}
+                                name='vehicle_exipration_date'
+                                value={validation.values.vehicle_exipration_date || ""}
+                                onChange={(dates) => validation.setFieldValue('vehicle_exipration_date', dates[0])}
+                                placeholder="Select Vehicle Expiration Date"
+                            />
                         </div>
+
+
+
+
                     </ModalBody>{/* Here all the element will be done*/}
                     {/* All the buttons are add from the footer */}
                     <ModalFooter>
