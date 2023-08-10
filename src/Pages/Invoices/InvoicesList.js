@@ -872,17 +872,17 @@ const InvoiceDetails = () =>
                           <table>
                             <thead>
                               <tr>
-                                <th className="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd ">#</th>
-                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Pick Up Location</th>
-                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Vehicle Number</th>
-                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Driver Name</th>
-                                <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg text-center">Drop Location</th>
+                                <th className="tm_width_6 tm_semi_bold tm_primary_color tm_gray_bg text-center">#</th>
+                                <th className="tm_width_5 tm_semi_bold tm_primary_color tm_gray_bg text-center">Pick Up Location</th>
+                                <th className="tm_width_5 tm_semi_bold tm_primary_color tm_gray_bg text-center">Vehicle Number</th>
+                                <th className="tm_width_5 tm_semi_bo ld tm_primary_color tm_gray_bg text-center">Driver Name</th>
+                                <th className="tm_width_5 tm_semi_bold tm_primary_color tm_gray_bg text-center">Drop Location</th>
                               </tr>
                             </thead>
                             <tbody>
                             {vehicles.map((item, index) => (
                               <tr key={index}>
-                                <td className="tm_width_3">{index + 1}</td>
+                                <td className="tm_width_3 text-center">{index + 1}</td>
                                 <td className="tm_width_4 text-center">{item.pickup_location}</td>
                                 <td className="tm_width_2 text-center">{item.vehicle_number}</td>
                                 <td className="tm_width_2 text-center">{item.driver_name}</td>
@@ -929,10 +929,10 @@ const InvoiceDetails = () =>
                         <table>
                           <thead>
                             <tr>
-                              <th className="tm_width_3 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center">#</th>
-                              <th className="tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center" style={{ width: '30%' }}>Recieved Money</th>
-                              <th className="tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center" style={{ width: '30%' }}>Received Date</th>
-                              <th className="tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center" style={{ width: '10%' }}>Remaining Amount</th>
+                              <th className="tm_width_6 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center">#</th>
+                              <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center">Recieved Money</th>
+                              <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center">Received Date</th>
+                              <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center">Remaining Amount</th>
                             </tr>
                           </thead>
                           <tbody>
