@@ -30,6 +30,7 @@ exports.addNew = async (req, res, next) =>
         req.body.length, // length of the vehicle
         req.body.breadth, // breadth of the vehicle
         req.body.height, // height of the vehicle
+        req.body.price, // Min price of the vehicle
         req.body.no_of_horse, // Maximum number of the horses a vehicle carry
         req.body.air_conditioner, // breadth of the vehicle
         req.body.temperature_manageable, // breadth of the vehicle
@@ -254,6 +255,7 @@ exports.updateData = async (req, res, next) =>
         req.body.length, // length of the vehicle
         req.body.breadth, // breadth of the vehicle
         req.body.height, // height of the vehicle
+        req.body.price, // Min price of the vehicle
         req.body.no_of_horse, // Maximum number of the horses a vehicle carry
         req.body.air_conditioner, // Value of the vehicle whether it consist of air conditioner or not
         req.body.temperature_manageable, // Value of the vehicle whether it consist of temperature manageable device or not

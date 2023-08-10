@@ -18,7 +18,7 @@ exports.isServiceProviderIdEntered = (tableName) => async (req, res, next) =>
     else
     {
         const data = await commonfetching.dataOnCondition(tableName, req.body.service_provider_id, 'id')
-        console.log(data);
+        // console.log(data);
         if(data === 'err' || !data)
         {
             return res.status(500).json
@@ -30,7 +30,7 @@ exports.isServiceProviderIdEntered = (tableName) => async (req, res, next) =>
         }
         else if(data.length > 0)
         {
-            console.log('service provider id Present');
+            // console.log('service provider id Present');
             next()          
         }
         else
@@ -152,7 +152,7 @@ exports.isBreadthEntered = (req, res, next) =>
         ({
             code: 400,
             status: "failure",
-            message: "Vehicle length must be a numeric value",
+            message: "Vehicle breadth must be a numeric value",
         });
     }
     else if (breadth <= 0)
@@ -189,7 +189,7 @@ exports.isheightEntered = (req, res, next) =>
         ({
             code: 400,
             status: "failure",
-            message: "Vehicle length must be a numeric value",
+            message: "Vehicle height must be a numeric value",
         });
     }
     else if (height <= 0)
@@ -766,3 +766,40 @@ exports.isVehicleImageTitleAdded = (req, res, next) =>
         next();
     }
 }
+
+exports.isPriceEntered = (req, res, next) => 
+{
+    const price = req.body.price;
+    const numericLength = parseFloat(price);
+    if (!price)
+    {
+        return res.status(200).send
+        ({
+            code: 400,
+            status: false,
+            message: "Vehicle price required",
+        });
+    }
+    else if (typeof numericLength !== "number" || isNaN(numericLength) || !isFinite(numericLength)) 
+    {
+        return res.status(200).send
+        ({
+            code: 400,
+            status: "failure",
+            message: "Vehicle price must be a numeric value",
+        });
+    }
+    else if (price <= 0)
+    {
+        return res.status(200).send
+        ({
+            code: 400,
+            status: "failure",
+            message: "Vehicle price must be greater than zero.",
+        });
+    } 
+    else
+    {
+        next();
+    }
+};
