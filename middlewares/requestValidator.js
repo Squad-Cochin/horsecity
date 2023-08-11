@@ -453,10 +453,25 @@ exports.verifyLanguageBody = async(req,res,next) =>
 
 }
 
+exports.verifyToken = async (req,res,next ) =>{
+    const bearerToken = req.headers.authorization;
+console.log(bearerToken);
+    const token = bearerToken.split(' ')[1];
+    if(process.env.clientApiToken === token){
+        next()
+    }else{
+        return res.status(200).send
+        ({
+            code: 400,
+            success: false,
+            message: "Invalid token"
+        });
+    }
+  
+}
+  
 
-
-
-
+ 
 exports.validateUAEMobileNumber = async (req, res, next) => {
     const { contact_no, emergency_contact_no } = req.body;
     const requestMethod = req.method;

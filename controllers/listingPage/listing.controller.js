@@ -22,3 +22,18 @@ exports.listingPageData = async(req,res)=>
 }
 
 
+exports.getUsernameServiceProvider = async(req,res)=>
+{    
+    let getUsernameServiceProvider = await modal.getUsernameServiceProvider();
+
+   if(getUsernameServiceProvider){
+
+    return res.status(200).send
+    ({
+        code: 200,
+        success: true,
+        message: constants.responseMessage.getAll,
+        data : getUsernameServiceProvider
+    });
+   }
+}

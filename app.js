@@ -50,5 +50,6 @@ require('./routes/tripDetails/tripDetails')(app) //Quotations
 require('./routes/accounts/accounts')(app) //Accounts 
 // /**REPORTS */
 require('./routes/reports/reports')(app)  
- 
+ /**Client */
+ require('./routes/listingPage/listing')(app)  
 module.exports = app; // making the app variable for export  

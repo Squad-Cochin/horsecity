@@ -13,7 +13,9 @@ module.exports =
         active : `ACTIVE`,
         inactive : `INACTIVE`,
         paid : `PAID`,
-        partPaid : `PARTIALLY PAID`
+        partPaid : `PARTIALLY PAID`,
+        yes : 'YES',
+        no : 'NO'
     },
     enquiry_status  :
     {
