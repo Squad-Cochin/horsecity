@@ -121,7 +121,7 @@ exports.addDriver = async (req, res, next) =>
         return res.status(200).json
         ({
             code: 400,
-            status: true,
+            status: false,
             message: constant.responseMessage.errorInsert,
         });
     }

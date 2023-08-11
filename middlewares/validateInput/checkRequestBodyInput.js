@@ -757,44 +757,6 @@ exports.confirmnewpassword = async (req, res, next) =>
     };
 }
 
-// const validDatePassword = async (password) =>
-// {
-//     let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
-//     con.query(selQuery, (err, result) => 
-//     {
-//         console.log('Validate Password function Regex Result:- ', result); 
-//         if (result)
-//         {
-//             // console.log('Validate Password Function after checking the password result',isValidPasswordTestWithRegex(result[0].value, password));
-//             // if (isValidPasswordTestWithRegex(result[0].value, password))
-//             {
-//                 console.log(`Password validation done`);
-//                 return `validPassword`
-//             }
-//             else 
-//             {
-//                 console.log(`Invalid Password`);
-//                 return `invalidPassword`
-//             }
-//         }
-//         else
-//         {
-//             console.log(`Error while fetchig the regex from the password policies table`);
-//             return `notfoundRegex`;
-//         }
-//     });
-// };
-
-// const isValidPasswordTestWithRegex = (result, password) => 
-// {
-//     const regexPattern = result.replace(/^\/|\/$/g, ``); // Remove leading and trailing slashes
-//     const regex = new RegExp(regexPattern);
-//     console.log('Regex from next funtion: ',regex);
-//     return regex.test(password); // Use the test() method to check if the password matches the regex pattern
-// };
-
-
-
 exports.isPageNumberEntered = (req, res, next) =>
 {
     if(!req.body.page)
@@ -1102,41 +1064,134 @@ exports.checkEmailBody = async (req, res, next) =>
     }
 };
 
+exports.checkCustomerEnquiryBody = async (req, res, next) =>
+{
+    try
+    {
+        // await this.checkValueEntered(req.body.customer_id, 'Customer id')(req, res, next);
+        await this.checkValueEntered(req.body.vehicle_id, 'Vehicle id')(req, res, next);
+        await this.checkValueEntered(req.body.service_provider_id, 'Service provider id')(req, res, next);
+        await this.checkValueEntered(req.body.pickup_location, 'Pick up location')(req, res, next);
+        await this.checkValueEntered(req.body.drop_location, 'Drop location')(req, res, next);
+        await this.checkValueEntered(req.body.vehicle_type, 'Vehicle type')(req, res, next);
+        await this.checkValueEntered(req.body.pickup_country, 'Pick up country')(req, res, next);
+        await this.checkValueEntered(req.body.drop_country, 'Drop country')(req, res, next);
+        await this.checkValueEntered(req.body.no_of_horse, 'Number of horse, Which are about to transport')(req, res, next);
+        await this.checkValueEntered(req.body.description, 'Description about the enquiry')(req, res, next);
+        next();
+    }
+    catch (error)
+    {
+        console.log(`Error from the 'checkCustomerEnquiryBody' function. It is in validator folder. Which is inside the middlewares. While checking the enquiries body. This middleware is basically designed to make the enquiries from the customer`, error); 
+    }
+};
 
 
+exports.isIdEntered = (feildName, tableName, MessageFeild) => async (req, res, next) =>
+{
+    if (!req.body[feildName]) 
+    {
+        return res.status(200).send
+        ({
+            code: 400,
+            status: false,
+            message: `${MessageFeild} id is required`
+        });
+    }
+    else
+    {
+        const data = await commonfetching.dataOnCondition(tableName, req.body[feildName], 'id');
+        // console.log(data);
+        if(data === 'err' || !data)
+        {
+            return res.status(500).json
+            ({
+                code: 400,
+                status : "failed",
+                error: `Internal server error while fetching the data of '${MessageFeild}' from the database`
+            });
+        }
+        else if(data.length > 0)
+        {
+            // console.log(`${MessageFeild} id present`);
+            next()          
+        }
+        else
+        {
+            console.log(`${MessageFeild} id doesn't exist`);
+            return res.status(200).send
+            ({
+                code: 400,
+                status: false,
+                message: `${MessageFeild} id doesn't exists in the database`
+            });
+        }
+    }
+};
 
-// module.exports.emailvalidation = async (req, res, next) => {
-//     const email = await req.body.email // Assigning the user entered email to email variable
-//     // //console.log(req.body)
-//     const isvalidEmail = (email) => {
-//         const regex = (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?$/);
-//         if (regex.test(email)) {
-//             const domain = email.split('@')[1]; // get domain name after '@' symbol
-//             const domainParts = domain.split('.'); // split domain name by '.' separator
-//             // //console.log(domainParts); // output: ['gmail', 'com', 'com']
-//             if (domainParts[1] === domainParts[2]) {
-//                 // //console.log('Both the domain names are same. It is not a valid email');
-//                 return false
-//             }
-//             else {
-//                 // //console.log('Valid Email');
-//                 return true;
-//             }
-//         }
-//         else {
-//             // //console.log('Invalid Email');
-//             return false
-//         }
-//     };
-//     //checking
-//     if (isvalidEmail(email)) // Here the checking of the email value is done
-//     {
-//         next();  // If correct then next()
-//     }
-//     else {
-//         res.status(401).json
-//             ({
-//                 message: "Invalid email"   // Or error message
-//             });
-//     }
-// };
+exports.checkingDuplicateEnquiry = async (req, res, next) =>
+{
+    try
+    {
+        return new Promise((resolve, reject) =>
+        {
+            const selQuery = `SELECT * FROM ${constants.tableName.enquiries} e WHERE e.customer_id = ${req.params.id} AND e.vehicle_id = ${req.body.vehicle_id} AND e.serviceprovider_id = ${req.body.service_provider_id} AND e.pickup_location = '${req.body.pickup_location}' AND e.drop_location = '${req.body.drop_location}' AND e.trip_type = '${req.body.vehicle_type}' AND e.pickup_country = '${req.body.pickup_country}' AND e.drop_country = '${req.body.drop_country}' AND e.no_of_horse = ${req.body.no_of_horse} `;
+            // console.log(`Query from checking duplicate enquiry: `, selQuery);
+            con.query(selQuery, (err, result) =>
+            {
+                if(result.length != 0)
+                {
+                    // console.log(`Result from the checking duplicate enquiry: `, result);
+                    if(result[0].status === constants.enquiry_status.confirmed)
+                    {
+                        // console.log(`Previous enquiry from this same details are confirmed by the service provider. So we can accept this enquiry now.`);
+                        next();
+                    }
+                    else if(result[0].status === constants.enquiry_status.notconfirmed)
+                    {                        
+                        if(result[0].status === req.body.description)
+                        {
+                            // console.log(`Previous enquiry from this same details are not confirmed by the service provider till now. So we can forward this enquiry of your right now. Please wait`);
+                            return res.status(200).send
+                            ({
+                                code : 400,
+                                status : false,
+                                message : `Previous enquiry from this same details are not confirmed by the service provider till now. So we can forward this enquiry of your right now. Please wait`
+                            });
+                        }
+
+                        if(result[0].status !== req.body.description)
+                        {
+                            // console.log(`Previous enquiry from this same details are not confirmed by the service provider till now. You have changed the description only. It is not allowed. Service provider will reach to you. Please tell them directly`);
+                            return res.status(200).send
+                            ({
+                                code : 400,
+                                status : false,
+                                message : `Previous enquiry from this same details are not confirmed by the service provider till now. You have changed the description only. It is not allowed. Service provider will reach to you. Please tell them directly`
+                            });
+                        }
+                    }
+                    else
+                    {
+                        // console.log(`Internal Server Error From the CheckDuplicateEntry function`);
+                        return res.status(200).send
+                        ({
+                            code : 500,
+                            status : false,
+                            message : ``
+                        });
+                    }
+                }
+                else
+                {
+                    // console.log(`No data present with the submitted details`);
+                    next();
+                }
+            });
+        });
+    }
+    catch (error)
+    {
+        console.log(`Error while checking the duplicate entry of enquiry data`, error);
+    }
+};

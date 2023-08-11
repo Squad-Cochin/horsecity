@@ -34,8 +34,8 @@ module.exports = class authentication
                 else
                 {
                     const passwordHashed = await commonoperation.changePasswordToSQLHashing(password);
-                    console.log(passwordHashed);
-                    console.log(userData[0].password);
+                    // console.log(passwordHashed);
+                    // console.log(userData[0].password);
                     if (userData[0].password === passwordHashed)
                     { 
                         if(userData[0].status === constant.status.inactive)
@@ -52,7 +52,7 @@ module.exports = class authentication
                             }
                             else
                             { 
-                                console.log("user",userData[0].role_Id);
+                                // console.log("User Id: ", userData[0].role_Id);
                                 let selQuery = `SELECT md.name AS module_name ,md.id AS module_id 
                                 FROM ${constants.tableName.permissions} AS pm
                                 JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id

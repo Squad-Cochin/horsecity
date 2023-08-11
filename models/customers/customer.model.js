@@ -14,30 +14,6 @@ module.exports = class customers
 {
     constructor(){}
 
-    // static async getall(pageNumber, pageSize, Id)
-    // {
-    //     try
-    //     {
-    //         const data = await commonfetching.getAllDataOfDriverAndCustomer(constants.tableName.customers, pageNumber, pageSize);
-    //         // console.log('Data', data);
-    //         const count = await commonoperation.totalCount(constants.tableName.customers)
-    //         // console.log('Total Data', count[0]['count(t.id)']);
-    //         if(data.length === 0)
-    //         {
-    //             return ({totalCount : count[0]['count(t.id)'], customer : data});
-    //         }
-    //         else
-    //         {
-    //             return ({totalCount : count[0]['count(t.id)'], customer : data});
-    //         }            
-    //     }
-    //     catch(error)
-    //     {
-    //         console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getall". Which is designed to fetch all the data of customers.');                    
-    //     }
-    // };
-
-
     static async getall(pageNumber, pageSize, Id)
     {
         try
