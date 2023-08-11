@@ -5,10 +5,11 @@ const constants = require('../../utils/constants');
 const time = require('../../utils/helper/date');
 require('dotenv').config()
 
-
+module.exports = class reports
+{
 
 /**For geting all service provider basis of from date & to date */
-exports.getReportsServiceProviders = (requestBody,fromDate,toDate,spID) =>
+static async getReportsServiceProviders (requestBody,fromDate,toDate,spID)
 {
     return new Promise((resolve, reject) =>
     {
@@ -77,8 +78,10 @@ exports.getReportsServiceProviders = (requestBody,fromDate,toDate,spID) =>
 }
 
 
+
+
 /**For geting all customers basis of from date & to date */
-exports.getReportsCustomers = (requestBody,fromDate,toDate,spID) =>
+static async getReportsCustomers (requestBody,fromDate,toDate,spID) 
 {
     return new Promise((resolve, reject) =>
     {
@@ -140,8 +143,9 @@ exports.getReportsCustomers = (requestBody,fromDate,toDate,spID) =>
 
 
 
+
 /**For geting all vehicles basis of from date & to date */
-exports.getReportsVehicles = (requestBody,fromDate,toDate,spID) =>
+static async getReportsVehicles  (requestBody,fromDate,toDate,spID)
 {
     return new Promise((resolve, reject) =>
     {
@@ -220,8 +224,9 @@ exports.getReportsVehicles = (requestBody,fromDate,toDate,spID) =>
 
 
 
+
 /**For geting all drivers basis of from date & to date */
-exports.getReportsDrivers = (requestBody,fromDate,toDate,spID) =>
+static async getReportsDrivers (requestBody,fromDate,toDate,spID) 
 {
     return new Promise((resolve, reject) =>
     {
@@ -301,8 +306,9 @@ exports.getReportsDrivers = (requestBody,fromDate,toDate,spID) =>
 }
 
 
+
 /**For geting all enquiries basis of from date & to date */
-exports.getReportsEnquiries = (requestBody,fromDate,toDate,spID) =>
+static async getReportsEnquiries  (requestBody,fromDate,toDate,spID) 
 {
     return new Promise((resolve, reject) =>
     {
@@ -382,7 +388,7 @@ exports.getReportsEnquiries = (requestBody,fromDate,toDate,spID) =>
 
 
 /**For geting all quotations basis of from date & to date */
-exports.getReportsQuotations = (requestBody,fromDate,toDate,spID) =>
+static async getReportsQuotations  (requestBody,fromDate,toDate,spID)
 {
     return new Promise((resolve, reject) =>
     {
@@ -464,7 +470,7 @@ exports.getReportsQuotations = (requestBody,fromDate,toDate,spID) =>
 
 
 /**For geting all Trip details basis of from date & to date */
-exports.getReportsTripDetails = (requestBody,fromDate,toDate,spID) =>
+static async getReportsTripDetails  (requestBody,fromDate,toDate,spID) 
 {
     return new Promise((resolve, reject) =>
     {
@@ -548,7 +554,7 @@ exports.getReportsTripDetails = (requestBody,fromDate,toDate,spID) =>
 
 
 /**For geting all invoices basis of from date & to date */
-exports.getReportsInvoices = (requestBody,fromDate,toDate,spID) =>
+static async getReportsInvoices  (requestBody,fromDate,toDate,spID) 
 {
     return new Promise((resolve, reject) =>
     {
@@ -634,7 +640,7 @@ exports.getReportsInvoices = (requestBody,fromDate,toDate,spID) =>
 
 
 /**For geting all invoices basis of from date & to date */
-exports.getAccountsReports = (requestBody,fromDate,toDate,spID) =>
+static async getAccountsReports (requestBody,fromDate,toDate,spID) 
 {
     return new Promise((resolve, reject) =>
     {
@@ -726,4 +732,6 @@ exports.getAccountsReports = (requestBody,fromDate,toDate,spID) =>
 
     })    
    
+}
+
 }

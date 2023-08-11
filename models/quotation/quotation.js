@@ -614,22 +614,22 @@ exports.updateStatusQuotation = (quotId) => {
                                                                         if (invId.length != 0) {
                                                                             let invoice_id = invId[0].id;
 
-                                                                            /********** After Inserting totalamount invoice id in to the payment records********** */
                                                                             let insQuery = `INSERT INTO ${constants.tableName.payment_records} (
-                                                                                                invoice_id,
-                                                                                                invoice_prefix_id,
-                                                                                                total_amount,
-                                                                                                remaining_amount,
-                                                                                                created_at
-                                                                                                ) VALUES (
-                                                                                                    '${invoice_id}', 
-                                                                                                    '${sum_invId}',
-                                                                                                    '${final_amount}',
-                                                                                                    '${final_amount}'.
-                                                                                                    '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
-                                                                                                );`;
+                                                                                invoice_id,
+                                                                                invoice_prefix_id,
+                                                                                total_amount,
+                                                                                remaining_amount,
+                                                                                created_at
+                                                                            ) VALUES (
+                                                                                '${invoice_id}', 
+                                                                                '${sum_invId}',
+                                                                                '${final_amount}',
+                                                                                '${final_amount}',
+                                                                                '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                                                            );`;
+                                                                            
                                                                             con.query(insQuery, async (err, result) => {
-
+                                                                                        console.log(err);
                                                                                 if (!err) {
                                                                                     resolve(true);
                                                                                 }
