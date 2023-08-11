@@ -78,7 +78,7 @@ module.exports = class drivers
                             }                           
                         });
                     }
-                    else if(result[0].id === constants.Roles.service_provider)
+                    else if(result[0].role_id === constants.Roles.service_provider)
                     {
                         console.log(`Role name is service provider at the time of drivers`);
                         const offset = (pageNumber - 1) * pageSize;
