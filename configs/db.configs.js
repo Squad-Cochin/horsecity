@@ -13,19 +13,18 @@ var con = mysql.createConnection
 ({
     // host : "192.168.200.211",
     host: "192.168.200.6",
-    // // port: 3306,
     user: "vsourz",
     password: "vsourz",
     database: "horscity" 
 
     // host: "localhost",
-    // // // // port: 3306,
+    // // // // // port: 3306,
     // user: "root",
     // password: "",
     // database: "horsecity"
      
 });
-    
+     
 con.connect(function async (err)  
 {
     if (err) 
@@ -39,4 +38,7 @@ con.connect(function async (err)
 });
  
 // Exporting the con variable for using it anywhere in the programm
-module.exports = con;
+module.exports = con; 
+
+
+

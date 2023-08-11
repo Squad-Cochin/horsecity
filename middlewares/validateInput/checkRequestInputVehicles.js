@@ -34,7 +34,7 @@ exports.isServiceProviderIdEntered = (tableName) =>async (req, res, next) =>
         }
         else
         {
-            console.log(`Id doesn't exist`);
+            console.log(`Params Id doesn't exist`);
             return res.status(200).send
             ({
                 code: 400,
