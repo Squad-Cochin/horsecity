@@ -328,7 +328,7 @@ const ListTables = () =>
                                                     from a object. We will map and show them one by one. The below function will be used this */}
                                                     {/* 'Driver' is having all the enquiry data. */}
                                                     {/* Index is the number of the data. i.e Serial number */}
-                                                    {drivers.map((item,index) => (
+                                                    {drivers?.map((item,index) => (
                                                         <tr key={item.id}> 
                                                         {/* Below we are intialize the enquiry data */}
                                                         <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th> {/* // Serial Number */}

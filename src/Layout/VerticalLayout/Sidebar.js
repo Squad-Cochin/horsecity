@@ -191,9 +191,7 @@ const Sidebar = (props) => {
       }
     }
   }
-  const isDropdown = () =>{
 
-  }
   //console.log("SIDE",sidebar_items);
   //console.log("side22",sidebarData);
   return (
@@ -212,8 +210,8 @@ const Sidebar = (props) => {
                   ) : (
                     <li key={key}>
                       <Link
-                            to={item.url ? item.url : null}
-                            onClick={isDropdown()}
+                            to={item.url ? item.url : "/#"}
+                      
                             className={
                               (item.issubMenubadge || item.isHasArrow)
                                 ? " "

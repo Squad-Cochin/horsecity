@@ -220,6 +220,7 @@ console.log("FADA",template_data.subject);
   async function quat_list(productId) {
     let qutData = await getSingleQuotationData(productId)
     setQuotationListDetails(qutData.quotation.details);
+
     setQuotationList(qutData.quotation.quotations)
     setQuatList_modal(!quatlist_modal);
   }
@@ -491,6 +492,7 @@ console.log("FADA",template_data.subject);
     setSPDrivers(sPDriverData.drivers)
     setSPVechiles(sPVechilesData.vehicles)
   }
+  console.log("ga",quotationListDetails);
 
   return (
     <React.Fragment>
