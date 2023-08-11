@@ -211,7 +211,7 @@ exports.getNameServiceProviders = () =>
             SELECT sp.id, sp.user_name
             FROM service_providers AS sp
             JOIN ${constants.tableName.roles} AS rl ON sp.role_Id = rl.id
-            WHERE sp.deleted_at IS NULL 
+            WHERE sp.deleted_at IS NULL AND sp.status = '${constants.status.active}'
                 AND sp.status = '${constants.status.active}'
                 AND rl.id <> '${constants.Roles.admin}' 
                 AND rl.id <> '${constants.Roles.super_admin}';
