@@ -860,7 +860,7 @@ const ListVehiclesTable = () =>
                                 />
                                 <label htmlFor="vehicle_type-private" className="form-check-label">PRIVATE</label>
                             </div>
-                            <div className="form-check">
+                            {/* <div className="form-check">
                                 <input
                                     type="radio"
                                     id="vehicle_type-gcc"
@@ -873,7 +873,7 @@ const ListVehiclesTable = () =>
                                     required
                                 />
                                 <label htmlFor="vehicle_type-gcc" className="form-check-label">GCC</label>
-                            </div>
+                            </div> */}
                             <div className="form-check">
                                 <input
                                     type="radio"
@@ -1302,7 +1302,7 @@ const ListVehiclesTable = () =>
                                 />
                                 <label htmlFor="vehicle_type-private" className="form-check-label">PRIVATE</label>
                             </div>
-                            <div className="form-check">
+                            {/* <div className="form-check">
                                 <input
                                     type="radio"
                                     id="vehicle_type-gcc"
@@ -1313,7 +1313,7 @@ const ListVehiclesTable = () =>
                                     disabled
                                 />
                                 <label htmlFor="vehicle_type-gcc" className="form-check-label">GCC</label>
-                            </div>
+                            </div> */}
                             <div className="form-check">
                                 <input
                                     type="radio"
