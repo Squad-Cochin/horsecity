@@ -1135,7 +1135,7 @@ exports.checkingDuplicateEnquiry = async (req, res, next) =>
     {
         return new Promise((resolve, reject) =>
         {
-            const selQuery = `SELECT * FROM ${constants.tableName.enquiries} e WHERE e.customer_id = ${req.params.id} AND e.vehicle_id = ${req.body.vehicle_id} AND e.serviceprovider_id = ${req.body.service_provider_id} AND e.pickup_location = '${req.body.pickup_location}' AND e.drop_location = '${req.body.drop_location}' AND e.trip_type = '${req.body.vehicle_type}' AND e.pickup_country = '${req.body.pickup_country}' AND e.drop_country = '${req.body.drop_country}' AND e.no_of_horse = ${req.body.no_of_horse} `;
+            const selQuery = `SELECT * FROM ${constants.tableName.enquiries} e WHERE e.customer_id = ${req.params.id} AND e.vehicle_id = ${req.body.vehicle_id} AND e.serviceprovider_id = ${req.body.service_provider_id} AND e.pickup_location = '${req.body.pickup_location}' AND e.drop_location = '${req.body.drop_location}' AND e.trip_type = '${req.body.vehicle_type}' AND e.pickup_country = '${req.body.pickup_country}' AND e.drop_country = '${req.body.drop_country}' AND e.no_of_horse = ${req.body.no_of_horse} AND e.status = '${constants.enquiry_status.notconfirmed}'`;
             // console.log(`Query from checking duplicate enquiry: `, selQuery);
             con.query(selQuery, (err, result) =>
             {
@@ -1149,7 +1149,7 @@ exports.checkingDuplicateEnquiry = async (req, res, next) =>
                     }
                     else if(result[0].status === constants.enquiry_status.notconfirmed)
                     {                        
-                        if(result[0].status === req.body.description)
+                        if(result[0].description === req.body.description)
                         {
                             // console.log(`Previous enquiry from this same details are not confirmed by the service provider till now. So we can forward this enquiry of your right now. Please wait`);
                             return res.status(200).send
@@ -1159,8 +1159,7 @@ exports.checkingDuplicateEnquiry = async (req, res, next) =>
                                 message : `Previous enquiry from this same details are not confirmed by the service provider till now. So we can forward this enquiry of your right now. Please wait`
                             });
                         }
-
-                        if(result[0].status !== req.body.description)
+                        if(result[0].description !== req.body.description)
                         {
                             // console.log(`Previous enquiry from this same details are not confirmed by the service provider till now. You have changed the description only. It is not allowed. Service provider will reach to you. Please tell them directly`);
                             return res.status(200).send

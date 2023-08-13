@@ -684,11 +684,8 @@ exports.updateStatusQuotation = (quotId) => {
             resolve(false)
             console.log('Error while fetching  quotations', err);
         }
-    })
+    });
 }
-
-
-
 
 /** For Sending email */
 exports.sendMail = (requestBody, quot_id) => 
@@ -698,25 +695,25 @@ exports.sendMail = (requestBody, quot_id) =>
         try
         {
       
-            const { costomer_email, subject, body } = requestBody
-            console.log(requestBody);
-            console.log("ddd");
-            const sendEmail = await mail.SendEmailOfQuotation(quot_id, costomer_email, subject)
+            const { customer_email, subject, body } = requestBody
+            // console.log(requestBody);
+            // console.log("ddd");
+            const sendEmail = await mail.SendEmailOfQuotation(quot_id, customer_email, subject)
             //    const sendEmail = false
             if (sendEmail) { 
-                let updateQuery = `UPDATE ${constants.tableName.bookings} 
-                                           SET 	confirmation_sent = '${constants.booking_confirmation_send.yes}'
-                                           WHERE  quotation_prefix_id = '${quot_id}'`;
+                // let updateQuery = `UPDATE ${constants.tableName.bookings} 
+                //                            SET 	confirmation_sent = '${constants.booking_confirmation_send.yes}'
+                //                            WHERE  quotation_prefix_id = '${quot_id}'`;
+                //                            console.log(updateQuery);
 
+                // con.query(updateQuery, async (err, result) => {
 
-                con.query(updateQuery, async (err, result) => {
-
-                    if (result.length != 0) {
+                //     if (result.length != 0) {
                         resolve(true)
-                    } else {
-                        resolve(false)
-                    }
-                })
+                //     } else {
+                //         resolve(false)
+                //     }
+                // })
             } else {
                 console.log("hello");
                 resolve(false);

@@ -627,20 +627,6 @@ exports.isValidVehicleTypeEntered = (req, res, next) =>
     }
 }
 
- 
-
-function hasOnlyNonSpaces(str) 
-{
-    if (str.includes(" "))
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
-}
-
 exports.isValidVehicleNumberEntered =  async (req, res, next) =>
 {
     let vehicleNumber = await req.body.vehicle_number

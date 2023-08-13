@@ -129,8 +129,7 @@ exports.sendMail = async(req,res)=>
 {
 
     let sendMail = await quotation.sendMail(req.body,req.params.id);
-
-   if(sendMail){
+    if(sendMail){
         return res.status(200).send({
             code: 200,
             success: true,

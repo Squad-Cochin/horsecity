@@ -68,10 +68,6 @@ function queryAsync(query)
     });
 }
 
-
-
-
-
 exports.CheckRole = async (req, res, next) =>
 {
     return new Promise((resolve, reject) =>
@@ -350,7 +346,7 @@ exports.CheckRole = async (req, res, next) =>
                                                 next();
                                             }
                                         }
-                                    }                   
+                                    }
                                 }
                             }
                         }
@@ -366,7 +362,7 @@ exports.CheckRole = async (req, res, next) =>
                             code : 500,
                             status : false,
                             message : `Internal Server Error from the params`
-                        })
+                        });
                     }
                 }
             });
