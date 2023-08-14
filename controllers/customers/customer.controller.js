@@ -177,7 +177,6 @@ exports.addCustomer = async (req, res, next) =>
     }
 };
 
-
 /**
  * The below function is for the editing or changing of the existing customer. 
  * The most important thing is the customer id in the params.
@@ -266,8 +265,7 @@ exports.updateStatus= async (req, res) =>
             message : `Customer ${constant.responseMessage.statusChanged}`
         });
     }
-}
-
+};
 
 /**
  * The below function is for removing the customer from the view page. The data will be in the datbase but it will never shown on the front end
@@ -297,3 +295,161 @@ exports.removeCustomer = async (req, res) =>
         });
     }
 }
+
+exports.customerLogin = async (req, res) =>
+{
+    // const { user_name, email, contact_no, password } = req.body;
+    // let fieldName = null;
+    // let uniqueData = null;
+    // if(user_name)
+    // {
+    //     fieldName = 'user_name';
+    //     uniqueData = user_name;
+    // }
+    // else if(email)
+    // {
+    //     fieldName = 'email';
+    //     uniqueData = email;
+    // }
+    // else if(contact_no)
+    // {
+    //     fieldName = 'contact_no';
+    //     uniqueData = contact_no ;
+    // }
+    // else
+    // {
+    //     return res.status(200).send
+    //     ({
+    //         code : 400,
+    //         success : false,
+    //         message: "Invalid login credentials" 
+    //     });
+    // }
+    const customers = await customer.customerlogin(req.body.userName, req.body.password)
+    if(customers === 'nocustomer')
+    {
+        console.log('Unavailable username or incorrect username. While customer login');
+        return res.status(200).send
+        ({
+            status : "failure",
+            code : 400,
+            message : "Username not found",
+        });
+    }
+    // If any unspecified or unencountered error came. Which is not as per our code thinking, then this else if block
+    else if(customers === 'err')
+    {
+        console.log('Unexpected error. While customer login');
+        return res.status(200).send
+        ({
+            status : "failure",
+            code : 500,
+            message : "Internal server error while sign in",
+        });
+    }
+    // If wrong password is entered then, this below response will be displayed
+    else if(customers === 'passwordnotmatched')
+    {
+        console.log('Incorrect password. While customer login');
+        return res.status(200).send
+        ({
+            status : "failure",
+            code : 400,
+            message : "Password is incorrect",
+        });
+    }
+    else
+    {
+        console.log(`Customer successfully login`);
+        return res.status(200).send
+        ({
+            status : "success",
+            code : 200,
+            message : "Login successful",
+            data : customers
+        });
+    }
+};
+
+exports.customerLogout = async (req, res) =>
+{
+    const customers = await customer.customerlogout(req.body.userName, req.body.password);
+    if(customers === 'logoutdone')
+    {
+        console.log('Customer logout successfully done');
+        res.status(200).send
+        ({
+            status : "success",
+            code : 200,
+            message : "Customer logout done"
+        });
+    }
+    // If any unspecified or unencountered error came. Which is not as per you code thinking, then this else if block
+    if(customers ==='incorrectpassword')
+    {
+        console.log('Customer incorrect password');
+        res.status(200).send
+        ({
+            status : "success",
+            code : 400,
+            message : "Customer incorrect password"
+        });
+    }
+    if(customers === 'nocustomer')
+    {
+        console.log('Incorrect customer username');
+        res.status(200).send
+        ({
+            status : "success",
+            code : 400,
+            message : "Incorrect customer username"
+        });
+    } 
+};
+
+exports.customerChangePassword = async (req, res, next) =>
+{
+    const customers = await customer.customerchangepassword(req.body.userName, req.body.password, req.body.newpassword, req.body.confirmnewpassword);
+    // The below if block will execute. when the entered username is not correct
+    if(customers === 'nocustomer')
+    {
+        console.log('Unavailable username or incorrect username. While customer password update');
+        return res.status(200).send
+        ({
+            status : "failure",
+            code : 400,
+            message : "This username must be incorect or no customer is registered with this username",
+        });
+    }
+    // The below if block will execute. when any unhandled error came
+    else if(customers === 'err')
+    {
+        console.log('Unexpected error. While customer password update');
+        return res.status(200).send
+        ({
+            status : "failure",
+            code : 500,
+            message : "Internal server error while updating the password of the customer",
+        });
+    }
+    else if(customers === 'incorrectpassword')
+    {
+        console.log('Incorrect password. While customer password update');
+        return res.status(200).send
+        ({
+            status : "failure",
+            code : 400,
+            message : "Customer password is incorrect.",
+        });
+    }
+    else
+    {
+        console.log('Password updated successfully. While customer password update');
+        return res.status(200).send
+        ({
+            status : "success",
+            code : 200,
+            message : "Customer password updated successfully",
+        });
+    }
+};

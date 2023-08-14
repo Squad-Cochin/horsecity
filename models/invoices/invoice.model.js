@@ -348,7 +348,7 @@ module.exports = class invoices
                                         JOIN vehicles v ON v.id = i.vehicle_id
                                         JOIN drivers dr ON dr.id = i.driver_id
                                         WHERE i.id = ${Id} ORDER BY remaining_amount DESC; `;
-                        // console.log('Data is not in the booking table query: ',selQuery);
+                        console.log('Data is not in the booking table query: ',selQuery);
                         con.query(selQuery, (err, result) =>
                         {
                             // console.log(`Result of booking id not present: `, result);

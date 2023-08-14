@@ -17,7 +17,6 @@ const constants = require('../../utils/constants');
  *          1. username
  *          2. password
  */
-
 exports.serviceProviderLogin = async(req, res)=>
 {
     // We are calling the function. Which will look for login functionality. We are sending username and password because it is needed
@@ -34,7 +33,7 @@ exports.serviceProviderLogin = async(req, res)=>
             message : "Username not found",
         });
     }
-    // If any unspecified or unencountered error came. Which is not as per you code thinking, then this else if block
+    // If any unspecified or unencountered error came. Which is not as per our code thinking, then this else if block
     else if(loginauth === 'err')
     {
         console.log('Unexpected error. While service provider login');
@@ -174,9 +173,6 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         });
     }
 };
-
-
-
 
 /**
  * The below function if for the logout. 

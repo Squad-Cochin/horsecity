@@ -52,5 +52,19 @@ module.exports = (app) =>
             checkInput.idProofNumberValidation,
             checkInput.isCustomerIdProofImageSubmitted,
             customerController.editCustomer
-           );    
+           );
+    
+    app.post(`/${process.env.apiToken}/customer/login`,
+    customerController.customerLogin);
+
+    app.post(`/${process.env.apiToken}/customer/logout`,
+    customerController.customerLogout);
+
+    app.post(`/${process.env.apiToken}/customer/password/update`,
+    checkInput.usernameValidation(constants.tableName.customers),
+    checkInput.passwordValidation,
+    checkInput.newpassword,
+    checkInput.confirmnewpassword,
+    checkInput.passwordsimilarity,
+    customerController.customerChangePassword)
 }

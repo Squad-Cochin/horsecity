@@ -89,4 +89,8 @@ module.exports = (app) =>
     app.put(`/${process.env.apiToken}/removeVehicle/:id`, 
     isValidIdInTheParams(constants.tableName.vehicles),  
     vehicleController.removeVehicle);
+
+    app.get(`/${process.env.apiToken}/customer/getOne/vehicle/:id`,
+    isValidIdInTheParams(constants.tableName.vehicles),
+    vehicleController.getVehicleDetailForCustomerPage);
 };

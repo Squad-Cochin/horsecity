@@ -38,26 +38,6 @@ exports.changePasswordToSQLHashing = (password) =>
         });
     });
 };
-
-exports.changePasswordOfUser = (tablename, username, password) => 
-{
-    return new Promise((resolve, reject) => 
-    {
-        let updatePasswordQuery = `UPDATE ${tablename} SET password = '${password}', expiry_at = '${timeCalculate.addingSpecifiedDaysToCurrentDate(constant.password.expiry_after)}' WHERE user_name = '${username}' `;
-        con.query(updatePasswordQuery, (err, result) => 
-        { 
-            if (err)
-            {
-                reject(err);
-            }
-            else
-            {
-                resolve(result);               
-            }
-        });
-    });
-};
-
 exports.fileUpload = (attachments, path) =>
 { 
     // console.log(attachments);

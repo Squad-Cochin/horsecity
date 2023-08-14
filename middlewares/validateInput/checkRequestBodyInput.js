@@ -218,24 +218,34 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
             // }
             // else
             // {
-                if(req.method === `POST` && req.url === url.UPDATE_SERVICE_PROVIDER_PASSWORD)
+                if(req.method === `POST` && req.url === url.UPDATE_CUSTOMER_PASSWORD)
                 {
+                    // console.log(`Came inside`);
+                    next();                    
+                }
+                else if(req.method === `POST` && req.url === url.UPDATE_SERVICE_PROVIDER_PASSWORD)
+                {
+                    // console.log(`Came inside 2`);
                     next();
                 }
                 else if(req.method === `PUT` && req.url === url.UPDATE_CUSTOMER_PAGE_URL + req.params.id)
                 {
+                    // console.log(`Came inside 3`);
                     this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params.id, 'Username' )(req, res, next);
                 }
                 else if(req.method === `PUT` && req.url === url.UPDATE_DRIVER_PAGE_URL + req.params.id)
                 {
+                    // console.log(`Came inside 4`);
                     this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params.id, 'Username')(req, res, next);
                 }
                 else if(req.method === `POST`)
                 {
+                    // console.log(`Came inside 5`);
                     this.validateCommonInputAtStartingTime(tableName, `user_name`, req.body.userName, req.params.id, 'Username')(req, res, next);
                 }
                 else 
                 {
+                    // console.log(`Came inside 6`);
                     return res.status(500).json
                     ({
                         code : 500,
@@ -453,7 +463,7 @@ exports.dateOfBirthValidation = (req, res, next) =>
         }
         else
         {
-            console.log(isValidDateOfBirth(time.formatDateToDDMMYYYY(req.body.date_of_birth)));
+            // console.log(isValidDateOfBirth(time.formatDateToDDMMYYYY(req.body.date_of_birth)));
             if(!isValidDateOfBirth(time.formatDateToDDMMYYYY(req.body.date_of_birth)))
             {
                 return res.status(200).send
@@ -616,20 +626,20 @@ exports.passwordValidation = async (req, res, next) =>
         let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
         con.query(selQuery, (err, result) =>
         {
-            console.log('Regex Result from password validation', result);
+            // console.log('Regex Result from password validation', result);
             if (result)
             {
                 const isValidPassword = (password) =>
                 {
                     const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
                     const regex = new RegExp(regexPattern);
-                    console.log('Regex after replacing the slashes: ', regex);
+                    // console.log('Regex after replacing the slashes: ', regex);
                     return regex.test(password); // Use the test() method to check if the password matches the regex pattern
                 };
                 if (isValidPassword(password))
                 {
                     //console.log('here');
-                    console.log("password validation done");
+                    // console.log("password validation done");
                     next();
                 }
                 else
@@ -673,19 +683,19 @@ exports.newpassword = async (req, res, next) =>
         let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
         con.query(selQuery, (err, result) =>
         {
-            console.log('Regex Result from password validation', result);
+            // console.log('Regex Result from password validation', result);
             if (result)
             {
                 const isValidPassword = (password) =>
                 {
                     const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
                     const regex = new RegExp(regexPattern);
-                    console.log('Regex after replacing the slashes: ', regex);
+                    // console.log('Regex after replacing the slashes: ', regex);
                     return regex.test(password); // Use the test() method to check if the password matches the regex pattern
                 };
                 if (isValidPassword(password))
                 {
-                    console.log("password validation done");
+                    // console.log("password validation done");
                     next();
                 }
                 else
@@ -728,19 +738,19 @@ exports.confirmnewpassword = async (req, res, next) =>
         let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
         con.query(selQuery, (err, result) =>
         {
-            console.log('Regex Result from password validation', result);
+            // console.log('Regex Result from password validation', result);
             if (result)
             {
                 const isValidPassword = (password) =>
                 {
                     const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
                     const regex = new RegExp(regexPattern);
-                    console.log('Regex after replacing the slashes: ', regex);
+                    // console.log('Regex after replacing the slashes: ', regex);
                     return regex.test(password); // Use the test() method to check if the password matches the regex pattern
                 };
                 if (isValidPassword(password))
                 {
-                    console.log("password validation done");
+                    // console.log("password validation done");
                     next();
                 }
                 else

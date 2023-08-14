@@ -12,6 +12,7 @@
 const constant = require('../../utils/constants'); // Constant elements are stored in this file
 const vehicle = require('../../models/vehicles/vehicle.model'); // The model from where the logic is intantiate are written in vehicle model
 const time = require('../../utils/helper/date'); // All the time related formating are written in this file.
+const vehicles = require('../../models/vehicles/vehicle.model');
 
 /**
  * The below function is for add the new vehicle in the database. We need number of input from the end user to add or register the vehicle. 
@@ -389,4 +390,33 @@ exports.removeVehicle = async (req, res, next) =>
             message : constant.responseMessage.removesuccess
         });
     }
+};
+
+exports.getVehicleDetailForCustomerPage = async (req, res, next) =>
+{
+    const vehicles = await vehicle.getvehicledetailforcustomerpage(req.params.id);
+    if(vehicles.length === 0)
+    {
+        console.log('No vehicle data present');
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : constant.responseMessage.getOne,
+            data : []
+        });
+    }
+    else
+    {
+        // Everythings went well and driver data is available then this else block of code will executed.
+        console.log('Vehicle data fetched successfully');
+        return res.status(200).send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.getOne,
+            data : vehicles
+        });
+    }
+
 }

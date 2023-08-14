@@ -10,31 +10,43 @@
 const token = `/${process.env.apiToken}`
 const UPDATE_SERVICE_PROVIDER_URL = token + `/update/serviceprovider/`
 const UPDATE_SETTINGS_PAGE_URL = token + `/update/settings`
+
 const ADD_CUSTOMER_PAGE_URL = token + `/add/customer`
-const ADD_DRIVER_PAGE_URL = token + `/add/driver`
-const ADD_VEHICLE_PAGE_URL = token + `/addNew/vehicle`
-const EDIT_VEHICLE_PAGE_URL = token + `/edit/vehicle/`
-const EDIT_DRIVER_PAGE_URL = token + `/edit/driver/`
-const EDIT_CUSTOMER_PAGE_URL = token + `/edit/customer/`
 const UPDATE_CUSTOMER_PAGE_URL = token + `/edit/customer/` 
-const UPDATE_DRIVER_PAGE_URL = token + `/edit/driver/` 
-const UPDATE_VEHICLE_PAGE_URL = token + `/edit/vehicle/` 
+const UPDATE_CUSTOMER_PASSWORD = token + `/customer/password/update`
+
+
+const ADD_DRIVER_PAGE_URL = token + `/add/driver`
+const UPDATE_DRIVER_PAGE_URL = token + `/edit/driver/`
+
+
+const ADD_VEHICLE_PAGE_URL = token + `/addNew/vehicle`
+const UPDATE_VEHICLE_PAGE_URL = token + `/edit/vehicle/`
+
+
 const ADD_SERVICEPROVIDER__URL = token + `/add/serviceprovider`
 const UPDATE_SERVICE_PROVIDER_PASSWORD = token + `/changePassword`
 
+
+
+
 module.exports = 
-{ 
-    UPDATE_SERVICE_PROVIDER_URL, // update service provider
-    UPDATE_SETTINGS_PAGE_URL,  // update setting link
-    UPDATE_CUSTOMER_PAGE_URL, // update customer link
-    UPDATE_DRIVER_PAGE_URL,  // update driver link
-    UPDATE_VEHICLE_PAGE_URL, // update vehicle link
+{
     ADD_SERVICEPROVIDER__URL, // Add service provider link
-    EDIT_DRIVER_PAGE_URL, // update driver link
-    EDIT_CUSTOMER_PAGE_URL,
-    ADD_DRIVER_PAGE_URL, // Add driver link
+    UPDATE_SERVICE_PROVIDER_PASSWORD, // update service provider
+
+    UPDATE_SETTINGS_PAGE_URL,  // update setting link
+    UPDATE_SERVICE_PROVIDER_URL,
+    
     ADD_CUSTOMER_PAGE_URL, // Add customer link
+    UPDATE_CUSTOMER_PAGE_URL, // update customer link
+    UPDATE_CUSTOMER_PASSWORD,
+
+
+    ADD_DRIVER_PAGE_URL, // Add driver link
+    UPDATE_DRIVER_PAGE_URL,  // update driver link
+    
+    
+    UPDATE_VEHICLE_PAGE_URL, // update vehicle link    
     ADD_VEHICLE_PAGE_URL, // Add vehicle link
-    EDIT_VEHICLE_PAGE_URL, // Edit vehicle link
-    UPDATE_SERVICE_PROVIDER_PASSWORD
 }
