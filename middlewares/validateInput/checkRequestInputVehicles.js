@@ -736,7 +736,6 @@ exports.isSafetyCertificateAdded = (req, res, next) =>
     }
 }
 
-
 exports.isVehicleImageUploaded = (req, res, next) =>
 {
     if(!req.files?.image)

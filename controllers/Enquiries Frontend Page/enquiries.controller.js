@@ -39,3 +39,40 @@ exports.createNewEnquiry = async (req, res, next) =>
         });
     }
 };
+
+exports.getParticularCustomerAllEnquiries = async (req, res, next) =>
+{
+    const data = await enquiriesModel.getparticularcustomerallenquiries(req.body.page, req.body.limit, req.params.id);
+    if(data === 'err')
+    {
+        console.log('Error while fetching the enquiry data of a particular customer. ');
+        return res.status(200).json
+        ({
+            code: 400,
+            status: false,
+            message: `Error while fetching the enquiry data of a particular customer.`,
+        });
+    }
+    else if (data.length === 0)
+    {
+        console.log('No enquiry present of this particular customers. ');
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: `No enquiry present of this particular customers.`,
+            data : []
+        });
+    }
+    else
+    {
+        console.log(`Particular customer all the enquiry fetched successfully.`);
+        res.status(200).send
+        ({
+            code : 200,
+            success : true,
+            message : 'Particular customer all the enquiry fetched successfully.',
+            data : data
+        });
+    }
+};

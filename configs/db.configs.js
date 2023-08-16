@@ -13,7 +13,7 @@ var con = mysql.createConnection
 ({
     // host : "192.168.200.211",
     host: "192.168.200.6",
-   // port: 3306,
+    // port: 3306,
     user: "vsourz",
     password: "vsourz",
     database: "horscity" 

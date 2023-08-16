@@ -3,9 +3,7 @@
 
 const constants = require('../../utils/constants');
 const time = require('../../utils/helper/date');
-const con = require('../../configs/db.configs')
-
-
+const con = require('../../configs/db.configs');
 
 module.exports = class enquiries
 {
@@ -47,6 +45,77 @@ module.exports = class enquiries
             console.log('Error while creating a new enquiry from the customer end.', error);           
         }
     };
+
+    static async getparticularcustomerallenquiries(pageNumber, pageSize,Id)
+    {
+        try
+        {
+            return await new Promise(async (resolve, reject) =>
+            {
+                const offset = (pageNumber - 1) * pageSize;
+                let selQuery = `SELECT * FROM ${constants.tableName.enquiries} e WHERE e.customer_id = ${Id} LIMIT ${pageSize} OFFSET ${offset}`;
+                // console.log(selQuery);
+                con.query(selQuery, (err, result) =>
+                {
+                    // console.log(result);
+                    if(err)
+                    {
+                        console.log(`Error while execting the fetching of all the enquiries of a particular customers.`);
+                        resolve(`err`);
+                    }
+                    else
+                    {
+                        if(result.length > 0)
+                        {
+                            let countQuery = `SELECT COUNT(e.id) FROM ${constants.tableName.enquiries} e WHERE e.customer_id = ${Id}`
+                            con.query(countQuery, (err, result2) =>
+                            {
+                                if(err)
+                                {
+                                    console.log(`Error while execting the fetching of all the enquiries of a particular customers.`);
+                                    resolve(`err`);
+                                }
+                                else
+                                {
+                                    console.log(result2);
+                                    if(result2.length > 0)
+                                    {
+                                        console.log(`Enquiry count is successfully done for a particular customer`);
+                                        console.log('Enquiry data is fetched successfully for a particular customer');
+                                        resolve({totalCount : result2[0]['COUNT(e.id)'], enquiries : result});
+                                    }
+                                    else
+                                    {
+                                        console.log(`Error while enquiry count for a particular customer`);
+                                        console.log(`Enquiry data is fetched successfully for a particular customer`);
+                                        resolve({totalCount : result2[0]['COUNT(e.id)'], enquiries : result});                                     
+                                    }
+                                }
+                            });
+                        }
+                        else
+                        {
+                            console.log(`Error from the result section of the fetching all the enquiried of a particular customer.`);
+                            resolve(resolve({totalCount : 0, enquiries : []} ));
+                        }
+                    }
+                });
+            });            
+        }
+        catch (error)
+        {
+            console.log('Error while fetching all enquiries of the customer from the customer end.', error);
+        }
+    };
+
+
+
+
+
+    
+
+
+
 
 };
 

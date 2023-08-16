@@ -19,4 +19,12 @@ module.exports = function (app)
     isValidVehicleTypeEntered,
     checkInput.checkingDuplicateEnquiry,
     frontEnquiriesController.createNewEnquiry);
+
+    app.get(`/${process.env.apiToken}/get/all/enquiry/customer/:id`,
+    validateParamsId.isValidIdInTheParams(constants.tableName.customers),
+    checkInput.isPageNumberEntered,
+    checkInput.isPageSizeEntered,
+    frontEnquiriesController.getParticularCustomerAllEnquiries
+    );
 };
+
