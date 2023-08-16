@@ -38,15 +38,17 @@ const ListVehiclesTable = () =>
     const [certificatePreview, setCertificatePreview] = useState(null);
     const [certificateImage, setCertificateImage] = useState("");
     const [sproviders, setSproviders] = useState([]);
-    const [ pageNumber, setPageNumber ] = useState(1);
-    const [userId, setUserId ] = useState("");
-    const [ role, setRole ] = useState(false);
+    const [pageNumber, setPageNumber] = useState(1);
+    const [userId, setUserId] = useState("");
+    const [role, setRole] = useState(false);
+    const [roleID, setRoleID] = useState("");
     const [module,setModule] = useState({});
     const [user_name, setuser_name] = useState('')
-    const [ numberOfData, setNumberOfData ] = useState(0);
-    const [ errors, setErrors ] = useState("")
+    const [numberOfData, setNumberOfData] = useState(0);
+    const [errors, setErrors] = useState("")
     const pageLimit = config.pageLimit;
     const role_name  = config.roles
+    const role_Id = config.Role
 
     const navigate = useNavigate(); // Use the 'useNavigate' hook from React Router
 
@@ -89,12 +91,15 @@ const ListVehiclesTable = () =>
         let role_Name = data[0]?.user[0]?.role_name
         console.log('Role name from the vehicles page: ', role_Name);
         let userName = data[0]?.user[0]?.user_name
-        console.log('user name from the vehicles page: ', role_Name);
+        console.log('user name from the vehicles page: ', userName);
+        let role_Id = data[0]?.user[0].role_Id
+        console.log(`Role Id from the vehicle page: `, role_Id);
         setUserId(user_Id);
         setRole(role_Name);
         setuser_name(userName);
+        setRoleID(role_Id);
         getAllData(1)
-    }, [userId, role]);
+    }, [userId, role, user_name, roleID]);
     console.log("Modules List: ",module);
 
     /**This function is an event handler that triggers when the user
@@ -137,7 +142,7 @@ const ListVehiclesTable = () =>
     async function remove_data(id)
     {
         await removeVehicle(id); // Call the 'removeVehicle' function with 'id' parameter
-        getAllData(id, pageNumber)
+        getAllData(pageNumber)
     }
 
     // The below function is for delete button of a particular vehicle.
@@ -175,7 +180,6 @@ const ListVehiclesTable = () =>
         }
     }
 
-    
     console.log("MMMM: ",userId);
 
     const validation = useFormik
@@ -185,7 +189,7 @@ const ListVehiclesTable = () =>
         initialValues, // Initial values for the form
         onSubmit: (values) =>{
             values.safety_certicate = certificateImage
-            if(role === role_name.service_provider){
+            if(roleID === role_Id.service_provider){
                 values.service_provider_id = userId
             }
             if (add_list) 
@@ -282,7 +286,7 @@ const ListVehiclesTable = () =>
                                                     <tr>
                                                         {/* This are the columns and column heading in the enquiry page */}
                                                         <th className="index" data-sort="index">#</th>
-                                                        { (role !== role_name.service_provider)  ? (
+                                                        { (roleID === role_Id.admin)  ? (
                                                             <th className="sort" data-sort="customer_name">Provider</th>
                                                         ): null}
                                                         <th className="sort" data-sort="vNumber">Vehicle Number</th>
@@ -302,7 +306,7 @@ const ListVehiclesTable = () =>
                                                             {/* Below we are intialize the vehicle data */}
                                                             {/* <td className="id" style={{ display: "none" }}><Link to="#" className="fw-medium link-primary">{index + 1}</Link></td> */}
                                                             <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th> {/* Serial Number */}
-                                                            { (role !== role_name.service_provider)  ? (
+                                                            { (roleID === role_Id.admin)  ? (
                                                                 <td className="name">{item.service_provider}</td>
                                                             ): null}
                                                             {/* <td className="name">{item.service_provider}</td> Name of the service provider */}
@@ -409,7 +413,7 @@ const ListVehiclesTable = () =>
                         {/* The below element is adding the name of the service provider. Whose vehicle is being added */}
                         {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
                         <div className="mb-3">
-                        {role === role_name.admin ? (
+                        {roleID === role_Id.admin ? (
                             <label htmlFor="serviceprovider-field" className="form-label">
                                 Service Provider
                             </label>
@@ -418,7 +422,7 @@ const ListVehiclesTable = () =>
                                         null
                                     
                                     )}
-                            {role === role_name.admin ? (
+                            {roleID === role_Id.admin ? (
                                 <select
                                     data-trigger
                                     name="service_provider_id"

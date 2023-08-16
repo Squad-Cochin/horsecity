@@ -39,6 +39,7 @@ const ListCustomerTable = () => {
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [userId, setUserId ] = useState("");
+    const [roleId, setRoleId] = useState("");
     const [role, setRole ] = useState(false);
     const [module, setModule] = useState({});
     const [ errors, setErrors ] = useState("")
@@ -53,10 +54,13 @@ const ListCustomerTable = () => {
         console.log('User id from the customer page: ', user_Id);
         let role_Name = data[0]?.user[0]?.role_name
         console.log('Role name from the customer page: ', role_Name);
+        let role_id = data[0]?.user[0]?.role_Id
+        console.log('Role Id from the customer page: ', role_id);
         setUserId(user_Id);
         setRole(role_Name);
+        setRoleId(role_id)
         getAllData(1)
-    }, [userId, role]);
+    }, [userId, role, roleId]);
 
     /**This object sets the initial values for the form fields managed by formik */
     const initialValues = {
@@ -417,7 +421,7 @@ const ListCustomerTable = () => {
                             />
                         </div>
                         {/** Customer Date of Birth */}
-                        <div className="mb-3">
+                        {/* <div className="mb-3">
                             <label htmlFor="date_of_birth-field" className="form-label">Date Of Birth</label>
                             <Flatpickr
                                 className="form-control"
@@ -430,7 +434,24 @@ const ListCustomerTable = () => {
                                 onChange={(dates) =>validation.setFieldValue('date_of_birth', dates[0])}
                                 placeholder={validation.values.date_of_birth || "Select Date"}
                             />
+                        </div> */}
+
+                        <div className="mb-3">
+                            <label htmlFor="date_of_birth-field" className="form-label">Date Of Birth</label>
+                            <Flatpickr
+                                className="form-control"
+                                name='date_of_birth'
+                                options={{
+                                    dateFormat: "d-m-Y",
+                                    maxDate: new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate()), // Max date is 18 years ago
+                                }}
+                                value=""
+                                onChange={(dates) => validation.setFieldValue('date_of_birth', dates[0])}
+                                placeholder={validation.values.date_of_birth || "Select Date"}
+                            />
                         </div>
+
+
                         {/** Customer Id proof no */}
                         <div className="mb-3">
                             <label htmlFor="id_proof_no-field" className="form-label">Id Proof Number</label>
