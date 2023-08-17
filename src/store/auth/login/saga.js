@@ -86,8 +86,10 @@ function* updateNewPassword({ payload: { user } }) {
   try{
     console.log("yy")
    const response =   yield call(changePassword, user);
+   console.log("RESPO",response);
       yield put(updatePWDSuccess(response));
 }catch (error) {
+  console.log("RESPOERR",error);
   yield put(apiError(error));
 }
 }

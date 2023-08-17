@@ -49,7 +49,7 @@ const Login = props => {
     };
   });
 
-  document.title = "Login | HORSCITY";
+  document.title = `Login | ${app_name}`;
   const dispatch = useDispatch();
 
   // Validation for login function
