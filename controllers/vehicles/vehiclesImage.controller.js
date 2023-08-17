@@ -24,7 +24,6 @@ exports.addImages = async (req, res, next) =>
         req.files.image, // We need to upload the image.
         req.body.title // title of the image
     );
-
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(vehicleImages === 'err')
     {
@@ -92,9 +91,7 @@ exports.allImages = async (req, res, next) =>
             data : vehicleImages
         });
     }
-
 };
-
 
 /**
  * The below function is for updating the status of the particular images of the vehicle. We need to give the vehicle image id in the params.
@@ -126,7 +123,6 @@ exports.updateStatus = async (req, res, next) =>
             message : constant.responseMessage.statusChanged
         });
     }
-
 };
 
 /**

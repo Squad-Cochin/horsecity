@@ -66,5 +66,15 @@ module.exports = (app) =>
     checkInput.newpassword,
     checkInput.confirmnewpassword,
     checkInput.passwordsimilarity,
-    customerController.customerChangePassword)
+    customerController.customerChangePassword);
+
+    app.post(`/${process.env.apiToken}/customer/registration`,
+    checkInput.nameValidation,
+    checkInput.emailValidation(constants.tableName.customers),
+    checkInput.usernameValidation(constants.tableName.customers),
+    checkInput.contactNumberValidation(constants.tableName.customers),
+    // checkInput.dateOfBirthValidation,
+    checkInput.idProofNumberValidation,
+    checkInput.isCustomerIdProofImageSubmitted,
+    customerController.signup);
 }

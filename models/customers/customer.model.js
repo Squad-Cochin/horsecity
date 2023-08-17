@@ -424,6 +424,7 @@ module.exports = class customers
                         // console.log(`Getting login time for entering into the customer logs table query: `, selQuery);
                         con.query(selQuery, (err, result3) =>
                         {
+                            // console.log(`Result 3: `, result3);
                             if(err)
                             {
                                 console.log(`Customer login is done successfully but error while fetching the login time from the logs table`, err);
@@ -431,7 +432,7 @@ module.exports = class customers
                             }
                             else
                             {
-                                if(result3[0].length != 0)
+                                if(result3.length != 0)
                                 {
                                     let upQuery = `UPDATE ${constants.tableName.customer_logs} c SET c.logout_time = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', c.duration = TIMEDIFF('${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.changeDateToSQLFormat(result3[0].login_time)}') WHERE c.customer_id = ${customerData[0].id} AND c.login_time IS NOT NULL AND c.logout_time IS NULL`;
                                     // console.log(`Update Query of the customers log when we are updatting the logout time in the table: `, upQuery);
@@ -449,6 +450,16 @@ module.exports = class customers
                                             resolve(`err`);
                                         }
                                     });
+                                }
+                                else if (result3.length == 0)
+                                {
+                                    // console.log(`The customer is not signin. We cannot logout before login`);
+                                    resolve(`notLogin`)
+                                }
+                                else
+                                {
+                                    console.log(`Error came while updating the data in the customer logs. Please check result 3`);
+                                    resolve(`err`);
                                 }
                             }
                         });
@@ -502,18 +513,61 @@ module.exports = class customers
         }
         catch (error)
         {
-          console.log('Error while service provider change password from the backend', error);
+          console.log('Error while customer change password from the backend', error);
           throw error; // re-throw the error to be handled by the calling code
         }
     };
 
-
-
-
-
-
-
-
-    
+    static async customersignup(name, email, user_name, password, contact_no, date_of_birth, id_proof_no, files)
+    {
+        try
+        {
+            return await new Promise(async(resolve, reject)=>
+            {
+                let uploadAttachment = await commonoperation.fileUploadTwo(files, constants.attachmentLocation.customer.upload.idProof);
+                // console.log(uploadAttachment);
+                if(uploadAttachment === 'INVALIDFORMAT')
+                {
+                    console.log(`Invalid format of the image while uploading at the time of customer registeration`);
+                    resolve('INVALIDFORMAT');
+                }
+                else if(uploadAttachment === 'ERR')
+                {
+                    console.log(`Error while uploading the image at the time of customer registeration`);
+                    resolve('err');
+                }
+                else if(uploadAttachment === 'NOATTACHEMENT')
+                {
+                    console.log(`No attachement at the time of the customer registration`);
+                    resolve('NOATTACHEMENT');
+                }
+                else
+                {
+                    let insQuery = `INSERT INTO customers(name, email, user_name, password, contact_no, date_of_birth, id_proof_no, id_proof_image, phone_verified, email_verified, expiry_at, created_at) VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', '${id_proof_no}', '${uploadAttachment}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                    // console.log('Customer register query: ', insQuery);
+                    con.query(insQuery, (err, result) =>
+                    {
+                        // console.log(result);
+                        if(result.affectedRows > 0)
+                        {
+                            // console.log('Customer registered successfully');
+                            resolve('registered');
+                        }
+                        else
+                        {
+                            console.log(`Error from the insert query of the customer registration models`);
+                            resolve('err');
+                        }
+                    });
+                }
+            });
+        }
+        catch (error)
+        {
+            console.log('Error while register customer from the backend', error);
+            // resolve('err'); // re-throw the error to be handled by the calling code
+        } 
+    };
+   
 };
 

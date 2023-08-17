@@ -390,7 +390,7 @@ exports.customerLogout = async (req, res) =>
         console.log('Customer incorrect password');
         res.status(200).send
         ({
-            status : "success",
+            status : "false",
             code : 400,
             message : "Customer incorrect password"
         });
@@ -400,11 +400,21 @@ exports.customerLogout = async (req, res) =>
         console.log('Incorrect customer username');
         res.status(200).send
         ({
-            status : "success",
+            status : "false",
             code : 400,
             message : "Incorrect customer username"
         });
-    } 
+    }
+    if(customers === 'notLogin')
+    {
+        // console.log('Customer is not login. We cannot logout directly');
+        res.status(200).send
+        ({
+            status : "false",
+            code : 400,
+            message : "Customer is not login. We cannot logout directly"
+        });
+    }
 };
 
 exports.customerChangePassword = async (req, res, next) =>
@@ -452,4 +462,65 @@ exports.customerChangePassword = async (req, res, next) =>
             message : "Customer password updated successfully",
         });
     }
+};
+
+exports.signup = async (req, res, next) =>
+{
+    const customers = await customer.customersignup
+    (
+        req.body.name, // Name of the customer
+        req.body.email, // Email of the customer
+        req.body.userName, // userName of the customer
+        req.body.password, // Password of the customer
+        req.body.contact_no, // Contact number of the customer
+        // Date of birth of the customer. Since the format from the front end is coming 
+        // in this way "Fri Jul 14 2023 00:00:00 GMT+0530 (India Standard Time)". So a function
+        // is written to convert them into SQL DATETIME format. FORMAT is YYYY-MM-DD HH-MM-SS
+        time.changeDateToSQLFormat(req.body.date_of_birth), 
+        req.body.id_proof_no, // Identity proof number of the customer
+        req.files.id_proof_image // Image of the identity proof
+    );
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
+    if (customers === 'err')
+    {
+        console.log('Error while inserting the customer data');
+        return res.status(200).json
+        ({
+            code: 400,
+            status: false,
+            message: constant.responseMessage.errorInsert,
+        });
+    }
+    // If the id proof image is in invalid format then this else if block of code will be executed.
+    else if (customers === 'INVALIDFORMAT')
+    {
+        console.log('Invalid Format of file submit for upload');
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : "Invalid Format of file submit for upload",
+        });
+    }
+    // If the id proof image is not uploaded then this else if block of code will be executed.
+    else if(customers === 'NOATTACHEMENT')
+    {
+        console.log('No image uploaded for customer');
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : "No image uploaded for customer",
+        });
+    }
+    else (customers === 'registered')
+    {
+        console.log('Customer registered successfully');
+        return res.status(200).send
+        ({
+            code: 200,
+            status: true,
+            message: `Customer registered successfully`,
+        });
+    }    
 };

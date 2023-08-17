@@ -62,6 +62,7 @@ exports.isManufacturerEntered = (req, res, next) =>
         next();
     }
 }
+
 exports.isModelEntered = (req,res,next) =>
 {
     if(!req.body.model)
@@ -79,6 +80,7 @@ exports.isModelEntered = (req,res,next) =>
     }
     
 }
+
 exports.isColorEntered = (req,res,next) =>
 {
     if(!req.body.color)
@@ -96,6 +98,7 @@ exports.isColorEntered = (req,res,next) =>
     }
     
 }
+
 exports.isLengthEntered = (req, res, next) => 
 {
     const length = req.body.length;
@@ -309,8 +312,6 @@ exports.isTemperaturControlValueEntered = (req, res, next) =>
     }
 }
 
-///
-
 exports.isGCCTravelValueEntered = (req, res, next) =>
 {
     if(!req.body.gcc_travel_allowed)
@@ -409,7 +410,6 @@ exports.isVehicleRegistrationNumberEntered = async (req, res, next) =>
         }   
     }
 }
-
 
 exports.isInsurancePolicyNumberEntered = async (req, res, next) =>
 {

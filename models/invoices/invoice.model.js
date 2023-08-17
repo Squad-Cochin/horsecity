@@ -16,6 +16,13 @@ module.exports = class invoices
 {
     constructor(){}
 
+    /**
+     * The below model is getting all the invoices. This function will executed when we will call this model from the controller.
+     * We need three thing from the controller to execute this funtion. They are
+     * 1. page number
+     * 2. page size
+     * 3. Id
+     */
     static async getall(pageNumber, pageSize, Id)
     {
         try 
@@ -146,6 +153,10 @@ module.exports = class invoices
         }
     };
 
+    /**
+     * The below model is for getting all the details of a particular invoice. This model will be executed when the controller will call this.
+     * We need the invoice id from the controller to execute this function
+     */
     static async getone(Id)
     {
         try
@@ -301,7 +312,7 @@ module.exports = class invoices
                     // The below if loop is for getting the invoice when the data is  in the booking table and the status of the booking data is CONFIRM      
                     if(data1[0].booking_status === 'CONFIRM')
                     {
-                        console.log('Booking status is confirm in the booking table and the vehicle details are fetched from the invoice table');                                                
+                        // console.log('Booking status is confirm in the booking table and the vehicle details are fetched from the invoice table');                                                
                         let selQuery = `SELECT i.id,
                                         v.id AS VehicleId,
                                         i.invoice_no AS iId,
@@ -348,7 +359,7 @@ module.exports = class invoices
                                         JOIN vehicles v ON v.id = i.vehicle_id
                                         JOIN drivers dr ON dr.id = i.driver_id
                                         WHERE i.id = ${Id} ORDER BY remaining_amount DESC; `;
-                        console.log('Data is not in the booking table query: ',selQuery);
+                        // console.log('Data is not in the booking table query: ',selQuery);
                         con.query(selQuery, (err, result) =>
                         {
                             // console.log(`Result of booking id not present: `, result);
@@ -862,6 +873,12 @@ module.exports = class invoices
         }
     };
 
+    /**
+     * the below static function is for adding the amount in the database for a particular invoice. 
+     * We require two things to execute this below function
+     * 1.   Id
+     * 2.   amount
+     */
     static async enteramountforparticularinvoice(Id, amount)
     {
         try 
@@ -967,7 +984,10 @@ module.exports = class invoices
         }
     };
 
-
+    /**
+     * The below static function is for getting payment histroy for a particular invoice.
+     * We need the invoice id from the controller to execute this function
+     */
     static async getpaymenthistroyofparticularinvoice(Id)
     {
         try 
@@ -991,6 +1011,10 @@ module.exports = class invoices
         }
     };
 
+    /**
+     * The below static function is for getting latest amount payed for a particular invoice.
+     * We need the invoice id from the controller to execute this function
+     */
     static async getlatestpaymenthistroy(Id)
     {
         try 
@@ -1023,8 +1047,13 @@ module.exports = class invoices
         }
     };
 
-
-
+    /**
+     * The below static function is for sending invoice on email.
+     * We need three thing from the controller to execute this funtion. They are
+     * 1. Id
+     * 2. to
+     * 3. subject
+     */
     static async sendemailatinvoice(id, to, subject)
     {
         try
@@ -1051,6 +1080,10 @@ module.exports = class invoices
         }
     };
 
+    /**
+     * The below static function is for getting the data for the send email button
+     * We need the invoice id from the controller to execute this function
+     */
     static async getsendemailbuttondata(Id)
     {
         try
@@ -1083,7 +1116,10 @@ module.exports = class invoices
         }
     };
 
-
+    /**
+     * The below static function is for starting the trip. This Trick can be clicked only once.  
+     * We need the invoice id from the controller to execute this function
+     */
     static async bookingstart(Id)
     {
         try
@@ -1176,13 +1212,6 @@ module.exports = class invoices
 
         }
     };
-
-
-
-
-
-
-
 };
 
 

@@ -1,5 +1,3 @@
-
-
 var enquiriesModel = require('../../models/Enquiries Front Page/enquiries.model');
 
 exports.createNewEnquiry = async (req, res, next) =>

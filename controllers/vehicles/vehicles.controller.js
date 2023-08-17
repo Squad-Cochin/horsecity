@@ -60,7 +60,6 @@ exports.addNew = async (req, res, next) =>
         // is written to convert them into SQL DATETIME format. FORMAT is YYYY-MM-DD HH-MM-SS
         time.changeDateToSQLFormat(req.body.vehicle_exipration_date)
     );
-
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(vehicles === 'err')
     {
@@ -89,7 +88,6 @@ exports.addNew = async (req, res, next) =>
  * The below function is for getting all the vehicles details. Those vehicles who deleted at feild are having
  * 'NULL' only those details will be shown or fetched.
  */
-
 exports.getAll = async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for get all vehicles logic.
@@ -241,7 +239,6 @@ exports.getOne = async (req, res, next) =>
  * The most important thing is the vehicle id in the params.
  * We need number of input from the end user to editing or changing of the existing vehicle. 
  */
-
 exports.updateData = async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for editing or updating the existing vehicle.
@@ -313,8 +310,6 @@ exports.updateData = async (req, res, next) =>
  * The below function is for getting all the vehicle images details of a particular vehicle. Those vehicle images whose deleted at feild are having
  * 'NULL' only those details will be shown or fetched.
  */
-
-
 exports.getAllImages = async (req, res, next) =>
 {
     // We need to add the vehicle id in the params
@@ -392,10 +387,29 @@ exports.removeVehicle = async (req, res, next) =>
     }
 };
 
+/**
+ * The below function is for getting the particular vehicle details on the customer side 
+ */
 exports.getVehicleDetailForCustomerPage = async (req, res, next) =>
 {
+    // We need to add the vehicle id in the params
+    // The below line is for going to the model function to implement the code for removing vehicle logic.
     const vehicles = await vehicle.getvehicledetailforcustomerpage(req.params.id);
-    if(vehicles.length === 0)
+    // console.log(vehicles);
+
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
+    if(vehicles === 'err')
+    {
+        return res.status(200).send
+        ({
+            code : 500,
+            status : false,
+            message : constant.responseMessage.universalError,
+            data : []
+        });
+    }
+    // If the vehicle data is not present, then this else if block of code will be executed. It will never come into play. But for safety purpose it is written because we are already checking the param id in the middleware 
+    else if(vehicles.length === 0)
     {
         console.log('No vehicle data present');
         return res.status(200).send
@@ -418,5 +432,4 @@ exports.getVehicleDetailForCustomerPage = async (req, res, next) =>
             data : vehicles
         });
     }
-
-}
+};

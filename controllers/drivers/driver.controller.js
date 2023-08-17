@@ -48,7 +48,6 @@ exports.getAll = async (req, res) =>
     }    
 }
 
-
 /**
  * The below function is for getting all the details of a particular driver. Only single driver
  * details we get through the below function.
@@ -89,7 +88,6 @@ exports.getOne= async (req, res) =>
         });
     }
 }
-
 
 /**
  * The below function is for the adding or registering of new driver. We need number of input
@@ -419,8 +417,6 @@ exports.UnAssignServiceProvider = async (req, res, next) =>
         });
     }
 };
-
-
 
 exports.UnAssignServiceProviderAndDriverBoth = async (req, res, next) =>
 {

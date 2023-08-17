@@ -139,7 +139,7 @@ exports.updateUserStatus = (tablename, Id) =>
                     if(result[0].status === constant.status.active)
                     {
                         let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.inactive}', t.updated_at = '${timeCalculate.getFormattedUTCTime(constant.timeOffSet.UAE)}'  WHERE t.id = '${Id}' AND t.deleted_at IS NULL`;
-                        console.log(UpdateQuery);
+                        // console.log(UpdateQuery);
                         con.query(UpdateQuery, (err, result) => // executing the above query 
                         {
                             if(result.length != 0) // if ticket updated then if block
@@ -347,21 +347,3 @@ exports.fileUploadTwo = async (attachments, path) =>
     });
 }
 
-exports.getFileNameFromURL = async (url) =>
-{
-    // Split the URL by slashes ('/') to get an array of path components
-    const pathComponents = url.split('/');
-
-    // Get the last element of the array, which represents the file name with extension
-    let fileNameWithExtension = pathComponents[pathComponents.length - 1];
-
-    // Check if the last element contains a dot (.) indicating it's a file name with extension
-    // If not, it means the URL itself is the file name, so return it as it is
-    if (!fileNameWithExtension.includes('.'))
-    {
-        return fileNameWithExtension;
-    }
-    console.log('Filename: ', fileNameWithExtension)
-    return fileNameWithExtension;
-}
-  

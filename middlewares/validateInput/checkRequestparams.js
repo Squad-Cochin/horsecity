@@ -396,7 +396,7 @@ const checkValueEntered = (Field, messageField) => (req, res, next) =>
         }
         else
         {
-            console.log(`${messageField} is present`);
+            // console.log(`${messageField} is present`);
             resolve();
         }
     });

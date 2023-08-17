@@ -17,7 +17,6 @@ function hasOnlyNonSpaces(str)
     }
 }
 
-
 const isValidDateOfBirth = (DOB) =>  
 {
     // This is regex or regular expression for verify the Date or birth validation
@@ -60,7 +59,6 @@ const isvalidEmail = (email) =>
         return false
     }
 };
-
 
 exports.validateCommonInputAtStartingTime = (tableName, feildName, Value, id, messageFeild) => async (req, res, next) =>
 {
@@ -353,7 +351,6 @@ exports.isValidLicenceNumber = async (req, res, next) =>
     }    
 };
 
-
 exports.idProofNumberValidation = async (req, res, next) =>
 {
     if (!req.body.id_proof_no) 
@@ -543,8 +540,6 @@ exports.idProofValidationWhileUpdate = async(req, res, next) =>
     }    
 };
 
-
-
 exports.isValidDescription = (req, res, next) =>
 {
     if (!req.body.description) 
@@ -655,7 +650,6 @@ exports.passwordValidation = async (req, res, next) =>
         });
     };
 };
-
 
 exports.newpassword = async (req, res, next) => 
 {
@@ -802,7 +796,6 @@ exports.isPageSizeEntered = (req, res, next) =>
         next();
     }
 }
-
 
 exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
 {  
@@ -954,8 +947,7 @@ exports.idProofImageWhileUpdate = (req, res, next) =>
     {
         next();
     }
-}
-    
+}   
 
 exports.isDriverIdEntered = (req, res, next) =>
 {
@@ -975,7 +967,6 @@ exports.isDriverIdEntered = (req, res, next) =>
     }
 }
 
-
 exports.isServiceProviderIdEntered = (req, res, next) =>
 {
     if(!req.body.serviceProvider_id)
@@ -993,7 +984,6 @@ exports.isServiceProviderIdEntered = (req, res, next) =>
         next();
     }
 };
-
 
 exports.checkAmountEntered = async(req, res, next) =>
 {
@@ -1095,7 +1085,6 @@ exports.checkCustomerEnquiryBody = async (req, res, next) =>
         console.log(`Error from the 'checkCustomerEnquiryBody' function. It is in validator folder. Which is inside the middlewares. While checking the enquiries body. This middleware is basically designed to make the enquiries from the customer`, error); 
     }
 };
-
 
 exports.isIdEntered = (feildName, tableName, MessageFeild) => async (req, res, next) =>
 {
