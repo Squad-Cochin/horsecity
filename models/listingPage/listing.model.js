@@ -69,15 +69,15 @@ static async listingPageData  (body)
         // Build the final SQL query
         let selQuery = `
         SELECT vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse,
-        GROUP_CONCAT(vimg.image) AS images
+        COALESCE(GROUP_CONCAT(vimg.image), "NOT FOUND") AS images
         FROM ${constants.tableName.vehicles} vh
-        LEFT JOIN vehicles_images AS vimg ON vh.id = vimg.id
+        LEFT JOIN vehicles_images AS vimg ON vh.id = vimg.vehicle_id
         WHERE 1=1
         ${gccType}
         ${tripTypeFilter}
         ${numberOfHorsesFilter}
         ${priceFilter}
-        ${suppliersFilter}
+        ${suppliersFilter} AND vh.deleted_at IS NULL AND vh.status = '${constants.status.active}'
         GROUP BY vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse
         ${sorted}
         LIMIT ${+limit} OFFSET ${+offset};
@@ -86,9 +86,35 @@ static async listingPageData  (body)
         
         // console.log(selQuery); // Print the constructed query for debugging
         con.query(selQuery,(err,data)=>{
-            console.log(err);
-            if(!err){
-                 resolve({listing_data : data})
+
+            if(!err){   
+                for(let i = 0;i < data.length ;  i++){
+           
+                     if(data[i].images != "NOT FOUND" ){
+                        const imagesArray = data[i].images.split(',');
+               
+                        for(let j =0 ; j < imagesArray.length;j++){
+                                imagesArray[j] =  `${process.env.PORT_SP}${constants.attachmentLocation.vehicle.view.image}${imagesArray[j]}`;
+                                data[i].images =   imagesArray
+                        }
+                     }
+                }
+
+                const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.vehicles} vh
+                WHERE 1=1
+                ${gccType}
+                ${tripTypeFilter}
+                ${numberOfHorsesFilter}
+                ${priceFilter}
+                ${suppliersFilter} AND vh.deleted_at IS NULL AND vh.status = '${constants.status.active}' `
+                // // resolve(result);
+                con.query(totalCountQuery,(err,result)=>{
+                    console.log(err);
+                    if(!err){
+                        const count = result[0]['count(*)'];
+                 resolve({totalCount: count,listing_data : data})
+                }
+            })
           }})
         } catch (err) {
             resolve(false)
