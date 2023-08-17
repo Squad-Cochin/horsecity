@@ -492,7 +492,7 @@ console.log("FADA",template_data.subject);
     setSPDrivers(sPDriverData.drivers)
     setSPVechiles(sPVechilesData.vehicles)
   }
-  console.log("ga",quotationListDetails);
+
 
   return (
     <React.Fragment>

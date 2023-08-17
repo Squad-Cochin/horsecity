@@ -39,7 +39,7 @@ export const CHANGE_PASSWORD_URL = apiBaseUrl + token + "/changePassword"
 export const RECOVER_PASSWORD = "/fake-recover-password";
 export const POST_FAKE_CHANGE_PWD = "/post-fake-change-password";
 
-/**SERVICE PROVIDER */
+/**SERVICE PROVIDER */ 
 export const GET_SP_ALL_DATA_URL = apiBaseUrl + token + "/getAll/serviceproviders"
 export const GET_SP_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/serviceprovider"
 export const POST_SP_ADD_URL = apiBaseUrl + token + "/add/serviceprovider"

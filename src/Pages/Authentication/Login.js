@@ -24,6 +24,7 @@ const Login = props => {
 
   const [loginpage_logo,setLoginPageLogo] = useState('')
   const [backgroundImage, setBackgroundImage] = useState('../../assets/images/bg.jpg');
+  const [app_name,setAppName] = useState('')
   useEffect(()=>{
     getAllData()
   },[])
@@ -35,6 +36,7 @@ const Login = props => {
     let settingsData = await getSettingsPageData();
     setBackgroundImage(settingsData?.settingsPageData[0]?.loginpage_bg_image);
     setLoginPageLogo(settingsData?.settingsPageData[0]?.loginpage_logo);
+    setAppName(settingsData?.settingsPageData[0]?.application_title)
    }
 
    // At the bigining unmounting 
@@ -103,10 +105,10 @@ const Login = props => {
                     </Link>
                   </div>
                   <h4 className="font-size-18 text-muted mt-2 text-center">
-                    Welcome to Horscity !
+                    Welcome to {app_name} !
                   </h4>
                   <p className="mb-5 text-center">
-                    Sign in to continue with Horscity.
+                    Sign in to continue with {app_name}.
                   </p>
                   <Form
                     className="form-horizontal"
