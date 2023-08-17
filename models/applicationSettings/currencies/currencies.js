@@ -5,8 +5,9 @@ const constants = require('../../../utils/constants');
 const time = require('../../../utils/helper/date');
 require('dotenv').config()
 
-
-exports.getCurrenciesNames = () =>
+module.exports = class currencie
+{
+    static async getCurrenciesNames  ()
 {
     return new Promise((resolve, reject) =>
     {
@@ -29,4 +30,6 @@ exports.getCurrenciesNames = () =>
 
     })    
    
+}
+
 }

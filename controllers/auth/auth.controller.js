@@ -136,7 +136,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         console.log('Unavailable username or incorrect username. While service provider password update');
         return res.status(200).send
         ({
-            status : "failure",
+            success : false,
             code : 400,
             message : "This username must be incorect or no user is registered with this username",
         });
@@ -147,7 +147,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         console.log('Unexpected error. While service provider password update');
         return res.status(200).send
         ({
-            status : "failure",
+            success : false,
             code : 500,
             message : "Internal server error while updating the password",
         });
@@ -157,7 +157,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         console.log('Incorrect password. While service provider password update');
         return res.status(200).send
         ({
-            status : "failure",
+            success : false,
             code : 400,
             message : "Password is incorrect",
         });
@@ -167,7 +167,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         console.log('Password updated successfully. While service provider password update');
         return res.status(200).send
         ({
-            status : "success",
+            success : "true",
             code : 200,
             message : "Password updated successfully",
         });

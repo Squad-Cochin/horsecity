@@ -5,7 +5,11 @@ const constants = require("../../../utils/constants");
 const time = require("../../../utils/helper/date");
 require("dotenv").config();
 
-exports.getLanguageNames = () => {
+
+
+module.exports = class languages
+{
+    static async getLanguageNames() {
   return new Promise((resolve, reject) => {
     try {
       console.log("hello");
@@ -24,7 +28,7 @@ exports.getLanguageNames = () => {
   });
 };
 
-exports.getAllLanguages = (requestBody) => {
+static async getAllLanguages(requestBody){
   return new Promise((resolve, reject) => {
     try {
       const { page, limit } = requestBody;
@@ -62,7 +66,7 @@ exports.getAllLanguages = (requestBody) => {
 
 
 
-exports.addNewLanguage = (requestBody, file) => {
+static async addNewLanguage(requestBody, file) {
   return new Promise(async (resolve, reject) => {
     try {
   
@@ -92,7 +96,7 @@ exports.addNewLanguage = (requestBody, file) => {
   });
 };
 
-exports.updateLanguage = (requestBody, file,id) => {
+static async updateLanguage  (requestBody, file,id)  {
   return new Promise(async (resolve, reject) => {
     try {
         let uploadLanguage = await commonoperation.fileNameUpload(file?.language_file);
@@ -127,7 +131,7 @@ exports.updateLanguage = (requestBody, file,id) => {
   });
 };
 
-exports.getOneLanguage = (id) => {
+static async getOneLanguage  (id)  {
   return new Promise((resolve, reject) => {
     try {
       const selQuery = `SELECT id, name, abbreviation, file
@@ -148,3 +152,4 @@ exports.getOneLanguage = (id) => {
     }
   });
 };
+}

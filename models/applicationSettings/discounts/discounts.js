@@ -6,7 +6,9 @@ const time = require('../../../utils/helper/date');
 require('dotenv').config()
 
 
-exports.getAllDiscounts = (requestBody) =>
+module.exports = class discounts
+{
+    static async getAllDiscounts (requestBody) 
 {
     return new Promise((resolve, reject) =>
     {
@@ -48,8 +50,7 @@ exports.getAllDiscounts = (requestBody) =>
    
 }
 
-
-exports.addNewDiscount = (requestBody) =>
+static async  addNewDiscount  (requestBody) 
 {
     return new Promise(async(resolve, reject) =>
     {
@@ -77,7 +78,7 @@ exports.addNewDiscount = (requestBody) =>
    
 }
 
-exports.updateDiscount = (requestBody,id) =>
+static async  updateDiscount (requestBody,id) 
 {
     return new Promise(async(resolve, reject) =>
     {
@@ -128,7 +129,7 @@ exports.updateDiscount = (requestBody,id) =>
 
 
 
-exports.getOneDiscount = (id) =>
+static async  getOneDiscount(id) 
 {
     return new Promise((resolve, reject) =>
     {
@@ -157,7 +158,7 @@ exports.getOneDiscount = (id) =>
    
 }
 
-exports.getallactivediscount = async () =>
+static async getallactivediscount  () 
 {
     return await new Promise((resolve, reject) =>
     {
@@ -190,4 +191,6 @@ exports.getallactivediscount = async () =>
             console.log(`Error from 'dicount.js' file. In the controllers>dicounts>dicounts.js. Function from which the eror we are getting is 'getallactivediscount' `);
         }
     });
+}
+
 }

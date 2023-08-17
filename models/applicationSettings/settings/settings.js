@@ -4,6 +4,8 @@ const commonfetching = require("../../../utils/helper/commonfetching");
 const commonoperation = require("../../../utils/helper/commonoperation");
 const con = require("../../../configs/db.configs");
 require('dotenv').config()
+
+
 module.exports = class settings {
   static async updateSettings(reqBody, files) {
     return new Promise(async (resolve, rejuct) => {

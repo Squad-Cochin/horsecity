@@ -6,7 +6,10 @@ const time = require('../../utils/helper/date');
 require('dotenv').config()
 
 
-exports.getAllEnquiries = (requestBody,spId) =>
+module.exports = class enguiries
+{
+
+    static async  getAllEnquiries  (requestBody,spId) 
 {
     return new Promise((resolve, reject) =>
     {
@@ -109,7 +112,7 @@ exports.getAllEnquiries = (requestBody,spId) =>
 
 
 
-exports.getOneEnquiry = (id) =>
+static asyncgetOneEnquiry(id)    
 {
     return new Promise((resolve, reject) =>
     {
@@ -157,3 +160,4 @@ exports.getOneEnquiry = (id) =>
    
 }
 
+}

@@ -5,8 +5,10 @@ const constants = require('../../utils/constants');
 const time = require('../../utils/helper/date');
 require('dotenv').config()
 
+module.exports = class tripetails
+{
 
-exports.getAllTripDetails = (requestBody,spId) => {
+    static async getAllTripDetails (requestBody,spId) {
     return new Promise((resolve, reject) => {
         try {
 
@@ -119,7 +121,7 @@ exports.getAllTripDetails = (requestBody,spId) => {
 
 
 
-exports.addBreakDowns = (requestBody) => {
+static async addBreakDowns (requestBody){
     return new Promise((resolve, reject) => {
         try {
 
@@ -294,7 +296,7 @@ console.log("gggggggg");
 
 
 
-exports.listBreakDowns = (bkId) => {
+static async listBreakDowns  (bkId)  {
     return new Promise((resolve, reject) => {
         try {
             console.log(bkId);
@@ -326,4 +328,4 @@ exports.listBreakDowns = (bkId) => {
 }
 
 
-
+}

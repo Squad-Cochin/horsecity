@@ -8,6 +8,7 @@ const time = require('../../utils/helper/date');
 exports.listingPageData = async(req,res)=>
 {
 
+    console.log("body",req.body);
     let listing = await modal.listingPageData(req.body)
 
    if(listing){
@@ -18,9 +19,9 @@ exports.listingPageData = async(req,res)=>
         message: constants.responseMessage.getAll,
         data : listing
     });
-   }
+   } 
 }
-
+ 
 
 exports.getUsernameServiceProvider = async(req,res)=>
 {    

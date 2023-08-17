@@ -6,7 +6,10 @@ const time = require('../../utils/helper/date');
 require('dotenv').config()
 
 
-exports.getAllServiceProviders = (requestBody,spId) =>
+
+module.exports = class serviceProviders
+{
+    static async getAllServiceProviders  (requestBody,spId) 
 {
     return new Promise((resolve, reject) =>
     {
@@ -99,7 +102,7 @@ exports.getAllServiceProviders = (requestBody,spId) =>
 }
 
 
-exports.addNewServiceProviders = (requestBody,file) =>
+static async addNewServiceProviders  (requestBody,file) 
 {
     return new Promise(async(resolve, reject) =>
     {
@@ -124,7 +127,7 @@ exports.addNewServiceProviders = (requestBody,file) =>
     })    
 }
 
-exports.updateServiceProvider = (requestBody,file,id) =>
+static async updateServiceProvider  (requestBody,file,id) 
 {
     return new Promise(async(resolve, reject) =>
     {
@@ -173,7 +176,7 @@ exports.updateServiceProvider = (requestBody,file,id) =>
 
 
 
-exports.getOneServiceProvider = (id) =>
+static async getOneServiceProvider(id) 
 {
     return new Promise((resolve, reject) =>
     {
@@ -201,7 +204,7 @@ exports.getOneServiceProvider = (id) =>
     })    
 }
 
-exports.getNameServiceProviders = () =>
+static async getNameServiceProviders()
 {
     return new Promise((resolve, reject) =>
     {
@@ -230,7 +233,7 @@ exports.getNameServiceProviders = () =>
 
 
 /**For getting particlar service provider vehicle */
-exports.getSpVehicles = (spID) =>
+static async getSpVehicles(spID) 
 {
     return new Promise((resolve, reject) =>
     {
@@ -258,7 +261,7 @@ exports.getSpVehicles = (spID) =>
 
 
 /**For getting particlar service provider driver */
-exports.getSpDrivers = (spID) =>
+static async getSpDrivers(spID) 
 {
     return new Promise((resolve, reject) =>
     {
@@ -283,6 +286,7 @@ exports.getSpDrivers = (spID) =>
             console.log('Error while feching particular service provider drivers', err);
         }
     })    
+}
 }
 
                          

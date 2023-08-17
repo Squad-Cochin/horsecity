@@ -5,8 +5,9 @@ const constants = require('../../../utils/constants');
 const time = require('../../../utils/helper/date');
 require('dotenv').config()
 
-
-exports.getAllTaxations = (requestBody) =>
+module.exports = class currencie
+{
+    static async getAllTaxations(requestBody)
 {
     return new Promise((resolve, reject) =>
     {
@@ -48,7 +49,7 @@ exports.getAllTaxations = (requestBody) =>
 }
 
 
-exports.getTaxationsNames = () =>
+static async getTaxationsNames ()
 {
     return new Promise((resolve, reject) =>
     {
@@ -73,7 +74,7 @@ exports.getTaxationsNames = () =>
    
 }
 
-exports.addNewTaxation = (requestBody) =>
+static async addNewTaxation(requestBody)
 {
     return new Promise(async(resolve, reject) =>
     {
@@ -101,7 +102,7 @@ exports.addNewTaxation = (requestBody) =>
    
 }
 
-exports.updateTaxation = (requestBody,id) =>
+static async updateTaxation  (requestBody,id) 
 {
     return new Promise(async(resolve, reject) =>
     {
@@ -151,7 +152,7 @@ exports.updateTaxation = (requestBody,id) =>
 
 
 
-exports.getOneTaxation = (id) =>
+static async getOneTaxation (id) 
 {
     return new Promise((resolve, reject) =>
     {
@@ -178,4 +179,5 @@ exports.getOneTaxation = (id) =>
 
     })    
    
+}
 }

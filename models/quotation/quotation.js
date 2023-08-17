@@ -8,8 +8,13 @@ const mail = require('../../utils/mailer')
 
 require('dotenv').config()
 
+
+module.exports = class quotation
+{
+
+
 /**Adding new quotation */
-exports.addNewQuotaion = (requestBody, pickup_date, drop_date) => {
+static async addNewQuotaion  (requestBody, pickup_date, drop_date) {
     return new Promise(async (resolve, reject) => {
         try {
             /**For taking letest id in the quotation */
@@ -87,7 +92,7 @@ exports.addNewQuotaion = (requestBody, pickup_date, drop_date) => {
 
 
 /**Listing quotation */
-exports.ListQuotation = (requestBody,spId) => {
+static async ListQuotation  (requestBody,spId) {
     return new Promise(async (resolve, reject) => {
         try {
             const { page, limit } = requestBody;
@@ -190,7 +195,7 @@ exports.ListQuotation = (requestBody,spId) => {
 
 
 /**For feching particlar quotation basis of quotation id */
-exports.getOneQuotation = (quotId) => {
+static async getOneQuotation (quotId)  {
     return new Promise(async (resolve, reject) => {
         try { 
             /**For taking tax id in the settings application */
@@ -286,7 +291,7 @@ exports.getOneQuotation = (quotId) => {
 
 
 /**For updating That means add  of quotation  */
-exports.updateQuotation = (requestBody, pickup_date, drop_date, quotId) => {
+static async updateQuotation(requestBody, pickup_date, drop_date, quotId)  {
     return new Promise(async (resolve, reject) => {
         try {
 
@@ -357,7 +362,7 @@ exports.updateQuotation = (requestBody, pickup_date, drop_date, quotId) => {
 
 
 /**For listing removed quotations */
-exports.removedQuotations = (quotId) => {
+static async removedQuotations  (quotId)  {
     return new Promise(async (resolve, reject) => {
         try {
 
@@ -456,7 +461,7 @@ exports.removedQuotations = (quotId) => {
 
 
 /** For chainging qutation status     basis of quotation id */
-exports.updateStatusQuotation = (quotId) => {
+static async updateStatusQuotation  (quotId)  {
     return new Promise(async (resolve, reject) => {
         try {
 
@@ -688,7 +693,7 @@ exports.updateStatusQuotation = (quotId) => {
 }
 
 /** For Sending email */
-exports.sendMail = (requestBody, quot_id) => 
+static async sendMail(requestBody, quot_id) 
 {
     return new Promise(async (resolve, reject) =>
     {
@@ -729,7 +734,7 @@ exports.sendMail = (requestBody, quot_id) =>
 
 
 
-exports.getsendemailbuttondata= () =>
+static async getsendemailbuttondata() 
 {
     
         return new Promise(async (resolve, reject) =>
@@ -758,7 +763,7 @@ exports.getsendemailbuttondata= () =>
 };
 
 
-
+}
 
 
 
