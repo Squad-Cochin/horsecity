@@ -35,7 +35,7 @@ const ListQuotationsTable = () => {
   const [ quotation, setQuotation ] = useState([]);
   const [ quotationListDetails, setQuotationListDetails ] = useState([])
   const [ quotationList, setQuotationList ] = useState([]);
-  const [ modalEmail, setModalEmail] = useState(false)
+  const [ modalEmail, setModalEmail] = useState(false);
   const [ qutId, setQutId ] = useState("");
   const [ pageNumber, setPageNumber ] = useState(1);
   const [ numberOfData, setNumberOfData ] = useState(0);

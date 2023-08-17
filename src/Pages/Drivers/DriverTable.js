@@ -47,11 +47,13 @@ const ListTables = () =>
     const [ pageNumber, setPageNumber ] = useState(1);
     const [userId, setUserId ] = useState("");
     const [role, setRole ] = useState(false);
+    const [roleId, setRoleId] = useState("");
     const [module, setModule] = useState({});
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("")
     const pageLimit = config.pageLimit;
-    const role_name  = config.roles
+    const role_name = config.roles
+    const role_id =  config.Role
 
      
     // The below effect for displaying the overall data of the driver page in the front.
@@ -63,10 +65,13 @@ const ListTables = () =>
         console.log('User id from the drivers page: ', user_Id);
         let role_Name = data[0]?.user[0]?.role_name
         console.log('Role name from the drivers page: ', role_Name);
+        let rId = data[0]?.user[0]?.role_Id
+        console.log('Role Id from the drivers page: ', rId);
         setUserId(user_Id);
         setRole(role_Name);
+        setRoleId(rId)
         getAllData(1)
-    }, [userId, role]);
+    }, [userId, role, roleId]);
     console.log(`Module list at the driver page: `, module);
 
     // The below intialValues variable is used for having the data the driver. When we will use the edit button.
@@ -314,10 +319,10 @@ const ListTables = () =>
                                                         <th className="sort" data-sort="driver_email">Email</th>
                                                         <th className="sort" data-sort="driver_phone">Contact Number</th>
                                                         <th className="sort" data-sort="registered_date">Registered Date</th>
-                                                        { (role !== role_name.service_provider)  ? (
+                                                        { (roleId === role_id.admin)  ? (
                                                         <th className="sort" data-sort="status">Assign To</th>
                                                         ): null}
-                                                        { (role !== role_name.service_provider)  ? (
+                                                        { (roleId === role_id.admin)  ? (
                                                         <th className="sort" data-sort="status">Status</th>
                                                         ): null}
                                                         <th className="sort" data-sort="action">Action</th>
@@ -336,7 +341,7 @@ const ListTables = () =>
                                                             <td className="driver_email">{item.email}</td> {/* // Driver Email */}
                                                             <td className="driver_phone">{item.contact_no}</td> {/* // Driver Contact Number */}
                                                             <td className="registered_date">{item.created_at}</td> {/* // Driver Created Time */}
-                                                            { (role !== role_name.service_provider)  ? (
+                                                            { (roleId === role_id.admin)  ? (
                                                             <td className="status">
                                                                 <button
                                                                     className="btn btn-sm btn-success status-item-btn"
@@ -349,7 +354,7 @@ const ListTables = () =>
                                                             </td>
                                                             ): null}
                                                             {/* This is the place from where we are calling the status button and function */}
-                                                            { (role !== role_name.service_provider)  ? (
+                                                            { (roleId === role_id.admin)  ? (
                                                             <td className="status">
                                                                 {item.status === "ACTIVE" ?
                                                                     <button
@@ -490,7 +495,9 @@ const ListTables = () =>
                                 name='date_of_birth'
                                 options={{
                                     dateFormat: "d-m-Y",
-                                    maxDate :new Date(),
+                                    // maxDate :new Date(),
+                                    maxDate: new Date(new Date().getFullYear() - 18, new Date().getMonth(), new Date().getDate()), // Max date is 18 years ago
+
                                 }}
                                 value={validation.values.date_of_birth || ""}
                                 onChange={(dates) =>validation.setFieldValue('date_of_birth', dates[0])}

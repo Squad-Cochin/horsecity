@@ -163,6 +163,7 @@ import * as url from "../url_helper";
     /**Add new driver */
     export async function addNewDriver(data, uId){
         try {
+            console.log(`user Id: `, uId);
             console.log("dd1",data)
             const formData = new FormData();
             // Append the object data to the FormData instance
@@ -188,7 +189,9 @@ import * as url from "../url_helper";
     }
     
     export async function assignNewSP(dId, spId){
-        try{
+    try
+    {
+        console.log(`Assign New Service Provider functions`);
             let reqObj = {
                 "driver_id": dId,
                 "serviceProvider_id": spId
