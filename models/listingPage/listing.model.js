@@ -45,7 +45,7 @@ static async listingPageData  (body)
         /**No of horse filtration */
         let numberOfHorsesFilter = '';  
         if (number_of_horses) {
-            numberOfHorsesFilter = `AND vh.no_of_horse = ${number_of_horses}`;
+            numberOfHorsesFilter = `AND vh.no_of_horse BETWEEN '${0}' AND ${number_of_horses}`;
         }
         
         /**filtering  price  */
@@ -55,12 +55,12 @@ static async listingPageData  (body)
         }
         
         /**Filtering suppliers */
-        let suppliersFilter = '';
-        if (suppliers.length>1) {
+        let suppliersFilter = ''; 
+
+        if (suppliers.length>0) {
             suppliersFilter = `AND vh.service_provider_id IN (${suppliers.join(',')})`;
         }
-        
-        
+
         /**Sorting price  */  
         let sorted = '';
         if (sort === 'low') {
