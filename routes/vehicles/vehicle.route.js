@@ -3,7 +3,7 @@ const checkInput = require(`../../middlewares/validateInput/checkRequestInputVeh
 const checkInputGetAll = require(`../../middlewares/validateInput/checkRequestBodyInput`);
 const constants = require('../../utils/constants');
 const { isValidIdInTheParams } = require('../../middlewares/validateInput/checkRequestparams');
-
+const verifyBody = require(`../../middlewares/requestValidator`); 
 
 module.exports = (app) =>
 {
@@ -90,7 +90,8 @@ module.exports = (app) =>
     isValidIdInTheParams(constants.tableName.vehicles),  
     vehicleController.removeVehicle);
 
-    app.get(`/${process.env.apiToken}/customer/getOne/vehicle/:id`,
+    app.get(`/customer/getOne/vehicle/:id`, 
+    verifyBody.verifyToken,
     isValidIdInTheParams(constants.tableName.vehicles),
     vehicleController.getVehicleDetailForCustomerPage);
 };
