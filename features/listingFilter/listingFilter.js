@@ -8,7 +8,7 @@ const initialState = {
   suppliers : [],
   sort : "",
   page : 1,
-  limit : 5 
+  limit : 3 
 };
 
 export const listingFilter = createSlice({

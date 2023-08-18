@@ -1,12 +1,14 @@
 import { useSelector, useDispatch } from "react-redux";
 import { addTripType } from "../../../features/search/initalSearch";
-import { useEffect } from "react";
-import { useState } from "react";
+import { useEffect,useState } from "react";
+import { add_list_data } from "../../../features/listData/listData";
+import listingDataApi from "../../../pages/api/listingDataApi";
  
 const CategorieFilters = () => {
-  const { price_from, price_to, suppliers, sort, limit } = useSelector((state) => state.listingFilter) || {};
+  const { price_from, price_to, suppliers, sort, limit, page } = useSelector((state) => state.listingFilter) || {};
   const [ trip_type, setTrip_type ] = useState([])
   const [ searchData, setSearchData ] = useState({})
+  const dispatch = useDispatch();
   useEffect(()=>{
     initialLoad();
   },[])
@@ -17,8 +19,6 @@ const CategorieFilters = () => {
     setSearchData(search)
   }
   // dispatch(addTripType(trip_type_data))
-  
-  
 
   let data = [
     {
@@ -37,50 +37,52 @@ const CategorieFilters = () => {
 
   async function checkType(val){
     console.log(val,"val")
-    if(trip_type.includes(val)){
+    if(trip_type?.includes(val)){
       const newArray = trip_type.filter(value => value !== val);
-      // let search_data = search;
-      setTrip_type(newArray)
+      setTrip_type(newArray);
       let modifiedData = searchData;
-      modifiedData.trip_type = newArray
-      setSearchData(modifiedData)
+      modifiedData.trip_type = newArray;
+      setSearchData(modifiedData);
       localStorage.setItem('searchObject', JSON.stringify(modifiedData));
       // await dispatch(addTripType(newArray))
-      applySearch(newArray)
-    }else{
+      updateListData(modifiedData);
+    } else {
       const newArray = [...trip_type];
       newArray.push(val);
-      setTrip_type(newArray)
+      setTrip_type(newArray);
       let modifiedData = searchData;
-      modifiedData.trip_type = newArray
-      setSearchData(modifiedData)
+      modifiedData.trip_type = newArray;
+      setSearchData(modifiedData);
       localStorage.setItem('searchObject', JSON.stringify(modifiedData));
-      applySearch(modifiedData)
+      updateListData(modifiedData);
     }
   }
 
-  async function applySearch(val){
-    console.log("trip_type",val)
+  async function updateListData(search){
     let reqObj = {
-      trip_type : val.trip_type,
-      number_of_horses : val.number_of_horses,
-      price_from : price_from,
-      price_to : price_to,
-      suppliers : suppliers,
-      sort : sort,
-      page : 1,
-      limit : limit
-    };
-    console.log("reqObj",reqObj)
-  } 
+      "trip_type": search.trip_type,
+      "number_of_horses": search.number_of_horses,
+      "price_from": price_from,
+      "price_to" : price_to,
+      "suppliers" : suppliers,
+      "sort" : sort,
+      "page" : page,
+      "limit" : limit
+    }
+    console.log("req", reqObj)
+    let packageList = await listingDataApi(reqObj)
+    console.log("response",packageList)
+    dispatch(add_list_data(packageList))
+  }
+
   return (
     <>
-      {data.map((item) => {
+      {data.map((item, index) => {
         return(
-          <div className="row y-gap-10 items-center justify-between">
+          <div key={index} className="row y-gap-10 items-center justify-between">
             <div className="col-auto">
               <div className="form-checkbox d-flex items-center">
-                {trip_type.includes(item.value) ? 
+                {trip_type?.includes(item.value) ? 
                   <input type="checkbox" onChange={ () => {checkType(item.value); }} checked /> 
                 : <input type="checkbox" onChange={ () => {checkType(item.value); }}/>
                 }

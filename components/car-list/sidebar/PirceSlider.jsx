@@ -2,6 +2,8 @@ import { useState } from "react";
 import InputRange from "react-input-range";
 import { useSelector, useDispatch } from "react-redux";
 import { filter_price_from, filter_price_to } from "../../../features/listingFilter/listingFilter";
+import { add_list_data } from "../../../features/listData/listData";
+import listingDataApi from "../../../pages/api/listingDataApi";
 
 const PirceSlider = () => {
   const dispatch = useDispatch();
@@ -20,6 +22,22 @@ const PirceSlider = () => {
   async function applySearch(val){
     console.log("min",val.min)
     console.log("max",val.max)
+    let search = await JSON.parse(localStorage.getItem('searchObject'));
+    let reqObj = {
+      "trip_type": search.trip_type,
+      "number_of_horses": search.number_of_horses,
+      "price_from": val.min,
+      "price_to" : val.max,
+      "suppliers" : suppliers,
+      "sort" : sort,
+      "page" : page,
+      "limit" : limit
+    }
+    console.log("req", reqObj)
+    let packageList = await listingDataApi(reqObj)
+    console.log("response",packageList)
+    dispatch(add_list_data(packageList))
+    
   } 
 
   return (

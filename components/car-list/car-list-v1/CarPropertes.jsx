@@ -9,31 +9,48 @@ import { HiAdjustments } from "react-icons/hi";
 import { useEffect } from "react";
 import listingDataApi from "../../../pages/api/listingDataApi";
 import { useState } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { add_list_data } from "../../../features/listData/listData";
 
 
 const CarPropertes = () => {
   const [ searchData, setSearchData ] = useState({});
-  const [ price_from, setPrice_from ] = useState(0);
-  const [ price_to, setPrice_to ] = useState(2000);
+  const [ listData, setListData ] = useState([]);
+  const { price_from, price_to, suppliers, sort, page, limit } = useSelector((state) => state.listingFilter) || {};
+  const { list_data } = useSelector((state) => state.listData) || {};
+  const dispatch = useDispatch();
+
   useEffect(() => {
-    async function initialLoad(){
-      const search = await JSON.parse(localStorage.getItem('searchObject'));
-      setSearchData(search)
-      console.log("1ss",search)
-      listingData();
-    }
     initialLoad();
   },[])
 
-  async function listingData(){
-    console.log("rr1",searchData)
-    let packageList = await listingDataApi(searchData)
+  async function initialLoad(){
+    const search = await JSON.parse(localStorage.getItem('searchObject'));
+    setSearchData(search)
+    console.log("1ss",search)
+    listingData(search);
+  }
+
+  async function listingData(search){
+    console.log("rr1",search)
+    let reqObj = {
+      "trip_type": search.trip_type,
+      "number_of_horses": search.number_of_horses,
+      "price_from": price_from,
+      "price_to" : price_to,
+      "suppliers" : suppliers,
+      "sort" : sort,
+      "page" : page,
+      "limit" : limit
+    }
+    console.log("req", reqObj)
+    let packageList = await listingDataApi(reqObj)
     console.log("response",packageList)
-    //  (packageList)
+    dispatch(add_list_data(packageList))
   }
   return (
     <>
-      {vehicleData.slice(0, 5).map((item) => (
+      {list_data?.listing_data.map((item) => (
         <div className="col-12" key={item?.id}>
           <div className="border-top-light pt-30">
             <div className="row x-gap-20 y-gap-20">
@@ -49,15 +66,15 @@ const CarPropertes = () => {
                         }}
                         navigation={true}
                       >
-                        {item?.slideImg?.map((slide, i) => (
+                        {item?.images?.map((slide, i) => (
                           <SwiperSlide key={i}>
                             <div className="ratio ratio-1:1">
                               <div className="cardImage__content">
-                                <Image
+                                <img
                                   width={250}
                                   height={250}
                                   className="rounded-4 col-12 js-lazy"
-                                  src={slide}
+                                  src="http://192.168.200.211:3001/Vehicles/images/410538_car.jpg"
                                   priority
                                   alt="image"
                                 />

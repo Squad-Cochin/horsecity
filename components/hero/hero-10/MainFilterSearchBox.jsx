@@ -15,6 +15,7 @@ const MainFilterSearchBox = () => {
       "departDate" : departDate,
       "returnDate" : returnDate,
       "trip" : trip,
+      "suppliers" : [],
       "trip_type" : trip_type,
       "number_of_horses" : number_of_horses
     }
