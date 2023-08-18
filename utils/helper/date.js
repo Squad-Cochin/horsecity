@@ -83,9 +83,6 @@ const getFormattedUTCTime = (utcOffset) =>
     return formattedDate;
 };
 
-
-
-
 function formatDateToDDMMYYYY(inputDate) 
   {
     if(!inputDate)
@@ -105,8 +102,33 @@ function formatDateToDDMMYYYY(inputDate)
         // Format the date as "DD-MM-YYYY"
         const formattedDate = `${day}-${month}-${year}`;
         return formattedDate;
+    }    
+}
+
+function formatDateToDDMMYYYYHHMMSS(inputDate) 
+  {
+    if(!inputDate)
+    {
+        return null
     }
+    else
+    {
+        // Convert the input date string to a Date object
+        const dateObj = new Date(inputDate);
     
+        // Extract day, month, and year from the Date object
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const year = dateObj.getFullYear();
+        const hours = String(dateObj.getHours()).padStart(2, '0');
+        const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+        const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+
+    
+        // Format the date as "DD-MM-YYYY HH:MM:SS"
+        const formattedDate = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
+        return formattedDate;
+    }    
 }
 
 const timeexportfunction = 
@@ -114,7 +136,8 @@ const timeexportfunction =
     addingSpecifiedDaysToCurrentDate,
     getFormattedUTCTime,
     changeDateToSQLFormat,
-    formatDateToDDMMYYYY
+    formatDateToDDMMYYYY,
+    formatDateToDDMMYYYYHHMMSS
 }
 
 module.exports = timeexportfunction;

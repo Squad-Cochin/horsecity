@@ -12,6 +12,7 @@
 const constant = require('../../utils/constants'); // Constant elements are stored in this file
 const customer = require('../../models/customers/customer.model'); // The model from where the logic is intantiate are written in customer model
 const time = require('../../utils/helper/date'); // All the time relateed formating are written in this file.
+const { errorMonitor } = require('nodemailer/lib/xoauth2');
 
 /**
  * The below function is for getting all the customer details. Those customer who deleted at feild are having
@@ -523,4 +524,44 @@ exports.signup = async (req, res, next) =>
             message: `Customer registered successfully`,
         });
     }    
+};
+
+exports.getParticularCustomerLogs = async(req, res, next) =>
+{
+    const customers = await customer.getparticularcustomerlogs(req.params.id);
+    // console.log(`Get Particular Customer Logs: `, customers);
+    
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
+    if(customers === 'err')
+    {
+        console.log('Errro while fetching the data from the logs table');
+        return res.status(200).json
+        ({
+            code: 500,
+            status: false,
+            message: `Internal server error. While fetching the data from the logs table of customers`,
+        });
+    }
+    else if(customers.length == 0)
+    {
+        console.log(`No logs present for this particular customer`);
+        res.status(200).send
+        ({
+            code : 200,
+            status : true,
+            message : `No logs present for this customer`,
+            data : customers
+        });
+    }
+    else 
+    {
+        console.log(`Logs present for this particular customer`);
+        res.status(200).send
+        ({
+            code : 200,
+            status : true,
+            message : `Logs present for this particular customer`,
+            data : customers
+        });
+    }
 };

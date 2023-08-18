@@ -453,13 +453,28 @@ exports.verifyLanguageBody = async(req,res,next) =>
 
 }
 
-exports.verifyToken = async (req,res,next ) =>{
+exports.verifyToken = async (req,res,next ) =>
+{
     const bearerToken = req.headers.authorization;
-console.log(bearerToken);
+    // console.log(bearerToken);
+    
+    if(!bearerToken)
+    {
+        console.log(`Bearer token not submitted. It is required`);
+        return res.status(200).send
+        ({
+            code: 400,
+            success: false,
+            message: "Bearer token not submitted. It is required"
+        });
+    }
     const token = bearerToken.split(' ')[1];
-    if(process.env.clientApiToken === token){
+    if(process.env.clientApiToken === token)
+    {
         next()
-    }else{
+    }
+    else
+    {
         return res.status(200).send
         ({
             code: 400,
@@ -467,7 +482,6 @@ console.log(bearerToken);
             message: "Invalid token"
         });
     }
-  
 }
   
 

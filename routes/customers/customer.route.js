@@ -77,4 +77,11 @@ module.exports = (app) =>
     checkInput.idProofNumberValidation,
     checkInput.isCustomerIdProofImageSubmitted,
     customerController.signup);
+
+    app.get(`/${process.env.apiToken}/customer/logs/:id`,
+    isValidIdInTheParams(constants.tableName.customers), 
+    customerController.getParticularCustomerLogs
+    );
+
+
 }

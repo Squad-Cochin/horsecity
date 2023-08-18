@@ -568,6 +568,54 @@ module.exports = class customers
             // resolve('err'); // re-throw the error to be handled by the calling code
         } 
     };
-   
+
+    static async getparticularcustomerlogs(Id)
+    {
+        try
+        {
+            return new Promise (async(resolve, reject)=>
+            {
+                let selQuery = `SELECT 
+                                c.id,
+                                c.customer_id,
+                                c.ip_address,
+                                c.device_information,
+                                c.location,
+                                DATE_FORMAT(c.login_time, '%d-%m-%Y %h:%m:%s') AS login_time,
+                                DATE_FORMAT(c.logout_time, '%d-%m-%Y %h:%m:%s') AS logout_time,
+                                c.duration
+                                FROM customer_logs c
+                                WHERE c.customer_id = ${Id}
+                                `;
+                // console.log(selQuery);
+                con.query(selQuery, (err, result)=>
+                {
+                    if(err)
+                    {
+                        console.log(`Error while fetching the details from the logs table for a particular customer`);
+                        resolve(err);
+                    }
+                    else
+                    {
+                        if(result.length !== 0)
+                        {
+                            console.log(`Data fetched for a particular customers`);
+                            resolve(result);
+                        }
+                        else
+                        {
+                            console.log(`Data fetched for a particular customer. But no data present`);
+                            resolve([]);
+                        }
+                    }
+                });
+            });
+        }
+        catch (error)
+        {
+           console.log(`Error from the try catch block of the getparticularcustomerlogs model from the customer.model.js`); 
+        }        
+    };
+    
 };
 

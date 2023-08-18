@@ -464,13 +464,50 @@ module.exports = class vehicles
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let selQuery = `SELECT v.id, v.service_provider_id, s.name AS service_provider_name, v.vehicle_number, v.price, v.no_of_horse, v.length, v.height, v.breadth, v.make, v.model, v.air_conditioner, v.temperature_manageable, v.gcc_travel_allowed, v.insurance_cover, v.vehicle_type, v.vehicle_registration_date, v.vehicle_exipration_date, v.insurance_date, v.insurance_expiration_date, v.insurance_provider, vi.id AS vehicle_image_id, vi.image, vi.title, r.id AS review_id, r.vehicle_rating, r.vehicle_description, r.created_at
-                FROM vehicles v
-                INNER JOIN service_providers s ON v.service_provider_id = s.id
-                LEFT JOIN vehicles_images vi ON v.id = vi.vehicle_id AND vi.status = "${constants.status.active}" 
-                LEFT JOIN reviews r ON v.id = r.vehicle_id
-                WHERE v.id = ${Id}
-                AND v.status = "${constants.status.active}"`;
+                // let selQuery = `SELECT v.id, v.service_provider_id, s.name AS service_provider_name, v.vehicle_number, v.price, v.no_of_horse, v.length, v.height, v.breadth, v.make, v.model, v.air_conditioner, v.temperature_manageable, v.gcc_travel_allowed, v.insurance_cover, v.vehicle_type, v.vehicle_registration_date, v.vehicle_exipration_date, v.insurance_date, v.insurance_expiration_date, v.insurance_provider, vi.id AS vehicle_image_id, vi.image, vi.title, r.id AS review_id, r.vehicle_rating, r.vehicle_description, r.created_at
+                // FROM vehicles v
+                // INNER JOIN service_providers s ON v.service_provider_id = s.id
+                // LEFT JOIN vehicles_images vi ON v.id = vi.vehicle_id AND vi.status = "${constants.status.active}" 
+                // LEFT JOIN reviews r ON v.id = r.vehicle_id
+                // WHERE v.id = ${Id}
+                // AND v.status = "${constants.status.active}"`;
+
+                let selQuery = `SELECT
+                                v.id,
+                                v.service_provider_id,
+                                s.name AS service_provider_name,
+                                v.vehicle_number,
+                                v.price,
+                                v.no_of_horse,
+                                v.length,
+                                v.height,
+                                v.breadth,
+                                v.make,
+                                v.model,
+                                v.air_conditioner,
+                                v.temperature_manageable,
+                                v.gcc_travel_allowed,
+                                v.insurance_cover,
+                                v.vehicle_type,
+                                v.vehicle_registration_date,
+                                v.vehicle_exipration_date,
+                                v.insurance_date,
+                                cr.abbreviation,
+                                v.insurance_expiration_date,
+                                v.insurance_provider,
+                                vi.id AS vehicle_image_id,
+                                vi.image,
+                                vi.title,
+                                r.id AS review_id,
+                                r.vehicle_rating,
+                                r.vehicle_description,
+                                r.created_at
+                                FROM vehicles v
+                                INNER JOIN service_providers s ON v.service_provider_id = s.id
+                                LEFT JOIN currencies cr ON cr.id = ( SELECT currency_id FROM application_settings WHERE application_settings.currency_id = cr.id )
+                                LEFT JOIN vehicles_images vi ON v.id = vi.vehicle_id AND vi.status = "${constants.status.active}"
+                                LEFT JOIN reviews r ON v.id = r.vehicle_id
+                                WHERE v.id = ${Id} AND v.status = "${constants.status.active}" `;
                 // console.log(`Fetch data query: `, selQuery);
                 con.query(selQuery, (err, result) =>
                 {
@@ -515,6 +552,7 @@ module.exports = class vehicles
                                         "insurance_cover" : result[0].insurance_cover,
                                         "insurance_provider" : result[0].insurance_provider,
                                         "vehicle_type" : result[0].vehicle_type,
+                                        "abbreviation" : result[0].abbreviation,
                                         "vehicle_registration_date" : time.formatDateToDDMMYYYY(result[0].vehicle_registration_date),
                                         "vehicle_expiration_date" : time.formatDateToDDMMYYYY(result[0].vehicle_exipration_date),
                                         "insurance_date" : time.formatDateToDDMMYYYY(result[0].insurance_date),
