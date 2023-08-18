@@ -30,8 +30,8 @@ const CategorieFilters = () => {
       value : "GCC"
     },
     {
-      name : "Public",
-      value : "PUBLIC"
+      name : "Sharing",
+      value : "SHARING"
     },
   ]  
 

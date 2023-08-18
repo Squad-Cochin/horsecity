@@ -21,7 +21,7 @@ const FilterSelect = () => {
         "trip" : "",
         "suppliers" : [],
         "trip_type" : [],
-        "number_of_horses" : 0
+        "number_of_horses" : ""
       }
       localStorage.setItem('searchObject', JSON.stringify(searchObject));
       // const searchData = JSON.parse(localStorage.getItem('searchObject'));

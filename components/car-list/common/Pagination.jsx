@@ -8,16 +8,18 @@ const Pagination = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [ searchData, setSearchData ] = useState({});
   const { list_data } = useSelector((state) => state.listData) || {};
-  const { price_from, price_to, sort, limit } = useSelector((state) => state.listingFilter) || {};
+  const { price_from, price_to, sort, limit, page, suppliers } = useSelector((state) => state.listingFilter) || {};
   const dispatch = useDispatch();
 
   useEffect(()=>{
     initialLoad()
-  },[])
+  },[price_from, price_to, sort, limit, suppliers])
+  
 
   async function initialLoad(){
     let search = await JSON.parse(localStorage.getItem('searchObject'));
     setSearchData(search)
+    dispatch(filter_page(1))
   }
 
   const handlePageClick = (pageNumber) => {
@@ -63,7 +65,7 @@ const Pagination = () => {
       pageNumbers.push(i);
     }
     const pages = pageNumbers.map((pageNumber) =>
-      renderPage(pageNumber, pageNumber === currentPage)
+      renderPage(pageNumber, pageNumber === page)
     );
     return pages;
   };
