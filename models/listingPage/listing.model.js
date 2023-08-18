@@ -57,7 +57,7 @@ static async listingPageData  (body)
         /**Filtering suppliers */
         let suppliersFilter = ''; 
 
-        if (suppliers.length>0) {
+        if (suppliers?.length>0) {
             suppliersFilter = `AND vh.service_provider_id IN (${suppliers.join(',')})`;
         }
 
@@ -68,48 +68,52 @@ static async listingPageData  (body)
         } else if (sort === 'high') {
             sorted = 'ORDER BY vh.price DESC';
         }
-        
+         
         // final SQL query
         let selQuery = `
-        SELECT vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse,vh.height,
-        COALESCE(GROUP_CONCAT(vimg.image), "NOT FOUND") AS images
-        FROM ${constants.tableName.vehicles} vh
-        LEFT JOIN vehicles_images AS vimg ON vh.id = vimg.vehicle_id
-        WHERE 1=1
-        ${gccType}
-        ${tripTypeFilter}
-        ${numberOfHorsesFilter}
-        ${priceFilter}
-        ${suppliersFilter} AND vh.deleted_at IS NULL AND vh.status = '${constants.status.active}'
-        GROUP BY vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse
-        ${sorted}
-        LIMIT ${+limit} OFFSET ${+offset};
+        SELECT vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse, vh.height,
+       GROUP_CONCAT(vimg.image) AS images
+FROM ${constants.tableName.vehicles} vh
+LEFT JOIN vehicles_images AS vimg ON vh.id = vimg.vehicle_id
+WHERE 1=1
+${gccType}
+${tripTypeFilter}
+${numberOfHorsesFilter}
+${priceFilter}
+${suppliersFilter} AND vh.deleted_at IS NULL AND vh.status = '${constants.status.active}'
+GROUP BY vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse
+${sorted}
+LIMIT ${+limit} OFFSET ${+offset};
+
     `;
    
-        
+         
         // console.log(selQuery); // Print the constructed query for debugging
         con.query(selQuery,(err,data)=>{
             console.log(err);
             if(!err){   
                 for(let i = 0;i < data.length ;  i++){
            
-                     if(data[i].images != "NOT FOUND" ){
+                     if(data[i].images){
                         const imagesArray = data[i].images.split(',');
                
                         for(let j =0 ; j < imagesArray.length;j++){
                                 imagesArray[j] =  `${process.env.PORT_SP}${constants.attachmentLocation.vehicle.view.image}${imagesArray[j]}`;
                                 data[i].images =   imagesArray
                         }
+                     }else{
+                        data[i].images = [];
                      } 
-                }
-
+                } 
+ 
                 const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.vehicles} vh
                 WHERE 1=1
                 ${gccType}
                 ${tripTypeFilter}
                 ${numberOfHorsesFilter}
                 ${priceFilter}
-                ${suppliersFilter} AND vh.deleted_at IS NULL AND vh.status = '${constants.status.active}' `
+                ${suppliersFilter} AND vh.deleted_at IS NULL AND vh.status = '${constants.status.active}' 
+                         `
                 // // resolve(result);
                 con.query(totalCountQuery,(err,result)=>{
   
