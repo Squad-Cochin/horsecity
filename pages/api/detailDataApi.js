@@ -1,0 +1,27 @@
+
+import axios from 'axios';
+// req, res
+
+import API_CONFIG from "../../config";
+
+export default async function DetailsDataApi(id) {
+    
+	try{   
+        const detailsDataApi = API_CONFIG.DETAILS_DATA_API;
+        const apiTocken = API_CONFIG.API_TOKEN;
+        console.log("listingDetails", detailsDataApi,apiTocken,id)
+        const response = await axios.get(`${detailsDataApi}/${id}` ,{
+            headers: {
+              "Authorization": `Bearer ${apiTocken}`, 
+            },
+        });
+        
+        return response.data.data
+    }
+    catch{
+           
+    }
+}
+
+
+

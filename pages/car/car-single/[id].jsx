@@ -18,19 +18,41 @@ import SlideGallery from "../../../components/car-single/SlideGallery";
 import FilterBox from "../../../components/car-single/filter-box";
 import Faq from "../../../components/faq/Faq";
 import MapPropertyFinder from "../../../components/car-single/MapPropertyFinder";
+import DetailsDataApi from "../../api/detailDataApi";
 
 const TourSingleV1Dynamic = () => {
   const router = useRouter();
-  const [car, setCar] = useState({});
+  const [vehicle, setVehicle] = useState([]);
+  const [ vehicleImages, setVehicleImages ] = useState([]);
+  const [ reviews ,setReviews ] = useState([]);
   const id = router.query.id;
+
+  // useEffect(() => {
+
+  //   else setVehicle(carsData.find((item) => item.id == id));
+
+  //   return () => {};
+  // }, [id]);
+
 
   useEffect(() => {
     if (!id) <h1>Loading...</h1>;
-    else setCar(carsData.find((item) => item.id == id));
+    else  getProductDetails();
+  },[id])
+console.log("vehicle images");
+  async function getProductDetails(){
 
-    return () => {};
-  }, [id]);
+    let packageDetails = await DetailsDataApi(id);
+    setVehicle(packageDetails?.vehicle[0])
+    setVehicleImages(packageDetails?.images);
+    setReviews(packageDetails?.reviews)
 
+
+    // let packageList = await axios.post(`/api/initialSearch`,{})
+    console.log("first",packageDetails)
+  }
+
+  console.log("vehicle",vehicle);
   return (
     <>
       <Seo pageTitle="Car Single" />
@@ -51,7 +73,7 @@ const TourSingleV1Dynamic = () => {
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-end">
                 <div className="col-auto">
-                  <h1 className="text-30 sm:text-24 fw-600">{car?.title}</h1>
+                  <h1 className="text-30 sm:text-24 fw-600">{vehicle?.make} {vehicle?.model}</h1>
                   <div className="row x-gap-10 items-center pt-10">
                     {/* <div className="col-auto">
                       <div className="d-flex x-gap-5 items-center">
@@ -96,7 +118,7 @@ const TourSingleV1Dynamic = () => {
               {/* End .row */}
 
               <div className="mt-40">
-                <SlideGallery />
+                <SlideGallery images={vehicleImages} />
               </div>
             </div>
             {/* End col-lg-8 left car gallery */}
@@ -109,7 +131,7 @@ const TourSingleV1Dynamic = () => {
                       <div className="text-14 text-light-1">
                         From
                         <span className="text-20 fw-500 text-dark-1 ml-5">
-                          US{car?.price}
+                          {vehicle?.abbreviation} {vehicle?.price}
                         </span>
                       </div>
                     </div>
@@ -120,14 +142,14 @@ const TourSingleV1Dynamic = () => {
                         <div className="text-14 text-right mr-10">
                           <div className="lh-15 fw-500">Exceptional</div>
                           <div className="lh-15 text-light-1">
-                            {car?.numberOfReviews} reviews
+                            {vehicle?.numberOfReviews} reviews
                           </div>
                         </div>
                         {/* End div */}
 
                         <div className="size-40 flex-center bg-yellow-1 rounded-4">
                           <div className="text-14 fw-600 text-dark-1">
-                            {car?.ratings}
+                            {vehicle?.ratings}
                           </div>
                         </div>
                         {/* End div */}
@@ -160,8 +182,8 @@ const TourSingleV1Dynamic = () => {
             <div className="col-lg-8">
               <div>
                 <h3 className="text-22 fw-500">Property highlights</h3>
-                <PropertyHighlights />
-                <Overview />
+                <PropertyHighlights vehicle={vehicle} />
+                <Overview vehicle={vehicle} />
               </div>
             </div>
             {/* End .col-lg-8 */}
@@ -216,7 +238,7 @@ const TourSingleV1Dynamic = () => {
           <div className="row y-gap-40 justify-between">
             <div className="col-xl-3">
               <h3 className="text-22 fw-500">Guest reviews</h3>
-              <ReviewProgress2 />
+              <ReviewProgress2 reviews={ reviews }/>
               {/* End review with progress */}
             </div>
             {/* End col-xl-3 */}

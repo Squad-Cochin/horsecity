@@ -1,6 +1,6 @@
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs, Mousewheel } from "swiper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const slides = [
   "/img/cars/slides/horseV1.jpg",
@@ -9,8 +9,11 @@ const slides = [
   "/img/cars/slides/horseV1.jpg",
 ];
 
-export default function SlideGallery() {
+export default function SlideGallery(props) {
   const [imagesNavSlider, setImagesNavSlider] = useState(null);
+  // const [ images ,setImage] = useState([]);
+
+
   return (
     <section className="slider">
       <div className="carsSlider mt-40">
@@ -32,11 +35,11 @@ export default function SlideGallery() {
               }}
               modules={[Navigation, Thumbs]}
             >
-              {slides.map((slide, index) => {
+              {props.images?.map((slide, index) => {
                 return (
                   <SwiperSlide key={index}>
                     <div className="slider__image">
-                      <img src={slide} alt="" />
+                      <img src={slide?.url} alt="" />
                     </div>
                   </SwiperSlide>
                 );
@@ -63,11 +66,11 @@ export default function SlideGallery() {
             className="swiper-container2"
             modules={[Navigation, Thumbs, Mousewheel]}
           >
-            {slides.map((slide, index) => {
+            {props.images?.map((slide, index) => {
               return (
                 <SwiperSlide key={index}>
                   <div className="slider__image">
-                    <img src={slide} alt="" />
+                    <img src={slide.url} alt="" />
                   </div>
                 </SwiperSlide>
               );

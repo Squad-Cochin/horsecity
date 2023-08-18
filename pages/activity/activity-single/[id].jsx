@@ -27,15 +27,15 @@ const TourSingleV1Dynamic = () => {
   const [isOpen, setOpen] = useState(false);
   const router = useRouter();
   const [activity, setActivity] = useState({});
-  const id = router.query.id;
-
+  const id = router.query.id; 
+  console.log("iddd",id);
   useEffect(() => {
     if (!id) <h1>Loading...</h1>;
     else setActivity(activityData.find((item) => item.id == id));
-
+     
     return () => {};
   }, [id]);
-
+   
   return (
     <>
       <ModalVideo

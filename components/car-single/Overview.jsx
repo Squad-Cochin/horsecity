@@ -1,10 +1,12 @@
 import Amenities from "./Amenities";
 import Specifications from "./Specifications";
 
-const Overview = () => {
+const Overview = (props) => {
   return (
     <>
-      <div className="border-top-light mt-40 pt-40 mb-40">
+
+
+      {/* <div className="border-top-light mt-40 pt-40 mb-40">
         <h3 className="text-22 fw-500">Overview</h3>
         <p className="text-dark-1 text-15 mt-20">
           Unless you hire a car, visiting Stonehenge, Bath, and Windsor Castle
@@ -33,13 +35,13 @@ const Overview = () => {
             <li>Great for history buffs and travelers with limited time</li>
           </ul>
         </div>
-      </div>
+      </div> */}
       {/* End overview */}
 
       <div className="border-top-light mt-40 pt-40 mb-40">
         <h3 className="text-22 fw-500">Specifications</h3>
         <div className="col-xl-9">
-          <Specifications />
+          <Specifications vehicleData={props.vehicle}/>
         </div>
       </div>
       {/* End specifications */}

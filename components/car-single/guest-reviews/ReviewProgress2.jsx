@@ -1,4 +1,4 @@
-const ReviewProgress2 = () => {
+const ReviewProgress2 = (props) => {
   const reviewProgressContent = [
     {
       id: 1,
@@ -40,21 +40,21 @@ const ReviewProgress2 = () => {
       {/* End .d-flex */}
 
       <div className="row y-gap-20 pt-20">
-        {reviewProgressContent.map((item) => (
-          <div className="col-12" key={item.id}>
+      
+          <div className="col-12" >
             <div className="d-flex items-center justify-between">
-              <div className="text-15 fw-500">{item.reviewReason}</div>
-              <div className="text-15 text-light-1">{item.reviews}</div>
-            </div>
+              <div className="text-15 fw-500">Excellent</div>
+              <div className="text-15 text-light-1">20</div>
+            </div>0
             <div className="progressBar mt-10">
               <div className="progressBar__bg bg-blue-2" />
               <div
                 className="progressBar__bar bg-yellow-1"
-                style={{ width: item.progressPercent }}
+                style={{ width: '10%' }}
               />
             </div>
           </div>
-        ))}
+    
 
         {/* End .col-md-4 */}
       </div>
