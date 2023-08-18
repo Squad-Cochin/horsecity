@@ -2,7 +2,7 @@ import Amenities from "./Amenities";
 import Specifications from "./Specifications";
 
 const Overview = (props) => {
-  return (
+  return (     
     <>
 
 
