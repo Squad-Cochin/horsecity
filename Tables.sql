@@ -293,6 +293,7 @@ CREATE TABLE vehicles
     breadth DECIMAL(15,2) NOT NULL,
     height DECIMAL(15,2) NOT NULL,
     no_of_horse INT(2) NOT NULL,
+    price DECIMAL(15,2) NOT NULL,
     air_conditioner ENUM ('YES', 'NO'),
     temperature_manageable ENUM ('YES', 'NO'),
     registration_no VARCHAR(150) UNIQUE NOT NULL,
@@ -303,7 +304,7 @@ CREATE TABLE vehicles
     insurance_provider VARCHAR(255) NOT NULL,
     insurance_expiration_date DATE,
     safety_certicate VARCHAR(255),
-    vehicle_type ENUM('PRIVATE', 'COMMERCIAL'),
+    vehicle_type ENUM('PRIVATE', 'SHARING'),
     vehicle_registration_date DATE,
     vehicle_exipration_date DATE,
     status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
@@ -610,3 +611,5 @@ CREATE TABLE payment_records (
 );
 
 ALTER TABLE vehicles ADD `price` DECIMAL(15.0) NULL AFTER `height`;
+ALTER TABLE `vehicles` CHANGE `vehicle_type` `vehicle_type` ENUM('PRIVATE','SHARING') CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
+
