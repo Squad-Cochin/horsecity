@@ -11,7 +11,7 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
  * The below one is Shaheer's Computer Details
  */
 // export const API_BASE_URL = "http://192.168.200.211:8000";
-// const apiBaseUrl = "http://192.168.200.211:8000";
+const apiBaseUrl = "http://192.168.200.211:3001";
 
 /**
  * The below one is Saurabh's Computer Details
@@ -22,14 +22,14 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
  * The below one is own Computer Details
  */
 
-const apiBaseUrl = "http://localhost:8000";
-export const API_BASE_URL = "http://localhost:8000";
+// const apiBaseUrl = "http://localhost:8000";
+// export const API_BASE_URL = "http://localhost:8000";
 
 const token = "/horsecity661809"
 
 // image path
 
-export const IMAGE_PATH = "http://192.168.200.211:8000/serviceProvider/licenceImage/"
+export const IMAGE_PATH = "http://192.168.200.211:3001/serviceProvider/licenceImage/"
 
 export const LOGIN_URL = apiBaseUrl + token + "/login"
 export const RECOVER_PWD_URL = apiBaseUrl + token + "/recoveryPassword"
