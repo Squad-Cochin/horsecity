@@ -77,7 +77,7 @@ module.exports = class customers
                             }                           
                         });
                     }
-                    else if(result[0].name === constants.roles.service_provider)
+                    else if(result[0].role_id === constants.roles.service_provider)
                     {
                         let Query = `SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
                                 FROM ${constants.tableName.permissions} AS pm

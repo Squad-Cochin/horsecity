@@ -475,7 +475,7 @@ module.exports = class drivers
                 {
                     // console.log('First Result: ', result);
                     let existSelQuery = `SELECT sp.* FROM service_providers sp LEFT JOIN assign_drivers ad ON sp.id = ad.service_provider_id AND ad.driver_id = ${id} AND ad.deleted_at IS NULL WHERE ad.id IS NULL`;
-                    console.log('Second Query: ', existSelQuery);
+                    // console.log('Second Query: ', existSelQuery);
                     con.query(existSelQuery, (error, result1)=>
                     {
                         // console.log('Second Result: ', result1);
