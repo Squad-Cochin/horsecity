@@ -48,20 +48,6 @@ CREATE TABLE discount_types
     updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL   
 );
-CREATE TABLE application_tokens 
-(
-    id INT(11) PRIMARY KEY AUTO_INCREMENT,
-    username VARCHAR(50) NOT NULL,
-    password VARCHAR(255) NOT NULL,
-    token VARCHAR(55),
-    type ENUM('MOBILE','WEB','PWA'),
-    status ENUM('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    token_generated_date DATETIME ,
-    token_expiry_date DATETIME DEFAULT NULL,
-    created_at DATETIME ,
-    updated_at DATETIME DEFAULT NULL 
-);
-
 
 CREATE TABLE application_settings (
     id INT(11) PRIMARY KEY,
@@ -205,8 +191,6 @@ CREATE TABLE assign_drivers
     deleted_at DATETIME DEFAULT NULL
 );
 
-
-
 CREATE TABLE customer_logs
 (
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -218,34 +202,6 @@ CREATE TABLE customer_logs
     login_time DATETIME,
     logout_time DATETIME,
     duration TIME
-);
-
-CREATE TABLE service_provider_logs
-(
-    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    service_provider_id INT(11),
-    FOREIGN KEY (service_provider_id) REFERENCES service_providers(id),
-    ip_address VARCHAR(50) NOT NULL,
-    device_information VARCHAR(255) NOT NULL,
-    location VARCHAR(255) NOT NULL,
-    login_time DATETIME,
-    logout_time DATETIME,
-    duration TIME
-);
-
-CREATE TABLE logs
-(
-    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    type ENUM('PAYMENT','CONFIRMATION','ALERT'),
-    customer_id INT(11),
-    FOREIGN KEY (customer_id) REFERENCES customers(id),
-    sprovider_id INT(11),
-    FOREIGN KEY (sprovider_id) REFERENCES service_providers(id),
-    sender VARCHAR(150) NOT NULL,
-    subject VARCHAR(155) NOT NULL,
-    message VARCHAR(255) NOT NULL,
-    receiver VARCHAR(150) NOT NULL,
-    created_at DATETIME 
 );
 
 CREATE TABLE templates
@@ -260,24 +216,6 @@ CREATE TABLE templates
     created_at DATETIME ,
     updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL
-);
-
-CREATE TABLE otp_stores
-(
-    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    customer_id INT(11),
-    FOREIGN KEY(customer_id) REFERENCES customers(id),
-    serviceprovider_id INT(11),
-    FOREIGN KEY (serviceprovider_id) REFERENCES service_providers(id),
-    user_type ENUM('CUSTOMER', 'SERVICE PROVIDER'),
-    purpose ENUM ('PASSWORD RESET', 'CONTACT VERIFICATION', 'EMAIL VERIFICATION'),
-    otp VARCHAR(255) NOT NULL,
-    delivery_method ENUM('EMAIL', 'SMS'),
-    status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    otp_used_status ENUM ('USED', 'NOT USED'),
-    created_at DATETIME ,
-    expired_at DATETIME ,
-    updated_at DATETIME NULL  
 );
 
 CREATE TABLE vehicles
@@ -313,32 +251,6 @@ CREATE TABLE vehicles
     deleted_at DATETIME DEFAULT NULL
 );
 
-CREATE TABLE payment_types
-(
-    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    name VARCHAR(155) NOT NULL,
-    status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME ,
-    updated_at DATETIME DEFAULT NULL ,
-    deleted_at DATETIME DEFAULT NULL   
-);
-
-
-CREATE TABLE calculate_amount_types
-(
-    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    service_provider_id INT(11),
-    FOREIGN KEY(service_provider_id) REFERENCES service_providers(id),    
-    unit VARCHAR(25) NOT NULL,
-    base_value DECIMAL(15,2) NOT NULL,
-    base_amount DECIMAL(15,2) NOT NULL,    
-    status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
-    created_at DATETIME ,
-    updated_at DATETIME DEFAULT NULL ,
-    deleted_at DATETIME DEFAULT NULL   
-);
-
-
 CREATE TABLE vehicles_images
 (
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -351,7 +263,6 @@ CREATE TABLE vehicles_images
     updated_at DATETIME DEFAULT NULL,
     deleted_at DATETIME DEFAULT NULL
 );
-
 
 CREATE TABLE enquiries
 (
@@ -414,25 +325,6 @@ CREATE TABLE quotations
     created_at DATETIME ,
     updated_at DATETIME DEFAULT NULL ,
     deleted_at DATETIME DEFAULT NULL   
-);
-
-CREATE TABLE horse_details
-(
-    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
-    customer_id INT(11),
-    FOREIGN KEY (customer_id) REFERENCES customers(id),
-    quot_id INT(11),
-    FOREIGN KEY (quot_id) REFERENCES quotations(id),
-    horse_type ENUM ('CHILD', 'ADULT'),
-    horse_age INT(3),
-    horse_gender ENUM ('MALE', 'FEMALE'),
-    horse_breed VARCHAR(50),
-    horse_color VARCHAR(50),
-    horse_height DECIMAL(15,2),
-    horse_weight DECIMAL(15,2) NOT NULL,
-    created_at DATETIME ,
-    updated_at DATETIME DEFAULT NULL ,
-    deleted_at DATETIME DEFAULT NULL
 );
 
 
@@ -499,26 +391,6 @@ CREATE TABLE bookings (
   deleted_at DATETIME DEFAULT NULL
 );
 
-
-
-CREATE TABLE payments (
-  id INT(11) PRIMARY KEY NOT NULL,
-  customer_id INT(11) DEFAULT NULL,
-  FOREIGN KEY(customer_id) REFERENCES customers(id),
-  service_provider_id INT(11),
-  FOREIGN KEY(service_provider_id) REFERENCES service_providers(id),
-  booking_id INT(11) DEFAULT NULL,
-  FOREIGN KEY(booking_id) REFERENCES bookings(id),
-  invoice_id INT(11) DEFAULT NULL,
-  FOREIGN KEY(invoice_id) REFERENCES invoices(id), 
-  payment_type_id INT(11) DEFAULT NULL,
-  FOREIGN KEY(payment_type_id) REFERENCES payment_types(id), 
-  paid_amount DECIMAL(15,2) NOT NULL,
-  status ENUM('PAID', 'PENDING', 'REFUND') DEFAULT NULL,
-  created_at DATETIME DEFAULT NULL,
-  updated_at DATETIME DEFAULT NULL,
-  deleted_at DATETIME DEFAULT NULL
-);
 CREATE TABLE vehicles_breakouts
 (
     id INT(11)  PRIMARY KEY NOT NULL AUTO_INCREMENT,
@@ -538,7 +410,6 @@ CREATE TABLE vehicles_breakouts
     updated_at DATETIME DEFAULT NULL,
     deleted_at DATETIME DEFAULT NULL
 );
-
 
 CREATE TABLE reviews
 (
@@ -561,41 +432,6 @@ CREATE TABLE reviews
     updated_at DATETIME DEFAULT NULL
 );
 
-CREATE TABLE bookings_logs (
-  id INT(11)  PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  customer_id INT(11) DEFAULT NULL,
-  FOREIGN KEY(customer_id) REFERENCES customers(id),
-  booking_id INT(11) DEFAULT NULL,
-  FOREIGN KEY (booking_id) REFERENCES bookings(id),
-  booking_status ENUM('CONFIRM', 'PENDING', 'CANCELED', 'COMPLETED', 'ONGOING') DEFAULT NULL,
-  created_at DATETIME DEFAULT NULL,
-  updated_at DATETIME DEFAULT NULL,
-  deleted_at DATETIME DEFAULT NULL
-);
-
-
-CREATE TABLE vehicles_transportation (
-  id INT(11)  PRIMARY KEY NOT NULL AUTO_INCREMENT,
-  vehicle_id INT(11) DEFAULT NULL,
-  FOREIGN KEY (vehicle_id) REFERENCES vehicles(id),
-  vehicle_owner_id INT(11) DEFAULT NULL,
-  FOREIGN KEY (vehicle_owner_id) REFERENCES service_providers(id),
-  driver_id INT(11) DEFAULT NULL,
-  FOREIGN KEY (driver_id) REFERENCES drivers(id),
-  booking_id INT(11) DEFAULT NULL,
-  FOREIGN KEY (booking_id) REFERENCES bookings(id),
-  trip_type ENUM('PRIVATE', 'SHARING', 'GCC') DEFAULT NULL,
-  pickup_location VARCHAR(255) NOT NULL,
-  pickup_country VARCHAR(30) NOT NULL,
-  pickup_date DATE DEFAULT NULL,
-  drop_location VARCHAR(255) NOT NULL,
-  drop_country VARCHAR(30) NOT NULL,
-  drop_date DATE DEFAULT NULL,
-  trip_distance DECIMAL(5,2) NOT NULL,
-  status ENUM('COMPLETED', 'ONGOING', 'NOT COMPLETED') DEFAULT NULL
-);
-
-
 CREATE TABLE payment_records (
     id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     invoice_id INT(11),
@@ -609,8 +445,3 @@ CREATE TABLE payment_records (
     created_at DATETIME DEFAULT NULL,
     updated_at DATETIME DEFAULT NULL
 );
-
-ALTER TABLE vehicles ADD `price` DECIMAL(15.0) NULL AFTER `height`;
-
-
-ALTER TABLE `vehicles` CHANGE `vehicle_type` `vehicle_type` ENUM('PRIVATE','SHARING') CHARACTER SET latin1 COLLATE latin1_swedish_ci NULL DEFAULT NULL;
