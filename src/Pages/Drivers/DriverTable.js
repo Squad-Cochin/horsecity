@@ -101,14 +101,19 @@ const ListTables = () =>
         {
             values.licence_img = updateLiscenceImage;
             values.profile_image = updateProfileImage;
-            if (add_list) {
+            if (add_list) 
+            {
                 //add new
                 // values.licence_img = updateLiscenceImage;
                 // values.profile_image = updateProfileImage;
                 addDriver(values)
-            } else if(assignSP){
+            }
+            else if(modal_assign)
+            {
                 assignNewProvider(values)
-            } else {
+            }
+            else
+            {
                 //update previes one
                 editDriver(values)
             }
@@ -259,15 +264,18 @@ const ListTables = () =>
     }
 
     // function for assign sp
-    async function assignNewProvider(val){
-        console.log("val",val.service_providers_id,selectedDriver)
+    async function assignNewProvider(val)
+    {
+        console.log(`Driver Id: `, selectedDriver);
+        console.log(`Service Provider Id: `, val.service_providers_id);
+        // console.log("val",val.service_providers_id,selectedDriver)
         let assignSP = await assignNewSP(selectedDriver, val.service_providers_id)
         if(assignSP.code === 200){
             setErrors("")
             let data = await getAssignedProviders(selectedDriver)
             setSproviders(data.notexist)
             setAssignedSProviders(data.exist)
-            setSelectedDriver();
+            setSelectedDriver(selectedDriver);
             validation.values.service_providers_id = "";
         }else{
             setErrors("")
