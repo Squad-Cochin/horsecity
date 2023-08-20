@@ -138,6 +138,9 @@ import GoogleMap from "../Pages/Maps/GoogleMap";
 import Profile from "../Pages/ProfilePage";
 import InvoiceDetails from "../Pages/Invoices/InvoicesList";
 
+// Dashboard Page
+
+import DashboardPanel from "../Pages/Dashboard/UserPanel";
 
 const authProtectedRoutes = [
   //dashboard
@@ -261,11 +264,7 @@ const authProtectedRoutes = [
 
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name
-  {
-    path: "/",
-    exact: true,
-    component: <Navigate to="/dashboard" />,
-  },
+  { path: "/dashboard", component: <DashboardPanel /> },
 ];
 
 const publicRoutes = [

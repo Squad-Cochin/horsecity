@@ -316,6 +316,61 @@ export async function getInvoicesData(pageNumber, uId)
     }
 }
 
+export async function getDashboardData(iId)
+{
+    try
+    {
+        // console.log(`Came inside the get api route file`);
+        // console.log(`Role id at the time of dashboard page:`, iId);
+        const { data } = await axios.get(`${url.GET_DASHBOARD_DATA}/${iId}`);
+        // console.log(`Result we got from the api`, data);
+        return data;
+    }
+    catch (error)
+    {
+        let errorObj =  
+        {
+            "code": 500,
+            "status": false,
+            "message": "Server error when we are trying to make connection with the backend at the time dashboard",
+            "data":
+            {
+                "totalCount": 0,
+                "data": []
+            }
+        }
+        return errorObj.data
+    }
+};
+
+export async function getMonthlySalesData(uId)
+{
+    try
+    {
+        console.log(`Came inside the get api route file`);
+        console.log(`Role id at the time of getMonthlySalesData function:`, uId);
+        const { data } = await axios.get(`${url.GET_MONTHLY_SALES_DATA}/${uId}`);
+        console.log(`Result we got from the api`, data);
+        return data;
+    }
+    catch (error)
+    {
+        let errorObj =  
+        {
+            "code": 500,
+            "status": false,
+            "message": "Server error when we are trying to make connection with the backend at the time dashboard",
+            "data":
+            {
+                "totalCount": 0,
+                "data": []
+            }
+        }
+        return errorObj.data
+    }
+}
+
+
 export async function getDriversData(pageNumber, uId){
     try {
         let pageLimit = config.pageLimit;

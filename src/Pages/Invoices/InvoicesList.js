@@ -81,10 +81,10 @@ const InvoiceDetails = () =>
     {
       totalInvoiceAmount: "",
       totalRecievedAmount: "",
-      invoiceId:invoice[0]?.id,
+      invoiceId: invoice[0]?.id,
       recepientEmail: sendEmailButtonData[0]?.email,
-      invoiceSubject:`${sendEmailButtonData[0]?.subject} - ${sendEmailButtonData[0]?.invoice_no}`,
-      invoiceBody:sendEmailButtonData[0]?.template
+      invoiceSubject: `${sendEmailButtonData[0]?.subject} - ${sendEmailButtonData[0]?.invoice_no}`,
+      invoiceBody: sendEmailButtonData[0]?.template
     };
                       
   const handleCloseModal = () => {
@@ -160,7 +160,7 @@ const InvoiceDetails = () =>
       else{
         setErrors("")
         setErrors(sendEmailResponse.message)
-    }
+      }
     };
 
   async function modalClose(productId)

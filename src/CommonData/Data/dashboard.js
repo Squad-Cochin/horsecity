@@ -91,27 +91,27 @@ const OrderStatusData = [
 // Overview
 
 const OverViewData = [
-    {
-        id: 1,
-        title: "Expenses",
-        count: "8,524",
-        percentage: "1.2",
-        color: "primary"
-    },
-    {
-        id: 2,
-        title: "Maintenance",
-        count: "8,524",
-        percentage: "2.0",
-        color: "light"
-    },
-    {
-        id: 3,
-        title: "Profit",
-        count: "8,524",
-        percentage: "0.4",
-        color: "danger"
-    },
+    // {
+    //     id: 1,
+    //     title: "Expenses",
+    //     count: "8,524",
+    //     percentage: "1.2",
+    //     color: "primary"
+    // },
+    // {
+    //     id: 2,
+    //     title: "Maintenance",
+    //     count: "8,524",
+    //     percentage: "2.0",
+    //     color: "light"
+    // },
+    // {
+    //     id: 3,
+    //     title: "Profit",
+    //     count: "8,524",
+    //     percentage: "0.4",
+    //     color: "danger"
+    // },
 ];
 
 // SocialSource

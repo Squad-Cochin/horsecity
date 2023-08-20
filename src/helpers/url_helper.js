@@ -11,7 +11,7 @@ export const POST_FAKE_REGISTER = "/post-fake-register";
  * The below one is Shaheer's Computer Details
  */
 // export const API_BASE_URL = "http://192.168.200.211:8000";
-const apiBaseUrl = "http://192.168.200.211:3001";
+// const apiBaseUrl = "http://192.168.200.211:3001";
 
 /**
  * The below one is Saurabh's Computer Details
@@ -22,8 +22,8 @@ const apiBaseUrl = "http://192.168.200.211:3001";
  * The below one is own Computer Details
  */
 
-// const apiBaseUrl = "http://localhost:8000";
-// export const API_BASE_URL = "http://localhost:8000";
+const apiBaseUrl = "http://localhost:8000";
+export const API_BASE_URL = "http://localhost:8000";
 
 const token = "/horsecity661809"
 
@@ -87,6 +87,9 @@ export const POST_ADD_AMOUNT_URL = apiBaseUrl + token + `/add/amount`
 export const GET_START_TRIP = apiBaseUrl + token + `/booking/started`
 export const GET_BOOKING_DATA_FROM_INVOICE_ID = apiBaseUrl + token + '/getInvoice/Data/From/Booking'
 
+// Dashboard Page
+export const GET_DASHBOARD_DATA = apiBaseUrl + token + '/dashboard'
+export const GET_MONTHLY_SALES_DATA = apiBaseUrl + token + '/dashboard/sales/report'
 /**DRIVERS */
 export const GET_DRIVERS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/drivers"
 export const GET_DRIVERS_SINGLE_DATA_URL = apiBaseUrl + token + "/getOne/driver"
