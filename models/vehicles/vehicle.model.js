@@ -559,7 +559,6 @@ module.exports = class vehicles
                                         "insurance_expiration_date" : time.formatDateToDDMMYYYY(result[0].insurance_expiration_date)
                                     });
                                 }
-
                                 if(row.vehicle_image_id !== null && !uniqueImagesIds.has(row.vehicle_image_id))
                                 {
                                     vehicleResponse.images.push
@@ -568,8 +567,7 @@ module.exports = class vehicles
                                         "url" : `${process.env.PORT_SP}${constants.attachmentLocation.vehicle.view.image}${row.image}`
                                     });
                                     uniqueImagesIds.add(row.vehicle_image_id);
-                                }                           
-
+                                }
                                 if (row.review_id !== null && !uniqueReviewIds.has(row.review_id)) 
                                 {
                                     vehicleResponse.reviews.push
@@ -595,6 +593,5 @@ module.exports = class vehicles
         }
     };
 
-
-
 };
+

@@ -6,9 +6,9 @@ const commonoperation = require('../../utils/helper/commonoperation');
 /**For gitting all data  */
 exports.getAllEnquiries = async(req,res)=>
 {
-    let getAllEnquiries = await enquirie.getAllEnquiries(req.body,req.params.id);
+    let getAllEnquiries = await enquirie.getAllEnquiries(req.body, req.params.id);
 
-   if(getAllEnquiries){
+    if(getAllEnquiries){
     return res.status(200).send
     ({
         code: 200,
@@ -18,9 +18,6 @@ exports.getAllEnquiries = async(req,res)=>
     });
    }
 }
-
-
-
 
 exports.getOneEnquiry = async(req,res)=>
 {

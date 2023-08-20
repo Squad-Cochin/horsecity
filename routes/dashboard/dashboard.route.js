@@ -7,6 +7,10 @@ module.exports = (app) =>
 {
     app.get(`/${process.env.apiToken}/dashboard/:id`,
     isValidIdInTheParams(constants.tableName.service_providers),
-    dashboardController.getDashboardDataForParticularCustomer)
+    dashboardController.getDashboardDataForParticularCustomer);
+
+    app.get(`/${process.env.apiToken}/dashboard/sales/report/:id`,
+    isValidIdInTheParams(constants.tableName.service_providers),
+    dashboardController.getMontlySalesReport);
 
 }

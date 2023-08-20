@@ -26,5 +26,30 @@ exports.getDashboardDataForParticularCustomer = async (req, res, next) =>
             data : data
         });
     }
-
 };
+
+exports.getMontlySalesReport = async (req, res, next) =>
+{
+    const data = await dashboardData.getmonthlysalesreport(req.params.id);
+    if(data === 'err')
+    {
+        console.log(`Error while fetching the monthly sales report`);
+        res.status(200).send
+        ({
+            code : 500,
+            status : false,
+            message : "Internal server error while fetching the monthly sales report"
+        });
+    }
+    else
+    {
+        console.log(`Monthly sales report data fetched successfully`);
+        res.status(200).send
+        ({
+            code : 200,
+            status : true,
+            message : "Monthly sales data fetched successfully",
+            data : data
+        });
+    }
+}

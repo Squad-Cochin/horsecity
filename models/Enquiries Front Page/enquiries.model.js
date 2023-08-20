@@ -77,7 +77,7 @@ module.exports = class enquiries
                                 }
                                 else
                                 {
-                                    console.log(result2);
+                                    // console.log(result2);
                                     if(result2.length > 0)
                                     {
                                         console.log(`Enquiry count is successfully done for a particular customer`);
