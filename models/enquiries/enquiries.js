@@ -112,7 +112,7 @@ module.exports = class enguiries
 
 
 
-static asyncgetOneEnquiry(id)    
+static async getOneEnquiry(id)    
 {
     return new Promise((resolve, reject) =>
     {
