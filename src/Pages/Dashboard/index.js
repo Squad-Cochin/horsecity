@@ -1,10 +1,10 @@
 import React,{useState,useEffect} from "react";
 import UsePanel from "./UserPanel";
 import OrderStatus from "./OrderStatus";
-import Notifications from "./Notifications";
-import SocialSource from "./SocialSource";
+// import Notifications from "./Notifications";
+// import SocialSource from "./SocialSource";
 import OverView from "./OverView";
-import RevenueByLocation from "./RevenueByLocation";
+// import RevenueByLocation from "./RevenueByLocation";
 import LatestTransation from "./LatestTransation";
 
 import { Row, Container } from "reactstrap";
@@ -39,17 +39,18 @@ const Dashboard = () => {
           <Row>
             {/* Overview Chart */}
             <OverView />
+            <OrderStatus />
             {/* Social Source Chart */}
-            <SocialSource />
+            {/* <SocialSource /> */}
           </Row>
 
           <Row>
             {/* Order Stats */}
-            <OrderStatus />
+            
             {/* Notifications */}
-            <Notifications />
+            {/* <Notifications /> */}
             {/* Revenue by Location Vector Map */}
-            <RevenueByLocation />
+            {/* <RevenueByLocation /> */}
           </Row>
 
           {/* Latest Transaction Table */}

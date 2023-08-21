@@ -343,14 +343,13 @@ export async function getDashboardData(iId)
     }
 };
 
-export async function getMonthlySalesData(uId)
+export async function getLatestEnquiryData(uId)
 {
     try
     {
-        console.log(`Came inside the get api route file`);
-        console.log(`Role id at the time of getMonthlySalesData function:`, uId);
-        const { data } = await axios.get(`${url.GET_MONTHLY_SALES_DATA}/${uId}`);
-        console.log(`Result we got from the api`, data);
+        // console.log(`Came into the getLatestEnquiryData function and the user id is: `, uId);
+        let { data } = await axios.get(`${url.GET_LATEST_ENQUIRIRES_FOR_DASHBOARD}/${uId}`);
+        // console.log(`Result we got from the GET_LATEST_ENQUIRIRES_FOR_DASHBOARD api`, data);
         return data;
     }
     catch (error)
@@ -368,7 +367,65 @@ export async function getMonthlySalesData(uId)
         }
         return errorObj.data
     }
+};
+
+export async function getMonthlySalesData(uId)
+{
+    try
+    {
+        // console.log(`Came inside the ggetMonthlySalesData function`);
+        // console.log(`Role id at the time of getMonthlySalesData function:`, uId);
+        const { data } = await axios.get(`${url.GET_MONTHLY_SALES_DATA}/${uId}`);
+        // console.log(`Result we got from the GET_MONTHLY_SALES_DATA api`, data);
+        return data;
+    }
+    catch (error)
+    {
+
+
+        let errorObj =  
+        {
+            "code": 500,
+            "status": false,
+            "message": "Server error when we are trying to make connection with the backend at the time dashboard",
+            "data":
+            {
+                "totalCount": 0,
+                "data": []
+            }
+        }
+        return errorObj.data
+    }
 }
+
+export async function getQuotationReportForDashboard(uId)
+{
+    try
+    {
+        // console.log(`Came inside the getQuotationReportForDashboard function`);
+        // console.log(`Role id at the time of getQuotationReportForDashboard function:`, uId);
+        const { data } = await axios.get(`${url.GET_QUOTATION_REPORT}/${uId}`);
+        // console.log(`Result we got from the getQuotationReportForDashboard api`, data);
+        return data;
+
+    }
+    catch (error)
+    {
+        let errorObj =  
+        {
+            "code": 500,
+            "status": false,
+            "message": "Server error when we are trying to make connection with the backend at the time dashboard",
+            "data":
+            {
+                "totalCount": 0,
+                "data": []
+            }
+        }
+        return errorObj.data
+    }
+};
+
 
 
 export async function getDriversData(pageNumber, uId){

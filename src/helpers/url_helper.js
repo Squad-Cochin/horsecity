@@ -90,6 +90,8 @@ export const GET_BOOKING_DATA_FROM_INVOICE_ID = apiBaseUrl + token + '/getInvoic
 // Dashboard Page
 export const GET_DASHBOARD_DATA = apiBaseUrl + token + '/dashboard'
 export const GET_MONTHLY_SALES_DATA = apiBaseUrl + token + '/dashboard/sales/report'
+export const GET_QUOTATION_REPORT = apiBaseUrl + token + '/dashboard/quotation/data'
+export const GET_LATEST_ENQUIRIRES_FOR_DASHBOARD = apiBaseUrl + token + '/dashboard/latest/enquiries'
 
 /**DRIVERS */
 export const GET_DRIVERS_ALL_DATA_URL = apiBaseUrl + token + "/getAll/drivers"

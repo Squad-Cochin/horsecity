@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     Card,
     CardBody,
@@ -8,18 +8,50 @@ import {
 } from "reactstrap";
 
 import { OrderStatusData } from '../../CommonData/Data/index';
+import { getQuotationReportForDashboard } from '../../helpers/ApiRoutes/getApiRoutes';
 
 
 const OrderStatus = () => {
+
+    const[dashboardQuotationData, setdashboardQuotationData] = useState([]);
+    const [userId, setUserId] = useState("");
+    const [roleName, setRoleName] = useState("");
+    const [roleId, setRoleId] = useState("");
+
+
+    var data = JSON.parse(localStorage.getItem("authUser"));
+    useEffect(() =>
+    {
+        // const data = JSON.parse(localStorage.getItem("authUser"));
+        // console.log('Data from the dashboard page', data);
+        let user_Id = data[0]?.user[0]?.id
+        // console.log('User id from the dashboard page: ', user_Id);
+        let role_Name = data[0]?.user[0]?.role_name
+        // console.log('Role name from the dashboard page: ', role_Name);
+        let rId = data[0]?.user[0]?.role_Id
+        // console.log('Role Id from the dashboard page: ', rId);
+        setUserId(user_Id);
+        setRoleId(rId);
+        setRoleName(role_Name);
+        enquiriesDataLatest();
+    }, [userId, roleName, roleId]);
+
+    async function enquiriesDataLatest()
+    {
+        // console.log(`Came inside the monthly sales graph data`);
+        let sgData = await getQuotationReportForDashboard(data[0]?.user[0]?.id);
+        // console.log(`Result from the  Quotation status data: `, sgData);
+        setdashboardQuotationData(sgData);
+    }
     return (
         <React.Fragment>
             <Col xl={4}>
                 <Card>
                     <CardBody>
-                        <CardTitle>Order Stats</CardTitle>
+                        <CardTitle>Quotation Status</CardTitle>
                         <div>
                             <ul className="list-unstyled">
-                                {OrderStatusData.map((item, key) => (<li key={key} className="py-3">
+                                {dashboardQuotationData.map((item, key) => (<li key={key} className="py-3">
                                     <div className="d-flex">
                                         <div className="avatar-xs align-self-center me-3">
                                             <div className="avatar-title rounded-circle bg-light text-primary font-size-18">
@@ -42,9 +74,9 @@ const OrderStatus = () => {
 
                         <div className="text-center">
                             <Row>
-                                {OrderStatusData.map((item, key) => (<div key={key} className="col-4">
+                                {dashboardQuotationData.map((item, key) => (<div key={key} className="col-4">
                                     <div className="mt-2">
-                                        <p className="text-muted mb-2">{item.title}</p>
+                                        <p className="text-muted mb-6">{item.title}</p>
                                         <h5 className="font-size-16 mb-0">{item.width}</h5>
                                     </div>
                                 </div>))}

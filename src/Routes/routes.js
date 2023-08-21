@@ -269,7 +269,7 @@ const authProtectedRoutes = [
     exact: true,
     component: <Navigate to="/dashboard" />,
   },
-  // { path: "/dashboard", component: <DashboardPanel /> },
+  { path: "/dashboard", component: <DashboardPanel /> },
 ];
 
 const publicRoutes = [
