@@ -108,7 +108,7 @@ module.exports = async function ()
                                                                             ('${process.env.roleOne}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
                                                                             ('${process.env.roleTwo}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
                                                                             ('${process.env.roleThree}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                                                                             console.log('Insert data into the role table query: ', insRole);
+                                                                            // console.log('Insert data into the role table query: ', insRole);
                                                                             con.query(insRole, (err , resultInsRole)=>
                                                                             {
                                                                                 if(resultInsRole)
@@ -193,7 +193,7 @@ module.exports = async function ()
                                                                                                                 (${resultRoleData[2].rID}, ${resultModuleData[11].mID}, 'false', 'false', 'false', 'false'),
                                                                                                                 (${resultRoleData[2].rID}, ${resultModuleData[12].mID}, 'false', 'false', 'false', 'false')
                                                                                                                 `;
-                                                                                                            console.log('Insert Permission Table Query: ', InsQuery);
+                                                                                                            // console.log('Insert Permission Table Query: ', InsQuery);
                                                                                                             con.query(InsQuery, (err, insPermissionResult) =>
                                                                                                             {
                                                                                                                 if(insPermissionResult)

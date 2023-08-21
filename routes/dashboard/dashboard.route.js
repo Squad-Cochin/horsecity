@@ -13,4 +13,12 @@ module.exports = (app) =>
     isValidIdInTheParams(constants.tableName.service_providers),
     dashboardController.getMontlySalesReport);
 
+    app.get(`/${process.env.apiToken}/dashboard/quotation/data/:id`,
+    isValidIdInTheParams(constants.tableName.service_providers),
+    dashboardController.getDashboardQuotationStatus);
+
+    app.get(`/${process.env.apiToken}/dashboard/latest/enquiries/:id`,
+    isValidIdInTheParams(constants.tableName.service_providers),
+    dashboardController.getLatestEnquiries)
+
 }

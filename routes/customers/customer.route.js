@@ -2,6 +2,7 @@ const customerController = require('../../controllers/customers/customer.control
 const checkInput = require(`../../middlewares/validateInput/checkRequestBodyInput`);
 const { isValidIdInTheParams, CheckRole } = require('../../middlewares/validateInput/checkRequestparams');
 const constants = require('../../utils/constants');
+const validateHeaders = require(`../../middlewares/requestValidator`);
 
 module.exports = (app) =>
 {
@@ -68,17 +69,18 @@ module.exports = (app) =>
     checkInput.passwordsimilarity,
     customerController.customerChangePassword);
 
-    app.post(`/${process.env.apiToken}/customer/registration`,
+    app.post(`/customer/registration`,
+    validateHeaders.verifyToken,
     checkInput.nameValidation,
     checkInput.emailValidation(constants.tableName.customers),
     checkInput.usernameValidation(constants.tableName.customers),
     checkInput.contactNumberValidation(constants.tableName.customers),
     // checkInput.dateOfBirthValidation,
-    checkInput.idProofNumberValidation,
-    checkInput.isCustomerIdProofImageSubmitted,
+    // checkInput.idProofNumberValidation,
+    // checkInput.isCustomerIdProofImageSubmitted,
     customerController.signup);
 
-    app.get(`/${process.env.apiToken}/customer/logs/:id`,
+    app.get(`/${process.env.apiToken}/customer/logs/:id`,    
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.getParticularCustomerLogs
     );
