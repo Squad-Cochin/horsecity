@@ -47,14 +47,16 @@ const MainFilterSearchBox = () => {
 
           {Object.keys(searchData).length > 0 ? <ToLocationSearch to_location = {searchData?.to_location}/> : <ToLocationSearch to_location = ''/>}
           {/* End Drop off location  */}
-          {/* {searchData?.trip === "One Way" || !searchData?.trip ?  */}
+          {searchData?.trip === "Return Also" || searchData?.trip === "One Way" ? 
           <div className="searchMenu-date px-30 lg:py-20 lg:px-0 js-form-dd js-calendar">
             <div>
+
               <h4 className="text-15 fw-500 ls-2 lh-16">Depart</h4>
               {Object.keys(searchData).length > 0 && searchData?.departDate != "" ? <DateSearch use = "fromDate" dateDate = {searchData?.departDate}/> : <DateSearch use = "fromDate" dateDate = {new Date}/>}
               {/* <DateSearch dateDate = {searchData?.departDate}/> */}
             </div>
           </div>
+          : null }
           {/* : null}  */}
           {/* End Pick Up Date */}
           {searchData?.trip === "Return Also" ? 

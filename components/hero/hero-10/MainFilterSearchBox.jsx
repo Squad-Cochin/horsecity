@@ -4,9 +4,21 @@ import DateSearch from "../DateSearch";
 import GuestSearch from "./GuestSearch";
 import FlyingFromLocation from "./FlyingFromLocation";
 import FlyingToLocation from "./FlyingToLocation";
+import { useEffect } from "react";
+import { filter_tripType, filter_number_of_horses, filter_price_from, filter_price_to, filter_suppliers, filter_sort, filter_page } from "../../../features/listingFilter/listingFilter";
 
 const MainFilterSearchBox = () => {
   const { from_location, to_location, departDate, returnDate, trip, trip_type, number_of_horses } = useSelector((state) => state.initialSearch) || {};
+  const dispatch = useDispatch();
+  useEffect(()=>{
+    dispatch(filter_tripType([]));
+    dispatch(filter_number_of_horses(""));
+    dispatch(filter_price_from(0));
+    dispatch(filter_price_to(2000));
+    dispatch(filter_suppliers([]));
+    dispatch(filter_sort(""));
+    dispatch(filter_page(1));
+  })
 
   function saveLocal(){
     let searchObject = {

@@ -17,24 +17,24 @@ const Pagination = () => {
   
 
   async function initialLoad(){
-    let search = await JSON.parse(localStorage.getItem('searchObject'));
-    setSearchData(search)
     dispatch(filter_page(1))
   }
 
-  const handlePageClick = (pageNumber) => {
+  const handlePageClick = async (pageNumber) => {
+    let search = await JSON.parse(localStorage.getItem('searchObject'));
+    setSearchData(search)
     dispatch(filter_page(pageNumber))
     setCurrentPage(pageNumber);
-    updateListData(pageNumber);
+    updateListData(pageNumber, search);
   };
 
-  async function updateListData(pageNumber){
+  async function updateListData(pageNumber, search){
     let reqObj = {
-      "trip_type": searchData.trip_type,
-      "number_of_horses": searchData.number_of_horses,
+      "trip_type": search.trip_type,
+      "number_of_horses": search.number_of_horses,
       "price_from": price_from,
       "price_to" : price_to,
-      "suppliers" : searchData.suppliers,
+      "suppliers" : suppliers,
       "sort" : sort,
       "page" : pageNumber,
       "limit" : limit

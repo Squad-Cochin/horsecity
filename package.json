@@ -4,7 +4,6 @@
   "private": true,
   "scripts": {
     "dev": "set NODE_ENV=development NODE_MODE=dev && node app.js",
-   
     "build": "next build",
     "start": "next start NODE_ENV=development NODE_MODE=dev && node app.js",
     "lint": "next lint"
@@ -36,6 +35,7 @@
     "react-redux": "^8.1.2",
     "react-slick": "^0.29.0",
     "react-tabs": "^6.0.0",
+    "reactstrap": "^9.2.0",
     "redux": "^4.2.1",
     "redux-saga": "^1.2.3",
     "sass": "^1.57.1",

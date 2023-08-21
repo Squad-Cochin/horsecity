@@ -1,8 +1,48 @@
 import Link from "next/link";
+import { useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import registrationApi from "../../pages/api/registrationApi";
+import { Alert } from 'reactstrap'
 
 const SignUpForm = () => {
+  const [dateOfBirth, setDateOfBirth] = useState(new Date());
+  const [ errors, setErrors ] = useState("");
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+
+    // Here, you can access form field values and perform any necessary actions
+    // For example, you might want to send the form data to an API or dispatch Redux actions
+
+    // Access form fields using event.target
+    const formData = new FormData(event.target);
+    const name = formData.get('name');
+    const email = formData.get('email');
+    const userName = formData.get('userName');
+    const password = formData.get('password');
+    const confirmPassword = formData.get('confirmPassword');
+    const phone = formData.get('phone');
+    if( password !== confirmPassword ){
+      setErrors("Password and confirm password must be same.")
+    } else {
+      let registrationData = {
+        "name" : name,
+        "email" : email,
+        "userName" : userName,
+        "password" : password,
+        "confirmPassword" : confirmPassword,
+        "date_of_birth" : dateOfBirth,
+        "contact_no" : phone,
+      }
+      // ... and so on
+
+      // Perform any actions with the form data
+      // console.log('Form submitted:', event.target);
+      await registrationApi(registrationData);
+    }
+  };
   return (
-    <form className="row y-gap-20">
+    <form className="row y-gap-20" onSubmit={handleSubmit} >
       <div className="col-12">
         <h1 className="text-22 fw-500">Welcome back</h1>
         <p className="mt-10">
@@ -11,28 +51,21 @@ const SignUpForm = () => {
             Log in
           </Link>
         </p>
+        {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
       </div>
       {/* End .col */}
 
       <div className="col-12">
         <div className="form-input ">
-          <input type="text" required />
-          <label className="lh-1 text-14 text-light-1">First Name</label>
+          <input type="text" name="name" required />
+          <label className="lh-1 text-14 text-light-1">Name</label>
         </div>
       </div>
       {/* End .col */}
 
       <div className="col-12">
         <div className="form-input ">
-          <input type="text" required />
-          <label className="lh-1 text-14 text-light-1">Last Name</label>
-        </div>
-      </div>
-      {/* End .col */}
-
-      <div className="col-12">
-        <div className="form-input ">
-          <input type="text" required />
+          <input type="email" name="email" required />
           <label className="lh-1 text-14 text-light-1">Email</label>
         </div>
       </div>
@@ -40,7 +73,51 @@ const SignUpForm = () => {
 
       <div className="col-12">
         <div className="form-input ">
-          <input type="password" required />
+          <div>
+          <DatePicker
+            name="dateOfBirth"
+            inputClass="custom_input-picker"
+            containerClassName="custom_container-picker"
+            selected={dateOfBirth}
+            onChange={(date) => {
+              setDateOfBirth(date) ; 
+              // dispatch(addDepart(date))
+            }}
+            maxDate={new Date()}
+            dateFormat="MMM dd"
+          />
+          </div>
+          <label className="lh-1 text-14 text-light-1">Date Of Birth</label>
+        </div>
+      </div>
+
+      {/* <div className="col-12">
+        <div className="form-input ">
+          <input type="date" required  />
+          <label className="lh-1 text-14 text-light-1">Date Of Birth</label>
+        </div>
+      </div> */}
+      {/* End .col */}
+
+      <div className="col-12">
+        <div className="form-input ">
+          <input type="number" name="phone" required />
+          <label className="lh-1 text-14 text-light-1">Contact Number</label>
+        </div>
+      </div>
+      {/* End .col */}
+
+      <div className="col-12">
+        <div className="form-input ">
+          <input type="text" name="userName" required />
+          <label className="lh-1 text-14 text-light-1">User Name</label>
+        </div>
+      </div>
+      {/* End .col */}
+
+      <div className="col-12">
+        <div className="form-input ">
+          <input type="password" name="password" required />
           <label className="lh-1 text-14 text-light-1">Password</label>
         </div>
       </div>
@@ -48,7 +125,7 @@ const SignUpForm = () => {
 
       <div className="col-12">
         <div className="form-input ">
-          <input type="password" required />
+          <input type="password" name="confirmPassword" required />
           <label className="lh-1 text-14 text-light-1">Confirm Password</label>
         </div>
       </div>

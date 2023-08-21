@@ -9,7 +9,7 @@ const DateSearch = (props) => {
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   useEffect(()=>{
-    console.log(props,"props")
+    console.log(props,"propssssssssssss")
     if(props.use == "fromDate"){
       setFromDate(new Date(props.dateDate))
     }else{
@@ -18,7 +18,6 @@ const DateSearch = (props) => {
   },[])
   return (
     <div className="text-15 text-light-1 ls-2 lh-16 custom_dual_datepicker">
-      
       {props.use == "fromDate" ?
       <DatePicker
         inputClass="custom_input-picker"
@@ -29,10 +28,6 @@ const DateSearch = (props) => {
           dispatch(addDepart(date))
         }}
         minDate={new Date()}
-        // numberOfMonths={2}
-        // offsetY={10}
-        // range
-        // rangeHover
         dateFormat="MMM dd"
       /> :  
       <DatePicker
