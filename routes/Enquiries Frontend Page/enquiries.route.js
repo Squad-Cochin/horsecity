@@ -4,12 +4,14 @@ const checkInput = require(`../../middlewares/validateInput/checkRequestBodyInpu
 const { isMaximumHorseCarryingCapicityEntered, isValidVehicleTypeEntered } = require("../../middlewares/validateInput/checkRequestInputVehicles");
 const validateParamsId = require(`../../middlewares/validateInput/checkRequestparams`);
 const constants = require("../../utils/constants");
+const verifyBody = require(`../../middlewares/requestValidator`); 
 
 
 
 module.exports = function (app)
 {
-    app.post(`/${process.env.apiToken}/add/enquiry/:id`,
+    app.post(`/add/enquiry/:id`,
+    verifyBody.verifyToken,
     validateParamsId.isValidIdInTheParams(constants.tableName.customers),
     checkInput.checkCustomerEnquiryBody,
     // checkInput.isIdEntered('customer_id', constants.tableName.customers, 'Customer'),
