@@ -28,8 +28,10 @@ const ReviewProgress2 = (props) => {
   ];
   return (
     <>
+  
+
       <div className="d-flex items-center mt-20">
-        <div className="flex-center bg-yellow-1 rounded-4 size-70 text-22 fw-600 text-cark-1">
+        <div className="flex-center bg-blue-1 rounded-4 size-70 text-22 fw-600 text-white">
           4.8
         </div>
         <div className="ml-20">
@@ -40,21 +42,21 @@ const ReviewProgress2 = (props) => {
       {/* End .d-flex */}
 
       <div className="row y-gap-20 pt-20">
-      
-          <div className="col-12" >
+        {reviewProgressContent.map((item) => (
+          <div className="col-12" key={item.id}>
             <div className="d-flex items-center justify-between">
-              <div className="text-15 fw-500">Excellent</div>
-              <div className="text-15 text-light-1">20</div>
-            </div>0
+              <div className="text-15 fw-500">{item.reviewReason}</div>
+              <div className="text-15 text-light-1">{item.ratings}</div>
+            </div>
             <div className="progressBar mt-10">
-              <div className="progressBar__bg bg-blue-2" />
+            <div className="progressBar__bg bg-blue-2" />
               <div
-                className="progressBar__bar bg-yellow-1"
-                style={{ width: '10%' }}
+                   className="progressBar__bar bg-yellow-1"
+                style={{ width: item.progressPercent }}
               />
             </div>
           </div>
-    
+        ))}
 
         {/* End .col-md-4 */}
       </div>

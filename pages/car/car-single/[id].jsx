@@ -18,15 +18,16 @@ import SlideGallery from "../../../components/car-single/SlideGallery";
 import FilterBox from "../../../components/car-single/filter-box";
 import Faq from "../../../components/faq/Faq";
 import MapPropertyFinder from "../../../components/car-single/MapPropertyFinder";
+import { useDispatch } from "react-redux";
 import DetailsDataApi from "../../api/detailDataApi";
-
+import { booking_data } from "../../../features/bookingData/bookingData";
 const TourSingleV1Dynamic = () => {
   const router = useRouter();
   const [vehicle, setVehicle] = useState([]);
   const [ vehicleImages, setVehicleImages ] = useState([]);
   const [ reviews ,setReviews ] = useState([]);
   const id = router.query.id;
-
+  const dispatch = useDispatch();
   // useEffect(() => {
 
   //   else setVehicle(carsData.find((item) => item.id == id));
@@ -46,6 +47,11 @@ console.log("vehicle images");
     setVehicle(packageDetails?.vehicle[0])
     setVehicleImages(packageDetails?.images);
     setReviews(packageDetails?.reviews)
+    dispatch(booking_data({
+      customer_id : '1',
+      vehicle_id :  id,
+      serviceprovider_id : packageDetails?.vehicle[0]?.service_provider_id
+      }))
 
 
     // let packageList = await axios.post(`/api/initialSearch`,{})
@@ -149,7 +155,7 @@ console.log("vehicle images");
 
                         <div className="size-40 flex-center bg-yellow-1 rounded-4">
                           <div className="text-14 fw-600 text-dark-1">
-                            {vehicle?.ratings}
+                            {/* {vehicle?.ratings} */}
                           </div>
                         </div>
                         {/* End div */}

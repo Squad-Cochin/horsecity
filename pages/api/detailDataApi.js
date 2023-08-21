@@ -25,3 +25,23 @@ export default async function DetailsDataApi(id) {
 
 
 
+export  async function addbooking(body,cuid) {
+    
+	try{   
+        const addBookingApi = API_CONFIG.ADD_BOOKING_API;
+        const apiToken = API_CONFIG.API_TOKEN;
+        console.log("listingDetails", addBookingApi,apiToken)
+        const response = await axios.post(`${addBookingApi}/${cuid}` ,body,{
+            headers: {
+              "Authorization": `Bearer ${apiToken}`, 
+            },
+        });
+        
+        return response.data.data
+    }
+    catch{
+           
+    }
+}
+
+

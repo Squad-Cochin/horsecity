@@ -1,3 +1,7 @@
+import { GiHorseHead } from "react-icons/gi";
+import { GrUserWorker } from "react-icons/gr";
+import { TbBus } from "react-icons/tb";
+
 const PropertyHighlights = (props) => {
   const propertyContent = [
     {
@@ -33,16 +37,19 @@ const PropertyHighlights = (props) => {
         <div className="col-md-auto col-6">
           <div className="d-flex ">
             {/* <i className={`${item.icon} text-22 text-dark-1 mr-10`} /> */}
-            <div className="text-15 ms-2 lh-15">
-             Service Provider
+            <div className="text-15 ms-3 lh-15">
+             <GrUserWorker/> 
+             {/* Service Provider */}
               <br /> {props.vehicle?.service_provider_name}
             </div>
-            <div className="text-15 ms-2 lh-15">
-             Vehicle Type 
+            <div className="text-15 ms-3 lh-15">
+             <TbBus/> 
+             {/* Vehicle Type  */}
               <br /> {props.vehicle?.vehicle_type}
             </div>
-            <div className="text-15 ms-2 lh-15">
-             No Of Horse
+            <div className="text-15 ms-3 lh-15">
+             <GiHorseHead/>
+              {/* No Of Horse */}
               <br /> {props.vehicle?.no_of_horses}
             </div>
           </div>
