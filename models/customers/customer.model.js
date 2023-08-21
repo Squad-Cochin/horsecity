@@ -518,32 +518,32 @@ module.exports = class customers
         }
     };
 
-    static async customersignup(name, email, user_name, password, contact_no, date_of_birth, id_proof_no, files)
+    static async customersignup(name, email, user_name, password, contact_no, date_of_birth)
     {
         try
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let uploadAttachment = await commonoperation.fileUploadTwo(files, constants.attachmentLocation.customer.upload.idProof);
+                // let uploadAttachment = await commonoperation.fileUploadTwo(files, constants.attachmentLocation.customer.upload.idProof);
                 // console.log(uploadAttachment);
-                if(uploadAttachment === 'INVALIDFORMAT')
-                {
-                    console.log(`Invalid format of the image while uploading at the time of customer registeration`);
-                    resolve('INVALIDFORMAT');
-                }
-                else if(uploadAttachment === 'ERR')
-                {
-                    console.log(`Error while uploading the image at the time of customer registeration`);
-                    resolve('err');
-                }
-                else if(uploadAttachment === 'NOATTACHEMENT')
-                {
-                    console.log(`No attachement at the time of the customer registration`);
-                    resolve('NOATTACHEMENT');
-                }
-                else
-                {
-                    let insQuery = `INSERT INTO customers(name, email, user_name, password, contact_no, date_of_birth, id_proof_no, id_proof_image, phone_verified, email_verified, expiry_at, created_at) VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', '${id_proof_no}', '${uploadAttachment}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                // if(uploadAttachment === 'INVALIDFORMAT')
+                // {
+                //     console.log(`Invalid format of the image while uploading at the time of customer registeration`);
+                //     resolve('INVALIDFORMAT');
+                // }
+                // else if(uploadAttachment === 'ERR')
+                // {
+                //     console.log(`Error while uploading the image at the time of customer registeration`);
+                //     resolve('err');
+                // }
+                // else if(uploadAttachment === 'NOATTACHEMENT')
+                // {
+                //     console.log(`No attachement at the time of the customer registration`);
+                //     resolve('NOATTACHEMENT');
+                // }
+                // else
+                // {
+                    let insQuery = `INSERT INTO customers(name, email, user_name, password, contact_no, date_of_birth, phone_verified, email_verified, expiry_at, created_at) VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                     // console.log('Customer register query: ', insQuery);
                     con.query(insQuery, (err, result) =>
                     {
@@ -559,7 +559,7 @@ module.exports = class customers
                             resolve('err');
                         }
                     });
-                }
+                // }
             });
         }
         catch (error)

@@ -798,8 +798,11 @@ exports.isPageSizeEntered = (req, res, next) =>
 }
 
 exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
-{  
-    if(!req.files?.id_proof_image && req.method === 'POST' && req.url === url.ADD_CUSTOMER_PAGE_URL + req.params.id)
+{
+    // console.log(req.files?.id_proof_image);
+    // if(!req.files?.id_proof_image && req.method === 'POST' && req.url === url.ADD_CUSTOMER_PAGE_URL + req.params.id)
+    if(!req.files?.id_proof_image)
+    // if (!req.files?.id_proof_image && req.method === 'POST' && req.url === url.ADD_CUSTOMER_PAGE_URL + req.params.id)
     {
         console.log(`Id proof image is not uploaded`);
         return res.status(200).json

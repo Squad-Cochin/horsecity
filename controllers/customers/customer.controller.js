@@ -478,8 +478,8 @@ exports.signup = async (req, res, next) =>
         // in this way "Fri Jul 14 2023 00:00:00 GMT+0530 (India Standard Time)". So a function
         // is written to convert them into SQL DATETIME format. FORMAT is YYYY-MM-DD HH-MM-SS
         time.changeDateToSQLFormat(req.body.date_of_birth), 
-        req.body.id_proof_no, // Identity proof number of the customer
-        req.files.id_proof_image // Image of the identity proof
+        // req.body.id_proof_no, // Identity proof number of the customer
+        // req.files.id_proof_image // Image of the identity proof
     );
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if (customers === 'err')

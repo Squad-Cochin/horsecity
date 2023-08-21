@@ -53,3 +53,56 @@ exports.getMontlySalesReport = async (req, res, next) =>
         });
     }
 }
+
+
+exports.getDashboardQuotationStatus = async (req, res, next) =>
+{
+    const data = await dashboardData.getdashboardquotationstatus(req.params.id);
+    if(data === 'err')
+    {
+        console.log(`Error while fetching the quotation data for the dashboard`);
+        res.status(200).send
+        ({
+            code : 500,
+            status : false,
+            message : "Internal server error while fetching the quotation data for the dashboard"
+        });
+    }
+    else
+    {
+        console.log(`Quotation data for the dashboard fetched successfully`);
+        res.status(200).send
+        ({
+            code : 200,
+            status : true,
+            message : "Quotation data for the dashboard fetched successfully fetched successfully",
+            data : data
+        });
+    }
+};
+
+exports.getLatestEnquiries = async (req, res) =>
+{
+    const data = await dashboardData.getlatestenquiries(req.params.id);
+    if(data === 'err')
+    {
+        console.log(`Error while fetching the latest enquiries for the dashboard`);
+        res.status(200).send
+        ({
+            code : 500,
+            status : false,
+            message : "Internal server error while fetching the latest enquiries data for the dashboard"
+        });
+    }
+    else
+    {
+        console.log(`Latest enquiries data for the dashboard fetched successfully `);
+        res.status(200).send
+        ({
+            code : 200,
+            status : true,
+            message : "Latest enquiries data for the dashboard fetched successfully ",
+            data : data
+        });
+    }
+};
