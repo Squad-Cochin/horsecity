@@ -1,27 +1,18 @@
-// import React from "react";
 import React, { useState, useEffect } from 'react';
-
 import { Card, CardBody, Col, Row } from "reactstrap";
-import { useFormik } from "formik";
-import { useParams } from 'react-router-dom'
-
-
-import RadialChart1 from "./userpanelChart1";
-import RadialChart2 from "./userpanelChart2";
-import RadialChart3 from "./userpanelChart3";
-
 import { getDashboardData } from '../../helpers/ApiRoutes/getApiRoutes';
-
-
+import config from '../../config';
+var role_id = config.Role.service_provider
 
 const DashboardPanel = () =>
 {
-  const[dashboarddata, setDashboardData] = useState([]);
+  const [dashboarddata, setDashboardData] = useState([]);
   const [userId, setUserId] = useState("");
   const [roleName, setRoleName] = useState("");
   const [roleId, setRoleId] = useState("");
 
   var data = JSON.parse(localStorage.getItem("authUser"));
+  console.log(`Data from of the userPanel: `, data);
   
   useEffect(() =>
   {
@@ -50,13 +41,16 @@ const DashboardPanel = () =>
     setDashboardData(dData.counts);
   }
   
-  
+  console.log(`Login user Role id: `, data[0]?.user[0]?.role_Id);
+  console.log(`Role id from the config file: `, role_id);
   
   return (
     <React.Fragment>
     {dashboarddata.map((item, index) =>
       <div key = {index}>    
-      <Row>  
+      <Row>
+
+      {role_id !== data[0]?.user[0]?.role_Id && ( 
         <Col xl={3} sm={6}>
           <Card>
             <CardBody>
@@ -87,7 +81,9 @@ const DashboardPanel = () =>
             </CardBody>
           </Card>
         </Col>
+        )}
 
+        {role_id !== data[0]?.user[0]?.role_Id && (
         <Col xl={3} sm={6}>
           <Card>
             <CardBody>
@@ -121,6 +117,7 @@ const DashboardPanel = () =>
             </CardBody>
           </Card>
         </Col>
+        )}
 
         <Col xl={3} sm={6}>
           <Card>
@@ -245,8 +242,9 @@ const DashboardPanel = () =>
               <div className="d-flex text-muted">
                 <div className="flex-shrink-0 me-3 align-self-center">
                   <div className="avatar-sm">
-                    <div className="avatar-title bg-light rounded-circle text-primary font-size-15">
-                      <i className="ri-cash-fill"></i>
+                    <div className="avatar-title bg-light rounded-circle text-primary font-size-25">
+                      <i className="ri-chat-quote-line"></i>
+                      {/* <iconify-icon icon="mdi:cash"></iconify-icon> */}
                     </div>
                   </div>
                 </div>
