@@ -7,17 +7,19 @@ const con = require('../../configs/db.configs');
 
 module.exports = class enquiries
 {
-    static async createnewenquiry(Id, vehicle_Id, service_provider_Id, pickup_Location, drop_Location, trip_Type, pickup_Country, drop_Country, horse, description)
+    static async createnewenquiry(Id, vehicle_Id, service_provider_Id, pickup_Location, drop_Location, trip_Type, pickup_Country, drop_Country, horse, description,pickup_date)
     {
         try
         {
             return await new Promise(async (resolve, reject) =>
             {
-                let insQuery = `INSERT INTO ${constants.tableName.enquiries}(customer_id, vehicle_id, serviceprovider_id, pickup_location, drop_location, trip_type, pickup_country, drop_country, no_of_horse, description, status, created_at) VALUES(
-                ${Id}, ${vehicle_Id}, ${service_provider_Id}, '${pickup_Location}', '${drop_Location}', '${trip_Type}', '${pickup_Country}', '${drop_Country}', '${horse}', '${description}', '${constants.enquiry_status.notconfirmed}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' )`;
-                // console.log(`Insert into enquiries table query: `, insQuery);
+                console.log("comee");
+                let insQuery = `INSERT INTO ${constants.tableName.enquiries}(customer_id, vehicle_id, serviceprovider_id, pickup_location, drop_location, trip_type, pickup_country, drop_country, no_of_horse,pickup_date, description, status, created_at) VALUES(
+                ${Id}, ${vehicle_Id}, ${service_provider_Id}, '${pickup_Location}', '${drop_Location}', '${trip_Type}', '${pickup_Country}', '${drop_Country}', '${horse}','${pickup_date}', '${description}', '${constants.enquiry_status.notconfirmed}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' )`;
+                 console.log(`Insert into enquiries table query: `, insQuery);
                 con.query(insQuery, (err, result) =>
                 {
+                    console.log(err);
                     // console.log(`Result when we enter into the enquiry table: `, result);
                     if(err)
                     {

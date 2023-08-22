@@ -445,3 +445,8 @@ CREATE TABLE payment_records (
     created_at DATETIME DEFAULT NULL,
     updated_at DATETIME DEFAULT NULL
 );
+
+
+
+ALTER TABLE enquiries
+ADD pickup_date DATE NOT NULL;

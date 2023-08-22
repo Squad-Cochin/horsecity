@@ -31,10 +31,10 @@ module.exports = class enguiries
     
                 if(data.length != 0){ 
           
-                    let role_name = data[0].role_name ;
+    
 
-                    let role_id = data[0].id
-
+                    let role_id = data[0].id 
+                        console.log(role_id);
             const selQuery = `SELECT enq.id, cu.name AS customer_name,sp.name AS service_provider,enq.status,enq.created_at
             FROM ${constants.tableName.enquiries} AS enq
             JOIN ${constants.tableName.customers} cu ON enq.customer_id = cu.id
@@ -85,7 +85,7 @@ module.exports = class enguiries
                                         // console.log("result",result);
                                         if(!err){
                                   
-                                            console.log("dataaa",data);
+                                   
                                             resolve({totalCount : count, enquiries : data,module : result})
                                         }
                                 })
@@ -118,7 +118,7 @@ static async getOneEnquiry(id)
     {
         try
         {     
-            const selQuery = `SELECT enq.id, cu.name AS customer_name,cu.id AS customer_id ,cu.contact_no AS customer_contact_no ,sp.name AS service_provider_name,sp.id AS service_provider_id,enq.trip_type,enq.drop_country,enq.pickup_country,  vh.id AS vehicle_id, vh.vehicle_number,enq.no_of_horse,enq.created_at, enq.pickup_location, enq.drop_location, enq.description
+            const selQuery = `SELECT enq.id, cu.name AS customer_name,cu.id AS customer_id ,cu.contact_no AS customer_contact_no ,sp.name AS service_provider_name,sp.id AS service_provider_id,enq.trip_type,enq.drop_country,enq.pickup_country,  vh.id AS vehicle_id, vh.vehicle_number,enq.no_of_horse,enq.created_at, enq.pickup_location, enq.pickup_date, enq.drop_location, enq.description
             FROM ${constants.tableName.enquiries} AS enq
             JOIN ${constants.tableName.customers} cu ON enq.customer_id = cu.id
             JOIN ${constants.tableName.vehicles} vh ON enq.vehicle_id = vh.id
@@ -131,7 +131,9 @@ static async getOneEnquiry(id)
                     data[0].created_at = `${time.formatDateToDDMMYYYY(
                         data[0].created_at
                       )}`;
-
+                      data[0].pickup_date = `${time.formatDateToDDMMYYYY(
+                        data[0].pickup_date
+                      )}`;
                       /***For selecting tax */
                     let selQuery = `SELECT 	tx.id , tx.type,tx.name,tx.value 
                                     FROM ${constants.tableName.application_settings} apps

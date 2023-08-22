@@ -74,7 +74,7 @@ static async listingPageData  (body)
         SELECT vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse, vh.height,
        GROUP_CONCAT(vimg.image) AS images
 FROM ${constants.tableName.vehicles} vh
-LEFT JOIN vehicles_images AS vimg ON vh.id = vimg.vehicle_id
+LEFT JOIN vehicles_images AS vimg ON vh.id = vimg.vehicle_id AND vimg.status = "${constants.status.active}"
 WHERE 1=1
 ${gccType}
 ${tripTypeFilter}
