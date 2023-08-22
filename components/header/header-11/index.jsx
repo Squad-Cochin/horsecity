@@ -8,6 +8,7 @@ import MobileMenu from "../MobileMenu";
 
 const Header1 = () => {
   const [navbar, setNavbar] = useState(false);
+  const [ login, setLogin ] = useState({});
 
   const changeBackground = () => {
     if (window.scrollY >= 10) {
@@ -19,6 +20,9 @@ const Header1 = () => {
 
   useEffect(() => {
     window.addEventListener("scroll", changeBackground);
+    let loginData = JSON.parse(localStorage.getItem("loginData"))
+    console.log(loginData,"loginData")
+    setLogin(loginData);
   }, []);
 
   return (
@@ -63,7 +67,7 @@ const Header1 = () => {
                 {/* End language and currency selector */}
 
                 {/* Start btn-group */}
-                <div className="d-flex items-center ml-20 is-menu-opened-hide md:d-none">
+                { Object.keys(login)?.length == 0 ? <div className="d-flex items-center ml-20 is-menu-opened-hide md:d-none">
                   {/* <Link
                     href="/others-pages/login"
                     className="button px-30 fw-400 text-14 -white bg-white h-50 text-dark-1"
@@ -76,7 +80,7 @@ const Header1 = () => {
                   >
                     Sign In / Register
                   </Link>
-                </div>
+                </div> : null }
                 {/* End btn-group */}
 
                 {/* Start mobile menu icon */}

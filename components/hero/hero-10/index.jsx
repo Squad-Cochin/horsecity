@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import FilterSelect from "./FilterSelect";
 import MainFilterSearchBox from "./MainFilterSearchBox";
 // import { useSelector, useDispatch } from "react-redux";
@@ -5,6 +6,9 @@ import MainFilterSearchBox from "./MainFilterSearchBox";
 const Index = () => {
   // const { from_location } = useSelector((state) => state.initialSearch) || {};
   // console.log(" tes",from_location)
+  useEffect(()=>{
+    localStorage.setItem('loginData', JSON.stringify({}));
+  },[])
   return (
     <section className="masthead -type-10">
       <div className="container-1500">
