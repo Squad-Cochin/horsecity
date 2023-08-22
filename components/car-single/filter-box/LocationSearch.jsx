@@ -2,6 +2,8 @@
 import { useEffect,useState } from "react";
 import {addbooking} from "../../../pages/api/detailDataApi";
 import { useSelector } from "react-redux";
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const LocationSearch = () => {
   const [selectedItem, setSelectedItem] = useState(null);
   const [pickupCountry, setPickupCountry] = useState("");
@@ -104,6 +106,8 @@ const LocationSearch = () => {
   ]
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+   
     const formData = {
       vehicle_id : vehicle_id,
       service_provider_id : serviceprovider_id,
@@ -121,6 +125,16 @@ const LocationSearch = () => {
         console.log("package",packageDetails);
         if(packageDetails?.code == 200){
           console.log("success",packageDetails);
+          toast.success(packageDetails?.message, {
+            position: 'top-right', // Position of the toast on the screen
+          });
+          setPickupCountry("");
+          setDropCountry("");
+          setDescription("");
+        }else{
+          toast.error(packageDetails?.message, {
+            position: 'top-right',
+          });
         }
 
       }
@@ -210,6 +224,7 @@ const LocationSearch = () => {
             value={tripType}
             onChange={(e) => setTripType(e.target.value)}
             required>
+           <option value=''>Select Trip Type</option>
             {tripTypes.map((item) => (
               <option value={item.name} key={item.id}>
                 {item.name}

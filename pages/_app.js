@@ -10,6 +10,8 @@ import "aos/dist/aos.css";
 import "../styles/index.scss";
 import { Provider } from "react-redux";
 import { store } from "../app/store";
+import { ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const path = require('path');
 
 
@@ -33,6 +35,7 @@ export default function App({ Component, pageProps }) {
     <main>
       <Provider store={store}>
         <Component {...pageProps} />
+        <ToastContainer />
         <SrollTop />
       </Provider>
     </main>
