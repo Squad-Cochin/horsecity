@@ -6,16 +6,16 @@ import API_CONFIG from "../../config";
 
 export default async function registrationApi(data) { 
 	try{   
-        // const listingDataApi = API_CONFIG.LISTING_DATA_API;
-        // const apiTocken = API_CONFIG.API_TOKEN;
-        // console.log("listingDatasss", listingDataApi, apiTocken, searchData)
-        // const response = await axios.post(listingDataApi, searchData ,{
-        //     headers: {
-        //       "Authorization": `Bearer ${apiTocken}`,
-        //     },
-        // });
-        console.log("regData",data)
-        // return response.data.data
+        const registrationApiApi = API_CONFIG.NEW_REGISTRATION_API;
+        const apiTocken = API_CONFIG.API_TOKEN;
+        console.log("NEWREG", registrationApiApi, apiTocken, data)
+        const response = await axios.post(registrationApiApi, data ,{
+            headers: {
+              "Authorization": `Bearer ${apiTocken}`,
+            },
+        });
+        console.log("regData",response.data.code)
+        return response.data
     }
     catch{
            

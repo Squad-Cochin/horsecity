@@ -17,7 +17,7 @@ const LoginForm = () => {
       <div className="col-12">
         <div className="form-input ">
           <input type="text" required />
-          <label className="lh-1 text-14 text-light-1">Email</label>
+          <label className="lh-1 text-14 text-light-1">User Name</label>
         </div>
       </div>
       {/* End .col */}
@@ -30,11 +30,11 @@ const LoginForm = () => {
       </div>
       {/* End .col */}
 
-      <div className="col-12">
+      {/* <div className="col-12">
         <a href="#" className="text-14 fw-500 text-blue-1 underline">
           Forgot your password?
         </a>
-      </div>
+      </div> */}
       {/* End .col */}
 
       <div className="col-12">

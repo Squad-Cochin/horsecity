@@ -74,7 +74,7 @@ const CarPropertes = () => {
                                   width={250}
                                   height={250}
                                   className="rounded-4 col-12 js-lazy"
-                                  src="http://192.168.200.211:3001/Vehicles/images/410538_car.jpg"
+                                  src={slide}
                                   priority
                                   alt="image"
                                 />

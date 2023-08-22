@@ -4,10 +4,12 @@ import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import registrationApi from "../../pages/api/registrationApi";
 import { Alert } from 'reactstrap'
+import Router from "next/router";
 
 const SignUpForm = () => {
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
   const [ errors, setErrors ] = useState("");
+  const [ success, setSuccess ] = useState("");
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -23,6 +25,7 @@ const SignUpForm = () => {
     const confirmPassword = formData.get('confirmPassword');
     const phone = formData.get('phone');
     if( password !== confirmPassword ){
+      setSuccess("")
       setErrors("Password and confirm password must be same.")
     } else {
       let registrationData = {
@@ -38,20 +41,29 @@ const SignUpForm = () => {
 
       // Perform any actions with the form data
       // console.log('Form submitted:', event.target);
-      await registrationApi(registrationData);
+      let res = await registrationApi(registrationData);
+      if(res.code === 400){
+        setErrors(res.message);
+        setSuccess("")
+      }else{
+        Router.push("/others-pages/login")
+        setSuccess(res.message)
+        setErrors("");
+      }
     }
   };
   return (
-    <form className="row y-gap-20" onSubmit={handleSubmit} >
+    <form  className="row y-gap-20" onSubmit={handleSubmit} >
       <div className="col-12">
         <h1 className="text-22 fw-500">Welcome back</h1>
-        <p className="mt-10">
+        <p className="mt-10" >
           Already have an account yet?{" "}
           <Link href="/others-pages/login" className="text-blue-1">
             Log in
           </Link>
         </p>
-        {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
+        {success !== "" ? <Alert color="success"  className="custom-alert"><div>{success}</div></Alert> : null}
+        {errors !== "" ? <Alert color="danger" ><div>{errors}</div></Alert> : null}
       </div>
       {/* End .col */}
 
@@ -73,7 +85,7 @@ const SignUpForm = () => {
 
       <div className="col-12">
         <div className="form-input ">
-          <div>
+         
           <DatePicker
             name="dateOfBirth"
             inputClass="custom_input-picker"
@@ -86,8 +98,8 @@ const SignUpForm = () => {
             maxDate={new Date()}
             dateFormat="MMM dd"
           />
-          </div>
-          <label className="lh-1 text-14 text-light-1">Date Of Birth</label>
+         
+          <label className="lh-1 text-14 text-light-1 spl-space-top">Date Of Birth</label>
         </div>
       </div>
 
@@ -148,9 +160,10 @@ const SignUpForm = () => {
       {/* End .col */}
 
       <div className="col-12">
+       
         <button
           type="submit"
-          href="#"
+          href="#top"
           className="button py-20 -dark-1 bg-blue-1 text-white w-100"
         >
           Sign Up <div className="icon-arrow-top-right ml-15" />

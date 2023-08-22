@@ -759,6 +759,14 @@ $_displays: none, inline-block, block, flex;
   width: 180px;
   max-width: 100%;
 }
+.custom-alert {
+  background-color: green;
+  border-color: darkgreen;
+  color: white;
+}
+.react-datepicker-wrapper{
+  width: 100%;
+}
 
 .halfMap {
   display: flex;
@@ -1157,7 +1165,10 @@ $_displays: none, inline-block, block, flex;
     font-size: 14px;
     transition: all 0.2s $easeOutQuart;
   }
-
+   
+ .spl-space-top{
+  top: 16px !important;
+ }
   textarea,
   input {
     border: 1px solid var(--color-border);
