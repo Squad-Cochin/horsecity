@@ -13,7 +13,7 @@ module.exports = function(app)
     
     // app.post(`/${process.env.apiToken}/login`, (req, res)=>{ console.log("Came here"); });
     
-      // The below route is for changing the password of the service provider user.
+    // The below route is for changing the password of the service provider user.
     app.post(`/${process.env.apiToken}/changePassword`, 
     checkInput.usernameValidation(constants.tableName.service_providers),
     checkInput.passwordValidation,
