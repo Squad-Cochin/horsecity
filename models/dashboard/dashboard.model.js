@@ -320,7 +320,7 @@ module.exports = class dashboard
                         {
                             let query = `SELECT e.id, c.user_name, c.name, DATE_FORMAT(e.created_at, '%d %b, %Y') AS date, e.pickup_location, e.no_of_horse, e.drop_location, e.status
                                         FROM enquiries e, customers c
-                                        WHERE e.status <> 'NOTCONFIRMED' AND e.customer_id = c.id
+                                        WHERE e.customer_id = c.id
                                         ORDER BY e.created_at DESC
                                         LIMIT 5`;
                                         // console.log(`Query: `, query);
@@ -351,11 +351,8 @@ module.exports = class dashboard
                         }
                         else if(result[0].role_id === constants.Roles.service_provider)
                         {
-                            let query = `SELECT e.id, c.user_name, c.name, DATE_FORMAT(e.created_at, '%d %b, %Y') AS date, e.pickup_location, e.no_of_horse, e.drop_location, e.status
-                            FROM enquiries e, customers c
-                            WHERE e.status <> 'NOTCONFIRMED' AND e.customer_id = c.id AND e.serviceprovider_id = ${Id}
-                            ORDER BY e.created_at DESC
-                            LIMIT 5`;
+                            let query = `SELECT e.id, c.user_name, c.name, DATE_FORMAT(e.created_at, '%d %b, %Y') AS date, e.pickup_location, e.no_of_horse, e.drop_location, e.status FROM enquiries e, customers c WHERE e.serviceprovider_id = ${Id} AND e.customer_id = c.id ORDER BY e.created_at DESC LIMIT 5`;
+                            // console.log(query);
                             con.query(query, async(err, result) =>
                             {
                                 if(err)

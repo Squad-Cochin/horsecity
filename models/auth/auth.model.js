@@ -62,10 +62,17 @@ module.exports = class authentication
                                     // console.log(selQuery);
                                     con.query(selQuery, async (err, data) =>
                                     {
-                                        // console.log(data);
+                                        const resObj = [{
+                                            id : userData[0].id,
+                                            name : userData[0].name,
+                                            email :  userData[0].email,
+                                            role_Id : userData[0].role_Id,
+                                            role_name : userData[0].role_name,
+                                            user_name : userData[0].user_name
+                                        }]
                                         if (data.length != 0)
                                         {
-                                            resolve ([{user : userData},{modules : data}])
+                                            resolve ([{user : resObj},{modules : data}])
                                         }
                                         else
                                         {  

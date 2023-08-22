@@ -364,10 +364,13 @@ module.exports = class customers
                             con.query(insQuery, (err, result1) =>
                             {
                                 // console.log('Result of inserting in the customer logs', result1);
+                                const data = {
+                                    id : customerData[0].id
+                                }
                                 if(result1.affectedRows > 0)
                                 {
                                     console.log(`Customer log also entered at the login time`);
-                                    resolve(customerData)
+                                    resolve(data);
                                 }
                                 else
                                 {
@@ -399,72 +402,64 @@ module.exports = class customers
         });  
     };
 
-    static async customerlogout(username, password) 
+    static async customerlogout(Id) 
     {
         return new Promise(async(resolve, reject) =>
         {
             try
             {
-                const customerData = await commonfetching.dataOnCondition(constants.tableName.customers, username, 'user_name');
+                const customerData = await commonfetching.dataOnCondition(constants.tableName.customers, Id, 'id');
                 if (customerData.length === 0) 
                 {
                     resolve('nocustomer');
                 }
                 else
                 {
-                    var passwordHashed = await commonoperation.changePasswordToSQLHashing(password);
-                    if (customerData[0].password !== passwordHashed)
+                    // console.log('Customer logout done');
+                    let selQuery = `SELECT * FROM ${constants.tableName.customer_logs} c WHERE c.customer_id = ${customerData[0].id} AND c.login_time IS NOT NULL AND c.logout_time IS NULL`;
+                    // console.log(`Getting login time for entering into the customer logs table query: `, selQuery);
+                    con.query(selQuery, (err, result3) =>
                     {
-                        resolve('incorrectpassword');
-                    }
-                    else
-                    {
-                        // console.log('Customer logout done');
-                        let selQuery = `SELECT * FROM ${constants.tableName.customer_logs} c WHERE c.customer_id = ${customerData[0].id} AND c.login_time IS NOT NULL AND c.logout_time IS NULL`;
-                        // console.log(`Getting login time for entering into the customer logs table query: `, selQuery);
-                        con.query(selQuery, (err, result3) =>
+                        // console.log(`Result 3: `, result3);
+                        if(err)
                         {
-                            // console.log(`Result 3: `, result3);
-                            if(err)
+                            console.log(`Customer login is done successfully but error while fetching the login time from the logs table`, err);
+                            resolve(`err`);
+                        }
+                        else
+                        {
+                            if(result3.length != 0)
                             {
-                                console.log(`Customer login is done successfully but error while fetching the login time from the logs table`, err);
-                                resolve(`err`);
+                                let upQuery = `UPDATE ${constants.tableName.customer_logs} c SET c.logout_time = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', c.duration = TIMEDIFF('${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.changeDateToSQLFormat(result3[0].login_time)}') WHERE c.customer_id = ${customerData[0].id} AND c.login_time IS NOT NULL AND c.logout_time IS NULL`;
+                                // console.log(`Update Query of the customers log when we are updatting the logout time in the table: `, upQuery);
+                                con.query(upQuery, (err, result1) =>
+                                {
+                                    // console.log('Result of inserting in the customer logs', result1);
+                                    if(result1.affectedRows > 0)
+                                    {
+                                        console.log(`Customer log also entered at the login time`);
+                                        resolve(`logoutdone`)
+                                    }
+                                    else
+                                    {
+                                        console.log(`Customer logout is done successfully but error while updating into the logs table`, err);
+                                        resolve(`err`);
+                                    }
+                                });
+                            }
+                            else if (result3.length == 0)
+                            {
+                                // console.log(`The customer is not signin. We cannot logout before login`);
+                                resolve(`notLogin`)
                             }
                             else
                             {
-                                if(result3.length != 0)
-                                {
-                                    let upQuery = `UPDATE ${constants.tableName.customer_logs} c SET c.logout_time = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', c.duration = TIMEDIFF('${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.changeDateToSQLFormat(result3[0].login_time)}') WHERE c.customer_id = ${customerData[0].id} AND c.login_time IS NOT NULL AND c.logout_time IS NULL`;
-                                    // console.log(`Update Query of the customers log when we are updatting the logout time in the table: `, upQuery);
-                                    con.query(upQuery, (err, result1) =>
-                                    {
-                                        // console.log('Result of inserting in the customer logs', result1);
-                                        if(result1.affectedRows > 0)
-                                        {
-                                            console.log(`Customer log also entered at the login time`);
-                                            resolve(`logoutdone`)
-                                        }
-                                        else
-                                        {
-                                            console.log(`Customer logout is done successfully but error while updating into the logs table`, err);
-                                            resolve(`err`);
-                                        }
-                                    });
-                                }
-                                else if (result3.length == 0)
-                                {
-                                    // console.log(`The customer is not signin. We cannot logout before login`);
-                                    resolve(`notLogin`)
-                                }
-                                else
-                                {
-                                    console.log(`Error came while updating the data in the customer logs. Please check result 3`);
-                                    resolve(`err`);
-                                }
+                                console.log(`Error came while updating the data in the customer logs. Please check result 3`);
+                                resolve(`err`);
                             }
-                        });
-                    }   
-                }
+                        }
+                    });
+                }   
             }
             catch (error)
             {

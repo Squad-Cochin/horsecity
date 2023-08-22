@@ -327,6 +327,7 @@ exports.customerLogin = async (req, res) =>
     //     });
     // }
     const customers = await customer.customerlogin(req.body.userName, req.body.password)
+    // console.log(`Customers: `, customers);
     if(customers === 'nocustomer')
     {
         console.log('Unavailable username or incorrect username. While customer login');
@@ -374,7 +375,7 @@ exports.customerLogin = async (req, res) =>
 
 exports.customerLogout = async (req, res) =>
 {
-    const customers = await customer.customerlogout(req.body.userName, req.body.password);
+    const customers = await customer.customerlogout(req.params.id);
     if(customers === 'logoutdone')
     {
         console.log('Customer logout successfully done');

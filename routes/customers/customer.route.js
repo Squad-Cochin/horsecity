@@ -55,11 +55,13 @@ module.exports = (app) =>
             customerController.editCustomer
            );
     
-    app.post(`/${process.env.apiToken}/customer/login`,
+    app.post(`/customer/login`,
+    validateHeaders.verifyToken,
     checkInput.passwordValidation,
     customerController.customerLogin);
 
-    app.post(`/${process.env.apiToken}/customer/logout`,
+    app.post(`/customer/logout/:id`,
+    isValidIdInTheParams(constants.tableName.customers), 
     customerController.customerLogout);
 
     app.post(`/${process.env.apiToken}/customer/password/update`,
