@@ -56,6 +56,7 @@ module.exports = (app) =>
            );
     
     app.post(`/${process.env.apiToken}/customer/login`,
+    checkInput.passwordValidation,
     customerController.customerLogin);
 
     app.post(`/${process.env.apiToken}/customer/logout`,
@@ -75,6 +76,7 @@ module.exports = (app) =>
     checkInput.emailValidation(constants.tableName.customers),
     checkInput.usernameValidation(constants.tableName.customers),
     checkInput.contactNumberValidation(constants.tableName.customers),
+    checkInput.passwordValidation,
     // checkInput.dateOfBirthValidation,
     // checkInput.idProofNumberValidation,
     // checkInput.isCustomerIdProofImageSubmitted,
