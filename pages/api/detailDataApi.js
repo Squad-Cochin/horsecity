@@ -36,8 +36,8 @@ export  async function addbooking(body,cuid) {
               "Authorization": `Bearer ${apiToken}`, 
             },
         });
-        
-        return response.data.data
+        console.log("Response",response.data);
+        return response.data  
     }
     catch{
            

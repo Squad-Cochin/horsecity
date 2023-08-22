@@ -102,7 +102,7 @@ const LocationSearch = () => {
     {id : 2,name : "SHARING"},
     {id : 3,name : "GCC"},
   ]
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const formData = {
       vehicle_id : vehicle_id,
@@ -117,7 +117,12 @@ const LocationSearch = () => {
     };
     console.log("data",formData);
       if(customer_id){
-        let packageDetails =  addbooking(formData,customer_id);
+        let packageDetails = await addbooking(formData,customer_id);
+        console.log("package",packageDetails);
+        if(packageDetails?.code == 200){
+          console.log("success",packageDetails);
+        }
+
       }
 
 

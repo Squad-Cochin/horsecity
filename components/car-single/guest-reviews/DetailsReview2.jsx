@@ -24,9 +24,10 @@ const DetailsReview2 = () => {
         {/* End .row */}
 
         <p className="text-15 text-dark-1 mt-10">
-          Nice two level apartment in great London location. Located in quiet
-          small street, but just 50 meters from main street and bus stop. Tube
-          station is short walk, just like two grocery stores.{" "}
+        is simply dummy text of the printing and typesetting industry.
+        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+        It has survived not only five centuries,.{" "}
         </p>
 
         {/* <ReviewGallery /> */}
@@ -54,9 +55,10 @@ const DetailsReview2 = () => {
 
 
         <p className="text-15 text-dark-1 mt-10">
-          Nice two level apartment in great London location. Located in quiet
-          small street, but just 50 meters from main street and bus stop. Tube
-          station is short walk, just like two grocery stores.{" "}
+        is simply dummy text of the printing and typesetting industry.
+        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+        It has survived not only five centuries,.{" "}
         </p>
 
       </div>
@@ -81,9 +83,10 @@ const DetailsReview2 = () => {
 
 
         <p className="text-15 text-dark-1 mt-10">
-          Nice two level apartment in great London location. Located in quiet
-          small street, but just 50 meters from main street and bus stop. Tube
-          station is short walk, just like two grocery stores.{" "}
+        is simply dummy text of the printing and typesetting industry.
+        Lorem Ipsum has been the industry's standard dummy text ever since the 1500s,
+        when an unknown printer took a galley of type and scrambled it to make a type specimen book.
+        It has survived not only five centuries,.{" "}
         </p>
 
       </div>
