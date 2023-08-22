@@ -60,7 +60,7 @@ module.exports = class dashboard
                     {
                         let Query = ` SELECT
                                       COALESCE((SELECT COUNT(v.id) FROM ${constants.tableName.vehicles} v WHERE v.service_provider_id = ${Id}), 0) AS total_vehicles,
-                                      COALESCE((SELECT COUNT(d.id) FROM ${constants.tableName.drivers} d, ${constants.tableName.assign_drivers} ad WHERE ad.service_provider_id = ${Id}), 0) AS total_drivers,
+                                      COALESCE((SELECT COUNT(ad.id) FROM ${constants.tableName.assign_drivers} ad WHERE ad.service_provider_id = ${Id} AND ad.deleted_at IS NULL), 0) AS total_drivers,
                                       COALESCE((SELECT COUNT(e.id) FROM ${constants.tableName.enquiries} e WHERE e.serviceprovider_id = ${Id}), 0) AS total_enquiries,
                                       COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q WHERE q.serviceprovider_id = ${Id}), 0) AS total_quotations,
                                       COALESCE((SELECT SUM(i.final_amount) FROM ${constants.tableName.invoices} i WHERE i.service_provider_id = ${Id}), 0) AS total_revenue
@@ -106,7 +106,7 @@ module.exports = class dashboard
         {
             return await new Promise(async (resolve, reject)=>
             {
-                let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
+                let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM ${constants.tableName.service_providers} sp, ${constants.tableName.roles} r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
                 // console.log('Check Role Data At The time of fetching monthly sales report: ', checkRole);
                 con.query(checkRole, async (err, result) =>
                 {
@@ -129,7 +129,7 @@ module.exports = class dashboard
                                             MONTH(created_at) AS month, 
                                             LEFT(MONTHNAME(created_at), 3) AS month_name, 
                                             SUM(final_amount) AS total_final_amount
-                                            FROM invoices
+                                            FROM ${constants.tableName.invoices}
                                             WHERE created_at >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
                                             GROUP BY YEAR(created_at), MONTH(created_at), LEFT(MONTHNAME(created_at), 3)
                                             ORDER BY YEAR(created_at), MONTH(created_at)`;
@@ -163,16 +163,12 @@ module.exports = class dashboard
                             let Query = `   SELECT
                                             YEAR(i.created_at) AS year,
                                             MONTH(i.created_at) AS month,
+                                            LEFT(MONTHNAME(i.created_at), 3) AS month_name, 
                                             SUM(i.final_amount) AS total_final_amount
                                             FROM ${constants.tableName.invoices} i
-                                            JOIN
-                                                ${constants.tableName.roles} r ON i.service_provider_id = r.id AND r.name = 'SERVICE PROVIDER' AND r.id = ${Id}
-                                            GROUP BY
-                                                YEAR(i.created_at),
-                                                MONTH(i.created_at)
-                                            ORDER BY
-                                                YEAR(i.created_at),
-                                                MONTH(i.created_at)`;
+                                            WHERE i.service_provider_id = ${Id}
+                                            GROUP BY YEAR(i.created_at), MONTH(i.created_at)
+                                            ORDER BY YEAR(i.created_at), MONTH(i.created_at)`;
                             // console.log(`Dashboard query at the time of service provider : `,Query);
                             con.query(Query, (err, result) =>
                             {
@@ -515,7 +511,7 @@ const customizeQuotationStatusReport = (data) =>
         {
             id: 3,
             title: "Total Quotations",
-            icon: "ri-equal-fill",
+            icon: "ri-add-circle-line",
             color: "primary",
             width: data[0].total_quotations,
         },
