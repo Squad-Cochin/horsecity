@@ -4,6 +4,7 @@ const initialState = {
     customer_id : '',
     vehicle_id : '',
     serviceprovider_id : '',
+    no_of_horse : ''
 };
 
 export const bookingData = createSlice({
@@ -14,6 +15,7 @@ export const bookingData = createSlice({
       state.customer_id = payload.customer_id;
       state.vehicle_id = payload.vehicle_id;
       state.serviceprovider_id = payload.serviceprovider_id;
+      state.no_of_horse = payload.no_of_horse;
     },
 
   },

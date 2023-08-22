@@ -3,9 +3,11 @@ import { useEffect,useState } from "react";
 import {addbooking} from "../../../pages/api/detailDataApi";
 import { useSelector } from "react-redux";
 import { toast } from 'react-toastify';
+import DatePicker from "react-datepicker";
+import DateSearch from "../../hero/DateSearch";
 import 'react-toastify/dist/ReactToastify.css';
 const LocationSearch = () => {
-  const [selectedItem, setSelectedItem] = useState(null);
+  const [filteredNoOfHorse, setFilteredNoOfHorse] = useState([]);
   const [pickupCountry, setPickupCountry] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
   const [dropCountry, setDropCountry] = useState("");
@@ -13,13 +15,58 @@ const LocationSearch = () => {
   const [tripType, setTripType] = useState("");
   const [noOfHorse, setNoOfHorse] = useState("");
   const [description, setDescription] = useState("");
+  const [pickupDate, setPickupDate] = useState("");
+  const [startDate, setStartDate] = useState(new Date());
 
 
 
-  const { customer_id, vehicle_id, serviceprovider_id } = useSelector((state) => state.bookingData) || {};
+  const { customer_id, vehicle_id, serviceprovider_id, no_of_horse } = useSelector((state) => state.bookingData) || {};
   useEffect(() => {
+    console.log("no",no_of_horse);
     initialLoad();
-  },[])
+  },[no_of_horse])
+  const noOfHorses = [
+    {
+      id: 1,
+      no: "1",
+    },
+    {
+      id: 2,
+      no: "2"
+    },
+    {
+      id: 3,
+      no: "3"
+    },
+    {
+      id: 4,
+      no: "4"
+    },
+    {
+      id: 5,
+      no: "5"
+    },
+    {
+      id: 6,
+      no: "6"
+    },
+    {
+      id: 7,
+      no: "7"
+    },
+    {
+      id: 8,
+      no: "8"
+    },
+    {
+      id: 9,
+      no: "9"
+    },
+    {
+      id: 10,
+      no: "10"
+    },
+  ];
 
   async function initialLoad(){
     const bookings = await JSON.parse(localStorage.getItem('searchObject'));
@@ -27,6 +74,10 @@ const LocationSearch = () => {
     setDropLocation(bookings?.to_location);
     setTripType(bookings?.trip_type[0]);
     setNoOfHorse(bookings?.number_of_horses);
+    setPickupDate(bookings?.departDate);
+   const filterData = noOfHorses.filter((value) => parseInt(value.no, 10) <= no_of_horse)
+
+   setFilteredNoOfHorse(filterData);
   }
 
   const locationSearchContent = [
@@ -55,49 +106,8 @@ const LocationSearch = () => {
       name: "United Arab Emirates"
     },
   ];
-  const noOfHorses = [
-    {
-      id: 1,
-      name: "1",
-    },
-    {
-      id: 2,
-      name: "2"
-    },
-    {
-      id: 3,
-      name: "3"
-    },
-    {
-      id: 4,
-      name: "4"
-    },
-    {
-      id: 5,
-      name: "5"
-    },
-    {
-      id: 6,
-      name: "6"
-    },
-    {
-      id: 7,
-      name: "7"
-    },
-    {
-      id: 8,
-      name: "8"
-    },
-    {
-      id: 9,
-      name: "9"
-    },
-    {
-      id: 10,
-      name: "10"
-    },
-  ];
-
+  
+console.log("piii",pickupDate);
 
   const tripTypes = [
     {id : 1,name : "PRIVATE"},
@@ -117,6 +127,7 @@ const LocationSearch = () => {
       drop_location : dropLocation,
       vehicle_type : tripType,
       no_of_horse : noOfHorse,
+      pickup_date : pickupDate,
       description : description,
     };
     console.log("data",formData);
@@ -234,6 +245,7 @@ const LocationSearch = () => {
         </div>
       </div>
 
+
       <div className="searchMenu-loc px-20 mt-3 py-10 border-light rounded-4 js-form-dd js-liverSearch">
         <h4 className="text-15 fw-500 ls-2 lh-16">No Of Horse</h4>
         <div className="text-15 text-light-1 ls-2 lh-16">
@@ -242,13 +254,22 @@ const LocationSearch = () => {
             value={noOfHorse}
             onChange={(e) => setNoOfHorse(e.target.value)}
             required>
-            {noOfHorses.map((item) => (
-              <option value={item.name} key={item.id}>
-                {item.name}
+            <option value=''>Select No OF Horse</option>
+            {filteredNoOfHorse.map((item) => (
+              <option value={item.no} key={item.id}>
+                {item.no} 
               </option>
             ))}
           </select>
         </div>
+      </div>
+
+      <div className="searchMenu-loc px-20 mt-3 py-10 border-light rounded-4 js-form-dd js-liverSearch">
+      <h4 className="text-15 fw-500 ls-2 lh-16">Pickup Date</h4>
+      <div className="text-15 text-light-1 ls-2 lh-16">
+      {pickupDate != "" ? <DateSearch use="pickupDate" pickupDate={pickupDate} setPickupDate={setPickupDate} /> : <DateSearch use="pickupDate" pickupDate={new Date()} setPickupDate={setPickupDate} />}  
+      {/* <DateSearch use="pickupDate" pickupDate={pickupDate} setPickupDate={setPickupDate} /> */}
+      </div>
       </div>
 
       <div className="searchMenu-loc px-20 mt-3 py-10 border-light rounded-4 js-form-dd js-liverSearch">

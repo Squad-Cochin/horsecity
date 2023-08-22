@@ -1,6 +1,7 @@
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
+import { IoIosArrowBack } from "react-icons/io";
 import "photoswipe/dist/photoswipe.css";
 import carsData from "../../../data/cars";
 import Seo from "../../../components/common/Seo";
@@ -50,9 +51,9 @@ console.log("vehicle images");
     dispatch(booking_data({
       customer_id : '1',
       vehicle_id :  id,
-      serviceprovider_id : packageDetails?.vehicle[0]?.service_provider_id
+      serviceprovider_id : packageDetails?.vehicle[0]?.service_provider_id,
+      no_of_horse : packageDetails?.vehicle[0]?.no_of_horses
       }))
-
 
     // let packageList = await axios.post(`/api/initialSearch`,{})
     console.log("first",packageDetails)
@@ -74,11 +75,13 @@ console.log("vehicle images");
       {/* End top breadcrumb */}
 
       <section className="pt-40">
+     
         <div className="container">
           <div className="row y-gap-30">
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-end">
                 <div className="col-auto">
+                <a onClick={() => router.push("/car/car-list-v1")}  style={{ cursor: 'pointer' }}><IoIosArrowBack/><b>Back to page</b></a>
                   <h1 className="text-30 sm:text-24 fw-600">{vehicle?.make} {vehicle?.model}</h1>
                   <div className="row x-gap-10 items-center pt-10">
                     {/* <div className="col-auto">
