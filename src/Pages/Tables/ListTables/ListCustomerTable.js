@@ -136,6 +136,7 @@ const ListCustomerTable = () => {
     async function tog_list(param, productId) {
         setErrors("")
         if (param === 'ADD') {
+            setIdProofPreview(null);
             setAdd_list(!add_list);
         }else{
             let singleCustomer = await getSingleCustomerData(productId)

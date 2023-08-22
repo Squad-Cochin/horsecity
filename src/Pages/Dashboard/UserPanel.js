@@ -242,8 +242,8 @@ const DashboardPanel = () =>
               <div className="d-flex text-muted">
                 <div className="flex-shrink-0 me-3 align-self-center">
                   <div className="avatar-sm">
-                    <div className="avatar-title bg-light rounded-circle text-primary font-size-25">
-                      <i className="ri-chat-quote-line"></i>
+                    <div className="avatar-title bg-light rounded-circle text-primary font-size-20">
+                      <i className="ri-hand-coin-line"></i>
                       {/* <iconify-icon icon="mdi:cash"></iconify-icon> */}
                     </div>
                   </div>
