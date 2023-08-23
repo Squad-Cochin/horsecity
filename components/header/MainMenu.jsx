@@ -13,10 +13,15 @@ import {
   isActiveParentChaild,
 } from "../../utils/linkActiveChecker";
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 
 const MainMenu = ({ style = "" }) => {
   const router = useRouter();
-
+  const [ login, setLogin ] = useState({});
+  useEffect(() => {
+    let loginData = JSON.parse(localStorage.getItem("loginData"))
+    setLogin(loginData);
+  }, []);
   return (
     <nav className="menu js-navList">
       <ul className={`menu__nav ${style} -is-active`}>
@@ -153,6 +158,12 @@ const MainMenu = ({ style = "" }) => {
         <li className={router.pathname === "/others-pages/help-center" ? "current" : ""}>
           <Link href="/others-pages/help-center">Help Center</Link>
         </li>
+        { Object.keys(login)?.length != 0 ? 
+          <li className={router.pathname === "/dashboard/db-dashboard" ? "current" : ""}>
+            <Link href="/dashboard/db-dashboard">Dashbord</Link>
+          </li>
+          :null 
+        }
 
       </ul>
     </nav>

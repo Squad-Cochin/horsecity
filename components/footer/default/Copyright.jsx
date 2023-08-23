@@ -14,7 +14,7 @@ const Copyright = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                Horscity
+                Kailplus
               </a>
               All rights reserved.
             </div>

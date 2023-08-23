@@ -42,19 +42,18 @@ const index = () => {
             <DashboardCard />
 
             <div className="row y-gap-30 pt-20 chart_responsive">
-              <div className="col-xl-7 col-md-6">
+              {/* <div className="col-xl-7 col-md-6">
                 <div className="py-30 px-30 rounded-4 bg-white shadow-3">
                   <div className="d-flex justify-between items-center">
                     <h2 className="text-18 lh-1 fw-500">Earning Statistics</h2>
                     <ChartSelect />
                   </div>
-                  {/* End .d-flex */}
 
                   <div className="pt-30">
                     <ChartMain />
                   </div>
                 </div>
-              </div>
+              </div> */}
               {/* End .col */}
 
               <div className="col-xl-5 col-md-6">
