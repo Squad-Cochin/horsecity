@@ -49,7 +49,7 @@ console.log("vehicle images");
     setVehicleImages(packageDetails?.images);
     setReviews(packageDetails?.reviews)
     dispatch(booking_data({
-      customer_id : '1',
+      customer_id : '1', 
       vehicle_id :  id,
       serviceprovider_id : packageDetails?.vehicle[0]?.service_provider_id,
       no_of_horse : packageDetails?.vehicle[0]?.no_of_horses

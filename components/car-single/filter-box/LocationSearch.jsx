@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import DatePicker from "react-datepicker";
 import DateSearch from "../../hero/DateSearch";
 import 'react-toastify/dist/ReactToastify.css';
+import { useRouter } from 'next/router';
 const LocationSearch = () => {
   const [filteredNoOfHorse, setFilteredNoOfHorse] = useState([]);
   const [pickupCountry, setPickupCountry] = useState("");
@@ -16,11 +17,12 @@ const LocationSearch = () => {
   const [noOfHorse, setNoOfHorse] = useState("");
   const [description, setDescription] = useState("");
   const [pickupDate, setPickupDate] = useState("");
-  const [startDate, setStartDate] = useState(new Date());
+  const [isLogin, setLogin] = useState(false);
 
 
 
   const { customer_id, vehicle_id, serviceprovider_id, no_of_horse } = useSelector((state) => state.bookingData) || {};
+  const router = useRouter();
   useEffect(() => {
     console.log("no",no_of_horse);
     initialLoad();
@@ -70,13 +72,17 @@ const LocationSearch = () => {
 
   async function initialLoad(){
     const bookings = await JSON.parse(localStorage.getItem('searchObject'));
+    const loginData = await JSON.parse(localStorage.getItem('loginData'));
+
+    if (Object.keys(loginData).length !== 0) {
+      setLogin(true);
+    }
     setPickupLocation(bookings?.from_location);
     setDropLocation(bookings?.to_location);
-    setTripType(bookings?.trip_type[0]);
+    setTripType(bookings?.trip_type[0]); 
     setNoOfHorse(bookings?.number_of_horses);
     setPickupDate(bookings?.departDate);
    const filterData = noOfHorses.filter((value) => parseInt(value.no, 10) <= no_of_horse)
-
    setFilteredNoOfHorse(filterData);
   }
 
@@ -117,7 +123,10 @@ console.log("piii",pickupDate);
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-   
+    if (!isLogin) {
+      router.push('/others-pages/login');
+      return; 
+    }
     const formData = {
       vehicle_id : vehicle_id,
       service_provider_id : serviceprovider_id,
@@ -267,8 +276,8 @@ console.log("piii",pickupDate);
       <div className="searchMenu-loc px-20 mt-3 py-10 border-light rounded-4 js-form-dd js-liverSearch">
       <h4 className="text-15 fw-500 ls-2 lh-16">Pickup Date</h4>
       <div className="text-15 text-light-1 ls-2 lh-16">
-      {pickupDate != "" ? <DateSearch use="pickupDate" pickupDate={pickupDate} setPickupDate={setPickupDate} /> : <DateSearch use="pickupDate" pickupDate={new Date()} setPickupDate={setPickupDate} />}  
-      {/* <DateSearch use="pickupDate" pickupDate={pickupDate} setPickupDate={setPickupDate} /> */}
+      {/* {pickupDate != "" ? <DateSearch use="pickupDate" pickupDate={pickupDate} setPickupDate={setPickupDate} /> : <DateSearch use="pickupDate" pickupDate={new Date()} setPickupDate={setPickupDate} />}   */}
+      <DateSearch use="pickupDate" pickupDate={pickupDate} setPickupDate={setPickupDate} />
       </div>
       </div>
 
@@ -285,7 +294,7 @@ console.log("piii",pickupDate);
             required
           />
         </div>
-      </div>
+      </div>  
 
       <div className="col-12">
         <button

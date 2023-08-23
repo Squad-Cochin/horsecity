@@ -33,7 +33,7 @@ console.log("Date",props.pickupDate);
       <DatePicker
         inputClass="custom_input-picker"
         containerClassName="custom_container-picker"
-        selected={new Date(props.pickupDate)}
+        selected={props.pickupDate ? new Date(props.pickupDate) : null}
         onChange={(date) => {
           console.log("FFF",date);
           props.setPickupDate(date);
