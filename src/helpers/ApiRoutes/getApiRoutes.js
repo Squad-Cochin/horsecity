@@ -698,9 +698,9 @@ export async function startTrip(iId)
 {
     try
     {
-        console.log(`Invoice Id:`, iId);
+        console.log(`Invoice Id from the start button:`, iId);
         const data = await axios.get(`${url.GET_START_TRIP}/${iId}`);
-        console.log("Booking started: ", data);
+        // console.log("Booking started: ", data);
         return (data);
     } catch (error) {
         console.error("Error occurred:", error);
@@ -710,7 +710,28 @@ export async function startTrip(iId)
         };
         return errObj;
     }
-}
+};
+
+export async function cancelTrip(iId)
+{
+    try
+    {
+        console.log(`Invoice Id from the cancel button:`, iId);
+        const data = await axios.put(`${url.PUT_CANCEL_INVOICE}/${iId}`);
+        console.log("Invoice Cancel: ", data);
+        return(data);                
+    }
+    catch (error)
+    {
+        console.error("Error occurred:", error);
+        let errObj = 
+        {
+            code: error.response ? error.response.status : 500,
+            error: error.message || "Failed!",
+        };
+        return errObj;        
+    }
+};
 
 export async function geBookingDataOnInvoiceId(iId)
 {

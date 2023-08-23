@@ -9,7 +9,7 @@ import { getLedgerData } from '../../helpers/ApiRoutes/authApiRoutes';
 import html2pdf from 'html2pdf.js'; // Make sure to include the library properly
 import config from '../../config';
 /**IMPORTED APIs */
-import { getInvoicesData, getSingleInvoiceData, getLatestPayementHistroy, getSendEmailButtonData , startTrip} from '../../helpers/ApiRoutes/getApiRoutes'; 
+import { getInvoicesData, getSingleInvoiceData, getLatestPayementHistroy, getSendEmailButtonData , startTrip, cancelTrip} from '../../helpers/ApiRoutes/getApiRoutes'; 
 import { addAmount, sendEmail } from '../../helpers/ApiRoutes/addApiRoutes';
 
  
@@ -34,6 +34,7 @@ const InvoiceDetails = () =>
     const [downloadingPDF, setDownloadingPDF] = useState(false);
     const [modalOpen2, setModalOpen2] = useState(false);
     const [startedTrips, setStartedTrips] = useState([]);
+    const [cancelledTrip, setCancelledTrip] = useState([]);
     const [userId, setUserId ] = useState("");
     const [role, setRole ] = useState(false);
     const [module, setModule] = useState({});
@@ -46,11 +47,11 @@ const InvoiceDetails = () =>
     useEffect(() => 
     {
       const data = JSON.parse(localStorage.getItem("authUser"));
-      console.log('Data from the list invoice page', data);
+      // console.log('Data from the list invoice page', data);
       let user_Id = data[0]?.user[0]?.id
       let role_Name = data[0]?.user[0]?.role_name
-      console.log(`Role name from the invoice page`, role_Name);
-      console.log('User id from the invoice page: ', user_Id);
+      // console.log(`Role name from the invoice page`, role_Name);
+      // console.log('User id from the invoice page: ', user_Id);
       setUserId(user_Id);
       setLedger(getLedgerData());
       getAllData(1);  
@@ -212,8 +213,26 @@ const InvoiceDetails = () =>
     }
   };
 
+  const handleCancelTrip = async (tripId) =>
+  {
+    const tripButton = await cancelTrip(tripId);
+    console.log('tripButton in cancel button: ', tripButton);
+    if(tripButton.code === 200)
+    {
+      setCancelledTrip((prevStartedTrips) => [...prevStartedTrips, tripId]);
+    }
+    if (tripButton.code === 404) {
+      // Trip started successfully, add the tripId to the list of started trips
+      setCancelledTrip((prevStartedTrips) => [...prevStartedTrips, tripId]);
+    }
+
+  };
+
   const isTripStarted = (tripId) => startedTrips.includes(tripId)
   const isTripActive = (status) => status === 'ACTIVE';
+
+
+  const isTripCancel = (tripId) => cancelledTrip.includes(tripId)
 
   async function tog_view(productId)
   {
@@ -285,7 +304,7 @@ const InvoiceDetails = () =>
                                 <th className="sort" data-sort="customer_email">Customer Email</th>
                                 <th className="sort" data-sort="view_invoice">View Invoice</th>
                                 <th className="sort" data-sort="send_email">Send Email</th>
-                                <th className="sort" data-sort="send_email">Action</th>
+                                <th className="sort" data-sort="action">Action</th>
                               </tr>
                             </thead>
                             <tbody className="list form-check-all">
@@ -298,7 +317,8 @@ const InvoiceDetails = () =>
                                   <td className="customer_email">{item.customer_email}</td>
                                   <td className="view_invoice"> <button type="button" className="btn btn-success" id="add-btn" onClick={() => tog_view(item.id)}> View Invoice </button> </td>
                                   <td className="send_email"> <button type="button" className="btn btn-success" id="add-btn" onClick={() => handleOpenModal(item.id)}> Send Mail </button> </td>
-                                  <td className="start_booking"> <button onClick={() => handleStartTrip(item.id)} disabled={!isTripActive(item.status) || isTripStarted(item.id)} className="btn btn-success" id="add-btn">Trip</button> </td>
+                                  <td className="start_booking"> <button onClick={() => handleStartTrip(item.id)} disabled={!isTripActive(item.status) || isTripStarted(item.id) || isTripCancel(item.id)} className="btn btn-success" id="add-btn">Trip</button> </td>
+                                  <td className="cancel_booking"> <button onClick={() => handleCancelTrip(item.id)} disabled={!isTripActive(item.status) || isTripCancel(item.id) || isTripStarted(item.id)} className="btn btn-danger" id="add-btn">Cancel</button> </td>
                                 </tr>
                               ))}
                             </tbody>
