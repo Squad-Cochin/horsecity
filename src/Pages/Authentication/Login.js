@@ -21,7 +21,7 @@ import { loginUser } from "../../store/actions";
 // Login function
 const Login = props => {
 
-
+  const [showPassword, setShowPassword] = useState(false);
   const [loginpage_logo,setLoginPageLogo] = useState('')
   const [backgroundImage, setBackgroundImage] = useState('../../assets/images/bg.jpg');
   const [app_name,setAppName] = useState('')
@@ -38,6 +38,10 @@ const Login = props => {
     setLoginPageLogo(settingsData?.settingsPageData[0]?.loginpage_logo);
     setAppName(settingsData?.settingsPageData[0]?.application_title)
    }
+
+   const togglePasswordVisibility = () => {
+    setShowPassword(!showPassword);
+  };
 
    // At the bigining unmounting 
    useEffect(() => {
@@ -141,10 +145,12 @@ const Login = props => {
 
                         <div className="mb-4">
                           <Label className="form-label">Password</Label>
+                          <div className="input-group">
                           <Input
                             name="password"
                             value={validation.values.password || ""}
-                            type="password"
+                            // type="password"
+                            type={showPassword ? "text" : "password"}
                             placeholder="Enter Password"
                             onChange={validation.handleChange}
                             onBlur={validation.handleBlur}
@@ -152,18 +158,20 @@ const Login = props => {
                               validation.touched.password && validation.errors.password ? true : false
                             }
                           />
+                          <button className="btn btn-outline-secondary" type="button" onClick={togglePasswordVisibility}> 
+                            {showPassword ? <i className="ri-eye-off-fill" style={{ fontSize: '15px' }}></i> : <i className="ri-eye-fill" style={{ fontSize: '15px' }}></i>}
+                          </button>
+                        </div>
                           {validation.touched.password && validation.errors.password ? (
                             <FormFeedback type="invalid"><div> {validation.errors.password} </div></FormFeedback>
                           ) : null}
                         </div>
                         <div className="d-grid mt-4">
-                          <Link
-                            to="/forgot-password"
-                            className="text-muted"
-                          >
-                            <i className="mdi mdi-lock"></i> Forgot your
-                            password?
+                          <span className="text-muted">
+                          <Link to="/forgot-password" style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
+                          <i className="mdi mdi-lock"></i> Forgot your password ?
                           </Link>
+                          </span>
                         </div>
                         <div className="d-grid mt-4">
                           <button
