@@ -267,8 +267,8 @@ console.log("piii",pickupDate);
       <div className="searchMenu-loc px-20 mt-3 py-10 border-light rounded-4 js-form-dd js-liverSearch">
       <h4 className="text-15 fw-500 ls-2 lh-16">Pickup Date</h4>
       <div className="text-15 text-light-1 ls-2 lh-16">
-      {pickupDate != "" ? <DateSearch use="pickupDate" pickupDate={pickupDate} setPickupDate={setPickupDate} /> : <DateSearch use="pickupDate" pickupDate={new Date()} setPickupDate={setPickupDate} />}  
-      {/* <DateSearch use="pickupDate" pickupDate={pickupDate} setPickupDate={setPickupDate} /> */}
+      {/* {pickupDate != "" ? <DateSearch use="pickupDate" pickupDate={pickupDate} setPickupDate={setPickupDate} /> : <DateSearch use="pickupDate" pickupDate={new Date()} setPickupDate={setPickupDate} />}   */}
+      <DateSearch use="pickupDate" pickupDate={pickupDate} setPickupDate={setPickupDate} />
       </div>
       </div>
 
@@ -285,7 +285,7 @@ console.log("piii",pickupDate);
             required
           />
         </div>
-      </div>
+      </div>  
 
       <div className="col-12">
         <button
