@@ -1,8 +1,10 @@
 var enquiriesModel = require('../../models/Enquiries Front Page/enquiries.model');
 const time = require('../../utils/helper/date');
+
+
 exports.createNewEnquiry = async (req, res, next) =>
 {
-    console.log(req.body);
+    // console.log(req.body);
     const data = await enquiriesModel.createnewenquiry(
         req.params.id,
         // req.body.customer_id,
@@ -15,7 +17,8 @@ exports.createNewEnquiry = async (req, res, next) =>
         req.body.drop_country,
         req.body.no_of_horse,
         req.body.description,
-        time.changeDateToSQLFormat(req.body.pickup_date));
+        time.changeDateToSQLFormat(req.body.pickup_date)
+        );
 
     if(data === 'err') 
     {

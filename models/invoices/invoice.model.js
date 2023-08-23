@@ -1227,6 +1227,98 @@ module.exports = class invoices
 
         }
     };
+
+    static async bookingcancel(Id)
+    {
+        try
+        {
+            return await new Promise(async(resolve, reject) =>
+            {
+                let data = await commonfetching.dataOnCondition(constants.tableName.invoices, Id, 'id');
+                // console.log(`Data at the booking got cancel button from the invoice table: `, data);
+
+                let data3 = await commonfetching.dataOnCondition(constants.tableName.bookings, data[0].invoice_no, 'invoice_prefix_id')
+                // console.log('Data 3 from the booking cancel: ', data3);
+                if(data3.length != 0)
+                {
+                    console.log(`Duplicate invoice number. Cannot enter during cancel`);
+                    resolve('duplicate');
+                }
+                else
+                {
+                    let data2 = await commonfetching.dataOnCondition(constants.tableName.quotations, data[0].quot_id, 'id');
+                    // console.log(`Data at the booking got cancel button from the quotation table: `, data2);
+
+                    const insQuery = `INSERT INTO bookings(customer_id, inv_id, invoice_prefix_id, service_provider_id, vehicle_id, driver_id, taxation_id, discount_type_id, status, booking_status, pickup_location, pickup_country, pickup_date, pickup_time, drop_location, drop_country, drop_date, drop_time ,confirmation_sent, sub_total, tax_amount, discount_amount, final_amount, created_at, deleted_at) VALUES(${data2[0].customer_id}, ${data[0].id}, '${data[0].invoice_no}', ${data[0].service_provider_id}, ${data[0].vehicle_id}, ${data[0].driver_id}, ${data2[0].taxation_id}, ${data2[0].discount_type_id}, '${constants.booking_status.cancelled}', '${constants.booking_status.cancelled}', '${data[0].pickup_point}', '${data2[0].pickup_country}', '${time.changeDateToSQLFormat(data2[0].pickup_date)}', '${data2[0].pickup_time}','${data[0].drop_point}', '${data2[0].drop_country}', '${time.changeDateToSQLFormat(data2[0].drop_date)}', '${data2[0].drop_time}', 'YES',  ${data[0].sub_total},  ${data[0].tax_amount},  ${data[0].discount_amount},  ${data[0].final_amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                    // console.log('Insert query during the cancel button: ',insQuery);
+                    con.query(insQuery, (err, result) =>
+                    {
+                        // console.log(`Insert result of the booking at the time of cancel button: `, result);
+                        if(result === 'undefined')
+                        {
+                            console.log(`Result is underfine while inserting the query into the booking table at the time of cancel button`);
+                            resolve('NotEntered');
+                        }
+                        if(err)
+                        {
+                            console.log(`Error while inserting the query into the booking table at the time of cancel button`);
+                            resolve('err');
+                        }
+                        if(result.affectedRows > 0)
+                        {
+                            // console.log(`Data is inserted in the booking table at the time of cancel button`);
+                            let upQuery = `UPDATE ${constants.tableName.invoices} i SET i.status = '${constants.status.inactive}', i.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE i.id = ${Id}`;
+                            // console.log('Update Query at the time of cancel button: ', upQuery);
+                            con.query(upQuery, (err, result2) =>
+                            {
+                                if(err)
+                                {
+                                    console.log(`Error while updating the query into the invoice table at the time of cancel button`);
+                                    resolve('err')
+                                }
+                                if(result2.affectedRows > 0)
+                                {
+                                    // console.log(`Data is updated in the invoice table at the time of cancel button`);
+                                    let upQuery2 = `UPDATE ${constants.tableName.payment_records} p SET p.status = '${constants.booking_status.cancelled}', p.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', p.received_amount = '0.00' WHERE p.invoice_id = ${Id} AND p.updated_at IS NULL AND p.deleted_at IS NULL`;
+                                    // console.log(`Update Query: `, upQuery2);
+                                    con.query(upQuery2, (err, result3) =>
+                                    {
+                                        if(err)
+                                        {
+                                            console.log(`Error while update query into the payment_record table at the time of cancel button`);
+                                            resolve('err')
+                                        }
+                                        if(result3 === 'undefined')
+                                        {
+                                            console.log(`Result is underfined while update the query into the payment record table at the time of cancel button`);
+                                            resolve('NotEntered');
+                                        }
+                                        if(result3.affectedRows > 0)
+                                        {
+                                            console.log(`Booking data is cancelled and entered into the bookings table`);
+                                            resolve('Entered');
+                                        }                                        
+                                    });
+                                }
+                                if(result2 === 'undefined')
+                                {
+                                    console.log(`Result is underfined while update the query into the invoices table at the time of cancel button`);
+                                    resolve('NotEntered')
+                                }
+                            });                            
+                        }
+                    });
+                }                
+            });            
+        }
+        catch (error)
+        {
+            console.log(`Error from the booking cancel.`, error);            
+        }
+    };
+
+
+
 };
 
 

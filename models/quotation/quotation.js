@@ -460,7 +460,7 @@ static async removedQuotations  (quotId)  {
 
 
 
-/** For chainging qutation status     basis of quotation id */
+/** For chainging qutation status basis of quotation id */
 static async updateStatusQuotation  (quotId)  {
     return new Promise(async (resolve, reject) => {
         try {
@@ -510,7 +510,7 @@ static async updateStatusQuotation  (quotId)  {
                     con.query(selQuery, async (err, qutationsData) => {
 
                         if (qutationsData.length != 0) {
-                            console.log("heyy");
+                            // console.log("heyy");
                             let pickup_date = await changeFormat(time.changeDateToSQLFormat(qutationsData[0].pickup_date))
                             let drop_date = await changeFormat(time.changeDateToSQLFormat(qutationsData[0].drop_date))
 
@@ -563,7 +563,7 @@ static async updateStatusQuotation  (quotId)  {
                                             let selQuery = `SELECT 	apps.invoice_prefix 
                                                 FROM ${constants.tableName.application_settings} apps`
                                             con.query(selQuery, async (err, result) => {
-                                                console.log("result",result); 
+                                                // console.log("result",result); 
                                                 if (result.length != 0) {
                                                     /**Adding prefix */
                                                     /** default 1 dont requires to add + 1  */
@@ -624,19 +624,19 @@ static async updateStatusQuotation  (quotId)  {
                                                                                 invoice_prefix_id,
                                                                                 total_amount,
                                                                                 remaining_amount,
-                                                                                status
+                                                                                status,
                                                                                 created_at
                                                                             ) VALUES (
                                                                                 '${invoice_id}', 
                                                                                 '${sum_invId}',
                                                                                 '${final_amount}',
                                                                                 '${final_amount}',
-                                                                                '${constants.amount_status.pending}'
+                                                                                '${constants.amount_status.pending}',
                                                                                 '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                                                             );`;
-                                                                            
+                                                                            // console.log('ddd', insQuery);
                                                                             con.query(insQuery, async (err, result) => {
-                                                                                        console.log(err);
+                                                                                        // console.log(err);
                                                                                 if (!err) {
                                                                                     resolve(true);
                                                                                 }

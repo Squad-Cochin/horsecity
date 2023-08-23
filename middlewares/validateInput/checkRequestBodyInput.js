@@ -1081,6 +1081,7 @@ exports.checkCustomerEnquiryBody = async (req, res, next) =>
         await this.checkValueEntered(req.body.drop_country, 'Drop country')(req, res, next);
         await this.checkValueEntered(req.body.no_of_horse, 'Number of horse, Which are about to transport')(req, res, next);
         await this.checkValueEntered(req.body.description, 'Description about the enquiry')(req, res, next);
+        await this.checkValueEntered(req.body.pickup_date, 'Pickup date')(req, res, next);
         next();
     }
     catch (error)

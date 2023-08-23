@@ -54,7 +54,7 @@ exports.dataOnCondition = async (tableName, Value, feildName) =>
         return await new Promise(async (resolve, reject) => 
         {
             let selQuery = `SELECT * FROM ${tableName} t WHERE t.${feildName} = '${Value}'`;
-            // console.log(`Universal Query At Normal Condition: `, selQuery);
+            console.log(`Universal Query At Normal Condition: `, selQuery);
             con.query(selQuery, (err, result) =>
             {
                 if(err)

@@ -434,7 +434,58 @@ exports.getDataFromBookingTable = async (req, res, next) =>
             data : invoices
         });
     }
-}
+};
+
+
+// The below function will take us to the model. Which is desinged for the cancel button in the invoice page.
+exports.BookingCancel = async (req, res) =>
+{
+    let invoices = await invoice.bookingcancel(req.params.id);
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
+    if(invoices === 'err')
+    {
+        console.log('Internal Server Error from the cancel button data');
+        return res.status(200).json
+        ({
+            code: 500,
+            status: false,
+            message: constant.responseMessage.universalError,
+        });
+    }
+    // If the function is executed and data is entered into the booking table and status of invoice data is also updated, Then this else if block of code is executed.
+    if(invoices === 'Entered')
+    {
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: `Invoice data is cancelled and inserted into the bookings table`
+        });
+    }
+    // If any error happend while updating in the invoice table and inserting into the booking table, Then this if block of code will be executed    
+    if(invoices === 'NotEntered')
+    {
+        console.log('Cancel button from the invoice page is successfully working. But data not entered');
+        return res.status(200).json
+        ({
+            code: 400,
+            status: false,
+            message: `Cancel button from the invoice page is successfully working. But data not entered`,
+        });
+    }
+    // Since the trip will be starts on once. So the entry of invoice data will be done once. This will be check in the below if block code.   
+    if(invoices === 'duplicate')
+    {
+        console.log('Cancel button successfully working. Invoice id is duplicate is already available in the bookings table');
+        return res.status(200).json
+        ({
+            code: 404,
+            status: false,
+            message: `Cancel button successfully working. Invoice id is duplicate is already available in the bookings table`,
+            data : []
+        });
+    }
+};
 
 
 
