@@ -8,6 +8,7 @@ import { TbBus, TbArrowAutofitWidth, TbArrowAutofitHeight, TbLineHeight } from "
 import { HiAdjustments } from "react-icons/hi";
 import { useEffect } from "react";
 import listingDataApi from "../../../pages/api/listingDataApi";
+import isWishlist from "../../../pages/api/wishlistApi";
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { add_list_data } from "../../../features/listData/listData";
@@ -18,6 +19,8 @@ const CarPropertes = () => {
   const [ listData, setListData ] = useState([]);
   const { price_from, price_to, suppliers, sort, page, limit } = useSelector((state) => state.listingFilter) || {};
   const { list_data } = useSelector((state) => state.listData) || {};
+  const [ isLogin, setLogin ] = useState(false);
+  const [ customer_id, setCustomerId ] =  useState('');
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -26,6 +29,12 @@ const CarPropertes = () => {
 
   async function initialLoad(){
     const search = await JSON.parse(localStorage.getItem('searchObject'));
+    const loginData = await JSON.parse(localStorage.getItem('loginData'));
+
+    if (Object.keys(loginData).length !== 0) {
+      setCustomerId(loginData.id);
+      setLogin(true);
+    }
     setSearchData(search)
     console.log("1ss",search)
     listingData(search);
@@ -40,6 +49,7 @@ const CarPropertes = () => {
       "price_to" : price_to,
       "suppliers" : suppliers,
       "sort" : sort,
+      "customer_id" : customer_id,
       "page" : page,
       "limit" : limit
     }
@@ -47,6 +57,31 @@ const CarPropertes = () => {
     let packageList = await listingDataApi(reqObj)
     console.log("response",packageList)
     dispatch(add_list_data(packageList))
+  }
+
+  const handleWishlist =async (wishlist,pId) =>{
+    let reqObj= {
+      customer_id :customer_id,
+      vehicle_id : pId
+    }
+    if(wishlist){
+      reqObj.flag = false;
+     
+      let wishlisted = await isWishlist(reqObj);
+      if(wishlisted.code == 200){
+        initialLoad();
+      }
+    }else{
+      reqObj.flag = true;
+      let wishlisted = await isWishlist(reqObj);
+      if(wishlisted.code == 200){
+        initialLoad();
+      }
+    } 
+    
+  
+
+
   }
   return (
     <>
@@ -79,11 +114,26 @@ const CarPropertes = () => {
                                   alt="image"
                                 />
                               </div>
+                              { isLogin ? (
                               <div className="cardImage__wishlist">
-                                <button className="button -blue-1 bg-white size-30 rounded-full shadow-2">
-                                  <i className="icon-heart text-12"></i>
+
+                                <button className="button -blue-1 bg-white size-30 rounded-full shadow-2" onClick={() => handleWishlist(item.wishlist,item.id)} >
+                                  <svg
+                                    height="20px"
+                                    version="1.1"
+                                    viewBox="0 0 512 512"
+                                    width="20px"  
+                                    xmlns="http://www.w3.org/2000/svg"
+                                  >
+                                    <path
+                                      d="M340.8,83C307,83,276,98.8,256,124.8c-20-26-51-41.8-84.8-41.8C112.1,83,64,131.3,64,190.7c0,27.9,10.6,54.4,29.9,74.6  L245.1,418l10.9,11l10.9-11l148.3-149.8c21-20.3,32.8-47.9,32.8-77.5C448,131.3,399.9,83,340.8,83L340.8,83z"
+                                      fill={ item.wishlist ? "red"  : null}
+                                    />
+                                  </svg>
                                 </button>
-                              </div>
+                              </div>)
+                              : null
+                            }
                             </div>
                           </SwiperSlide>
                         ))}
@@ -130,21 +180,21 @@ const CarPropertes = () => {
                       <div className="col-sm-6">
                         <div className="d-flex items-center">
                           <TbLineHeight />
-                          <div className="text-14 ml-10">{item?.length}feat</div>
+                          <div className="text-14 ml-10">{item?.length} feat</div>
                         </div>
                       </div>
                       <div className="col-sm-6">
                         <div className="d-flex items-center">
                           <TbArrowAutofitWidth />
                           <div className="text-14 ml-10">
-                            {item?.breadth}feat
+                            {item?.breadth} feat
                           </div>
                         </div>
                       </div>
                       <div className="col-sm-6">
                         <div className="d-flex items-center">
                           <TbArrowAutofitHeight />
-                          <div className="text-14 ml-10">{item?.height}feat</div>
+                          <div className="text-14 ml-10">{item?.height} feat</div>
                         </div>
                       </div>
                       <div className="col-sm-6">
