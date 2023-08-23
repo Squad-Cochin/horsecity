@@ -905,7 +905,7 @@ module.exports = class invoices
                         {
                             let ra = paymentRecordData[0].total_amount - amount
                             let upQuery = `UPDATE ${constants.tableName.payment_records} pr SET pr.invoice_prefix_id = '${paymentRecordData[0].invoice_prefix_id}', pr.received_amount = ${amount}, pr.received_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', pr.remaining_amount = ${ra}, pr.status = '${constants.status.partPaid}', pr.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE pr.invoice_id = ${Id}`;
-                            console.log(upQuery);
+                            // console.log(upQuery);
                             con.query(upQuery, (err, result) =>
                             {                            
                                 if(result.affectedRows > 0)
@@ -927,13 +927,13 @@ module.exports = class invoices
                             let latestData = `SELECT * FROM payment_records WHERE invoice_id = '${Id}' ORDER BY remaining_amount ASC LIMIT 1`;
                             con.query(latestData, (err, result) =>
                             {
-                                console.log('Latest Data: ', result);
+                                // console.log('Latest Data: ', result);
                                 let ra = result[0].remaining_amount - amount
                                 // console.log('ra: ', ra);
                                 if(ra > 0)
                                 {
                                     let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, invoice_prefix_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, '${result[0].invoice_prefix_id}', ${result[0].total_amount}, ${amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${ra}, '${constants.status.partPaid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                                    console.log(insQuery);
+                                    // console.log(insQuery);
                                     con.query(insQuery, (err, result) =>
                                     {
                                         if(result.affectedRows > 0)
@@ -952,13 +952,28 @@ module.exports = class invoices
                                 if(ra == 0)
                                 {
                                     let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, invoice_prefix_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, '${result[0].invoice_prefix_id}', ${result[0].total_amount}, ${amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${ra}, '${constants.status.paid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                                    console.log(insQuery);
-                                    con.query(insQuery, (err, result) =>
+                                    // console.log(insQuery);
+                                    con.query(insQuery, (err, insResult) =>
                                     {
-                                        if(result.affectedRows > 0)
+                                        if(insResult.affectedRows > 0)
                                         {
                                             console.log('Insert query executed, Payment is fully made');
-                                            resolve('fullypaid')
+                                            let updateBookingTable = `UPDATE ${constants.tableName.bookings} b SET b.status = '${constants.status.paid}', b.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE b.inv_id = ${Id} AND b.invoice_prefix_id = '${result[0].invoice_prefix_id}' AND b.booking_status <> 'BREAKOUT' AND b.booking_status <> 'COMPLETED' AND b.status = 'PENDING' `
+                                            // console.log(`Update query when the amount is fully paid: `, updateBookingTable);
+                                            con.query(updateBookingTable, (err, upBoResult) =>
+                                            {
+                                                if(upBoResult.affectedRows > 0)
+                                                {
+                                                    console.log(`Data is successfully entered in the payment records and bookings table. `);
+                                                    resolve('fullypaid');
+                                                }
+                                                else
+                                                {
+                                                    console.log(`Error while executing the update query in the booking table. Which need to be executed when the amount is fully paid by the customer`);
+                                                    console.log(err);
+                                                    resolve('err');
+                                                }
+                                            });
                                         }
                                         else
                                         {
@@ -1143,10 +1158,10 @@ module.exports = class invoices
 
                     const insQuery = `INSERT INTO bookings(customer_id, inv_id, invoice_prefix_id, service_provider_id, vehicle_id, driver_id, taxation_id, discount_type_id, status, booking_status, pickup_location, pickup_country, pickup_date, pickup_time, drop_location, drop_country, drop_date, drop_time ,confirmation_sent, sub_total, tax_amount, discount_amount, final_amount, created_at) VALUES(${data2[0].customer_id}, ${data[0].id}, '${data[0].invoice_no}', ${data[0].service_provider_id}, ${data[0].vehicle_id}, ${data[0].driver_id}, ${data2[0].taxation_id}, ${data2[0].discount_type_id}, 'PENDING', 'CONFIRM', '${data[0].pickup_point}', '${data2[0].pickup_country}', '${time.changeDateToSQLFormat(data2[0].pickup_date)}', '${data2[0].pickup_time}','${data[0].drop_point}', '${data2[0].drop_country}', '${time.changeDateToSQLFormat(data2[0].drop_date)}', '${data2[0].drop_time}', 'YES',  ${data[0].sub_total},  ${data[0].tax_amount},  ${data[0].discount_amount},  ${data[0].final_amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
 
-                    console.log('Insert Booking Query: ',insQuery);
+                    // console.log('Insert Booking Query: ',insQuery);
                     con.query(insQuery, (err, result) =>
                     {
-                        console.log(`Insert result of the booking : `, result);
+                        // console.log(`Insert result of the booking : `, result);
                         if(result === 'undefined')
                         {
                             resolve('NotEntered')
@@ -1159,7 +1174,7 @@ module.exports = class invoices
                         if(result.affectedRows > 0)
                         {
                             let upQuery = `UPDATE invoices i SET i.status = 'STARTED' WHERE i.id = ${Id}`;
-                            console.log('Update Query: ', upQuery);
+                            // console.log('Update Query: ', upQuery);
                             con.query(upQuery, (err, result2) =>
                             {
                                 if(err)

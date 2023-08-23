@@ -568,7 +568,7 @@ module.exports = class customers
     {
         try
         {
-            return new Promise (async(resolve, reject)=>
+            return await new Promise (async(resolve, reject)=>
             {
                 let selQuery = `SELECT 
                                 c.id,
@@ -611,6 +611,367 @@ module.exports = class customers
            console.log(`Error from the try catch block of the getparticularcustomerlogs model from the customer.model.js`); 
         }        
     };
-    
+
+    static async getparticularcustomerdashboard(Id)
+    {
+        try
+        {
+            return await new Promise (async (resolve, reject)=>
+            {
+                let countQuery = `SELECT
+                COALESCE((SELECT COUNT(b.id) FROM ${constants.tableName.bookings} b WHERE b.customer_id = ${Id}), 0) AS total_booking,
+                COALESCE((SELECT COUNT(b.id) FROM ${constants.tableName.bookings} b WHERE b.customer_id = ${Id} AND b.booking_status = 'COMPLETED'), 0) AS total_completed_booking,
+                COALESCE((SELECT COUNT(b.id) FROM ${constants.tableName.bookings} b WHERE b.customer_id = ${Id} AND b.booking_status = 'CONFIRM'), 0) AS total_confirm_booking,
+                COALESCE((SELECT SUM(b.final_amount) FROM ${constants.tableName.bookings} b WHERE b.customer_id = ${Id} AND b.status = 'PAID'), 0) AS total_paid_amount,
+                COALESCE((SELECT SUM(b.final_amount) FROM ${constants.tableName.bookings} b WHERE b.customer_id = ${Id} AND b.status = 'PENDING'), 0) AS total_pending_amount,
+                COALESCE((SELECT COUNT(e.id) FROM ${constants.tableName.enquiries} e WHERE e.customer_id = ${Id} ), 0) AS total_enquiry,
+                COALESCE((SELECT COUNT(e.id) FROM ${constants.tableName.enquiries} e WHERE e.customer_id = ${Id} AND e.status = 'CONFIRMED'), 0) AS total_enquiry_confirmed,
+                COALESCE((SELECT COUNT(e.id) FROM ${constants.tableName.enquiries} e WHERE e.customer_id = ${Id} AND e.status = 'NOTCONFIRMED'), 0) AS total_enquiry_not_confirmed,
+                COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q WHERE q.customer_id = ${Id} ), 0) AS total_quotation,
+                COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q WHERE q.customer_id = ${Id} AND q.status = 'CONFIRMED'), 0) AS total_quotation_confirmed,
+                COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q WHERE q.customer_id = ${Id} AND q.status = 'NOTCONFIRMED'), 0) AS total_quotation_not_confirmed`;
+                // console.log(`Query of the count:`, countQuery);
+                con.query(countQuery, (err, result1) =>
+                {
+                    if(err)
+                    {
+                        console.log(`Error while executing the count query from the customer dashboard model function`);
+                        console.log(err);
+                        resolve('err')
+                    }
+                    else
+                    {
+                        let recentBookingQuery = `  SELECT 
+                                                    b.id AS booking_id,
+                                                    p.id AS payment_id,
+                                                    s.name,
+                                                    b.pickup_location,
+                                                    b.drop_location,
+                                                    b.final_amount,
+                                                    p.remaining_amount,
+                                                    b.booking_status 
+                                                    FROM
+                                                    ${constants.tableName.service_providers} s
+                                                    INNER JOIN ${constants.tableName.bookings} b ON b.service_provider_id = s.id
+                                                    LEFT JOIN ${constants.tableName.payment_records} p ON p.invoice_prefix_id = b.invoice_prefix_id
+                                                    WHERE b.customer_id = ${Id}
+                                                    AND p.id = ( SELECT MAX(pr.id) FROM ${constants.tableName.payment_records} pr WHERE pr.invoice_prefix_id = b.invoice_prefix_id )
+                                                    ORDER BY p.id DESC LIMIT 5`;
+                        // console.log(`Query for the recent booking: `, recentBookingQuery);                            
+                        con.query(recentBookingQuery, async (err, result2) =>
+                        {
+                            if(err)
+                            {
+                                console.log(`Error while executing the fetching 5 recent query from the customer dashboard model function`);
+                                console.log(err);
+                                resolve('err')
+                            }
+                            else
+                            {
+                                // console.log(`Result 1: `, result1);
+                                // console.log(`Result 2: `, result2);
+                                let remainingamount = await remainingAmount(Id);
+                                let PaidAmount = await paidAmount(Id);
+                                // console.log('Remaining Amount: ', remainingamount);
+                                // console.log('Paid Amount: ', PaidAmount);
+                                if(remainingamount == 'false' && PaidAmount == 'false')
+                                {
+                                    // console.log(`If block`);
+                                    let result = customizeCustomerDashboardData(result1, result2, 0, 0)
+                                    resolve(result);
+                                    // remainingAmount(Id);
+                                }
+                                else
+                                {
+                                    // console.log(`Else block`);
+                                    // console.log(result1);
+                                    // console.log(result2);
+                                    let result = customizeCustomerDashboardData(result1, result2, remainingamount, PaidAmount)
+                                    resolve(result);
+                                    // remainingAmount(Id);
+                                }
+                            }
+                        });
+                    }
+                });                
+            });        
+        }
+        catch (error)
+        {
+            console.log(`Error while fetching the dashboard data of the customer from the backend. Please check the getparticularcustomerdasboard model in the customer.model.js`);                        
+        }
+    }
+
+    static async getparticularbookindetailscompleted(Id)
+    {
+        try
+        {
+            return await new Promise(async (resolve, reject) =>
+            {
+                let query = ` SELECT
+                    b.id,
+                    s.name,
+                    b.pickup_location,
+                    b.drop_location,
+                    b.booking_status,
+                    b.final_amount,
+                    CASE
+                        WHEN pr_check.status = 'PAID' THEN 0
+                        ELSE latest_payment.remaining_amount
+                    END AS remaining_amount
+                FROM service_providers s
+                INNER JOIN bookings b ON b.service_provider_id = s.id
+                LEFT JOIN (
+                    SELECT
+                        pr.invoice_id,
+                        pr.remaining_amount
+                    FROM payment_records pr
+                    WHERE pr.id IN (
+                        SELECT MAX(pr_inner.id)
+                        FROM payment_records pr_inner
+                        WHERE pr_inner.status <> 'PAID'
+                        GROUP BY pr_inner.invoice_id
+                    )
+                ) AS latest_payment ON latest_payment.invoice_id = b.inv_id
+                LEFT JOIN payment_records pr_check ON pr_check.invoice_id = b.inv_id AND pr_check.status = 'PAID'
+                WHERE b.customer_id = ${Id}
+                    AND b.booking_status = 'COMPLETED' `;
+                    
+                let result = await queryAsync(query)
+                if(result == 'err')
+                {
+                    resolve('err');
+                }
+                else
+                {
+                    resolve(result);
+                }
+            });
+        }
+        catch (error)
+        {
+         console.log(`Error from the try catch block of the getparticularbookindetailscompleted model file function`);
+        }
+    };
+
+    static async getparticularbookindetailsconfirm(Id)
+    {
+        try
+        {
+            return await new Promise(async (resolve, reject) =>
+            {
+                let query = ` SELECT
+                    b.id,
+                    s.name,
+                    b.pickup_location,
+                    b.drop_location,
+                    b.booking_status,
+                    b.final_amount,
+                    CASE
+                        WHEN pr_check.status = 'PAID' THEN 0
+                        ELSE latest_payment.remaining_amount
+                    END AS remaining_amount
+                FROM service_providers s
+                INNER JOIN bookings b ON b.service_provider_id = s.id
+                LEFT JOIN (
+                    SELECT
+                        pr.invoice_id,
+                        pr.remaining_amount
+                    FROM payment_records pr
+                    WHERE pr.id IN (
+                        SELECT MAX(pr_inner.id)
+                        FROM payment_records pr_inner
+                        WHERE pr_inner.status <> 'PAID'
+                        GROUP BY pr_inner.invoice_id
+                    )
+                ) AS latest_payment ON latest_payment.invoice_id = b.inv_id
+                LEFT JOIN payment_records pr_check ON pr_check.invoice_id = b.inv_id AND pr_check.status = 'PAID'
+                WHERE b.customer_id = ${Id}
+                    AND b.booking_status = 'CONFIRM' `;
+                    
+                let result = await queryAsync(query)
+                if(result == 'err')
+                {
+                    resolve('err');
+                }
+                else
+                {
+                    resolve(result);
+                }
+            });
+        }
+        catch (error)
+        {
+         console.log(`Error from the try catch block of the getparticularbookindetailscompleted model file function`);
+        }
+    };
+
+
+
 };
 
+
+const customizeCustomerDashboardData = (value1, value2, rAmount, pAmount) =>
+{
+    return {
+        count: {
+            total_booking: value1[0].total_booking,
+            total_pending_booking: value1[0].total_confirm_booking,
+            total_paid_amount: pAmount,
+            total_pending_amount: rAmount
+        },
+        bookings: value2.map(item => ({
+            id: item.booking_id,
+            service_provider_name: item.name,
+            pickup_location: item.pickup_location,
+            drop_location: item.drop_location,
+            pending_amount: item.remaining_amount,
+            final_amount: item.final_amount,
+            booking_status: item.booking_status
+        }))
+    };
+}
+
+const remainingAmount = async (Id) => {
+    return await new Promise(async (resolve, reject) => {
+
+        let getQuotationDataOnCustomerId = `SELECT * FROM ${constants.tableName.quotations} q WHERE q.customer_id = ${Id} AND q.status = 'CONFIRMED'`
+        let result1 = await queryAsync(getQuotationDataOnCustomerId)
+        if (result1?.length !== 0)
+        {
+            // console.log(result1.length);
+            var result2 = [];
+            var invoiceId = [];
+            var remainingAmountEntry = [];
+            for (let i = 0; i < result1.length; i++)
+            {
+                result2[i] = await commonfetching.dataOnCondition(constants.tableName.invoices, result1[i].id, 'quot_id');
+                // console.log(result2[i][0].id);
+                // Push the id value into the invoiceId array
+                invoiceId.push(result2[i][0].id);
+            }
+            // console.log(invoiceId); // This will log the invoiceId array
+            for (let i = 0; i < invoiceId.length; i++)
+            {
+                let dataFromThePaymentRecords = `SELECT 
+                pr.remaining_amount
+                FROM payment_records pr
+                WHERE pr.invoice_id = ${invoiceId[i]}
+                AND pr.status <> 'PAID'
+                AND NOT EXISTS (
+                SELECT 1
+                FROM payment_records pr_paid
+                WHERE pr_paid.invoice_id = pr.invoice_id
+                AND pr_paid.status = 'PAID'
+                )
+                ORDER BY pr.created_at DESC
+                LIMIT 1`
+                // console.log(dataFromThePaymentRecords);
+                let result3 = await queryAsync(dataFromThePaymentRecords)
+                // console.log('Result 3: ', result3);
+                if(result3?.length !== 0)
+                {
+                    remainingAmountEntry.push(parseFloat(result3[0].remaining_amount)); // Parse as float
+                    //  }
+                    // remainingAmountEntry.push(result3[0].remaining_amount);
+                }
+            }
+            // console.log(remainingAmountEntry);
+            const totalRemainingAmountSum = remainingAmountEntry.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+            // console.log(totalRemainingAmountSum);
+            resolve(totalRemainingAmountSum)
+        }
+        else 
+        {
+            resolve(false);
+        }
+    });
+};
+
+const paidAmount = async (Id) => 
+{
+    return await new Promise(async (resolve, reject) =>
+    {
+        let getQuotationDataOnCustomerId = `SELECT * FROM ${constants.tableName.quotations} q WHERE q.customer_id = ${Id} AND q.status = 'CONFIRMED'`
+        let result1 = await queryAsync(getQuotationDataOnCustomerId)
+        if (result1?.length !== 0)
+        {
+            // console.log(result1.length);
+            var result2 = [];
+            var invoiceId = [];
+            var paidAmount = [];
+            for (let i = 0; i < result1.length; i++)
+            {
+                result2[i] = await commonfetching.dataOnCondition(constants.tableName.invoices, result1[i].id, 'quot_id');
+                // console.log(result2[i][0].id);
+                // Push the id value into the invoiceId array
+                invoiceId.push(result2[i][0].id);
+            }
+            console.log(invoiceId); // This will log the invoiceId arra
+            for (let i = 0; i < invoiceId.length; i++)
+            {
+                // let dataFromThePaymentRecords = `SELECT 
+                // COALESCE(SUM(pr.received_amount), 0) AS paid_amount
+                // FROM payment_records pr
+                // WHERE pr.invoice_id = ${invoiceId[i]}
+                // AND pr.status = 'PARTIALLY PAID'
+                // AND NOT EXISTS (
+                // SELECT 1
+                // FROM payment_records pr_paid
+                // WHERE pr_paid.invoice_id = pr.invoice_id
+                // AND pr_paid.status = 'PAID') ORDER BY pr.created_at DESC
+                // LIMIT 1`
+                let dataFromThePaymentRecords = `
+                SELECT 
+                CASE
+                    WHEN COALESCE(SUM(pr.received_amount), 0) = 0
+                    THEN (SELECT pr.total_amount FROM payment_records pr WHERE pr.invoice_id = ${invoiceId[i]} AND pr.status = 'PAID' LIMIT 1)
+                    ELSE COALESCE(SUM(pr.received_amount), 0)
+                    END AS paid_amount
+                    FROM payment_records pr
+                    WHERE pr.invoice_id = ${invoiceId[i]}
+                    AND pr.status = 'PARTIALLY PAID'
+                    AND NOT EXISTS (
+                    SELECT 1
+                    FROM payment_records pr_paid
+                    WHERE pr_paid.invoice_id = pr.invoice_id
+                    AND pr_paid.status = 'PAID')
+                    ORDER BY pr.created_at DESC
+                    LIMIT 1`;
+                // console.log(dataFromThePaymentRecords);
+                let result3 = await queryAsync(dataFromThePaymentRecords)
+                // console.log('Result 3: ', result3);
+                if(result3?.length !== 0)
+                {
+                    paidAmount.push(parseFloat(result3[0].paid_amount)); // Parse as float
+                }
+            }
+            // console.log(paidAmount);
+            const totalPaidAmountSum = paidAmount.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
+            // console.log(totalPaidAmountSum);
+            resolve(totalPaidAmountSum)
+        }
+        else
+        {
+            resolve(false);
+        }        
+    });
+};
+
+function queryAsync(query)
+{
+    return new Promise((resolve, reject) =>
+    {
+        con.query(query, (err, result) =>
+        {
+            if (err)
+            {
+                reject(err);
+            }
+            else
+            {
+                resolve(result);
+            }
+        });
+    });
+}

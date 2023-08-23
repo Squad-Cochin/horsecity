@@ -84,10 +84,28 @@ module.exports = (app) =>
     // checkInput.isCustomerIdProofImageSubmitted,
     customerController.signup);
 
-    app.get(`/${process.env.apiToken}/customer/logs/:id`,    
+    app.get(`/${process.env.apiToken}/customer/logs/:id`,
+    validateHeaders.verifyToken,   
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.getParticularCustomerLogs
     );
+
+
+    app.get(`/customer/dasboard/:id`,
+    validateHeaders.verifyToken,   
+    isValidIdInTheParams(constants.tableName.customers), 
+    customerController.getParticularCustomerDashboard
+    );
+
+    app.get(`/customer/booking/completed/:id`,
+    validateHeaders.verifyToken,   
+    isValidIdInTheParams(constants.tableName.customers), 
+    customerController.getParticularBookinDetailsCompleted);
+
+    app.get(`/customer/booking/confirm/:id`,
+    validateHeaders.verifyToken,   
+    isValidIdInTheParams(constants.tableName.customers), 
+    customerController.getParticularBookinDetailsConfirm);
 
 
 }
