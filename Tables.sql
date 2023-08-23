@@ -446,7 +446,16 @@ CREATE TABLE payment_records (
     updated_at DATETIME DEFAULT NULL
 );
 
-
+CREATE TABLE wishlist
+(
+    id INT(11) PRIMARY KEY AUTO_INCREMENT,
+    customer_id INT(11),
+    FOREIGN KEY (customer_id) REFERENCES customers(id),
+    vehicle_id INT(11),
+    FOREIGN KEY (vehicle_id) REFERENCES vehicles(id),
+    created_at DATETIME,
+    deleted_at DATETIME DEFAULT NULL
+);
 
 ALTER TABLE enquiries
 ADD pickup_date DATE NOT NULL;

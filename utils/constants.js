@@ -201,7 +201,8 @@ module.exports =
         vehicles_breakouts : `vehicles_breakouts`,
         vehicles_images : `vehicles_images`,
         assign_drivers : `assign_drivers`,
-        payment_records : `payment_records`
+        payment_records : `payment_records`,
+        wishlist : `wishlist`
     },
 
     roles :

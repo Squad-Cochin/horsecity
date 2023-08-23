@@ -11,4 +11,4 @@ module.exports = function(app)
     app.get(`/${process.env.apiToken}/getOne/enquiry/:id`, enquiry.getOneEnquiry);
 
 
-} 
+}  

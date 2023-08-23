@@ -18,7 +18,7 @@ static async listingPageData  (body)
     return new Promise(async (resolve, reject) => {
         try { 
  
-        const { trip_type, number_of_horses, price_from, price_to, suppliers, sort, page, limit } = body;
+        const { trip_type, number_of_horses, price_from, price_to, suppliers, sort, page, limit,customer_id } = body;
 
         // Calculate the offset based on the current page and limit
         const offset = (page - 1) * limit;
@@ -71,22 +71,31 @@ static async listingPageData  (body)
          
         // final SQL query
         let selQuery = `
-        SELECT vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse, vh.height,
-       GROUP_CONCAT(vimg.image) AS images
-FROM ${constants.tableName.vehicles} vh
-LEFT JOIN vehicles_images AS vimg ON vh.id = vimg.vehicle_id AND vimg.status = "${constants.status.active}"
-WHERE 1=1
-${gccType}
-${tripTypeFilter}
-${numberOfHorsesFilter}
-${priceFilter}
-${suppliersFilter} AND vh.deleted_at IS NULL AND vh.status = '${constants.status.active}'
-GROUP BY vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse
-${sorted}
-LIMIT ${+limit} OFFSET ${+offset};
+                SELECT vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse, vh.height,
+                GROUP_CONCAT(vimg.image) AS images,wl.created_at,wl.deleted_at
 
-    `;
-   
+        FROM ${constants.tableName.vehicles} vh
+        LEFT JOIN vehicles_images AS vimg ON vh.id = vimg.vehicle_id AND vimg.status = "${constants.status.active}"
+        LEFT JOIN (
+            SELECT MAX(id) AS max_id,vehicle_id,  created_at, deleted_at
+            FROM wishlist
+            GROUP BY vehicle_id 
+        ) AS w ON vh.id = w.vehicle_id 
+        LEFT JOIN wishlist AS wl ON w.max_id = wl.id ${customer_id ? `AND wl.customer_id = ${customer_id}` : ''}
+
+
+        WHERE 1=1
+        ${gccType}
+        ${tripTypeFilter}
+        ${numberOfHorsesFilter}
+        ${priceFilter}
+        ${suppliersFilter} AND vh.deleted_at IS NULL AND vh.status = '${constants.status.active}'
+        GROUP BY vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse
+        ${sorted}
+        LIMIT ${+limit} OFFSET ${+offset};
+
+            `;
+        
          
         // console.log(selQuery); // Print the constructed query for debugging
         con.query(selQuery,(err,data)=>{
@@ -104,6 +113,12 @@ LIMIT ${+limit} OFFSET ${+offset};
                      }else{
                         data[i].images = [];
                      } 
+
+                     if(data[i].created_at && data[i].deleted_at || (!data[i].created_at && !data[i].deleted_at)){
+                        data[i].wishlist = false;
+                     }else if(data[i].created_at){
+                        data[i].wishlist = true;
+                     }
                 } 
  
                 const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.vehicles} vh

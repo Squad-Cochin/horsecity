@@ -117,17 +117,18 @@ static async getOneEnquiry(id)
     return new Promise((resolve, reject) =>
     {
         try
-        {     
+        {   
             const selQuery = `SELECT enq.id, cu.name AS customer_name,cu.id AS customer_id ,cu.contact_no AS customer_contact_no ,sp.name AS service_provider_name,sp.id AS service_provider_id,enq.trip_type,enq.drop_country,enq.pickup_country,  vh.id AS vehicle_id, vh.vehicle_number,enq.no_of_horse,enq.created_at, enq.pickup_location, enq.pickup_date, enq.drop_location, enq.description
-            FROM ${constants.tableName.enquiries} AS enq
+            FROM ${constants.tableName.enquiries} AS enq 
             JOIN ${constants.tableName.customers} cu ON enq.customer_id = cu.id
             JOIN ${constants.tableName.vehicles} vh ON enq.vehicle_id = vh.id
             JOIN ${constants.tableName.service_providers} sp ON enq.serviceprovider_id = sp.id
             WHERE enq.id = '${id}'`
-
-            con.query(selQuery,async(err,data)=>{
-                if(data?.length != 0){
-
+            console.log('14578', selQuery);
+            con.query(selQuery,async(err,data)=>{ 
+                console.log(err,data);  
+                if(data?.length != 0){ 
+ 
                     data[0].created_at = `${time.formatDateToDDMMYYYY(
                         data[0].created_at
                       )}`;
@@ -148,7 +149,7 @@ static async getOneEnquiry(id)
                         }
                     })
                 }else{
-                    resolve({enquiry : []})
+                    resolve({enquiry : []}) 
                 }
             })
         }catch(err){

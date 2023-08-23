@@ -13,7 +13,7 @@ module.exports = class enquiries
         {
             return await new Promise(async (resolve, reject) =>
             {
-                console.log("comee");
+                console.log(Id, vehicle_Id, service_provider_Id, pickup_Location, drop_Location, trip_Type, pickup_Country, drop_Country, horse, description,pickup_date);
                 let insQuery = `INSERT INTO ${constants.tableName.enquiries}(customer_id, vehicle_id, serviceprovider_id, pickup_location, drop_location, trip_type, pickup_country, drop_country, no_of_horse,pickup_date, description, status, created_at) VALUES(
                 ${Id}, ${vehicle_Id}, ${service_provider_Id}, '${pickup_Location}', '${drop_Location}', '${trip_Type}', '${pickup_Country}', '${drop_Country}', '${horse}','${pickup_date}', '${description}', '${constants.enquiry_status.notconfirmed}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' )`;
                  console.log(`Insert into enquiries table query: `, insQuery);
