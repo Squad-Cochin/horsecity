@@ -92,7 +92,7 @@ const ListEnquiriesTable = () => {
         drop_date : "",
         pickup_time : "",
         drop_time : "",
-        pickup_date : "",
+        pickup_date : enquiry ? enquiry[0]?.pickup_date : "",
         discount_type_id : "",
         driver_id : "",
         final_amount : "",
@@ -170,6 +170,7 @@ const ListEnquiriesTable = () => {
     const tog_confirm = async (id) => 
     {
         let singleEnqData = await getSingleEnquiryData(id)
+        console.log("singleP",singleEnqData);
         let serviceProviderData = await getSPUserName()
         const sPVechilesData = await getSPVehiclesData(singleEnqData.enquiry[0]?.service_provider_id) 
         setSPVechiles(sPVechilesData.vehicles)
@@ -733,7 +734,7 @@ const ListEnquiriesTable = () => {
                                     dateFormat: "d-m-Y",
                                     minDate : new Date()
                                 }}
-                                value= ""
+                                value= {validation.values.pickup_date || ""}
                                 onChange={(dates) =>validation.setFieldValue('pickup_date', dates[0])}
                                 placeholder={validation.values.pickup_date || "Select Date"}
                             />
