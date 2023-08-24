@@ -16,13 +16,15 @@ module.exports = class wishlist
         try
         {       
             const { customer_id, vehicle_id, flag} = body ;
-            console.log(body);
+               
+            console.log("sdhfksd",JSON.parse(flag));
             if(JSON.parse(flag)){
                 let insQuery = `INSERT INTO ${constants.tableName.wishlist}(customer_id , vehicle_id,created_at)
                 VALUES ('${customer_id}', '${vehicle_id}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`
                 con.query(insQuery,(err,result)=>{ 
+
                     if(!err){ 
-                            resolve(true)
+                            resolve(true) 
                     }
                     })
             }else{
@@ -39,7 +41,7 @@ module.exports = class wishlist
             }
          
         }catch(err){
-            console.log('Error while feching currencies', err); 
+            console.log('Error in wishlist', err); 
         }
 
 
@@ -54,19 +56,25 @@ static async wishlistItems(cuId)
     {
         try
         {       
-           
-let selQuery = `
-    SELECT vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse, vh.height
- 
-    FROM wishlist w 
-    JOIN vehicles AS vh ON w.vehicle_id = vh.id
-            
-    WHERE w.customer_id = '${cuId}' AND w.deleted_at IS NULL;
-`;
+
+
+            let selQuery = `
+            SELECT vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse, vh.height,
+            CASE
+                WHEN COUNT(vimg.image) > 0 THEN GROUP_CONCAT(vimg.image)
+                ELSE NULL
+            END AS images
+        FROM wishlist w 
+        JOIN vehicles AS vh ON w.vehicle_id = vh.id
+        LEFT JOIN vehicles_images vimg ON w.vehicle_id = vimg.vehicle_id   AND vimg.status = "${constants.status.active}"
+        WHERE w.customer_id = '${cuId}' AND w.deleted_at IS NULL
+        GROUP BY vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse, vh.height;
+        
+        `;
 
                    con.query(selQuery,(err,result)=>{ 
                     console.log(err,result);
-                    if(!err){ 
+                    if(!err){   
                         for(let i = 0;i < result.length ;  i++){
            
                             if(result[i].images){
