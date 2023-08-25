@@ -76,8 +76,8 @@ module.exports = class serviceProviders
                                 JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                                 JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
                                 WHERE pm.role_id = '${role_id}'  AND md.id = '${constants.modules.service_provider}'`;
-                              console.log(Query);
-                               console.log(role_id);
+                            //   console.log(Query);
+                            //    console.log(role_id);
                                     con.query(Query,(err,result)=>{
                                         // console.log("result",result);
                                         if(!err){

@@ -629,7 +629,11 @@ module.exports = class customers
                 COALESCE((SELECT COUNT(e.id) FROM ${constants.tableName.enquiries} e WHERE e.customer_id = ${Id} AND e.status = 'NOTCONFIRMED'), 0) AS total_enquiry_not_confirmed,
                 COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q WHERE q.customer_id = ${Id} ), 0) AS total_quotation,
                 COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q WHERE q.customer_id = ${Id} AND q.status = 'CONFIRMED'), 0) AS total_quotation_confirmed,
-                COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q WHERE q.customer_id = ${Id} AND q.status = 'NOTCONFIRMED'), 0) AS total_quotation_not_confirmed`;
+                COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q WHERE q.customer_id = ${Id} AND q.status = 'NOTCONFIRMED'), 0) AS total_quotation_not_confirmed,
+                COALESCE((SELECT COUNT(i.id) FROM ${constants.tableName.quotations} q LEFT JOIN invoices i ON q.id = i.quot_id AND i.status = 'ACTIVE' WHERE q.customer_id = ${Id}), 0) AS total_invoices_not_started,
+                COALESCE((SELECT COUNT(i.id) FROM ${constants.tableName.quotations} q LEFT JOIN invoices i ON q.id = i.quot_id AND i.status = 'STARTED' WHERE q.customer_id = ${Id}), 0) AS total_invoice_started,
+                COALESCE((SELECT COUNT(i.id) FROM ${constants.tableName.quotations} q LEFT JOIN invoices i ON q.id = i.quot_id AND i.status = 'INACTIVE' WHERE q.customer_id = ${Id}), 0) AS total_invoice_cancelled,
+                COALESCE((SELECT COUNT(i.id) FROM ${constants.tableName.quotations} q LEFT JOIN invoices i ON q.id = i.quot_id WHERE q.customer_id = ${Id}), 0) AS total_invoices`;
                 // console.log(`Query of the count:`, countQuery);
                 con.query(countQuery, (err, result1) =>
                 {
@@ -641,24 +645,45 @@ module.exports = class customers
                     }
                     else
                     {
-                        let recentBookingQuery = `  SELECT 
-                                                    b.id AS booking_id,
-                                                    p.id AS payment_id,
-                                                    s.name,
-                                                    b.pickup_location,
-                                                    b.drop_location,
-                                                    b.final_amount,
-                                                    p.remaining_amount,
-                                                    b.booking_status 
-                                                    FROM
-                                                    ${constants.tableName.service_providers} s
-                                                    INNER JOIN ${constants.tableName.bookings} b ON b.service_provider_id = s.id
-                                                    LEFT JOIN ${constants.tableName.payment_records} p ON p.invoice_prefix_id = b.invoice_prefix_id
-                                                    WHERE b.customer_id = ${Id}
-                                                    AND p.id = ( SELECT MAX(pr.id) FROM ${constants.tableName.payment_records} pr WHERE pr.invoice_prefix_id = b.invoice_prefix_id )
-                                                    ORDER BY p.id DESC LIMIT 5`;
+                        console.log('Result one:', result1);
+                        // let recentBookingQuery = `  SELECT 
+                        //                             b.id AS booking_id,
+                        //                             p.id AS payment_id,
+                        //                             s.name,
+                        //                             b.pickup_location,
+                        //                             b.drop_location,
+                        //                             b.final_amount,
+                        //                             p.remaining_amount,
+                        //                             b.booking_status 
+                        //                             FROM
+                        //                             ${constants.tableName.service_providers} s
+                        //                             INNER JOIN ${constants.tableName.bookings} b ON b.service_provider_id = s.id
+                        //                             LEFT JOIN ${constants.tableName.payment_records} p ON p.invoice_prefix_id = b.invoice_prefix_id
+                        //                             WHERE b.customer_id = ${Id}
+                        //                             AND p.id = ( SELECT MAX(pr.id) FROM ${constants.tableName.payment_records} pr WHERE pr.invoice_prefix_id = b.invoice_prefix_id )
+                        //                             ORDER BY p.id DESC LIMIT 5`;
+                        let receivedBookingQuery = `SELECT
+                                    e.id,
+                                    s.name AS service_provider_name,
+                                    e.vehicle_id,
+                                    v.vehicle_number,
+                                    v.make,
+                                    v.model,
+                                    e.pickup_location,
+                                    e.drop_location,
+                                    e.trip_type,
+                                    e.no_of_horse,
+                                    e.pickup_date,
+                                    e.status,
+                                    e.created_at
+                                    FROM enquiries e
+                                    INNER JOIN vehicles v ON v.id = e.vehicle_id
+                                    INNER JOIN service_providers s ON s.id = e.serviceprovider_id
+                                    WHERE e.customer_id = ${Id}
+                                    ORDER BY e.created_at DESC
+                                    LIMIT 5`
                         // console.log(`Query for the recent booking: `, recentBookingQuery);                            
-                        con.query(recentBookingQuery, async (err, result2) =>
+                        con.query(receivedBookingQuery, async (err, result2) =>
                         {
                             if(err)
                             {
@@ -668,26 +693,26 @@ module.exports = class customers
                             }
                             else
                             {
-                                // console.log(`Result 1: `, result1);
-                                // console.log(`Result 2: `, result2);
+                                // // console.log(`Result 1: `, result1);
+                                // // console.log(`Result 2: `, result2);
                                 let remainingamount = await remainingAmount(Id);
                                 let PaidAmount = await paidAmount(Id);
-                                // console.log('Remaining Amount: ', remainingamount);
-                                // console.log('Paid Amount: ', PaidAmount);
-                                if(remainingamount == 'false' && PaidAmount == 'false')
-                                {
-                                    // console.log(`If block`);
-                                    let result = customizeCustomerDashboardData(result1, result2, 0, 0)
-                                    resolve(result);
-                                    // remainingAmount(Id);
-                                }
-                                else
-                                {
-                                    console.log(`Else block`);
-                                    // console.log(result1);
-                                    // console.log(result2);
-                                    // console.log(remainingamount);
-                                    // console.log(PaidAmount);
+                                // // console.log('Remaining Amount: ', remainingamount);
+                                // // console.log('Paid Amount: ', PaidAmount);
+                                // if(remainingamount == 'false' && PaidAmount == 'false')
+                                // {
+                                //     // console.log(`If block`);
+                                //     let result = customizeCustomerDashboardData(result1, result2, 0, 0)
+                                //     resolve(result);
+                                //     // remainingAmount(Id);
+                                // }
+                                // else
+                                // {
+                                //     // console.log(`Else block`);
+                                //     // console.log(result1);
+                                //     // console.log(result2);
+                                //     // console.log(remainingamount);
+                                //     // console.log(PaidAmount);
                                     if(!remainingamount && !PaidAmount)
                                     {
                                         console.log(`Else block if`);
@@ -696,12 +721,12 @@ module.exports = class customers
                                     }
                                     else
                                     {
-                                        console.log(`Else block else`);
+                                        // console.log(`Else block else`);
                                         let result = customizeCustomerDashboardData(result1, result2, remainingamount, PaidAmount)
                                         resolve(result);
-                                    // remainingAmount(Id);
+                                        // remainingAmount(Id);
                                     }
-                                }
+                                // }
                             }
                         });
                     }
@@ -818,8 +843,143 @@ module.exports = class customers
         }
     };
 
+    static async getparticularbookindetailscancelled(Id)
+    {
+        try
+        {
+            return await new Promise(async (resolve, reject) =>
+            {
+                let query = `   SELECT
+                                b.id,
+                                s.name,
+                                b.pickup_location,
+                                b.drop_location,
+                                b.booking_status,
+                                b.final_amount,
+                                DATE_FORMAT(b.deleted_at, '%d-%m-%Y %h:%m:%s') AS cancelled_date,
+                                CASE
+                                    WHEN pr_check.status = 'PAID' THEN 0
+                                    ELSE latest_payment.remaining_amount
+                                    END AS remaining_amount
+                                FROM service_providers s
+                                INNER JOIN bookings b ON b.service_provider_id = s.id
+                                LEFT JOIN (
+                                SELECT
+                                pr.invoice_id,
+                                pr.remaining_amount
+                                FROM payment_records pr
+                                WHERE pr.id IN (
+                                SELECT MAX(pr_inner.id)
+                                FROM payment_records pr_inner
+                                WHERE pr_inner.status <> 'PAID'
+                                GROUP BY pr_inner.invoice_id )
+                                ) AS latest_payment ON latest_payment.invoice_id = b.inv_id
+                                LEFT JOIN payment_records pr_check ON pr_check.invoice_id = b.inv_id AND pr_check.status = 'PAID'
+                                WHERE b.customer_id = ${Id}
+                                AND b.booking_status = 'CANCELLED' `;
+                let result = await queryAsync(query)
+                if(result == 'err')
+                {
+                    resolve('err');
+                }
+                else
+                {
+                    resolve(result);
+                }
+            });
+        }
+        catch (error)
+        {
+            console.log(`Error from the try catch block of the getparticularbookindetailscancelled model file function`);
+        }
+    };
 
+    static async getparticularbookindetailsrecent(Id)
+    {
+        try
+        {
+            return await new Promise(async (resolve, reject) =>
+            {
+                let recEnquiry = `  SELECT
+                                    e.id,
+                                    s.name AS service_provider_name,
+                                    e.vehicle_id,
+                                    v.vehicle_number,
+                                    v.make,
+                                    v.model,
+                                    e.pickup_location,
+                                    e.drop_location,
+                                    e.trip_type,
+                                    e.no_of_horse,
+                                    e.pickup_date,
+                                    e.status,
+                                    e.created_at
+                                    FROM enquiries e
+                                    INNER JOIN vehicles v ON v.id = e.vehicle_id
+                                    INNER JOIN service_providers s ON s.id = e.serviceprovider_id
+                                    WHERE e.customer_id = ${Id}
+                                    ORDER BY e.created_at DESC
+                                    LIMIT 5`;
+                // console.log(`Query from the recent enquiry of a particular customer: `, recEnquiry);
+                let queryresult = await queryAsync(recEnquiry);
+                // console.log('Most Recent enuiry: ', queryresult);
+                let result = recentEnquiryCustomizeResponse(queryresult)
+                resolve(result)
+            });
+        }
+        catch (error)
+        {
+            console.log(`Error from the try catch block of the getparticularbookindetailsrecent model file function`);
+        }
+    };
 
+    static async getparticularcustomerallbookings(Id, pageNumber, pageSize)
+    {
+        try
+        {
+            return await new Promise(async (resolve, reject) =>
+            {
+                const offset = (pageNumber - 1) * pageSize;
+                let bookingQuery = `    SELECT
+                                        b.id,
+                        s.name,
+                        b.pickup_location,
+                        b.drop_location,
+                        b.booking_status,
+                        b.final_amount,
+                        CASE
+                            WHEN pr_check.status = 'PAID' THEN 0
+                            ELSE latest_payment.remaining_amount
+                        END AS remaining_amount
+                        FROM service_providers s
+                        INNER JOIN bookings b ON b.service_provider_id = s.id
+                        LEFT JOIN (
+                            SELECT
+                                pr.invoice_id,
+                                pr.remaining_amount
+                            FROM payment_records pr
+                        WHERE pr.id IN (
+                            SELECT MAX(pr_inner.id)
+                            FROM payment_records pr_inner
+                            WHERE pr_inner.status <> 'PAID'
+                            GROUP BY pr_inner.invoice_id
+                            )
+                        )
+                        AS latest_payment ON latest_payment.invoice_id = b.inv_id
+                        LEFT JOIN payment_records pr_check ON pr_check.invoice_id = b.inv_id AND pr_check.status = 'PAID'
+                        WHERE b.customer_id = ${Id} LIMIT ${pageSize} OFFSET ${offset}`;
+                // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
+                let queryresult = await queryAsync(bookingQuery);
+                // // console.log('Most Recent enuiry: ', queryresult);
+                // let result = recentEnquiryCustomizeResponse(queryresult)
+                resolve(queryresult)
+            });
+        }
+        catch (error)
+        {
+            console.log(`Error from the try catch block of the getparticularcustomerallbookings model file function`);
+        }
+    };
 };
 
 
@@ -827,19 +987,30 @@ const customizeCustomerDashboardData = (value1, value2, rAmount, pAmount) =>
 {
     return {
         count: {
-            total_booking: value1[0].total_booking,
-            total_pending_booking: value1[0].total_confirm_booking,
+            // total_enquiry: value1[0].total_enquiry,
+            // total_enquiry_confirmed : value1[0].total_enquiry_confirmed,
+            // total_enquiry_not_confirmed : value1[0].total_enquiry_not_confirmed,
+            total_booking: value1[0].total_invoices,
+            total_pending_booking: value1[0].total_invoices_not_started,
+            // total_enquiry:
             total_paid_amount: pAmount,
             total_pending_amount: rAmount
         },
-        bookings: value2.map(item => ({
-            id: item.booking_id,
-            service_provider_name: item.name,
+        enquiries: value2.map(item => ({
+            // id: item.booking_id,
+            // service_provider_name: item.name,
+            // pickup_location: item.pickup_location,
+            // drop_location: item.drop_location,
+            // pending_amount: item.remaining_amount,
+            // final_amount: item.final_amount,
+            // booking_status: item.booking_status
+            id : item.id,
+            service_provider_name: item.service_provider_name,
+            vehicle_number : item.vehicle_number,
             pickup_location: item.pickup_location,
             drop_location: item.drop_location,
-            pending_amount: item.remaining_amount,
-            final_amount: item.final_amount,
-            booking_status: item.booking_status
+            enquiry_status: item.status,
+            horse : item.no_of_horse
         }))
     };
 }
@@ -862,7 +1033,7 @@ const remainingAmount = async (Id) =>
             {
                 result2[i] = await commonfetching.dataOnCondition(constants.tableName.invoices, result1[i].id, 'quot_id');
                 // console.log(i,result2[i]);
-                console.log(result2[i][0]?.id);
+                // console.log(result2[i][0]?.id);
                 // Push the id value into the invoiceId array
                 if(result2[i].length > 0)
                 {
@@ -870,7 +1041,7 @@ const remainingAmount = async (Id) =>
                     invoiceId.push(result2[i][0].id);
                 }
             }
-            console.log('Invoice Id we got from the remaingn amount: ',invoiceId); // This will log the invoiceId array
+            // console.log('Invoice Id we got from the remaingn amount: ',invoiceId); // This will log the invoiceId array
             for (let i = 0; i < invoiceId.length; i++)
             {
                 let dataFromThePaymentRecords = `SELECT 
@@ -886,10 +1057,9 @@ const remainingAmount = async (Id) =>
                 )
                 ORDER BY pr.created_at DESC
                 LIMIT 1`
-                
-                console.log(dataFromThePaymentRecords);
+                // console.log(dataFromThePaymentRecords);
                 let result3 = await queryAsync(dataFromThePaymentRecords)
-                console.log('Result 3: ', result3);
+                // console.log('Result 3: ', result3);
                 if(result3?.length !== 0)
                 {
                     remainingAmountEntry.push(parseFloat(result3[0].remaining_amount)); // Parse as float
@@ -897,9 +1067,9 @@ const remainingAmount = async (Id) =>
                     // remainingAmountEntry.push(result3[0].remaining_amount);
                 }
             }
-            console.log(remainingAmountEntry);
+            // console.log(remainingAmountEntry);
             const totalRemainingAmountSum = remainingAmountEntry.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-            console.log(totalRemainingAmountSum);
+            // console.log(totalRemainingAmountSum);
             resolve(totalRemainingAmountSum)
         }
         else 
@@ -911,7 +1081,7 @@ const remainingAmount = async (Id) =>
 
 const paidAmount = async (Id) => 
 {
-    console.log(`Paid Amount`);
+    // console.log(`Paid Amount`);
     return await new Promise(async (resolve, reject) =>
     {
         let getQuotationDataOnCustomerId = `SELECT * FROM ${constants.tableName.quotations} q WHERE q.customer_id = ${Id} AND q.status = 'CONFIRMED'`
@@ -941,71 +1111,6 @@ const paidAmount = async (Id) =>
             // console.log(invoiceId); // This will log the invoiceId arra
             for (let i = 0; i < invoiceId.length; i++)
             {
-                // let dataFromThePaymentRecords = `SELECT 
-                // COALESCE(SUM(pr.received_amount), 0) AS paid_amount
-                // FROM payment_records pr
-                // WHERE pr.invoice_id = ${invoiceId[i]}
-                // AND pr.status = 'PARTIALLY PAID'
-                // AND NOT EXISTS (
-                // SELECT 1
-                // FROM payment_records pr_paid
-                // WHERE pr_paid.invoice_id = pr.invoice_id
-                // AND pr_paid.status = 'PAID') ORDER BY pr.created_at DESC
-                // LIMIT 1`
-
-
-                // let dataFromThePaymentRecords = `
-                // SELECT 
-                // CASE
-                //     WHEN COALESCE(SUM(pr.received_amount), 0) = 0
-                //     THEN (SELECT pr.total_amount FROM payment_records pr WHERE pr.invoice_id = ${invoiceId[i]} AND pr.status = 'PAID' LIMIT 1)
-                //     ELSE COALESCE(SUM(pr.received_amount), 0)
-                //     END AS paid_amount
-                //     FROM payment_records pr
-                //     WHERE pr.invoice_id = ${invoiceId[i]}
-                //     AND pr.status = 'PARTIALLY PAID'
-                    // AND NOT EXISTS (
-                    // SELECT 1
-                    // FROM payment_records pr_paid
-                    // WHERE pr_paid.invoice_id = pr.invoice_id
-                    // AND pr_paid.status = 'PAID')
-                    // ORDER BY pr.created_at DESC
-                    // LIMIT 1`;
-
-
-            //     let dataFromThePaymentRecords = `SELECT
-            //     CASE
-            //         WHEN COALESCE(SUM(pr.received_amount), 0) = 0 THEN 0
-            //         ELSE COALESCE(SUM(pr.received_amount), 0)
-            //     END AS paid_amount
-            // FROM payment_records pr
-            // WHERE pr.invoice_id = ${invoiceId[i]}
-            // AND (pr.status = 'PARTIALLY PAID' OR pr.status = 'PENDING')
-            // AND NOT EXISTS (
-            //     SELECT 1
-            //     FROM payment_records pr_paid
-            //     WHERE pr_paid.invoice_id = pr.invoice_id
-            //     AND pr_paid.status = 'PAID')
-            // ORDER BY pr.created_at DESC
-            // LIMIT 1`;
-
-        //     let dataFromThePaymentRecords = `SELECT
-        //     CASE
-        //         WHEN COALESCE(SUM(pr.received_amount), 0) = 0 THEN 0
-        //         ELSE COALESCE(SUM(pr.received_amount), 0)
-        //     END AS paid_amount
-        // FROM payment_records pr
-        // WHERE pr.invoice_id = ${invoiceId[i]}
-        // AND (pr.status = 'PARTIALLY PAID' OR pr.status = 'PENDING')
-        // AND NOT EXISTS (
-        //     SELECT 1
-        //     FROM payment_records pr_paid
-        //     WHERE pr_paid.invoice_id = pr.invoice_id
-        //     AND pr_paid.status = 'PAID')
-        // ORDER BY pr.created_at DESC
-        // LIMIT 1;
-        // `;
-
             let dataFromThePaymentRecords = `SELECT
             CASE
                 WHEN COALESCE(SUM(pr.received_amount), 0) = 0
@@ -1059,3 +1164,25 @@ function queryAsync(query)
         });
     });
 }
+
+const recentEnquiryCustomizeResponse = async (value) =>
+{
+    return {
+        enquiries : value.map(item => (
+        {
+            enquiry_id : item.id,
+            service_provider_name : item.service_provider_name,
+            vehicle_number : item.vehicle_number,
+            manufacturer : item.make,
+            model : item.model,
+            pickup_location : item.pickup_location,
+            drop_location: item.drop_location,
+            trip_type: item.trip_type,
+            no_of_horse: item.no_of_horse,
+            pickup_date: time.formatDateToDDMMYYYY(item.pickup_date),
+            status: item.status,
+            created_at: time.formatDateToDDMMYYYY(item.created_at)
+        }))
+    }
+
+};

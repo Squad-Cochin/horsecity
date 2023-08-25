@@ -24,7 +24,7 @@ module.exports = class settings {
           currency_id,
           logo,loginpage_logo
         } = reqBody; 
-    console.log("cu",currency_id);
+    // console.log("cu",currency_id);
     
             let validateLanguageQuery = `SELECT * FROM ${constants.tableName.languages} apps
                   WHERE apps.id = '${language_id}'`;
@@ -86,7 +86,7 @@ module.exports = class settings {
                             uploadLoginPageBGimg ||
                             uploadFavicon
                         ) {
-                            console.log("dgfdg", logo,loginpage_logo);
+                            // console.log("dgfdg", logo,loginpage_logo);
 
                             const updateSettingsQuery = `
                             UPDATE ${constants.tableName.application_settings} AS apps
@@ -112,26 +112,26 @@ module.exports = class settings {
                           con.query(updateSettingsQuery, (err, data) => {
                
                             if (data?.length != 0) {
-                              console.log("Success");
+                              // console.log("Success");
                               resolve({ status: "SUCCESS" });
                             } else {
-                              console.log("1");
+                              // console.log("1");
                               resolve({ status: "FAILD" });
                             }
                           });
                         }
                       } else {
-                        console.log("22");
+                        // console.log("22");
                         resolve({ status: "FAILD" });
                       }
                     });
                   } else {
-                    console.log("2244");
+                    // console.log("2244");
                     resolve({ status: "FAILD" });
                   }
                 });
               } else {
-                console.log("2255");
+                // console.log("2255");
                 resolve({ status: "FAILD" });
               }
             });
@@ -140,7 +140,7 @@ module.exports = class settings {
 
 
       } catch (err) {
-        console.log("Error while updating setting s page", err);
+        // console.log("Error while updating setting s page", err);
         resolve({ status: "FAILD" });
 
       }
@@ -174,7 +174,7 @@ module.exports = class settings {
                 `;
 
         con.query(selQuery, async (err, data) => {
-          console.log(data);
+          // console.log(data);
           if (data?.length != 0) {
             let logoImage = data[0].logo;
             let loginpage_logo = data[0].loginpage_logo
@@ -209,7 +209,7 @@ module.exports = class settings {
       WHERE lg.status = '${constants.status.active}' AND lg.deleted_at IS NULL`;
 
         con.query(selQuery, async (err, data) => {
-          console.log(data);
+          // console.log(data);
           if (data?.length != 0) {
            
             resolve({ languagefile: data });

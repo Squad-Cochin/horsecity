@@ -8,9 +8,9 @@ const commonoperation = require('../../../utils/helper/commonoperation');
 /**For gitting all data  */
 exports.updateSettings = async(req,res)=>
 {
-console.log("here");
+// console.log("here");
     let settingsPage = await settings.updateSettings(req.body,req.files);
-    console.log("new",settingsPage);
+    // console.log("new",settingsPage);
     if(settingsPage.status == 'INVALIDFORMAT'){
         return res.status(200).send({
             code: 400,
@@ -43,7 +43,7 @@ exports.getSettingsData = async(req,res)=>
 {
 
     let settingsPage = await settings.getSettingsData();
-    console.log("new",settingsPage);
+    // console.log("new",settingsPage);
    if(settingsPage.settingsPageData == 'NOTFOUND'){
     return res.status(200).send
     ({
@@ -70,7 +70,7 @@ exports.getLngFile = async(req,res)=>
 {
 
     let getLngFile = await settings.getLngFile();
-    console.log("new",getLngFile);
+    // console.log("new",getLngFile);
    if(getLngFile.languagefile == 'NOTFOUND'){
     return res.status(200).send
     ({

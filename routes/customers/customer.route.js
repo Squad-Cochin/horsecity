@@ -107,5 +107,22 @@ module.exports = (app) =>
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.getParticularBookinDetailsConfirm);
 
+    app.get(`/customer/booking/cancelled/:id`,
+    validateHeaders.verifyToken,   
+    isValidIdInTheParams(constants.tableName.customers), 
+    customerController.getParticularBookinDetailsCancelled);
+
+    app.get(`/customer/booking/recent/:id`,
+    validateHeaders.verifyToken,   
+    isValidIdInTheParams(constants.tableName.customers), 
+    customerController.getParticularBookinDetailsRecent);
+    
+
+
+    app.get(`/customer/booking/data/:id`,
+    validateHeaders.verifyToken,   
+    isValidIdInTheParams(constants.tableName.customers), 
+    customerController.getParticularCustomerAllBookings);
+
 
 }

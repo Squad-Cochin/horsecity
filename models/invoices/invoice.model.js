@@ -591,7 +591,7 @@ module.exports = class invoices
                     {                        
                         let data3 = await commonfetching.dataOnCondition(constants.tableName.vehicles_breakouts, Id, 'invoice_id')
                         // console.log(`Data Present in the vehicles breakdown: `, data3);
-                        if(data3[0].length === 0)
+                        if(data3.length == 0)
                         {
                             console.log('Booking status is completed in the booking table and the vehicle details are fetched from the invoice table');
                             let selQuery = `SELECT i.id,
@@ -892,7 +892,7 @@ module.exports = class invoices
                 else
                 {
                     const data = await commonfetching.dataOnCondition(constants.tableName.invoices, Id, 'id');
-                    if(data.length === 0)
+                    if(data.length == 0)
                     {
                         resolve('nodata');
                     }
@@ -958,7 +958,7 @@ module.exports = class invoices
                                         if(insResult.affectedRows > 0)
                                         {
                                             console.log('Insert query executed, Payment is fully made');
-                                            let updateBookingTable = `UPDATE ${constants.tableName.bookings} b SET b.status = '${constants.status.paid}', b.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE b.inv_id = ${Id} AND b.invoice_prefix_id = '${result[0].invoice_prefix_id}' AND b.booking_status <> 'BREAKOUT' AND b.booking_status <> 'COMPLETED' AND b.status = 'PENDING' `
+                                            let updateBookingTable = `UPDATE ${constants.tableName.bookings} b SET b.status = '${constants.status.paid}', b.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE b.inv_id = ${Id} AND b.invoice_prefix_id = '${result[0].invoice_prefix_id}' AND (b.booking_status <> 'BREAKOUT' OR b.booking_status <> 'COMPLETED') AND b.status = 'PENDING' `
                                             // console.log(`Update query when the amount is fully paid: `, updateBookingTable);
                                             con.query(updateBookingTable, (err, upBoResult) =>
                                             {
@@ -1279,7 +1279,7 @@ module.exports = class invoices
                                 if(result2.affectedRows > 0)
                                 {
                                     // console.log(`Data is updated in the invoice table at the time of cancel button`);
-                                    let upQuery2 = `UPDATE ${constants.tableName.payment_records} p SET p.status = '${constants.booking_status.cancelled}', p.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', p.received_amount = '0.00' WHERE p.invoice_id = ${Id} AND p.updated_at IS NULL AND p.deleted_at IS NULL`;
+                                    let upQuery2 = `UPDATE ${constants.tableName.payment_records} p SET p.status = '${constants.booking_status.cancelled}', p.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', p.received_amount = '0.00', p.remaining_amount = '0.00' WHERE p.invoice_id = ${Id} AND p.updated_at IS NULL AND p.deleted_at IS NULL`;
                                     // console.log(`Update Query: `, upQuery2);
                                     con.query(upQuery2, (err, result3) =>
                                     {

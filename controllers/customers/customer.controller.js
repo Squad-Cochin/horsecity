@@ -650,3 +650,94 @@ exports.getParticularBookinDetailsConfirm = async (req, res, next) =>
         });
     }
 };
+
+exports.getParticularBookinDetailsCancelled = async (req, res, next) =>
+{
+    const customers = await customer.getparticularbookindetailscancelled(req.params.id);
+    // console.log(`Customer dashboard response: `, customers);
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
+    if(customers === 'err')
+    {
+        console.log('Error while fetching the cancelled booking dashboard data for the customer');
+        return res.status(200).json
+        ({
+            code: 500,
+            status: false,
+            message: `Internal server error. While fetching the cancelled booking dashboard data for the customer`,
+        });
+    }
+    else
+    {
+        console.log(`Booking cancel data fetched successfully for the customer dashboard`);
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: `Booking cancel data fetched successfully for the customer dashboard`,
+            data : customers
+        });
+    }
+};
+
+
+exports.getParticularBookinDetailsRecent = async (req, res, next) =>
+{
+    const customers = await customer.getparticularbookindetailsrecent(req.params.id);
+    // console.log(`Customer dashboard response: `, customers);
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
+    if(customers === 'err')
+    {
+        console.log('Error while fetching the recent enquiry data for the customer dashboard');
+        return res.status(200).json
+        ({
+            code: 500,
+            status: false,
+            message: `Internal server error. While fetching the recent enquiry data for the customer dashboard`,
+        });
+    }
+    else
+    {
+        console.log(`Enquiry data fetched successfully for the particular customer dashboard`);
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: `Enquiry data fetched successfully for the particular customer dashboard`,
+            data : customers
+        });
+    }
+};
+
+exports.getParticularCustomerAllBookings = async (req, res, next) =>
+{
+    let customers = await customer.getparticularcustomerallbookings(
+        req.params.id,
+        req.body.page = req.body.page !== undefined ? req.body.page : 1,
+        req.body.limit = req.body.limit !== undefined ? req.body.limit : 10000000000
+        
+        );
+    // console.log(`Customer dashboard response: `, customers);
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
+    if(customers === 'err')
+    {
+        console.log('Error while fetching all the booking data for the customer dashboard');
+        return res.status(200).json
+        ({
+            code: 500,
+            status: false,
+            message: `Internal server error. While fetching all the booking data for the customer dashboard`,
+        });
+    }
+    else
+    {
+        // console.log(`All the booking of a particular customer is fetched successfully`);
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: `All the booking of a particular customer is fetched successfully for the dashboard`,
+            data : customers
+        });
+    }
+
+}
