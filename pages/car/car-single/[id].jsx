@@ -43,18 +43,20 @@ const TourSingleV1Dynamic = () => {
   },[id])
 console.log("vehicle images");
   async function getProductDetails(){
-
+    const loginData = await JSON.parse(localStorage.getItem('loginData'));
+    
     let packageDetails = await DetailsDataApi(id);
     setVehicle(packageDetails?.vehicle[0])
     setVehicleImages(packageDetails?.images);
     setReviews(packageDetails?.reviews)
+    if (Object.keys(loginData).length !== 0) {
     dispatch(booking_data({
-      customer_id : '1', 
+      customer_id : loginData.id, 
       vehicle_id :  id,
       serviceprovider_id : packageDetails?.vehicle[0]?.service_provider_id,
       no_of_horse : packageDetails?.vehicle[0]?.no_of_horses
       }))
-
+    }
     // let packageList = await axios.post(`/api/initialSearch`,{})
     console.log("first",packageDetails)
   }

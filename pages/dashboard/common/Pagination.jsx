@@ -1,8 +1,8 @@
 import { useState } from "react";
-
+import { useSelector, useDispatch } from "react-redux";
 const Pagination = () => {
   const [currentPage, setCurrentPage] = useState(1);
-
+  const { limit } = useSelector((state) => state.listingFilter) || {};
   const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
   };

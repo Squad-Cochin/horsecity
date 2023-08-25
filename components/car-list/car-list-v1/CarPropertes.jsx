@@ -78,11 +78,8 @@ const CarPropertes = () => {
         initialLoad();
       }
     } 
-    
-  
-
-
   }
+
   return (
     <>
       {list_data?.listing_data.map((item) => (

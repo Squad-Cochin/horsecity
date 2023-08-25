@@ -126,7 +126,7 @@ const HotelProperties = () => {
               </div>
               <div className="mt-5">
                 <div className="fw-500">
-                  Starting from{" "}
+                  Starting fromssss{" "}  
                   <span className="text-blue-1">US${item?.price}</span>
                 </div>
               </div>
