@@ -7,8 +7,23 @@ import ChartMain from "./components/ChartMain";
 import Link from "next/link";
 import RercentBooking from "./components/RercentBooking";
 import Footer from "../common/Footer";
+import { useEffect, useState } from "react";
+import dashboardDataApi from "../../api/dashboardDataApi";
 
 const index = () => {
+  const [ login, setLogin ] = useState({});
+  const [ data, setData ] = useState([]);
+  useEffect(()=>{
+    initialFunction()
+  },[])
+  async function initialFunction(){
+    let loginData = await JSON.parse(localStorage.getItem("loginData"))
+    if(loginData){
+      setLogin(loginData);
+    }
+    let dashboardData = await dashboardDataApi(loginData.id)
+    setData(dashboardData);
+  } 
   return (
     <>
       <Seo pageTitle="Dashboard" />
@@ -31,15 +46,15 @@ const index = () => {
             <div className="row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32">
               <div className="col-12">
                 <h1 className="text-30 lh-14 fw-600">Dashboard</h1>
-                <div className="text-15 text-light-1">
+                {/* <div className="text-15 text-light-1">
                   Lorem ipsum dolor sit amet, consectetur.
-                </div>
+                </div> */}
               </div>
               {/* End .col-12 */}
             </div>
             {/* End .row */}
 
-            <DashboardCard />
+            <DashboardCard data={data.count}/>
 
             <div className="row y-gap-30 pt-20 chart_responsive">
               {/* <div className="col-xl-7 col-md-6">
@@ -60,18 +75,18 @@ const index = () => {
                 <div className="py-30 px-30 rounded-4 bg-white shadow-3">
                   <div className="d-flex justify-between items-center">
                     <h2 className="text-18 lh-1 fw-500">Recent Bookings</h2>
-                    <div>
+                    {/* <div>
                       <Link
                         href="#"
                         className="text-14 text-blue-1 fw-500 underline"
                       >
                         View All
                       </Link>
-                    </div>
+                    </div> */}
                   </div>
                   {/* End d-flex */}
 
-                  <RercentBooking />
+                  <RercentBooking data={data.enquiries}/>
                 </div>
                 {/* End py-30 */}
               </div>

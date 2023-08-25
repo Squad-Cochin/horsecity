@@ -20,7 +20,9 @@ const MainMenu = ({ style = "" }) => {
   const [ login, setLogin ] = useState({});
   useEffect(() => {
     let loginData = JSON.parse(localStorage.getItem("loginData"))
-    setLogin(loginData);
+    if(loginData){
+      setLogin(loginData);
+    }
   }, []);
   return (
     <nav className="menu js-navList">

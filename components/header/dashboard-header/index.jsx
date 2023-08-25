@@ -51,7 +51,7 @@ const HeaderDashBoard = () => {
                   <i className="icon-menu-2 text-20"></i>
                 </button>
 
-                <div className="single-field relative d-flex items-center md:d-none ml-30">
+                {/* <div className="single-field relative d-flex items-center md:d-none ml-30">
                   <input
                     className="pl-50 border-light text-dark-1 h-50 rounded-8"
                     type="email"
@@ -60,6 +60,11 @@ const HeaderDashBoard = () => {
                   <button className="absolute d-flex items-center h-full">
                     <i className="icon-search text-20 px-15 text-dark-1"></i>
                   </button>
+                </div> */}
+                <div className="header-menu">
+                  <div className="header-menu__content">
+                    <MainMenu style="text-dark-1" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -67,31 +72,27 @@ const HeaderDashBoard = () => {
 
             <div className="col-auto">
               <div className="d-flex items-center">
-                <div className="header-menu">
-                  <div className="header-menu__content">
-                    <MainMenu style="text-dark-1" />
-                  </div>
-                </div>
+                
                 {/* End header-menu */}
 
-                <div className="row items-center x-gap-5 y-gap-20 pl-20 lg:d-none">
+                {/* <div className="row items-center x-gap-5 y-gap-20 pl-20 lg:d-none">
                   <div className="col-auto">
                     <button className="button -blue-1-05 size-50 rounded-22 flex-center">
                       <i className="icon-email-2 text-20"></i>
                     </button>
-                  </div>
+                  </div> */}
                   {/* End col-auto */}
 
-                  <div className="col-auto">
+                  {/* <div className="col-auto">
                     <button className="button -blue-1-05 size-50 rounded-22 flex-center">
                       <i className="icon-notification text-20"></i>
                     </button>
-                  </div>
+                  </div> */}
                   {/* End col-auto */}
-                </div>
+                {/* </div> */}
                 {/* End .row */}
 
-                <div className="pl-15">
+                {/* <div className="pl-15">
                   <Image
                     width={50}
                     height={50}
@@ -99,7 +100,7 @@ const HeaderDashBoard = () => {
                     alt="image"
                     className="size-50 rounded-22 object-cover"
                   />
-                </div>
+                </div> */}
 
                 <div className="d-none xl:d-flex x-gap-20 items-center pl-20">
                   <div>
