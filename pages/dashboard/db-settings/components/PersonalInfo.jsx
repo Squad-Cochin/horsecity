@@ -4,7 +4,7 @@ const PersonalInfo = () => {
   return (
     <>
       <form>
-        <AvatarUploader />
+        {/* <AvatarUploader /> */}
         {/* End AvatarUploader*/}
 
         <div className="border-top-light mt-30 mb-30" />
@@ -15,34 +15,40 @@ const PersonalInfo = () => {
               <div className="form-input ">
                 <input type="text" required />
                 <label className="lh-1 text-16 text-light-1">
-                  Business Name
+                Name
                 </label>
               </div>
             </div>
             {/* End col-12 */}
-            <div className="col-12">
+            {/* <div className="col-12">
+              <div className="form-input ">
+                <input type="text" required />
+                <label className="lh-1 text-16 text-light-1">User Name</label>
+              </div>
+            </div> */}
+            {/* End col-12 */}
+{/* 
+            <div className="col-md-6">
+              <div className="form-input ">
+                <input type="text" required />
+                <label className="lh-1 text-16 text-light-1">Email</label>
+              </div>
+            </div> */}
+            {/* End col-6 */}
+
+            {/* <div className="col-md-6">
+              <div className="form-input ">
+                <input type="text" required />
+                <label className="lh-1 text-16 text-light-1">Contact_no</label>
+              </div>
+            </div> */}
+            {/* End col-6 */}
+            <div className="col-md-6">
               <div className="form-input ">
                 <input type="text" required />
                 <label className="lh-1 text-16 text-light-1">User Name</label>
               </div>
             </div>
-            {/* End col-12 */}
-
-            <div className="col-md-6">
-              <div className="form-input ">
-                <input type="text" required />
-                <label className="lh-1 text-16 text-light-1">First Name</label>
-              </div>
-            </div>
-            {/* End col-6 */}
-
-            <div className="col-md-6">
-              <div className="form-input ">
-                <input type="text" required />
-                <label className="lh-1 text-16 text-light-1">Last Name</label>
-              </div>
-            </div>
-            {/* End col-6 */}
 
             <div className="col-md-6">
               <div className="form-input ">
@@ -62,22 +68,65 @@ const PersonalInfo = () => {
             </div>
             {/* End col-6 */}
 
-            <div className="col-12">
+            {/* <div className="col-12">
               <div className="form-input ">
                 <input type="text" required />
                 <label className="lh-1 text-16 text-light-1">Birthday</label>
               </div>
+            </div> */}
+                    <div className="col-md-6">
+              <div className="form-input ">
+                <input type="text" required />
+                <label className="lh-1 text-16 text-light-1">
+                Birthday
+                </label>
+              </div>
             </div>
+            
+            {/* <div className="col-md-6">
+              <div className="form-input ">
+                <input type="text" required />
+                <label className="lh-1 text-16 text-light-1">Email</label>
+              </div>
+            </div> */}
+            {/* End col-6 */}
+{/* 
+            <div className="col-md-6">
+              <div className="form-input ">
+                <input type="text" required />
+                <label className="lh-1 text-16 text-light-1">Contact_no</label>
+              </div>
+            </div> */}
             {/* End col-6 */}
 
-            <div className="col-12">
+            {/* <div className="col-12">
               <div className="form-input ">
                 <textarea required rows={5} defaultValue={""} />
                 <label className="lh-1 text-16 text-light-1">
                   About Yourself
                 </label>
               </div>
+            </div> */}
+                        {/* End col-6 */}
+
+                        <div className="col-md-6">
+              <div className="form-input ">
+                <input type="text" required />
+                <label className="lh-1 text-16 text-light-1">Id Proof No</label>
+              </div>
             </div>
+            
+            {/* End col-6 */}
+
+            {/* <div className="col-md-6">
+              <div className="form-input ">
+                <input type="text" required />
+                <label className="lh-1 text-16 text-light-1">
+                  Phone Number
+                </label>
+              </div>
+            </div> */}
+             <AvatarUploader /> 
           </div>
         </div>
         {/* End col-xl-9 */}

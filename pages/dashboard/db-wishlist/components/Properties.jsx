@@ -153,7 +153,7 @@ const Properties = () => {
                       {/* <span className="text-15 text-light-1">or similar</span> */}
                     </h3>
                   </div>
-                  <div className="col-lg-7 mt-20">
+                  <div className="col-lg-12 mt-20">
                     <div className="row y-gap-5">
                       <div className="col-sm-6">
                         <div className="d-flex items-center">
