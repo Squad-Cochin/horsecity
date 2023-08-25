@@ -10,6 +10,6 @@ module.exports = function(app)
 
     
     /**For geting all service provider  */
-    app.get(`/wishlist/:id`,verifyBody.verifyToken,wishlist.wishlistItems); 
+    app.post(`/wishlist/list_items`,verifyBody.verifyToken,wishlist.wishlistItems); 
 
 }

@@ -50,16 +50,17 @@ module.exports = class wishlist
 }
 
 
-static async wishlistItems(cuId)
+static async wishlistItems(body)
 {
     return new Promise(async(resolve, reject) =>
     {
         try
         {       
+            const { page, limit, customer_id} = body ;
 
-
+            const offset = (page - 1) * limit;
             let selQuery = `
-            SELECT vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse, vh.height,
+            SELECT vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse, vh.height,w.created_at,w.deleted_at,
             CASE
                 WHEN COUNT(vimg.image) > 0 THEN GROUP_CONCAT(vimg.image)
                 ELSE NULL
@@ -67,8 +68,9 @@ static async wishlistItems(cuId)
         FROM wishlist w 
         JOIN vehicles AS vh ON w.vehicle_id = vh.id
         LEFT JOIN vehicles_images vimg ON w.vehicle_id = vimg.vehicle_id   AND vimg.status = "${constants.status.active}"
-        WHERE w.customer_id = '${cuId}' AND w.deleted_at IS NULL
-        GROUP BY vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse, vh.height;
+        WHERE w.customer_id = '${customer_id}' AND w.deleted_at IS NULL
+        GROUP BY vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse, vh.height
+        LIMIT ${+limit} OFFSET ${+offset};;
         
         `;
 
@@ -87,10 +89,26 @@ static async wishlistItems(cuId)
                             }else{
                                result[i].images = [];
                             } 
+                            
+                            if(result[i].created_at && result[i].deleted_at || (!result[i].created_at && !result[i].deleted_at)){
+                                result[i].wishlist = false;
+                            }else if(result[i].created_at){
+                                result[i].wishlist = true;
+                            } 
         
                        } 
-        
-                            resolve({wishlist :result })
+                       const totalCountQuery = `SELECT count(*) FROM wishlist w 
+               WHERE w.customer_id = '${customer_id}' AND w.deleted_at IS NULL`
+
+                con.query(totalCountQuery,(err,count)=>{
+                    console.log(count);
+                    if(!err){
+                        const COUNT = count[0]['count(*)'];
+                            resolve({totalCount: COUNT,wishlist :result })  
+                        }
+                    })
+                    
+                            
                     }
                     })        
 

@@ -24,7 +24,7 @@ exports.isWishlistAdd = async(req,res)=>
 /**Particular customer wishlist items  */
 exports.wishlistItems = async(req,res)=>
 {
-    let wishlistItems = await wishlistModel.wishlistItems(req.params.id);
+    let wishlistItems = await wishlistModel.wishlistItems(req.body);
 
    if(wishlistItems){
     return res.status(200).send
