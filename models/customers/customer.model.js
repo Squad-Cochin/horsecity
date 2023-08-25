@@ -683,12 +683,24 @@ module.exports = class customers
                                 }
                                 else
                                 {
-                                    // console.log(`Else block`);
+                                    console.log(`Else block`);
                                     // console.log(result1);
                                     // console.log(result2);
-                                    let result = customizeCustomerDashboardData(result1, result2, remainingamount, PaidAmount)
-                                    resolve(result);
+                                    // console.log(remainingamount);
+                                    // console.log(PaidAmount);
+                                    if(!remainingamount && !PaidAmount)
+                                    {
+                                        console.log(`Else block if`);
+                                        let result = customizeCustomerDashboardData(result1, result2, 0, 0)
+                                        resolve(result);
+                                    }
+                                    else
+                                    {
+                                        console.log(`Else block else`);
+                                        let result = customizeCustomerDashboardData(result1, result2, remainingamount, PaidAmount)
+                                        resolve(result);
                                     // remainingAmount(Id);
+                                    }
                                 }
                             }
                         });
@@ -719,24 +731,24 @@ module.exports = class customers
                         WHEN pr_check.status = 'PAID' THEN 0
                         ELSE latest_payment.remaining_amount
                     END AS remaining_amount
-                FROM service_providers s
-                INNER JOIN bookings b ON b.service_provider_id = s.id
-                LEFT JOIN (
-                    SELECT
-                        pr.invoice_id,
-                        pr.remaining_amount
-                    FROM payment_records pr
+                    FROM service_providers s
+                    INNER JOIN bookings b ON b.service_provider_id = s.id
+                    LEFT JOIN (
+                        SELECT
+                            pr.invoice_id,
+                            pr.remaining_amount
+                        FROM payment_records pr
                     WHERE pr.id IN (
                         SELECT MAX(pr_inner.id)
                         FROM payment_records pr_inner
                         WHERE pr_inner.status <> 'PAID'
                         GROUP BY pr_inner.invoice_id
+                        )
                     )
-                ) AS latest_payment ON latest_payment.invoice_id = b.inv_id
-                LEFT JOIN payment_records pr_check ON pr_check.invoice_id = b.inv_id AND pr_check.status = 'PAID'
-                WHERE b.customer_id = ${Id}
-                    AND b.booking_status = 'COMPLETED' `;
-                    
+                    AS latest_payment ON latest_payment.invoice_id = b.inv_id
+                    LEFT JOIN payment_records pr_check ON pr_check.invoice_id = b.inv_id AND pr_check.status = 'PAID'
+                    WHERE b.customer_id = ${Id}
+                    AND b.booking_status = 'COMPLETED' `;                    
                 let result = await queryAsync(query)
                 if(result == 'err')
                 {
@@ -832,25 +844,33 @@ const customizeCustomerDashboardData = (value1, value2, rAmount, pAmount) =>
     };
 }
 
-const remainingAmount = async (Id) => {
-    return await new Promise(async (resolve, reject) => {
-
+const remainingAmount = async (Id) =>
+{
+    // console.log(`Remaining Amount`);
+    return await new Promise(async (resolve, reject) =>
+    {
         let getQuotationDataOnCustomerId = `SELECT * FROM ${constants.tableName.quotations} q WHERE q.customer_id = ${Id} AND q.status = 'CONFIRMED'`
         let result1 = await queryAsync(getQuotationDataOnCustomerId)
+        // console.log(`Quotation Data from remaining amount: `, result1);
         if (result1?.length !== 0)
         {
-            // console.log(result1.length);
+            // console.log('No of confirmed quotation present of a submitted customer id: ',result1.length);
             var result2 = [];
             var invoiceId = [];
             var remainingAmountEntry = [];
             for (let i = 0; i < result1.length; i++)
             {
                 result2[i] = await commonfetching.dataOnCondition(constants.tableName.invoices, result1[i].id, 'quot_id');
-                // console.log(result2[i][0].id);
+                // console.log(i,result2[i]);
+                console.log(result2[i][0]?.id);
                 // Push the id value into the invoiceId array
-                invoiceId.push(result2[i][0].id);
+                if(result2[i].length > 0)
+                {
+                    // console.log('Came insides');
+                    invoiceId.push(result2[i][0].id);
+                }
             }
-            // console.log(invoiceId); // This will log the invoiceId array
+            console.log('Invoice Id we got from the remaingn amount: ',invoiceId); // This will log the invoiceId array
             for (let i = 0; i < invoiceId.length; i++)
             {
                 let dataFromThePaymentRecords = `SELECT 
@@ -866,9 +886,10 @@ const remainingAmount = async (Id) => {
                 )
                 ORDER BY pr.created_at DESC
                 LIMIT 1`
-                // console.log(dataFromThePaymentRecords);
+                
+                console.log(dataFromThePaymentRecords);
                 let result3 = await queryAsync(dataFromThePaymentRecords)
-                // console.log('Result 3: ', result3);
+                console.log('Result 3: ', result3);
                 if(result3?.length !== 0)
                 {
                     remainingAmountEntry.push(parseFloat(result3[0].remaining_amount)); // Parse as float
@@ -876,9 +897,9 @@ const remainingAmount = async (Id) => {
                     // remainingAmountEntry.push(result3[0].remaining_amount);
                 }
             }
-            // console.log(remainingAmountEntry);
+            console.log(remainingAmountEntry);
             const totalRemainingAmountSum = remainingAmountEntry.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-            // console.log(totalRemainingAmountSum);
+            console.log(totalRemainingAmountSum);
             resolve(totalRemainingAmountSum)
         }
         else 
@@ -890,12 +911,15 @@ const remainingAmount = async (Id) => {
 
 const paidAmount = async (Id) => 
 {
+    console.log(`Paid Amount`);
     return await new Promise(async (resolve, reject) =>
     {
         let getQuotationDataOnCustomerId = `SELECT * FROM ${constants.tableName.quotations} q WHERE q.customer_id = ${Id} AND q.status = 'CONFIRMED'`
         let result1 = await queryAsync(getQuotationDataOnCustomerId)
+        // console.log(`Quotation Data from paid amount: `, result1);
         if (result1?.length !== 0)
         {
+            // console.log('No of confirmed quotation present of a submitted customer id in the paid amount: ',result1.length);
             // console.log(result1.length);
             var result2 = [];
             var invoiceId = [];
@@ -903,11 +927,18 @@ const paidAmount = async (Id) =>
             for (let i = 0; i < result1.length; i++)
             {
                 result2[i] = await commonfetching.dataOnCondition(constants.tableName.invoices, result1[i].id, 'quot_id');
+                // console.log(i,result2[i]);
+                // console.log(result2[i][0]?.id);
                 // console.log(result2[i][0].id);
                 // Push the id value into the invoiceId array
-                invoiceId.push(result2[i][0].id);
+                if(result2[i].length > 0)
+                {
+                    invoiceId.push(result2[i][0].id);
+                }
+                // invoiceId.push(result2[i][0].id);
             }
-            console.log(invoiceId); // This will log the invoiceId arra
+            // console.log('Invoice Id we got from the paid amount: ',invoiceId); // This will log the invoiceId array
+            // console.log(invoiceId); // This will log the invoiceId arra
             for (let i = 0; i < invoiceId.length; i++)
             {
                 // let dataFromThePaymentRecords = `SELECT 
@@ -921,26 +952,79 @@ const paidAmount = async (Id) =>
                 // WHERE pr_paid.invoice_id = pr.invoice_id
                 // AND pr_paid.status = 'PAID') ORDER BY pr.created_at DESC
                 // LIMIT 1`
-                let dataFromThePaymentRecords = `
-                SELECT 
-                CASE
-                    WHEN COALESCE(SUM(pr.received_amount), 0) = 0
-                    THEN (SELECT pr.total_amount FROM payment_records pr WHERE pr.invoice_id = ${invoiceId[i]} AND pr.status = 'PAID' LIMIT 1)
-                    ELSE COALESCE(SUM(pr.received_amount), 0)
-                    END AS paid_amount
-                    FROM payment_records pr
-                    WHERE pr.invoice_id = ${invoiceId[i]}
-                    AND pr.status = 'PARTIALLY PAID'
-                    AND NOT EXISTS (
-                    SELECT 1
-                    FROM payment_records pr_paid
-                    WHERE pr_paid.invoice_id = pr.invoice_id
-                    AND pr_paid.status = 'PAID')
-                    ORDER BY pr.created_at DESC
-                    LIMIT 1`;
+
+
+                // let dataFromThePaymentRecords = `
+                // SELECT 
+                // CASE
+                //     WHEN COALESCE(SUM(pr.received_amount), 0) = 0
+                //     THEN (SELECT pr.total_amount FROM payment_records pr WHERE pr.invoice_id = ${invoiceId[i]} AND pr.status = 'PAID' LIMIT 1)
+                //     ELSE COALESCE(SUM(pr.received_amount), 0)
+                //     END AS paid_amount
+                //     FROM payment_records pr
+                //     WHERE pr.invoice_id = ${invoiceId[i]}
+                //     AND pr.status = 'PARTIALLY PAID'
+                    // AND NOT EXISTS (
+                    // SELECT 1
+                    // FROM payment_records pr_paid
+                    // WHERE pr_paid.invoice_id = pr.invoice_id
+                    // AND pr_paid.status = 'PAID')
+                    // ORDER BY pr.created_at DESC
+                    // LIMIT 1`;
+
+
+            //     let dataFromThePaymentRecords = `SELECT
+            //     CASE
+            //         WHEN COALESCE(SUM(pr.received_amount), 0) = 0 THEN 0
+            //         ELSE COALESCE(SUM(pr.received_amount), 0)
+            //     END AS paid_amount
+            // FROM payment_records pr
+            // WHERE pr.invoice_id = ${invoiceId[i]}
+            // AND (pr.status = 'PARTIALLY PAID' OR pr.status = 'PENDING')
+            // AND NOT EXISTS (
+            //     SELECT 1
+            //     FROM payment_records pr_paid
+            //     WHERE pr_paid.invoice_id = pr.invoice_id
+            //     AND pr_paid.status = 'PAID')
+            // ORDER BY pr.created_at DESC
+            // LIMIT 1`;
+
+        //     let dataFromThePaymentRecords = `SELECT
+        //     CASE
+        //         WHEN COALESCE(SUM(pr.received_amount), 0) = 0 THEN 0
+        //         ELSE COALESCE(SUM(pr.received_amount), 0)
+        //     END AS paid_amount
+        // FROM payment_records pr
+        // WHERE pr.invoice_id = ${invoiceId[i]}
+        // AND (pr.status = 'PARTIALLY PAID' OR pr.status = 'PENDING')
+        // AND NOT EXISTS (
+        //     SELECT 1
+        //     FROM payment_records pr_paid
+        //     WHERE pr_paid.invoice_id = pr.invoice_id
+        //     AND pr_paid.status = 'PAID')
+        // ORDER BY pr.created_at DESC
+        // LIMIT 1;
+        // `;
+
+            let dataFromThePaymentRecords = `SELECT
+            CASE
+                WHEN COALESCE(SUM(pr.received_amount), 0) = 0
+                THEN (SELECT pr.total_amount FROM payment_records pr WHERE pr.invoice_id = ${invoiceId[i]} AND pr.status = 'PAID' LIMIT 1)
+                ELSE COALESCE(SUM(pr.received_amount), 0)
+            END AS paid_amount
+        FROM payment_records pr
+        WHERE pr.invoice_id = ${invoiceId[i]}
+        AND (pr.status = 'PARTIALLY PAID' OR pr.status = 'PENDING')
+        AND NOT EXISTS (
+            SELECT 1
+            FROM payment_records pr_paid
+            WHERE pr_paid.invoice_id = pr.invoice_id
+            AND pr_paid.status = 'PAID')
+            ORDER BY pr.created_at DESC
+            LIMIT 1`;
                 // console.log(dataFromThePaymentRecords);
                 let result3 = await queryAsync(dataFromThePaymentRecords)
-                // console.log('Result 3: ', result3);
+                // console.log('Result 3 from the paid amount: ', result3);
                 if(result3?.length !== 0)
                 {
                     paidAmount.push(parseFloat(result3[0].paid_amount)); // Parse as float
