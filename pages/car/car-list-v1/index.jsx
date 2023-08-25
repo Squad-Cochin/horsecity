@@ -14,7 +14,7 @@ import React, { useEffect, useState } from "react";
 // import { addTripType, addNumberOfHorses } from "../../../features/search/initalSearch";
 // import { add_list_data } from "../../../features/listData/listData";
 
-const index = () => {
+const Index = () => {
   // const dispatch = useDispatch();
   useEffect(() => {
     getPackageList();
@@ -122,4 +122,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;
