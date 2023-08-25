@@ -623,6 +623,7 @@ static async updateStatusQuotation  (quotId)  {
                                                                                 invoice_id,
                                                                                 invoice_prefix_id,
                                                                                 total_amount,
+                                                                                received_amount,
                                                                                 remaining_amount,
                                                                                 status,
                                                                                 created_at
@@ -630,6 +631,7 @@ static async updateStatusQuotation  (quotId)  {
                                                                                 '${invoice_id}', 
                                                                                 '${sum_invId}',
                                                                                 '${final_amount}',
+                                                                                '0.00',
                                                                                 '${final_amount}',
                                                                                 '${constants.amount_status.pending}',
                                                                                 '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'

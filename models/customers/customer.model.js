@@ -633,7 +633,7 @@ module.exports = class customers
                 COALESCE((SELECT COUNT(i.id) FROM ${constants.tableName.quotations} q LEFT JOIN invoices i ON q.id = i.quot_id AND i.status = 'ACTIVE' WHERE q.customer_id = ${Id}), 0) AS total_invoices_not_started,
                 COALESCE((SELECT COUNT(i.id) FROM ${constants.tableName.quotations} q LEFT JOIN invoices i ON q.id = i.quot_id AND i.status = 'STARTED' WHERE q.customer_id = ${Id}), 0) AS total_invoice_started,
                 COALESCE((SELECT COUNT(i.id) FROM ${constants.tableName.quotations} q LEFT JOIN invoices i ON q.id = i.quot_id AND i.status = 'INACTIVE' WHERE q.customer_id = ${Id}), 0) AS total_invoice_cancelled,
-                COALESCE((SELECT COUNT(i.id) FROM ${constants.tableName.quotations} q LEFT JOIN invoices i ON q.id = i.quot_id WHERE q.customer_id = ${Id}), 0) AS total_invoices`;
+                COALESCE((SELECT COUNT(i.id) FROM ${constants.tableName.quotations} q LEFT JOIN invoices i ON q.id = i.quot_id WHERE q.customer_id = ${Id} AND i.status <> 'INACTIVE'), 0) AS total_invoices`;
                 // console.log(`Query of the count:`, countQuery);
                 con.query(countQuery, (err, result1) =>
                 {
@@ -645,7 +645,7 @@ module.exports = class customers
                     }
                     else
                     {
-                        console.log('Result one:', result1);
+                        // console.log('Result one:', result1);
                         // let recentBookingQuery = `  SELECT 
                         //                             b.id AS booking_id,
                         //                             p.id AS payment_id,
@@ -1107,7 +1107,7 @@ const paidAmount = async (Id) =>
                 }
                 // invoiceId.push(result2[i][0].id);
             }
-            // console.log('Invoice Id we got from the paid amount: ',invoiceId); // This will log the invoiceId array
+            console.log('Invoice Id we got from the paid amount: ',invoiceId); // This will log the invoiceId array
             // console.log(invoiceId); // This will log the invoiceId arra
             for (let i = 0; i < invoiceId.length; i++)
             {
@@ -1127,17 +1127,17 @@ const paidAmount = async (Id) =>
             AND pr_paid.status = 'PAID')
             ORDER BY pr.created_at DESC
             LIMIT 1`;
-                // console.log(dataFromThePaymentRecords);
+                console.log(dataFromThePaymentRecords);
                 let result3 = await queryAsync(dataFromThePaymentRecords)
-                // console.log('Result 3 from the paid amount: ', result3);
+                console.log('Result 3 from the paid amount: ', result3);
                 if(result3?.length !== 0)
                 {
                     paidAmount.push(parseFloat(result3[0].paid_amount)); // Parse as float
                 }
             }
-            // console.log(paidAmount);
+            console.log(paidAmount);
             const totalPaidAmountSum = paidAmount.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-            // console.log(totalPaidAmountSum);
+            console.log(totalPaidAmountSum);
             resolve(totalPaidAmountSum)
         }
         else
