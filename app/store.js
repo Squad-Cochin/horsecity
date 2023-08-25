@@ -5,6 +5,7 @@ import listingFilter from "../features/listingFilter/listingFilter";
 import listData from "../features/listData/listData";
 import currentPage from "../features/currentPage/currentPage";
 import bookingData  from "../features/bookingData/bookingData";
+import wishlist  from "../features/wishlist/wishlist";
 export const store = configureStore({
     reducer: {
         hero: findPlaceSlice,
@@ -12,6 +13,7 @@ export const store = configureStore({
         listingFilter: listingFilter,
         listData: listData,
         currentPage: currentPage,
-        bookingData : bookingData
+        bookingData : bookingData,
+        wishlist : wishlist
     },
 });

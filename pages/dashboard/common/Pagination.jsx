@@ -1,10 +1,15 @@
 import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import { wishlist_page } from "../../../features/wishlist/wishlist";
 const Pagination = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { limit } = useSelector((state) => state.listingFilter) || {};
+  const { total_count } = useSelector((state) => state.wishlist) || {};
+
   const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
+    useDispatch(wishlist_page({page : pageNumber}))
+
   };
 
   const renderPage = (pageNumber, isActive = false) => {
@@ -21,11 +26,11 @@ const Pagination = () => {
   };
 
   const renderPages = () => {
-    const totalPages =  Math.ceil(9/ limit);
+    const totalPages =  Math.ceil(total_count/ limit);
     //  Math.ceil(list_data?.totalCount / limit); // Change this to the actual total number of pages
     const pageNumbers = [];
     for (let i = 1; i <= totalPages; i++) {
-      pageNumbers.push(i);
+      pageNumbers.push(i); 
     }
     const pages = pageNumbers.map((pageNumber) =>
       renderPage(pageNumber, pageNumber === currentPage)

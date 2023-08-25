@@ -7,12 +7,18 @@ import isWishlist from "../../../api/wishlistApi";
 import { Navigation, Pagination } from "swiper";
 import { GiHorseHead } from "react-icons/gi";
 import Link from "next/link";
+import { useDispatch,useSelector } from "react-redux";
+import { wishlist_items } from "../../../../features/wishlist/wishlist";
 import { TbBus, TbArrowAutofitWidth, TbArrowAutofitHeight, TbLineHeight } from "react-icons/tb";
 const Properties = () => {
 
   const [ wishlist,setWishlist ] = useState([])
   const [ customer_id, setCustomerId ] =  useState('');
   const [ isLogin, setLogin ] = useState(false);
+
+  const dispatch = useDispatch();
+  const { page } = useSelector((state) => state.wishlist) || {};
+  const { limit } = useSelector((state) => state.listingFilter) || {};
   useEffect(()=>{
     initialLoad();
   },[])
@@ -24,13 +30,14 @@ const Properties = () => {
       setCustomerId(loginData.id);
       setLogin(true);
       let reqObj = {
-        page : 1,
-        limit : 4,
+        page : page,
+        limit : limit,
         customer_id : loginData.id
       }
       let wishlist = await WishlistData(reqObj);
       if(wishlist?.code == 200){
         setWishlist(wishlist.data)
+        dispatch(wishlist_items({total_count : wishlist.data.totalCount}))
       }
       console.log("wishlist",wishlist);
 
@@ -46,6 +53,7 @@ const Properties = () => {
       reqObj.flag = false;
      
       let wishlisted = await isWishlist(reqObj);
+      
       if(wishlisted.code == 200){
         initialLoad();
       }
