@@ -14,6 +14,7 @@ module.exports =
         inactive : `INACTIVE`,
         paid : `PAID`,
         partPaid : `PARTIALLY PAID`,
+        pending : `PENDING`,
         yes : 'YES',
         no : 'NO'
     },
@@ -38,7 +39,7 @@ module.exports =
         confirmed : 'CONFIRMED',
         pending : 'PENDING',
         cancelled : 'CANCELLED',
-        complete : 'COMPLETE'
+        completed : 'COMPLETED'
     },
     booking_confirmation_send : 
     {

@@ -119,7 +119,7 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
     // console.log('Came to the enter amount for a particular invoice controller');
     // The below line is for calling the model. Which is having the code for enter amount button the particular invoices.
     const invoices = await invoice.enteramountforparticularinvoice(req.params.id, req.body.totalRecievedAmount)
-    // console.log(`Enter amount for a particular invoice: `, invoice);
+    // console.log(`Enter amount for a particular invoice: `, invoices);
     
     // If we are not having the invoice data, then this if block of code will be executed. This function will not be executed because we have written the middleware which will check whether the available invoice id is entered.
     if(invoices === 'nodata')
@@ -135,7 +135,7 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(invoices === 'err')
     {
-        console.log('Internal server error from the enter amount for particular invoice');
+        // console.log('Internal server error from the enter amount for particular invoice');
         return res.status(200).json
         ({
             code: 500,
@@ -157,7 +157,7 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
     // If all the things are done accordingly and data is stored in the database.
     if(invoices == 'affectedRows')
     {
-        console.log('Amount data inserted successfully');
+        // console.log('Amount data inserted successfully');
         return res.status(200).json
         ({
             code: 200,
@@ -168,7 +168,7 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
     // If the remaining amount is 0 then this if block will be executed
     if(invoices === 'fullypaid')
     {
-        console.log('Amount is already paid fully');
+        // console.log('Amount is already paid fully');
         return res.status(200).json
         ({
             code: 200,
@@ -179,7 +179,7 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
     // If we are entering the amount more than the remaining amount, then this if block of code will be executed
     if(invoices === 'moreThanActualAmount')
     {
-        console.log('Amount which is being inserted is more than the remaing amount');
+        // console.log('Amount which is being inserted is more than the remaing amount');
         return res.status(200).json
         ({
             code: 400,

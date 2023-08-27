@@ -756,22 +756,22 @@ module.exports = class customers
                         WHEN pr_check.status = 'PAID' THEN 0
                         ELSE latest_payment.remaining_amount
                     END AS remaining_amount
-                    FROM service_providers s
-                    INNER JOIN bookings b ON b.service_provider_id = s.id
+                    FROM ${constants.tableName.service_providers} s
+                    INNER JOIN ${constants.tableName.bookings} b ON b.service_provider_id = s.id
                     LEFT JOIN (
                         SELECT
                             pr.invoice_id,
                             pr.remaining_amount
-                        FROM payment_records pr
+                        FROM ${constants.tableName.payment_records} pr
                     WHERE pr.id IN (
                         SELECT MAX(pr_inner.id)
-                        FROM payment_records pr_inner
+                        FROM ${constants.tableName.payment_records} pr_inner
                         WHERE pr_inner.status <> 'PAID'
                         GROUP BY pr_inner.invoice_id
                         )
                     )
                     AS latest_payment ON latest_payment.invoice_id = b.inv_id
-                    LEFT JOIN payment_records pr_check ON pr_check.invoice_id = b.inv_id AND pr_check.status = 'PAID'
+                    LEFT JOIN ${constants.tableName.payment_records} pr_check ON pr_check.invoice_id = b.inv_id AND pr_check.status = 'PAID'
                     WHERE b.customer_id = ${Id}
                     AND b.booking_status = 'COMPLETED' `;                    
                 let result = await queryAsync(query)
@@ -986,13 +986,13 @@ module.exports = class customers
 const customizeCustomerDashboardData = (value1, value2, rAmount, pAmount) =>
 {
     return {
-        count: {
+        count:
+        {
             // total_enquiry: value1[0].total_enquiry,
             // total_enquiry_confirmed : value1[0].total_enquiry_confirmed,
             // total_enquiry_not_confirmed : value1[0].total_enquiry_not_confirmed,
             total_booking: value1[0].total_invoices,
             total_pending_booking: value1[0].total_invoices_not_started,
-            // total_enquiry:
             total_paid_amount: pAmount,
             total_pending_amount: rAmount
         },
@@ -1044,16 +1044,18 @@ const remainingAmount = async (Id) =>
             // console.log('Invoice Id we got from the remaingn amount: ',invoiceId); // This will log the invoiceId array
             for (let i = 0; i < invoiceId.length; i++)
             {
-                let dataFromThePaymentRecords = `SELECT 
+                let dataFromThePaymentRecords = 
+                `
+                SELECT 
                 pr.remaining_amount
-                FROM payment_records pr
+                FROM ${constants.tableName.payment_records} pr
                 WHERE pr.invoice_id = ${invoiceId[i]}
-                AND pr.status <> 'PAID'
+                AND pr.status <> '${constants.status.paid}'
                 AND NOT EXISTS (
                 SELECT 1
-                FROM payment_records pr_paid
+                FROM ${constants.tableName.payment_records} pr_paid
                 WHERE pr_paid.invoice_id = pr.invoice_id
-                AND pr_paid.status = 'PAID'
+                AND pr_paid.status = '${constants.status.paid}'
                 )
                 ORDER BY pr.created_at DESC
                 LIMIT 1`
@@ -1107,37 +1109,67 @@ const paidAmount = async (Id) =>
                 }
                 // invoiceId.push(result2[i][0].id);
             }
-            console.log('Invoice Id we got from the paid amount: ',invoiceId); // This will log the invoiceId array
+            // console.log('Invoice Id we got from the paid amount: ',invoiceId); // This will log the invoiceId array
             // console.log(invoiceId); // This will log the invoiceId arra
             for (let i = 0; i < invoiceId.length; i++)
             {
-            let dataFromThePaymentRecords = `SELECT
-            CASE
-                WHEN COALESCE(SUM(pr.received_amount), 0) = 0
-                THEN (SELECT pr.total_amount FROM payment_records pr WHERE pr.invoice_id = ${invoiceId[i]} AND pr.status = 'PAID' LIMIT 1)
-                ELSE COALESCE(SUM(pr.received_amount), 0)
-            END AS paid_amount
-        FROM payment_records pr
-        WHERE pr.invoice_id = ${invoiceId[i]}
-        AND (pr.status = 'PARTIALLY PAID' OR pr.status = 'PENDING')
-        AND NOT EXISTS (
-            SELECT 1
-            FROM payment_records pr_paid
-            WHERE pr_paid.invoice_id = pr.invoice_id
-            AND pr_paid.status = 'PAID')
-            ORDER BY pr.created_at DESC
-            LIMIT 1`;
-                console.log(dataFromThePaymentRecords);
+                let dataFromThePaymentRecords =
+                ` 
+                    SELECT 
+                    CASE
+                    WHEN EXISTS 
+                    ( 
+                        SELECT 1 FROM ${constants.tableName.payment_records} pr_pending 
+                        WHERE pr_pending.invoice_id = ${invoiceId[i]} 
+                        AND pr_pending.status = '${constants.status.pending}' 
+                        AND pr_pending.received_amount = 0
+                    )
+                    THEN 0
+                    WHEN EXISTS
+                    (
+                        SELECT 1
+                        FROM ${constants.tableName.payment_records} pr_paid
+                        WHERE pr_paid.invoice_id = ${invoiceId[i]}
+                        AND pr_paid.status = '${constants.status.paid}'
+                    )
+                    THEN COALESCE
+                    (
+                        (
+                            SELECT pr_paid.total_amount FROM ${constants.tableName.payment_records} pr_paid
+                            WHERE pr_paid.invoice_id = ${invoiceId[i]}
+                            AND pr_paid.status = '${constants.status.paid}' 
+                            LIMIT 1
+                        ),0
+                    )
+                    WHEN EXISTS
+                    (
+                        SELECT 1
+                        FROM ${constants.tableName.payment_records} pr_partially_paid
+                        WHERE pr_partially_paid.invoice_id = ${invoiceId[i]}
+                        AND pr_partially_paid.status = '${constants.status.partPaid}'
+                    )
+                    THEN COALESCE
+                    (
+                        (
+                            SELECT SUM(pr_received.received_amount)
+                            FROM ${constants.tableName.payment_records} pr_received 
+                            WHERE pr_received.invoice_id = ${invoiceId[i]}
+                            AND pr_received.status = '${constants.status.partPaid}'
+                        ),0
+                    )
+                    END AS paid_amount
+                `;
+                // console.log(dataFromThePaymentRecords);
                 let result3 = await queryAsync(dataFromThePaymentRecords)
-                console.log('Result 3 from the paid amount: ', result3);
+                // console.log('Result 3 from the paid amount: ', result3);
                 if(result3?.length !== 0)
                 {
                     paidAmount.push(parseFloat(result3[0].paid_amount)); // Parse as float
                 }
             }
-            console.log(paidAmount);
+            // console.log(paidAmount);
             const totalPaidAmountSum = paidAmount.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-            console.log(totalPaidAmountSum);
+            // console.log(totalPaidAmountSum);
             resolve(totalPaidAmountSum)
         }
         else
@@ -1184,5 +1216,4 @@ const recentEnquiryCustomizeResponse = async (value) =>
             created_at: time.formatDateToDDMMYYYY(item.created_at)
         }))
     }
-
 };

@@ -12,7 +12,6 @@
 const constant = require('../../utils/constants'); // Constant elements are stored in this file
 const customer = require('../../models/customers/customer.model'); // The model from where the logic is intantiate are written in customer model
 const time = require('../../utils/helper/date'); // All the time relateed formating are written in this file.
-const { errorMonitor } = require('nodemailer/lib/xoauth2');
 
 /**
  * The below function is for getting all the customer details. Those customer who deleted at feild are having
@@ -678,7 +677,6 @@ exports.getParticularBookinDetailsCancelled = async (req, res, next) =>
         });
     }
 };
-
 
 exports.getParticularBookinDetailsRecent = async (req, res, next) =>
 {

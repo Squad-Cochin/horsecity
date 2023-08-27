@@ -924,7 +924,7 @@ module.exports = class invoices
                         else
                         {
                             // console.log('Amount:', amount);
-                            let latestData = `SELECT * FROM payment_records WHERE invoice_id = '${Id}' ORDER BY remaining_amount ASC LIMIT 1`;
+                            let latestData = `SELECT * FROM ${constants.tableName.payment_records} WHERE invoice_id = '${Id}' ORDER BY remaining_amount ASC LIMIT 1`;
                             con.query(latestData, (err, result) =>
                             {
                                 // console.log('Latest Data: ', result);
@@ -958,13 +958,14 @@ module.exports = class invoices
                                         if(insResult.affectedRows > 0)
                                         {
                                             console.log('Insert query executed, Payment is fully made');
-                                            let updateBookingTable = `UPDATE ${constants.tableName.bookings} b SET b.status = '${constants.status.paid}', b.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE b.inv_id = ${Id} AND b.invoice_prefix_id = '${result[0].invoice_prefix_id}' AND (b.booking_status <> 'BREAKOUT' OR b.booking_status <> 'COMPLETED') AND b.status = 'PENDING' `
+                                            let updateBookingTable = `UPDATE ${constants.tableName.bookings} b SET b.status = '${constants.status.paid}', b.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE b.inv_id = ${Id} AND b.invoice_prefix_id = '${result[0].invoice_prefix_id}' AND (b.booking_status <> '${constants.vehicles_breakouts_status.break_out}' OR b.booking_status <> '${constants.booking_status.completed}') AND b.status = '${constants.status.pending}' `
                                             // console.log(`Update query when the amount is fully paid: `, updateBookingTable);
                                             con.query(updateBookingTable, (err, upBoResult) =>
                                             {
+                                                // console.log('Result from the updateBookingTable query: ', upBoResult);
                                                 if(upBoResult.affectedRows > 0)
                                                 {
-                                                    console.log(`Data is successfully entered in the payment records and bookings table. `);
+                                                    // console.log(`Data is successfully entered in the payment records and bookings table. `);
                                                     resolve('fullypaid');
                                                 }
                                                 else
