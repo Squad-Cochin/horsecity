@@ -16,23 +16,29 @@ const Sidebar = () => {
     {
       id: 2,
       icon: "/img/dashboard/sidebar/booking.svg",
-      name: " Booking History",
+      name: " Enquiries History",
       routePath: "/dashboard/db-booking",
     },
     {
       id: 3,
+      icon: "/img/dashboard/sidebar/booking.svg",
+      name: " Booking History",
+      routePath: "/dashboard/db-confirmed-booking",
+    },
+    {
+      id: 4,
       icon: "/img/dashboard/sidebar/bookmark.svg",
       name: "Wishlist",
       routePath: "/dashboard/db-wishlist",
     },
     {
-      id: 4,
+      id: 5,
       icon: "/img/dashboard/sidebar/gear.svg",
       name: " Settings",
       routePath: "/dashboard/db-settings",
     },
     {
-      id: 5,
+      id: 6,
       icon: "/img/dashboard/sidebar/log-out.svg",
       name: " Logout",
       routePath: "/others-pages/login",
@@ -48,6 +54,7 @@ const Sidebar = () => {
             } sidebar__button `}
           >
             <Link
+              // { (item.name === " Logout") ? null : null}
               href={item.routePath}
               className="d-flex items-center text-15 lh-1 fw-500"
             >

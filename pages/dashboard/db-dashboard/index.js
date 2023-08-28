@@ -54,7 +54,7 @@ const index = () => {
             </div>
             {/* End .row */}
 
-            <DashboardCard data={data.count}/>
+            <DashboardCard data={data?.count}/>
 
             <div className="row y-gap-30 pt-20 chart_responsive">
               {/* <div className="col-xl-7 col-md-6">
@@ -86,7 +86,7 @@ const index = () => {
                   </div>
                   {/* End d-flex */}
 
-                  <RercentBooking data={data.enquiries}/>
+                  <RercentBooking data={data?.enquiries}/>
                 </div>
                 {/* End py-30 */}
               </div>

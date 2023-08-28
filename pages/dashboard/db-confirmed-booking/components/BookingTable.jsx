@@ -1,11 +1,16 @@
-import { useEffect, useState } from "react";
+import { use, useEffect, useState } from "react";
 import Pagination from "../../common/Pagination";
 import ActionsButton from "../components/ActionsButton";
-import enquiriesListDataApi from "../../../api/enquiriesListDataApi";
+import allBookingListApi from "../../../api/allBookingListApi";
+import activeBookingListApi from "../../../api/activeBookingListApi";
+import inactiveBookingListApi from "../../../api/inactiveBookingListApi";
+import startedBookingListApi from "../../../api/startedBookingListApi";
 
 const BookingTable = () => {
 
   const [ data, setData ] = useState([]);
+  const [activeTab, setActiveTab] = useState(0);
+  const [ customerId, setCustomer ] = useState();
   
   useEffect(()=>{
     initialLoad();
@@ -16,28 +21,59 @@ const BookingTable = () => {
     // if(loginData){
     //   setLogin(loginData);
     // }
-    let enqList = await enquiriesListDataApi(loginData?.id)
+    let enqList = await allBookingListApi(loginData?.id)
+    setCustomer(loginData?.id)
     setData(enqList);
+    setActiveTab(0)
   }
-  
+
+  async function activeData(){
+    let activeEnqList = await activeBookingListApi(customerId)
+    setData(activeEnqList);
+  }
+
+  async function inactiveData(){
+    let activeEnqList = await inactiveBookingListApi(customerId)
+    setData(activeEnqList);
+  }
+
+  async function startedData(){
+    let activeEnqList = await startedBookingListApi(customerId)
+    setData(activeEnqList);
+  }
+
+  const handleTabClick = (index) => {
+    setActiveTab(index);
+  };
+
+  const tabItems = [
+    {name :"All Booking", fun : initialLoad},
+    {name :"Confirmed", fun : activeData},
+    {name :"Cancelled", fun : inactiveData},
+    {name :"Started", fun : startedData},
+    // "Confirmed",
+    // "Cancelled",
+    // "Started"
+  ];
+
 
   return (
     <>
       <div className="tabs -underline-2 js-tabs">
-        {/* <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
+        <div className="tabs__controls row x-gap-40 y-gap-10 lg:x-gap-20 js-tabs-controls">
           {tabItems.map((item, index) => (
             <div className="col-auto" key={index}>
               <button
                 className={`tabs__button text-18 lg:text-16 text-light-1 fw-500 pb-5 lg:pb-0 js-tabs-button ${
                   activeTab === index ? "is-tab-el-active" : ""
                 }`}
-                onClick={() => handleTabClick(index)}
+                onClick={async () =>{ await item.fun() ; handleTabClick(index)}}
               >
-                {item}
+                {item.name}
               </button>
             </div>
           ))}
-        </div> */}
+        </div>
         {/* End tabs */}
 
         <div className="tabs__content pt-30 js-tabs-content">
@@ -50,9 +86,11 @@ const BookingTable = () => {
                     <th>Vehicle Number</th>
                     <th>Pickup Location</th>
                     <th>Drop Location</th>
+                    <th>Pickup Date</th>
                     <th>Trip Type</th>
                     <th>Number Of Horse</th>
-                    <th>Pickup Date</th>
+                    <th>Total Amount</th>
+                    <th>Pending Amount</th>
                     <th>Status</th>
                     {/* <th>Action</th> */}
                   </tr>
@@ -64,12 +102,14 @@ const BookingTable = () => {
                     <tr key={index}>
                       <td>{item.service_provider_name}</td>
                       <td>{item.vehicle_number}</td>
-                      <td>{item.pickup_location}</td>
-                      <td>{item.drop_location}</td>
+                      <td>{item.pickup_point}</td>
+                      <td>{item.drop_point}</td>
+                      <td>{item.pickup_date}</td>
                       <td>{item.trip_type}</td>
                       <td>{item.no_of_horse}</td>
-                      <td>{item.pickup_date}</td>
-                      <td>{item.status}</td>
+                      <td>{item.invoice_amount}</td>
+                      <td>{item.remaining_payment}</td>
+                      <td>{item.invoice_status}</td>
                     </tr>
                   )
                 })}
