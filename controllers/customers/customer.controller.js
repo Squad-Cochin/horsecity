@@ -737,5 +737,30 @@ exports.getParticularCustomerAllBookings = async (req, res, next) =>
             data : customers
         });
     }
-
 }
+
+exports.getParticularCustomerAllEnquiry = async (req, res, next)=>
+{
+    let customers = await customer.getparticularcustomerallenquiry(req.params.id);
+    if(customers === 'err')
+    {
+        console.log('Error while fetching particular customer enquiries data');
+        return res.status(200).json
+        ({
+            code: 500,
+            status: false,
+            message: `Internal server error while fetching particular customer enquiries data. `,
+        });
+    }
+    else
+    {
+        // console.log(`All the booking of a particular customer is fetched successfully`);
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: `All the enquiries of a particular customer is fetched successfully for the dashboard`,
+            data : customers
+        });
+    }
+};

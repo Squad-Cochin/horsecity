@@ -116,13 +116,16 @@ module.exports = (app) =>
     validateHeaders.verifyToken,   
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.getParticularBookinDetailsRecent);
-    
-
 
     app.get(`/customer/booking/data/:id`,
     validateHeaders.verifyToken,   
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.getParticularCustomerAllBookings);
+
+    app.get(`/customer/all/enquiries/:id`,
+    validateHeaders.verifyToken,   
+    isValidIdInTheParams(constants.tableName.customers), 
+    customerController.getParticularCustomerAllEnquiry)
 
 
 }

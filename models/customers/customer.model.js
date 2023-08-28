@@ -15,6 +15,12 @@ module.exports = class customers
 {
     constructor(){}
 
+    /**
+     * The below function is for the Admin side page
+     * 
+     * The function for fetching all the customer details present in the database.
+     */
+
     static async getall(pageNumber, pageSize, Id)
     {
         try
@@ -968,7 +974,7 @@ module.exports = class customers
                         AS latest_payment ON latest_payment.invoice_id = b.inv_id
                         LEFT JOIN payment_records pr_check ON pr_check.invoice_id = b.inv_id AND pr_check.status = 'PAID'
                         WHERE b.customer_id = ${Id} LIMIT ${pageSize} OFFSET ${offset}`;
-                // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
+                console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
                 let queryresult = await queryAsync(bookingQuery);
                 // // console.log('Most Recent enuiry: ', queryresult);
                 // let result = recentEnquiryCustomizeResponse(queryresult)
@@ -980,6 +986,49 @@ module.exports = class customers
             console.log(`Error from the try catch block of the getparticularcustomerallbookings model file function`);
         }
     };
+
+    static async getparticularcustomerallenquiry(Id)
+    {
+        try
+        {
+            return await new Promise(async (resolve, reject) =>
+            {
+                let recEnquiry = `  SELECT
+                                    e.id,
+                                    s.name AS service_provider_name,
+                                    e.vehicle_id,
+                                    v.vehicle_number,
+                                    v.make,
+                                    v.model,
+                                    e.pickup_location,
+                                    e.drop_location,
+                                    e.trip_type,
+                                    e.no_of_horse,
+                                    e.pickup_date,
+                                    e.status,
+                                    e.created_at
+                                    FROM enquiries e
+                                    INNER JOIN vehicles v ON v.id = e.vehicle_id
+                                    INNER JOIN service_providers s ON s.id = e.serviceprovider_id
+                                    WHERE e.customer_id = ${Id}
+                                    ORDER BY e.created_at DESC`;
+                // console.log(`Query from the recent enquiry of a particular customer: `, recEnquiry);
+                let queryresult = await queryAsync(recEnquiry);
+                // console.log('Most Recent enuiry: ', queryresult);
+                let result = recentEnquiryCustomizeResponse(queryresult)
+                resolve(result)
+            });
+        }
+        catch (error)
+        {
+            console.log(`Error from the try catch block of the getparticularbookindetailsrecent model file function`);
+        }        
+    }
+
+    
+
+
+
 };
 
 
