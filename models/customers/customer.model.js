@@ -375,7 +375,7 @@ module.exports = class customers
                                 }
                                 if(result1.affectedRows > 0)
                                 {
-                                    console.log(`Customer log also entered at the login time`);
+                                    // console.log(`Customer log also entered at the login time`);
                                     resolve(data);
                                 }
                                 else
@@ -443,7 +443,7 @@ module.exports = class customers
                                     // console.log('Result of inserting in the customer logs', result1);
                                     if(result1.affectedRows > 0)
                                     {
-                                        console.log(`Customer log also entered at the login time`);
+                                        // console.log(`Customer log also entered at the login time`);
                                         resolve(`logoutdone`)
                                     }
                                     else
@@ -939,13 +939,12 @@ module.exports = class customers
         }
     };
 
-    static async getparticularcustomerallbookings(Id, pageNumber, pageSize)
+    static async getparticularcustomerallbookings(Id)
     {
         try
         {
             return await new Promise(async (resolve, reject) =>
             {
-                const offset = (pageNumber - 1) * pageSize;
                 let bookingQuery = `    SELECT
                                         b.id,
                         s.name,
@@ -973,8 +972,8 @@ module.exports = class customers
                         )
                         AS latest_payment ON latest_payment.invoice_id = b.inv_id
                         LEFT JOIN payment_records pr_check ON pr_check.invoice_id = b.inv_id AND pr_check.status = 'PAID'
-                        WHERE b.customer_id = ${Id} LIMIT ${pageSize} OFFSET ${offset}`;
-                console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
+                        WHERE b.customer_id = ${Id}`;
+                // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
                 let queryresult = await queryAsync(bookingQuery);
                 // // console.log('Most Recent enuiry: ', queryresult);
                 // let result = recentEnquiryCustomizeResponse(queryresult)
@@ -1024,6 +1023,226 @@ module.exports = class customers
             console.log(`Error from the try catch block of the getparticularbookindetailsrecent model file function`);
         }        
     }
+
+    static async getparticularcustomerallbookingsdatafrominvoice(Id)
+    {
+        try
+        {
+            return await new Promise(async (resolve, reject) =>
+            {
+                let bookingQuery = `
+                SELECT
+                i.id AS invoice_id,
+                s.name AS service_provider_name,
+                i.pickup_point,
+                i.drop_point,
+                i.status AS invoice_status,
+                i.final_amount AS invoice_amount,
+                p.remaining_amount AS remaining_payment,
+                (i.final_amount - p.remaining_amount) AS paid_amount,
+                v.vehicle_number,
+                q.no_of_horse,
+                q.trip_type
+                FROM
+                    ${constants.tableName.quotations} q
+                JOIN ${constants.tableName.invoices} i ON q.id = i.quot_id
+                JOIN ${constants.tableName.service_providers} s ON q.serviceprovider_id = s.id
+                JOIN ${constants.tableName.vehicles} v ON v.id = i.vehicle_id
+                JOIN (
+                    SELECT
+                        pr.invoice_id,
+                        pr.remaining_amount
+                    FROM ${constants.tableName.payment_records} pr
+                    JOIN (
+                        SELECT
+                            invoice_id,
+                            MAX(created_at) AS max_payment_date
+                        FROM ${constants.tableName.payment_records}
+                        GROUP BY invoice_id
+                    ) latest_payments 
+                    ON pr.invoice_id = latest_payments.invoice_id 
+                    AND pr.created_at = latest_payments.max_payment_date
+                ) p ON i.id = p.invoice_id
+                LEFT JOIN ${constants.tableName.bookings} b 
+                ON i.id = b.inv_id
+                WHERE q.customer_id = ${Id}
+                `;
+                // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
+                let queryresult = await queryAsync(bookingQuery);
+                // // console.log('Most Recent enuiry: ', queryresult);
+                // let result = recentEnquiryCustomizeResponse(queryresult)
+                resolve(queryresult)
+            });
+        }
+        catch (error)
+        {
+            // console.log(`Error from the try catch block of the getparticularcustomerallbookings model file function`);
+        }
+    }
+
+    static async getparticularcustomeractivebookingsdatafrominvoice(Id)
+    {
+        try
+        {
+            return await new Promise(async (resolve, reject) =>
+            {
+                let bookingQuery = `
+                SELECT
+                i.id AS invoice_id,
+                s.name AS service_provider_name,
+                i.pickup_point,
+                i.drop_point,
+                i.status AS invoice_status,
+                i.final_amount AS invoice_amount,
+                p.remaining_amount AS remaining_payment,
+                (i.final_amount - p.remaining_amount) AS paid_amount,
+                v.vehicle_number,
+                q.no_of_horse,
+                q.trip_type
+                FROM
+                ${constants.tableName.quotations} q
+                JOIN ${constants.tableName.invoices} i ON q.id = i.quot_id
+                JOIN ${constants.tableName.service_providers} s ON q.serviceprovider_id = s.id
+                JOIN ${constants.tableName.vehicles} v ON v.id = i.vehicle_id
+                JOIN (
+                    SELECT
+                        pr.invoice_id,
+                        pr.remaining_amount
+                    FROM ${constants.tableName.payment_records} pr
+                    JOIN (
+                        SELECT
+                            invoice_id,
+                            MAX(created_at) AS max_payment_date
+                        FROM ${constants.tableName.payment_records}
+                        GROUP BY invoice_id
+                    ) latest_payments 
+                    ON pr.invoice_id = latest_payments.invoice_id 
+                    AND pr.created_at = latest_payments.max_payment_date
+                ) p ON i.id = p.invoice_id
+                LEFT JOIN ${constants.tableName.bookings} b 
+                ON i.id = b.inv_id
+                WHERE q.customer_id = ${Id} AND i.status = '${constants.status.active}' `;
+                
+                // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
+                let queryresult = await queryAsync(bookingQuery);
+                // // console.log('Most Recent enuiry: ', queryresult);
+                resolve(queryresult)
+            });
+        }
+        catch (error)
+        {
+            // console.log(`Error from the try catch block of the getparticularcustomerallbookings model file function`);
+        }
+    };
+
+    static async getparticularcustomerinactivebookingsdatafrominvoice(Id)
+    {
+        try
+        {
+            return await new Promise(async (resolve, reject) =>
+            {
+                let bookingQuery = `SELECT
+                i.id AS invoice_id,
+                s.name AS service_provider_name,
+                i.pickup_point,
+                i.drop_point,
+                i.status AS invoice_status,
+                i.final_amount AS invoice_amount,
+                p.remaining_amount AS remaining_payment,
+                (i.final_amount - p.remaining_amount) AS paid_amount,
+                v.vehicle_number,
+                q.no_of_horse,
+                q.trip_type
+                FROM
+                ${constants.tableName.quotations} q
+                JOIN ${constants.tableName.invoices} i ON q.id = i.quot_id
+                JOIN ${constants.tableName.service_providers} s ON q.serviceprovider_id = s.id
+                JOIN ${constants.tableName.vehicles} v ON v.id = i.vehicle_id
+                JOIN (
+                    SELECT
+                        pr.invoice_id,
+                        pr.remaining_amount
+                    FROM ${constants.tableName.payment_records} pr
+                    JOIN (
+                        SELECT
+                            invoice_id,
+                            MAX(created_at) AS max_payment_date
+                        FROM ${constants.tableName.payment_records}
+                        GROUP BY invoice_id
+                    ) latest_payments 
+                    ON pr.invoice_id = latest_payments.invoice_id 
+                    AND pr.created_at = latest_payments.max_payment_date
+                ) p ON i.id = p.invoice_id
+                LEFT JOIN ${constants.tableName.bookings} b 
+                ON i.id = b.inv_id
+                WHERE q.customer_id = ${Id} AND i.status = '${constants.status.inactive}' `;
+                
+                
+                console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
+                let queryresult = await queryAsync(bookingQuery);
+                // // console.log('Most Recent enuiry: ', queryresult);
+                resolve(queryresult)
+            });
+        }
+        catch (error)
+        {
+            // console.log(`Error from the try catch block of the getparticularcustomerallbookings model file function`);
+        }
+    };
+
+    static async getparticularcustomerongoingbookingsdatafrominvoice(Id)
+    {
+        try
+        {
+            return await new Promise(async (resolve, reject) =>
+            {
+                let bookingQuery = `SELECT
+                i.id AS invoice_id,
+                s.name AS service_provider_name,
+                i.pickup_point,
+                i.drop_point,
+                i.status AS invoice_status,
+                i.final_amount AS invoice_amount,
+                p.remaining_amount AS remaining_payment,
+                (i.final_amount - p.remaining_amount) AS paid_amount,
+                v.vehicle_number,
+                q.no_of_horse,
+                q.trip_type
+                FROM
+                ${constants.tableName.quotations} q
+                JOIN ${constants.tableName.invoices} i ON q.id = i.quot_id
+                JOIN ${constants.tableName.service_providers} s ON q.serviceprovider_id = s.id
+                JOIN ${constants.tableName.vehicles} v ON v.id = i.vehicle_id
+                JOIN (
+                    SELECT
+                        pr.invoice_id,
+                        pr.remaining_amount
+                    FROM ${constants.tableName.payment_records} pr
+                    JOIN (
+                        SELECT
+                            invoice_id,
+                            MAX(created_at) AS max_payment_date
+                        FROM ${constants.tableName.payment_records}
+                        GROUP BY invoice_id
+                    ) latest_payments 
+                    ON pr.invoice_id = latest_payments.invoice_id 
+                    AND pr.created_at = latest_payments.max_payment_date
+                ) p ON i.id = p.invoice_id
+                LEFT JOIN ${constants.tableName.bookings} b 
+                ON i.id = b.inv_id
+                WHERE q.customer_id = ${Id} AND i.status = 'STARTED' `;
+                
+                console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
+                let queryresult = await queryAsync(bookingQuery);
+                // // console.log('Most Recent enuiry: ', queryresult);
+                resolve(queryresult)
+            });
+        }
+        catch (error)
+        {
+            // console.log(`Error from the try catch block of the getparticularcustomerallbookings model file function`);
+        }
+    };
 
     
 

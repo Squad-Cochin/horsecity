@@ -61,10 +61,12 @@ module.exports = (app) =>
     customerController.customerLogin);
 
     app.post(`/customer/logout/:id`,
+    validateHeaders.verifyToken,
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.customerLogout);
 
-    app.post(`/${process.env.apiToken}/customer/password/update`,
+    app.post(`/customer/password/update`,
+    validateHeaders.verifyToken,
     checkInput.usernameValidation(constants.tableName.customers),
     checkInput.passwordValidation,
     checkInput.newpassword,
@@ -84,7 +86,7 @@ module.exports = (app) =>
     // checkInput.isCustomerIdProofImageSubmitted,
     customerController.signup);
 
-    app.get(`/${process.env.apiToken}/customer/logs/:id`,
+    app.get(`/customer/logs/:id`,
     validateHeaders.verifyToken,   
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.getParticularCustomerLogs
@@ -125,7 +127,26 @@ module.exports = (app) =>
     app.get(`/customer/all/enquiries/:id`,
     validateHeaders.verifyToken,   
     isValidIdInTheParams(constants.tableName.customers), 
-    customerController.getParticularCustomerAllEnquiry)
+    customerController.getParticularCustomerAllEnquiry);
 
+    app.get(`/customer/all/booking/data/invoice/table/:id`,
+    validateHeaders.verifyToken,   
+    isValidIdInTheParams(constants.tableName.customers), 
+    customerController.getParticularCustomerAllBookingsDataFromInvoice);
+
+    app.get(`/customer/active/booking/data/invoice/table/:id`,
+    validateHeaders.verifyToken,   
+    isValidIdInTheParams(constants.tableName.customers), 
+    customerController.getParticularCustomerActiveBookingsDataFromInvoice);
+
+    app.get(`/customer/inactive/booking/data/invoice/table/:id`,
+    validateHeaders.verifyToken,   
+    isValidIdInTheParams(constants.tableName.customers), 
+    customerController.getParticularCustomerInactiveBookingsDataFromInvoice);
+
+    app.get(`/customer/ongoing/booking/data/invoice/table/:id`,
+    validateHeaders.verifyToken,   
+    isValidIdInTheParams(constants.tableName.customers), 
+    customerController.getParticularCustomerOngoingBookingsDataFromInvoice);
 
 }

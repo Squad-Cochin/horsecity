@@ -708,12 +708,7 @@ exports.getParticularBookinDetailsRecent = async (req, res, next) =>
 
 exports.getParticularCustomerAllBookings = async (req, res, next) =>
 {
-    let customers = await customer.getparticularcustomerallbookings(
-        req.params.id,
-        req.body.page = req.body.page !== undefined ? req.body.page : 1,
-        req.body.limit = req.body.limit !== undefined ? req.body.limit : 10000000000
-        
-        );
+    let customers = await customer.getparticularcustomerallbookings(req.params.id);
     // console.log(`Customer dashboard response: `, customers);
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
@@ -760,6 +755,123 @@ exports.getParticularCustomerAllEnquiry = async (req, res, next)=>
             code: 200,
             status: true,
             message: `All the enquiries of a particular customer is fetched successfully for the dashboard`,
+            data : customers
+        });
+    }
+};
+
+exports.getParticularCustomerAllBookingsDataFromInvoice = async (req, res, next) =>
+{
+    let customers = await customer.getparticularcustomerallbookingsdatafrominvoice(req.params.id)
+    // console.log(`Data from 'getParticularCustomerAllBookingsDataFromInvoice' function: `, customers);
+    
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
+    if(customers === 'err')
+    {
+        console.log('Error while fetching all the booking data for the customer dashboard from the invoice table');
+        return res.status(200).json
+        ({
+            code: 500,
+            status: false,
+            message: `Internal server error. While fetching all the booking data for the customer dashboard from the invoice table`,
+        });
+    }
+    else
+    {
+        // console.log(`All the booking data of a particular customer is fetched successfully from the invoice table`);
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: `Booking data of a particular customer is fetched successfully data is coming from the invoice table.`,
+            data : customers
+        });
+    }
+
+};
+
+exports.getParticularCustomerActiveBookingsDataFromInvoice = async (req, res, next) =>
+{
+    let customers = await customer.getparticularcustomeractivebookingsdatafrominvoice(req.params.id)
+    // console.log(`Data from 'getParticularCustomerActiveBookingsDataFromInvoice' function: `, customers);
+    
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
+    if(customers === 'err')
+    {
+        console.log('Error while fetching all the active booking data for the customer dashboard from the invoice table');
+        return res.status(200).json
+        ({
+            code: 500,
+            status: false,
+            message: `Internal server error. While fetching all the active booking data for the customer dashboard from the invoice table`,
+        });
+    }
+    else
+    {
+        // console.log(`All the booking data of a particular customer is fetched successfully from the invoice table`);
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: `Active Booking data of a particular customer is fetched successfully data is coming from the invoice table.`,
+            data : customers
+        });
+    }
+};
+
+exports.getParticularCustomerInactiveBookingsDataFromInvoice = async (req, res, next) =>
+{
+    let customers = await customer.getparticularcustomerinactivebookingsdatafrominvoice(req.params.id)
+    // console.log(`Data from 'getParticularCustomerActiveBookingsDataFromInvoice' function: `, customers);
+    
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
+    if(customers === 'err')
+    {
+        console.log('Error while fetching all the inactive booking data for the customer dashboard from the invoice table');
+        return res.status(200).json
+        ({
+            code: 500,
+            status: false,
+            message: `Internal server error. While fetching all the inactive booking data for the customer dashboard from the invoice table`,
+        });
+    }
+    else
+    {
+        // console.log(`All the booking data of a particular customer is fetched successfully from the invoice table`);
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: `Inactive booking data of a particular customer is fetched successfully data is coming from the invoice table.`,
+            data : customers
+        });
+    }
+};
+
+exports.getParticularCustomerOngoingBookingsDataFromInvoice = async (req, res, next) =>
+{
+    let customers = await customer.getparticularcustomerongoingbookingsdatafrominvoice(req.params.id)
+    // console.log(`Data from 'getParticularCustomerActiveBookingsDataFromInvoice' function: `, customers);
+    
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
+    if(customers === 'err')
+    {
+        console.log('Error while fetching all the ongoing booking data for the customer dashboard from the invoice table');
+        return res.status(200).json
+        ({
+            code: 500,
+            status: false,
+            message: `Internal server error. While fetching all the ongoing booking data for the customer dashboard from the invoice table`,
+        });
+    }
+    else
+    {
+        // console.log(`All the booking data of a particular customer is fetched successfully from the invoice table`);
+        return res.status(200).json
+        ({
+            code: 200,
+            status: true,
+            message: `Ongoing booking data of a particular customer is fetched successfully data is coming from the invoice table.`,
             data : customers
         });
     }
