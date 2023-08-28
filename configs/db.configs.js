@@ -7,7 +7,6 @@
 
 const mysql = require('mysql2'); // Importing the mysql2 library functionalities
 
-
 // This is written for establishing the connection with the database. All the details are in the env file
 var con = mysql.createConnection
 ({
@@ -16,7 +15,7 @@ var con = mysql.createConnection
     // port: 3306,
     user: "vsourz",
     password: "vsourz",
-    database: "horsecity2" 
+    database: "horscity" 
 
     // host: "localhost",
     // // port: 3306,

@@ -1042,7 +1042,8 @@ module.exports = class customers
                 (i.final_amount - p.remaining_amount) AS paid_amount,
                 v.vehicle_number,
                 q.no_of_horse,
-                q.trip_type
+                q.trip_type,
+                DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date
                 FROM
                     ${constants.tableName.quotations} q
                 JOIN ${constants.tableName.invoices} i ON q.id = i.quot_id
@@ -1098,7 +1099,8 @@ module.exports = class customers
                 (i.final_amount - p.remaining_amount) AS paid_amount,
                 v.vehicle_number,
                 q.no_of_horse,
-                q.trip_type
+                q.trip_type,
+                DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date
                 FROM
                 ${constants.tableName.quotations} q
                 JOIN ${constants.tableName.invoices} i ON q.id = i.quot_id
@@ -1152,7 +1154,8 @@ module.exports = class customers
                 (i.final_amount - p.remaining_amount) AS paid_amount,
                 v.vehicle_number,
                 q.no_of_horse,
-                q.trip_type
+                q.trip_type,
+                DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date
                 FROM
                 ${constants.tableName.quotations} q
                 JOIN ${constants.tableName.invoices} i ON q.id = i.quot_id
@@ -1176,9 +1179,7 @@ module.exports = class customers
                 LEFT JOIN ${constants.tableName.bookings} b 
                 ON i.id = b.inv_id
                 WHERE q.customer_id = ${Id} AND i.status = '${constants.status.inactive}' `;
-                
-                
-                console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
+                // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
                 let queryresult = await queryAsync(bookingQuery);
                 // // console.log('Most Recent enuiry: ', queryresult);
                 resolve(queryresult)
@@ -1207,7 +1208,8 @@ module.exports = class customers
                 (i.final_amount - p.remaining_amount) AS paid_amount,
                 v.vehicle_number,
                 q.no_of_horse,
-                q.trip_type
+                q.trip_type,
+                DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date
                 FROM
                 ${constants.tableName.quotations} q
                 JOIN ${constants.tableName.invoices} i ON q.id = i.quot_id
@@ -1232,7 +1234,7 @@ module.exports = class customers
                 ON i.id = b.inv_id
                 WHERE q.customer_id = ${Id} AND i.status = 'STARTED' `;
                 
-                console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
+                // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
                 let queryresult = await queryAsync(bookingQuery);
                 // // console.log('Most Recent enuiry: ', queryresult);
                 resolve(queryresult)
@@ -1243,11 +1245,6 @@ module.exports = class customers
             // console.log(`Error from the try catch block of the getparticularcustomerallbookings model file function`);
         }
     };
-
-    
-
-
-
 };
 
 
