@@ -8,12 +8,14 @@ const DateSearch = (props) => {
   const dispatch = useDispatch();
 
   const [ dateData, setDateData ] = useState(new Date()) 
-
+  // const today = new Date();
+  // const minDate = new Date();
+  // minDate.setFullYear(today.getFullYear() - 18);
   // async function initialLoad(){
   //   const bookings = await JSON.parse(localStorage.getItem('searchObject'));
   //   setPickupDate(bookings?.departDate)
   // }
-console.log("Date",props.pickupDate);
+
 
   return (
     <div className="text-15 text-light-1 ls-2 lh-16 custom_dual_datepicker">
@@ -42,18 +44,23 @@ console.log("Date",props.pickupDate);
         dateFormat="MMM dd"
         required
       />
-    //   <DatePicker
-    //   inputClass="custom_input-picker"
-    //   containerClassName="custom_container-picker"
-    //   selected={dateData}
-    //   onChange={(date) => {
-    //     setDateData(date);
-    //     dispatch(addDepart(date));
-    //   }}
-    //   minDate={new Date()}
-    //   dateFormat="MMM dd"
-    // />
-    ) : (
+    ): props.use === "date-of-birth"? (
+      <DatePicker
+          inputClass="custom_input-picker"
+          containerClassName="custom_container-picker"
+          selected={props.formData.birthday ? new Date(props.formData.birthday) : null}
+          onChange={(date) => {
+          const newFormdata = {
+            ...props.formData,
+            birthday : date
+          } 
+          props.setFormData(newFormdata);
+          }}
+          minDate={new Date()}
+          dateFormat="dd MMM"
+          required
+      />
+    )  : (
       <DatePicker
         inputClass="custom_input-picker"
         containerClassName="custom_container-picker"

@@ -10,7 +10,7 @@ import Footer from "../common/Footer";
 import { useEffect, useState } from "react";
 import dashboardDataApi from "../../api/dashboardDataApi";
 
-const index = () => {
+const Index = () => {
   const [ login, setLogin ] = useState({});
   const [ data, setData ] = useState([]);
   useEffect(()=>{
@@ -105,4 +105,4 @@ const index = () => {
   );
 };
 
-export default index;
+export default Index;

@@ -1,14 +1,17 @@
 import Image from "next/image";
-import React, { useState } from "react";
+import React, { useState ,useEffect} from "react";
 
-const AvatarUploader = () => {
+const AvatarUploader = (props) => {
   const [image, setImage] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
+  console.log("Date",props.formData.id_proof_image);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
+    useEffect(()=>{
+    },[])
 
     if (!file) {
       setError("Please select an image.");
@@ -27,8 +30,14 @@ const AvatarUploader = () => {
       setSuccess(false);
       return;
     }
+    const newFormData = {
+      ...props.formData,
+      id_proof_image : file
+    }
 
+    props.setFormData(newFormData)
     reader.onload = () => {
+      console.log("Filee",reader.result);
       setImage(reader.result);
       setSuccess(true);
       setError("");
@@ -37,44 +46,30 @@ const AvatarUploader = () => {
     reader.readAsDataURL(file);
   };
 
+
+// FUNCTION FOR IMAGE LOADER
+
+  const imageLoader = ({ src, width, quality }) => {
+
+    return `${src}`;
+
+  };
+
   return (
     <div className="row y-gap-30 items-center">
-      <div className="col-auto">
-        {image ? (
-          <div className="d-flex ratio ratio-1:1 w-200">
-            <Image
-              width={200}
-              height={200}
-              src={image}
-              alt="avatar"
-              className="img-ratio rounded-4"
-            />
-            <div className="d-flex justify-end px-10 py-10 h-100 w-1/1 absolute">
-              <div
-                className="size-40 bg-white rounded-4 flex-center cursor-pointer"
-                onClick={() => setImage("")}
-              >
-                <i className="icon-trash text-16" />
-              </div>
-            </div>
-          </div>
-        ) : (
-          <div className="d-flex ratio ratio-1:1 w-200">
-            <Image
-              width={200}
-              height={200}
-              src="/img/misc/avatar-1.png"
-              alt="image"
-              className="img-ratio rounded-4"
-            />
-            <div className="d-flex justify-end px-10 py-10 h-100 w-1/1 absolute">
-              <div className="size-40 bg-white rounded-4 flex-center cursor-pointer">
-                <i className="icon-trash text-16" />
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
+ <div className="col-auto">
+  <div className="d-flex ratio ratio-1:1 w-200">
+    <Image
+      src={props.formData.id_proof_image || image}
+      loader={imageLoader}
+      width={200}
+      height={200}
+      alt="ID Proof"
+      className="img-ratio rounded-4"
+    />
+  </div>
+</div>
+
 
       <div className="col-auto">
         <h4 className="text-16 fw-500">Id Proof Image</h4>
@@ -96,6 +91,7 @@ const AvatarUploader = () => {
             accept="image/png, image/jpeg"
             onChange={handleImageChange}
             style={{ display: "none" }}
+
           />
         </div>
         {error && !success && <div className="text-red-1 mt-1">{error}</div>}

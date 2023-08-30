@@ -5,10 +5,10 @@ const Pagination = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const { limit } = useSelector((state) => state.listingFilter) || {};
   const { total_count } = useSelector((state) => state.wishlist) || {};
-
+  const dispatch = useDispatch();
   const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
-    useDispatch(wishlist_page({page : pageNumber}))
+    dispatch(wishlist_page({page : pageNumber}))
 
   };
 
