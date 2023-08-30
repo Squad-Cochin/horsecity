@@ -842,6 +842,7 @@ exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
         }   
         if(req.method === 'PUT' && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params.id}` && req.files?.id_proof_image)
         {
+            // console.log(req.files?.id_proof_image);
             // console.log('Going inside 3');
             next();
         }

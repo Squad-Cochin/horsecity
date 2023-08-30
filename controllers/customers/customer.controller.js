@@ -880,6 +880,7 @@ exports.getParticularCustomerOngoingBookingsDataFromInvoice = async (req, res, n
 
 exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
 {
+    console.log();
     let customers = await customer.editcustomerdetailsfromcustomerside(
         req.params.id,
         req.body.name,
@@ -888,7 +889,7 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
         req.body.contact_no,
         req.body.date_of_birth,
         req.body.id_proof_no,
-        req.body.id_proof_image
+        req.files.id_proof_image
     );
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
@@ -909,7 +910,7 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : ` Customer ${constant.responseMessage.edit} `,
+            message : `Customer ${constant.responseMessage.edit} `,
         });
     }
     
