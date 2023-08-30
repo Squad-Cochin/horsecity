@@ -15,7 +15,7 @@ var con = mysql.createConnection
     // port: 3306,
     user: "vsourz",
     password: "vsourz",
-    database: "horscity" 
+    database: "horsecity2" 
 
     // host: "localhost",
     // // port: 3306,

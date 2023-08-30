@@ -914,3 +914,44 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
     }
     
 };
+
+exports.getOneDetailsOnCustomerPage = async(req, res, next) =>
+{
+    let customers = await customer.getonedetailsoncustomerpage(req.params?.id);
+    // console.log('Customer One Data: ',customers);    
+    // If any wrong id or some thing wrong entered, If that Id has no data then this if block of code will be executed
+    if(customers === 'nodata')
+    {
+        console.log('No customer data present');
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : constant.responseMessage.getOneErr,
+            data : []
+        });
+    }
+    // If any unwanted, unencounter, or unconventionaal error came then this else if block of code will be executed.
+    else if(customers === 'err')
+    {
+        return res.status(200).send
+        ({
+            code : 500,
+            status : false,
+            message : constant.responseMessage.universalError,
+            data : []
+        });
+    }
+    else
+    {
+        // Every things went well and customer data is available then this else block of code will executed.
+        console.log('Particular customer data fetched successfully');
+        return res.status(200).send
+        ({
+            code : 200,
+            status : true,
+            message : constant.responseMessage.getAll,
+            data : customers 
+        });
+    }
+};

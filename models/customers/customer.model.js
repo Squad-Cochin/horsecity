@@ -1304,6 +1304,42 @@ module.exports = class customers
         }
     };
 
+    static async getonedetailsoncustomerpage(Id)
+    {
+        try
+        {
+            const data = await commonfetching.dataOnCondition(constants.tableName.customers, Id, 'id');
+            // console.log('Data : ', data);
+            if(data.length === 0)
+            {                
+                console.log('No data present on this Id');
+                return ('nodata');
+            }
+            else if(data === 'err')
+            {
+                console.log(`Error while fethcing the vehicle data on the basis if Id. Model folder`);
+                return ('err');
+            }
+            else
+            {
+                let responseObj = {
+                    name : data[0].name,
+                    userName : data[0].user_name, 
+                    email : data[0].email,               
+                    contact_no : data[0].contact_no, 
+                    birthday : time.formatDateToDDMMYYYY(data[0].date_of_birth),                
+                    id_proof_no : data[0].id_proof_no, 
+                    id_proof_image : `${process.env.PORT_SP}${constants.attachmentLocation.customer.view.idProof}${data[0].id_proof_image}`
+                }
+                return responseObj;
+            }     
+        }
+        catch (error)
+        {
+            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getone". Which is designed to fetch particular data of the customers.', error);            
+        }
+    };
+
 
 };
 

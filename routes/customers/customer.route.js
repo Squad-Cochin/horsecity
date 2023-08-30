@@ -160,4 +160,9 @@ module.exports = (app) =>
     checkInput.isCustomerIdProofImageSubmitted,
     customerController.editCustomerDetailsFromCustomerSide);
 
+    app.get(`/customer/view/detail/:id`,
+    validateHeaders.verifyToken, 
+    isValidIdInTheParams(constants.tableName.customers),
+    customerController.getOneDetailsOnCustomerPage)
+
 }
