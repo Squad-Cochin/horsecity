@@ -887,7 +887,7 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
         req.body.userName,
         req.body.email,
         req.body.contact_no,
-        time.changeCustomerPageDateToSQLFormat(req.body.date_of_birth),
+        time.changeCustomerPageDateToSQLFormat(req.body.birthday),
         req.body.id_proof_no,
         req.files && req.files.id_proof_image !== undefined ? req.files.id_proof_image : null // Perform the null check here // Image of the identity proof
         // req.files.id_proof_image

@@ -230,12 +230,12 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
                     // console.log(`Came inside 2`);
                     next();
                 }
-                else if(req.method === `PUT` && req.url === url.UPDATE_CUSTOMER_PAGE_URL + req.params.id)
+                else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params?.id}`)
                 {
                     // console.log(`Came inside 3`);
                     this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params.id, 'Username' )(req, res, next);
                 }
-                else if(req.method === `PUT` && req.url === url.UPDATE_DRIVER_PAGE_URL + req.params.id)
+                else if(req.method === `PUT` && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params?.id}`)
                 {
                     // console.log(`Came inside 4`);
                     this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params.id, 'Username')(req, res, next);
@@ -304,11 +304,11 @@ exports.contactNumberValidation = (tableName) => async (req, res, next) =>
                     {
                         this.validateCommonInputAtStartingTime(tableName, `contact_no`, req.body.contact_no, req.params.id, 'contact number')(req, res, next);                        
                     }
-                    else if(req.method === `PUT` && req.url === url.UPDATE_DRIVER_PAGE_URL + req.params.id && tableName === constants.tableName.drivers)
+                    else if(req.method === `PUT` && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params?.id}` && tableName === constants.tableName.drivers)
                     {
                         this.validateCommonInputAtUpdateTime(tableName, `contact_no`, req.body.contact_no, req.params.id, 'contact number')(req, res, next);
                     }
-                    else if(req.method === `PUT` && req.url === url.UPDATE_CUSTOMER_PAGE_URL + req.params.id && tableName === constants.tableName.customers)
+                    else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params?.id}` && tableName === constants.tableName.customers)
                     {
                         this.validateCommonInputAtUpdateTime(tableName, `contact_no`, req.body.contact_no, req.params.id, 'contact number')(req, res, next);
                     }
@@ -347,7 +347,7 @@ exports.isValidLicenceNumber = async (req, res, next) =>
         {
             this.validateCommonInputAtStartingTime(constants.tableName.drivers, `licence_no`, req.body.licence_no, req.params.id, 'Licence number')(req, res, next);                        
         }
-        else if(req.method === `PUT` && req.url === url.UPDATE_DRIVER_PAGE_URL + req.params.id)
+        else if(req.method === `PUT` && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params.id}`)
         {
             this.validateCommonInputAtUpdateTime(constants.tableName.drivers, `licence_no`, req.body.licence_no, req.params.id, 'Licence number')(req, res, next);
         }
@@ -380,7 +380,7 @@ exports.idProofNumberValidation = async (req, res, next) =>
         {
             this.validateCommonInputAtStartingTime(constants.tableName.customers, `id_proof_no`, req.body.id_proof_no, req.params.id, 'Id proof number')(req, res, next);                        
         }
-        else if(req.method === `PUT` && req.url === url.UPDATE_CUSTOMER_PAGE_URL + req.params.id)
+        else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params?.id}`)
         {
             this.validateCommonInputAtUpdateTime(constants.tableName.customers, `id_proof_no`, req.body.id_proof_no, req.params.id, 'Id proof number')(req, res, next);
         }
