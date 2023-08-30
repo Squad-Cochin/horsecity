@@ -60,7 +60,7 @@ module.exports = (app) =>
     checkInput.passwordValidation,
     customerController.customerLogin);
 
-    app.post(`/customer/logout/:id`,
+    app.get(`/customer/logout/:id`,
     validateHeaders.verifyToken,
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.customerLogout);
@@ -148,5 +148,17 @@ module.exports = (app) =>
     validateHeaders.verifyToken,   
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.getParticularCustomerOngoingBookingsDataFromInvoice);
+
+    app.put(`/customer/edit/details/:id`,
+    validateHeaders.verifyToken, 
+    isValidIdInTheParams(constants.tableName.customers),  
+    checkInput.nameValidation,
+    checkInput.emailValidation(constants.tableName.customers),
+    checkInput.usernameValidation(constants.tableName.customers),
+    checkInput.contactNumberValidation(constants.tableName.customers),
+    checkInput.dateOfBirthValidation,
+    checkInput.idProofNumberValidation,
+    checkInput.isCustomerIdProofImageSubmitted,
+    customerController.editCustomerDetailsFromCustomerSide);
 
 }

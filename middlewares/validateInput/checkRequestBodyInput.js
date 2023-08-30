@@ -154,6 +154,9 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
             }
             else
             {
+                console.log(req.method);
+                console.log(req.url);
+                console.log(url.UPDATE_CUSTOMER_SIDE_URL + req.params.id);
                 if(req.method === `POST`)
                 {
                     this.validateCommonInputAtStartingTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
@@ -166,13 +169,17 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
                 {
                     this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
                 }
+                else if(req.method === `PUT` && req.url === url.UPDATE_CUSTOMER_SIDE_URL + req.params.id)
+                {
+                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
+                }
                 else
                 {
                     return res.status(500).json
                     ({
                         code : 500,
                         status : false, 
-                        message : `Internal server error. While checking the email.` 
+                        message : `Internal server error. While checking the email from the middleware.` 
                     });
                 }
             }
@@ -243,7 +250,7 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
                 }
                 else 
                 {
-                    // console.log(`Came inside 6`);
+                    console.log(`Came inside 6`);
                     return res.status(500).json
                     ({
                         code : 500,
@@ -819,6 +826,10 @@ exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
             next();
         }
         if(req.method === 'PUT' && req.url === url.UPDATE_CUSTOMER_PAGE_URL + req.params.id && req.files?.id_proof_image)
+        {
+            next();
+        }   
+        if(req.method === 'PUT' && req.url === url.UPDATE_CUSTOMER_SIDE_URL + req.params.id && req.files?.id_proof_image)
         {
             next();
         }

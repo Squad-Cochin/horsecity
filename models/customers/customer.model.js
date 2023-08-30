@@ -1232,9 +1232,11 @@ module.exports = class customers
                 ) p ON i.id = p.invoice_id
                 LEFT JOIN ${constants.tableName.bookings} b 
                 ON i.id = b.inv_id
-                WHERE q.customer_id = ${Id} AND i.status = 'STARTED' `;
+                WHERE q.customer_id = ${Id} 
+                AND i.status = 'STARTED'
+                AND b.booking_status = 'CONFIRM'`;
                 
-                // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
+                console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
                 let queryresult = await queryAsync(bookingQuery);
                 // // console.log('Most Recent enuiry: ', queryresult);
                 resolve(queryresult)
@@ -1245,6 +1247,61 @@ module.exports = class customers
             // console.log(`Error from the try catch block of the getparticularcustomerallbookings model file function`);
         }
     };
+
+    static async editcustomerdetailsfromcustomerside(Id, name, userName, email, contact_no, date_of_birth, id_proof_no, id_proof_image)
+    {
+        try
+        {
+            return await new Promise(async (resolve, reject) =>
+            {
+                if(id_proof_image === null || id_proof_image === undefined)
+                {
+                    let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${Id}'`;
+                    console.log(upQuery);
+                    con.query(upQuery, (err, result) =>
+                    {
+                        console.log(result);
+                        if(result.affectedRows > 0)
+                        {
+                            console.log('Customer data updated successfully');
+                            resolve(result);
+                        }
+                        else
+                        {
+                            console.log(err);
+                            resolve('err')
+                        }
+                    });
+                }
+                else
+                {
+                    let uploadAttachment = await commonoperation.fileUploadTwo(id_proof_image, constants.attachmentLocation.customer.upload.idProof);
+                    let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.id_proof_image = '${uploadAttachment}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
+                    console.log(upQuery);
+                    con.query(upQuery, (err, result) =>
+                    {
+                        console.log(result);
+                        if(result.affectedRows > 0)
+                        {
+                            console.log('Customer data updated successfully');
+                            resolve(result);
+                        }
+                        else
+                        {
+                            console.log(err);
+                            resolve('err')
+                        }
+                    });
+                }                   
+            });
+        }
+        catch (error)
+        {
+            // console.log(`Error from the try catch block of the getparticularcustomerallbookings model file function`);
+        }
+    };
+
+
 };
 
 

@@ -876,3 +876,40 @@ exports.getParticularCustomerOngoingBookingsDataFromInvoice = async (req, res, n
         });
     }
 };
+
+exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
+{
+    let customers = await customer.editcustomerdetailsfromcustomerside(
+        req.params.id,
+        req.body.name,
+        req.body.userName,
+        req.body.email,
+        req.body.contact_no,
+        req.body.date_of_birth,
+        req.body.id_proof_no,
+        req.body.id_proof_image
+    );
+    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
+    if(customers === 'err')
+    {
+        console.log('Error while editing the customer data');
+        return res.status(200).send
+        ({
+            code : 400,
+            status : true,
+            message : constant.responseMessage.erroredit,
+        });
+    }
+    // If input feild are in correct format and not already present in the database, then this else block of code will be executed.
+    else
+    {
+        console.log('Customer data edited successfully');
+        return res.status(200).send
+        ({
+            code : 200,
+            status : true,
+            message : ` Customer ${constant.responseMessage.edit} `,
+        });
+    }
+    
+};
