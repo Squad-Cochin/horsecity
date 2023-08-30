@@ -29,8 +29,7 @@ module.exports = (app) =>
     // checkInput.dateOfBirthValidation,
     checkInput.idProofNumberValidation,
     checkInput.isCustomerIdProofImageSubmitted,
-    customerController.addCustomer
-    );
+    customerController.addCustomer);
 
     // Below route is for removing the customer
     app.put(`/${process.env.apiToken}/remove/customer/:id`, 
@@ -52,8 +51,7 @@ module.exports = (app) =>
             // checkInput.dateOfBirthValidation,
             checkInput.idProofNumberValidation,
             checkInput.isCustomerIdProofImageSubmitted,
-            customerController.editCustomer
-           );
+    customerController.editCustomer);
     
     app.post(`/customer/login`,
     validateHeaders.verifyToken,
@@ -89,14 +87,12 @@ module.exports = (app) =>
     app.get(`/customer/logs/:id`,
     validateHeaders.verifyToken,   
     isValidIdInTheParams(constants.tableName.customers), 
-    customerController.getParticularCustomerLogs
-    );
+    customerController.getParticularCustomerLogs);
 
     app.get(`/customer/dasboard/:id`,
     validateHeaders.verifyToken,   
     isValidIdInTheParams(constants.tableName.customers), 
-    customerController.getParticularCustomerDashboard
-    );
+    customerController.getParticularCustomerDashboard);
 
     app.get(`/customer/booking/completed/:id`,
     validateHeaders.verifyToken,   
@@ -155,7 +151,7 @@ module.exports = (app) =>
     checkInput.emailValidation(constants.tableName.customers),
     checkInput.usernameValidation(constants.tableName.customers),
     checkInput.contactNumberValidation(constants.tableName.customers),
-    checkInput.dateOfBirthValidation,
+    // checkInput.dateOfBirthValidation,
     checkInput.idProofNumberValidation,
     checkInput.isCustomerIdProofImageSubmitted,
     customerController.editCustomerDetailsFromCustomerSide);

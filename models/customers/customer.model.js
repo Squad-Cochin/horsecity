@@ -1322,7 +1322,8 @@ module.exports = class customers
             }
             else
             {
-                let responseObj = {
+                let responseObj = 
+                {
                     name : data[0].name,
                     userName : data[0].user_name, 
                     email : data[0].email,               
@@ -1339,8 +1340,6 @@ module.exports = class customers
             console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getone". Which is designed to fetch particular data of the customers.', error);            
         }
     };
-
-
 };
 
 

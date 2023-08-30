@@ -240,6 +240,10 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
                     // console.log(`Came inside 4`);
                     this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params.id, 'Username')(req, res, next);
                 }
+                else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params?.id}`)
+                {
+                    this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params?.id, 'Username')(req, res, next);
+                }
                 else if(req.method === `POST`)
                 {
                     // console.log(`Came inside 5`);
@@ -305,6 +309,10 @@ exports.contactNumberValidation = (tableName) => async (req, res, next) =>
                         this.validateCommonInputAtUpdateTime(tableName, `contact_no`, req.body.contact_no, req.params.id, 'contact number')(req, res, next);
                     }
                     else if(req.method === `PUT` && req.url === url.UPDATE_CUSTOMER_PAGE_URL + req.params.id && tableName === constants.tableName.customers)
+                    {
+                        this.validateCommonInputAtUpdateTime(tableName, `contact_no`, req.body.contact_no, req.params.id, 'contact number')(req, res, next);
+                    }
+                    else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params?.id}`)
                     {
                         this.validateCommonInputAtUpdateTime(tableName, `contact_no`, req.body.contact_no, req.params.id, 'contact number')(req, res, next);
                     }
