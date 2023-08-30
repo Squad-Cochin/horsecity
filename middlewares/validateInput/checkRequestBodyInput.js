@@ -384,6 +384,10 @@ exports.idProofNumberValidation = async (req, res, next) =>
         {
             this.validateCommonInputAtUpdateTime(constants.tableName.customers, `id_proof_no`, req.body.id_proof_no, req.params.id, 'Id proof number')(req, res, next);
         }
+        else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params?.id}`)
+        {
+            this.validateCommonInputAtUpdateTime(constants.tableName.customers, `id_proof_no`, req.body.id_proof_no, req.params.id, 'Id proof number')(req, res, next);
+        }
         else
         {
             return res.status(500).json
@@ -839,6 +843,11 @@ exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
         if(req.method === 'PUT' && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params.id}` && req.files?.id_proof_image)
         {
             // console.log('Going inside 3');
+            next();
+        }
+        if(req.method === 'PUT' && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params.id}` && !req.files?.id_proof_image)
+        {
+            // console.log('Going inside 5');
             next();
         }
         if(req.method === 'POST')
