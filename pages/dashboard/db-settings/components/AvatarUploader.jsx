@@ -10,7 +10,7 @@ const AvatarUploader = (props) => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
-
+    setImage(URL.createObjectURL(file));
     if (!file) {
       setError("Please select an image.");
       setSuccess(false);
@@ -34,7 +34,7 @@ const AvatarUploader = (props) => {
     }
 
       props.setFormData(newFormData)
-      setImage(URL.createObjectURL(file));
+
 
   };
 
@@ -49,16 +49,26 @@ const AvatarUploader = (props) => {
 
   return (
     <div className="row y-gap-30 items-center">
- <div className="col-auto">
-  <div className="d-flex ratio ratio-1:1 w-200">
-    <Image
-      src={props.formData.id_proof_image || image}
+   <div className="col-auto">
+    <div className="d-flex ratio ratio-1:1 w-200">
+      {props.formData.id_proof_image? ( 
+      <Image
+      src={props.formData.id_proof_image}
       loader={imageLoader}
       width={200}
       height={200}
       alt="ID Proof"
       className="img-ratio rounded-4"
-    />
+    />):null}
+     {image? ( 
+      <Image
+      src={image}
+      width={200}
+      height={200}
+      alt="ID Proof"
+      className="img-ratio rounded-4"
+    />):null}
+ 
   </div>
 </div>
 
@@ -91,5 +101,17 @@ const AvatarUploader = (props) => {
     </div>
   );
 };
-
+AvatarUploader.defaultProps = {
+  formData : {
+    name: '',
+    userName: '',
+    email: '',
+    contact_no: '',
+    birthday: '',
+    id_proof_no: '',
+    id_proof_image: '',
+  }
+}
 export default AvatarUploader;
+
+

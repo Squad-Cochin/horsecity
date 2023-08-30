@@ -15,7 +15,9 @@ const DateSearch = (props) => {
   //   const bookings = await JSON.parse(localStorage.getItem('searchObject'));
   //   setPickupDate(bookings?.departDate)
   // }
-
+  const today = new Date();
+  const maxdate= new Date();
+  maxdate.setFullYear(today.getFullYear() - 18);
 
   return (
     <div className="text-15 text-light-1 ls-2 lh-16 custom_dual_datepicker">
@@ -56,7 +58,7 @@ const DateSearch = (props) => {
           } 
           props.setFormData(newFormdata);
           }}
-          minDate={new Date()}
+          maxDate={maxdate}
           dateFormat="dd MMM"
           required
       />
