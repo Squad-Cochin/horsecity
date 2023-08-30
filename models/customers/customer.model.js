@@ -1329,7 +1329,7 @@ module.exports = class customers
                     userName : data[0].user_name, 
                     email : data[0].email,               
                     contact_no : data[0].contact_no, 
-                    birthday : time.formatDateToDDMMYYYY(data[0].date_of_birth),                
+                    birthday : time.formatDateToMMDDYYYY(data[0].date_of_birth),                
                     id_proof_no : data[0].id_proof_no, 
                     id_proof_image : `${process.env.PORT_SP}${constants.attachmentLocation.customer.view.idProof}${data[0].id_proof_image}`
                 }

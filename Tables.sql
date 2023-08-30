@@ -458,14 +458,9 @@ CREATE TABLE wishlist
 );
 
 ALTER TABLE enquiries ADD pickup_date DATE NOT NULL;
-
 ALTER TABLE `payment_records` CHANGE `status` `status` ENUM('PAID','PARTIALLY PAID','PENDING','CANCELLED') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
-
 ALTER TABLE `payment_records` ADD `deleted_at` DATETIME NULL AFTER `updated_at`;
-
 ALTER TABLE `bookings` CHANGE `status` `status` ENUM('PAID','PENDING','REFUND', 'CANCELLED') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
-
 ALTER TABLE `bookings` CHANGE `booking_status` `booking_status` ENUM('CONFIRM','COMPLETED','BREAKOUT','CANCELLED') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
-
 ALTER TABLE `drivers` CHANGE `date_of_birth` `date_of_birth` DATE NOT NULL;
 ALTER TABLE `customers` CHANGE `date_of_birth` `date_of_birth` DATE NOT NULL;

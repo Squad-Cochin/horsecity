@@ -131,13 +131,35 @@ function formatDateToDDMMYYYYHHMMSS(inputDate)
     }    
 }
 
+function formatDateToMMDDYYYY(inputDate) 
+  {
+    if(!inputDate)
+    {
+        return null
+    }
+    else
+    {
+        // Convert the input date string to a Date object
+        const dateObj = new Date(inputDate);
+    
+        // Extract day, month, and year from the Date object
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const year = dateObj.getFullYear();    
+        // Format the date as "MM-DD-YYYY"
+        const formattedDate = `${month}-${day}-${year}`;
+        return formattedDate;
+    }    
+}
+
 const timeexportfunction = 
 {
     addingSpecifiedDaysToCurrentDate,
     getFormattedUTCTime,
     changeDateToSQLFormat,
     formatDateToDDMMYYYY,
-    formatDateToDDMMYYYYHHMMSS
+    formatDateToDDMMYYYYHHMMSS,
+    formatDateToMMDDYYYY
 }
 
 module.exports = timeexportfunction;
