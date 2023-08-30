@@ -54,14 +54,41 @@ const getFormattedUTCTime = (utcOffset) =>
 }
 
 
-  const changeDateToSQLFormat = (dateString) =>
-  {
-
+const changeDateToSQLFormat = (dateString) =>
+{
     // Check if the input date string is in the format "DD-MM-YYYY"
     if (/^\d{2}-\d{2}-\d{4}$/.test(dateString))
     {
         // Split the dateString into day, month, and year parts
         const [day, month, year] = dateString.split('-');
+         // Format the date in YYYY-MM-DD HH:MM:SS
+         const formattedDate = `${year}-${month}-${day} 00:00:00`;
+         return formattedDate;
+    }
+
+    // Convert the input string to a Date object
+    const dateObj = new Date(dateString);
+
+    // Extract the individual date components
+    const year = dateObj.getFullYear();
+    const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+    const day = String(dateObj.getDate()).padStart(2, '0');
+    const hours = String(dateObj.getHours()).padStart(2, '0');
+    const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+    const seconds = String(dateObj.getSeconds()).padStart(2, '0');
+
+    // Format the date in YYYY-MM-DD HH:MM:SS
+    const formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    return formattedDate;
+};
+
+const changeCustomerPageDateToSQLFormat = (dateString) =>
+{
+    // Check if the input date string is in the format "DD-MM-YYYY"
+    if (/^\d{2}-\d{2}-\d{4}$/.test(dateString))
+    {
+        // Split the dateString into day, month, and year parts
+        const [month, day, year] = dateString.split('-');
          // Format the date in YYYY-MM-DD HH:MM:SS
          const formattedDate = `${year}-${month}-${day} 00:00:00`;
          return formattedDate;
@@ -140,8 +167,7 @@ function formatDateToMMDDYYYY(inputDate)
     else
     {
         // Convert the input date string to a Date object
-        const dateObj = new Date(inputDate);
-    
+        const dateObj = new Date(inputDate);    
         // Extract day, month, and year from the Date object
         const day = String(dateObj.getDate()).padStart(2, '0');
         const month = String(dateObj.getMonth() + 1).padStart(2, '0');
@@ -159,7 +185,8 @@ const timeexportfunction =
     changeDateToSQLFormat,
     formatDateToDDMMYYYY,
     formatDateToDDMMYYYYHHMMSS,
-    formatDateToMMDDYYYY
+    formatDateToMMDDYYYY,
+    changeCustomerPageDateToSQLFormat
 }
 
 module.exports = timeexportfunction;

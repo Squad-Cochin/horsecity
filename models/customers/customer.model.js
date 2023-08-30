@@ -724,7 +724,7 @@ module.exports = class customers
                                 //     // console.log(PaidAmount);
                                     if(!remainingamount && !PaidAmount)
                                     {
-                                        console.log(`Else block if`);
+                                        // console.log(`Else block if`);
                                         let result = customizeCustomerDashboardData(result1, result2, 0, 0)
                                         resolve(result);
                                     }
@@ -1126,7 +1126,7 @@ module.exports = class customers
                 ) p ON i.id = p.invoice_id
                 LEFT JOIN ${constants.tableName.bookings} b 
                 ON i.id = b.inv_id
-                WHERE q.customer_id = ${Id} AND i.status = '${constants.status.active}' `;
+                WHERE q.customer_id = ${Id} AND i.status = '${constants.status.active}'`;
                 
                 // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
                 let queryresult = await queryAsync(bookingQuery);
@@ -1239,7 +1239,7 @@ module.exports = class customers
                 AND i.status = 'STARTED'
                 AND b.booking_status = 'CONFIRM'`;
                 
-                console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
+                // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
                 let queryresult = await queryAsync(bookingQuery);
                 // // console.log('Most Recent enuiry: ', queryresult);
                 resolve(queryresult)
