@@ -13,8 +13,7 @@ const UPDATE_SETTINGS_PAGE_URL = token + `/update/settings`
 
 const ADD_CUSTOMER_PAGE_URL = token + `/add/customer`
 const UPDATE_CUSTOMER_PAGE_URL = token + `/edit/customer/` 
-const UPDATE_CUSTOMER_PASSWORD = token + `/customer/password/update`
-const UPDATE_CUSTOMER_SIDE_URL = `/customer/edit/details`
+const UPDATE_CUSTOMER_SIDE_URL = `/customer/edit/details/`
 
 
 const ADD_DRIVER_PAGE_URL = token + `/add/driver`
@@ -41,7 +40,6 @@ module.exports =
     
     ADD_CUSTOMER_PAGE_URL, // Add customer link
     UPDATE_CUSTOMER_PAGE_URL, // update customer link
-    UPDATE_CUSTOMER_PASSWORD,
     UPDATE_CUSTOMER_SIDE_URL,
 
 

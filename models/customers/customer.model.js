@@ -194,7 +194,7 @@ module.exports = class customers
                         {
                             if(resultRole[0].role_id === constants.Roles.admin)
                             {
-                                console.log(`Add customer with the admin side`);
+                                // console.log(`Add customer with the admin side`);
                                 let insQuery = `INSERT INTO customers(name, email, user_name, password, contact_no, date_of_birth, id_proof_no, id_proof_image, phone_verified, email_verified, expiry_at, created_at) VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', '${id_proof_no}', '${uploadAttachment}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                                 // console.log('Customer insert query: ', insQuery);
                                 con.query(insQuery, (err, result) =>
@@ -475,42 +475,45 @@ module.exports = class customers
         });           
     };
 
-    static async customerchangepassword(username, password, newpassword) 
+    static async customerchangepassword(id, password, newpassword) 
     {
         try
         {
-            const customerData = await commonfetching.dataOnCondition(constants.tableName.customers, username, 'user_name');
-            if (customerData.length === 0) 
+            return new Promise(async(resolve, reject) =>
             {
-                return 'nocustomer';
-            }
-            else
-            {
-                var passwordHashed = await commonoperation.changePasswordToSQLHashing(password);
-                if (customerData[0].password !== passwordHashed)
+                const customerData = await commonfetching.dataOnCondition(constants.tableName.customers, id, 'id');
+                if (customerData.length === 0) 
                 {
-                    return 'incorrectpassword';
+                    resolve('nocustomer');
                 }
                 else
                 {
-                    const newpasswordHashed = await commonoperation.changePasswordToSQLHashing(newpassword);
-                    let updatePasswordQuery = `UPDATE ${constants.tableName.customers} SET password = '${newpasswordHashed}' WHERE user_name = '${username}' `;
-                    // console.log(`Update Password Query: `, updatePasswordQuery);
-                    con.query(updatePasswordQuery, (err, result) =>
+                    var passwordHashed = await commonoperation.changePasswordToSQLHashing(password);
+                    if (customerData[0].password !== passwordHashed)
                     {
-                        if(result.affectedRows > 0)
+                        resolve('incorrectpassword');
+                    }
+                    else
+                    {
+                        const newpasswordHashed = await commonoperation.changePasswordToSQLHashing(newpassword);
+                        let updatePasswordQuery = `UPDATE ${constants.tableName.customers} SET password = '${newpasswordHashed}', updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE id = ${id} `;
+                        // console.log(`Update Password Query: `, updatePasswordQuery);
+                        con.query(updatePasswordQuery, (err, result) =>
                         {
-                            console.log('Password Updated');
-                            return customerData;
-                        }
-                        else
-                        {
-                            console.log(`Error while updating the password`);
-                            return 'err';   
-                        }
-                    });                                
-                }   
-            }           
+                            if(result.affectedRows > 0)
+                            {
+                                // console.log('Password Updated');
+                                resolve(customerData);
+                            }
+                            else
+                            {
+                                console.log(`Error while updating the password`);
+                                resolve('err');   
+                            }
+                        });                                
+                    }   
+                }
+            });         
         }
         catch (error)
         {

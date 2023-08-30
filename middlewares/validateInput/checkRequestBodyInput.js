@@ -154,23 +154,25 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
             }
             else
             {
-                console.log(req.method);
-                console.log(req.url);
-                console.log(url.UPDATE_CUSTOMER_SIDE_URL + req.params.id);
+                // console.log(req.method);
+                //console.log(req.url);
+                // console.log(`${url.UPDATE_CUSTOMER_SIDE_URL}${req.params?.id}`);
+                // console.log(url.UPDATE_CUSTOMER_SIDE_URL + req.params.id);
                 if(req.method === `POST`)
                 {
                     this.validateCommonInputAtStartingTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
                 }
-                else if(req.method === `PUT` && req.url === url.UPDATE_CUSTOMER_PAGE_URL + req.params.id)
+                else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params.id}`)
                 {
                     this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
                 }
-                else if(req.method === `PUT` && req.url === url.UPDATE_DRIVER_PAGE_URL + req.params.id)
+                else if(req.method === `PUT` && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params.id}`)
                 {
                     this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
                 }
-                else if(req.method === `PUT` && req.url === url.UPDATE_CUSTOMER_SIDE_URL + req.params.id)
+                else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params?.id}`)
                 {
+                    // console.log('Inside');
                     this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
                 }
                 else
@@ -223,12 +225,7 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
             // }
             // else
             // {
-                if(req.method === `POST` && req.url === url.UPDATE_CUSTOMER_PASSWORD)
-                {
-                    // console.log(`Came inside`);
-                    next();                    
-                }
-                else if(req.method === `POST` && req.url === url.UPDATE_SERVICE_PROVIDER_PASSWORD)
+                if(req.method === `POST` && req.url === url.UPDATE_SERVICE_PROVIDER_PASSWORD)
                 {
                     // console.log(`Came inside 2`);
                     next();
@@ -250,7 +247,7 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
                 }
                 else 
                 {
-                    console.log(`Came inside 6`);
+                    // console.log(`Came inside 6`);
                     return res.status(500).json
                     ({
                         code : 500,
@@ -806,9 +803,9 @@ exports.isPageSizeEntered = (req, res, next) =>
 
 exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
 {
-    // console.log(req.files?.id_proof_image);
-    // if(!req.files?.id_proof_image && req.method === 'POST' && req.url === url.ADD_CUSTOMER_PAGE_URL + req.params.id)
-    if(!req.files?.id_proof_image)
+    // console.log('We are coming inside the id proof check');
+    if(!req.files?.id_proof_image && req.method === 'POST' && req.url === `${url.ADD_CUSTOMER_PAGE_URL}/${req.params?.id}`)
+    // if(!req.files?.id_proof_image)
     // if (!req.files?.id_proof_image && req.method === 'POST' && req.url === url.ADD_CUSTOMER_PAGE_URL + req.params.id)
     {
         console.log(`Id proof image is not uploaded`);
@@ -821,20 +818,24 @@ exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
     }
     else
     {
-        if(req.method === 'PUT' && req.url === url.UPDATE_CUSTOMER_PAGE_URL + req.params.id && !req.files?.id_proof_image)
+        if(req.method === 'PUT' && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params.id}` && !req.files?.id_proof_image)
         {
+            // console.log('Going inside 1');
             next();
         }
-        if(req.method === 'PUT' && req.url === url.UPDATE_CUSTOMER_PAGE_URL + req.params.id && req.files?.id_proof_image)
+        if(req.method === 'PUT' && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params.id}` && req.files?.id_proof_image)
         {
+            // console.log('Going inside 2');
             next();
         }   
-        if(req.method === 'PUT' && req.url === url.UPDATE_CUSTOMER_SIDE_URL + req.params.id && req.files?.id_proof_image)
+        if(req.method === 'PUT' && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params.id}` && req.files?.id_proof_image)
         {
+            // console.log('Going inside 3');
             next();
         }
         if(req.method === 'POST')
         {
+            // console.log('Going inside 4');
             next();
         }
     }

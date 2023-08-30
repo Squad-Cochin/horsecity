@@ -167,7 +167,7 @@ exports.addCustomer = async (req, res, next) =>
     // If input feild are in correct format and not already presnet in the database, then this else block of code will be executed.
     else
     {
-        console.log('Customer data inserted successfully');
+        // console.log('Customer data inserted successfully');
         return res.status(200).send
         ({
             code: 200,
@@ -200,7 +200,7 @@ exports.editCustomer = async (req, res, next) =>
         req.body.id_proof_no, // Identity proof number of the customer
         req.files && req.files.id_proof_image !== undefined ? req.files.id_proof_image : null // Perform the null check here // Image of the identity proof
     );
-    
+    // console.log('Result from the edit customer from the admin side: ', customers);
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
@@ -420,8 +420,9 @@ exports.customerLogout = async (req, res) =>
 
 exports.customerChangePassword = async (req, res, next) =>
 {
-    const customers = await customer.customerchangepassword(req.body.userName, req.body.password, req.body.newpassword, req.body.confirmnewpassword);
+    const customers = await customer.customerchangepassword(req.params.id, req.body.password, req.body.newpassword);
     // The below if block will execute. when the entered username is not correct
+    // console.log(`Customer: `, customers);
     if(customers === 'nocustomer')
     {
         console.log('Unavailable username or incorrect username. While customer password update');
@@ -455,7 +456,7 @@ exports.customerChangePassword = async (req, res, next) =>
     }
     else
     {
-        console.log('Password updated successfully. While customer password update');
+        console.log('Password updated successfully from the customer side.');
         return res.status(200).send
         ({
             status : "success",

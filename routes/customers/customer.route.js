@@ -65,9 +65,9 @@ module.exports = (app) =>
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.customerLogout);
 
-    app.post(`/customer/password/update`,
+    app.post(`/customer/password/update/:id`,
     validateHeaders.verifyToken,
-    checkInput.usernameValidation(constants.tableName.customers),
+    isValidIdInTheParams(constants.tableName.customers),
     checkInput.passwordValidation,
     checkInput.newpassword,
     checkInput.confirmnewpassword,
@@ -91,7 +91,6 @@ module.exports = (app) =>
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.getParticularCustomerLogs
     );
-
 
     app.get(`/customer/dasboard/:id`,
     validateHeaders.verifyToken,   
