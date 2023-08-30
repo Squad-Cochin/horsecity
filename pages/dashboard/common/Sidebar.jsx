@@ -2,6 +2,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { isActiveLink } from "../../../utils/linkActiveChecker";
+import logoutApi from "../../api/logoutApi";
 
 const Sidebar = () => {
   const router = useRouter();
@@ -37,13 +38,21 @@ const Sidebar = () => {
       name: " Settings",
       routePath: "/dashboard/db-settings",
     },
-    {
-      id: 6,
-      icon: "/img/dashboard/sidebar/log-out.svg",
-      name: " Logout",
-      routePath: "/others-pages/login",
-    },
+    // {
+    //   id: 6,
+    //   icon: "/img/dashboard/sidebar/log-out.svg",
+    //   name: " Logout",
+    //   routePath: "/others-pages/login",
+    // },
   ];
+
+  async function userLogout(){
+    console.log("rr1")
+    let loginData = await JSON.parse(localStorage.getItem("loginData"))
+    await logoutApi(loginData?.id)
+    localStorage.setItem('loginData', JSON.stringify({}));
+    router.push('/others-pages/login');
+  }
   return (
     <div className="sidebar -dashboard">
       {sidebarContent.map((item) => (
@@ -70,6 +79,32 @@ const Sidebar = () => {
           </div>
         </div>
       ))}
+
+        <div className="sidebar__item">
+          <div
+            className={` sidebar__button `}
+          >
+            <button
+              onClick={userLogout}
+            >
+              {/* <Link
+                // { (item.name === " Logout") ? null : null}
+                href='/others-pages/login'
+                className="d-flex items-center text-15 lh-1 fw-500"
+              > */}
+                <Image
+                  width={20}
+                  height={20}
+                  src='/img/dashboard/sidebar/log-out.svg'
+                  alt="image"
+                  className="mr-15"
+                />
+                Logout
+              {/* </Link> */}
+            </button>
+            
+          </div>
+        </div>
     </div>
   );
 };
