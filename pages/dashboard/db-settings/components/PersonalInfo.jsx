@@ -72,6 +72,7 @@ const PersonalInfo = () => {
         if(Customerinfo.code == 200){
           setSuccess(Customerinfo.message)
           setErrors("");
+          initialLoad();
         }else{
           setErrors(Customerinfo.message);
           setSuccess("")
