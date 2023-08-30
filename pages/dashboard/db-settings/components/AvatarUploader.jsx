@@ -10,8 +10,6 @@ const AvatarUploader = (props) => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
-    useEffect(()=>{
-    },[])
 
     if (!file) {
       setError("Please select an image.");
@@ -35,15 +33,9 @@ const AvatarUploader = (props) => {
       id_proof_image : file
     }
 
-    props.setFormData(newFormData)
-    reader.onload = () => {
-      console.log("Filee",reader.result);
-      setImage(reader.result);
-      setSuccess(true);
-      setError("");
-    };
+      props.setFormData(newFormData)
+      setImage(URL.createObjectURL(file));
 
-    reader.readAsDataURL(file);
   };
 
 

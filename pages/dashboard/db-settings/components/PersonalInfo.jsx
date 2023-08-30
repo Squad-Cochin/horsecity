@@ -68,6 +68,7 @@ const PersonalInfo = () => {
     const loginData = await JSON.parse(localStorage.getItem('loginData'));
     if (Object.keys(loginData).length !== 0) {
     let Customerinfo  = await postCustomerInfo(formData,loginData.id)
+    console.log("VVVV",Customerinfo);
         if(Customerinfo.code == 200){
           setSuccess(Customerinfo.message)
           setErrors("");
