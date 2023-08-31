@@ -59,7 +59,7 @@ const FilterSelect = () => {
       key: "trip_type",
       reduxFunction: addTripType,
       value: tripTypeValue,
-      list: [{ label: "Private" , value: ["PRIVATE"] }, { label: "GCC", value: ["GCC"] }, { label: "Public", value: ["PUBLIC"] }],
+      list: [{ label: "Private" , value: ["PRIVATE"] }, { label: "GCC", value: ["GCC"] }, { label: "Sharing", value: ["SHARING"] }],
       onChange: handleTripTypeValueChange,
     },
     {
