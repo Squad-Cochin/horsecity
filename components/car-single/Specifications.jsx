@@ -10,7 +10,7 @@ const Specifications = (props) => {
     { id: 8, name: "Transmission", content: "Auto" },
     { id: 9, name: "Condition", content: "New" },
   ];
-  console.log("props",props);
+  // console.log("props",props);
   return (
     <>
     <div className="row y-gap-30 pt-15">

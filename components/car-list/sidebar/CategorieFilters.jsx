@@ -14,7 +14,7 @@ const CategorieFilters = () => {
   },[])
   async function initialLoad(){
     let search = await JSON.parse(localStorage.getItem('searchObject'));
-    console.log("Ss",search)
+    // console.log("Ss",search)
     setTrip_type(search.trip_type)
     setSearchData(search)
   }
@@ -36,7 +36,7 @@ const CategorieFilters = () => {
   ]  
 
   async function checkType(val){
-    console.log(val,"val")
+    // console.log(val,"val")
     if(trip_type?.includes(val)){
       const newArray = trip_type.filter(value => value !== val);
       setTrip_type(newArray);
@@ -69,9 +69,9 @@ const CategorieFilters = () => {
       "page" : page,
       "limit" : limit
     }
-    console.log("req", reqObj)
+    // console.log("req", reqObj)
     let packageList = await listingDataApi(reqObj)
-    console.log("response",packageList)
+    // console.log("response",packageList)
     dispatch(add_list_data(packageList))
   }
 

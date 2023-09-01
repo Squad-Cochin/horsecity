@@ -7,9 +7,9 @@ import API_CONFIG from "../../config";
 export default async function WishlistData(body) {
     
 	try{   
-        console.log("body",body);
+        // console.log("body",body);
         const wishlistApi = API_CONFIG.GET_WISHLIST_API;
-        console.log("body2",wishlistApi);
+        // console.log("body2",wishlistApi);
         const apiToken = API_CONFIG.API_TOKEN;
 
         const response = await axios.post(`${wishlistApi}`,body,{

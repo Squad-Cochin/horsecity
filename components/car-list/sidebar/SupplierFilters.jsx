@@ -20,19 +20,19 @@ const SupplierFilters = () => {
   
   async function initialLoad(){
     // setSearchData(search)
-    // console.log("searchsearch",search)
+    // // console.log("searchsearch",search)
     // setSuppliersData(search.suppliers)
     let packageList = await serviceProvidersApi()
-    console.log("response",packageList)
+    // console.log("response",packageList)
     setSuppliersData(packageList)
   }
 
   async function checkType(val){
-    console.log(val,"val")
-    console.log("suppliersData",suppliers)
+    // console.log(val,"val")
+    // console.log("suppliersData",suppliers)
     let search = await JSON.parse(localStorage.getItem('searchObject'));
     if(suppliers.includes(val)){
-      console.log("yes")
+      // console.log("yes")
       const newArray = suppliers.filter(value => value !== val);
       
       // setSuppliersData(newArray);
@@ -44,7 +44,7 @@ const SupplierFilters = () => {
       // applySearch(newArray);
       updateListData(modifiedData);
     } else {
-      console.log("no")
+      // console.log("no")
       const newArray = [...suppliers];
       newArray.push(val);
       dispatch(filter_suppliers(newArray))
@@ -69,9 +69,9 @@ const SupplierFilters = () => {
       "page" : page,
       "limit" : limit
     }
-    console.log("reqqqqq", reqObj)
+    // console.log("reqqqqq", reqObj)
     let packageList = await listingDataApi(reqObj)
-    console.log("response",packageList)
+    // console.log("response",packageList)
     dispatch(add_list_data(packageList))
   }
 

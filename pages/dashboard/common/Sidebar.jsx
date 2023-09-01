@@ -47,7 +47,7 @@ const Sidebar = () => {
   ];
 
   async function userLogout(){
-    console.log("rr1")
+    // console.log("rr1")
     let loginData = await JSON.parse(localStorage.getItem("loginData"))
     await logoutApi(loginData?.id)
     localStorage.setItem('loginData', JSON.stringify({}));

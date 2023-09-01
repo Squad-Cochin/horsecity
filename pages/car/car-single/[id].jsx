@@ -41,7 +41,7 @@ const TourSingleV1Dynamic = () => {
     if (!id) <h1>Loading...</h1>;
     else  getProductDetails();
   },[id])
-console.log("vehicle images");
+// console.log("vehicle images");
   async function getProductDetails(){
     const loginData = await JSON.parse(localStorage.getItem('loginData'));
     
@@ -58,10 +58,10 @@ console.log("vehicle images");
       }))
     }
     // let packageList = await axios.post(`/api/initialSearch`,{})
-    console.log("first",packageDetails)
+    // console.log("first",packageDetails)
   }
 
-  console.log("vehicle",vehicle);
+  // console.log("vehicle",vehicle);
   return (
     <>
       <Seo pageTitle="Car Single" />

@@ -21,7 +21,7 @@ const Header1 = () => {
   useEffect(() => {
     window.addEventListener("scroll", changeBackground);
     let loginData = JSON.parse(localStorage.getItem("loginData"))
-    console.log(loginData,"loginData")
+    // console.log(loginData,"loginData")
     setLogin(loginData);
   }, []);
 

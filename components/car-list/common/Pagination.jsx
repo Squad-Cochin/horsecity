@@ -39,9 +39,9 @@ const Pagination = () => {
       "page" : pageNumber,
       "limit" : limit
     }
-    console.log("reqw", reqObj)
+    // console.log("reqw", reqObj)
     let packageList = await listingDataApi(reqObj)
-    console.log("response",packageList)
+    // console.log("response",packageList)
     dispatch(add_list_data(packageList))
   }
 

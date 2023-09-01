@@ -24,10 +24,10 @@ const Index = () => {
     // const { price_from, price_to, suppliers, limit } = useSelector((state) => state.listingFilter) || {};
     
     // const searchObject = JSON.parse(localStorage.getItem('searchObject'));
-    // console.log("local",searchObject)
+    // // console.log("local",searchObject)
     // let packageList = await initialSearch(searchObject)
     // let packageList = await axios.post(`/api/initialSearch`,{})
-    // console.log("first")
+    // // console.log("first")
   }
   return (
     <>

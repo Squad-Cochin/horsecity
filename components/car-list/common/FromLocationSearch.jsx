@@ -7,7 +7,7 @@ const FromLocationSearch = (props) => {
   const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState('');
   useEffect(()=>{
-    console.log(props,"props")
+    // console.log(props,"props")
     setSearchValue(props.from_location)
   },[props])
   

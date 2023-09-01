@@ -18,7 +18,7 @@ const TopHeaderFilter = () => {
   },[])
   async function initialLoad(){
     let search = await JSON.parse(localStorage.getItem('searchObject'));
-    console.log("Ss",search)
+    // console.log("Ss",search)
     setSearchData(search)
   }
   const { price_from, price_to, suppliers, limit } = useSelector((state) => state.listingFilter) || {};
@@ -35,9 +35,9 @@ const TopHeaderFilter = () => {
       page : 1,
       limit : limit
     };
-    console.log("req",reqObj)
+    // console.log("req",reqObj)
     let packageList = await listingDataApi(reqObj)
-    console.log("response",packageList)
+    // console.log("response",packageList)
     dispatch(add_list_data(packageList))
   };
   return (

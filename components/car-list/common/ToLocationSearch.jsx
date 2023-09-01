@@ -7,7 +7,7 @@ const ToLocationSearch = (props) => {
   const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState('');
   useEffect(()=>{
-    console.log(props,"props")
+    // console.log(props,"props")
     setSearchValue(props.to_location)
   },[props])
   // const [selectedItem, setSelectedItem] = useState(null);

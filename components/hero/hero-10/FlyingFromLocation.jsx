@@ -7,7 +7,7 @@ const FlyingFromLocation = () => {
   const dispatch = useDispatch();
   const [searchValue, setSearchValue] = useState("");
   // const { from_location } = useSelector((state) => state.initialSearch) || {};
-  // console.log(" tes",from_location)
+  // // console.log(" tes",from_location)
 
   
   // const [selectedItem, setSelectedItem] = useState(null);

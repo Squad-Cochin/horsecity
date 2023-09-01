@@ -28,11 +28,11 @@ const PasswordInfo = () => {
   };
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    // console.log(formData);
     const loginData = await JSON.parse(localStorage.getItem('loginData'));
     if (Object.keys(loginData).length !== 0) {
         let changePwd  = await changePassword(formData,loginData.id)
-        console.log("REsponsee",changePwd);
+        // console.log("REsponsee",changePwd);
 
         if(changePwd.code === 200){
           setSuccess(changePwd.message)

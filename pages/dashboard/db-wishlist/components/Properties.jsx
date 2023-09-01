@@ -39,7 +39,7 @@ const Properties = () => {
         setWishlist(wishlist.data)
         dispatch(wishlist_items({total_count : wishlist.data.totalCount}))
       }
-      console.log("wishlist",wishlist);
+      // console.log("wishlist",wishlist);
 
     }
   }

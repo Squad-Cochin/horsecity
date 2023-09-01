@@ -11,7 +11,7 @@
 // dotenv.config({
 //     path: `.env.${process.env.NODE_ENV}`
 // });
-console.log(process.env.NEXT_PUBLIC_API_KEY)
+// console.log(process.env.NEXT_PUBLIC_API_KEY)
 const API_CONFIG = {
 	API_KEY: `${process.env.NEXT_PUBLIC_API_KEY}`,
 	API_TOKEN: `${process.env.NEXT_PUBLIC_API_TOKEN}`,
@@ -33,6 +33,6 @@ const API_CONFIG = {
 	POST_CUSTOMER_INFORMATION_API : `${process.env.NEXT_PUBLIC_POST_CUSTOMER_INFORMATION}`,
 	CHANGE_PASSWORD_API : `${process.env.NEXT_PUBLIC_CHANGE_PASSWORD}`,
 }
-console.log(API_CONFIG) 
+// console.log(API_CONFIG) 
 
 module.exports = API_CONFIG;

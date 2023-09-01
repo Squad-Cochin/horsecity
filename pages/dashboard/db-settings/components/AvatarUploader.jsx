@@ -5,7 +5,7 @@ const AvatarUploader = (props) => {
   const [image, setImage] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  console.log("Date",props.formData.id_proof_image);
+  // console.log("Date",props.formData.id_proof_image);
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];

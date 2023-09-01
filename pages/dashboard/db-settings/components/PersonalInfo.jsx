@@ -36,7 +36,7 @@ const PersonalInfo = () => {
 
     if (Object.keys(loginData).length !== 0) {
         const  resObj = await getCustomerInfo(loginData.id) ;
-        console.log("REAAA",resObj);
+        // console.log("REAAA",resObj);
         setFormData({
           name: resObj?.name || '',
           userName: resObj?.userName || '',
@@ -60,7 +60,7 @@ const PersonalInfo = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
+    // console.log(formData);
 
 
 
@@ -68,7 +68,7 @@ const PersonalInfo = () => {
     const loginData = await JSON.parse(localStorage.getItem('loginData'));
     if (Object.keys(loginData).length !== 0) {
     let Customerinfo  = await postCustomerInfo(formData,loginData.id)
-    console.log("VVVV",Customerinfo);
+    // console.log("VVVV",Customerinfo);
         if(Customerinfo.code == 200){
           setSuccess(Customerinfo.message)
           setErrors("");

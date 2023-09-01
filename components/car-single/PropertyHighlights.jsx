@@ -30,7 +30,7 @@ const PropertyHighlights = (props) => {
     },
   ];
 
-  console.log("propsVehicle",props.vehicle?.service_provider_name);
+  // console.log("propsVehicle",props.vehicle?.service_provider_name);
   return (
     <div className="row y-gap-30 justify-between pt-20">
 

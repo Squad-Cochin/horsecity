@@ -31,7 +31,7 @@ const MainFilterSearchBox = () => {
       "trip_type" : trip_type,
       "number_of_horses" : number_of_horses
     }
-    console.log("before",searchObject)
+    // console.log("before",searchObject)
     localStorage.setItem('searchObject', JSON.stringify(searchObject));
     if(number_of_horses && number_of_horses != "" && number_of_horses != 0 && trip_type && trip_type != [] && trip && trip != ""){
       Router.push("/car/car-list-v1")

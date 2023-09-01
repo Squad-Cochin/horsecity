@@ -13,7 +13,7 @@ export default async function postCustomerInfo(data,id) {
             formData.append(key, data[key]);
         }
         const editCustomerInfo = API_CONFIG.POST_CUSTOMER_INFORMATION_API;
-        console.log("Post",data);
+        // console.log("Post",data);
         const apiToken = API_CONFIG.API_TOKEN;
 
         const response = await axios.put(`${editCustomerInfo}/${id}`,formData,{
@@ -21,7 +21,7 @@ export default async function postCustomerInfo(data,id) {
               "Authorization": `Bearer ${apiToken}`, 
             },
         });
-        console.log("RRRR",response.data);
+        // console.log("RRRR",response.data);
 
         return response.data
     }

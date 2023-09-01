@@ -1,4 +1,13 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                          File using for store redux configure store                               //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Imorting redux toolkit
 import { configureStore } from "@reduxjs/toolkit";
+
+// Importing redux value storing files
 import findPlaceSlice from "../features/hero/findPlaceSlice";
 import initialSearch from "../features/search/initalSearch";
 import listingFilter from "../features/listingFilter/listingFilter";

@@ -12,15 +12,15 @@ const MainFilterSearchBox = () => {
     async function initialLoad(){
       const search = await JSON.parse(localStorage.getItem('searchObject'));
       setSearchData(search)
-      console.log("searchh",search)
+      // console.log("searchh",search)
     }
     initialLoad();
   },[])
 
   
-  console.log("searchData",searchData)
+  // console.log("searchData",searchData)
   function saveLocal(){
-    console.log("before",searchData)
+    // console.log("before",searchData)
     if(from_location != ""){
       searchData.from_location = from_location;
     }
@@ -33,7 +33,7 @@ const MainFilterSearchBox = () => {
     if(returnDate != ""){
       searchData.returnDate = returnDate;
     }
-    console.log(searchData)
+    // console.log(searchData)
     localStorage.setItem('searchObject', JSON.stringify(searchData));
     // return false;
   }

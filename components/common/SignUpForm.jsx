@@ -40,7 +40,7 @@ const SignUpForm = () => {
       // ... and so on
 
       // Perform any actions with the form data
-      // console.log('Form submitted:', event.target);
+      // // console.log('Form submitted:', event.target);
       let res = await registrationApi(registrationData);
       if(res.code !== 200){
         setErrors(res.message);

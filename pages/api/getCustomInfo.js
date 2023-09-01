@@ -17,7 +17,7 @@ export default async function getCustomerInfo(id) {
               "Authorization": `Bearer ${apiToken}`, 
             },
         });
-        console.log("RRRR",response.data.data);
+        // console.log("RRRR",response.data.data);
         const resObj = {
             name: 'shaheer',
             userName: 'shaheer123',

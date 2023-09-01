@@ -10,7 +10,7 @@ const FilterSelect = () => {
   const [ searchData, setSearchData ] = useState({});
 
   // const { trip } = useSelector((state) => state.initialSearch) || {};
-  // console.log(" tess",trip)
+  // // console.log(" tess",trip)
   // useEffect(() => {
     useEffect(() => {
       let searchObject = {
@@ -25,7 +25,7 @@ const FilterSelect = () => {
       }
       localStorage.setItem('searchObject', JSON.stringify(searchObject));
       // const searchData = JSON.parse(localStorage.getItem('searchObject'));
-      // console.log("ss",searchData)
+      // // console.log("ss",searchData)
     })
     
   // })
@@ -87,8 +87,8 @@ const FilterSelect = () => {
       onChange: handleNoOfHorsesValueChange,
     },
   ];
-  // console.log(searchData);
-  console.log();
+  // // console.log(searchData);
+  // console.log();
   return (
     <>
       {dropdownOptions.map((option, index) => (

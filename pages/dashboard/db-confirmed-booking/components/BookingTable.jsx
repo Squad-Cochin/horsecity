@@ -97,7 +97,7 @@ const BookingTable = () => {
                 </thead>
                 <tbody>
                 {data?.map((item, index)=>{
-                  console.log("ddddd",data)
+                  // console.log("ddddd",data)
                   return(
                     <tr key={index}>
                       <td>{item.service_provider_name}</td>

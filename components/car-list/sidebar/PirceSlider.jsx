@@ -20,8 +20,8 @@ const PirceSlider = () => {
   };
 
   async function applySearch(val){
-    console.log("min",val.min)
-    console.log("max",val.max)
+    // console.log("min",val.min)
+    // console.log("max",val.max)
     let search = await JSON.parse(localStorage.getItem('searchObject'));
     let reqObj = {
       "trip_type": search.trip_type,
@@ -33,9 +33,9 @@ const PirceSlider = () => {
       "page" : page,
       "limit" : limit
     }
-    console.log("req", reqObj)
+    // console.log("req", reqObj)
     let packageList = await listingDataApi(reqObj)
-    console.log("response",packageList)
+    // console.log("response",packageList)
     dispatch(add_list_data(packageList))
     
   } 

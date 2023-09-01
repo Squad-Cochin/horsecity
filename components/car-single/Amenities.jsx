@@ -7,7 +7,7 @@ const Amenities = (props) => {
     { id: 5, name: "Speed Km" },
     { id: 6, name: "Steering Wheel" },
   ];
-  console.log("Amenties",props.vehicleData.air_condition);
+  // console.log("Amenties",props.vehicleData.air_condition);
   return (
     <>
       <div className="row y-gap-10 pt-15">

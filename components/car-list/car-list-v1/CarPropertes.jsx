@@ -16,7 +16,6 @@ import { add_list_data } from "../../../features/listData/listData";
 
 const CarPropertes = () => {
   const [ searchData, setSearchData ] = useState({});
-  const [ listData, setListData ] = useState([]);
   const { price_from, price_to, suppliers, sort, page, limit } = useSelector((state) => state.listingFilter) || {};
   const { list_data } = useSelector((state) => state.listData) || {};
   const [ isLogin, setLogin ] = useState(false);
@@ -36,12 +35,10 @@ const CarPropertes = () => {
       setLogin(true);
     }
     setSearchData(search)
-    console.log("1ss",search)
     listingData(search);
   }
 
   async function listingData(search){
-    console.log("rr1",search)
     let reqObj = {
       "trip_type": search.trip_type,
       "number_of_horses": search.number_of_horses,
@@ -53,9 +50,7 @@ const CarPropertes = () => {
       "page" : page,
       "limit" : limit
     }
-    console.log("req", reqObj)
     let packageList = await listingDataApi(reqObj)
-    console.log("response",packageList)
     dispatch(add_list_data(packageList))
   }
 

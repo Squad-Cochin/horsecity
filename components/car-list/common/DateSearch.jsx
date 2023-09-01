@@ -9,7 +9,7 @@ const DateSearch = (props) => {
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   useEffect(()=>{
-    console.log(props,"propssssssssssss")
+    // console.log(props,"propssssssssssss")
     if(props.use == "fromDate"){
       setFromDate(new Date(props.dateDate))
     }else{

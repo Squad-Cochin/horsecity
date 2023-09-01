@@ -24,7 +24,7 @@ const LocationSearch = () => {
   const { customer_id, vehicle_id, serviceprovider_id, no_of_horse } = useSelector((state) => state.bookingData) || {};
   const router = useRouter();
   useEffect(() => {
-    console.log("no",no_of_horse);
+    // console.log("no",no_of_horse);
     initialLoad();
   },[no_of_horse])
   const noOfHorses = [
@@ -113,7 +113,7 @@ const LocationSearch = () => {
     },
   ];
   
-console.log("piii",pickupDate);
+// console.log("piii",pickupDate);
 
   const tripTypes = [
     {id : 1,name : "PRIVATE"},
@@ -139,12 +139,12 @@ console.log("piii",pickupDate);
       pickup_date : pickupDate,
       description : description,
     };
-    console.log("data",formData);
+    // console.log("data",formData);
       if(customer_id){
         let packageDetails = await addbooking(formData,customer_id);
-        console.log("package",packageDetails);
+        // console.log("package",packageDetails);
         if(packageDetails?.code == 200){
-          console.log("success",packageDetails);
+          // console.log("success",packageDetails);
           toast.success(packageDetails?.message, {
             position: 'top-right', // Position of the toast on the screen
           });

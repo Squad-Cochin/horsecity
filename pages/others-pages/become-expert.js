@@ -5,7 +5,6 @@ import DefaultHeader from "../../components/header/default-header";
 import DefaultFooter from "../../components/footer/default";
 import Image from "next/image";
 import HowWorks from "../../components/block/HowWorks";
-import Block2 from "../../components/about/Block2";
 import Faq from "../../components/faq/Faq";
 import Link from "next/link";
 
@@ -84,9 +83,7 @@ const BecomeExpert = () => {
       </section>
       {/* End how works Section */}
 
-      <section className="section-bg layout-pt-lg layout-pb-lg md:pt-0 md:pb-60 sm:pb-40 bg-blue-2 z-auto">
-        <Block2 />
-      </section>
+      
       {/* End about section block */}
 
       <section className="layout-pt-lg layout-pb-lg">

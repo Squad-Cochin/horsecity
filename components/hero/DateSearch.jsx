@@ -39,7 +39,7 @@ const DateSearch = (props) => {
         containerClassName="custom_container-picker"
         selected={props.pickupDate ? new Date(props.pickupDate) : null}
         onChange={(date) => {
-          console.log("FFF",date);
+          // console.log("FFF",date);
           props.setPickupDate(date);
         }}
         minDate={new Date()}
