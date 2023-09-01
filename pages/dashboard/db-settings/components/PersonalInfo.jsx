@@ -58,6 +58,13 @@ const PersonalInfo = () => {
     }));
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     // console.log(formData);
@@ -73,9 +80,11 @@ const PersonalInfo = () => {
           setSuccess(Customerinfo.message)
           setErrors("");
           initialLoad();
+          scrollToTop()
         }else{
           setErrors(Customerinfo.message);
           setSuccess("")
+          scrollToTop()
         }
   }
   };
