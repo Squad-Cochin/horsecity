@@ -555,9 +555,10 @@ module.exports = class drivers
                 // console.log(upQuery);
                 con.query(upQuery, (err, result) =>
                 {
+                    // console.log(result);
                     if(result.affectedRows > 0)
                     {
-                        // c onsole.log(`Unassigned of the driver ${Id} id done `);
+                        // console.log(`Unassigned of the driver ${Id} id done `);
                         resolve('unassigned');
                     }
                     else
@@ -568,15 +569,15 @@ module.exports = class drivers
                             resolve('alreadyunassigned');
                         }
 
-                        if(driverId.length === 0)
-                        {
-                            resolve('noDriver')
-                        }
+                        // if(dId.length === 0)
+                        // {
+                        //     resolve('noDriver')
+                        // }
 
-                        if(serproviderId.length === 0)
-                        {
-                            resolve('noServiceProvider')
-                        }
+                        // if(sId.length === 0)
+                        // {
+                        //     resolve('noServiceProvider')
+                        // }
                         
                         if(err)
                         {

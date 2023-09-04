@@ -26,16 +26,24 @@ module.exports = class dashboard
                     }
                     if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
                     {
+                        // let query = `   SELECT
+                        //                 COALESCE((SELECT COUNT(sp.id) FROM ${constants.tableName.service_providers} sp, ${constants.tableName.roles} r WHERE sp.role_Id = r.id AND r.name = 'SERVICE PROVIDER' ), 0) AS total_providers,
+                        //                 COALESCE((SELECT COUNT(id) FROM ${constants.tableName.customers}), 0) AS total_customers,
+                        //                 COALESCE((SELECT COUNT(id) FROM ${constants.tableName.vehicles}), 0) AS total_vehicles,
+                        //                 COALESCE((SELECT COUNT(id) FROM ${constants.tableName.drivers}), 0) AS total_drivers,
+                        //                 COALESCE((SELECT COUNT(id) FROM ${constants.tableName.enquiries}), 0) AS total_enquiries,
+                        //                 COALESCE((SELECT COUNT(id) FROM ${constants.tableName.quotations}), 0) AS total_quotations,
+                        //                 COALESCE((SELECT SUM(final_amount) FROM ${constants.tableName.invoices}), 0) AS total_revenue`;
                         let query = `   SELECT
-                                        COALESCE((SELECT COUNT(sp.id) FROM ${constants.tableName.service_providers} sp, ${constants.tableName.roles} r WHERE sp.role_Id = r.id AND r.name = 'SERVICE PROVIDER' ), 0) AS total_providers,
-                                        COALESCE((SELECT COUNT(id) FROM ${constants.tableName.customers}), 0) AS total_customers,
-                                        COALESCE((SELECT COUNT(id) FROM ${constants.tableName.vehicles}), 0) AS total_vehicles,
-                                        COALESCE((SELECT COUNT(id) FROM ${constants.tableName.drivers}), 0) AS total_drivers,
-                                        COALESCE((SELECT COUNT(id) FROM ${constants.tableName.enquiries}), 0) AS total_enquiries,
-                                        COALESCE((SELECT COUNT(id) FROM ${constants.tableName.quotations}), 0) AS total_quotations,
-                                        COALESCE((SELECT SUM(final_amount) FROM ${constants.tableName.invoices}), 0) AS total_revenue`;
+                                        COALESCE((SELECT COUNT(sp.id) FROM ${constants.tableName.service_providers} sp, roles r WHERE sp.role_Id = r.id AND r.name = 'SERVICE PROVIDER' ), 0) AS total_providers,
+                                        COALESCE((SELECT COUNT(c.id) FROM ${constants.tableName.customers} c where c.deleted_at IS NULL), 0) AS total_customers,
+                                        COALESCE((SELECT COUNT(v.id) FROM ${constants.tableName.vehicles} v where v.deleted_at IS NULL), 0) AS total_vehicles,
+                                        COALESCE((SELECT COUNT(d.id) FROM ${constants.tableName.drivers} d where d.deleted_at IS NULL), 0) AS total_drivers,
+                                        COALESCE((SELECT COUNT(e.id) FROM ${constants.tableName.enquiries} e), 0) AS total_enquiries,
+                                        COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q where q.deleted_at IS NULL), 0) AS total_quotations,
+                                        COALESCE((SELECT SUM(i.final_amount) FROM ${constants.tableName.invoices} i WHERE i.deleted_at IS NULL AND i.status <> "INACTIVE"), 0) AS total_revenue
+                                    `;
                         // console.log(`Dashboard query at the time of admin: `,query);
-
                         con.query(query, (err, result) =>
                         {
                             if(err)
@@ -58,13 +66,21 @@ module.exports = class dashboard
                     }
                     else if(result[0].role_id === constants.Roles.service_provider)
                     {
-                        let Query = ` SELECT
-                                      COALESCE((SELECT COUNT(v.id) FROM ${constants.tableName.vehicles} v WHERE v.service_provider_id = ${Id}), 0) AS total_vehicles,
-                                      COALESCE((SELECT COUNT(ad.id) FROM ${constants.tableName.assign_drivers} ad WHERE ad.service_provider_id = ${Id} AND ad.deleted_at IS NULL), 0) AS total_drivers,
-                                      COALESCE((SELECT COUNT(e.id) FROM ${constants.tableName.enquiries} e WHERE e.serviceprovider_id = ${Id}), 0) AS total_enquiries,
-                                      COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q WHERE q.serviceprovider_id = ${Id}), 0) AS total_quotations,
-                                      COALESCE((SELECT SUM(i.final_amount) FROM ${constants.tableName.invoices} i WHERE i.service_provider_id = ${Id}), 0) AS total_revenue
-                                   `;
+                        // let Query = ` SELECT
+                        //               COALESCE((SELECT COUNT(v.id) FROM ${constants.tableName.vehicles} v WHERE v.service_provider_id = ${Id}), 0) AS total_vehicles,
+                        //               COALESCE((SELECT COUNT(ad.id) FROM ${constants.tableName.assign_drivers} ad WHERE ad.service_provider_id = ${Id} AND ad.deleted_at IS NULL), 0) AS total_drivers,
+                        //               COALESCE((SELECT COUNT(e.id) FROM ${constants.tableName.enquiries} e WHERE e.serviceprovider_id = ${Id}), 0) AS total_enquiries,
+                        //               COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q WHERE q.serviceprovider_id = ${Id}), 0) AS total_quotations,
+                        //               COALESCE((SELECT SUM(i.final_amount) FROM ${constants.tableName.invoices} i WHERE i.service_provider_id = ${Id}), 0) AS total_revenue
+                        //            `;
+
+                    let Query = `   SELECT
+                                    COALESCE((SELECT COUNT(v.id) FROM ${constants.tableName.vehicles} v WHERE v.service_provider_id = ${Id} AND v.deleted_at IS NULL), 0) AS total_vehicles,
+                                    COALESCE((SELECT COUNT(ad.id) FROM ${constants.tableName.assign_drivers} ad WHERE ad.service_provider_id = ${Id} AND ad.deleted_at IS NULL), 0) AS total_drivers,
+                                    COALESCE((SELECT COUNT(e.id) FROM ${constants.tableName.enquiries} e WHERE e.serviceprovider_id = ${Id}), 0) AS total_enquiries,
+                                    COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q WHERE q.serviceprovider_id = ${Id} AND q.deleted_at IS NULL), 0) AS total_quotations,
+                                    COALESCE((SELECT SUM(i.final_amount) FROM ${constants.tableName.invoices} i WHERE i.service_provider_id = ${Id} AND i.deleted_at IS NULL AND i.status <> "${constants.status.inactive}"), 0) AS total_revenue
+                                `;
                         // console.log(`Dashboard query at the time of service provider : `,Query);
                         con.query(Query, (err, result) =>
                         {

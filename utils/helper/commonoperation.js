@@ -38,6 +38,7 @@ exports.changePasswordToSQLHashing = (password) =>
         });
     });
 };
+
 exports.fileUpload = (attachments, path) =>
 { 
     // console.log(attachments);

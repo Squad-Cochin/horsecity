@@ -911,7 +911,7 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : `Customer ${constant.responseMessage.edit} `,
+            message : `Data updated successfully`,
         });
     }
     

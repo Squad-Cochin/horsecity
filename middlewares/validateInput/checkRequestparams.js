@@ -4,6 +4,7 @@ const constants = require("../../utils/constants");
 const commonfetching = require(`../../utils/helper/commonfetching`);
 const time = require('../../utils/helper/date');
 const commonoperation = require('../../utils/helper/commonoperation');
+const { checkValueEntered } = require("./checkRequestBodyInput");
 
 
 exports.isValidIdInTheParams = (tableName) => async (req, res, next) =>
@@ -89,7 +90,7 @@ exports.CheckRole = async (req, res, next) =>
                 else 
                 {
                     // console.log(`Role result: `, result);
-                    console.log(`Are we coming over here`);
+                    // console.log(`Are we coming over here`);
                     if (result[0].role_id === constants.Roles.service_provider) 
                     {
                         const selQuery = `SELECT * FROM drivers d WHERE d.name = '${req.body.name}' AND d.email = '${req.body.email}' AND d.contact_no = '${req.body.contact_no}' AND d.emergency_contact_no = '${req.body.emergency_contact_no}' AND d.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}' AND d.description = '${req.body.description}' AND d.licence_no = '${req.body.licence_no}' AND d.deleted_at IS NOT NULL`; // Your query here
@@ -97,7 +98,7 @@ exports.CheckRole = async (req, res, next) =>
                         const result22 = await queryAsync(selQuery);
                         if (result22.length != 0)
                         {
-                            console.log('result22');
+                            // console.log('result22');
                             uploadlicence_img = await commonoperation.fileUploadTwo(req.files.licence_img, constants.attachmentLocation.driver.upload.licence);                        
                             uploadprofile_image = await commonoperation.fileUploadTwo(req.files.profile_image, constants.attachmentLocation.driver.upload.profilephoto);                                                
                             const upQuery = `UPDATE drivers d SET d.deleted_at = NULL, d.licence_img = '${uploadlicence_img}', d.profile_image = '${uploadprofile_image}' WHERE d.id = ${result22[0].id}`;
@@ -146,7 +147,7 @@ exports.CheckRole = async (req, res, next) =>
                             if (result23.length != 0)
                             {
                                 // console.log(`result 23`, result23);
-                                console.log(`result 23`);
+                                // console.log(`result 23`);
                                 let selQuery3 = `SELECT * FROM assign_drivers ad WHERE ad.driver_id = ${result23[0].id} AND ad.service_provider_id = ${req.params.id} AND ad.deleted_at != NULL`
                                 // console.log(selQuery3);
                                 const result24 = await queryAsync(selQuery3);
@@ -375,29 +376,6 @@ exports.CheckRole = async (req, res, next) =>
                 status: false,
                 message: `Internal Server Error from the params`,
             });
-        }
-    });
-};
-
-const checkValueEntered = (Field, messageField) => (req, res, next) =>
-{
-    return new Promise((resolve, reject) =>
-    {
-        // console.log(`Checking ${messageField}: Field = ${Field}`);
-        if (!Field)
-        {
-            console.log(`${messageField} is required`);
-            return res.status(400).send
-            ({
-                code: 400,
-                status: false,
-                message: `${messageField} is required`
-            });
-        }
-        else
-        {
-            // console.log(`${messageField} is present`);
-            resolve();
         }
     });
 };

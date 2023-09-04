@@ -336,7 +336,7 @@ exports.getWorkPastServiceProvider = async (req, res, next) =>
     // console.log('Checking whether the data comming to controller: ', drivers);
     if(drivers.exist.length == 0)
     {
-        console.log('This driver has no past histroy working with server provider that are registered with us');
+        // console.log('This driver has no past histroy working with server provider that are registered with us');
         return res.status(200).send
         ({
             code : 200,
@@ -428,7 +428,6 @@ exports.UnAssignServiceProviderAndDriverBoth = async (req, res, next) =>
         req.body.serviceProvider_id // Service Provider id in the request body
     );
     // console.log(drivers);
-
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(drivers === 'err')
     {

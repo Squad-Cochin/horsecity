@@ -6,14 +6,13 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-
 const token = `/${process.env.apiToken}`
 const UPDATE_SERVICE_PROVIDER_URL = token + `/update/serviceprovider/`
 const UPDATE_SETTINGS_PAGE_URL = token + `/update/settings`
 
 const ADD_CUSTOMER_PAGE_URL = token + `/add/customer`
 const UPDATE_CUSTOMER_PAGE_URL = token + `/edit/customer/` 
-const UPDATE_CUSTOMER_SIDE_URL = `/customer/edit/details/`
+const UPDATE_CUSTOMER_SIDE_URL = `/customer/edit/details/` // This link is for the customer side frontend (Next.js)
 
 
 const ADD_DRIVER_PAGE_URL = token + `/add/driver`
@@ -38,14 +37,12 @@ module.exports =
     UPDATE_SETTINGS_PAGE_URL,  // update setting link
     UPDATE_SERVICE_PROVIDER_URL,
     
-    ADD_CUSTOMER_PAGE_URL, // Add customer link
-    UPDATE_CUSTOMER_PAGE_URL, // update customer link
-    UPDATE_CUSTOMER_SIDE_URL,
-
+    ADD_CUSTOMER_PAGE_URL, // Add customer link (React js)
+    UPDATE_CUSTOMER_PAGE_URL, // update customer link (React js)
+    UPDATE_CUSTOMER_SIDE_URL, // This link is for the customer side frontend (Next.js)
 
     ADD_DRIVER_PAGE_URL, // Add driver link
     UPDATE_DRIVER_PAGE_URL,  // update driver link
-    
     
     UPDATE_VEHICLE_PAGE_URL, // update vehicle link    
     ADD_VEHICLE_PAGE_URL, // Add vehicle link

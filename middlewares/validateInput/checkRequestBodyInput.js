@@ -659,7 +659,7 @@ exports.passwordValidation = async (req, res, next) =>
                     ({
                         success: false,
                         code: 400,
-                        message: "Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character except '@'  ",
+                        message: `Failed! Not a valid password. Password must meet the following conditions: The password must contain at least one lowercase or uppercase letter (a-z or A-Z), at least one special character from the set (-, #, $, ., %, &, or *), minimum 8 character, maximum 16 character`,
                     });
                 }
             }    
@@ -714,7 +714,7 @@ exports.newpassword = async (req, res, next) =>
                     ({
                         success: false,
                         code: 400,
-                        message: "Failed! Not a valid new password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character except '@'  ",
+                        message : "Failed! Not a valid password. Password must meet the following conditions: The password must contain at least one lowercase or uppercase letter (a-z or A-Z), at least one special character from the set (-, #, $, ., %, &, or *), minimum 8 character, maximum 16 character",
                     });
                 }
             }    
@@ -769,7 +769,7 @@ exports.confirmnewpassword = async (req, res, next) =>
                     ({
                         success: false,
                         code: 400,
-                        message: "Failed! Not a valid confirm password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character except '@'  ",
+                        message : "Failed! Not a valid password. Password must meet the following conditions: The password must contain at least one lowercase or uppercase letter (a-z or A-Z), at least one special character from the set (-, #, $, ., %, &, or *), minimum 8 character, maximum 16 character"
                     });
                 }
             }    
@@ -980,43 +980,7 @@ exports.idProofImageWhileUpdate = (req, res, next) =>
     {
         next();
     }
-}   
-
-exports.isDriverIdEntered = (req, res, next) =>
-{
-    if(!req.body.driver_id)
-    {
-        console.log(`Driver id is not entered`);
-        return res.status(200).json
-        ({
-            code : 500,
-            success: false,
-            message : `Internal Server Error. Driver id is not entered`
-        });     
-    }
-    else
-    {
-        next();
-    }
-}
-
-exports.isServiceProviderIdEntered = (req, res, next) =>
-{
-    if(!req.body.serviceProvider_id)
-    {
-        console.log(`Service provider id is not entered`);
-        return res.status(200).json
-        ({
-            code : 500,
-            success: false,
-            message : `Internal Server Error. Service provider id is not entered`
-        });     
-    }
-    else
-    {
-        next();
-    }
-};
+} 
 
 exports.checkAmountEntered = async(req, res, next) =>
 {

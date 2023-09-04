@@ -67,8 +67,8 @@ module.exports = function(app)
 
     // The below route is for assigning a driver to a particular service provider.
     app.post(`/${process.env.apiToken}/assign/driver`,
-    checkInput.isDriverIdEntered,
-    checkInput.isServiceProviderIdEntered,
+    checkInput.isIdEntered('driver_id', constants.tableName.drivers, 'Driver'),
+    checkInput.isIdEntered('serviceProvider_id', constants.tableName.service_providers, 'Service provider'),
     driverController.AssignServiceProvider);
     
     // The below route is for fetching a details past service provider. Where the driver last worked
@@ -81,7 +81,7 @@ module.exports = function(app)
     driverController.UnAssignServiceProvider);
 
     app.put(`/${process.env.apiToken}/un/assign/serviceProvider`,
-    checkInput.isDriverIdEntered,
-    checkInput.isServiceProviderIdEntered,
+    checkInput.isIdEntered('driver_id', constants.tableName.drivers, 'Driver'),
+    checkInput.isIdEntered('serviceProvider_id', constants.tableName.service_providers, 'Service provider'),
     driverController.UnAssignServiceProviderAndDriverBoth);    
 }

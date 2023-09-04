@@ -55,7 +55,6 @@ module.exports =
     { 
         expiry_after : 90, // Days after which the token will expire
     },
-
     attachmentLocation :
     {
         customer : 
@@ -109,8 +108,7 @@ module.exports =
                 view : `/applicationSettings/settings/`
             }
         }
-    },
-    
+    },    
     modules :
     {
         menu : 1,
@@ -127,7 +125,6 @@ module.exports =
         reports : 12,
         applicationSettings : 13
     },
-
     responseMessage :
     {
         getAll : `Data Fetched Sucessfully`,
@@ -155,7 +152,6 @@ module.exports =
         particularVehicleImageError : 'Error while uploading the particular vehicle image',       
         
     },
-
     timeOffSet :
     {
         BAHRAIN : `+03:00`,
@@ -166,7 +162,6 @@ module.exports =
         UAE : `+04:00`,
         INDIA : `+05:30`
     },
-    
     tableName :
     {
         application_settings : `application_settings`,
@@ -205,7 +200,6 @@ module.exports =
         payment_records : `payment_records`,
         wishlist : `wishlist`
     },
-
     roles :
     {
         service_provider : 'SERVICE PROVIDER',
@@ -223,9 +217,4 @@ module.exports =
         invoice : 1,
         quotaions : 2
     }
-
-
-
-
-
 }

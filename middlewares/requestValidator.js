@@ -1,9 +1,6 @@
 const con = require("../configs/db.configs");  // importing the database details 
 const constants = require("../utils/constants");
-
 const url = require("../utils/url_helper")
-
-
 
 /***Username validation */
 exports.usernamevalidation = (req, res, next) => {
@@ -325,7 +322,6 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
 
 }
 
-
 /**Languages middleware */
 exports.verifyLanguageBody = async(req,res,next) =>
 {
@@ -483,8 +479,6 @@ exports.verifyToken = async (req,res,next ) =>
         });
     }
 }
-  
-
  
 exports.validateUAEMobileNumber = async (req, res, next) => {
     const { contact_no, emergency_contact_no } = req.body;

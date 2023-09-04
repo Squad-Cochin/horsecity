@@ -143,7 +143,7 @@ static async updateServiceProvider  (requestBody,file,id)
                 uploadLicence ){
 
         const {name,email,user_name,contact_person,contact_no,emergency_contact_no,contact_address,licence_no,role_id,service_provider_id} = requestBody ;
-        console.log(constants.Roles.service_provider,service_provider_id);
+        // console.log(constants.Roles.service_provider,service_provider_id);
         let updateQuery = `UPDATE ${constants.tableName.service_providers} SET 
         name = '${name}',
         email = '${email}',

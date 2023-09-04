@@ -53,7 +53,6 @@ const getFormattedUTCTime = (utcOffset) =>
     return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
 }
 
-
 const changeDateToSQLFormat = (dateString) =>
 {
     // Check if the input date string is in the format "DD-MM-YYYY"
@@ -89,9 +88,9 @@ const changeCustomerPageDateToSQLFormat = (dateString) =>
     {
         // Split the dateString into day, month, and year parts
         const [month, day, year] = dateString.split('-');
-         // Format the date in YYYY-MM-DD HH:MM:SS
-         const formattedDate = `${year}-${month}-${day} 00:00:00`;
-         return formattedDate;
+        // Format the date in YYYY-MM-DD HH:MM:SS
+        const formattedDate = `${year}-${month}-${day} 00:00:00`;
+        return formattedDate;
     }
 
     // Convert the input string to a Date object
@@ -132,32 +131,6 @@ function formatDateToDDMMYYYY(inputDate)
     }    
 }
 
-function formatDateToDDMMYYYYHHMMSS(inputDate) 
-  {
-    if(!inputDate)
-    {
-        return null
-    }
-    else
-    {
-        // Convert the input date string to a Date object
-        const dateObj = new Date(inputDate);
-    
-        // Extract day, month, and year from the Date object
-        const day = String(dateObj.getDate()).padStart(2, '0');
-        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
-        const year = dateObj.getFullYear();
-        const hours = String(dateObj.getHours()).padStart(2, '0');
-        const minutes = String(dateObj.getMinutes()).padStart(2, '0');
-        const seconds = String(dateObj.getSeconds()).padStart(2, '0');
-
-    
-        // Format the date as "DD-MM-YYYY HH:MM:SS"
-        const formattedDate = `${day}-${month}-${year} ${hours}:${minutes}:${seconds}`;
-        return formattedDate;
-    }    
-}
-
 function formatDateToMMDDYYYY(inputDate) 
   {
     if(!inputDate)
@@ -184,7 +157,6 @@ const timeexportfunction =
     getFormattedUTCTime,
     changeDateToSQLFormat,
     formatDateToDDMMYYYY,
-    formatDateToDDMMYYYYHHMMSS,
     formatDateToMMDDYYYY,
     changeCustomerPageDateToSQLFormat
 }

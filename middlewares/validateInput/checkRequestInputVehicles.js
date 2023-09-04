@@ -1,103 +1,22 @@
 const constants = require("../../utils/constants");
-const commonfetching = require(`../../utils/helper/commonfetching`);
 const checkInput = require(`./checkRequestBodyInput`);
 const url = require(`../../utils/url_helper`);
 
-
-exports.isServiceProviderIdEntered = (tableName) => async (req, res, next) =>
+exports.checkVehicleBodyEntered = async (req, res, next) =>
 {
-    if (!req.body.service_provider_id) 
+    try
     {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: "Service provider id is required"
-        });
-    }
-    else
-    {
-        const data = await commonfetching.dataOnCondition(tableName, req.body.service_provider_id, 'id')
-        // console.log(data);
-        if(data === 'err' || !data)
-        {
-            return res.status(500).json
-            ({
-                code: 400,
-                status : "failed",
-                error: 'Internal server error while service provider' 
-            });
-        }
-        else if(data.length > 0)
-        {
-            // console.log('service provider id Present');
-            next()          
-        }
-        else
-        {
-            // console.log(`Id doesn't exist`);
-            return res.status(200).send
-            ({
-                code: 400,
-                status: false,
-                message: "This service provider id doesn't exists in the database"
-            });
-        }
-    }
-}
-
-exports.isManufacturerEntered = (req, res, next) =>
-{
-    if(!req.body.make)
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: "Manufacturer or Maker name required"
-        });        
-    }
-    else
-    {
+        await checkInput.checkValueEntered(req.body.make, 'Manufacturer')(req, res, next);
+        await checkInput.checkValueEntered(req.body.model, 'Model')(req, res, next);
+        await checkInput.checkValueEntered(req.body.color, 'Color')(req, res, next);
+        await checkInput.checkValueEntered(req.body.insurance_policy_provider, 'Insurance policy provider name')(req, res, next);
         next();
     }
-}
-
-exports.isModelEntered = (req,res,next) =>
-{
-    if(!req.body.model)
+    catch (error)
     {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: "Vehicle model required"
-        });        
+        console.log(`Error from the 'checkVehicleBodyEntered' function. It is in validator folder. Which is inside the middlewares. While checking the vehicle body.`, error); 
     }
-    else
-    {
-        next();
-    }
-    
-}
-
-exports.isColorEntered = (req,res,next) =>
-{
-    if(!req.body.color)
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: "Vehicle color required"
-        });        
-    }
-    else
-    { 
-        next();
-    }
-    
-}
+};
 
 exports.isLengthEntered = (req, res, next) => 
 {
@@ -330,7 +249,7 @@ exports.isGCCTravelValueEntered = (req, res, next) =>
     }
     else if(req.body.gcc_travel_allowed === 'NO')
     {
-        console.log('GCC travel Not Present');
+        // console.log('GCC travel Not Present');
         next();
     }
     else
@@ -363,7 +282,7 @@ exports.isInsuranceCoverValueEntered = (req, res, next) =>
     }
     else if(req.body.insurance_cover === 'NO')
     {
-        console.log('Insurance Not Present');
+        // console.log('Insurance Not Present');
         next();
     }
     else
@@ -477,24 +396,6 @@ exports.isValidInsuranceCoverEntered = (req, res, next) =>
         {
             next();
         }
-    }
-}
-
-exports.insurancePolicyProviderEntered = (req, res, next) =>
-{
-    if (!req.body.insurance_policy_provider) 
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: "Insurance provider name is required."
-        });
-    }
-    else
-    {
-        // console.log('Insurance provider name is entered');
-        next();
     }
 }
 
