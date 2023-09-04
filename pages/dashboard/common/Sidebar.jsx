@@ -4,6 +4,7 @@ import { useRouter } from "next/router";
 import { isActiveLink } from "../../../utils/linkActiveChecker";
 import logoutApi from "../../api/logoutApi";
 
+import { useEffect, useState } from "react";
 const Sidebar = () => {
   const router = useRouter();
 

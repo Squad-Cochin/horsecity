@@ -20,7 +20,6 @@ const LocationSearch = () => {
   const [isLogin, setLogin] = useState(false);
 
 
-
   const { customer_id, vehicle_id, serviceprovider_id, no_of_horse } = useSelector((state) => state.bookingData) || {};
   const router = useRouter();
   useEffect(() => {

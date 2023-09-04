@@ -27,6 +27,7 @@ const TourSingleV1Dynamic = () => {
   const [vehicle, setVehicle] = useState([]);
   const [ vehicleImages, setVehicleImages ] = useState([]);
   const [ reviews ,setReviews ] = useState([]);
+  const [url,setUrl] =useState(false);
   const id = router.query.id;
   const dispatch = useDispatch();
   // useEffect(() => {
@@ -44,7 +45,12 @@ const TourSingleV1Dynamic = () => {
 // console.log("vehicle images");
   async function getProductDetails(){
     const loginData = await JSON.parse(localStorage.getItem('loginData'));
-    
+    const searchData = await JSON.parse(localStorage.getItem('searchObject'));
+    if(searchData.number_of_horses !=''){
+      setUrl(true);
+    }else{
+      setUrl(false);
+    }
     let packageDetails = await DetailsDataApi(id);
     setVehicle(packageDetails?.vehicle[0])
     setVehicleImages(packageDetails?.images);
@@ -83,7 +89,7 @@ const TourSingleV1Dynamic = () => {
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-end">
                 <div className="col-auto">
-                <a onClick={() => router.push("/car/car-list-v1")}  style={{ cursor: 'pointer' }}><IoIosArrowBack/><b>Back to page</b></a>
+                <a onClick={() =>url ? router.push("/car/car-list-v1") : router.push("/dashboard/db-wishlist")}  style={{ cursor: 'pointer' }}><IoIosArrowBack/><b>Back to page</b></a>
                   <h1 className="text-30 sm:text-24 fw-600">{vehicle?.make} {vehicle?.model}</h1>
                   <div className="row x-gap-10 items-center pt-10">
                     {/* <div className="col-auto">
