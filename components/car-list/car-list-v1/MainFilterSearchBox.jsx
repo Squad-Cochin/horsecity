@@ -11,6 +11,7 @@ const MainFilterSearchBox = () => {
   useEffect(() => {
     async function initialLoad(){
       const search = await JSON.parse(localStorage.getItem('searchObject'));
+      console.log("Dd",search)
       setSearchData(search)
       // console.log("searchh",search)
     }
@@ -33,7 +34,7 @@ const MainFilterSearchBox = () => {
     if(returnDate != ""){
       searchData.returnDate = returnDate;
     }
-    // console.log(searchData)
+    console.log("ss",searchData)
     localStorage.setItem('searchObject', JSON.stringify(searchData));
     // return false;
   }

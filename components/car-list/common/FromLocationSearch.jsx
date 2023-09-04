@@ -26,8 +26,8 @@ const FromLocationSearch = (props) => {
               type="search"
               placeholder="Start location ?"
               className="js-search js-dd-focus"
-              value={from_location != "" ? from_location : searchValue}
-              onChange={(e) => {setSearchValue(e.target.value); dispatch(addFromLocation(e.target.value))}}
+              value={from_location}
+              onChange={(e) => {setSearchValue(e.target.value); dispatch(addFromLocation(e.target.value));}}
             />
           </div>
         {/* </div> */}

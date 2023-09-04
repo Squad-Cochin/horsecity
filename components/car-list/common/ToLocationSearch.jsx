@@ -55,7 +55,7 @@ const ToLocationSearch = (props) => {
               type="search"
               placeholder="End location ?"
               className="js-search js-dd-focus"
-              value={to_location != "" ? to_location : searchValue}
+              value={to_location }
               onChange={(e) => {setSearchValue(e.target.value); dispatch(addToLocation(e.target.value))}}
             />
         </div>
