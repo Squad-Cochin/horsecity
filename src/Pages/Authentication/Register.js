@@ -46,11 +46,6 @@ const Register = props => {
     registrationError: state.account.registrationError,
   }));
 
-  // handleValidSubmit
-  // const handleValidSubmit = values => {
-  //   dispatch(registerUser(values));
-  // };
-
   useEffect(() => {
     dispatch(apiError(""));
   }, [dispatch]);

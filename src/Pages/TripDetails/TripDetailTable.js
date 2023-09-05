@@ -1,3 +1,9 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                       Tripdetails page functionality done over here.                       //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 import React, { useState, useEffect } from "react";
 import {
   Alert,
@@ -13,29 +19,23 @@ import {
   Row,
   ModalHeader,
 } from "reactstrap";
-import Breadcrumbs from "../../components/Common/Breadcrumb";
-// import SimpleBar from 'simplebar-react';
 import { Link } from "react-router-dom";
-import List from "list.js";
-// Import Flatepicker
-import Flatpickr from "react-flatpickr";
+import { useFormik } from "formik";
 
-//Import Trip details
+//IMPORTED FILES
 import {
   getTripDeatails,
   getSPUserName,
 } from "../../helpers/ApiRoutes/getApiRoutes";
-//Import Trip details
+import Breadcrumbs from "../../components/Common/Breadcrumb";
 import {
   getLIstBreakDownVehicles,
   getSPVehiclesData,
   getSPDriverData,
 } from "../../helpers/ApiRoutes/getApiRoutes";
-
 import { updateTripStatus } from "../../helpers/ApiRoutes/addApiRoutes";
-import { useFormik } from "formik";
 import config from "../../config";
-import { filter } from "lodash";
+
 const TripDeatails = () => {
   const [modal_list, setmodal_list] = useState(false);
   const [tripDatas, setTripDatas] = useState([]);
@@ -59,10 +59,9 @@ const TripDeatails = () => {
 
 
 
-
+  /**Initial render wIll load this hook */
   useEffect(() => {
     const data = JSON.parse(localStorage.getItem("authUser"));
-        
     let userIdd = data[0]?.user[0]?.id
     setUserId(userIdd);
     getAllData(1);
@@ -81,8 +80,6 @@ const TripDeatails = () => {
     pickup_location:  "",
   };
 
-  // Later in your code, when setting the initial state
-
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
@@ -94,7 +91,17 @@ const TripDeatails = () => {
     },
   });
 
-
+  // function for get data all customer data
+  async function getAllData(page) {
+    if(userId){ 
+    let Tripdetails = await getTripDeatails(page || 1,userId);
+  
+    setTripDatas(Tripdetails?.tripDetails);
+    setModule(Tripdetails?.module[0])
+    setPageNumber(page);
+    setNumberOfData(Tripdetails?.totalCount);
+    }
+  }
 
   async function updateTrip(values){
   let updateTrip = await   updateTripStatus(values);
@@ -108,6 +115,7 @@ const TripDeatails = () => {
      
   }
 
+  /** THIS FUNCTION WILL DISPLAY THE BREAKDOWN LIST */
   async function breakdown_list(productId) {
     setTrip_list_data([]);
     let breakOut = await getLIstBreakDownVehicles(productId);
@@ -120,10 +128,9 @@ const TripDeatails = () => {
       setTrip_list_data(filterTrpDetailsData);
       setListOrView(false)
     }
-
-    
     setBreakdown_list_modal(!breakdown_list_modal);
   }
+  /** THIS FUNCTION WILL OPEN THE EDIT POPUP  */
   async function tog_list(bkId ,invId) {
     setTrip_list_data([]);
     setBooking_id(bkId);
@@ -137,17 +144,7 @@ const TripDeatails = () => {
     
     setmodal_list(!modal_list);
   }
-  // function for get data all customer data
-  async function getAllData(page) {
-    if(userId){ 
-    let Tripdetails = await getTripDeatails(page || 1,userId);
-  
-    setTripDatas(Tripdetails?.tripDetails);
-    setModule(Tripdetails?.module[0])
-    setPageNumber(page);
-    setNumberOfData(Tripdetails?.totalCount);
-    }
-  }
+  /**SETTING DRIVER & VEHICLES BASIS OF SERVICE PROVIDER */
   async function serviceProviderSelected(id) {
     console.log("d",id);
     const sPVechilesData = await getSPVehiclesData(id);
@@ -156,6 +153,8 @@ const TripDeatails = () => {
     setSPDrivers(sPDriverData.drivers);
     setSPVechiles(sPVechilesData.vehicles);
   }
+
+  /**SETTING TRIP STATUS */
    function tripStatusSelected(value) {
     setStoreTripStatus(value)
     if(value === tripStatus.breakout){
@@ -163,8 +162,8 @@ const TripDeatails = () => {
     }else if(value === tripStatus.compleated){
       setTrip_status(false)
     }
- 
   }
+
   const tripStatus = {
     breakout: "BREAKOUT",
     compleated: "COMPLETED",
@@ -174,7 +173,6 @@ const TripDeatails = () => {
       <div className="page-content">
         <Container fluid>
           <Breadcrumbs title="Tables" breadcrumbItem="Trip details" />
-
           <Row>
             <Col lg={12}>
               <Card>
@@ -199,15 +197,9 @@ const TripDeatails = () => {
                             <th className="sort" data-sort="service-provider">
                               Service Provider
                             </th>
-                            {/* <th className="sort" data-sort="start-location">
-                              Start Location
-                            </th> */}
                             <th className="sort" data-sort="start-date">
                               Started At
                             </th>
-                            {/* <th className="sort" data-sort="end-location">
-                              End Location
-                            </th> */}
                             <th className="sort" data-sort="End-date">
                               Ended At
                             </th>
@@ -231,15 +223,9 @@ const TripDeatails = () => {
                               <td className="service-provider">
                                 {item?.service_provider}
                               </td>
-                              {/* <td className="start-location">
-                                {item?.pickup_location}
-                              </td> */}
                               <td className="start-date">
                                 {item?.trip_starting_date} {item?.pickup_time}
                               </td>
-                              {/* <td className="end-location">
-                                {item?.drop_location}
-                              </td> */}
                               <td className="end-date">
                                 {item?.trip_ending_date} {item?.drop_time}
                               </td>
@@ -410,7 +396,6 @@ const TripDeatails = () => {
               >
                 Close
               </button>
-              {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
             </div>
           </ModalFooter>
         </form>
@@ -591,7 +576,6 @@ const TripDeatails = () => {
               <button type="submit" className="btn btn-success" id="add-btn">
                 Update Trip Deatails
               </button>
-              {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
             </div>
           </ModalFooter>
         </form>

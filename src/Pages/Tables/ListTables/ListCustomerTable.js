@@ -8,16 +8,14 @@ import React, { useState, useEffect } from 'react';
 //IMPORTED FROM REACT BOOTSTRAP
 import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
-
-/**Navigation UI element */
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
-
 /**Using for form validation */
 import { useFormik } from "formik";
-
 // Import Flatepicker for using  date pick
 import Flatpickr from "react-flatpickr";
 
+
+/**Navigation UI element */
+import Breadcrumbs from "../../../components/Common/Breadcrumb";
 /**IMPORTED APIs */
 // import { getCustomersData } from '../../../helpers/ApiRoutes/authApiRoutes'; //For getting all customers
 import { removeCustomer } from '../../../helpers/ApiRoutes/removeApiRoutes'; //For removing customers
@@ -36,18 +34,17 @@ const ListCustomerTable = () => {
     const [customer, setCustomer] = useState([]); /**Using for storing All particul  customer based of thair ID */
     const [updateImage, setUpdateImage] = useState(""); /**Using for storing id proof image file */
     const [idProofPreview, setIdProofPreview] = useState(null);  /**Using for storing idproof image URL*/
-    const [ pageNumber, setPageNumber ] = useState(1);
-    const [ numberOfData, setNumberOfData ] = useState(0);
-    const [userId, setUserId ] = useState("");
+    const [pageNumber, setPageNumber] = useState(1);
+    const [numberOfData, setNumberOfData] = useState(0);
+    const [userId, setUserId] = useState("");
     const [roleId, setRoleId] = useState("");
-    const [role, setRole ] = useState(false);
+    const [role, setRole] = useState(false);
     const [module, setModule] = useState({});
-    const [ errors, setErrors ] = useState("")
+    const [errors, setErrors] = useState("")
     const pageLimit = config.pageLimit;
 
     /**This hook is used to fetch customers data */
-    useEffect(() =>
-    {
+    useEffect(() => {
         const data = JSON.parse(localStorage.getItem("authUser"));
         console.log('Data from the list invoice page', data);
         let user_Id = data[0]?.user[0]?.id
@@ -94,30 +91,30 @@ const ListCustomerTable = () => {
     });
 
     // function for add customer
-    async function addCustomer(values){
+    async function addCustomer(values) {
         let addCustomer = await addNewCustomer(values, userId);
-        if(addCustomer.code === 200){
+        if (addCustomer.code === 200) {
             setErrors("")
             setAdd_list(false);
             setmodal_list(false);
             getAllData(pageNumber)
             setUpdateImage("")
-        }else{
+        } else {
             setErrors("")
             setErrors(addCustomer.message)
         }
     }
 
     // Update customer
-    async function editCustomer(data){
+    async function editCustomer(data) {
         let updatedCustomer = await updateCustomer(customer[0]?.id, data);
-        if(updatedCustomer.code === 200){
+        if (updatedCustomer.code === 200) {
             setErrors("")
             setAdd_list(false);
             setmodal_list(false);
             getAllData(pageNumber)
             setUpdateImage("")
-        }else{
+        } else {
             setErrors("")
             setErrors(updatedCustomer.message)
         }
@@ -138,7 +135,7 @@ const ListCustomerTable = () => {
         if (param === 'ADD') {
             setIdProofPreview(null);
             setAdd_list(!add_list);
-        }else{
+        } else {
             let singleCustomer = await getSingleCustomerData(productId)
             setCustomer(singleCustomer);
             setIdProofPreview(singleCustomer[0]?.id_proof_image)
@@ -184,10 +181,8 @@ const ListCustomerTable = () => {
     }
 
     // function for get data all customer data
-    async function getAllData(page) 
-    {
-        if(userId)
-        {
+    async function getAllData(page) {
+        if (userId) {
             console.log(`User id at the time of getall function in the customer page`, userId);
             let getCustomers = await getCustomersData(page || 1, userId);
             console.log('Id:', userId);
@@ -220,116 +215,116 @@ const ListCustomerTable = () => {
                                             </Col>
                                         </Row>
                                         <div className="table-responsive table-card mt-3 mb-1">
-                                        <table className="table align-middle table-nowrap" id="customerTable">
-                                        <thead className="table-light">
-                                            <tr>
-                                            <th className="index" data-sort="customer_name">
-                                                #
-                                            </th>
-                                            <th className="customer_name" data-sort="customer_name">
-                                                Name
-                                            </th>
-                                            <th className="email" data-sort="email">
-                                                Email
-                                            </th>
-                                            <th className="contact_no" data-sort="contact_no">
-                                                Contact Number
-                                            </th>
-                                            <th className="registered_date" data-sort="registered_date">
-                                                Registered Date
-                                            </th>
-                                            <th className="status" data-sort="status">
-                                                Status
-                                            </th>
-                                            <th className="action" data-sort="action">
-                                                Action
-                                            </th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="list form-check-all">
-                                            {customers.map((item, index) => (
-                                            <tr key={item?.id}>
-                                                <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
-                                                <td className="customer_name">{item.name}</td>
-                                                <td className="email">{item.email}</td>
-                                                <td className="contact_no">{item.contact_no}</td>
-                                                <td className="registered_date">{item.created_at}</td>
-                                                <td>
-                                                    {item.status === "ACTIVE" ?
-                                                        <button
-                                                            className="btn btn-sm btn-success status-item-btn"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#showModal"
-                                                            onClick={(event) => toggleStatus(event.target, item.id)}
-                                                        >
-                                                            {item.status}
-                                                        </button> :
-                                                        <button
-                                                            className="btn btn-sm btn-danger status-item-btn"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#showModal"
-                                                            onClick={(event) => toggleStatus(event.target, item.id)}
-                                                        >
-                                                            {item.status}
-                                                        </button>
+                                            <table className="table align-middle table-nowrap" id="customerTable">
+                                                <thead className="table-light">
+                                                    <tr>
+                                                        <th className="index" data-sort="customer_name">
+                                                            #
+                                                        </th>
+                                                        <th className="customer_name" data-sort="customer_name">
+                                                            Name
+                                                        </th>
+                                                        <th className="email" data-sort="email">
+                                                            Email
+                                                        </th>
+                                                        <th className="contact_no" data-sort="contact_no">
+                                                            Contact Number
+                                                        </th>
+                                                        <th className="registered_date" data-sort="registered_date">
+                                                            Registered Date
+                                                        </th>
+                                                        <th className="status" data-sort="status">
+                                                            Status
+                                                        </th>
+                                                        <th className="action" data-sort="action">
+                                                            Action
+                                                        </th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="list form-check-all">
+                                                    {customers.map((item, index) => (
+                                                        <tr key={item?.id}>
+                                                            <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
+                                                            <td className="customer_name">{item.name}</td>
+                                                            <td className="email">{item.email}</td>
+                                                            <td className="contact_no">{item.contact_no}</td>
+                                                            <td className="registered_date">{item.created_at}</td>
+                                                            <td>
+                                                                {item.status === "ACTIVE" ?
+                                                                    <button
+                                                                        className="btn btn-sm btn-success status-item-btn"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#showModal"
+                                                                        onClick={(event) => toggleStatus(event.target, item.id)}
+                                                                    >
+                                                                        {item.status}
+                                                                    </button> :
+                                                                    <button
+                                                                        className="btn btn-sm btn-danger status-item-btn"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#showModal"
+                                                                        onClick={(event) => toggleStatus(event.target, item.id)}
+                                                                    >
+                                                                        {item.status}
+                                                                    </button>
 
-                                                    }
-                                                </td>
-                                                <td>
-                                                <div className="d-flex gap-2">
-                                                    <div className="view">
-                                                    <button
-                                                        className="btn btn-sm btn-success edit-item-btn"
-                                                        onClick={() => tog_view(item.id)}
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#showModal"
-                                                    >
-                                                        View
-                                                    </button>
-                                                    </div>
-                                                    <div className="edit">
-                                                    <button
-                                                        className="btn btn-sm btn-primary edit-item-btn"
-                                                        onClick={() => tog_list("EDIT", item.id)}
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#showModal"
-                                                    >
-                                                        Edit
-                                                    </button>
-                                                    </div>
-                                                    <div className="remove">
-                                                    <button
-                                                        className="btn btn-sm btn-danger remove-item-btn"
-                                                        onClick={() => remove_data(item.id)}
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#deleteRecordModal"
-                                                    >
-                                                        Remove
-                                                    </button>
-                                                    </div>
-                                                </div>
-                                                </td>
-                                            </tr>
-                                            ))}
-                                        </tbody>
-                                        </table>
-                                         </div>
-                                         <div className="d-flex justify-content-end">
+                                                                }
+                                                            </td>
+                                                            <td>
+                                                                <div className="d-flex gap-2">
+                                                                    <div className="view">
+                                                                        <button
+                                                                            className="btn btn-sm btn-success edit-item-btn"
+                                                                            onClick={() => tog_view(item.id)}
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#showModal"
+                                                                        >
+                                                                            View
+                                                                        </button>
+                                                                    </div>
+                                                                    <div className="edit">
+                                                                        <button
+                                                                            className="btn btn-sm btn-primary edit-item-btn"
+                                                                            onClick={() => tog_list("EDIT", item.id)}
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#showModal"
+                                                                        >
+                                                                            Edit
+                                                                        </button>
+                                                                    </div>
+                                                                    <div className="remove">
+                                                                        <button
+                                                                            className="btn btn-sm btn-danger remove-item-btn"
+                                                                            onClick={() => remove_data(item.id)}
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#deleteRecordModal"
+                                                                        >
+                                                                            Remove
+                                                                        </button>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                        <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">
                                                 {pageNumber > 1 ?
-                                                    <Link 
-                                                        className="page-item pagination-prev disabled" 
-                                                        onClick={()=> getAllData(pageNumber - 1)}
+                                                    <Link
+                                                        className="page-item pagination-prev disabled"
+                                                        onClick={() => getAllData(pageNumber - 1)}
                                                     >
                                                         Previous
                                                     </Link>
-                                                : null }
+                                                    : null}
                                                 <ul className="pagination listjs-pagination mb-0"></ul>
-                                                {numberOfData > pageLimit * pageNumber ? 
+                                                {numberOfData > pageLimit * pageNumber ?
                                                     <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}>
                                                         Next
-                                                    </Link> 
-                                                : null }
+                                                    </Link>
+                                                    : null}
                                             </div>
                                         </div>
                                     </div>
@@ -342,7 +337,7 @@ const ListCustomerTable = () => {
 
             {/********* Add Modal*************** */}
             <Modal className="extra-width" isOpen={modal_list} toggle={() => { setmodal_list(false); setAdd_list(false); setIdProofPreview(null) }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); setAdd_list(false); setIdProofPreview(null); setUpdateImage("")}}>{add_list ? 'Add Customer' : 'Edit Customer'} </ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); setAdd_list(false); setIdProofPreview(null); setUpdateImage("") }}>{add_list ? 'Add Customer' : 'Edit Customer'} </ModalHeader>
                 <form className="tablelist-form"
                     onSubmit={validation.handleSubmit}>
                     <ModalBody>
@@ -363,20 +358,20 @@ const ListCustomerTable = () => {
                         </div>
                         {/** Customer email */}
                         {add_list ?
-                        <div className="mb-3">
-                            <label htmlFor="email-field" className="form-label">Email</label>
-                            <input
-                                type="email"
-                                name='email'
-                                id="email-field"
-                                value={validation.values.email || ""}
-                                onChange={validation.handleChange}
-                                className="form-control"
-                                placeholder="Enter Email"
-                                required
-                            />
-                        </div>
-                        : null}
+                            <div className="mb-3">
+                                <label htmlFor="email-field" className="form-label">Email</label>
+                                <input
+                                    type="email"
+                                    name='email'
+                                    id="email-field"
+                                    value={validation.values.email || ""}
+                                    onChange={validation.handleChange}
+                                    className="form-control"
+                                    placeholder="Enter Email"
+                                    required
+                                />
+                            </div>
+                            : null}
                         {/** Customer username */}
                         <div className="mb-3">
                             <label htmlFor="username-field" className="form-label">Username</label>
@@ -406,7 +401,7 @@ const ListCustomerTable = () => {
                                     required
                                 />
                             </div>
-                        : null }
+                            : null}
                         {/** Customer contact_no number */}
                         <div className="mb-3">
                             <label htmlFor="contact_no-field" className="form-label">Contact Number</label>
@@ -501,7 +496,7 @@ const ListCustomerTable = () => {
 
             {/***************** View Modal *************/}
             <Modal className="extra-width" isOpen={view_modal} toggle={() => { tog_view('view'); }}>
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setView_modal(false);}}>View Customer</ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setView_modal(false); }}>View Customer</ModalHeader>
                 <form className="tablelist-form"
                     onSubmit={validation.handleSubmit}>
                     <ModalBody>

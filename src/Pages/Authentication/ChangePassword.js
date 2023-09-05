@@ -1,7 +1,6 @@
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import logo from "../../assets/images/logo.png";
-// import logodark from "../../assets/images/logo-dark.png";
 
 import { Row, Col, CardBody, Card, Alert, Container, Form, Input, FormFeedback, Label } from "reactstrap";
 
@@ -70,7 +69,7 @@ const ChangePassword = props => {
     error: state.login.error,
   }));
 
-
+  /**SET BACKGROUND IMAGE */
   async function getAllData() {
     let settingsData = await getSettingsPageData();
     console.log("bgimmage",settingsData);
@@ -84,7 +83,6 @@ const ChangePassword = props => {
     return function cleanup() {
       document.body.className = "";
     };
-
   });
 
   return (

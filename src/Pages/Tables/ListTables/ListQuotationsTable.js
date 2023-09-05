@@ -1,3 +1,9 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                       Quotation page functionality done over here.                         //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 import React, { useState, useEffect } from "react";
 import {
   Alert,
@@ -13,20 +19,18 @@ import {
   Row,
   ModalHeader,
 } from "reactstrap";
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
-// import SimpleBar from 'simplebar-react';
 import { Link } from "react-router-dom";
-import List from "list.js";
-// Import Flatepicker
 import Flatpickr from "react-flatpickr";
-import config from '../../../config';
+import { useFormik } from "formik";
 
-// import { item } from "../../../CommonData/Data";
+/**IMPORTED FILES */
+import Breadcrumbs from "../../../components/Common/Breadcrumb";
+import config from '../../../config';
 import Logo from "../../../assets/images/black-logo.png";
 import { getQuotationData, getConfirmQut, getSingleQuotationData,getTemplateQuotationData, getSPVehiclesData, getSPDriverData, getDiscounts, getSPUserName } from "../../../helpers/ApiRoutes/getApiRoutes";
 import { sendEmailFunction } from "../../../helpers/ApiRoutes/addApiRoutes";
 import { updatQuotation, confirmQuotation } from "../../../helpers/ApiRoutes/editApiRoutes";
-import { useFormik } from "formik";
+
 
 const ListQuotationsTable = () => {
   const [ view_modal, setView_modal ] = useState(false);
@@ -61,6 +65,29 @@ const ListQuotationsTable = () => {
   const [ selectedDiscount, setSelectedDiscount ] = useState("");
   const [ discountAmount, setDiscountAmount ] = useState(0);
 
+
+    useEffect(() => {
+      const data = JSON.parse(localStorage.getItem("authUser"));
+      let userIdd = data[0]?.user[0]?.id
+      setUserId(userIdd);
+      getAllData(1)
+      }, [userId])
+ 
+  // function for getting data all quotation
+  async function getAllData(page) {
+    if(userId){ 
+    let quotationData = await getQuotationData(page || 1,userId);
+    setQuotations(quotationData.quotations);
+    setModule(quotationData.module[0])
+    setPageNumber(page);
+    setNumberOfData(quotationData.totalCount);
+  }
+  }
+
+
+
+
+  /**INITIAL VALUES */
   const initialValues = {
     quotation_id : quotations ? quotations[0]?.quotation_id : "",
     enquiry_id : quotations ? quotations[0]?.enquiry_id : "",
@@ -97,14 +124,10 @@ const ListQuotationsTable = () => {
     final_amount : quotation ? quotation[0]?.final_amount : "",
 
     subject : template_data.subject,
-    // body : "",
   };
-
-  // Later in your code, when setting the initial state
 
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
-    
     enableReinitialize: true,
     initialValues,
     onSubmit: (values) => {
@@ -144,6 +167,7 @@ const ListQuotationsTable = () => {
     setModalEmail(false);
   }
 
+  /**IT WILL OPEN CONFIRM POPUP */
   async function confirmQut(){
     await confirmQuotation(qutId);
     setErrors("")
@@ -152,7 +176,7 @@ const ListQuotationsTable = () => {
     getAllData(pageNumber)
   }
 
-  // Update service provider
+  // UPDATE QUATATION DATA
   async function editQuotation(data){
     let updateQut = await updatQuotation(qutId, data);
     if(updateQut.code === 200){
@@ -166,11 +190,9 @@ const ListQuotationsTable = () => {
     }
   }
   
-  // Update service provider
+  // SEND EMAIL
   async function sendEmail(data){
-    console.log(data,"SE")
     let sendEmail = await sendEmailFunction(qutId, data);
-    console.log("es",sendEmail)
     if(sendEmail.code === 200){
         setErrors("")
         setModalEmail(false);
@@ -180,8 +202,7 @@ const ListQuotationsTable = () => {
         setErrors(sendEmail.message)
     }
   }
-console.log("FADA",template_data.subject);
-  /************ */
+  /*IT WILL OPEN EDIT QUOTATION POP UP*/
   async function tog_list(id) {
     setQutId(id)
     let singleQut = await getConfirmQut(id)
@@ -209,50 +230,31 @@ console.log("FADA",template_data.subject);
     setModal(!modal);
   }
 
-  //view
+ /*IT WILL OPEN VIEW QUOTATION POP UP*/
   async function tog_view(productId) {
     setQutId(productId)
     let confirmData = await getConfirmQut(productId)
     setQuotation(confirmData.quotation);
     setView_modal(!view_modal);
   }
-
+ /*IT WILL LIST QUOTATION POP UP DATAS*/
   async function quat_list(productId) {
     let qutData = await getSingleQuotationData(productId)
     setQuotationListDetails(qutData.quotation.details);
-
     setQuotationList(qutData.quotation.quotations)
     setQuatList_modal(!quatlist_modal);
   }
 
-  // send Mail modal
+  // IT WILL OPEN SEND MAIL POP UP
   async function tog_sendMail(qId, cEmail) {
     setQutId(qId)
     let temp_data = await getTemplateQuotationData()
- console.log("FSS",temp_data.templates_quotation[0]);
     setTemplateData(temp_data.templates_quotation[0])
     setModalEmail(!modalEmail);
   }
 
-  useEffect(() => {
-    const data = JSON.parse(localStorage.getItem("authUser"));
-    
-    let userIdd = data[0]?.user[0]?.id
-    setUserId(userIdd);
-    getAllData(1)
-}, [userId])
 
-  // function for get data all service provider data
-  async function getAllData(page) {
-    if(userId){ 
-    let quotationData = await getQuotationData(page || 1,userId);
-    setQuotations(quotationData.quotations);
-    setModule(quotationData.module[0])
-    setPageNumber(page);
-    setNumberOfData(quotationData.totalCount);
-  }
-  }
-
+  /**BASIS OF CHANGING DISCOUNT WILL CHANGE TAXAMOUNT & FINAL AMOUNT */
   async function calcDiscount(val){
     setSelectedDiscount(val);
     if(val !== ""){
@@ -352,7 +354,7 @@ console.log("FADA",template_data.subject);
         }
     }
   }
-
+  /**BASIS OF CHANGING VEHICLE & DRIVER AMOUNT THAT TIME WILL CHANGE FINAL AMOUNT */
   async function totalAmount(val){
       console.log("total",val,selectedDiscount,taxApplayed, taxAmount)
       if(selectedDiscount !== ""){
@@ -458,7 +460,7 @@ console.log("FADA",template_data.subject);
       }
       setTAmount(val)
   }
-
+  /**BASIS OF CHANGING TAX AMOUNT THAT TIME WILL CHANGE FINAL AMOUNT */
   async function applyTaxation(val){
     console.log("1",val)
     console.log("2",tAmount,"3",Number(taxation[0].value) / 100)
@@ -485,7 +487,7 @@ console.log("FADA",template_data.subject);
       }
       
   }
-
+  /**SETTING DRIVER & VEHICLES BASIS OF SERVICE PROVIDER */
   async function serviceProviderSelected(id){
     const sPVechilesData = await getSPVehiclesData(id) 
     const sPDriverData = await getSPDriverData(id)
@@ -499,14 +501,12 @@ console.log("FADA",template_data.subject);
       <div className="page-content">
         <Container fluid>
           <Breadcrumbs title="Tables" breadcrumbItem="Quotations" />
-
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
                   <h4 className="card-title mb-0">Add, Edit & Remove</h4>
                 </CardHeader>
-
                 <CardBody>
                   <div id="customerList">
                     <div className="table-responsive table-card mt-3 mb-1">
@@ -594,14 +594,6 @@ console.log("FADA",template_data.subject);
                                   >
                                     Send Email
                                   </button>
-
-                                  {/* <button
-                                    className="btn btn-sm btn-danger remove-item-btn"
-                                    data-bs-toggle="modal"
-                                    data-bs-target="#deleteRecordModal"
-                                  >
-                                    Remove
-                                  </button> */}
                                 </div>
                               </td>
                             </tr>
@@ -1013,7 +1005,6 @@ console.log("FADA",template_data.subject);
                         name="tax_applayed"
                         className="form-check-input"
                         value="YES"
-                        // checked={taxApplayed === "YES"}
                         onChange={(e) => {applyTaxation(e.target.value);}}
                         onBlur={validation.handleBlur}
                         />
@@ -1031,7 +1022,6 @@ console.log("FADA",template_data.subject);
                         name="tax_applayed"
                         className="form-check-input"
                         value="NO"
-                        // checked={taxApplayed === "NO"}
                         onChange={(e) => {applyTaxation(e.target.value);}}
                         onBlur={validation.handleBlur}
                         />
@@ -1202,12 +1192,6 @@ console.log("FADA",template_data.subject);
                               <th className="sort" data-sort="send_email">
                                 No Of Horse
                               </th>
-                              {/* <th className="sort" data-sort="quotation_id">
-                                Tax
-                              </th>
-                              <th className="sort" data-sort="view_invoice">
-                                Discount
-                              </th> */}
                               <th className="sort" data-sort="send_email">
                                 Final Amount
                               </th>
@@ -1217,14 +1201,11 @@ console.log("FADA",template_data.subject);
                             {quotationList.map((item, index)=>{
                               return(
                                 <tr key={index}>
-                                  {/* <td className="index text-center">{index + 1}</td> */}
                                   <td className="customer_name">{item.quotation_id}</td>
                                   <td className="service_provider_name">{item.trip_type}</td>
                                   <td className="quotation_id">{item.pickup_location}</td>
                                   <td className="quotation_id">{item.drop_location}</td>
                                   <td className="quotation_id">{item.no_of_horse}</td>
-                                  {/* <td className="quotation_id">{item.tax_amount}</td>
-                                  <td className="quotation_id">{item.discount_amount}</td> */}
                                   <td className="quotation_id">{item.final_amount}</td>
                                 </tr>
                             )})}
@@ -1250,7 +1231,6 @@ console.log("FADA",template_data.subject);
               >
                 Close
               </button>
-              {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
             </div>
           </ModalFooter>
         </form>
@@ -1543,18 +1523,6 @@ console.log("FADA",template_data.subject);
                   />
                 </div>
 
-                {/* <div className="mb-3">
-                  <label htmlFor="body-field" className="form-label">Body</label>
-                  <textarea
-                      name="body"
-                      id="body-field"
-                      className="form-control"
-                      value={validation.values.body || ""}
-                      onChange={validation.handleChange}
-                      required
-                  />
-                </div> */}
-                  
               </ModalBody>
               <ModalFooter>
                   <div className="hstack gap-2 justify-content-end">

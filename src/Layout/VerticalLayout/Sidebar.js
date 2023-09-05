@@ -14,7 +14,6 @@ import { findIndex } from "lodash";
 import config from '../../config'
 const Sidebar = (props) => {
   
-  const [modules, setModules] =  useState([]);
   const [sidebar_items,setSidebar_items] = useState([]);
 
   const module_items = config.modules
@@ -30,19 +29,6 @@ const Sidebar = (props) => {
       const role = config.Role
       const user_role = data[0]?.user[0]?.role_Id
 
-      // if(user_role === role.service_provider){
-
-      //   const updatedSidebarItem = {
-      //     ...sidebarData[11],
-      //     subItem: sidebarData[11]?.subItem.filter(sub => sub.id !== 1) //Sub modules reports customer id 
-      //   };
-      //   console.log("uppp",updatedSidebarItem);
-      //   const updatedSidebarItems = [...sidebarItems];
-      //   const find_index = updatedSidebarItems.findIndex((value) => value.id === 12);
-
-      //   updatedSidebarItems[find_index] = updatedSidebarItem;
-      //   setSidebar_items(updatedSidebarItems);
-      // }
       /**Checking customer */
       const checkCustomer = sidebarItems.find((value) =>
       value.id  == module_items.customers
@@ -180,9 +166,7 @@ const Sidebar = (props) => {
     activeMenu();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [sidebar_items]);
-  // useEffect(() => {
-  //   activeMenu();
-  // }, [activeMenu]);
+
   function scrollElement(item) {
     if (item) {
       const currentPosition = item.offsetTop;
@@ -192,16 +176,13 @@ const Sidebar = (props) => {
     }
   }
 
-  //console.log("SIDE",sidebar_items);
-  //console.log("side22",sidebarData);
   return (
     <React.Fragment>
       <div className="vertical-menu">
         <SimpleBar className="h-100" ref={ref}>
           <div id="sidebar-menu">
             <ul className="metismenu list-unstyled" id="side-menu-item">
-              {/* {(sidebar_items || []).map((item, key) => ( */}
-                {/* sidebarData */}
+
                 {sidebar_items.map((item, key) => (
                 <React.Fragment key={key}>
                   {item.isMainMenu ? (
@@ -222,16 +203,6 @@ const Sidebar = (props) => {
                           className={item.icon}
                           style={{ marginRight: "5px" }}
                         ></i>
-                        {/* {item.issubMenubadge && (
-                          <span
-                            className={
-                              "badge rounded-pill float-end " + item.bgcolor
-                            }
-                          >
-                            {" "}
-                            {item.badgeValue}{" "}
-                          </span>
-                        )} */}
                         <span>{props.t(item.label)}</span>
                       </Link>
                       {item.subItem && (

@@ -369,9 +369,6 @@ const FormAdvanced = () => {
       <div className="page-content">
         <Container fluid={true}>
           <Breadcrumbs title="Forms" breadcrumbItem="Form Advanced" />
-
-
-
           <Row>
             <Col lg="6">
               <Card>

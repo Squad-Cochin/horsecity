@@ -1,6 +1,11 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                      Accounts report page functionality done over here.                    //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 import React, { useState, useEffect } from 'react';
 import { Button, Card, CardBody, CardHeader, Col, Container,  Row } from 'reactstrap';
-import Breadcrumbs from "../../components/Common/Breadcrumb";
 // import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
@@ -9,6 +14,8 @@ import Flatpickr from "react-flatpickr";
 /**Using for form validation */
 import { useFormik } from "formik";
 
+/**IMPORTED */
+import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { getAccountsReport } from '../../helpers/ApiRoutes/getApiRoutes';
 import config from '../../config';
 
@@ -52,7 +59,7 @@ const AccountsReport  = () => {
             getData(1, values)
         }
     });
-
+    /**GETTING REPORTS ACCOUNT DATA */
     async function getData(page, val,spId){
         setFromDate(val.from_date)
         setToDate(val.to_date)

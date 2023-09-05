@@ -17,7 +17,6 @@ import * as url from "../url_helper";
                 'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log("response",response)
             return response
         } catch (error) {
             let errObj = {
@@ -42,7 +41,6 @@ import * as url from "../url_helper";
                 'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log("response",response)
             return response
         } catch (error) {
             let errObj = {
@@ -67,7 +65,6 @@ import * as url from "../url_helper";
                 'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log("response",response)
             return response
         } catch (error) {
             let errObj = {
@@ -81,8 +78,6 @@ import * as url from "../url_helper";
     /**Add new Customer */
     export async function addNewCustomer(data, Id){
         try {
-            console.log(`User Id: `, Id);
-            console.log(data)
             const formData = new FormData();
             // Append the object data to the FormData instance
             for (const key in data) {
@@ -95,7 +90,6 @@ import * as url from "../url_helper";
                 'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log("response",response)
             return response
         } catch (error) {
             let errObj = {
@@ -136,7 +130,6 @@ import * as url from "../url_helper";
       
     export async function addNewImage(data, id){
         try {
-            console.log("dd1",data)
             const formData = new FormData();
             // Append the object data to the FormData instance
             for (const key in data) {
@@ -231,7 +224,6 @@ import * as url from "../url_helper";
                 'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log("response",response)
             return response
         } catch (error) {
             let errObj = {

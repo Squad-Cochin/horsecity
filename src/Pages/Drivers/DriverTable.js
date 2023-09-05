@@ -676,18 +676,7 @@ const ListTables = () =>
                     />
                     </div>
 
-                    {/* The Below element is displaying the last time when the driver details are updated. */}
-                    {/* <div className="mb-3">
-                    <label htmlFor="last_update_date-field" className="form-label">Last Update Date</label>
-                    <input
-                        type="text"
-                        id="last_update_date-field"
-                        name='last_update_date'
-                        className="form-control"
-                        value={validation.values.updated_at || ""}
-                        readOnly
-                    />
-                    </div> */}
+              
 
                     {/* Profile image of the image*/}
                     <div className="mb-3">

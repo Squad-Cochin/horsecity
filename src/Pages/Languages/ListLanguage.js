@@ -1,17 +1,19 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                       Language page functionality done over here.                          //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
 import React, { useState, useEffect } from 'react';
 import { Button, Alert, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
-import Breadcrumbs from "../../components/Common/Breadcrumb";
-// import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
-import List from 'list.js';
-// Import Flatepicker
-import Flatpickr from "react-flatpickr";
 import { useFormik } from "formik";
+
+/**IMPORTED FILES */
+import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { addNewLanguage } from "../../helpers/ApiRoutes/addApiRoutes";
 import { updateLanguage } from "../../helpers/ApiRoutes/editApiRoutes"
 import { removeLanguage } from '../../helpers/ApiRoutes/removeApiRoutes'
 import { updateLanguageStatus } from '../../helpers/ApiRoutes/editApiRoutes';
-//Import get language api's
 import { getLanguagesPageData, getSingleLanguageData } from '../../helpers/ApiRoutes/getApiRoutes'
 import config from '../../config';
 const LanguageDeatails = () => {
@@ -25,8 +27,10 @@ const LanguageDeatails = () => {
     const [errors, setErrors] = useState("");
     const [lng_file, setLngFile] = useState(null)
 
-
+    /**PAGE LIMIT */
     const pageLimit = config.pageLimit;
+
+    // THIS HOOK RENDERING INITIAL TIME TAKING FOR ALL LANGUGE DATA 
     useEffect(() => {
         getAllData(1)
     }, [])
@@ -67,7 +71,7 @@ const LanguageDeatails = () => {
             }
         }
     });
-
+    /**FOR CHANGING LANGUAGE STATUS */
     function toggleStatus(button, lngId) {
         var currentStatus = button.innerText.trim();
         const language = languages.find((d) => d.id === lngId);
@@ -91,7 +95,7 @@ const LanguageDeatails = () => {
     }
 
 
-    // Add Language
+    // ADD LANGUAGE
     async function addLanguage(val) {
         let addLng = await addNewLanguage(val);
         if (addLng.code === 200) {
@@ -105,7 +109,7 @@ const LanguageDeatails = () => {
         }
     }
 
-    // Update Language
+    // UPDATE LANGUAGE
     async function editLanguage(data) {
         let updateLng = await updateLanguage(language[0]?.id, data);
         if (updateLng.code === 200) {
@@ -119,20 +123,21 @@ const LanguageDeatails = () => {
             setErrors(updateLng.message)
         }
     }
+    // GET LANGUAGE DATA
     async function getAllData(page) {
         let getLanguages = await getLanguagesPageData(page || 1);
         setLanguges(getLanguages.languages);
         setPageNumber(page);
         setNumberOfData(getLanguages.totalCount);
     }
+    
 
     const handleLanguageFile = (event) => {
         const file = event.target.files[0];
         setLngFile(file)
-        // setloginPageBackgroundPreview(URL.createObjectURL(file));
     };
 
-    /**This function is used to remove a language*/
+    /**REMOVING LANGUAGE*/
     async function remove_data(id) {
         let lng = await removeLanguage(id)
         if (lng.code === 200) {
@@ -144,14 +149,12 @@ const LanguageDeatails = () => {
             <div className="page-content">
                 <Container fluid>
                     <Breadcrumbs title="Tables" breadcrumbItem="Languages" />
-
                     <Row>
                         <Col lg={12}>
                             <Card>
                                 <CardHeader>
                                     <h4 className="card-title mb-0">Add, Edit & Remove</h4>
                                 </CardHeader>
-
                                 <CardBody>
                                     <div id="List">
                                         <Row className="g-4 mb-3">
@@ -202,15 +205,6 @@ const LanguageDeatails = () => {
                                                                 }
                                                             </td>
                                                             <td>
-                                                                {/* <div className="edit">
-                                                                        <button
-                                                                            className="btn btn-sm btn-success edit-item-btn"
-                                                                            data-bs-toggle="modal"
-                                                                            data-bs-target="#showModal" onClick={() => tog_list('EDIT', item.id)}
-                                                                        >
-                                                                            Edit
-                                                                        </button>
-                                                                    </div> */}
                                                                 <div className="remove">
                                                                     <button
                                                                         className="btn btn-sm btn-danger remove-item-btn"
@@ -295,7 +289,6 @@ const LanguageDeatails = () => {
                                         id="languagefile-field"
                                         name="language_file"
                                         className="form-control"
-                                        // value={validation.values.language_file || ""}
                                         onChange={handleLanguageFile}
                                         required
                                     />
@@ -309,7 +302,6 @@ const LanguageDeatails = () => {
                                             id="languagefile-field"
                                             name="language_file"
                                             className="form-control"
-                                            // value={validation.values.language_file || ""}
                                             onChange={handleLanguageFile}
                                         />
                                     </div>

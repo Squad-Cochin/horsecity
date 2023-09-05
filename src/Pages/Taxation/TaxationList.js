@@ -1,20 +1,16 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                       Driver page functionality done over here.                            //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 import React, { useState, useEffect } from 'react';
 import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-// import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
-// Import Flatepicker
-// import Flatpickr from "react-flatpickr";
 
-// Import Images
-// import avatar1 from "../../assets/images/users/avatar-1.jpg";
-// import avatar2 from "../../assets/images/users/avatar-2.jpg";
-// import avatar3 from "../../assets/images/users/avatar-3.jpg";
-// import avatar4 from "../../assets/images/users/avatar-4.jpg";
-// import avatar5 from "../../assets/images/users/avatar-5.jpg";
-
-//Import Drivers
+//IMPORTED FILES
 import { removeTaxation } from '../../helpers/ApiRoutes/removeApiRoutes'
 import { addNewTaxation } from '../../helpers/ApiRoutes/addApiRoutes';
 import { updateTaxation, updateTaxationStatus} from '../../helpers/ApiRoutes/editApiRoutes';
@@ -27,22 +23,32 @@ const TaxationDeatails = () => {
     const [ taxations, setTaxations] = useState([]);
     const [ taxation, setTaxation] = useState([]);
     const [ add_list, setAdd_list ] = useState(false);
-    const [modal_delete, setmodal_delete] = useState(false);
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("")
     const pageLimit = config.pageLimit;
 
+    /**Initial render wIll load this hook */
+    useEffect(() => {
+        getAllData(1)
+    }, []);
+
+    // function for get data all service provider data
+    async function getAllData(page) {
+        let getTaxations = await getTaxationsData(page || 1);
+        setTaxations(getTaxations.taxations);
+        setPageNumber(page);
+        setNumberOfData(getTaxations.totalCount);
+    }
+    /**IT WILL OPEN ADD & EDIT POPUP */
     async function tog_list(param,productId) {
         if(param === 'ADD'){
             setAdd_list(!add_list);
         } else {
-            // const data = taxations?.find((item)=>item?.id === productId)
             let taxationData = await getSingleTaxationData(productId)
             setTaxation(taxationData.taxation);
         }
         setmodal_list(!modal_list);
-          // Later in your code, when setting the initial state
     }
 
     const initialValues = {
@@ -50,6 +56,7 @@ const TaxationDeatails = () => {
         type : !add_list ? taxation[0]?.type : '',
         value : !add_list ? taxation[0]?.value : '',
       };
+
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
@@ -66,20 +73,7 @@ const TaxationDeatails = () => {
                 }
         }
       });
-    function tog_delete() {
-        setmodal_delete(!modal_delete);
-    }
-    useEffect(() => {
-        getAllData(1)
-    }, []);
 
-    // function for get data all service provider data
-    async function getAllData(page) {
-        let getTaxations = await getTaxationsData(page || 1);
-        setTaxations(getTaxations.taxations);
-        setPageNumber(page);
-        setNumberOfData(getTaxations.totalCount);
-    }
 
     // Add Taxation
     async function addTaxation(val){
@@ -118,7 +112,6 @@ const TaxationDeatails = () => {
         }
     }
 
-    
     // Update service provider
     async function editTxations(data){
         let updateTax = await updateTaxation(taxations[0]?.id, data);
@@ -328,31 +321,9 @@ const TaxationDeatails = () => {
                         <div className="hstack gap-2 justify-content-end">
                             <button type="button" className="btn btn-light" onClick={() =>{ setmodal_list(false); setAdd_list(false);}}>Close</button>
                             <button type="submit" className="btn btn-success" id="add-btn">{add_list ?  'Add taxation' : 'Update taxation' }</button>
-                            {/* <button type="button" className="btn btn-success" id="edit-btn">Update</button> */}
                         </div>
                     </ModalFooter>
                 </form>
-            </Modal>
-
-            {/* Remove Modal */}
-            <Modal isOpen={modal_delete} toggle={() => { tog_delete(); }} className="modal fade zoomIn" id="deleteRecordModal" centered >
-                <div className="modal-header">
-                    <Button type="button" onClick={() => setmodal_delete(false)} className="btn-close" aria-label="Close"> </Button>
-                </div>
-                <ModalBody>
-                    <div className="mt-2 text-center">
-                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="loop"
-                            colors="primary:#f7b84b,secondary:#f06548" style={{ width: "100px", height: "100px" }}></lord-icon>
-                        <div className="mt-4 pt-2 fs-15 mx-4 mx-sm-5">
-                            <h4>Are you Sure ?</h4>
-                            <p className="text-muted mx-4 mb-0">Are you Sure You want to Remove this Record ?</p>
-                        </div>
-                    </div>
-                    <div className="d-flex gap-2 justify-content-center mt-4 mb-2">
-                        <button type="button" className="btn w-sm btn-light" onClick={() => setmodal_delete(false)}>Close</button>
-                        <button type="button" className="btn w-sm btn-danger " id="delete-record">Yes, Delete It!</button>
-                    </div>
-                </ModalBody>
             </Modal>
         </React.Fragment>
     );

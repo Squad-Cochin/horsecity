@@ -1,17 +1,15 @@
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-//                                                                                                                   //
-//                              This file is for implementing CRUD operations for service providers                  //
-//                                                                                                                   //
-///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                       service provider page functionality done over here.                  //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 import React, { useState, useEffect } from 'react';
 //IMPORTED FROM REACT BOOTSTRAP
 import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
-
 /**Navigation UI element */
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-
 /**Using for form validation */
 import { useFormik } from "formik";
 

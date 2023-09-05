@@ -68,15 +68,7 @@ const ProfileMenu = props => {
             <i className="ri-wallet-2-line align-middle me-2" />
             {props.t("Change password")}
           </DropdownItem>
-          {/* <DropdownItem tag="a" href="#">
-            <span className="badge bg-success float-end mt-1">11</span>
-            <i className="ri-settings-2-line align-middle me-2" />
-            {props.t("Settings")}
-          </DropdownItem> */}
-          {/* <DropdownItem tag="a" href="auth-lock-screen">
-            <i className="ri-lock-unlock-line align-middle me-2" />
-            {props.t("Lock screen")}
-          </DropdownItem> */}
+
           <div className="dropdown-divider" />
           <Link to="/logout" className="dropdown-item">
             <i className="ri-shut-down-line align-middle me-2 text-danger" />

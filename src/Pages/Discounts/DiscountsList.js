@@ -1,15 +1,17 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                       Discounts page functionality done over here.                         //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
 
 import React, { useState, useEffect } from 'react';
 import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-// import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
-// Import Flatepicker
 import Flatpickr from "react-flatpickr";
 
-
-//Import discounts
+//Import discounts Api's functions
 import { getDiscountsPageData , getSingleDiscountData} from '../../helpers/ApiRoutes/getApiRoutes';
 import { updateDiscountStatus } from '../../helpers/ApiRoutes/editApiRoutes';
 import { removeDiscount } from '../../helpers/ApiRoutes/removeApiRoutes'
@@ -18,8 +20,8 @@ import { updateDiscounts } from '../../helpers/ApiRoutes/editApiRoutes';
 import { useFormik } from "formik";
 
 import config from '../../config';
-const DiscountsDeatails = () => {
 
+const DiscountsDeatails = () => {
     const [modal_list, setmodal_list] = useState(false);
     const [discounts, setDiscounts] = useState([])
     const [add_list, setAdd_list] = useState(false);
@@ -30,11 +32,9 @@ const DiscountsDeatails = () => {
     const [modal_delete, setmodal_delete] = useState(false);
     const pageLimit = config.pageLimit;
 
-
     useEffect(() => {
         getAllData(1)
     }, [])
-
 
     function toggleStatus(button, discountId) {
         var currentStatus = button.innerText.trim();
@@ -57,7 +57,6 @@ const DiscountsDeatails = () => {
             }
         }
     }
-
 
     async function tog_list(param, productId) {
         if (param === 'ADD') {
@@ -131,7 +130,7 @@ const DiscountsDeatails = () => {
         function tog_delete() {
             setmodal_delete(!modal_delete);
         }
-
+        /**GET DISCOUNTS PAGE DATA*/
         async function getAllData(page) {
             let getDiscounts = await getDiscountsPageData(page || 1);
             setDiscounts(getDiscounts.discounts);
@@ -208,8 +207,8 @@ const DiscountsDeatails = () => {
                                                         </button>
                                                     }
                                                 </td>
-                                                            <td>
-                                                                <div className="d-flex gap-2">
+                                                        <td>
+                                                            <div className="d-flex gap-2">
                                                                     <div className="edit">
                                                                         <button
                                                                             className="btn btn-sm btn-success edit-item-btn"

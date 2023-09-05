@@ -1,3 +1,8 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                       Accounts page functionality done over here.                         //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
 import React, { useState, useEffect } from 'react';
 import { Button, Card, CardBody, CardHeader, Col, Container,  Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
@@ -8,7 +13,7 @@ import List from 'list.js';
 import Flatpickr from "react-flatpickr";
 /**Using for form validation */
 import { useFormik } from "formik";
-
+/**Import Api's */
 import { getAccountsData, getSingleAccountsData } from '../../helpers/ApiRoutes/getApiRoutes';
 import config from '../../config';
 
@@ -25,6 +30,8 @@ const Accounts  = () => {
 
     const pageLimit = config.pageLimit;
     const role_id  = config.Role
+
+
     useEffect(()=>{
         const data = JSON.parse(localStorage.getItem("authUser"));
         console.log("UUUU",data);
@@ -36,7 +43,7 @@ const Accounts  = () => {
         getAllData(1)
     },[userId,role])
 
-
+    /**Getting accounts page data */
     async function getAllData(page) {
         if(userId){ 
         let getAccountsdata = await getAccountsData(page || 1,userId);
@@ -46,7 +53,7 @@ const Accounts  = () => {
         setNumberOfData(getAccountsdata.totalCount);
     }
     }
-
+    /**GET SINGLE ACCOUNTS */
     async function tog_view(productId) {
         let singleAccount = await getSingleAccountsData(productId)
         setSingleData(singleAccount?.accounts)

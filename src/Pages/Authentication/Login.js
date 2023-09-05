@@ -9,6 +9,7 @@ import React, { useEffect ,useState} from "react";
 import logo from "../../assets/images/black-logo.png";
 import { Row, Col, CardBody, Card, Alert, Container, Form, Input, FormFeedback, Label } from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
+/**get settings page api */
 import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 
 import { Link } from "react-router-dom";
 import withRouter from "../../components/Common/withRouter";
@@ -31,7 +32,9 @@ const Login = props => {
   const { file } = useSelector(state => ({
     file: state.settings.file,
   }));
- 
+  /**
+   * SET SETTINGS BACKGROUND IMAGE & LOGIN PAGE IMAGE & APPLICATION NAME  
+   */
   async function getAllData() {
     let settingsData = await getSettingsPageData();
     setBackgroundImage(settingsData?.settingsPageData[0]?.loginpage_bg_image);
@@ -41,7 +44,7 @@ const Login = props => {
 
    const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
-  };
+   };
 
    // At the bigining unmounting 
    useEffect(() => {
@@ -71,7 +74,6 @@ const Login = props => {
     }),
     onSubmit: (values) => {
       localStorage.setItem('userName', values.userName);
-
       dispatch(loginUser(values, props.router.navigate));
 
     }

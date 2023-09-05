@@ -24,15 +24,9 @@ const LanguageDropdown = () => {
     setselectLang(selectLang);
   }, [selectLang]);
 
-//   async function getSettingsLanguage() {
-//     let getTaxations = await getTaxationsData(page || 1);
-//     setTaxations(getTaxations.taxations);
-//     setPageNumber(page);
-//     setNumberOfData(getTaxations.totalCount);
-// }
+
 
   const changeLanguageAction = (lang) => {
-    console.log("language",lang);
     //set language as i18n
     i18n.changeLanguage(lang);
     localStorage.setItem("I18N_LANGUAGE", lang);

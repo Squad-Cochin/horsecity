@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 
 import { Row, Col } from 'reactstrap';
 
-import { LatestTransationData } from '../../CommonData/Data/index';
+// import { LatestTransationData } from '../../CommonData/Data/index';
 import { getLatestEnquiryData } from '../../helpers/ApiRoutes/getApiRoutes';
 
 const LatestTransation = () => {

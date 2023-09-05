@@ -1,3 +1,8 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                       invoice page functionality done over here.                           //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
 import React, { useState, useEffect, useRef  } from 'react';
 import List from "list.js";
 import { useFormik} from "formik";
@@ -5,7 +10,6 @@ import { Link } from 'react-router-dom';
 import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import Logo from "../../assets/images/black-logo.png";
-import { getLedgerData } from '../../helpers/ApiRoutes/authApiRoutes';
 import html2pdf from 'html2pdf.js'; // Make sure to include the library properly
 import config from '../../config';
 /**IMPORTED APIs */
@@ -15,7 +19,6 @@ import { addAmount, sendEmail } from '../../helpers/ApiRoutes/addApiRoutes';
  
 const InvoiceDetails = () =>
 {
-    const [ledger, setLedger] = useState([]);
     const [ledg, setLedg] = useState([]);
     const [vehicles, setVehicles] = useState([]);
     const [paymentHistroy, setPaymentHistroy] = useState([]);
@@ -47,13 +50,10 @@ const InvoiceDetails = () =>
     useEffect(() => 
     {
       const data = JSON.parse(localStorage.getItem("authUser"));
-      // console.log('Data from the list invoice page', data);
       let user_Id = data[0]?.user[0]?.id
       let role_Name = data[0]?.user[0]?.role_name
-      // console.log(`Role name from the invoice page`, role_Name);
-      // console.log('User id from the invoice page: ', user_Id);
       setUserId(user_Id);
-      setLedger(getLedgerData());
+    
       getAllData(1);  
     }, [userId]);
 

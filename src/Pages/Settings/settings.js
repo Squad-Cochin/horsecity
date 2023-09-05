@@ -1,14 +1,18 @@
-import React, { useEffect, useState } from 'react';
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                       settings page functionality done over here.                          //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+import React, { useEffect, useState } from 'react';      
 import { Alert,Card, CardBody, Col, Row, Container } from "reactstrap";
-import Breadcrumbs from "../../components/Common/Breadcrumb";
-import Header from '../../Layout/VerticalLayout/Header';
-// import { getSettingsPageData } from '../../helpers/ApiRoutes/authApiRoutes'
-import { updateSettings} from '../../helpers/ApiRoutes/editApiRoutes';
-import { getSettingsPageData , getTaxationsNames, getCurrenciesNames, getLanguagesNames} from '../../helpers/ApiRoutes/getApiRoutes'; 
 import { useFormik } from "formik";
-import { uploadMenuImg } from "../../store/actions";
 import { useSelector, useDispatch } from "react-redux";
-// import { uploadSettings } from "../../store/actions";
+
+//IMPORTED FILES
+import Breadcrumbs from "../../components/Common/Breadcrumb";
+import { updateSettings} from '../../helpers/ApiRoutes/editApiRoutes';
+import { getSettingsPageData , getTaxationsNames, getCurrenciesNames, getLanguagesNames} from '../../helpers/ApiRoutes/getApiRoutes';
 //i18n
 import i18n from "../../i18n";
 const SettingPage = () => 
@@ -33,8 +37,7 @@ const SettingPage = () =>
     const dispatch = useDispatch();
       /**This hook is used to fetch settings data */
       useEffect(() => {
-         getAllData()
-
+         getAllData();
        }, []);
 
 
@@ -48,11 +51,19 @@ const SettingPage = () =>
 
     },[settings_data])
     // Use useEffect to update the title when pageTitle changes
-
-
-          //  console.log("TT",settings_data);
+    // function for get data all service provider data
+      async function getAllData() {
+        let settingsData = await getSettingsPageData();
+        let languages = await getLanguagesNames();
+        let currencies = await getCurrenciesNames();
+        let taxations = await getTaxationsNames();
+        console.log("get",settingsData);
+        setSetting_data(settingsData.settingsPageData);
+        setLanguages(languages?.languages);
+        setCurrencies(currencies?.currencies);
+        setTaxations(taxations?.taxations)
+    }
     const initialValues = {
-
       application_title: settings_data[0]?.application_title || '',
       contact_address: settings_data[0]?.contact_address || '',
       email: settings_data[0]?.email || '',
@@ -69,7 +80,7 @@ const SettingPage = () =>
       quotation_prefix: settings_data[0]?.quotation_prefix || '',
       licence_number: settings_data[0]?.licence_number || '',
     };
-    console.log("Data",settings_data[0]?.currency_id);
+
     const validation = useFormik({
       // enableReinitialize : use this flag when initial values needs to be changed
       enableReinitialize: true,
@@ -79,12 +90,6 @@ const SettingPage = () =>
         values.logo = logo
         values.loginpage_bg_image = loginPageBackgroundImg
         values.loginpage_logo = loginPageLogo
-
-                  //  console.log("values",values.id,values);    
-                   console.log("values",values);
-                  //  dispatch(uploadMenuImg(menuLogoPreview));
-      
-
                   let updateSettingsPage = await updateSettings(values);
                   console.log("update",updateSettingsPage);
                   if(updateSettingsPage.code === 200){
@@ -93,8 +98,6 @@ const SettingPage = () =>
                       console.log("abb",data.abbreviation);
                       i18n.changeLanguage('en');
                       localStorage.setItem("I18N_LANGUAGE", 'en');
-                      // let test = "hello"
-                      // dispatch(uploadSettings(test));
                       window.location.reload();
                   }else{
                       setErrors("")
@@ -103,29 +106,33 @@ const SettingPage = () =>
                   }
       }
     });
-    
+    /**BACKGROUND IMAGE */
     const handleLoginPageBackgroundChange = (event) => {
       const file = event.target.files[0];
       setUploadLoginPageBackgroundImg(file)
       setloginPageBackgroundPreview(URL.createObjectURL(file));
     };
+    /**LOGIN PAGE */
     const handleloginPageLogoPreview = (event) => {
       const file = event.target.files[0];
       setUploadLoginPageLogo(file)
       setLoginPageLogoPreview(URL.createObjectURL(file));
     };  
+    /**LOGO */
     const handleMenuLogoChange = (event) => 
     {
       const file = event.target.files[0];
       setMenuLogo(file)
       setMenuLogoPreview(URL.createObjectURL(file));
     };
+    /**FAVICON */
     const handleFaviconChange = (event) => {
       const file = event.target.files[0];
       setUploadFavicon(file);
       console.log(file);
       setFaviconPreview(URL.createObjectURL(file));
     };
+    /**CONTREY CODES */
     const countryCodes = 
     [
         { code: '+973', country: 'Bahrain', region: 'GCC' },
@@ -137,20 +144,6 @@ const SettingPage = () =>
       ];
 
   
-    // function for get data all service provider data
-    async function getAllData() {
-      let settingsData = await getSettingsPageData();
-      let languages = await getLanguagesNames();
-      let currencies = await getCurrenciesNames();
-      let taxations = await getTaxationsNames();
-      console.log("get",settingsData);
-      setSetting_data(settingsData.settingsPageData);
-      setLanguages(languages?.languages);
-      setCurrencies(currencies?.currencies);
-      setTaxations(taxations?.taxations)
-  }
-
-  console.log("lng",languages);
 
 
 
@@ -232,8 +225,6 @@ const SettingPage = () =>
                                 className="form-control"
                                 name='logo'
                                 type="file"
-                                // value={validation.values.logo || ""}
-                                // onChange={validation.handleChange} 
                                 placeholder="Upload Menu Logo Image"
                                 onChange={handleMenuLogoChange}
                             
@@ -254,8 +245,6 @@ const SettingPage = () =>
                               className="form-control"
                               type="file"
                               name='loginpage_logo'
-                              // value={validation.values.loginpage_logo || ""}
-                              // onChange={validation.handleChange} 
                               placeholder="Upload Menu Logo Image"
                               onChange={handleloginPageLogoPreview}
                  
@@ -277,11 +266,8 @@ const SettingPage = () =>
                               className="form-control"
                               type="file"
                               name='favicon'
-                              // value={validation.values.favicon || ""}
-                              // onChange={validation.handleChange} 
                               placeholder="Upload Favicon Image"
                               onChange={handleFaviconChange}
-                   
                             />
                           </div>
                         </Row>
@@ -302,10 +288,7 @@ const SettingPage = () =>
                               type="file"
                               name='loginpage_bg_image'
                               placeholder="Upload background image"
-                              // value={validation.values.loginpage_bg_image || ""}
-                              // onChange={validation.handleChange} 
                               onChange={handleLoginPageBackgroundChange}
-                          
                             />
                           </div>
                         </Row>
@@ -375,7 +358,6 @@ const SettingPage = () =>
                       </div>
                     </Row>
                       <div className="d-flex justify-content-end gap-2">
-                        {/* <button type="Edit" className="btn btn-success" id="add-btn"> Edit  </button> */}
                         <button type="submit" className="btn btn-success" id="add-btn"> Submit </button>
                       </div>
                     </form>

@@ -1,12 +1,8 @@
 import React,{useState,useEffect} from "react";
 import UsePanel from "./UserPanel";
 import OrderStatus from "./OrderStatus";
-// import Notifications from "./Notifications";
-// import SocialSource from "./SocialSource";
 import OverView from "./OverView";
-// import RevenueByLocation from "./RevenueByLocation";
 import LatestTransation from "./LatestTransation";
-
 import { Row, Container } from "reactstrap";
 /**Api */
 import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 
@@ -37,20 +33,11 @@ const Dashboard = () => {
           <UsePanel />
 
           <Row>
-            {/* Overview Chart */}
             <OverView />
             <OrderStatus />
-            {/* Social Source Chart */}
-            {/* <SocialSource /> */}
           </Row>
 
           <Row>
-            {/* Order Stats */}
-            
-            {/* Notifications */}
-            {/* <Notifications /> */}
-            {/* Revenue by Location Vector Map */}
-            {/* <RevenueByLocation /> */}
           </Row>
 
           {/* Latest Transaction Table */}

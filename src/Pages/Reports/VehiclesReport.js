@@ -1,18 +1,23 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                      VEHICLE report page functionality done over here.            //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 import React, { useState, useEffect } from 'react';
 import { Button, Card, CardBody, CardHeader, Col, Container,  Row } from 'reactstrap';
-import Breadcrumbs from "../../components/Common/Breadcrumb";
-// import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
-// Import Flatepicker for using  date pick
 import Flatpickr from "react-flatpickr";
 /**Using for form validation */
 import { useFormik } from "formik";
 
+/**IMPORTED */
+import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { getVehicleReport } from '../../helpers/ApiRoutes/getApiRoutes';
 import config from '../../config';
 
-//Import reports
+
 const VehicleReport  = () => {
     const [ vehicleReport, setVehicleReport ] = useState([])
     const [ fromDate, setFromDate ] = useState("");
@@ -21,6 +26,8 @@ const VehicleReport  = () => {
     const [ numberOfData, setNumberOfData ] = useState(0);
     const pageLimit = config.pageLimit;
     const [ role, setRole ] = useState('');
+
+    /**Setting from date & to date initial loading  */
     useEffect(()=>{
         const today = new Date();
         const sixtyDaysAgo = new Date(today);
@@ -52,6 +59,7 @@ const VehicleReport  = () => {
         }
     });
 
+    /**GETTING VEHICLES REPORT */
     async function getData(page, val,spId){
         console.log("SP",spId);
         setFromDate(val.from_date)
@@ -70,7 +78,6 @@ const VehicleReport  = () => {
             <div className="page-content">
                 <Container fluid>
                     <Breadcrumbs title="Tables" breadcrumbItem="Vehicles Reports" />
-
                     <Row>
                         <Col lg={12}>
                             <Card>
