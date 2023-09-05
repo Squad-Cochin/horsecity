@@ -1,19 +1,18 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                            //
-//                       Accounts page functionality done over here.                         //
+//                       Accounts page functionality done over here.                          //
 //                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 import React, { useState, useEffect } from 'react';
 import { Button, Card, CardBody, CardHeader, Col, Container,  Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-// import SimpleBar from 'simplebar-react';
 import { Link } from 'react-router-dom';
 import List from 'list.js';
-// Import Flatepicker for using  date pick
 import Flatpickr from "react-flatpickr";
 /**Using for form validation */
 import { useFormik } from "formik";
-/**Import Api's */
 import { getAccountsData, getSingleAccountsData } from '../../helpers/ApiRoutes/getApiRoutes';
 import config from '../../config';
 

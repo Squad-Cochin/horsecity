@@ -16,7 +16,7 @@ import Drivers from "../Pages/Drivers/DriverTable";
 import TripDeatails from "../Pages/TripDetails/TripDetailTable";
 
 //Import monthly reports
-import ServiceProviderReport  from "../Pages/Reports/ServiceProviderReport";
+import ServiceProviderReport from "../Pages/Reports/ServiceProviderReport";
 import CustomerReport from "../Pages/Reports/CustomerReport";
 import DriverReport from "../Pages/Reports/DriversReport";
 import VehicleReport from "../Pages/Reports/VehiclesReport";
@@ -27,7 +27,7 @@ import AccountsReport from "../Pages/Reports/AccountsReport";
 
 
 //Import Accounts
-import Accounts  from "../Pages/Accounts/AccountsList";
+import Accounts from "../Pages/Accounts/AccountsList";
 
 //Languages
 import Language from "../Pages/Languages/ListLanguage";
@@ -44,7 +44,6 @@ import Login from "../Pages/Authentication/Login";
 import ChangePassword from "../Pages/Authentication/ChangePassword";
 import ForgetPasswordPage from "../Pages/Authentication/ForgetPassword";
 import Logout from "../Pages/Authentication/Logout";
-import Register from "../Pages/Authentication/Register";
 import UserProfile from "../Pages/Authentication/user-profile";
 import ListEnquiriesTable from "../Pages/Tables/ListTables/ListEnquiriesTable";
 import ListQuotationsTable from "../Pages/Tables/ListTables/ListQuotationsTable";
@@ -73,7 +72,7 @@ const authProtectedRoutes = [
   // Profile
   { path: "/userprofile", component: <UserProfile /> },
 
-// **************************
+  // **************************
   //ServiceProvider
   { path: "/service-providers", component: <ServiceProviders /> },
 
@@ -94,16 +93,16 @@ const authProtectedRoutes = [
   { path: "/account-reports", component: <AccountsReport /> },
   { path: "/invoice-reports", component: <InvoiceReport /> },
 
-  
+
   //Accounts
   { path: "/accounts", component: <Accounts /> },
   /**Image gallery */
-    { path: "/image-gallery/:id", component: <ImageGallery /> },
+  { path: "/image-gallery/:id", component: <ImageGallery /> },
 
   //Language
-  { path: "/languages", component: <Language /> },   
-  { path : "/taxation-list", component : <TaxListing />},
-  { path : "/discount-list", component : <DiscountListing />},
+  { path: "/languages", component: <Language /> },
+  { path: "/taxation-list", component: <TaxListing /> },
+  { path: "/discount-list", component: <DiscountListing /> },
   { path: "/setting-page", component: <SettingPage /> },
 
 
@@ -117,7 +116,7 @@ const authProtectedRoutes = [
   { path: "/quotations", component: <ListQuotationsTable /> },
 
   // Invoice Page
-  { path : "/invoices", component : <InvoiceDetails />},
+  { path: "/invoices", component: <InvoiceDetails /> },
 
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name
@@ -136,7 +135,6 @@ const publicRoutes = [
   { path: "/login", component: <Login /> },
   { path: "/change-password", component: <ChangePassword /> },
   { path: "/forgot-password", component: <ForgetPasswordPage /> },
-  { path: "/register", component: <Register /> },
 
   //Profile page
   { path: "/profile-page", component: <Profile /> },

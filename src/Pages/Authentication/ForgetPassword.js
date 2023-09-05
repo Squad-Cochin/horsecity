@@ -1,20 +1,22 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                      Forgot password page functionality done over here.                    //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 import PropTypes from "prop-types";
 import React, { useEffect } from "react";
 import { Row, Col, Alert, Card, CardBody, Container, FormFeedback, Input, Label, Form } from "reactstrap";
-
 //redux
 import { useSelector, useDispatch } from "react-redux";
-
 import { Link } from "react-router-dom";
 import withRouter from "../../components/Common/withRouter";
-
 // Formik Validation
 import * as Yup from "yup";
 import { useFormik } from "formik";
-
 // action
 import { userForgetPassword } from "../../store/actions";
-
 // import images
 import logo from "../../assets/images/logo.png";
 

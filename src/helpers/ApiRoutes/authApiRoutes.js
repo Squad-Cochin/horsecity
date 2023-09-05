@@ -51,11 +51,8 @@ const fakeBackend = () => {
     const user = JSON.parse(config["data"]);
 
     const data = await axios.post(`${url.LOGIN_URL}`, user);
-    console.log("data", data);
     
-    // const roleHeaderValue = data.headers['role']; // Accessing headers directly from response
-    // console.log("Header", roleHeaderValue);
-    console.log("RES",data)
+
     return new Promise((resolve, reject) => {
       setTimeout(() => {
         if (data.status === "success") {
@@ -74,9 +71,7 @@ const fakeBackend = () => {
     //Change password
     mock.onPost(url.POST_FAKE_CHANGE_PWD).reply(async (config) => {
       const user = JSON.parse(config["data"]);
-      console.log("user",user);
       const data = await axios.post(`${url.CHANGE_PASSWORD_URL}`, user);
-      console.log("response",data)
       return new Promise((resolve, reject) => {
         setTimeout(() => {
           if (data.success === true) {
@@ -94,9 +89,7 @@ const fakeBackend = () => {
   //Recovery password
   mock.onPost(url.RECOVER_PASSWORD).reply(async (config) => {
     const user = JSON.parse(config["data"]);
-    console.log("user",user);
     // const data = await axios.post(`${url.RECOVER_PWD_URL}`, user);
-    // console.log(data)
     // return new Promise((resolve, reject) => {
     //   setTimeout(() => {
     //     if (data.success === true) {

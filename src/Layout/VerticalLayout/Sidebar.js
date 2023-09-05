@@ -1,16 +1,20 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                      Side bar functionality done over here.                            //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 import React, { useCallback, useEffect, useRef ,useState} from "react";
 import PropTypes from "prop-types";
-import sidebarData from "./SidebarData";
-//Simple bar
-import SimpleBar from "simplebar-react";
-// MetisMenu
-import MetisMenu from "metismenujs";
-import withRouter from "../../components/Common/withRouter";
 import { Link } from "react-router-dom";
-
+import SimpleBar from "simplebar-react";
+import MetisMenu from "metismenujs";
+//IMPOTED FILES
+import withRouter from "../../components/Common/withRouter";
+import sidebarData from "./SidebarData";
 //i18n
 import { withTranslation } from "react-i18next";
-import { findIndex } from "lodash";
 import config from '../../config'
 const Sidebar = (props) => {
   
@@ -21,19 +25,17 @@ const Sidebar = (props) => {
     useEffect(() => {
       const data = JSON.parse(localStorage.getItem("authUser"))
       const modules = data[1]?.modules;
+      /**filtering sidebar data basis of module id */
       const sidebarItems = sidebarData.filter((element) => 
       modules.some((value) => element.id === value.module_id)
       );
-
-
       const role = config.Role
       const user_role = data[0]?.user[0]?.role_Id
-
       /**Checking customer */
       const checkCustomer = sidebarItems.find((value) =>
       value.id  == module_items.customers
        );
-   
+       /*Filtering sub items after side bar data filtration */
         const updatedSidebarItem = {
           ...sidebarData[11],
           subItem: sidebarData[11]?.subItem.filter(sub => {
@@ -47,11 +49,9 @@ const Sidebar = (props) => {
         };
         const updatedSidebarItems = [...sidebarItems];
         const find_index = updatedSidebarItems.findIndex((value) => value.id === 12);
-
+        /**Attaching updated sidebar items */
         updatedSidebarItems[find_index] = updatedSidebarItem;
         setSidebar_items(updatedSidebarItems);
-
-
 
   }, [])
 

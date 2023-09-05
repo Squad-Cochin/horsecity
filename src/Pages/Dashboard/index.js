@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                       Dashboard page functionality done over here.                         //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 import React,{useState,useEffect} from "react";
 import UsePanel from "./UserPanel";
 import OrderStatus from "./OrderStatus";
@@ -24,6 +31,8 @@ const Dashboard = () => {
     setPageTitle(settingsData?.settingsPageData[0]?.application_title);
    }
   document.title = `Dashboard | ${pageTitle} - React Admin & Dashboard Template`;
+
+
   return (
     <React.Fragment>
       <div className="page-content">
@@ -31,15 +40,12 @@ const Dashboard = () => {
           <Breadcrumbs title={pageTitle} breadcrumbItem="Dashboard" />
           {/* User Panel Charts */}
           <UsePanel />
-
           <Row>
             <OverView />
             <OrderStatus />
           </Row>
-
           <Row>
           </Row>
-
           {/* Latest Transaction Table */}
           <LatestTransation />
         </Container>

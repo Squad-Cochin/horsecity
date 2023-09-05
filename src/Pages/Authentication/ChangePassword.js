@@ -1,35 +1,32 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                      Change password page functionality done over here.                    //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import logo from "../../assets/images/logo.png";
-
 import { Row, Col, CardBody, Card, Alert, Container, Form, Input, FormFeedback, Label } from "reactstrap";
-
 //redux
 import { useSelector, useDispatch } from "react-redux";
-
 import { Link } from "react-router-dom";
-import withRouter from "../../components/Common/withRouter";
-
 // Formik validation
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
+import withRouter from "../../components/Common/withRouter";
+import logo from "../../assets/images/logo.png";
 import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 
 import { updateNewPwd } from "../../store/actions";
-
 import { logoutUser } from "../../store/actions";
-
-//Import config
-// import { facebook, google } from "../../config";
 
 const ChangePassword = props => {
   document.title = "Change-Password | HORSCITY";
 
   const [backgroundImage, setBackgroundImage] = useState('../../assets/images/bg.jpg');
-
+  const [ appName, setAppName ] = useState('');
 
   const dispatch = useDispatch();
-
   useEffect(() => {
     dispatch(logoutUser());
   }, [dispatch]);
@@ -74,6 +71,7 @@ const ChangePassword = props => {
     let settingsData = await getSettingsPageData();
     console.log("bgimmage",settingsData);
     setBackgroundImage(settingsData?.settingsPageData[0]?.loginpage_bg_image);
+    setAppName(settingsData?.settingsPageData[0]?.application_title)
    }
 
   useEffect(() => {
@@ -116,7 +114,7 @@ const ChangePassword = props => {
                     Change Password
                   </h4>
                   <p className="mb-5 text-center">
-                    Update password to continue with Horscity.
+                    Update password to continue with {appName}.
                   </p>
                   <Form
                     className="form-horizontal"
