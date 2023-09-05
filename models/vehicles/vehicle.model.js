@@ -4,16 +4,20 @@
 //                                                                                         //
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-const constants = require('../../utils/constants');
-const commonfetching = require('../../utils/helper/commonfetching');
-const commonoperation = require('../../utils/helper/commonoperation');
-const time = require('../../utils/helper/date');
-const con = require('../../configs/db.configs')
+const constants = require('../../utils/constants'); // Constant elements are stored in this file
+const commonfetching = require('../../utils/helper/commonfetching'); // helper file function. This file consist of functions Which is written universally for fetching the data from the database
+const commonoperation = require('../../utils/helper/commonoperation'); // helper file function. This file consist of functions Which is written universally for some common operations.
+const time = require('../../utils/helper/date'); // All the time relateed formating are written in this file.
+const con = require('../../configs/db.configs') // Calling the db file for making the database connection
 
 module.exports = class vehicles
 {
     constructor(){}
 
+    /**
+    * The below model function is for the Admin side page. 
+    * The function is adding or creating new vehicle.
+    */
     static async addnew(Id, serviceProviderId, vehicle_number, make, model, color, length, breadth, height, price, max_no_of_horse, air_conditioner, temp_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date)
     { 
         try
@@ -89,6 +93,10 @@ module.exports = class vehicles
         }
     };
 
+    /**
+    * The below model function is for the Admin side page. 
+    * The function is for fetching the list of all the vehicles.
+    */
     static async getall(pageNumber, pageSize, Id)
     {
         try
@@ -200,6 +208,10 @@ module.exports = class vehicles
         }
     };
 
+    /**
+    * The below model function is for the Admin side page.
+    * The function is updating the status of a particular vehicle on the basis of vehicle id in the params.
+    */
     static async updatestatus(id)
     {
         try
@@ -265,6 +277,10 @@ module.exports = class vehicles
         }
     };
 
+    /**
+    * The below model function is for the Admin side page. 
+    * The function for fetching particular vehicle details present in the database on the basis of vehicle id.
+    */
     static async getone(Id)
     {
         try
@@ -330,6 +346,10 @@ module.exports = class vehicles
         }
     };
 
+    /**
+    * The below model function is for the Admin side page. 
+    * The function is updating or edititng the details of the present vehicle on the basis of vehicle id in the params.
+    */
     static async updatedata(id, serviceProviderId, vehicle_number, make, model, color, length, breadth, height, price, max_no_of_horse, air_conditioner, temp_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, vehicle_type, vehicle_registration_date, vehicle_exipration_date, safety_certicate)
     {
         try
@@ -382,6 +402,10 @@ module.exports = class vehicles
         }
     };
 
+    /**
+    * The below model function is for the Admin side page. 
+    * This function is for fetching the list of all the images of a particular vehicles on the basis of the vehicle id.
+    */
     static async getallimages(id)
     {
         try
@@ -436,6 +460,11 @@ module.exports = class vehicles
         }
     };
 
+    /**
+    * The below model function is for the Admin side page.
+    * The function is updating or adding the deleted_at of a particular vehicles on the basis of vehicles id in the params.
+    * This will be considered as the vehicles is deleted
+    */
     static async removevehicle(Id)
     {
         try
@@ -458,20 +487,16 @@ module.exports = class vehicles
         }
     };
 
+    /**
+    * The below model function is for the Admin side page.
+    * The function is for showing the particular vehicle on the front end of the customer [NEXTJS]
+    */
     static async getvehicledetailforcustomerpage(Id)
     {
         try
         {
             return await new Promise(async(resolve, reject)=>
             {
-                // let selQuery = `SELECT v.id, v.service_provider_id, s.name AS service_provider_name, v.vehicle_number, v.price, v.no_of_horse, v.length, v.height, v.breadth, v.make, v.model, v.air_conditioner, v.temperature_manageable, v.gcc_travel_allowed, v.insurance_cover, v.vehicle_type, v.vehicle_registration_date, v.vehicle_exipration_date, v.insurance_date, v.insurance_expiration_date, v.insurance_provider, vi.id AS vehicle_image_id, vi.image, vi.title, r.id AS review_id, r.vehicle_rating, r.vehicle_description, r.created_at
-                // FROM vehicles v
-                // INNER JOIN service_providers s ON v.service_provider_id = s.id
-                // LEFT JOIN vehicles_images vi ON v.id = vi.vehicle_id AND vi.status = "${constants.status.active}" 
-                // LEFT JOIN reviews r ON v.id = r.vehicle_id
-                // WHERE v.id = ${Id}
-                // AND v.status = "${constants.status.active}"`;
-
                 let selQuery = `SELECT
                                 v.id,
                                 v.service_provider_id,
@@ -502,12 +527,22 @@ module.exports = class vehicles
                                 r.vehicle_rating,
                                 r.vehicle_description,
                                 r.created_at
-                                FROM vehicles v
-                                INNER JOIN service_providers s ON v.service_provider_id = s.id
-                                LEFT JOIN currencies cr ON cr.id = ( SELECT currency_id FROM application_settings WHERE application_settings.currency_id = cr.id )
-                                LEFT JOIN vehicles_images vi ON v.id = vi.vehicle_id AND vi.status = "${constants.status.active}"
-                                LEFT JOIN reviews r ON v.id = r.vehicle_id
-                                WHERE v.id = ${Id} AND v.status = "${constants.status.active}"  `;
+                                FROM ${constants.tableName.vehicles} v
+                                INNER JOIN ${constants.tableName.service_providers} s 
+                                ON v.service_provider_id = s.id
+                                LEFT JOIN ${constants.tableName.currencies} cr 
+                                ON cr.id = ( 
+                                    SELECT currency_id 
+                                    FROM ${constants.tableName.application_settings} 
+                                    WHERE application_settings.currency_id = cr.id 
+                                    )
+                                LEFT JOIN ${constants.tableName.vehicles_images} vi 
+                                ON v.id = vi.vehicle_id 
+                                AND vi.status = "${constants.status.active}"
+                                LEFT JOIN ${constants.tableName.reviews} r 
+                                ON v.id = r.vehicle_id
+                                WHERE v.id = ${Id} 
+                                AND v.status = "${constants.status.active}"  `;
                 // console.log(`Fetch data query: `, selQuery);
                 con.query(selQuery, (err, result) =>
                 {
@@ -592,331 +627,6 @@ module.exports = class vehicles
             return console.log(`Error from the vehicle.model.js file from the models > vehicles folder. In the static function "getvehicledetailforcustomerpage". Which is designed to fetch the details of a particular vehicle for the details page in the customer side`);                        
         }
     };
-
-    // static async getvehicledetailforcustomerpage(Id)
-    // {
-    //     try
-    //     {
-    //         return await new Promise(async(resolve, reject)=>
-    //         {
-    //             // let selQuery = `SELECT v.id, v.service_provider_id, s.name AS service_provider_name, v.vehicle_number, v.price, v.no_of_horse, v.length, v.height, v.breadth, v.make, v.model, v.air_conditioner, v.temperature_manageable, v.gcc_travel_allowed, v.insurance_cover, v.vehicle_type, v.vehicle_registration_date, v.vehicle_exipration_date, v.insurance_date, v.insurance_expiration_date, v.insurance_provider, vi.id AS vehicle_image_id, vi.image, vi.title, r.id AS review_id, r.vehicle_rating, r.vehicle_description, r.created_at
-    //             // FROM vehicles v
-    //             // INNER JOIN service_providers s ON v.service_provider_id = s.id
-    //             // LEFT JOIN vehicles_images vi ON v.id = vi.vehicle_id AND vi.status = "${constants.status.active}" 
-    //             // LEFT JOIN reviews r ON v.id = r.vehicle_id
-    //             // WHERE v.id = ${Id}
-    //             // AND v.status = "${constants.status.active}"`;
-
-    //             let selQuery = `SELECT
-    //                             v.id,
-    //                             v.service_provider_id,
-    //                             s.name AS service_provider_name,
-    //                             v.vehicle_number,
-    //                             v.price,
-    //                             v.no_of_horse,
-    //                             v.length,
-    //                             v.height,
-    //                             v.breadth,
-    //                             v.make,
-    //                             v.model,
-    //                             v.air_conditioner,
-    //                             v.temperature_manageable,
-    //                             v.gcc_travel_allowed,
-    //                             v.insurance_cover,
-    //                             v.vehicle_type,
-    //                             v.vehicle_registration_date,
-    //                             v.vehicle_exipration_date,
-    //                             v.insurance_date,
-    //                             cr.abbreviation,
-    //                             v.insurance_expiration_date,
-    //                             v.insurance_provider,
-    //                             vi.id AS vehicle_image_id,
-    //                             vi.image,
-    //                             vi.title,
-    //                             r.id AS review_id,
-    //                             r.vehicle_description,
-    //                             SUM(CASE WHEN r.vehicle_rating = 1 THEN 1 ELSE 0 END) AS rating_1_count, 
-    //                             SUM(CASE WHEN r.vehicle_rating = 2 THEN 1 ELSE 0 END) AS rating_2_count, 
-    //                             SUM(CASE WHEN r.vehicle_rating = 3 THEN 1 ELSE 0 END) AS rating_3_count, 
-    //                             SUM(CASE WHEN r.vehicle_rating = 4 THEN 1 ELSE 0 END) AS rating_4_count, 
-    //                             SUM(CASE WHEN r.vehicle_rating = 5 THEN 1 ELSE 0 END) AS rating_5_count, 
-    //                             COUNT(r.id) AS review_count,  
-    //                             r.created_at,
-    //                             c.name AS customer_name
-    //                             FROM vehicles v
-    //                             INNER JOIN service_providers s ON v.service_provider_id = s.id
-    //                             JOIN ${constants.tableName.bookings} b ON v.service_provider_id = b.service_provider_id  
-    //                             JOIN ${constants.tableName.customers} c ON b.customer_id  = c.id  
-    //                             LEFT JOIN currencies cr ON cr.id = ( SELECT currency_id FROM application_settings WHERE application_settings.currency_id = cr.id )
-    //                             LEFT JOIN vehicles_images vi ON v.id = vi.vehicle_id AND vi.status = "${constants.status.active}"
-    //                             LEFT JOIN reviews r ON v.id = r.vehicle_id
-    //                             WHERE v.id = ${Id} AND v.status = "${constants.status.active}" `;
-    //             // console.log(`Fetch data query: `, selQuery);
-    //             con.query(selQuery, (err, result) =>
-    //             {
-    //                 // console.log(result);
-    //                 // console.log(`Result of the particular vehicle for the customer page: `, result);
-    //                 if(err)
-    //                 {
-    //                     console.log(err);
-    //                     resolve('err');
-    //                 }
-    //                 else
-    //                 {
-    //                     var vehicleResponse =
-    //                     {
-    //                         "vehicle": [],
-    //                         "images" : [],
-    //                         "reviews": [],
-    //                         "review_ratings" : []
-    //                     };
-    //                     if(result.length != 0)
-    //                     {
-    //                         const uniqueReviewIds = new Set();
-    //                         const uniqueImagesIds = new Set();
-                    
-    //                         for (let row of result)
-    //                         {
-    //                             if (vehicleResponse.vehicle.length === 0)
-    //                             {
-    //                                 // If result has data, populate the vehicleResponse data
-    //                                 vehicleResponse.vehicle.push
-    //                                 ({
-    //                                     "service_provider_id" : result[0].service_provider_id,
-    //                                     "service_provider_name" : result[0].service_provider_name,
-    //                                     "vehicle_number" : result[0].vehicle_number,
-    //                                     "price" : result[0].price,
-    //                                     "no_of_horses" : result[0].no_of_horse,
-    //                                     "length" : result[0].length,
-    //                                     "breadth" : result[0].breadth,
-    //                                     "height" : result[0].height,
-    //                                     "make" : result[0].make,
-    //                                     "model" : result[0].model,
-    //                                     "air_condition" : result[0].air_conditioner,
-    //                                     "temperature_manageable" : result[0].temperature_manageable,
-    //                                     "gcc_travel_allowed" : result[0].gcc_travel_allowed,
-    //                                     "insurance_cover" : result[0].insurance_cover,
-    //                                     "insurance_provider" : result[0].insurance_provider,
-    //                                     "vehicle_type" : result[0].vehicle_type,
-    //                                     "abbreviation" : result[0].abbreviation,
-    //                                     "vehicle_registration_date" : time.formatDateToDDMMYYYY(result[0].vehicle_registration_date),
-    //                                     "vehicle_expiration_date" : time.formatDateToDDMMYYYY(result[0].vehicle_exipration_date),
-    //                                     "insurance_date" : time.formatDateToDDMMYYYY(result[0].insurance_date),
-    //                                     "insurance_expiration_date" : time.formatDateToDDMMYYYY(result[0].insurance_expiration_date)
-    //                                 });
-    //                             }
-
-    //                             if(row.vehicle_image_id !== null && !uniqueImagesIds.has(row.vehicle_image_id))
-    //                             {
-    //                                 vehicleResponse.images.push
-    //                                 ({
-    //                                     "id": row.vehicle_image_id,
-    //                                     "url" : `${process.env.PORT_SP}${constants.attachmentLocation.vehicle.view.image}${row.image}`
-    //                                 });
-    //                                 uniqueImagesIds.add(row.vehicle_image_id);
-    //                             }                           
-
-    //                             if (row.review_id !== null && !uniqueReviewIds.has(row.review_id)) 
-    //                             {
-    //                                 vehicleResponse.reviews.push
-    //                                 ({
-    //                                     "id": row.review_id,
-    //                                     "customer_name" : row.customer_name,
-    //                                     // "rating" : row.vehicle_rating,
-    //                                     "description" : row.vehicle_description,
-    //                                     "created_at" : time.formatDateToDDMMYYYY(row.created_at)
-    //                                 });
-
-    //                                 // const reviewRatings = [];
-    //                                 // for (let rating = 1; rating <= 5; rating++) {
-    //                                 //     reviewRatings.push({
-    //                                 //         "rating": rating,
-    //                                 //         "rating_count": row[`rating_${rating}_count`], // Use the dynamically generated column name
-    //                                 //         "review_count": row.review_count
-    //                                 //     });
-    //                                 // }
-    //                                 const reviewRatings = [
-    //                                     {
-    //                                         "rating": 1,
-    //                                         "rating_count": row.rating_1_count,
-    //                                         "review_count": row.review_count
-    //                                     },
-    //                                     {
-    //                                         "rating": 2,
-    //                                         "rating_count": row.rating_2_count,
-    //                                         "review_count": row.review_count
-    //                                     },
-    //                                     {
-    //                                         "rating": 3,
-    //                                         "rating_count": row.rating_3_count,
-    //                                         "review_count": row.review_count
-    //                                     },
-    //                                     {
-    //                                         "rating": 4,
-    //                                         "rating_count": row.rating_4_count,
-    //                                         "review_count": row.review_count
-    //                                     },
-    //                                     {
-    //                                         "rating": 5,
-    //                                         "rating_count": row.rating_5_count,
-    //                                         "review_count": row.review_count
-    //                                     }
-                                      
-    //                                 ];
-    //                                 vehicleResponse.review_ratings = reviewRatings;
-
-    //                                 uniqueReviewIds.add(row.review_id);
-    //                             }
-    //                         }
-    //                         // console.log(`Final Data: `, vehicleResponse);
-    //                         resolve(vehicleResponse);
-    //                     }
-    //                 }
-    //             });            
-    //         });
-    //     }
-    //     catch (error)
-    //     {
-    //         return console.log(`Error from the vehicle.model.js file from the models > vehicles folder. In the static function "getvehicledetailforcustomerpage". Which is designed to fetch the details of a particular vehicle for the details page in the customer side`);                        
-    //     }
-    // };
-
-
-
-    // static async getvehicledetailforcustomerpage(Id)
-    // {
-    //     try
-    //     {
-    //         return await new Promise(async(resolve, reject)=>
-    //         {
-    //             // let selQuery = `SELECT v.id, v.service_provider_id, s.name AS service_provider_name, v.vehicle_number, v.price, v.no_of_horse, v.length, v.height, v.breadth, v.make, v.model, v.air_conditioner, v.temperature_manageable, v.gcc_travel_allowed, v.insurance_cover, v.vehicle_type, v.vehicle_registration_date, v.vehicle_exipration_date, v.insurance_date, v.insurance_expiration_date, v.insurance_provider, vi.id AS vehicle_image_id, vi.image, vi.title, r.id AS review_id, r.vehicle_rating, r.vehicle_description, r.created_at
-    //             // FROM vehicles v
-    //             // INNER JOIN service_providers s ON v.service_provider_id = s.id
-    //             // LEFT JOIN vehicles_images vi ON v.id = vi.vehicle_id AND vi.status = "${constants.status.active}" 
-    //             // LEFT JOIN reviews r ON v.id = r.vehicle_id
-    //             // WHERE v.id = ${Id}
-    //             // AND v.status = "${constants.status.active}"`;
-
-    //             let selQuery = `SELECT
-    //                             v.id,
-    //                             v.service_provider_id,
-    //                             s.name AS service_provider_name,
-    //                             v.vehicle_number,
-    //                             v.price,
-    //                             v.no_of_horse,
-    //                             v.length,
-    //                             v.height,
-    //                             v.breadth,
-    //                             v.make,
-    //                             v.model,
-    //                             v.air_conditioner,
-    //                             v.temperature_manageable,
-    //                             v.gcc_travel_allowed,
-    //                             v.insurance_cover,
-    //                             v.vehicle_type,
-    //                             v.vehicle_registration_date,
-    //                             v.vehicle_exipration_date,
-    //                             v.insurance_date,
-    //                             cr.abbreviation,
-    //                             v.insurance_expiration_date,
-    //                             v.insurance_provider,
-    //                             vi.id AS vehicle_image_id,
-    //                             vi.image,
-    //                             vi.title,
-    //                             r.id AS review_id,
-    //                             r.vehicle_rating,
-    //                             r.vehicle_description,
-    //                             r.created_at
-    //                             FROM vehicles v
-    //                             INNER JOIN service_providers s ON v.service_provider_id = s.id
-    //                             LEFT JOIN currencies cr ON cr.id = ( SELECT currency_id FROM application_settings WHERE application_settings.currency_id = cr.id )
-    //                             LEFT JOIN vehicles_images vi ON v.id = vi.vehicle_id AND vi.status = "${constants.status.active}"
-    //                             LEFT JOIN reviews r ON v.id = r.vehicle_id
-    //                             WHERE v.id = ${Id} AND v.status = "${constants.status.active}" `;
-    //             // console.log(`Fetch data query: `, selQuery);
-    //             con.query(selQuery, (err, result) =>
-    //             {
-    //                 // console.log(`Result of the particular vehicle for the customer page: `, result);
-    //                 if(err)
-    //                 {
-    //                     console.log(err);
-    //                     resolve('err');
-    //                 }
-    //                 else
-    //                 {
-    //                     var vehicleResponse =
-    //                     {
-    //                         "vehicle": [],
-    //                         "images" : [],
-    //                         "reviews": []
-    //                     };
-    //                     if(result.length != 0)
-    //                     {
-    //                         const uniqueReviewIds = new Set();
-    //                         const uniqueImagesIds = new Set();
-    //                         for (let row of result)
-    //                         {
-    //                             if (vehicleResponse.vehicle.length === 0)
-    //                             {
-    //                                 // If result has data, populate the vehicleResponse data
-    //                                 vehicleResponse.vehicle.push
-    //                                 ({
-    //                                     "service_provider_id" : result[0].service_provider_id,
-    //                                     "service_provider_name" : result[0].service_provider_name,
-    //                                     "vehicle_number" : result[0].vehicle_number,
-    //                                     "price" : result[0].price,
-    //                                     "no_of_horses" : result[0].no_of_horse,
-    //                                     "length" : result[0].length,
-    //                                     "breadth" : result[0].breadth,
-    //                                     "height" : result[0].height,
-    //                                     "make" : result[0].make,
-    //                                     "model" : result[0].model,
-    //                                     "air_condition" : result[0].air_conditioner,
-    //                                     "temperature_manageable" : result[0].temperature_manageable,
-    //                                     "gcc_travel_allowed" : result[0].gcc_travel_allowed,
-    //                                     "insurance_cover" : result[0].insurance_cover,
-    //                                     "insurance_provider" : result[0].insurance_provider,
-    //                                     "vehicle_type" : result[0].vehicle_type,
-    //                                     "abbreviation" : result[0].abbreviation,
-    //                                     "vehicle_registration_date" : time.formatDateToDDMMYYYY(result[0].vehicle_registration_date),
-    //                                     "vehicle_expiration_date" : time.formatDateToDDMMYYYY(result[0].vehicle_exipration_date),
-    //                                     "insurance_date" : time.formatDateToDDMMYYYY(result[0].insurance_date),
-    //                                     "insurance_expiration_date" : time.formatDateToDDMMYYYY(result[0].insurance_expiration_date)
-    //                                 });
-    //                             }
-    //                             if(row.vehicle_image_id !== null && !uniqueImagesIds.has(row.vehicle_image_id))
-    //                             {
-    //                                 vehicleResponse.images.push
-    //                                 ({
-    //                                     "id": row.vehicle_image_id,
-    //                                     "url" : `${process.env.PORT_SP}${constants.attachmentLocation.vehicle.view.image}${row.image}`
-    //                                 });
-    //                                 uniqueImagesIds.add(row.vehicle_image_id);
-    //                             }
-    //                             if (row.review_id !== null && !uniqueReviewIds.has(row.review_id)) 
-    //                             {
-    //                                 vehicleResponse.reviews.push
-    //                                 ({
-    //                                     "id": row.review_id,
-    //                                     "rating" : row.vehicle_rating,
-    //                                     "description" : row.vehicle_description,
-    //                                     "created_at" : time.formatDateToDDMMYYYY(row.created_at)
-    //                                 });
-    //                                 uniqueReviewIds.add(row.review_id);
-    //                             }
-    //                         }
-    //                         // console.log(`Final Data: `, vehicleResponse);
-    //                         resolve(vehicleResponse);
-    //                     }
-    //                 }
-    //             });            
-    //         });
-    //     }
-    //     catch (error)
-    //     {
-    //         return console.log(`Error from the vehicle.model.js file from the models > vehicles folder. In the static function "getvehicledetailforcustomerpage". Which is designed to fetch the details of a particular vehicle for the details page in the customer side`);                        
-    //     }
-    // };
 
 };
 

@@ -5,12 +5,12 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 const objectConvertor = require('../../utils/objectConvertor');
-const mail = require('../../utils/mailer');
-const commonfetching = require('../../utils/helper/commonfetching');
-const commonoperation = require('../../utils/helper/commonoperation');
-const constants = require('../../utils/constants');
-const time = require('../../utils/helper/date');
-const con = require('../../configs/db.configs');
+const mail = require('../../utils/mailer'); // Importing the fucntion. Which will be used for sending invoice on email 
+const commonfetching = require('../../utils/helper/commonfetching'); // helper file function. This file consist of functions Which is written universally for fetching the data from the database
+const commonoperation = require('../../utils/helper/commonoperation'); // helper file function. This file consist of functions Which is written universally for some common operations.
+const constants = require('../../utils/constants'); // Constant elements are stored in this file
+const time = require('../../utils/helper/date'); // All the time relateed formating are written in this file.
+const con = require('../../configs/db.configs'); // Calling the db file for making the database connection
 
 module.exports = class invoices
 {
@@ -1133,7 +1133,8 @@ module.exports = class invoices
     };
 
     /**
-     * The below static function is for starting the trip. This Trick can be clicked only once.  
+     * The below static function is for starting the trip. 
+     * This function can be executed only once for a particular invoice id.  
      * We need the invoice id from the controller to execute this function
      */
     static async bookingstart(Id)
@@ -1202,6 +1203,10 @@ module.exports = class invoices
         }
     }
 
+    /**
+     * The below static function is for fetching data from the booking table on the basis of invoice id.
+     * We need the invoice id from the controller to execute this function
+     */
     static async getdatafrombookingtable(id)
     {
         try
@@ -1209,8 +1214,7 @@ module.exports = class invoices
             return await new Promise(async(resolve, reject)=>
             {
                 let data = await commonfetching.dataOnCondition(constants.tableName.bookings, id, 'inv_id')
-                // console.log(`Invoice checking in the booking table`, data);
-                
+                // console.log(`Invoice checking in the booking table`, data);                
                 if(data.length !== 0)
                 {
                     console.log('Invoice number found in the booking table');
@@ -1229,6 +1233,11 @@ module.exports = class invoices
         }
     };
 
+    /**
+     * The below static function is for canceling the trip.
+     * This function can be executed only once for a particular invoice id.   
+     * We need the invoice id from the controller to execute this function
+     */
     static async bookingcancel(Id)
     {
         try

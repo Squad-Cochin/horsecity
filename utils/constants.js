@@ -154,13 +154,7 @@ module.exports =
     },
     timeOffSet :
     {
-        BAHRAIN : `+03:00`,
-        KUWAIT : `+03:00`,
-        OMAN : `+04:00`,
-        QATAR : `+03:00`,
-        SAUDIARABIA : `+03:00`,
         UAE : `+04:00`,
-        INDIA : `+05:30`
     },
     tableName :
     {

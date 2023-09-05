@@ -1,12 +1,18 @@
 
+/////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                         //
+//   This is Enquiries model file. Where all the logic of the enquirie part is written.    //
+//   The file's function will be used in the front of the customer. NEXTJS                 //
+//                                                                                         //
+/////////////////////////////////////////////////////////////////////////////////////////////
 
-
-const constants = require('../../utils/constants');
-const time = require('../../utils/helper/date');
-const con = require('../../configs/db.configs');
+const constants = require('../../utils/constants'); // Constant elements are stored in this file
+const time = require('../../utils/helper/date'); // All the time relateed formating are written in this file.
+const con = require('../../configs/db.configs'); // Calling the db file for making the database connection
 
 module.exports = class enquiries
 {
+    // The below model function is used creating new enquiries. This is for the frontend of the customer(NEXTJS)
     static async createnewenquiry(Id, vehicle_Id, service_provider_Id, pickup_Location, drop_Location, trip_Type, pickup_Country, drop_Country, horse, description,pickup_date)
     {
         try
@@ -48,6 +54,7 @@ module.exports = class enquiries
         }
     };
 
+    // The below model function is used for fetching all the enquiries of a particular customer on the basis of customer id in the params. This is for the frontend of the customer(NEXTJS)
     static async getparticularcustomerallenquiries(pageNumber, pageSize,Id)
     {
         try

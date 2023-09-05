@@ -200,7 +200,6 @@ exports.removeDriver = async (req, res) =>
  * The most important thing is the driver id in the params.
  * We need number of input from the end user to editing or changing of the existing driver. 
  */
-
 exports.editDriver = async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for editing or updating the existing driver.
@@ -247,7 +246,6 @@ exports.editDriver = async (req, res, next) =>
  * The below function is for assigning the driver to a service provider. We have a seperate junction table called assign_drivers.
  * where we will store the service provider is and driver id. 
  */
-
 exports.AssignServiceProvider = async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for assigning a driver to a service provider.
@@ -373,7 +371,6 @@ exports.getWorkPastServiceProvider = async (req, res, next) =>
 /**
  * The below function is for unassigning or remove a driver from the service provider they are registered
  */
-
 exports.UnAssignServiceProvider = async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for unassigning the driver from a service provider.

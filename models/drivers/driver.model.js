@@ -4,18 +4,22 @@
 //                                                                                         //
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-const constants = require('../../utils/constants');
-const commonfetching = require('../../utils/helper/commonfetching');
-const commonoperation = require('../../utils/helper/commonoperation');
-const time = require('../../utils/helper/date');
-const con = require('../../configs/db.configs');
-const { pastWorkHistroyResponse } = require('../../utils/objectConvertor');
-const objectConvertor = require('../../utils/objectConvertor');
+const constants = require('../../utils/constants'); // Constant elements are stored in this file
+const commonfetching = require('../../utils/helper/commonfetching'); // helper file function. This file consist of functions Which is written universally for fetching the data from the database
+const commonoperation = require('../../utils/helper/commonoperation'); // helper file function. This file consist of functions Which is written universally for some common operations.
+const time = require('../../utils/helper/date'); // All the time relateed formating are written in this file.
+const con = require('../../configs/db.configs'); // Calling the db file for making the database connection
+const objectConvertor = require('../../utils/objectConvertor'); 
 
 module.exports = class drivers
 {
     constructor(){}
-
+    
+    /**
+    * The below function is for the Admin side page
+    * 
+    * The function for fetching all the drivers details present in the database.
+    */
     static async getall(pageNumber, pageSize, Id)
     {
         try
@@ -144,6 +148,10 @@ module.exports = class drivers
         }
     };
 
+    /**
+    * The below model function is for the Admin side page. 
+    * The function for fetching particular driver details present in the database on the basis of driver id.
+    */
     static async getone(Id)
     {
         try
@@ -170,8 +178,12 @@ module.exports = class drivers
         {
             console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "getone". Which is designed to fetch particular data of the drivers.');            
         }
-    }
+    };
 
+    /**
+     * The below model function is for the Admin side page.
+     * For adding or registering a new driver
+     */
     static async adddriver(Id, name, email, contact_no, emergency_contact_no, date_of_birth, licence_no, description, profile_image, licence_img)
     {
         try
@@ -267,8 +279,11 @@ module.exports = class drivers
         {
             console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "addcustomer". Which is designed to add particular data of the drivewr.');            
         }
-    }
+    };
 
+    /**
+    * The below model function is for the Admin side page. The function is updating the status of a particular driver on the basis of driver id in the params.
+    */
     static async updatestatus(Id)
     {
         try
@@ -290,6 +305,10 @@ module.exports = class drivers
         }
     };
 
+    /**
+    * The below model function is for the Admin side page. The function is updating or adding the deleted_at of a particular driver on the basis of driver id in the params.
+    * This will be considered as the driver is deleted
+    */
     static async removedriver(Id)
     {
         return await new Promise(async(resolve, reject)=>
@@ -344,6 +363,9 @@ module.exports = class drivers
         });
     };    
 
+    /**
+    * The below model function is for the Admin side page. The function is updating or edititng the details of the present driver on the basis of driver id in the params.
+    */
     static async editdriver(id, name, email, contact_no, emergency_contact_no, date_of_birth, licence_no, description, profile_image, licence_img) {
     try 
     {
@@ -388,8 +410,12 @@ module.exports = class drivers
         } catch (error) {
             console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "editdriver". Which is designed to edit particular data of the driver.');
         }
-    }
+    };
 
+    /**
+     * The below model function is for the admin side page.
+     * This function is a service provider to a driver
+     */
     static async assignserviceprovider(dId, sId)
     {
         try
@@ -461,8 +487,12 @@ module.exports = class drivers
         {
             console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "assignserviceprovider". Which is designed to assigne the driver to service provider.');            
         }
-    }
+    };
 
+    /**
+     * The below model function is for the admin side page.
+     * This function is the past histroy of the driver
+     */
     static async getworkpastserviceprovider(id)
     {
         try
@@ -507,15 +537,22 @@ module.exports = class drivers
         {
             console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "assignserviceprovider". Which is designed to assigne the driver to service provider.');            
         }
-    }
+    };
 
+    /**
+     *  The below model function is for the admin side page.
+     *  Is the unassign the driver to a particular service provider
+     */
     static async unassignserviceprovider(Id)
     {
         try
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let upQuery = `UPDATE ${constants.tableName.assign_drivers} t SET t.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE t.id = '${Id}' AND t.deleted_at IS NULL `;
+                let upQuery = `UPDATE ${constants.tableName.assign_drivers} t 
+                SET t.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
+                WHERE t.id = '${Id}' 
+                AND t.deleted_at IS NULL `;
                 con.query(upQuery, (err, result) =>
                 {
                     if(result.affectedRows > 0)
@@ -543,15 +580,24 @@ module.exports = class drivers
         {
             console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "unassignserviceprovider". Which is designed to unassigned particular driver to their service provider.', error);            
         }        
-    }
+    };
 
+    /**
+     *  The below model function is for the admin side page.
+     *  It is for unassinging the driver to the service provider.
+     *  This function will be used on the admin page. 
+     */
     static async unassignserviceproviderandboth(dId,sId)
     {
         try
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let upQuery = `UPDATE ${constants.tableName.assign_drivers} t SET t.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE t.service_provider_id = ${sId} AND t.driver_id = '${dId}' AND t.deleted_at IS NULL `;
+                let upQuery = `UPDATE ${constants.tableName.assign_drivers} t 
+                SET t.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
+                WHERE t.service_provider_id = ${sId} 
+                AND t.driver_id = '${dId}' 
+                AND t.deleted_at IS NULL `;
                 // console.log(upQuery);
                 con.query(upQuery, (err, result) =>
                 {
@@ -592,16 +638,5 @@ module.exports = class drivers
         {
             console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "unassignserviceproviderandboth". Which is designed to unassigned particular driver to their service provider.', error);            
         }        
-    }
-
-    
-
-
-
-
-
-
-
-
-
+    };
 };

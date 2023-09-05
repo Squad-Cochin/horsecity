@@ -1,14 +1,28 @@
-const constants = require('../../utils/constants');
-const time = require('../../utils/helper/date');
-const commonfetching = require('../../utils/helper/commonfetching');
-const commonoperation = require('../../utils/helper/commonoperation');
-const con = require('../../configs/db.configs');
+/////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                         //
+//   This is dashboard model file. Where all the logic of the dashboard page  is written.  //
+//                                                                                         //
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+const constants = require('../../utils/constants'); // Constant elements are stored in this file
+const con = require('../../configs/db.configs'); // Calling the db file for making the database connection
 
 module.exports = class dashboard
 {
     constructor(){}
 
-    static async getdashboarddataforparticularcustomer(Id)
+    /**
+     * The below model function is for fetching the counts for the SERVICE PROVIDER or ADMIN dashboard page.
+     * This are the following counts we will show on the dashboard page.
+        "total_providers": " ",
+        "total_customers": " ",
+        "total_vehicles": " ",
+        "total_drivers": " ",
+        "total_enquiries": " ",
+        "total_quotations": " ",
+        "total_revenue": " ",
+     */
+    static async getdashboarddataforparticularprovider(Id)
     {
         try
         {
@@ -116,6 +130,9 @@ module.exports = class dashboard
         }        
     };
 
+    /**
+     * The below model function is for fetching the data we need to show in the monthly sales report for the SERVICE PROVIDER or ADMIN dashboard page.
+     */
     static async getmonthlysalesreport(Id)
     {
         try
@@ -222,6 +239,9 @@ module.exports = class dashboard
         }
     };
 
+    /**
+     * The below model function is for fetching all the quoation breakdown (ALL, CONFIMED, NOTCONFIRMED) data for the SERVICE PROVIDER or ADMIN dashboard page.
+     */
     static async getdashboardquotationstatus(Id)
     {
         try
@@ -314,6 +334,9 @@ module.exports = class dashboard
         }
     }
 
+    /**
+     * The below model function is for fetching the latest 5 enquiries data for the SERVICE PROVIDER or ADMIN dashboard page.
+     */
     static async getlatestenquiries(Id)
     {
         try
@@ -408,6 +431,10 @@ module.exports = class dashboard
     }
 };
 
+/**
+ * The monthly sales report need a customize set of response. For making it according to front end object.
+ * This function will be used for customizing the function output.
+ */
 
 const custoizeMonthlySalesReport = (salesData) =>
 {
@@ -503,6 +530,11 @@ const custoizeMonthlySalesReport = (salesData) =>
     
     return monthlySalesData ;
 }
+
+/**
+ * The quotation status report need a customize set of response. For making it according to front end object.
+ * This function will be used for customizing the function output.
+ */
 
 const customizeQuotationStatusReport = (data) =>
 {

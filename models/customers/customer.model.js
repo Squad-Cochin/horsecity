@@ -4,11 +4,11 @@
 //                                                                                         //
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-const constants = require('../../utils/constants');
-const time = require('../../utils/helper/date');
-const commonfetching = require('../../utils/helper/commonfetching');
-const commonoperation = require('../../utils/helper/commonoperation');
-const con = require('../../configs/db.configs');
+const constants = require('../../utils/constants'); // Constant elements are stored in this file
+const time = require('../../utils/helper/date'); // All the time relateed formating are written in this file.
+const commonfetching = require('../../utils/helper/commonfetching'); // helper file function. This file consist of functions Which is written universally for fetching the data from the database
+const commonoperation = require('../../utils/helper/commonoperation'); // helper file function. This file consist of functions Which is written universally for some common operations.
+const con = require('../../configs/db.configs'); // Calling the db file for making the database connection
 
 
 module.exports = class customers
@@ -16,11 +16,10 @@ module.exports = class customers
     constructor(){}
 
     /**
-     * The below function is for the Admin side page
-     * 
-     * The function for fetching all the customer details present in the database.
-     */
-
+    * The below function is for the Admin side page
+    * 
+    * The function for fetching all the customer details present in the database.
+    */
     static async getall(pageNumber, pageSize, Id)
     {
         try
@@ -125,6 +124,10 @@ module.exports = class customers
         }
     };
 
+    /**
+    * The below model function is for the Admin side page. 
+    * The function for fetching particular customer details present in the database on the basis of customer id.
+    */
     static async getone(Id)
     {
         try
@@ -158,6 +161,9 @@ module.exports = class customers
         }
     };
 
+    /**
+    * The below model function is for the Admin side page. The function is registerting or adding new customer.
+    */
     static async addcustomer(Id, name, email, user_name, password, contact_no, date_of_birth, id_proof_no, files)
     {
         try
@@ -232,6 +238,9 @@ module.exports = class customers
         }
     };
 
+    /**
+    * The below model function is for the Admin side page. The function is updating or edititng the details of the present customer on the basis of customer id in the params.
+    */
     static async editcustomer(id, name, email, userName, contact_no, date_of_birth, id_proof_no, id_proof_image)
     // static async editcustomer(id,requestBody, file)
     {
@@ -300,6 +309,9 @@ module.exports = class customers
         }
     };
 
+    /**
+    * The below model function is for the Admin side page. The function is updating the status of a particular customer on the basis of customer id in the params.
+    */
     static async updatestatus(Id)
     {
         try
@@ -321,6 +333,10 @@ module.exports = class customers
         }
     };
 
+    /**
+    * The below model function is for the Admin side page. The function is updating or adding the deleted_at of a particular customer on the basis of customer id in the params.
+    * This will be considered as the customer is deleted
+    */
     static async removecustomer(Id)
     {
         try
@@ -342,6 +358,9 @@ module.exports = class customers
         }
     };
 
+    /**
+     * The below model function is for the customer frontend side page. This function is for the login of the customer.
+     */
     static async customerlogin(username, password)
     {
         return new Promise(async(resolve, reject) =>
@@ -408,6 +427,9 @@ module.exports = class customers
         });  
     };
 
+    /**
+     * The below model function is for the customer frontend side page. This function is for the Logout of the customer.
+     */
     static async customerlogout(Id) 
     {
         return new Promise(async(resolve, reject) =>
@@ -475,6 +497,9 @@ module.exports = class customers
         });           
     };
 
+    /**
+     * The below model function is for the customer frontend side page. This function is for the change password of the customer.
+     */
     static async customerchangepassword(id, password, newpassword) 
     {
         try
@@ -522,6 +547,9 @@ module.exports = class customers
         }
     };
 
+    /**
+    * The below model function is for the customer frontend side page. This function is for siginup of the new customer
+    */
     static async customersignup(name, email, user_name, password, contact_no, date_of_birth)
     {
         try
@@ -547,7 +575,9 @@ module.exports = class customers
                 // }
                 // else
                 // {
-                    let insQuery = `INSERT INTO customers(name, email, user_name, password, contact_no, date_of_birth, phone_verified, email_verified, expiry_at, created_at) VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                    let insQuery = `INSERT INTO 
+                                    customers(name, email, user_name, password, contact_no, date_of_birth, phone_verified, email_verified, expiry_at, created_at) 
+                                    VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                     // console.log('Customer register query: ', insQuery);
                     con.query(insQuery, (err, result) =>
                     {
@@ -573,6 +603,9 @@ module.exports = class customers
         } 
     };
 
+    /**
+    * The below model function is for the customer frontend side page. This function is for fetching the logs of a particular customer
+    */
     static async getparticularcustomerlogs(Id)
     {
         try
@@ -621,6 +654,9 @@ module.exports = class customers
         }        
     };
 
+    /**
+    * The below model function is for the customer frontend side page. This function is for fetching the data. Which we are showing on the dashboard of the customer
+    */
     static async getparticularcustomerdashboard(Id)
     {
         try
@@ -748,6 +784,10 @@ module.exports = class customers
         }
     }
 
+    /**
+    * The below model function is for the customer frontend side page. This function is for fetching all the booking of a particular customer
+    * whose status is completed
+    */
     static async getparticularbookindetailscompleted(Id)
     {
         try
@@ -800,6 +840,10 @@ module.exports = class customers
         }
     };
 
+    /**
+    * The below model function is for the customer frontend side page. This function is for fetching all the booking of a particular customer
+    * whose status is CONFIRM
+    */
     static async getparticularbookindetailsconfirm(Id)
     {
         try
@@ -852,6 +896,10 @@ module.exports = class customers
         }
     };
 
+    /**
+    * The below model function is for the customer frontend side page. This function is for fetching all the booking of a particular customer
+    * whose status is CANCELLED
+    */
     static async getparticularbookindetailscancelled(Id)
     {
         try
@@ -867,25 +915,29 @@ module.exports = class customers
                                 b.final_amount,
                                 DATE_FORMAT(b.deleted_at, '%d-%m-%Y %h:%m:%s') AS cancelled_date,
                                 CASE
-                                    WHEN pr_check.status = 'PAID' THEN 0
+                                    WHEN pr_check.status = '${constants.status.paid}' THEN 0
                                     ELSE latest_payment.remaining_amount
                                     END AS remaining_amount
-                                FROM service_providers s
-                                INNER JOIN bookings b ON b.service_provider_id = s.id
+                                FROM ${constants.tableName.service_providers} s
+                                INNER JOIN ${constants.tableName.bookings} b 
+                                ON b.service_provider_id = s.id
                                 LEFT JOIN (
                                 SELECT
                                 pr.invoice_id,
                                 pr.remaining_amount
-                                FROM payment_records pr
+                                FROM ${constants.tableName.payment_records} pr
                                 WHERE pr.id IN (
                                 SELECT MAX(pr_inner.id)
-                                FROM payment_records pr_inner
-                                WHERE pr_inner.status <> 'PAID'
+                                FROM ${constants.tableName.payment_records} pr_inner
+                                WHERE pr_inner.status <> '${constants.status.paid}'
                                 GROUP BY pr_inner.invoice_id )
-                                ) AS latest_payment ON latest_payment.invoice_id = b.inv_id
-                                LEFT JOIN payment_records pr_check ON pr_check.invoice_id = b.inv_id AND pr_check.status = 'PAID'
+                                ) AS latest_payment 
+                                ON latest_payment.invoice_id = b.inv_id
+                                LEFT JOIN ${constants.tableName.payment_records} pr_check 
+                                ON pr_check.invoice_id = b.inv_id 
+                                AND pr_check.status = '${constants.status.paid}'
                                 WHERE b.customer_id = ${Id}
-                                AND b.booking_status = 'CANCELLED' `;
+                                AND b.booking_status = '${constants.booking_status.cancelled}' `;
                 let result = await queryAsync(query)
                 if(result == 'err')
                 {
@@ -903,6 +955,10 @@ module.exports = class customers
         }
     };
 
+    /**
+    * The below model function is for the customer frontend side page. This function is for fetching all the enquiries of a particular customer
+    * We will get only five recent enquiries because of the limit.  
+    */
     static async getparticularbookindetailsrecent(Id)
     {
         try
@@ -923,9 +979,9 @@ module.exports = class customers
                                     e.pickup_date,
                                     e.status,
                                     e.created_at
-                                    FROM enquiries e
-                                    INNER JOIN vehicles v ON v.id = e.vehicle_id
-                                    INNER JOIN service_providers s ON s.id = e.serviceprovider_id
+                                    FROM ${constants.tableName.enquiries} e
+                                    INNER JOIN ${constants.tableName.vehicles} v ON v.id = e.vehicle_id
+                                    INNER JOIN ${constants.tableName.service_providers} s ON s.id = e.serviceprovider_id
                                     WHERE e.customer_id = ${Id}
                                     ORDER BY e.created_at DESC
                                     LIMIT 5`;
@@ -942,6 +998,10 @@ module.exports = class customers
         }
     };
 
+    /**
+    * The below model function is for the customer frontend side page. This function is for fetching all the bookings of a particular customer
+    * The data will be fetched from the bookings table
+    */
     static async getparticularcustomerallbookings(Id)
     {
         try
@@ -950,36 +1010,39 @@ module.exports = class customers
             {
                 let bookingQuery = `    SELECT
                                         b.id,
-                        s.name,
-                        b.pickup_location,
-                        b.drop_location,
-                        b.booking_status,
-                        b.final_amount,
-                        CASE
-                            WHEN pr_check.status = 'PAID' THEN 0
-                            ELSE latest_payment.remaining_amount
-                        END AS remaining_amount
-                        FROM service_providers s
-                        INNER JOIN bookings b ON b.service_provider_id = s.id
-                        LEFT JOIN (
-                            SELECT
-                                pr.invoice_id,
-                                pr.remaining_amount
-                            FROM payment_records pr
-                        WHERE pr.id IN (
-                            SELECT MAX(pr_inner.id)
-                            FROM payment_records pr_inner
-                            WHERE pr_inner.status <> 'PAID'
-                            GROUP BY pr_inner.invoice_id
-                            )
-                        )
-                        AS latest_payment ON latest_payment.invoice_id = b.inv_id
-                        LEFT JOIN payment_records pr_check ON pr_check.invoice_id = b.inv_id AND pr_check.status = 'PAID'
-                        WHERE b.customer_id = ${Id}`;
+                                        s.name,
+                                        b.pickup_location,
+                                        b.drop_location,
+                                        b.booking_status,
+                                        b.final_amount,
+                                        CASE
+                                            WHEN pr_check.status = '${constants.status.paid}' THEN 0
+                                            ELSE latest_payment.remaining_amount
+                                            END AS remaining_amount
+                                        FROM ${constants.tableName.service_providers} s
+                                        INNER JOIN ${constants.tableName.bookings} b 
+                                        ON b.service_provider_id = s.id
+                                        LEFT JOIN (
+                                            SELECT
+                                            pr.invoice_id,
+                                            pr.remaining_amount
+                                            FROM ${constants.tableName.payment_records} pr
+                                            WHERE pr.id IN (
+                                                SELECT MAX(pr_inner.id)
+                                                FROM ${constants.tableName.payment_records} pr_inner
+                                                WHERE pr_inner.status <> '${constants.status.paid}'
+                                                GROUP BY pr_inner.invoice_id
+                                            )
+                                        )
+                                        AS latest_payment 
+                                        ON latest_payment.invoice_id = b.inv_id
+                                        LEFT JOIN ${constants.tableName.payment_records} pr_check 
+                                        ON pr_check.invoice_id = b.inv_id 
+                                        AND pr_check.status = '${constants.status.paid}'
+                                        WHERE b.customer_id = ${Id}`;
                 // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
                 let queryresult = await queryAsync(bookingQuery);
                 // // console.log('Most Recent enuiry: ', queryresult);
-                // let result = recentEnquiryCustomizeResponse(queryresult)
                 resolve(queryresult)
             });
         }
@@ -989,6 +1052,11 @@ module.exports = class customers
         }
     };
 
+    /**
+     * The below model is for fetching all the enquiries of a particular customer.
+     * From here we will send the data to the controller. The response of the route will be taken from the 
+     * controller. Whatever data  is there in the response it is coming from this model.
+     */
     static async getparticularcustomerallenquiry(Id)
     {
         try
@@ -1009,9 +1077,9 @@ module.exports = class customers
                                     e.pickup_date,
                                     e.status,
                                     e.created_at
-                                    FROM enquiries e
-                                    INNER JOIN vehicles v ON v.id = e.vehicle_id
-                                    INNER JOIN service_providers s ON s.id = e.serviceprovider_id
+                                    FROM ${constants.tableName.enquiries} e
+                                    INNER JOIN ${constants.tableName.vehicles} v ON v.id = e.vehicle_id
+                                    INNER JOIN ${constants.tableName.service_providers} s ON s.id = e.serviceprovider_id
                                     WHERE e.customer_id = ${Id}
                                     ORDER BY e.created_at DESC`;
                 // console.log(`Query from the recent enquiry of a particular customer: `, recEnquiry);
@@ -1027,6 +1095,12 @@ module.exports = class customers
         }        
     }
 
+    /**
+     * The below model is for fetching all the booking details of a particular customer.
+     * The data will be taken from the quotations, invoices, payment_records.
+     * From here we will send the data to the controller. The response of the route will be taken from the 
+     * controller. Whatever data  is there in the response it is coming from this model.
+     */
     static async getparticularcustomerallbookingsdatafrominvoice(Id)
     {
         try
@@ -1084,6 +1158,12 @@ module.exports = class customers
         }
     }
 
+     /**
+     * The below model is for fetching all the booking details(ACTIVE STATUS FROM THE INVVOICES TABLE) of a particular customer. 
+     * The data will be taken from the quotations, invoices, payment_records.
+     * From here we will send the data to the controller. The response of the route will be taken from the 
+     * controller. Whatever data  is there in the response it is coming from this model.
+     */
     static async getparticularcustomeractivebookingsdatafrominvoice(Id)
     {
         try
@@ -1126,8 +1206,8 @@ module.exports = class customers
                 ) p ON i.id = p.invoice_id
                 LEFT JOIN ${constants.tableName.bookings} b 
                 ON i.id = b.inv_id
-                WHERE q.customer_id = ${Id} AND i.status = '${constants.status.active}'`;
-                
+                WHERE q.customer_id = ${Id} 
+                AND i.status = '${constants.status.active}'`;
                 // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
                 let queryresult = await queryAsync(bookingQuery);
                 // // console.log('Most Recent enuiry: ', queryresult);
@@ -1140,48 +1220,56 @@ module.exports = class customers
         }
     };
 
+    /**
+     * The below model function is for fetching all the booking detail.
+     * Whose status from the invoice table must be INACTIVE that means it is cancelled.
+     * The data will be taken from the quotations, invoices, payment_records.
+     * From here we will send the data to the controller. The response of the route will be taken from the 
+     * controller. Whatever data is there in the json response it is coming from this model. 
+     */
     static async getparticularcustomerinactivebookingsdatafrominvoice(Id)
     {
         try
         {
             return await new Promise(async (resolve, reject) =>
             {
-                let bookingQuery = `SELECT
-                i.id AS invoice_id,
-                s.name AS service_provider_name,
-                i.pickup_point,
-                i.drop_point,
-                i.status AS invoice_status,
-                i.final_amount AS invoice_amount,
-                p.remaining_amount AS remaining_payment,
-                (i.final_amount - p.remaining_amount) AS paid_amount,
-                v.vehicle_number,
-                q.no_of_horse,
-                q.trip_type,
-                DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date
-                FROM
-                ${constants.tableName.quotations} q
-                JOIN ${constants.tableName.invoices} i ON q.id = i.quot_id
-                JOIN ${constants.tableName.service_providers} s ON q.serviceprovider_id = s.id
-                JOIN ${constants.tableName.vehicles} v ON v.id = i.vehicle_id
-                JOIN (
-                    SELECT
-                        pr.invoice_id,
-                        pr.remaining_amount
-                    FROM ${constants.tableName.payment_records} pr
-                    JOIN (
-                        SELECT
-                            invoice_id,
-                            MAX(created_at) AS max_payment_date
-                        FROM ${constants.tableName.payment_records}
-                        GROUP BY invoice_id
-                    ) latest_payments 
-                    ON pr.invoice_id = latest_payments.invoice_id 
-                    AND pr.created_at = latest_payments.max_payment_date
-                ) p ON i.id = p.invoice_id
-                LEFT JOIN ${constants.tableName.bookings} b 
-                ON i.id = b.inv_id
-                WHERE q.customer_id = ${Id} AND i.status = '${constants.status.inactive}' `;
+                let bookingQuery = `    SELECT
+                                        i.id AS invoice_id,
+                                        s.name AS service_provider_name,
+                                        i.pickup_point,
+                                        i.drop_point,
+                                        i.status AS invoice_status,
+                                        i.final_amount AS invoice_amount,
+                                        p.remaining_amount AS remaining_payment,
+                                        (i.final_amount - p.remaining_amount) AS paid_amount,
+                                        v.vehicle_number,
+                                        q.no_of_horse,
+                                        q.trip_type,
+                                        DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date
+                                        FROM
+                                        ${constants.tableName.quotations} q
+                                        JOIN ${constants.tableName.invoices} i ON q.id = i.quot_id
+                                        JOIN ${constants.tableName.service_providers} s ON q.serviceprovider_id = s.id
+                                        JOIN ${constants.tableName.vehicles} v ON v.id = i.vehicle_id
+                                        JOIN (
+                                                SELECT
+                                                pr.invoice_id,
+                                                pr.remaining_amount
+                                                FROM ${constants.tableName.payment_records} pr
+                                                JOIN (
+                                                    SELECT
+                                                    invoice_id,
+                                                    MAX(created_at) AS max_payment_date
+                                                    FROM ${constants.tableName.payment_records}
+                                                    GROUP BY invoice_id
+                                                ) latest_payments 
+                                                ON pr.invoice_id = latest_payments.invoice_id 
+                                                AND pr.created_at = latest_payments.max_payment_date
+                                            ) p ON i.id = p.invoice_id
+                                        LEFT JOIN ${constants.tableName.bookings} b 
+                                        ON i.id = b.inv_id
+                                        WHERE q.customer_id = ${Id} 
+                                        AND i.status = '${constants.status.inactive}' `;
                 // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
                 let queryresult = await queryAsync(bookingQuery);
                 // // console.log('Most Recent enuiry: ', queryresult);
@@ -1194,6 +1282,14 @@ module.exports = class customers
         }
     };
 
+     /**
+     * The below model function is for fetching all the booking detail.
+     * Whose status from the invoice table must be STARTED that means it is driver taken the animals 
+     * and leave for the destination and booking status in the booking table in CONFIRM
+     * The data will be taken from the quotations, invoices, payment_records.
+     * From here we will send the data to the controller. The response of the route will be taken from the 
+     * controller. Whatever data is there in the json response it is coming from this model. 
+     */
     static async getparticularcustomerongoingbookingsdatafrominvoice(Id)
     {
         try
@@ -1237,8 +1333,8 @@ module.exports = class customers
                 ON i.id = b.inv_id
                 WHERE q.customer_id = ${Id} 
                 AND i.status = 'STARTED'
-                AND b.booking_status = 'CONFIRM'`;
-                
+                AND b.booking_status = 'CONFIRM'
+                `;                
                 // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
                 let queryresult = await queryAsync(bookingQuery);
                 // // console.log('Most Recent enuiry: ', queryresult);
@@ -1251,16 +1347,29 @@ module.exports = class customers
         }
     };
 
+    /**
+     * The model function is for editing the customer details.
+     * The function will be used when the data is inserted from the front end of customer (NEXT JS)
+     */
     static async editcustomerdetailsfromcustomerside(Id, name, userName, email, contact_no, date_of_birth, id_proof_no, id_proof_image)
     {
         try
         {
             return await new Promise(async (resolve, reject) =>
             {
-                // console.log(id_proof_image);
+                // The below if contion is when the id proof image we are not updating or changing.
                 if(id_proof_image === null || id_proof_image === undefined)
                 {
-                    let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${Id}'`;
+                    let upQuery = ` UPDATE ${constants.tableName.customers} c 
+                                    SET c.name = '${name}',
+                                    c.email = '${email}',
+                                    c.user_name = '${userName}',
+                                    c.contact_no = '${contact_no}',
+                                    c.date_of_birth = '${date_of_birth}',
+                                    c.id_proof_no = '${id_proof_no}',
+                                    c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
+                                    WHERE c.id = '${Id}'
+                                  `;
                     // console.log(upQuery);
                     con.query(upQuery, (err, result) =>
                     {
@@ -1279,8 +1388,28 @@ module.exports = class customers
                 }
                 else
                 {
+                    /**
+                     * This else case will be executed. When we are updating or changing the id proof image
+                     * 
+                     * The below line will take us to the function which is used for uploading the image.
+                     * This function is in the utils folder. Inside the commonoperations.js
+                     * 
+                     * We need to send to things for the execution of the 'fileUploadTwo' function
+                     * 1. Image
+                     * 2. Path where we need to store the image 
+                     */
+
                     let uploadAttachment = await commonoperation.fileUploadTwo(id_proof_image, constants.attachmentLocation.customer.upload.idProof);
-                    let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.id_proof_image = '${uploadAttachment}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${Id}'`;
+                    let upQuery = `     UPDATE ${constants.tableName.customers} c 
+                                        SET c.name = '${name}',
+                                        c.email = '${email}',
+                                        c.user_name = '${userName}',
+                                        c.contact_no = '${contact_no}',
+                                        c.date_of_birth = '${date_of_birth}', 
+                                        c.id_proof_no = '${id_proof_no}',
+                                        c.id_proof_image = '${uploadAttachment}',
+                                        c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                        WHERE c.id = '${Id}'`;
                     // console.log(upQuery);
                     con.query(upQuery, (err, result) =>
                     {
@@ -1304,7 +1433,11 @@ module.exports = class customers
             // console.log(`Error from the try catch block of the getparticularcustomerallbookings model file function`);
         }
     };
-
+    
+    /**
+     * The model function is for view details of a particular customer.
+     * The function will be used when the data is inserted from the front end of customer (NEXT JS)
+     */
     static async getonedetailsoncustomerpage(Id)
     {
         try
@@ -1343,7 +1476,15 @@ module.exports = class customers
     };
 };
 
-
+/**
+ * The below function is created for customize the received output according to the frontend.
+ *  the output consist of 
+ *     Total bookings
+ *     Pending bookings
+ *     Total Paid amount
+ *     Total Remaining amount
+ *     Recent Five Enquiries
+ */
 const customizeCustomerDashboardData = (value1, value2, rAmount, pAmount) =>
 {
     return {
@@ -1376,6 +1517,7 @@ const customizeCustomerDashboardData = (value1, value2, rAmount, pAmount) =>
     };
 }
 
+// The below function is used for calculating the total remaining amount of a particular customers
 const remainingAmount = async (Id) =>
 {
     // console.log(`Remaining Amount`);
@@ -1442,6 +1584,7 @@ const remainingAmount = async (Id) =>
     });
 };
 
+// The below function is used for calculating the total paid amount of a particular customers
 const paidAmount = async (Id) => 
 {
     // console.log(`Paid Amount`);
@@ -1558,6 +1701,7 @@ function queryAsync(query)
     });
 }
 
+// The function will be used for changing response according to the front end object
 const recentEnquiryCustomizeResponse = async (value) =>
 {
     return {

@@ -4,16 +4,19 @@
 //   part is written.                                                                      //
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-const constants = require('../../utils/constants');
-const commonfetching = require('../../utils/helper/commonfetching');
-const commonoperation = require('../../utils/helper/commonoperation');
-const time = require('../../utils/helper/date');
-const con = require('../../configs/db.configs')
+const constants = require('../../utils/constants');// Constant elements are stored in this file
+const commonoperation = require('../../utils/helper/commonoperation'); // helper file function. This file consist of functions Which is written universally for some common operations.
+const time = require('../../utils/helper/date'); // All the time relateed formating are written in this file.
+const con = require('../../configs/db.configs'); // Calling the db file for making the database connection
 
 module.exports = class vehicleImages
 {
     constructor(){}
 
+    /**
+    * The below model function is for the Admin side page. 
+    * The function is adding image to a particular vehicle on the basis of vehicle id.
+    */
     static async addimages(id, image, title)
     {
         try 
@@ -45,6 +48,10 @@ module.exports = class vehicleImages
         }
     }
 
+    /**
+    * The below model function is for the Admin side page. 
+    * This function is for fetching the list of all the images of a particular vehicles on the basis of the vehicle id.
+    */
     static async allimages (id, pageNumber, pageSize)
     {
         try 
@@ -90,6 +97,10 @@ module.exports = class vehicleImages
         }
     }
 
+    /**
+    * The below model function is for the Admin side page.
+    * The function is updating the status of a particular images of a vehicle on the basis of vehicle_image id in the params.
+    */
     static async updatestatus(Id)
     {
         try 
@@ -112,7 +123,11 @@ module.exports = class vehicleImages
 
     }
 
-
+    /**
+    * The below model function is for the Admin side page.
+    * The function is updating or adding the deleted_at of a particular vehicles_iamge on the basis of vehicles_image id in the params.
+    * This will be considered as the vehicles_image is deleted
+    */
     static async removeimage (Id)
     {
         try 

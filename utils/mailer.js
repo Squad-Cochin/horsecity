@@ -68,6 +68,7 @@ exports.SendEmail = async (id, to, subject) =>
             <html>
                 <head>
                     <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width">
                     <title>Invoice</title>
                 </head>
                 <body style="color: #666; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.6em; overflow-x: hidden; background-color: #ffffff;">
@@ -237,7 +238,7 @@ exports.SendEmail = async (id, to, subject) =>
         // Example usage: Assuming you have the invoiceData object containing invoice, vehicles, and payment details.
       
         const htmlContent = generateInvoiceHTML(invoiceData);
-        // console.log(htmlContent)
+        console.log(htmlContent)
         const transporter = nodemailer.createTransport 
         ({
             // service: 'Gmail', // replace with your email service provider
@@ -289,6 +290,7 @@ exports.SendEmailOfQuotation = async (id, to, subject) =>
             <html>
             <head>
             <meta charset="UTF-8">
+            <meta name="viewport" content="width=device-width">
             <title>Quotation</title>
             </head>
             <body style="color: #666; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.6em; overflow-x: hidden; background-color: #ffffff;">
