@@ -8,8 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { Link } from 'react-router-dom';
-import List from 'list.js';
-import Flatpickr from "react-flatpickr";
+
 
 //Import discounts Api's functions
 import { getDiscountsPageData , getSingleDiscountData} from '../../helpers/ApiRoutes/getApiRoutes';
@@ -29,13 +28,14 @@ const DiscountsDeatails = () => {
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("") ;
-    const [modal_delete, setmodal_delete] = useState(false);
     const pageLimit = config.pageLimit;
 
+    /**THIS HOOK WILL RENDER INITIAL TIME  */
     useEffect(() => {
         getAllData(1)
     }, [])
 
+    /**CHANGE DISCOUNT STATUS */
     function toggleStatus(button, discountId) {
         var currentStatus = button.innerText.trim();
         const discount = discounts.find((d) => d.id === discountId);
@@ -70,7 +70,6 @@ const DiscountsDeatails = () => {
         setmodal_list(!modal_list);
     }
 
-
     const initialValues = {
         name: !add_list ? discount[0]?.name : '',
         type: !add_list ? discount[0]?.type : '',
@@ -83,15 +82,11 @@ const DiscountsDeatails = () => {
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
-            console.log(values);
             if (add_list) {
                 //add new
-                console.log("add new");
                 addDiscount(values)
-      
             } else {
                 //update previes one
-                console.log("update previues one ");
                 editDiscounts(values)
             }
 
@@ -127,9 +122,6 @@ const DiscountsDeatails = () => {
             }
         }
 
-        function tog_delete() {
-            setmodal_delete(!modal_delete);
-        }
         /**GET DISCOUNTS PAGE DATA*/
         async function getAllData(page) {
             let getDiscounts = await getDiscountsPageData(page || 1);

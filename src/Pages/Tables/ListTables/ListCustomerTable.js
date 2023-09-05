@@ -46,13 +46,9 @@ const ListCustomerTable = () => {
     /**This hook is used to fetch customers data */
     useEffect(() => {
         const data = JSON.parse(localStorage.getItem("authUser"));
-        console.log('Data from the list invoice page', data);
         let user_Id = data[0]?.user[0]?.id
-        console.log('User id from the customer page: ', user_Id);
         let role_Name = data[0]?.user[0]?.role_name
-        console.log('Role name from the customer page: ', role_Name);
         let role_id = data[0]?.user[0]?.role_Id
-        console.log('Role Id from the customer page: ', role_id);
         setUserId(user_Id);
         setRole(role_Name);
         setRoleId(role_id)
@@ -78,13 +74,11 @@ const ListCustomerTable = () => {
         initialValues,
         onSubmit: (values) => {
             values.id_proof_image = updateImage;
-            console.log(values);
             if (add_list) {
                 //add new customer
                 addCustomer(values)
             } else {
                 //update previes customer
-                console.log("update previues one ");
                 editCustomer(values)
             }
         }
@@ -183,10 +177,7 @@ const ListCustomerTable = () => {
     // function for get data all customer data
     async function getAllData(page) {
         if (userId) {
-            console.log(`User id at the time of getall function in the customer page`, userId);
             let getCustomers = await getCustomersData(page || 1, userId);
-            console.log('Id:', userId);
-            console.log('Customers: ', getCustomers)
             setCustomers(getCustomers?.customer);
             setModule(getCustomers.module[0]);
             setPageNumber(page);

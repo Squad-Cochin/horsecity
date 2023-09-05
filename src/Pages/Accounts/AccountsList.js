@@ -33,11 +33,10 @@ const Accounts  = () => {
 
     useEffect(()=>{
         const data = JSON.parse(localStorage.getItem("authUser"));
-        console.log("UUUU",data);
         let userIdd = data[0]?.user[0]?.id
         let role_id = data[0]?.user[0]?.role_Id
         setRole(role_id)
-        console.log(userIdd);
+
         setUserId(userIdd);
         getAllData(1)
     },[userId,role])

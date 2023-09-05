@@ -134,13 +134,10 @@ const ListQuotationsTable = () => {
       initialValues.current_amount = tAmount
       if (modalEmail) {
         //SEND MAIL 
-        console.log("send mail");
-        console.log(values);
+
         sendEmail(values);
       } else {
         //update previes one
-        console.log("update previues one ");
-        console.log(values);
         editQuotation(values);
       }
     },
@@ -225,7 +222,6 @@ const ListQuotationsTable = () => {
     setTAmount(Number(singleQut.quotation[0]?.vehicle_amount) + Number(singleQut.quotation[0]?.driver_amount))
     if(Number(singleQut.quotation[0]?.tax_amount) > 0){
       setTaxApplayed("YES")
-      console.log("YES")
     }
     setModal(!modal);
   }
@@ -264,7 +260,6 @@ const ListQuotationsTable = () => {
             setDiscountAmount(discount)
             setFinalAmount(Number(tAmount) - Number(discount));
             if(taxApplayed === "YES"){
-                console.log("tt",taxation[0])
                 if(taxation[0]?.type === "PERCENTAGE"){
                     let taxAmount = (Number(tAmount) - Number(discount)) * (Number(taxation[0].value) / 100)
                     setTaxAmount(taxAmount)
@@ -288,7 +283,6 @@ const ListQuotationsTable = () => {
                 setDiscountAmount(Number(discountType.rate))
                 setFinalAmount(Number(tAmount) - Number(discountType.rate));
                 if(taxApplayed === "YES"){
-                    console.log("tt",taxation[0])
                     if(taxation[0]?.type === "PERCENTAGE"){
                         let taxAmount = (Number(tAmount) - Number(discountType.rate) ) * (Number(taxation[0].value) / 100)
                         setTaxAmount(Number(taxAmount))
@@ -310,7 +304,6 @@ const ListQuotationsTable = () => {
             }else{
                 setDiscountAmount(0)
                 if(taxApplayed === "YES"){
-                    console.log("tt",taxation[0])
                     if(taxation[0]?.type === "PERCENTAGE"){
                         let taxAmount = (Number(tAmount)) * (Number(taxation[0].value) / 100)
                         setTaxAmount(taxAmount)
@@ -333,7 +326,6 @@ const ListQuotationsTable = () => {
     }else{
         setDiscountAmount(0)
         if(taxApplayed === "YES"){
-            console.log("tt",taxation[0])
             if(taxation[0]?.type === "PERCENTAGE"){
                 let taxAmount = (Number(tAmount)) * (Number(taxation[0].value) / 100)
                 setTaxAmount(taxAmount)
@@ -356,16 +348,13 @@ const ListQuotationsTable = () => {
   }
   /**BASIS OF CHANGING VEHICLE & DRIVER AMOUNT THAT TIME WILL CHANGE FINAL AMOUNT */
   async function totalAmount(val){
-      console.log("total",val,selectedDiscount,taxApplayed, taxAmount)
       if(selectedDiscount !== ""){
           let discountType = discounts.find((d) => d.id === Number(selectedDiscount));
-          console.log("ddt",discountType)
           if(discountType.type === "PERCENTAGE"){
               let discount = Number(val) * (Number(discountType.rate)/100);
               setDiscountAmount(Number(discount))
               setFinalAmount(Number(val) - Number(discount));
               if(taxApplayed === "YES"){
-                  console.log("tt",taxation[0])
                   if(taxation[0]?.type === "PERCENTAGE"){
                       let taxAmount = (Number(val) - Number(discount)) * (Number(taxation[0].value) / 100)
                       setTaxAmount(Number(taxAmount))
@@ -389,7 +378,6 @@ const ListQuotationsTable = () => {
                   setDiscountAmount(Number(discountType.rate))
                   setFinalAmount(Number(val) - Number(discountType.rate));
                   if(taxApplayed === "YES"){
-                      console.log("tt",taxation[0])
                       if(taxation[0]?.type === "PERCENTAGE"){
                           let taxAmount = (Number(val) - Number(discountType.rate)) * (Number(taxation[0].value) / 100)
                           setTaxAmount(Number(taxAmount))
@@ -411,7 +399,6 @@ const ListQuotationsTable = () => {
               }else{
                   setDiscountAmount(0)
                   if(taxApplayed === "YES"){
-                      console.log("tt",taxation[0])
                       if(taxation[0]?.type === "PERCENTAGE"){
                           let taxAmount = Number(val) * (Number(taxation[0].value) / 100)
                           setTaxAmount(taxAmount)
@@ -436,7 +423,6 @@ const ListQuotationsTable = () => {
           setDiscountAmount(0)
           setFinalAmount(Number(val));
           if(taxApplayed === "YES"){
-              console.log("tt",taxation[0])
               if(taxation[0]?.type === "PERCENTAGE"){
                   let taxAmount = Number(val) * (Number(taxation[0].value) / 100)
                   setTaxAmount(taxAmount)
@@ -462,11 +448,8 @@ const ListQuotationsTable = () => {
   }
   /**BASIS OF CHANGING TAX AMOUNT THAT TIME WILL CHANGE FINAL AMOUNT */
   async function applyTaxation(val){
-    console.log("1",val)
-    console.log("2",tAmount,"3",Number(taxation[0].value) / 100)
       setTaxApplayed(val);
       if(val === "YES"){
-          console.log("tt",taxation[0])
           if(taxation[0]?.type === "PERCENTAGE"){
               let taxAmount = (Number(tAmount) - Number(discountAmount)) * (Number(taxation[0].value) / 100)
               setTaxAmount(taxAmount)

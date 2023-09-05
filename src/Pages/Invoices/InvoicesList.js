@@ -57,17 +57,14 @@ const InvoiceDetails = () =>
       getAllData(1);  
     }, [userId]);
 
-    console.log(`Module list at the invoice page: `, module);
 
     const handleOpenModal = async (productId) =>
     {
       let sendEmailbuttondata = await getSendEmailButtonData(productId);
-      console.log(`Send Email Button Data: `, sendEmailbuttondata);
       setsendEmailButtonData(sendEmailbuttondata);     
       setModalOpen(true); 
       // Fetch the invoice data for the selected productId
       let invoiceData = await getSingleInvoiceData(productId);
-      console.log("Invoice Data: ", invoiceData);      
       // Store the invoice data in the state variable
       setSelectedInvoiceData(invoiceData);
       setModalOpen(true);    
@@ -106,11 +103,9 @@ const InvoiceDetails = () =>
     onSubmit: async (values) =>
     {
       setmodal_list(false);
-      console.log("Values: ",values);
       if(modal)
       {
         let addedData = await addAmount(values.invoiceId, values.totalRecievedAmount);
-        console.log(addedData);
         if(addedData.code === 200)
         {
           setErrors("");
@@ -128,7 +123,6 @@ const InvoiceDetails = () =>
       if(modalOpen)
       {
         let email = await sendEmail(sendEmailButtonData[0]?.id, values.recepientEmail, values.invoiceSubject);
-        console.log(`Send Email Response`, email);
         if(email.code === 200)
         {
           setErrors("")
@@ -147,11 +141,8 @@ const InvoiceDetails = () =>
 
     const handleSendEmail = async () => 
     {
-      console.log('We are inside send email');
       const { recepientEmail, invoiceSubject } = validation.values;
-      console.log("values", validation.values);
       const sendEmailResponse = await sendEmail(sendEmailButtonData[0]?.id, recepientEmail, invoiceSubject);  
-      console.log('Send Email Response:', sendEmailResponse);
       if(sendEmailResponse.code === 200)
       {
         setErrors("")
@@ -167,7 +158,6 @@ const InvoiceDetails = () =>
   async function modalClose(productId)
   {
     let invoiceData = await getSingleInvoiceData(productId)
-    console.log("Invoice Data: ",invoiceData)
     setView_modal(!view_modal)
     setInvoice(invoiceData.invoice)
     setLedg(invoiceData.payment)
@@ -176,9 +166,7 @@ const InvoiceDetails = () =>
 
   const handleDownloadPDF = () => {
     const invoiceSection = invoiceRef.current;
-    console.log('Invoice Section ',invoiceSection)
     if (invoiceSection) {
-      console.log('Download function executing started');
       setDownloadingPDF(true);  
       const opt = {
         margin: 5,
@@ -202,7 +190,6 @@ const InvoiceDetails = () =>
 
   const handleStartTrip = async (tripId) => {
     const tripButton = await startTrip(tripId);
-    console.log('tripButton: ', tripButton);
     if (tripButton.code === 200) {
       // Trip started successfully, add the tripId to the list of started trips
       setStartedTrips((prevStartedTrips) => [...prevStartedTrips, tripId]);
@@ -216,7 +203,6 @@ const InvoiceDetails = () =>
   const handleCancelTrip = async (tripId) =>
   {
     const tripButton = await cancelTrip(tripId);
-    console.log('tripButton in cancel button: ', tripButton);
     if(tripButton.code === 200)
     {
       setCancelledTrip((prevStartedTrips) => [...prevStartedTrips, tripId]);
@@ -236,15 +222,12 @@ const InvoiceDetails = () =>
 
   async function tog_view(productId)
   {
-    console.log("Reached: ",productId)
     let invoiceData = await getSingleInvoiceData(productId);
-    console.log("Invoice Data: ",invoiceData);
     setView_modal(!view_modal);
     setInvoice(invoiceData.invoice);
     setLedg(invoiceData.payment);
     setVehicles(invoiceData.vehicles);
     let latestPaymentHistroy = await getLatestPayementHistroy(productId);
-    console.log("Latest Payment Data:",latestPaymentHistroy);
     setPaymentHistroy(latestPaymentHistroy.invoice);
     setView_modal(!view_modal);
   }  
@@ -253,9 +236,7 @@ const InvoiceDetails = () =>
   {
     if(userId)
     {
-      console.log(`User id at the time of getall function in the invoice page`, userId);
       let getInvoices = await getInvoicesData(page || 1, userId);
-      console.log("Get Invoice Date: ",getInvoices)
       setInvoices(getInvoices.invoices);
       setModule(getInvoices.module[0]);
       setPageNumber(page);
@@ -345,7 +326,7 @@ const InvoiceDetails = () =>
         <ModalBody>
           {invoice.map((item, index) => (
             <div key={index} className="tm_container" ref={invoiceRef}>
-              {console.log(item)}
+
               <div className="tm_invoice_wrap">
                 <div className="tm_invoice tm_style1" id="tm_download_section">
                   <div className="tm_invoice_in">
@@ -478,7 +459,6 @@ const InvoiceDetails = () =>
             <form className="tablelist-form" onSubmit={validation.handleSubmit}>
               <ModalBody>
               {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
-              {console.log('Payment histroy: ',paymentHistroy)}
                 {paymentHistroy.map((item, index) => (
                   <div key={index} className="tm_container">
                     <div className="mb-3">

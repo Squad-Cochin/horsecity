@@ -153,14 +153,12 @@ const ListEnquiriesTable = () => {
      */
     async function tog_view(productId) {
         let singleEnqData = await getSingleEnquiryData(productId)
-        console.log("errq", singleEnqData)
         setEnquiry(singleEnqData.enquiry);
         setView_modal(prevState => !prevState);
     }
     /**CONFIRM ENQUIRY */
     const tog_confirm = async (id) => {
         let singleEnqData = await getSingleEnquiryData(id)
-        console.log("singleP", singleEnqData);
         let serviceProviderData = await getSPUserName()
         const sPVechilesData = await getSPVehiclesData(singleEnqData.enquiry[0]?.service_provider_id)
         setSPVechiles(sPVechilesData.vehicles)
@@ -191,7 +189,6 @@ const ListEnquiriesTable = () => {
                 setDiscountAmount(discount)
                 setFinalAmount(Number(tAmount) - Number(discount));
                 if (taxApplayed === "YES") {
-                    console.log("tt", taxation[0])
                     if (taxation[0]?.type === "PERCENTAGE") {
                         let taxAmount = (Number(tAmount) - Number(discount)) * (Number(taxation[0].value) / 100)
                         setTaxAmount(taxAmount)
@@ -215,7 +212,6 @@ const ListEnquiriesTable = () => {
                     setDiscountAmount(Number(discountType.rate))
                     setFinalAmount(Number(tAmount) - Number(discountType.rate));
                     if (taxApplayed === "YES") {
-                        console.log("tt", taxation[0])
                         if (taxation[0]?.type === "PERCENTAGE") {
                             let taxAmount = (Number(tAmount) - Number(discountType.rate)) * (Number(taxation[0].value) / 100)
                             setTaxAmount(Number(taxAmount))
@@ -237,7 +233,6 @@ const ListEnquiriesTable = () => {
                 } else {
                     setDiscountAmount(0)
                     if (taxApplayed === "YES") {
-                        console.log("tt", taxation[0])
                         if (taxation[0]?.type === "PERCENTAGE") {
                             let taxAmount = (Number(tAmount)) * (Number(taxation[0].value) / 100)
                             setTaxAmount(taxAmount)
@@ -260,7 +255,6 @@ const ListEnquiriesTable = () => {
         } else {
             setDiscountAmount(0)
             if (taxApplayed === "YES") {
-                console.log("tt", taxation[0])
                 if (taxation[0]?.type === "PERCENTAGE") {
                     let taxAmount = (Number(tAmount)) * (Number(taxation[0].value) / 100)
                     setTaxAmount(taxAmount)
@@ -290,7 +284,6 @@ const ListEnquiriesTable = () => {
                 setDiscountAmount(Number(discount))
                 setFinalAmount(Number(val) - Number(discount));
                 if (taxApplayed === "YES") {
-                    console.log("tt", taxation[0])
                     if (taxation[0]?.type === "PERCENTAGE") {
                         let taxAmount = (Number(val) - Number(discount)) * (Number(taxation[0].value) / 100)
                         setTaxAmount(Number(taxAmount))
@@ -314,7 +307,6 @@ const ListEnquiriesTable = () => {
                     setDiscountAmount(Number(discountType.rate))
                     setFinalAmount(Number(val) - Number(discountType.rate));
                     if (taxApplayed === "YES") {
-                        console.log("tt", taxation[0])
                         if (taxation[0]?.type === "PERCENTAGE") {
                             let taxAmount = (Number(val) - Number(discountType.rate)) * (Number(taxation[0].value) / 100)
                             setTaxAmount(Number(taxAmount))
@@ -336,7 +328,6 @@ const ListEnquiriesTable = () => {
                 } else {
                     setDiscountAmount(0)
                     if (taxApplayed === "YES") {
-                        console.log("tt", taxation[0])
                         if (taxation[0]?.type === "PERCENTAGE") {
                             let taxAmount = Number(val) * (Number(taxation[0].value) / 100)
                             setTaxAmount(taxAmount)
@@ -361,7 +352,6 @@ const ListEnquiriesTable = () => {
             setDiscountAmount(0)
             setFinalAmount(Number(val));
             if (taxApplayed === "YES") {
-                console.log("tt", taxation[0])
                 if (taxation[0]?.type === "PERCENTAGE") {
                     let taxAmount = Number(val) * (Number(taxation[0].value) / 100)
                     setTaxAmount(taxAmount)

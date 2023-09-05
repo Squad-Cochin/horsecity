@@ -48,7 +48,6 @@ const ListTables = () => {
         setUserId(userIdd);
         getAllData(1)
     }, [userId,role])
-    console.log("module",module);
 
     /**This object sets the initial values for the form fields managed by formik */
     const initialValues = {
@@ -75,11 +74,10 @@ const ListTables = () => {
         onSubmit: (values) => {
             values.licence_image = updateImage;
             if (add_list) {
-                console.log("added new0 ",values);
+
                 addProvider(values)
             } else {
                 //update previes SProvider
-                console.log("update previues one ",values);
                 editProvider(values);
             }
         }
@@ -143,7 +141,6 @@ const ListTables = () => {
             }
         }
     }
-console.log("MMMM",userId);
     /**This function is used to toggle the modal for adding/editing service providers 
      * and set the selected service provider */
     async function tog_list(param, productId) {
@@ -175,10 +172,8 @@ console.log("MMMM",userId);
     async function getAllData(page) {
         
         if(userId){ 
-            console.log("uu",userId);
         let getSPdataNext = await getSPAllData(page || 1, userId);
         setSproviders(getSPdataNext.serviceProviders);
-        console.log("spa",getSPdataNext.module);
         setModule(getSPdataNext.module[0])
         setPageNumber(page);
         setNumberOfData(getSPdataNext.totalCount);

@@ -57,7 +57,7 @@ const SettingPage = () =>
         let languages = await getLanguagesNames();
         let currencies = await getCurrenciesNames();
         let taxations = await getTaxationsNames();
-        console.log("get",settingsData);
+
         setSetting_data(settingsData.settingsPageData);
         setLanguages(languages?.languages);
         setCurrencies(currencies?.currencies);
@@ -91,17 +91,14 @@ const SettingPage = () =>
         values.loginpage_bg_image = loginPageBackgroundImg
         values.loginpage_logo = loginPageLogo
                   let updateSettingsPage = await updateSettings(values);
-                  console.log("update",updateSettingsPage);
                   if(updateSettingsPage.code === 200){
                       setErrors("");
                       const data = languages?.find((item)=>item?.id == values.language_id)
-                      console.log("abb",data.abbreviation);
                       i18n.changeLanguage('en');
                       localStorage.setItem("I18N_LANGUAGE", 'en');
                       window.location.reload();
                   }else{
                       setErrors("")
-                      console.log("ERRRRR",updateSettingsPage);
                       setErrors(updateSettingsPage.message)
                   }
       }
@@ -129,7 +126,6 @@ const SettingPage = () =>
     const handleFaviconChange = (event) => {
       const file = event.target.files[0];
       setUploadFavicon(file);
-      console.log(file);
       setFaviconPreview(URL.createObjectURL(file));
     };
     /**CONTREY CODES */

@@ -105,7 +105,7 @@ const ListVehiclesTable = () => {
             setAdd_list(!add_list);
         } else {
             let data = await getSingleVechileData(productId)
-            console.log("DDDD", data)
+
             setVehicle([data]);
             setCertificatePreview(data.safety_certicate)
         }
@@ -114,9 +114,7 @@ const ListVehiclesTable = () => {
 
     // The Below function is used when we are displaying the particular vehicle data.
     async function tog_view(productId) {
-        console.log("rr", productId)
         let data = await getSingleVechileData(productId)
-        console.log("DD", data)
         setVehicle([data]);
         setCertificatePreview(data.safety_certicate)
         setView_modal(!view_modal);
@@ -135,7 +133,6 @@ const ListVehiclesTable = () => {
 
     // The below function is the changging Status button
     function toggleStatus(button, vehiclesId) {
-        console.log("vid", vehiclesId)
         var currentStatus = button.innerText.trim();
         const vehicle = vehicles.find((v) => v.id === vehiclesId);
         updateVechileStatus(vehicle.id)
@@ -180,11 +177,8 @@ const ListVehiclesTable = () => {
     // function for get data all Vechile data
     async function getAllData(page) {
         if (userId) {
-            console.log(`User id at the time of getall function`, userId);
             let getvehicles = await getVehiclesData(page || 1, userId);
             let getSP = await getSPUserName();
-            console.log("ss", getSP)
-            console.log("ssv", getvehicles)
             setSproviders(getSP.serviceProviders);
             setVehicles(getvehicles?.vehicles);
             setModule(getvehicles.module[0]);
@@ -195,7 +189,6 @@ const ListVehiclesTable = () => {
 
     // Update vehicle
     async function editVehicles(data) {
-        console.log("Reach vehicle at the time of edit vehicle")
         let updatedVehicle = await updateVehicle(vehicle[0]?.id, data);
         if (updatedVehicle.code === 200) {
             setErrors("")
@@ -211,7 +204,6 @@ const ListVehiclesTable = () => {
     }
     /**Add new vehicle */
     async function addVechile(values) {
-        console.log("va", values)
         let addedVechile = await addNewVehicle(values, userId);
         if (addedVechile.code === 200) {
             setErrors("")

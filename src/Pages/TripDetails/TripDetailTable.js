@@ -85,7 +85,6 @@ const TripDeatails = () => {
     enableReinitialize: true,
     initialValues,
     onSubmit: (values) => {
-      console.log(values);
       updateTrip(values)
 
     },
@@ -119,7 +118,6 @@ const TripDeatails = () => {
   async function breakdown_list(productId) {
     setTrip_list_data([]);
     let breakOut = await getLIstBreakDownVehicles(productId);
-    console.log("here",breakOut);
     if(breakOut.vehicles_breakouts.length != 0){
       setTrip_list_data(breakOut.vehicles_breakouts);
       setListOrView(true)
@@ -137,7 +135,6 @@ const TripDeatails = () => {
     setInvoice_id(invId);
     setTrip_status(false);
     let filterTrpDetailsData = tripDatas.filter((item)=> item.booking_id  == bkId)
-    console.log("gtyuy",filterTrpDetailsData[0].service_provider);
     setTrip_list_data(filterTrpDetailsData);
     let serviceProviderData = await getSPUserName();
     setServiceProviders(serviceProviderData.serviceProviders);
@@ -146,10 +143,8 @@ const TripDeatails = () => {
   }
   /**SETTING DRIVER & VEHICLES BASIS OF SERVICE PROVIDER */
   async function serviceProviderSelected(id) {
-    console.log("d",id);
     const sPVechilesData = await getSPVehiclesData(id);
     const sPDriverData = await getSPDriverData(id);
-    console.log("drivers",sPDriverData);
     setSPDrivers(sPDriverData.drivers);
     setSPVechiles(sPVechilesData.vehicles);
   }

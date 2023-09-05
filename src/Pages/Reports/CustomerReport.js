@@ -29,7 +29,6 @@ const CustomerReport  = () => {
         const today = new Date();
         const sixtyDaysAgo = new Date(today);
         sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
-        console.log(today,"next",sixtyDaysAgo)
         let value = {
             from_date : sixtyDaysAgo,
             to_date : today,
@@ -55,8 +54,7 @@ const CustomerReport  = () => {
 
     async function getData(page, val,spId){
         setFromDate(val.from_date)
-        setToDate(val.to_date)
-        console.log("val",val)
+        setToDate(val.to_date);
         if(spId){
         let getAllData = await getCustomerReport(page || 1, val,spId)
         setCustomerReport(getAllData?.customers);

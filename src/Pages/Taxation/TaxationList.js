@@ -62,13 +62,12 @@ const TaxationDeatails = () => {
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
-                console.log(values);
+
                 if(add_list){
                     //add new
                     addTaxation(values)
                 }else{
                     //update previes one
-                    console.log("update previues one ");
                     editTxations(values)
                 }
         }
@@ -129,7 +128,6 @@ const TaxationDeatails = () => {
     /**This function is used to remove a service provider*/
     async function remove_data(id) {
       let tax =   await removeTaxation(id)
-      console.log("test",test);
       if (tax.code === 200) {
         getAllData(pageNumber)
     } 

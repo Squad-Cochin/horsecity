@@ -69,7 +69,7 @@ const ChangePassword = props => {
   /**SET BACKGROUND IMAGE */
   async function getAllData() {
     let settingsData = await getSettingsPageData();
-    console.log("bgimmage",settingsData);
+
     setBackgroundImage(settingsData?.settingsPageData[0]?.loginpage_bg_image);
     setAppName(settingsData?.settingsPageData[0]?.application_title)
    }
@@ -180,36 +180,6 @@ const ChangePassword = props => {
                             <FormFeedback type="invalid"><div> {validation.errors.confirmPassword} </div></FormFeedback>
                           ) : null}
                         </div>
-
-
-                        {/* <Row>
-                          <Col>
-                            <div className="form-check">
-                              <input
-                                type="checkbox"
-                                className="form-check-input"
-                                id="customControlInline"
-                              />
-                              <label
-                                className="form-label form-check-label"
-                                htmlFor="customControlInline"
-                              >
-                                Remember me
-                              </label>
-                            </div>
-                          </Col>
-                          <Col className="col-7">
-                            <div className="text-md-end mt-3 mt-md-0">
-                              <Link
-                                to="/auth-recoverpw"
-                                className="text-muted"
-                              >
-                                <i className="mdi mdi-lock"></i> Forgot your
-                                password?
-                              </Link>
-                            </div>
-                          </Col>
-                        </Row> */}
                         <div className="d-grid mt-4">
                           <button
                             className="btn btn-primary waves-effect waves-light"
@@ -218,46 +188,6 @@ const ChangePassword = props => {
                             Update Password
                           </button>
                         </div>
-                        {/* <div className="mt-4 text-center">
-                      <h5 className="font-size-14 mb-3">Sign in with</h5>
-
-                      <ul className="list-inline">
-                        <li className="list-inline-item">
-                          <FacebookLogin
-                            appId={facebook.APP_ID}
-                            autoLoad={false}
-                            callback={facebookResponse}
-                            render={renderProps => (
-                              <Link
-                                to="#"
-                                className="social-list-item bg-primary text-white border-primary"
-                                onClick={renderProps.onClick}
-                              >
-                                <i className="mdi mdi-facebook" />
-                              </Link>
-                            )}
-                          />
-                        </li>
-
-                        <li className="list-inline-item">
-                          <GoogleLogin
-                            clientId={google.CLIENT_ID}
-                            render={renderProps => (
-                              <Link
-                                to="#"
-                                className="social-list-item bg-danger text-white border-danger"
-                                onClick={renderProps.onClick}
-                              >
-                                <i className="mdi mdi-google" />
-                              </Link>
-                            )}
-                            onSuccess={googleResponse}
-                            onFailure={() => { }}
-                          />
-                        </li>
-                      </ul>
-                    </div> */}
-
                       </Col>
                     </Row>
                   </Form>
@@ -268,19 +198,7 @@ const ChangePassword = props => {
                 <p className="text-white-50">Go back to <Link to="/login" className="fw-medium text-primary"> Login  </Link> </p>
                 {/* <p className="text-white-50">© {new Date().getFullYear()} HORSCITY. Crafted with <i className="mdi mdi-heart text-danger"></i> by Themesdesign</p> */}
             </div>
-            {/* <div className="mt-5 text-center">
-              <p className="text-white-50">
-                Don't have an account ?{" "}
-                <Link to="/register" className="fw-medium text-primary">
-                  {" "}
-                  Register{" "}
-                </Link>{" "}
-              </p>
-              <p className="text-white-50">
-                © {new Date().getFullYear()} Upzet. Crafted with{" "}
-                <i className="mdi mdi-heart text-danger"></i> by Themesdesign
-              </p>
-            </div> */}
+  
           </Col>
         </Row>
       </Container>

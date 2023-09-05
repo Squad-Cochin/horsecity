@@ -59,14 +59,12 @@ const LanguageDeatails = () => {
         initialValues,
         onSubmit: (values) => {
             values.language_file = lng_file;
-            console.log(values);
+
             if (add_list) {
                 //add new
-                console.log("add new");
                 addLanguage(values);
             } else {
                 //update previes one
-                console.log("update previues one ");
                 editLanguage(values);
             }
         }
@@ -119,7 +117,6 @@ const LanguageDeatails = () => {
             getAllData(pageNumber)
         } else {
             setErrors("")
-            console.log("err", updateLng.message);
             setErrors(updateLng.message)
         }
     }

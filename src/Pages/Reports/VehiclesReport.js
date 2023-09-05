@@ -32,7 +32,6 @@ const VehicleReport  = () => {
         const today = new Date();
         const sixtyDaysAgo = new Date(today);
         sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
-        console.log(today,"next",sixtyDaysAgo)
         let value = {
             from_date : sixtyDaysAgo,
             to_date : today,
@@ -61,10 +60,8 @@ const VehicleReport  = () => {
 
     /**GETTING VEHICLES REPORT */
     async function getData(page, val,spId){
-        console.log("SP",spId);
         setFromDate(val.from_date)
         setToDate(val.to_date)
-        console.log("val",val)
         if(spId){
         let getAllData = await getVehicleReport(page || 1, val,spId)
         setVehicleReport(getAllData?.vehicles);
@@ -72,7 +69,6 @@ const VehicleReport  = () => {
         setNumberOfData(getAllData?.totalCount);
         }
     }
-    console.log("rolee",!(config.Role.service_provider  === 2));
     return (
         <React.Fragment>
             <div className="page-content">

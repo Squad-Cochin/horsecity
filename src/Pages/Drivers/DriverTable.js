@@ -10,20 +10,15 @@ import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, Modal
 import { Link } from 'react-router-dom';
 import List from 'list.js';
 import Flatpickr from "react-flatpickr";
-// GET_DRIVERS_ALL_DATA_URL
-//The purpose of the Breadcrumbs component is to display a breadcrumb navigation element. 
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-
 // The code you provided imports the useFormik hook from the "formik" library. The useFormik hook is a custom hook provided by Formik, which is a popular form library for React.
 import { useFormik } from "formik";
-
 /**IMPORTED APIs */
 import { addNewDriver, assignNewSP } from '../../helpers/ApiRoutes/addApiRoutes';
 import { removeDriver, removeAssignedDriver, removeDriverWithServiceProvider } from '../../helpers/ApiRoutes/removeApiRoutes';
 import { updateDriver , updateDriverStatus } from '../../helpers/ApiRoutes/editApiRoutes'; 
 import { getDriversData, getSingleDriverData, getAssignedProviders } from '../../helpers/ApiRoutes/getApiRoutes'; 
 import config from '../../config';
-
 
 // The name of the function. Which will be executed and used all over program. This funtion is having all the code
 const ListTables = () => 
@@ -60,19 +55,15 @@ const ListTables = () =>
     useEffect(() =>
     {
         const data = JSON.parse(localStorage.getItem("authUser"));
-        console.log('Data from the list invoice page', data);
         let user_Id = data[0]?.user[0]?.id
-        console.log('User id from the drivers page: ', user_Id);
         let role_Name = data[0]?.user[0]?.role_name
-        console.log('Role name from the drivers page: ', role_Name);
         let rId = data[0]?.user[0]?.role_Id
-        console.log('Role Id from the drivers page: ', rId);
         setUserId(user_Id);
         setRole(role_Name);
         setRoleId(rId)
         getAllData(1)
     }, [userId, role, roleId]);
-    console.log(`Module list at the driver page: `, module);
+
 
     // The below intialValues variable is used for having the data the driver. When we will use the edit button.
     // We are usign the add module for editing the driver. That is why if we are having data of a particular then
@@ -104,8 +95,6 @@ const ListTables = () =>
             if (add_list) 
             {
                 //add new
-                // values.licence_img = updateLiscenceImage;
-                // values.profile_image = updateProfileImage;
                 addDriver(values)
             }
             else if(modal_assign)
@@ -126,7 +115,6 @@ const ListTables = () =>
         // Get the selected file from the event
         const file = event.target.files[0];    
         // Update the state variable 'updateImage' with the selected file
-        console.log(`Profile Image Chnage Data: `, file);
         setUpdateProfileImage(file);
         // Generate a preview URL for the selected image using the URL.createObjectURL method
         const previewURL = URL.createObjectURL(file); 
@@ -138,7 +126,6 @@ const ListTables = () =>
     const handleLicenceImageChange = (event) => 
     {
       const file = event.target.files[0];
-      console.log(`Licence Image File Data: `, file);
       setUpdateLiscenceImage(file)
       setLicenceImagePreview(URL.createObjectURL(file));
     };   
@@ -196,7 +183,6 @@ const ListTables = () =>
 
     // function for display assigned drivers modal
     async function toggleAssign(id){
-        console.log(id)
         let data = await getAssignedProviders(id)
         setSproviders(data.notexist)
         setAssignedSProviders(data.exist)
@@ -210,7 +196,6 @@ const ListTables = () =>
     {
         if(userId)
         {
-            console.log(`User id at the time of getall function in the driver page`, userId);
             let getDrivers = await getDriversData(page || 1, userId);
             setDrivers(getDrivers.drivers);
             setModule(getDrivers.module[0]);
@@ -235,7 +220,6 @@ const ListTables = () =>
 
     // function for edit driver
     async function editDriver(data){
-        console.log("Data at the editing",data)
         let updatedDriver = await updateDriver(driver[0]?.id, data);
         if(updatedDriver.code === 200){
             setErrors("")
@@ -266,9 +250,6 @@ const ListTables = () =>
     // function for assign sp
     async function assignNewProvider(val)
     {
-        console.log(`Driver Id: `, selectedDriver);
-        console.log(`Service Provider Id: `, val.service_providers_id);
-        // console.log("val",val.service_providers_id,selectedDriver)
         let assignSP = await assignNewSP(selectedDriver, val.service_providers_id)
         if(assignSP.code === 200){
             setErrors("")

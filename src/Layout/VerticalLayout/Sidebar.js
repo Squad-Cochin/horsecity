@@ -139,11 +139,10 @@ const Sidebar = (props) => {
   const activeMenu = useCallback(() => {
     const pathName = props.router.location.pathname;
     const fullPath = pathName;
-    console.log("fullpath",fullPath)
+
     let matchingMenuItem = null;
     const ul = document.getElementById("side-menu-item");
     const items = ul.getElementsByTagName("a");
-    console.log("items",items)
     removeActivation(items);
     for (let i = 0; i < items.length; ++i) {
       if (fullPath === items[i].pathname) {

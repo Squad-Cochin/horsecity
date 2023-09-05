@@ -32,7 +32,6 @@ const TripDetailsReport  = () => {
         const today = new Date();
         const sixtyDaysAgo = new Date(today);
         sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
-        console.log(today,"next",sixtyDaysAgo)
         let value = {
             from_date : sixtyDaysAgo,
             to_date : today,
@@ -62,7 +61,6 @@ const TripDetailsReport  = () => {
     async function getData(page, val,spId){
         setFromDate(val.from_date)
         setToDate(val.to_date)
-        console.log("val",val)
         if(spId){
         let getAllData = await getTripDetailsReport(page || 1, val,spId)
         setTripDetailsReport(getAllData?.tripDetails);

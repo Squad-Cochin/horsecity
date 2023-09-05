@@ -25,7 +25,6 @@ function* loginUser({ payload: { user, history } }) {
         user.userName,
         user.password
       );
-      console.log("RRR",response);
       yield put(loginSuccess(response));
     } else if (process.env.REACT_APP_DEFAULTAUTH === "jwt") {
       const response = yield call(postJwtLogin, {
@@ -39,7 +38,7 @@ function* loginUser({ payload: { user, history } }) {
         userName: user.userName,
         password: user.password,
       });
-      console.log("response",response)
+
 
    
       localStorage.setItem("authUser", JSON.stringify(response));
@@ -64,7 +63,6 @@ function* loginUser({ payload: { user, history } }) {
     
     
   } catch (error) {
-    console.log("err",error);
 
     yield put(apiError(error));
   }
@@ -84,12 +82,9 @@ function* recoverNewPassword({ payload: { user } }) {
 /**rECOVER NEW PASSWORD */
 function* updateNewPassword({ payload: { user } }) {
   try{
-    console.log("yy")
    const response =   yield call(changePassword, user);
-   console.log("RESPO",response);
       yield put(updatePWDSuccess(response));
 }catch (error) {
-  console.log("RESPOERR",error);
   yield put(apiError(error));
 }
 }
@@ -128,7 +123,6 @@ function* socialLogin({ payload: { data, history, type } }) {
       reject("")
       
     })
-    console.log(data)
     if(data2 === "expired"){
       history("/change-password");
     }else{

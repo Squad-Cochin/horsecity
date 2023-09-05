@@ -12,7 +12,7 @@ const DashboardPanel = () =>
   const [roleId, setRoleId] = useState("");
 
   var data = JSON.parse(localStorage.getItem("authUser"));
-  console.log(`Data from of the userPanel: `, data);
+
   
   useEffect(() =>
   {
@@ -34,8 +34,7 @@ const DashboardPanel = () =>
     setDashboardData(dData.counts);
   }
   
-  console.log(`Login user Role id from the userpanel.js: `, data[0]?.user[0]?.role_Id);
-  console.log(`Role id from the config file: `, role_id);
+
   
   return (
     <React.Fragment>
