@@ -58,7 +58,7 @@ const LatestTransation = () => {
                                             </th>
                                             {/* <th scope="col" style={{ width: "60px" }}></th> */}
                                             <th>Sr.no</th>
-                                            <th scope="col">Customer ID & Name</th>
+                                            <th scope="col">User Name & Name</th>
                                             <th scope="col">Enquiry Date</th>
                                             <th scope="col">Pickup Location</th>
                                             <th scope="col">Drop Location</th>
