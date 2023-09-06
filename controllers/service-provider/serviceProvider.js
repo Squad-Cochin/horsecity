@@ -213,3 +213,28 @@ exports.getSpDrivers = async(req,res)=>
     });
    }
 }
+
+
+/**For getting role list */
+exports.getRoleList = async(req,res)=>
+{
+    let roleItems = await serviceProvider.getRoleList();
+  
+   if(roleItems){
+    return res.status(200).send
+    ({
+        code: 200,
+        success: true,
+        message: constants.responseMessage.getAll,
+        data :roleItems
+
+    });
+   }else if(roleItems == 'ERRR'){
+    return res.status(200).send
+    ({
+        code: 500,
+        success: false,
+        message: constants.responseMessage.universalError,
+    });
+   }
+}

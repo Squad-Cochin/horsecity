@@ -41,5 +41,8 @@ module.exports = function(app)
     /**For getting particlar service provider driver */
     app.get(`/${process.env.apiToken}/serviceprovider/driver/:id`, spcontroller.getSpDrivers);
 
+    /**For getting role list */
+    app.get(`/${process.env.apiToken}/role/list`, spcontroller.getRoleList);
+
 
 }

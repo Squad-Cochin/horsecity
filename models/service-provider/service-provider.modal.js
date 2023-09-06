@@ -287,6 +287,33 @@ static async getSpDrivers(spID)
         }
     })    
 }
+
+
+/**For getting role list */
+static async getRoleList() 
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {       
+       
+            const selQuery = `SELECT id, name
+            FROM ${constants.tableName.roles} 
+            WHERE deleted_at IS NULL AND status = '${constants.status.active}'`;
+
+            con.query(selQuery,async(err,data)=>{
+                if(data?.length != 0){                  
+                    resolve({roles : data})
+                }else{
+                    resolve({roles :[] })
+                }
+            })
+        }catch(err){
+            resolve({roles : "ERRR"})
+            console.log('Error while feching role list', err);
+        }
+    })    
+}
 }
 
                          

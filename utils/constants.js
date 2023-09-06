@@ -65,7 +65,7 @@ module.exports =
             },
             upload :
             {
-                idProof : `${__dirname}../../Attachements/Customers/IdProofs/`,
+                idProof : `${__dirname}../../attachements/Customers/IdProofs/`,
             }       
         },
         driver :
@@ -77,14 +77,14 @@ module.exports =
             },
             upload :
             {
-                licence : `${__dirname}../../Attachements/Drivers/Licence/`,
-                profilephoto : `${__dirname}../../Attachements/Drivers/ProfilePhoto/`               
+                licence : `${__dirname}../../attachements/Drivers/Licence/`,
+                profilephoto : `${__dirname}../../attachements/Drivers/ProfilePhoto/`               
             }
         },
         serviceProvider :
         {
              licenceImage : {
-                upload : `${__dirname}../../Attachements/serviceProvider/licenceImage/`,
+                upload : `${__dirname}../../attachements/serviceProvider/licenceImage/`,
                 view : `/serviceProvider/licenceImage/`
             }
         },
@@ -97,14 +97,14 @@ module.exports =
             },
             upload :
             {
-                scertificate : `${__dirname}../../Attachements/Vehicles/scertificate/`,
-                images : `${__dirname}../../Attachements/Vehicles/images/`
+                scertificate : `${__dirname}../../attachements/Vehicles/scertificate/`,
+                images : `${__dirname}../../attachements/Vehicles/images/`
             }
         },
         applicationSettings : 
         {
             settings : {
-                upload : `${__dirname}../../Attachements/applicationSettings/settings/`,
+                upload : `${__dirname}../../attachements/applicationSettings/settings/`,
                 view : `/applicationSettings/settings/`
             }
         }
