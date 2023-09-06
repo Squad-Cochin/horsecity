@@ -1,13 +1,13 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                            //
+//     This is the report controller file. Logics are written in model file and data we need are              //
+//     showing in the response. It will be fetched from the model file. But how the data will be displayed    //
+//     in the response it will done from here. The calling of the models are done from the controller files.  //                                        //                                          //
+//                                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const reportsModal = require('../../models/reports/report.modal')
-const constants = require('../../utils/constants');
-const commonoperation = require('../../utils/helper/commonoperation');
 const time = require('../../utils/helper/date');
-
-
-
-
-
 
 /**For geting all service provider basis of from date & to date */
 exports.getReportsServiceProviders = async(req,res)=>

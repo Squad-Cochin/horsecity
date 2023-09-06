@@ -1,8 +1,16 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                            //
+//     This is the quotation controller file. Logics are written in model file and data we need are           //
+//     showing in the response. It will be fetched from the model file. But how the data will be displayed    //
+//     in the response it will done from here. The calling of the models are done from the controller files.  //                                        //                                          //
+//                                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const quotation = require('../../models/quotation/quotation')
 const constants = require('../../utils/constants');
-const commonoperation = require('../../utils/helper/commonoperation');
 const time = require('../../utils/helper/date');
+
+// the below function is for creating new Quotation 
 exports.addNewQuotation = async(req,res)=>
 {
 

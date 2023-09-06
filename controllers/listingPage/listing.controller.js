@@ -1,10 +1,16 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                            //
+//     This is the listing controller file. Logics are written in model file and data we need are              //
+//     showing in the response. It will be fetched from the model file. But how the data will be displayed    //
+//     in the response it will done from here. The calling of the models are done from the controller files.  //                                        //                                          //
+//                                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const modal = require('../../models/listingPage/listing.model')
 const constants = require('../../utils/constants');
-const commonoperation = require('../../utils/helper/commonoperation');
-const time = require('../../utils/helper/date');
 
-
+// the below function is listing all the vehicle on the basis of the search term
+// This is for the nextjs front end
 exports.listingPageData = async(req,res)=>
 {
 
@@ -22,7 +28,8 @@ exports.listingPageData = async(req,res)=>
    } 
 }
  
-
+// The below function is for getting all the usernames of the service provider
+// This is for the nextjs front end
 exports.getUsernameServiceProvider = async(req,res)=>
 {    
     let getUsernameServiceProvider = await modal.getUsernameServiceProvider();

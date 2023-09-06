@@ -1,8 +1,11 @@
-const wishlistModel = require('../../models/wishlist/wishlist.model')
-const constants = require('../../utils/constants');
-const commonoperation = require('../../utils/helper/commonoperation');
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                            //
+//     This is the wishlist controller file. But how the data will be used it will done from here.            //
+//     The calling of the models are done from the controller files.                                          //                                          //
+//                                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+const wishlistModel = require('../../models/wishlist/wishlist.model');
 
 /**For adding & remove wishlist  */
 exports.isWishlistAdd = async(req,res)=>

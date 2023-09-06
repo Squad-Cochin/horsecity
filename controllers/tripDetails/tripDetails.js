@@ -1,7 +1,13 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                            //
+//     This is the trip details controller file. Logics are written in model file and data we need are        //
+//     showing in the response. It will be fetched from the model file. But how the data will be displayed    //
+//     in the response it will done from here. The calling of the models are done from the controller files.  //                                        //                                          //
+//                                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const tripDetails = require('../../models/tripDetails/tripDetails')
 const constants = require('../../utils/constants');
-const commonoperation = require('../../utils/helper/commonoperation');
 
 /**For gitting all trip details  */
 exports.getAllTripDetails = async(req,res)=>
@@ -18,7 +24,6 @@ exports.getAllTripDetails = async(req,res)=>
     });
    }
 }
-
 
 /**For adding new break down details  */
 exports.addBreakDowns = async(req,res)=>

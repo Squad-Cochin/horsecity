@@ -133,7 +133,7 @@ static async updateServiceProvider  (requestBody,file,id)
     {
         try
         {  
-            console.log("hereee");
+            // console.log("hereee");
         let uploadLicence = await commonoperation.fileUpload(file?.licence_image, constants.attachmentLocation.serviceProvider.licenceImage.upload);
         const invalidFormat = "INVALIDFORMAT";
         const invalidAttachment = 'INVALIDATTACHMENT'

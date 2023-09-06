@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                                            //
-//     This is the driver controller file. The logic of the code is mainlly written in the models. The        //
+//     This is the invoice controller file. The logic of the code is mainlly written in the models. The        //
 //     common logic are written in the helper folder inside the utils folder. The code which was writen       //
 //     over there are for make the code reusability. We will do the operations or fetching in the helper.     //
 //     But how the data will be used it will done from here. The calling of the models are done from the      //
@@ -10,7 +10,7 @@
 
 
 const constant = require('../../utils/constants'); // Constant elements are stored in this file
-const invoice = require('../../models/invoices/invoice.model');  // The model from where the logic is intantiate are written in driver model
+const invoice = require('../../models/invoices/invoice.model');  // The model from where the logic is intantiate are written in invoice model
 const time = require('../../utils/helper/date'); // All the time related formating are written in this fi
 
 /**

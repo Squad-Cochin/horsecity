@@ -123,7 +123,7 @@ exports.removeServiceProvider = async(req,res)=>
     }
 }
 
-
+// The below function is for showing the detail of a single service provider
 exports.getOneServiceProvider = async(req,res)=>
 {
     let getOneSProvider = await serviceProvider.getOneServiceProvider(req.params.id);
@@ -147,6 +147,7 @@ exports.getOneServiceProvider = async(req,res)=>
    }
 }
 
+// the below function is for fetching the name of all the service provider
 exports.getNameServiceProviders = async(req,res)=>
 {    
     let getAllSProvidersUsername = await serviceProvider.getNameServiceProviders();
