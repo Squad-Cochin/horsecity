@@ -13,15 +13,13 @@ exports.getAllAcounts = (requestBody,spId) =>
         try
         {     
             const {page, limit} = requestBody;
-            const offset = (page - 1) * limit; 
-
-
+            const offset = (page - 1) * limit;
             const selRoleName = `
-            SELECT rl.name AS role_name, rl.id
-            FROM ${constants.tableName.service_providers} AS sp 
-            JOIN ${constants.tableName.roles} AS rl ON sp.role_Id = rl.id
-            WHERE sp.id = '${spId}';
-        `;
+                                SELECT rl.name AS role_name, rl.id
+                                FROM ${constants.tableName.service_providers} AS sp 
+                                JOIN ${constants.tableName.roles} AS rl 
+                                ON sp.role_Id = rl.id
+                                WHERE sp.id = '${spId}' `;
         
             con.query(selRoleName,(err,data)=>{ 
               

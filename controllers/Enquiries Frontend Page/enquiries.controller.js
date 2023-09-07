@@ -11,7 +11,7 @@ var enquiriesModel = require('../../models/Enquiries Front Page/enquiries.model'
 const time = require('../../utils/helper/date'); // All the time related formating are written in this file
 
 /**
- * The below function is for creating new enquiry. This is for NEXT JS front end
+ * The below function is for creating new enquiry. This is for NEXT JS front end 
  */
 exports.createNewEnquiry = async (req, res, next) =>
 {
@@ -54,6 +54,10 @@ exports.createNewEnquiry = async (req, res, next) =>
     }
 };
 
+/**
+ * The below function is for fetching all enquiries of a particular customer on the basis of customer id. 
+ * This is for NEXT JS front end 
+ */
 exports.getParticularCustomerAllEnquiries = async (req, res, next) =>
 {
     const data = await enquiriesModel.getparticularcustomerallenquiries(req.body.page, req.body.limit, req.params.id);

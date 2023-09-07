@@ -370,7 +370,7 @@ exports.bookingStarted = async (req, res) =>
     // If the function is executed and data is entered into the booking table and status of invoice data is also updated, Then this else if block of code is executed.
     if(invoices === 'Entered')
     {
-        console.log('Booking started and data entered into the booking table');
+        // console.log('Booking started and data entered into the booking table');
         return res.status(200).json
         ({
             code: 200,

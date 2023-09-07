@@ -62,7 +62,7 @@ exports.dataOnConditionUpdate = async(tableName, feildName, Value, id, messageFe
                 
                 if(result.length > 0)
                 {
-                    console.log(`I think ${messageFeild} is not updating this time`);
+                    // console.log(`I think ${messageFeild} is not updating this time`);
                     resolve(`valuenotchanged`);
                 }
                 else
@@ -76,7 +76,7 @@ exports.dataOnConditionUpdate = async(tableName, feildName, Value, id, messageFe
                     }
                     else
                     {
-                        console.log(`No one has this ${messageFeild}`);
+                        // console.log(`No one has this ${messageFeild}`);
                         resolve(`true`);
                     }
                 }
@@ -98,10 +98,10 @@ exports.getOneInvoice = async (Id) =>
                 // The below one is for the invoice id available in the booking table
                 let data1 = await this.dataOnCondition(constants.tableName.bookings, Id, 'inv_id');
                 // console.log(`The below one is for the invoice id available in the booking table: `, data1);
-                if(data1.length === 0)
+                if(data1.length == 0)
                 {
                     // The below if loop is for getting the invoice when the data is not in the booking table
-                    console.log('This invoice data is not available in the booking table. We need to fetch it from the invoice table.');                                                
+                    // console.log('This invoice data is not available in the booking table. We need to fetch it from the invoice table.');                                                
                     let selQuery = `SELECT i.id,
                                     v.id AS VehicleId,
                                     i.invoice_no AS iId,
@@ -242,9 +242,9 @@ exports.getOneInvoice = async (Id) =>
                 else
                 {
                     // The below if loop is for getting the invoice when the data is  in the booking table and the status of the booking data is CONFIRM      
-                    if(data1[0].booking_status === 'CONFIRM')
+                    if(data1[0].booking_status == 'CONFIRM')
                     {
-                        console.log('Booking status is confirm in the booking table and the vehicle details are fetched from the invoice table');                                                
+                        // console.log('Booking status is confirm in the booking table and the vehicle details are fetched from the invoice table');                                                
                         let selQuery = `SELECT i.id,
                                         v.id AS VehicleId,
                                         i.invoice_no AS iId,
@@ -384,9 +384,9 @@ exports.getOneInvoice = async (Id) =>
                     // The above condition loop is for getting the invoice when the data is  in the booking table and the status of the booking data is CONFIRM
 
                     /* This Part is Wokrking */
-                    else if(data1[0].booking_status ==='BREAKOUT')
+                    else if(data1[0].booking_status =='BREAKOUT')
                     {
-                        console.log('Booking status is breakout in the booking table and the vehicle details are fetched from the vehicle breakout');
+                        // console.log('Booking status is breakout in the booking table and the vehicle details are fetched from the vehicle breakout');
                         let selQuery = `SELECT i.id,
                         i.invoice_no AS iId,
                         DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
@@ -519,13 +519,13 @@ exports.getOneInvoice = async (Id) =>
                         });                        
                     }
                     /* This Above Part is Wokrking */
-                    else if(data1[0].booking_status === 'COMPLETED')
+                    else if(data1[0].booking_status == 'COMPLETED')
                     {                        
                         let data3 = await this.dataOnCondition(constants.tableName.vehicles_breakouts, Id, 'invoice_id')
                         // console.log(`Data Present in the vehicles breakdown: `, data3);
-                        if(data3[0].length === 0)
+                        if(data3.length == 0)
                         {
-                            console.log('Booking status is completed in the booking table and the vehicle details are fetched from the invoice table');
+                            // console.log('Booking status is completed in the booking table and the vehicle details are fetched from the invoice table');
                             let selQuery = `SELECT i.id,
                             v.id AS VehicleId,
                             i.invoice_no AS iId,
@@ -663,7 +663,7 @@ exports.getOneInvoice = async (Id) =>
                         }
                         else
                         {
-                            console.log('Booking status is completed in the booking table and the vehicle details are fetched from the vehicle breakout');
+                            // console.log('Booking status is completed in the booking table and the vehicle details are fetched from the vehicle breakout');
                             let selQuery = `SELECT i.id,
                             i.invoice_no AS iId,
                             DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
