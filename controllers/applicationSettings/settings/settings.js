@@ -5,12 +5,12 @@ const commonoperation = require('../../../utils/helper/commonoperation');
 
 
 
-/**For gitting all data  */
+/**For updating settings page */
 exports.updateSettings = async(req,res)=>
 {
-// console.log("here");
+
     let settingsPage = await settings.updateSettings(req.body,req.files);
-    // console.log("new",settingsPage);
+
     if(settingsPage.status == 'INVALIDFORMAT'){
         return res.status(200).send({
             code: 400,
@@ -38,12 +38,11 @@ exports.updateSettings = async(req,res)=>
 
 
 
-/**For gitting all data  */
+/**For gitting settings page data */
 exports.getSettingsData = async(req,res)=>
 {
 
     let settingsPage = await settings.getSettingsData();
-    // console.log("new",settingsPage);
    if(settingsPage.settingsPageData == 'NOTFOUND'){
     return res.status(200).send
     ({
@@ -65,12 +64,12 @@ exports.getSettingsData = async(req,res)=>
 }
 
 
-/**For gitting all data  */
+// Below route is for getting settings page language details
 exports.getLngFile = async(req,res)=>
 {
 
     let getLngFile = await settings.getLngFile();
-    // console.log("new",getLngFile);
+
    if(getLngFile.languagefile == 'NOTFOUND'){
     return res.status(200).send
     ({

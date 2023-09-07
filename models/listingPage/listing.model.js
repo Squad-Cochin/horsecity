@@ -1,6 +1,10 @@
+/////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                         //
+// This is listing model file. Where all the logic of the listing page program is written. //
+//                                                                                         //
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 const con = require("../../configs/db.configs");
-const timeCalculate = require('../../utils/helper/date'); // This variable will have the date file data.
-const commonoperation = require('../../utils/helper/commonoperation');
 const constants = require('../../utils/constants');
 const time = require('../../utils/helper/date');
 const mail = require('../../utils/mailer')
@@ -12,7 +16,12 @@ require('dotenv').config()
 module.exports = class listing
 {
 
-/**for displaying listing page data */
+
+    /**
+    * The below function is for the Client side page
+    * 
+    * The function for fetching all the vehicles basis of the filter.
+    */
 static async listingPageData  (body) 
 {
     return new Promise(async (resolve, reject) => {
@@ -27,18 +36,17 @@ static async listingPageData  (body)
         if (trip_type && trip_type.includes('GCC')) {
             gccType = `AND vh.gcc_travel_allowed = '${constants.status.yes}'`
         }
+
         let filteredTripTypes = [];
         if (trip_type && Array.isArray(trip_type)) {
             filteredTripTypes = trip_type.filter(type => type !== "GCC");
         }
-        // Filter conditions  
+        // Filtering trip type
         let tripTypeFilter = ''; 
         if (filteredTripTypes.length != 0) {
             console.log(filteredTripTypes);
             const tripTypeFilterValues = filteredTripTypes.map(type => `'${type}'`).join(',');
-
             tripTypeFilter = `AND vh.vehicle_type IN (${tripTypeFilterValues})`;
-            console.log("filter",tripTypeFilter);
         }
 
           
@@ -73,7 +81,6 @@ static async listingPageData  (body)
         let selQuery = `
                 SELECT vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse, vh.height,
                 GROUP_CONCAT(vimg.image) AS images,wl.created_at,wl.deleted_at
-
         FROM ${constants.tableName.vehicles} vh
         LEFT JOIN vehicles_images AS vimg ON vh.id = vimg.vehicle_id AND vimg.status = "${constants.status.active}"
         LEFT JOIN (
@@ -82,8 +89,6 @@ static async listingPageData  (body)
             GROUP BY vehicle_id 
         ) AS w ON vh.id = w.vehicle_id 
         LEFT JOIN wishlist AS wl ON w.max_id = wl.id ${customer_id ? `AND wl.customer_id = ${customer_id}` : ''}
-
-
         WHERE 1=1
         ${gccType}
         ${tripTypeFilter}
@@ -93,11 +98,7 @@ static async listingPageData  (body)
         GROUP BY vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse
         ${sorted}
         LIMIT ${+limit} OFFSET ${+offset};
-
             `;
-        
-         
-        // console.log(selQuery); // Print the constructed query for debugging
         con.query(selQuery,(err,data)=>{
             console.log(err);
             if(!err){   
@@ -129,12 +130,11 @@ static async listingPageData  (body)
                 ${priceFilter}
                 ${suppliersFilter} AND vh.deleted_at IS NULL AND vh.status = '${constants.status.active}' 
                          `
-                // // resolve(result);
                 con.query(totalCountQuery,(err,result)=>{
   
                     if(!err){
                         const count = result[0]['count(*)'];
-                 resolve({totalCount: count,listing_data : data})
+                        resolve({totalCount: count,listing_data : data})
                 }
             })
           }})

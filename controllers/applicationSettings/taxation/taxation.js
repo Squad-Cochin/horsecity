@@ -39,9 +39,8 @@ exports.getTaxationsNames = async(req,res)=>
 /**For add new taxation  */
 exports.addNewTaxation = async(req,res)=>
 {
-    // console.log("1",req.body);
+    
     let addNewTaxation = await tax.addNewTaxation(req.body);
-    // console.log("addNew",addNewTaxation);
    if(addNewTaxation){
     return res.status(200).send
     ({
@@ -81,8 +80,7 @@ exports.updateStatus = async(req,res)=>
 {
 
     const taxation = await commonoperation.updateUserStatus(constants.tableName.taxations,req.params.id);
-    // console.log("addNew",data);
-    console.log("status",taxation);
+
     if(taxation.length === 0)
     {
 

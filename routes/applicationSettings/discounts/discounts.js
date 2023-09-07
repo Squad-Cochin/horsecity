@@ -7,22 +7,19 @@ module.exports = function(app)
      /**For listing discounts basis of page limit  */ 
     app.post(`/${process.env.apiToken}/getAll/discounts`,discounts.getAllDiscounts); 
 
-     /**For changing status taxations  */ 
+     /**For changing status discoun  */ 
     app.put(`/${process.env.apiToken}/update-status/discounts/:id`, discounts.updateStatus);
 
-           /**For removing taxations  */
+    /**Below route is for  removing taxations  */
     app.put(`/${process.env.apiToken}/remove/discount/:id`,discounts.removeDiscounts );
 
     // /**For adding new discounts  */
     app.post(`/${process.env.apiToken}/add/discount`,verifyBody.verifyDiscountBody,discounts.addNewDiscount);-
     // /**For updating discount  */
     app.put(`/${process.env.apiToken}/update/discount/:id`,verifyBody.verifyDiscountBody,discounts.updateDiscount);-
-        // Below route is for getting data of any particular discount
+    // Below route is for getting data of any particular discount
     app.get(`/${process.env.apiToken}/getOne/discounts/:id`,discounts.getOneDiscount);
-
+    /**Below route is for getting list of all the discounts */
     app.get(`/${process.env.apiToken}/getAll/active/discounts`, discounts.getAllActiveDiscount);
-
-
-
 
 }

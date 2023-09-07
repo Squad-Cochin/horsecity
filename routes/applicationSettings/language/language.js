@@ -5,7 +5,7 @@ const verifyBody = require(`../../../middlewares/requestValidator`); // Importin
 module.exports = function(app)
 {
 
-    /**For listing language Names  */ 
+    /**For getting list of active language */
     app.get(`/${process.env.apiToken}/getAll/languages`,languages.getLanguageNames);   
 
      /**For listing languages basis of page limit  */ 
@@ -14,13 +14,13 @@ module.exports = function(app)
      /**For changing status languages  */ 
     app.put(`/${process.env.apiToken}/update-status/languages/:id`, languages.updateStatus);
 
-           /**For removing languages  */
+    /**For removing languages  */
     app.put(`/${process.env.apiToken}/remove/languages/:id`,languages.removeLanguage );
 
     // /**For adding new languages  */
     app.post(`/${process.env.apiToken}/add/languages`,verifyBody.verifyLanguageBody,languages.addNewLanguage);-
-    // /**For updating discount  */
+    // /**For updating language  */
     app.put(`/${process.env.apiToken}/update/languages/:id`,verifyBody.verifyLanguageBody,languages.updateLanguages);-
-        // Below route is for getting data of any particular discount
+    // Below route is for getting data of any particular language
     app.get(`/${process.env.apiToken}/getOne/languages/:id`,languages.getOneLanguage);
 }

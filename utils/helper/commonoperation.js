@@ -70,7 +70,7 @@ exports.fileUpload = (attachments, path) =>
                     else
                     {
                         console.log('File Uploaded');
-                        // resolve({message : 'INVALIDFORMAT'});
+                       
                         resolve(filename);
                     }
                 });                

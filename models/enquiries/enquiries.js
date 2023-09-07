@@ -1,6 +1,10 @@
+/////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                         //
+//   This is enquiry model file. Where all the logic of the enquiry  program is written.  //
+//                                                                                         //
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 const con = require("../../configs/db.configs"); 
-const timeCalculate = require('../../utils/helper/date'); // This variable will have the date file data.
-const commonoperation = require('../../utils/helper/commonoperation');
 const constants = require('../../utils/constants');
 const time = require('../../utils/helper/date');
 require('dotenv').config()
@@ -8,7 +12,7 @@ require('dotenv').config()
 
 module.exports = class enguiries
 {
-
+// This below  function will be used for fetching the data of enquiries
     static async  getAllEnquiries  (requestBody,spId) 
 {
     return new Promise((resolve, reject) =>
@@ -26,15 +30,12 @@ module.exports = class enguiries
             WHERE sp.id = '${spId}';
         `;
         
-            
             con.query(selRoleName,(err,data)=>{ 
     
                 if(data.length != 0){ 
-          
-    
 
-                    let role_id = data[0].id 
-                        console.log(role_id);
+            let role_id = data[0].id 
+
             const selQuery = `SELECT enq.id, cu.name AS customer_name,sp.name AS service_provider,enq.status,enq.created_at
             FROM ${constants.tableName.enquiries} AS enq
             JOIN ${constants.tableName.customers} cu ON enq.customer_id = cu.id
@@ -110,8 +111,7 @@ module.exports = class enguiries
 
 
 
-
-
+// This below  function will be used for fetching the data of particular enquirie basis of enquiry id
 static async getOneEnquiry(id)    
 {
     return new Promise((resolve, reject) =>

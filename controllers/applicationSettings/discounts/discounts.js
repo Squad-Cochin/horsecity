@@ -20,12 +20,12 @@ exports.getAllDiscounts = async(req,res)=>
    }
 }
 
-/**For add new taxation  */
+/**For add new discount  */
 exports.addNewDiscount = async(req,res)=>
 {
-    // console.log("1",req.body);
+
     let addNewDiscount = await discounts.addNewDiscount(req.body);
-    // console.log("addNew",addNewTaxation);
+
    if(addNewDiscount){
     return res.status(200).send
     ({
@@ -60,13 +60,12 @@ exports.updateDiscount = async(req,res)=>
 }
 
 
-// /**For add new service provider  */
+// /**Update discount status  */
 exports.updateStatus = async(req,res)=>
 {
 
     const discounts = await commonoperation.updateUserStatus(constants.tableName.discount_types,req.params.id);
-    // console.log("addNew",data);
-    console.log("status",discounts);
+
     if(discounts.length === 0)
     {
 
@@ -89,7 +88,7 @@ exports.updateStatus = async(req,res)=>
 }
 
 
-// /**For remove taxation  */
+// /**Remove discount  */
 exports.removeDiscounts = async(req,res)=>
 {
 
@@ -116,7 +115,7 @@ exports.removeDiscounts = async(req,res)=>
     }
 }
 
-
+/**Get one discount */
 exports.getOneDiscount = async(req,res)=>
 {
     let getOneDiscount = await discounts.getOneDiscount(req.params.id);
@@ -139,13 +138,13 @@ exports.getOneDiscount = async(req,res)=>
     });
    }
 }
-
+/**Get all  active discount */
 exports.getAllActiveDiscount = async (req, res, next) =>
 {
     let discount = await discounts.getallactivediscount(); 
     if(discount.length !== 0)
     {
-        console.log('Discount data fetched successfully');
+
         return res.status(200).send
         ({
             code : 200,
@@ -156,7 +155,6 @@ exports.getAllActiveDiscount = async (req, res, next) =>
     }
     if(discount.length == 0)
     {
-        console.log('No discount data present');
         return res.status(200).send
         ({
             code : 200,
@@ -167,7 +165,7 @@ exports.getAllActiveDiscount = async (req, res, next) =>
     }
     if(discount === 'err')
     {
-        console.log('Error while fetching the discount table data');
+
         return res.status(200).send
         ({
             code : 400,

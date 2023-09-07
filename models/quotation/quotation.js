@@ -1,6 +1,10 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                              //
+//  This is quotation model file. Where all the logic of the quotation page program is written. //
+//                                                                                              //
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 const con = require("../../configs/db.configs");
-const timeCalculate = require('../../utils/helper/date'); // This variable will have the date file data.
-const commonoperation = require('../../utils/helper/commonoperation');
 const constants = require('../../utils/constants');
 const time = require('../../utils/helper/date');
 const mail = require('../../utils/mailer')
@@ -13,7 +17,7 @@ module.exports = class quotation
 {
 
 
-/**Adding new quotation */
+/**********The below function is for creating new Quotation  **********/
 static async addNewQuotaion  (requestBody, pickup_date, drop_date) {
     return new Promise(async (resolve, reject) => {
         try {
@@ -48,7 +52,6 @@ static async addNewQuotaion  (requestBody, pickup_date, drop_date) {
                                                     VALUES ('${customer_id}', '${sum_quotId}', '${enquiry_id}', '${driver_id}', '${vehicle_id}', '${service_provider_id}', '${tax_id}', '${discount_type_id}', '${trip_type}', '${pickup_location}', '${pickup_country}','${pickup_date}','${pickup_time}', '${drop_location}','${drop_country}', '${drop_date}','${drop_time}','${no_of_horse}','${special_requirement}', '${additional_service}','${transportation_insurance_coverage}','${driver_amount}','${vehicle_amount}','${current_amount}', '${tax_amount}','${discount_amount}','${final_amount}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
 
                                     con.query(insQuery, async (err, data) => {
-                                        console.log("insert", err);
                                         if (!err) {
 
                                             let updateQuery = `UPDATE ${constants.tableName.enquiries} SET  
@@ -56,7 +59,6 @@ static async addNewQuotaion  (requestBody, pickup_date, drop_date) {
                                             WHERE id = '${enquiry_id}'`;
 
                                             con.query(updateQuery, async (err, data) => {
-                                                console.log("data", data);
                                                 if (data?.length != 0) {
                                                     resolve(true)
 
@@ -91,7 +93,7 @@ static async addNewQuotaion  (requestBody, pickup_date, drop_date) {
 
 
 
-/**Listing quotation */
+/******This function for list quotation basis of page & limit ******/
 static async ListQuotation  (requestBody,spId) {
     return new Promise(async (resolve, reject) => {
         try {
@@ -166,7 +168,6 @@ static async ListQuotation  (requestBody,spId) {
 
 
                                       con.query(Query,(err,modules)=>{
-                                        // console.log("result",result);
                                         if(!err){
                       
                                             resolve({ totalCount: count, quotations: quo ,module : modules})
@@ -194,7 +195,7 @@ static async ListQuotation  (requestBody,spId) {
 
 
 
-/**For feching particlar quotation basis of quotation id */
+/***********For feching particlar quotation basis of quotation id ********/
 static async getOneQuotation (quotId)  {
     return new Promise(async (resolve, reject) => {
         try { 
@@ -257,11 +258,7 @@ static async getOneQuotation (quotId)  {
         WHERE quo.quotation_id = '${quotId}' AND quo.deleted_at IS NULL;`
 
                     con.query(selQuery, async (err, data) => {
-                        console.log(err);
                         if (data.length != 0) {
-                            // console.log(data[0].pickup_date);
-                            // console.log(data[0].drop_date);
-                            // console.log(data[0].enquiry_date);
                             data[0].pickup_date = `${time.formatDateToDDMMYYYY(
                                 data[0].pickup_date
                             )}`;
@@ -290,7 +287,7 @@ static async getOneQuotation (quotId)  {
 
 
 
-/**For updating That means add  of quotation  */
+/***************For updating That means add  of quotation  ******************/
 static async updateQuotation(requestBody, pickup_date, drop_date, quotId)  {
     return new Promise(async (resolve, reject) => {
         try {
@@ -304,7 +301,6 @@ static async updateQuotation(requestBody, pickup_date, drop_date, quotId)  {
                     let tax_id = tax[0].tax_id
 
                     const { customer_id, enquiry_id, driver_id, vehicle_id, service_provider_id, discount_type_id, trip_type, pickup_location, pickup_country,pickup_time, drop_location, drop_country,drop_time, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage, driver_amount, vehicle_amount, current_amount, tax_amount, discount_amount, final_amount } = requestBody;
-                        console.log(customer_id);
                     /**** Taking last added quotation id  */
                     let selQuery = `SELECT id FROM ${constants.tableName.quotations}  WHERE quotation_id = '${quotId}' ORDER BY id DESC LIMIT 1`
                     con.query(selQuery, async (err, id) => {
@@ -312,13 +308,11 @@ static async updateQuotation(requestBody, pickup_date, drop_date, quotId)  {
                             let idd = id[0].id;
                             time.changeDateToSQLFormat(pickup_date)
                             time.changeDateToSQLFormat(drop_date)
-                            console.log("id", idd, id);
                             /**inserting new quotation same quotation id  */
                             let insQuery = `INSERT INTO quotations (customer_id,quotation_id, enquiry_id, driver_id, vehicle_id, serviceprovider_id, taxation_id, discount_type_id, trip_type, pickup_location, pickup_country, pickup_date,pickup_time, drop_location, drop_country, drop_date,drop_time, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage,driver_amount,vehicle_amount,sub_total, tax_amount, discount_amount, final_amount,created_at)
                                    VALUES ('${customer_id}', '${quotId}', '${enquiry_id}', '${driver_id}', '${vehicle_id}', '${service_provider_id}', '${tax_id}', '${discount_type_id}', '${trip_type}', '${pickup_location}', '${pickup_country}','${pickup_date}','${pickup_time}', '${drop_location}','${drop_country}', '${drop_date}','${drop_time}','${no_of_horse}','${special_requirement}', '${additional_service}','${transportation_insurance_coverage}','${driver_amount}','${vehicle_amount}','${current_amount}', '${tax_amount}','${discount_amount}','${final_amount}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
 
                             con.query(insQuery, async (err, result) => {
-                                console.log("insert", err);
                                 if (!err) {
 
                                     /*******************Last added quotaion id update deleted at********************** */
@@ -330,7 +324,6 @@ static async updateQuotation(requestBody, pickup_date, drop_date, quotId)  {
                                     // SELECT * FROM quotations WHERE quotations.quotation_id = 'QUO2' ORDER BY id DESC LIMIT 1
 
                                     con.query(updateQuery, async (err, data) => {
-                                        console.log("data", data);
                                         if (data?.length != 0) {
                                             resolve(true)
 
@@ -361,7 +354,7 @@ static async updateQuotation(requestBody, pickup_date, drop_date, quotId)  {
 
 
 
-/**For listing removed quotations */
+/***************For listing removed quotations *********/
 static async removedQuotations  (quotId)  {
     return new Promise(async (resolve, reject) => {
         try {
@@ -422,7 +415,6 @@ static async removedQuotations  (quotId)  {
            JOIN ${constants.tableName.vehicles} vh ON quo.vehicle_id = vh.id
            WHERE quo.quotation_id = '${quotId}'`;
                     con.query(selQuery, async (err, qutationsData) => {
-                        console.log(qutationsData);
                         if (qutationsData.length != 0) {
 
                             resolve({
@@ -460,7 +452,7 @@ static async removedQuotations  (quotId)  {
 
 
 
-/** For chainging qutation status basis of quotation id */
+/************** For chainging qutation status basis of quotation id ********/
 static async updateStatusQuotation  (quotId)  {
     return new Promise(async (resolve, reject) => {
         try {
@@ -510,7 +502,7 @@ static async updateStatusQuotation  (quotId)  {
                     con.query(selQuery, async (err, qutationsData) => {
 
                         if (qutationsData.length != 0) {
-                            // console.log("heyy");
+        
                             let pickup_date = await changeFormat(time.changeDateToSQLFormat(qutationsData[0].pickup_date))
                             let drop_date = await changeFormat(time.changeDateToSQLFormat(qutationsData[0].drop_date))
 
@@ -545,7 +537,7 @@ static async updateStatusQuotation  (quotId)  {
                             let checkQutaionIdInvoices = `SELECT * FROM ${constants.tableName.invoices}
                                                           WHERE quotation_prefix_id = '${quotId}'`
                             con.query(checkQutaionIdInvoices, async (err, checkQutaionId) => {
-                                console.log(checkQutaionId.length);
+                      
                                 if (checkQutaionId.length === 0) {
                           
                   
@@ -563,20 +555,14 @@ static async updateStatusQuotation  (quotId)  {
                                             let selQuery = `SELECT 	apps.invoice_prefix 
                                                 FROM ${constants.tableName.application_settings} apps`
                                             con.query(selQuery, async (err, result) => {
-                                                // console.log("result",result); 
+                       
                                                 if (result.length != 0) {
                                                     /**Adding prefix */
                                                     /** default 1 dont requires to add + 1  */
                                                     let inv_id = (invoice_no[0].latest_id == null) ? 1 : ID + 1;
                                                     let invoice = result[0]?.invoice_prefix
                                                     let sum_invId = invoice.concat(inv_id);
-                                                    /**********Last added booking id *********** */
-                                                    // let lasttAddedBokkings_id = `SELECT id
-                                                    //                                       FROM ${constants.tableName.bookings}
-                                                    //                                       ORDER BY id DESC LIMIT 1`
-                                                    // con.query(lasttAddedBokkings_id, async (err, id) => {
-                                                    //     if (id.length != 0) {
-                                                    //         let booking_id = id[0].id;
+                                            
                                                             /**********Inserting invoices datas*********** */
                                                             let insQuery = `INSERT INTO ${constants.tableName.invoices} (
                                                                                                     invoice_no,
@@ -636,9 +622,9 @@ static async updateStatusQuotation  (quotId)  {
                                                                                 '${constants.amount_status.pending}',
                                                                                 '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                                                             );`;
-                                                                            // console.log('ddd', insQuery);
+                                                          
                                                                             con.query(insQuery, async (err, result) => {
-                                                                                        // console.log(err);
+                                                                         
                                                                                 if (!err) {
                                                                                     resolve(true);
                                                                                 }
@@ -661,7 +647,6 @@ static async updateStatusQuotation  (quotId)  {
                                                                 }
                                                             });
 
-
                                                 }
                                                 else {
                                                     resolve(false)
@@ -674,7 +659,7 @@ static async updateStatusQuotation  (quotId)  {
                                     })
 
                                 } else {
-                                    console.log("herrrr");
+                             
                                     resolve('QUOTIDALLREDYAVAILABLE')
                                 }
                             })
@@ -696,7 +681,7 @@ static async updateStatusQuotation  (quotId)  {
     });
 }
 
-/** For Sending email */
+/**Tis function for Sending email */
 static async sendMail(requestBody, quot_id) 
 {
     return new Promise(async (resolve, reject) =>
@@ -705,10 +690,8 @@ static async sendMail(requestBody, quot_id)
         {
       
             const { customer_email, subject, body } = requestBody
-            // console.log(requestBody);
-            // console.log("ddd");
-            const sendEmail = await mail.SendEmailOfQuotation(quot_id, customer_email, subject)
-            //    const sendEmail = false
+    
+            const sendEmail = await mail.SendEmailOfQuotation(quot_id, customer_email, subject);
             if (sendEmail) { 
                 // let updateQuery = `UPDATE ${constants.tableName.bookings} 
                 //                            SET 	confirmation_sent = '${constants.booking_confirmation_send.yes}'
@@ -724,7 +707,7 @@ static async sendMail(requestBody, quot_id)
                 //     }
                 // })
             } else {
-                console.log("hello");
+           
                 resolve(false);
             }
 
@@ -737,7 +720,7 @@ static async sendMail(requestBody, quot_id)
 
 
 
-
+/***** This function for feching email template data ******* */
 static async getsendemailbuttondata() 
 {
     
@@ -762,11 +745,8 @@ static async getsendemailbuttondata()
             resolve(false)
             console.log('Error while sending mail  for  quotations', err);
         }
-    })         
-  
+    })    
 };
-
-
 }
 
 

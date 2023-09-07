@@ -5,7 +5,7 @@ const commonoperation = require('../../../utils/helper/commonoperation');
 
 
 
-/**For gitting all data  */
+/**For getting list of active language   */
 exports.getLanguageNames = async(req,res)=>
 {
     let getAllLanguages = await lngModal.getLanguageNames();
@@ -26,9 +26,9 @@ exports.getLanguageNames = async(req,res)=>
 /**For add new languages  */
 exports.addNewLanguage = async(req,res)=>
 {
-    // console.log("1",req.body);
+
     let addNewLanguage = await lngModal.addNewLanguage(req.body,req.files);
-    // console.log("addNew",addNewTaxation);
+
    if(addNewLanguage.status == 'INVALIDFORMAT'){
     return res.status(200).send
     ({
@@ -47,7 +47,7 @@ exports.addNewLanguage = async(req,res)=>
 }
 
 
-/**For gitting all data basisi of page and limit  */
+/**For gitting all languges basis of page and limit  */
 exports.getAllLanguages = async(req,res)=>
 {
     let getAllLanguages = await lngModal.getAllLanguages(req.body);
@@ -64,7 +64,7 @@ exports.getAllLanguages = async(req,res)=>
 }
 
 
-/**For update service provider  */
+/**For update language  */
 exports.updateLanguages = async(req,res)=>
 {
     let updateLanguage = await lngModal.updateLanguage(req.body,req.files,req.params.id);
@@ -95,13 +95,11 @@ exports.updateLanguages = async(req,res)=>
 }
 
 
-// /**For add new service provider  */
+// /**For update language status  */
 exports.updateStatus = async(req,res)=>
 {
 
     const languages = await commonoperation.updateUserStatus(constants.tableName.languages,req.params.id);
-    // console.log("addNew",data);
-
     if(languages.length === 0)
     {
 
@@ -151,11 +149,11 @@ exports.removeLanguage = async(req,res)=>
     }
 }
 
-
+/**Getting particular language */
 exports.getOneLanguage = async(req,res)=>
 {
     let getOneLanguage = await lngModal.getOneLanguage(req.params.id);
-    console.log(getOneLanguage);
+
    if(getOneLanguage?.language == 'NOTFOUND'){
     return res.status(200).send
     ({

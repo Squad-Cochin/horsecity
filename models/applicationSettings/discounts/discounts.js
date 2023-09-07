@@ -1,3 +1,9 @@
+/////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                         //
+//   This is discount model file. Where all the logic of the discounts program is written. //
+//                                                                                         //
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 const con = require("../../../configs/db.configs"); 
 const timeCalculate = require('../../../utils/helper/date'); // This variable will have the date file data.
 const commonoperation = require('../../../utils/helper/commonoperation');
@@ -8,6 +14,7 @@ require('dotenv').config()
 
 module.exports = class discounts
 {
+    /**Getting all discount basis of page & limit */
     static async getAllDiscounts (requestBody) 
 {
     return new Promise((resolve, reject) =>
@@ -25,7 +32,7 @@ module.exports = class discounts
             con.query(selQuery,(err,data)=>{
             
                 if(!err){
-                    console.log("hello",data);
+          
                     const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.discount_types} tx
                                              WHERE tx.deleted_at IS NULL`
                     con.query(totalCountQuery,(err,result)=>{
@@ -49,7 +56,7 @@ module.exports = class discounts
     })    
    
 }
-
+/**For add new discount  */
 static async  addNewDiscount  (requestBody) 
 {
     return new Promise(async(resolve, reject) =>
@@ -77,7 +84,7 @@ static async  addNewDiscount  (requestBody)
     })    
    
 }
-
+/**For update Discount */
 static async  updateDiscount (requestBody,id) 
 {
     return new Promise(async(resolve, reject) =>
@@ -128,7 +135,7 @@ static async  updateDiscount (requestBody,id)
 }
 
 
-
+/**Get one discount */
 static async  getOneDiscount(id) 
 {
     return new Promise((resolve, reject) =>
@@ -157,7 +164,7 @@ static async  getOneDiscount(id)
     })    
    
 }
-
+/**For get all  active discount */
 static async getallactivediscount  () 
 {
     return await new Promise((resolve, reject) =>

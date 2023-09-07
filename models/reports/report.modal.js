@@ -1,6 +1,10 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                              //
+//  This is report model file. Where all the logic of the report page program is written. //
+//                                                                                              //
+//////////////////////////////////////////////////////////////////////////////////////////////////
+
 const con = require("../../configs/db.configs"); 
-const timeCalculate = require('../../utils/helper/date'); // This variable will have the date file data.
-const commonoperation = require('../../utils/helper/commonoperation');
 const constants = require('../../utils/constants');
 const time = require('../../utils/helper/date');
 require('dotenv').config()
@@ -15,7 +19,7 @@ static async getReportsServiceProviders (requestBody,fromDate,toDate,spID)
     {
         try
         {        
-            console.log(spID);
+   
          
             const {page, limit} = requestBody;
             const offset = (page - 1) * limit; 
@@ -31,7 +35,7 @@ static async getReportsServiceProviders (requestBody,fromDate,toDate,spID)
                 if(data.length != 0){ 
                  
                     let role_id  = data[0].id
-                        console.log(data[0]);
+         
             const selQuery = `SELECT sp.id, sp.name AS service_provider_name, sp.contact_person, sp.contact_address, sp.contact_no AS contact_number, sp.created_at, sp.status
             FROM ${constants.tableName.service_providers} AS sp
             WHERE sp.deleted_at IS NULL AND sp.created_at BETWEEN '${fromDate}' AND '${toDate}'
@@ -43,7 +47,7 @@ static async getReportsServiceProviders (requestBody,fromDate,toDate,spID)
             LIMIT ${+limit} OFFSET ${+offset}`;
         
             con.query(selQuery,(err,data)=>{
-                    console.log(data);
+              
                 if(!err){
                     
                     for(let i = 0;i<data.length;i++){
@@ -164,7 +168,7 @@ static async getReportsVehicles  (requestBody,fromDate,toDate,spID)
                 if(data.length != 0){ 
           
                     let role_id  = data[0].id
-                    console.log(data[0].id);
+
                     const selQuery = `SELECT vh.id, sp.name AS service_provider_name,vh.make,vh.model,vh.no_of_horse AS max_no_horse, vh.vehicle_number ,vh.vehicle_registration_date,vh.created_at,vh.status
                     FROM ${constants.tableName.vehicles} AS vh
                     JOIN ${constants.tableName.service_providers} sp ON vh.service_provider_id  = sp.id
@@ -181,7 +185,7 @@ static async getReportsVehicles  (requestBody,fromDate,toDate,spID)
                     )
                     LIMIT ${+limit} OFFSET ${+offset}`;
                     con.query(selQuery,(err,data)=>{
-                            console.log(err);
+                        
                         if(!err){
 
 
@@ -345,7 +349,7 @@ static async getReportsEnquiries  (requestBody,fromDate,toDate,spID)
             )
             LIMIT ${+limit} OFFSET ${+offset}`;
             con.query(selQuery,(err,data)=>{
-                console.log(err);
+              
                 if(!err){
 
 
@@ -447,7 +451,7 @@ static async getReportsQuotations  (requestBody,fromDate,toDate,spID)
                                                 )
                                             )`
                     con.query(totalCountQuery,(err,result)=>{
-                        console.log(err);
+          
                         if(!err){
                             const count = result[0]['count(*)'];
                             resolve({totalCount : count, quotations : data})
@@ -509,7 +513,7 @@ static async getReportsTripDetails  (requestBody,fromDate,toDate,spID)
                                             )
             LIMIT ${+limit} OFFSET ${+offset}`;
             con.query(selQuery,(err,data)=>{
-                console.log(data.length);
+        
                 if(!err){
 
 
@@ -595,7 +599,7 @@ static async getReportsInvoices  (requestBody,fromDate,toDate,spID)
                                                             
                                                   
             con.query(selQuery,(err,data)=>{
-                console.log(err);
+           
                 if(!err){
 
 
@@ -688,7 +692,7 @@ static async getAccountsReports (requestBody,fromDate,toDate,spID)
                         LIMIT ${+limit} OFFSET ${+offset};`
                                                   
             con.query(selQuery,(err,data)=>{
-                console.log(data);
+          
                 if(!err){
 
 

@@ -1,12 +1,17 @@
+/////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                         //
+//   This is  taxation model file. Where all the logic of the  taxation program is written.//
+//                                                                                         //
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 const con = require("../../../configs/db.configs"); 
-const timeCalculate = require('../../../utils/helper/date'); // This variable will have the date file data.
-const commonoperation = require('../../../utils/helper/commonoperation');
 const constants = require('../../../utils/constants');
 const time = require('../../../utils/helper/date');
 require('dotenv').config()
 
 module.exports = class currencie
 {
+    /**For gitting all data basisi of page and limit  */
     static async getAllTaxations(requestBody)
 {
     return new Promise((resolve, reject) =>
@@ -48,7 +53,7 @@ module.exports = class currencie
    
 }
 
-
+/**For gitting active taxation details */
 static async getTaxationsNames ()
 {
     return new Promise((resolve, reject) =>
@@ -74,6 +79,7 @@ static async getTaxationsNames ()
    
 }
 
+/**For add new taxation  */
 static async addNewTaxation(requestBody)
 {
     return new Promise(async(resolve, reject) =>
@@ -89,19 +95,19 @@ static async addNewTaxation(requestBody)
          
         con.query(insQuery,async(err,data)=>{
             if(!err){
-                console.log(data);
+     
                 resolve(true)
             }
         })
         }catch(err){
-            console.log('Error while adding service providers', err);
+            console.log('Error while adding taxation', err);
         }
 
   
     })    
    
 }
-
+/**For updating taxation  */
 static async updateTaxation  (requestBody,id) 
 {
     return new Promise(async(resolve, reject) =>
@@ -125,9 +131,9 @@ static async updateTaxation  (requestBody,id)
             
                 
                 con.query(updateQuery,async(err,data)=>{
-                    console.log("data",data);
+   
                     if(data?.length != 0 ){
-                        console.log("haii");
+              
                         resolve({status : "SUCCESS"})
                     }else{
                         resolve({status : "FAILD"})
@@ -142,7 +148,7 @@ static async updateTaxation  (requestBody,id)
         
         }catch(err){
             resolve({status : "FAILD"}) 
-            console.log('Error while updating service providers', err);
+            console.log('Error while updating taxation', err);
         }
 
   
@@ -151,7 +157,7 @@ static async updateTaxation  (requestBody,id)
 }
 
 
-
+/**For getting data of any particular tax details */
 static async getOneTaxation (id) 
 {
     return new Promise((resolve, reject) =>

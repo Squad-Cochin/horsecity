@@ -1,3 +1,9 @@
+/////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                         //
+//   This is  settings model file. Where all the logic of the  settings program is written.//
+//                                                                                         //
+/////////////////////////////////////////////////////////////////////////////////////////////
+
 const constants = require("../../../utils/constants");
 const time = require("../../../utils/helper/date");
 const commonfetching = require("../../../utils/helper/commonfetching");
@@ -7,6 +13,7 @@ require('dotenv').config()
 
 
 module.exports = class settings {
+/**For updating settings page */ 
   static async updateSettings(reqBody, files) {
     return new Promise(async (resolve, rejuct) => {
       try {
@@ -24,7 +31,6 @@ module.exports = class settings {
           currency_id,
           logo,loginpage_logo
         } = reqBody; 
-    // console.log("cu",currency_id);
     
             let validateLanguageQuery = `SELECT * FROM ${constants.tableName.languages} apps
                   WHERE apps.id = '${language_id}'`;
@@ -86,8 +92,6 @@ module.exports = class settings {
                             uploadLoginPageBGimg ||
                             uploadFavicon
                         ) {
-                            // console.log("dgfdg", logo,loginpage_logo);
-
                             const updateSettingsQuery = `
                             UPDATE ${constants.tableName.application_settings} AS apps
                             SET
@@ -112,35 +116,26 @@ module.exports = class settings {
                           con.query(updateSettingsQuery, (err, data) => {
                
                             if (data?.length != 0) {
-                              // console.log("Success");
                               resolve({ status: "SUCCESS" });
                             } else {
-                              // console.log("1");
                               resolve({ status: "FAILD" });
                             }
                           });
                         }
                       } else {
-                        // console.log("22");
                         resolve({ status: "FAILD" });
                       }
                     });
                   } else {
-                    // console.log("2244");
                     resolve({ status: "FAILD" });
                   }
                 });
               } else {
-                // console.log("2255");
                 resolve({ status: "FAILD" });
               }
             });
-  
-
-
 
       } catch (err) {
-        // console.log("Error while updating setting s page", err);
         resolve({ status: "FAILD" });
 
       }
@@ -174,7 +169,6 @@ module.exports = class settings {
                 `;
 
         con.query(selQuery, async (err, data) => {
-          // console.log(data);
           if (data?.length != 0) {
             let logoImage = data[0].logo;
             let loginpage_logo = data[0].loginpage_logo
@@ -198,7 +192,7 @@ module.exports = class settings {
   }
 
 
-  /**For getting language file */
+// Below route is for getting settings page language details
   static async getLngFile() {
     return new Promise((resolve, rejuct) => {   
       try { 
@@ -209,9 +203,7 @@ module.exports = class settings {
       WHERE lg.status = '${constants.status.active}' AND lg.deleted_at IS NULL`;
 
         con.query(selQuery, async (err, data) => {
-          // console.log(data);
           if (data?.length != 0) {
-           
             resolve({ languagefile: data });
           } else {
             resolve({ languagefile: "NOTFOUND" });

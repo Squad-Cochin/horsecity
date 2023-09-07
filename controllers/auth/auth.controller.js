@@ -25,7 +25,7 @@ exports.serviceProviderLogin = async(req, res)=>
     // console.log('Login Auth from Controller', loginauth);
     if(loginauth === 'noserviceprovider')
     {
-        console.log('Unavailable username or incorrect username. While service provider login');
+ 
         return res.status(200).send
         ({
             status : "failure",
@@ -36,7 +36,7 @@ exports.serviceProviderLogin = async(req, res)=>
     // If any unspecified or unencountered error came. Which is not as per our code thinking, then this else if block
     else if(loginauth === 'err')
     {
-        console.log('Unexpected error. While service provider login');
+   
         return res.status(200).send
         ({
             status : "failure",
@@ -47,7 +47,7 @@ exports.serviceProviderLogin = async(req, res)=>
     // If wrong password is entered then, this below response will be displayed
     else if(loginauth === 'passwordnotmatched')
     {
-        console.log('Incorrect password. While service provider login');
+      
         return res.status(200).send
         ({
             status : "failure",
@@ -58,7 +58,7 @@ exports.serviceProviderLogin = async(req, res)=>
     // If service provider user is inactive then, this below response will be displayed
     else if(loginauth === 'serviceproviderinactive')
     {
-        console.log('Inactive user. While service provider login');
+     
         return res.status(200).send
         ({
             status : "failure",
@@ -69,7 +69,7 @@ exports.serviceProviderLogin = async(req, res)=>
     // If password of the service provider user is expired then, this below response will be displayed
     else if(loginauth === 'passwordexpired')
     {
-        console.log('Password is expired. While service provider login');
+       
         return res.status(200).send
         ({
             status : "expired",
@@ -133,7 +133,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
     // The below if block will execute. when the entered username is not correct
     if(loginauth === 'noserviceprovider')
     {
-        console.log('Unavailable username or incorrect username. While service provider password update');
+        
         return res.status(200).send
         ({
             success : false,
@@ -144,7 +144,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
     // The below if block will execute. when any unhandled error came
     else if(loginauth === 'err')
     {
-        console.log('Unexpected error. While service provider password update');
+      
         return res.status(200).send
         ({
             success : false,
@@ -154,7 +154,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
     }
     else if(loginauth === 'incorrectpassword')
     {
-        console.log('Incorrect password. While service provider password update');
+       
         return res.status(200).send
         ({
             success : false,
@@ -164,7 +164,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
     }
     else
     {
-        console.log('Password updated successfully. While service provider password update');
+        
         return res.status(200).send
         ({
             success : "true",
@@ -185,7 +185,7 @@ exports.serviceProviderLogout = async(req, res)=>
     // If things are smoothly working, Then the below response will work 
     if(loginauth === 'logoutdone')
     {
-        console.log('Logout successfully done');
+        
         res.status(200).send
         ({
             status : "success",
@@ -196,7 +196,7 @@ exports.serviceProviderLogout = async(req, res)=>
     // If any unspecified or unencountered error came. Which is not as per you code thinking, then this else if block
     if(loginauth ==='incorrectpassword')
     {
-        console.log('Incorrect Password');
+        
         res.status(200).send
         ({
             status : "success",
@@ -206,7 +206,7 @@ exports.serviceProviderLogout = async(req, res)=>
     }
     if(loginauth === 'noserviceprovider')
     {
-        console.log('Incorrect Service Provider Username');
+        
         res.status(200).send
         ({
             status : "success",

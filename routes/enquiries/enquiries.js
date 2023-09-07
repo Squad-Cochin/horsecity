@@ -4,7 +4,7 @@ const enquiry = require(`../../controllers/enquiries/enquiries`);   // importing
 
 module.exports = function(app)
 {
-    /**For getting all enquiries */
+    /**For getting all enquiries basis user id & page & limit  */
     app.post(`/${process.env.apiToken}/getAll/enquiries/:id`,enquiry.getAllEnquiries); 
     
     /**For getting one enquiries */
