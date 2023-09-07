@@ -1,9 +1,6 @@
 
 
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, Col, Row } from "reactstrap";
-import { useFormik } from "formik";
-import { useParams } from 'react-router-dom'
 import ReactApexChart from "react-apexcharts";
 
 import { getMonthlySalesData } from '../../helpers/ApiRoutes/getApiRoutes';

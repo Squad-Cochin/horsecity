@@ -40,6 +40,7 @@ const TaxationDeatails = () => {
         setPageNumber(page);
         setNumberOfData(getTaxations.totalCount);
     }
+    
     /**IT WILL OPEN ADD & EDIT POPUP */
     async function tog_list(param,productId) {
         if(param === 'ADD'){
@@ -51,12 +52,13 @@ const TaxationDeatails = () => {
         setmodal_list(!modal_list);
     }
 
+    /**INITIAL VALUES */
     const initialValues = {
         name : !add_list ? taxation[0]?.name : '',
         type : !add_list ? taxation[0]?.type : '',
         value : !add_list ? taxation[0]?.value : '',
       };
-
+    /**VALIDATION */
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
@@ -222,16 +224,6 @@ const TaxationDeatails = () => {
                                             ))}
                                         </tbody>
                                         </table>
-                                            <div className="noresult" style={{ display: "none" }}>
-                                                <div className="text-center">
-                                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                                        colors="primary:#121331,secondary:#08a88a" style={{ width: "75px", height: "75px" }}>
-                                                    </lord-icon>
-                                                    <h5 className="mt-2">Sorry! No Result Found</h5>
-                                                    <p className="text-muted mb-0">We've searched more than 150+ Orders We did not find any
-                                                        orders for you search.</p>
-                                                </div>
-                                            </div>
                                         </div>
                                         <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">

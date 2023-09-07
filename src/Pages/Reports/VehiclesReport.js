@@ -5,11 +5,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container,  Row } from 'reactstrap';
+import { Card, CardBody, CardHeader, Col, Container, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import List from 'list.js';
+
 import Flatpickr from "react-flatpickr";
-/**Using for form validation */
 import { useFormik } from "formik";
 
 /**IMPORTED */
@@ -18,37 +17,39 @@ import { getVehicleReport } from '../../helpers/ApiRoutes/getApiRoutes';
 import config from '../../config';
 
 
-const VehicleReport  = () => {
-    const [ vehicleReport, setVehicleReport ] = useState([])
-    const [ fromDate, setFromDate ] = useState("");
-    const [ toDate, setToDate ] = useState("");
-    const [ pageNumber, setPageNumber ] = useState(1);
-    const [ numberOfData, setNumberOfData ] = useState(0);
-    const pageLimit = config.pageLimit;
-    const [ role, setRole ] = useState('');
+const VehicleReport = () => {
+    const [vehicleReport, setVehicleReport] = useState([])
+    const [fromDate, setFromDate] = useState("");
+    const [toDate, setToDate] = useState("");
+    const [pageNumber, setPageNumber] = useState(1);
+    const [numberOfData, setNumberOfData] = useState(0);
+    const [role, setRole] = useState('');
 
-    /**Setting from date & to date initial loading  */
-    useEffect(()=>{
+    const pageLimit = config.pageLimit;
+
+    /**THIS HOOK WILL RENDER INITIAL TIME SETTING THE FROMDATE BEFORE 60 DAYS TODATE CURRENT DATE */
+    useEffect(() => {
         const today = new Date();
         const sixtyDaysAgo = new Date(today);
         sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
         let value = {
-            from_date : sixtyDaysAgo,
-            to_date : today,
+            from_date: sixtyDaysAgo,
+            to_date: today,
         }
         const data = JSON.parse(localStorage.getItem("authUser"));
-        let userId = data[0]?.user[0]?.id ;
+        let userId = data[0]?.user[0]?.id;
         const user_role = data[0]?.user[0]?.role_Id
-
         setRole(user_role)
-        getData(1, value,userId)
-    },[])
+        getData(1, value, userId)
+    }, []);
 
-    const initialValues = { 
-        from_date : "",
-        to_date : "",
+    /**INITIAL VALUES */
+    const initialValues = {
+        from_date: "",
+        to_date: "",
     }
-    
+
+    /**VALIDATION */
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
@@ -59,16 +60,17 @@ const VehicleReport  = () => {
     });
 
     /**GETTING VEHICLES REPORT */
-    async function getData(page, val,spId){
+    async function getData(page, val, spId) {
         setFromDate(val.from_date)
         setToDate(val.to_date)
-        if(spId){
-        let getAllData = await getVehicleReport(page || 1, val,spId)
-        setVehicleReport(getAllData?.vehicles);
-        setPageNumber(page);
-        setNumberOfData(getAllData?.totalCount);
+        if (spId) {
+            let getAllData = await getVehicleReport(page || 1, val, spId)
+            setVehicleReport(getAllData?.vehicles);
+            setPageNumber(page);
+            setNumberOfData(getAllData?.totalCount);
         }
     }
+
     return (
         <React.Fragment>
             <div className="page-content">
@@ -81,40 +83,39 @@ const VehicleReport  = () => {
                                     <form className="tablelist-form" onSubmit={validation.handleSubmit} >
                                         <Row className="align-items-md-center">
                                             <Col lg={5}>
-                                            {/* <h4 className="card-title mb-0">Add, Edit & Remove</h4> */}
-                                            <div className="mb-3">
-                                                <label htmlFor="from-field" className="form-label">From date</label>
-                                                <Flatpickr
-                                                    className="form-control"
-                                                    name='from_date'
-                                                    options={{
-                                                        dateFormat: "d-m-Y",
-                                                        maxDate :new Date()
-                                                    }}
-                                                    value= {fromDate}
-                                                    onChange={(dates) => {validation.setFieldValue('from_date', dates[0]); setFromDate(dates[0])}}
-                                                    placeholder= "Select from date"
-                                                    required
-                                                />
-                                            </div>
+                                                <div className="mb-3">
+                                                    <label htmlFor="from-field" className="form-label">From date</label>
+                                                    <Flatpickr
+                                                        className="form-control"
+                                                        name='from_date'
+                                                        options={{
+                                                            dateFormat: "d-m-Y",
+                                                            maxDate: new Date()
+                                                        }}
+                                                        value={fromDate}
+                                                        onChange={(dates) => { validation.setFieldValue('from_date', dates[0]); setFromDate(dates[0]) }}
+                                                        placeholder="Select from date"
+                                                        required
+                                                    />
+                                                </div>
                                             </Col>
                                             <Col lg={5}>
-                                            <div className="mb-3">
-                                                <label htmlFor="to-field" className="form-label">To date</label>
-                                                <Flatpickr
-                                                    className="form-control"
-                                                    name='to_date'
-                                                    options={{
-                                                        dateFormat: "d-m-Y",
-                                                        maxDate :new Date(),
-                                                        minDate : fromDate
-                                                    }}
-                                                    value= { toDate }
-                                                    onChange={(dates) => {validation.setFieldValue('to_date', dates[0]); setToDate(dates[0])}}
-                                                    placeholder="Select to date"
-                                                    required
-                                                />
-                                            </div>
+                                                <div className="mb-3">
+                                                    <label htmlFor="to-field" className="form-label">To date</label>
+                                                    <Flatpickr
+                                                        className="form-control"
+                                                        name='to_date'
+                                                        options={{
+                                                            dateFormat: "d-m-Y",
+                                                            maxDate: new Date(),
+                                                            minDate: fromDate
+                                                        }}
+                                                        value={toDate}
+                                                        onChange={(dates) => { validation.setFieldValue('to_date', dates[0]); setToDate(dates[0]) }}
+                                                        placeholder="Select to date"
+                                                        required
+                                                    />
+                                                </div>
                                             </Col>
                                             <Col lg={2} className="mt-3">
                                                 <button type="submit" className="btn btn-success" id="add-btn">Submit</button>
@@ -129,11 +130,11 @@ const VehicleReport  = () => {
                                             <table className="table align-middle table-nowrap" id="customerTable">
                                                 <thead className="table-light">
                                                     <tr>
-                                                    <th className="index" data-sort="index">#</th>
-                                                    {!(config.Role.service_provider  === role)? (
-                                                        <th className="sort" data-sort="month">Service Provider Name</th>
+                                                        <th className="index" data-sort="index">#</th>
+                                                        {!(config.Role.service_provider === role) ? (
+                                                            <th className="sort" data-sort="month">Service Provider Name</th>
                                                         ) : null
-                                                    }
+                                                        }
                                                         <th className="sort" data-sort="number">Vehicle Number</th>
                                                         <th className="sort" data-sort="number">Make</th>
                                                         <th className="sort" data-sort="number">Model</th>
@@ -143,22 +144,22 @@ const VehicleReport  = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {vehicleReport.map((item, index)=>(
-                                                    <tr key={index}> 
-                                                        <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
-                                                        {!(config.Role.service_provider  === role)? (
-                                                        <td className="customer_name">{item.service_provider_name}</td>
-                                                        ) : null
-                                                    }
-                                                        <td className="phone">{item.vehicle_number}</td>
-                                                        <td className="phone">{item.make}</td>
-                                                        <td className="phone">{item.model}</td>
-                                                        <td className="date">{item.max_no_horse}</td>
-                                                        <td className="date">{item.created_at}</td>
-                                                        <td className="phone">{item.status}</td>
-                                                    </tr>
-                                                 ))}
-                                                
+                                                    {vehicleReport.map((item, index) => (
+                                                        <tr key={index}>
+                                                            <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
+                                                            {!(config.Role.service_provider === role) ? (
+                                                                <td className="customer_name">{item.service_provider_name}</td>
+                                                            ) : null
+                                                            }
+                                                            <td className="phone">{item.vehicle_number}</td>
+                                                            <td className="phone">{item.make}</td>
+                                                            <td className="phone">{item.model}</td>
+                                                            <td className="date">{item.max_no_horse}</td>
+                                                            <td className="date">{item.created_at}</td>
+                                                            <td className="phone">{item.status}</td>
+                                                        </tr>
+                                                    ))}
+
                                                 </tbody>
                                             </table>
                                         </div>
@@ -166,19 +167,19 @@ const VehicleReport  = () => {
                                         <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">
                                                 {pageNumber > 1 ?
-                                                    <Link 
-                                                        className="page-item pagination-prev disabled" 
-                                                        onClick={()=> getData(pageNumber - 1, { from_date : fromDate, to_date : toDate })}
+                                                    <Link
+                                                        className="page-item pagination-prev disabled"
+                                                        onClick={() => getData(pageNumber - 1, { from_date: fromDate, to_date: toDate })}
                                                     >
                                                         Previous
                                                     </Link>
-                                                : null }
+                                                    : null}
                                                 <ul className="pagination listjs-pagination mb-0"></ul>
-                                                {numberOfData > pageLimit * pageNumber ? 
-                                                    <Link className="page-item pagination-next" onClick={() => getData(pageNumber + 1, { from_date : fromDate, to_date : toDate })}>
+                                                {numberOfData > pageLimit * pageNumber ?
+                                                    <Link className="page-item pagination-next" onClick={() => getData(pageNumber + 1, { from_date: fromDate, to_date: toDate })}>
                                                         Next
-                                                    </Link> 
-                                                : null }
+                                                    </Link>
+                                                    : null}
                                             </div>
                                         </div>
                                     </div>
@@ -193,4 +194,4 @@ const VehicleReport  = () => {
     );
 };
 
-export default VehicleReport ;
+export default VehicleReport;

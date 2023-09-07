@@ -6,15 +6,17 @@
 
 
 import React,{useState,useEffect} from "react";
-import UsePanel from "./UserPanel";
-import OrderStatus from "./OrderStatus";
-import OverView from "./OverView";
-import LatestTransation from "./LatestTransation";
 import { Row, Container } from "reactstrap";
+
 /**Api */
 import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 
 //Import Breadcrumb
 import Breadcrumbs from "../../components/Common/Breadcrumb";
+
+import UsePanel from "./UserPanel";
+import OrderStatus from "./OrderStatus";
+import OverView from "./OverView";
+import LatestTransation from "./LatestTransation";
 
 const Dashboard = () => {
 

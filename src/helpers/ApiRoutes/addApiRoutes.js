@@ -125,7 +125,7 @@ import * as url from "../url_helper";
             return errObj;
         }
     }   
-      
+    /**Adding for image */
     export async function addNewImage(data, id){
         try {
             const formData = new FormData();
@@ -175,7 +175,7 @@ import * as url from "../url_helper";
             return errObj;
         }
     }
-    
+    /**This function assign service provider to driver */
     export async function assignNewSP(dId, spId){
     try
     {
@@ -194,15 +194,7 @@ import * as url from "../url_helper";
         }
     }
 
-     /**Add new monthly report */
-    export async function addNewMonthlyReport(data){
-        try {
-            // const { data } = await axios.post(`${url.POST_SP_ADD_URL}`);
-            // return { data };
-        } catch (error) {
-            return { error : "Faild !"}
-        }
-    }   
+
       
      /**Add new discounts */
     export async function addNewLanguage(data){
@@ -252,10 +244,9 @@ import * as url from "../url_helper";
         }
     }
 
-    /**
-     * Adding amount to the invoice
-     */
 
+
+     /**Adding amount on invoice */   
     export async function addAmount(id, amount)
 {
     try
@@ -286,10 +277,8 @@ import * as url from "../url_helper";
 };
 
 
-    /**
- * Sending mail of the invoice
- */
 
+/**Send email function for invoice page */
 export async function sendEmail(id, email, subject)
 {
     try
@@ -316,6 +305,7 @@ export async function sendEmail(id, email, subject)
         return errObj;        
     }
 };
+/**Send email function for quotation page */
 export async function sendEmailFunction(id, data)
 {
     try {
@@ -340,7 +330,7 @@ export async function sendEmailFunction(id, data)
     }
 };
 
-    /**Add new service provider */
+    /**Add new breakdown */
     export async function updateTripStatus(data){
         try {
             const formData = new FormData();

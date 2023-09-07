@@ -1,16 +1,9 @@
 import React from "react";
-
-import logosm from "../../assets/images/logo-sm.png";
-import logodark from "../../assets/images/logo-dark.png";
 import logo from "../../assets/images/logo.png";
-
 // import component
 import ProfileMenu from "./TopbarDropdown/ProfileMenu";
-
 import NotificationDropdown from "./TopbarDropdown/NotificationDropdown";
-
 import LanguageDropdown from "./TopbarDropdown/LanguageDropdown";
-
 import AppsDropdown from "./TopbarDropdown/AppsDropdown";
 
 const TopBar = () => {

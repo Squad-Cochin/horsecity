@@ -3,6 +3,7 @@
 //                       invoice page functionality done over here.                           //
 //                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////
+
 import React, { useState, useEffect, useRef  } from 'react';
 import List from "list.js";
 import { useFormik} from "formik";
@@ -46,14 +47,13 @@ const InvoiceDetails = () =>
     const pageLimit = config.pageLimit;
     const role_name  = config.roles.service_provider
 
-
+    /**THIS HOOK WILL RENDER INITIAL TIME */
     useEffect(() => 
     {
       const data = JSON.parse(localStorage.getItem("authUser"));
       let user_Id = data[0]?.user[0]?.id
       let role_Name = data[0]?.user[0]?.role_name
       setUserId(user_Id);
-    
       getAllData(1);  
     }, [userId]);
 

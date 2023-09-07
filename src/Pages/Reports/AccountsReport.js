@@ -5,13 +5,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container,  Row } from 'reactstrap';
-// import SimpleBar from 'simplebar-react';
+import {  Card, CardBody, CardHeader, Col, Container,  Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import List from 'list.js';
-// Import Flatepicker for using  date pick
 import Flatpickr from "react-flatpickr";
-/**Using for form validation */
 import { useFormik } from "formik";
 
 /**IMPORTED */
@@ -19,8 +15,8 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { getAccountsReport } from '../../helpers/ApiRoutes/getApiRoutes';
 import config from '../../config';
 
-//Import reports
 const AccountsReport  = () => {
+
     const [ accountsReport, setAccountsReport ] = useState([])
     const [ fromDate, setFromDate ] = useState("");
     const [ toDate, setToDate ] = useState("");
@@ -29,6 +25,7 @@ const AccountsReport  = () => {
     const [ role, setRole ] = useState('');
     const pageLimit = config.pageLimit;
 
+   /**THIS HOOK WILL RENDER INITIAL TIME SETTING THE FROMDATE BEFORE 60 DAYS TODATE CURRENT DATE */
     useEffect(()=>{
         const today = new Date();
         const sixtyDaysAgo = new Date(today);
@@ -44,7 +41,8 @@ const AccountsReport  = () => {
         setRole(user_role)
         getData(1, value,userId)
     },[])
-
+    
+    /**INITIAL VALUES */
     const initialValues = { 
         from_date : "",
         to_date : "",
@@ -58,6 +56,7 @@ const AccountsReport  = () => {
             getData(1, values)
         }
     });
+
     /**GETTING REPORTS ACCOUNT DATA */
     async function getData(page, val,spId){
         setFromDate(val.from_date)

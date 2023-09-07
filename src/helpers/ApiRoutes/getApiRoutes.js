@@ -969,3 +969,19 @@ export async function getInvoiceReport(pageNumber, val,spId){
         // return errorObj.data
     }
 }
+
+
+export async function getRoleList(){
+    try {
+  
+        const  response  = await axios.get(`${url.GET_SP_ROLELIST}`);
+        return response
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+        }
+        return errorObj.data
+    }
+}

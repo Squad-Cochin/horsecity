@@ -315,17 +315,6 @@ const ListVehiclesTable = () => {
                                                     ))}
                                                 </tbody>
                                             </table>
-                                            {/* If there are no data to show, then thic line of code will be executed */}
-                                            <div className="noresult" style={{ display: "none" }}>
-                                                <div className="text-center">
-                                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                                        colors="primary:#121331,secondary:#08a88a" style={{ width: "75px", height: "75px" }}>
-                                                    </lord-icon>
-                                                    <h5 className="mt-2">Sorry! No Result Found</h5>
-                                                    <p className="text-muted mb-0">We've searched more than 150+ Orders We did not find any
-                                                        orders for you search.</p>
-                                                </div>
-                                            </div>
                                         </div>
 
                                         {/* The below is having the code of the pagination of the page.

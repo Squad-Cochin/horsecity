@@ -35,9 +35,9 @@ const SettingPage = () =>
     const [ taxations, setTaxations ] = useState([]);
 
     const dispatch = useDispatch();
-      /**This hook is used to fetch settings data */
+     /**THIS HOOK WILL RENDER INITIAL TIME */
       useEffect(() => {
-         getAllData();
+         getAllData(); 
        }, []);
 
 
@@ -63,6 +63,8 @@ const SettingPage = () =>
         setCurrencies(currencies?.currencies);
         setTaxations(taxations?.taxations)
     }
+
+    /**INITIAL VALUES */
     const initialValues = {
       application_title: settings_data[0]?.application_title || '',
       contact_address: settings_data[0]?.contact_address || '',
@@ -80,7 +82,7 @@ const SettingPage = () =>
       quotation_prefix: settings_data[0]?.quotation_prefix || '',
       licence_number: settings_data[0]?.licence_number || '',
     };
-
+    /**VALIDATION */
     const validation = useFormik({
       // enableReinitialize : use this flag when initial values needs to be changed
       enableReinitialize: true,
@@ -138,9 +140,6 @@ const SettingPage = () =>
         { code: '+966', country: 'Saudi Arabia', region: 'GCC' },
         { code: '+971', country: 'United Arab Emirates', region: 'GCC' },
       ];
-
-  
-
 
 
     return (

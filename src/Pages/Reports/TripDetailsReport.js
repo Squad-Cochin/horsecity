@@ -5,13 +5,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container,  Row } from 'reactstrap';
-// import SimpleBar from 'simplebar-react';
+import { Card, CardBody, CardHeader, Col, Container,  Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import List from 'list.js';
-// Import Flatepicker for using  date pick
 import Flatpickr from "react-flatpickr";
-/**Using for form validation */
 import { useFormik } from "formik";
 
 /**IMPORTED */
@@ -26,8 +22,10 @@ const TripDetailsReport  = () => {
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ role, setRole ] = useState('');
+
     const pageLimit = config.pageLimit;
 
+    /**THIS HOOK WILL RENDER INITIAL TIME SETTING THE FROMDATE BEFORE 60 DAYS TODATE CURRENT DATE */
     useEffect(()=>{
         const today = new Date();
         const sixtyDaysAgo = new Date(today);
@@ -44,11 +42,13 @@ const TripDetailsReport  = () => {
         getData(1, value,userId)
     },[role])
 
+    /**INITIAL VALUES */
     const initialValues = { 
         from_date : "",
         to_date : "",
     }
-    
+
+    /**VALIDATION */
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
@@ -57,6 +57,7 @@ const TripDetailsReport  = () => {
             getData(1, values)
         }
     });
+
     /**GETTING TRIPDETAILS REPORT */
     async function getData(page, val,spId){
         setFromDate(val.from_date)
@@ -66,7 +67,6 @@ const TripDetailsReport  = () => {
         setTripDetailsReport(getAllData?.tripDetails);
         setPageNumber(page);
         setNumberOfData(getAllData?.totalCount);
-
         }
     }
 

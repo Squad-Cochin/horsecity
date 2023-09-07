@@ -14,24 +14,7 @@ module.exports = {
         yes : 'YES',
         no : 'NO'
       },
-  // modules : [
-  // {
-  //   id : 1,
-  //   name : '  '
-  // },    
-  // {
-  //   id : 2,
-  //   name : 'DASHBOARD'
-  // },
-  // {
-  //   id : 3,
-  //   name : 'SERVICE PROVIDER'
-  // },    
-  // {
-  //   id : 4,
-  //   name : 'CUSTOMERS'
-  // }
-  // ],
+
   modules :
     {
         menu : 1,

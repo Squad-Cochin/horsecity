@@ -5,19 +5,16 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// Importing the react component
 import React, { useState, useEffect } from 'react';
 import { Alert, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
-/**Using for form validation */
 import { useFormik } from "formik";
-// Import Flatepicker for using  date pick
 import Flatpickr from "react-flatpickr";
 
+/**IMPORTED FILES */
 import config from '../../../config';
 import { getEnquiriesData, getSingleEnquiryData, getSPUserName, getSPVehiclesData, getSPDriverData, getDiscounts } from "../../../helpers/ApiRoutes/getApiRoutes";
 import { addNewQuotaion } from "../../../helpers/ApiRoutes/addApiRoutes";
-//The purpose of the Breadcrumbs component is to display a breadcrumb navigation element. 
 import Breadcrumbs from "../../../components/Common/Breadcrumb";
 
 
@@ -49,8 +46,8 @@ const ListEnquiriesTable = () => {
 
     const pageLimit = config.pageLimit;
     const role_id = config.Role
-    //  The useEffect hook is used to perform some initialization logic when the component mounts
 
+    //  The useEffect hook is used to perform some initialization logic when the component mounts
     useEffect(() => {
         const data = JSON.parse(localStorage.getItem("authUser"));
         let userIdd = data[0]?.user[0]?.id
@@ -60,6 +57,7 @@ const ListEnquiriesTable = () => {
         getAllData(1)
     }, [userId, role]);
 
+    /**INITIAL VALUES */
     const initialValues = {
         customer_id: enquiry ? enquiry[0]?.customer_id : "",
         customer_name: enquiry ? enquiry[0]?.customer_name : "",
@@ -91,7 +89,7 @@ const ListEnquiriesTable = () => {
         final_amount: "",
     };
 
-    // validation function
+    /**VALIDATION */
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
@@ -105,6 +103,7 @@ const ListEnquiriesTable = () => {
         }
     });
 
+    /**After closing modal set state default value */
     function modalClose() {
         setEnquiry(null);
         setTAmount(0);
@@ -124,6 +123,7 @@ const ListEnquiriesTable = () => {
         setView_modal(false);
     }
 
+    /**After editing will add new quotaion  */
     async function addQuatation(val) {
         let addQut = await addNewQuotaion(val)
         if (addQut.code === 200) {
@@ -423,7 +423,6 @@ const ListEnquiriesTable = () => {
                                             <table className="table align-middle table-nowrap" id="customerTable">
                                                 <thead className="table-light">
                                                     <tr>
-                                                        {/* This are the columns and column heading in the enquiry page */}
                                                         <th className="index" data-sort="index">#</th>
                                                         <th className="sort" data-sort="customer_name">Customer Name</th>
                                                         {!(role === role_id.service_provider) ? (
@@ -435,22 +434,15 @@ const ListEnquiriesTable = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {/* The data we will be getting to showcase on enquiry page is
-                                                    from a object. We will map and show them one by one. The below function will be used this */}
-                                                    {/* 'enquiries' is having all the enquiry data. */}
-                                                    {/* Index is the number of the data. i.e Serial number */}
                                                     {enquiries.map((item, index) => (
                                                         <tr key={item.id}>
-                                                            {/* Below we are intialize the enquiry data */}
-                                                            <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th> {/* // Serial Number */}
-                                                            <td className="customer_name">{item.customer_name}</td> {/* Customer name */}
+                                                            <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
+                                                            <td className="customer_name">{item.customer_name}</td>
                                                             {!(role === role_id.service_provider) ? (
                                                                 <td className="service_provider">{item.service_provider}</td>
                                                             ) : null}
-                                                            <td className="status">{item.status}</td> {/* Customer Phone */}
-                                                            <td className="created_date">{item.created_at}</td> {/* Enquiry Time */}
-                                                            {/* This is the place from where we are calling he view button and function. Which is used to show
-                                                            particular enquiry data fully. */}
+                                                            <td className="status">{item.status}</td>
+                                                            <td className="created_date">{item.created_at}</td>
                                                             <td>
                                                                 {JSON.parse(module?.read || 'true') ? (
                                                                     <div className="d-flex gap-2">
@@ -463,7 +455,7 @@ const ListEnquiriesTable = () => {
                                                                     </div>
                                                                 ) : null}
                                                             </td>
-                                                            {item.status !== "CONFIRMED" ?
+                                                            {item.status !== "CONFIRMED" ? (
                                                                 <td>
                                                                     {JSON.parse(module?.update || 'true') ? (
                                                                         <div className="d-flex gap-2">
@@ -475,11 +467,13 @@ const ListEnquiriesTable = () => {
                                                                             </div>
                                                                         </div>
                                                                     ) : null}
-                                                                </td> : null}
+                                                                </td>
+                                                            ) : null}
                                                         </tr>
                                                     ))}
                                                 </tbody>
                                             </table>
+
 
                                             {/* The below the message when there is not data to showcase on the page */}
                                             <div className="noresult" style={{ display: "none" }}>

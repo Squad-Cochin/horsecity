@@ -11,7 +11,7 @@ import { Link } from 'react-router-dom';
 
 
 //Import discounts Api's functions
-import { getDiscountsPageData , getSingleDiscountData} from '../../helpers/ApiRoutes/getApiRoutes';
+import { getDiscountsPageData, getSingleDiscountData } from '../../helpers/ApiRoutes/getApiRoutes';
 import { updateDiscountStatus } from '../../helpers/ApiRoutes/editApiRoutes';
 import { removeDiscount } from '../../helpers/ApiRoutes/removeApiRoutes'
 import { addNewDiscounts } from '../../helpers/ApiRoutes/addApiRoutes';
@@ -25,9 +25,9 @@ const DiscountsDeatails = () => {
     const [discounts, setDiscounts] = useState([])
     const [add_list, setAdd_list] = useState(false);
     const [discount, setDiscount] = useState([]);
-    const [ pageNumber, setPageNumber ] = useState(1);
-    const [ numberOfData, setNumberOfData ] = useState(0);
-    const [ errors, setErrors ] = useState("") ;
+    const [pageNumber, setPageNumber] = useState(1);
+    const [numberOfData, setNumberOfData] = useState(0);
+    const [errors, setErrors] = useState("");
     const pageLimit = config.pageLimit;
 
     /**THIS HOOK WILL RENDER INITIAL TIME  */
@@ -58,15 +58,16 @@ const DiscountsDeatails = () => {
         }
     }
 
+    /**IT WILL OPEN FOR POPUP */
     async function tog_list(param, productId) {
         if (param === 'ADD') {
             setErrors("")
             setAdd_list(!add_list);
-        }else {
+        } else {
             setErrors("")
             let discountData = await getSingleDiscountData(productId)
             setDiscount(discountData.discount);
-        }   
+        }
         setmodal_list(!modal_list);
     }
 
@@ -76,7 +77,7 @@ const DiscountsDeatails = () => {
         rate: !add_list ? discount[0]?.rate : '',
     };
 
-    // Later in your code, when setting the initial state
+    /**VALIDATION */
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
@@ -93,50 +94,49 @@ const DiscountsDeatails = () => {
         }
     });
 
-            // Add discount
-            async function addDiscount(val){
-                let addDsc = await addNewDiscounts(val);
-                if(addDsc.code === 200){
-                    setErrors("")
-                    setAdd_list(false);
-                    setmodal_list(false);
-                    getAllData(pageNumber)
-                }else{
-                    setErrors("")
-                    setErrors(addDsc.message)
-                }
-            }
-
-        // Update Discount
-        async function editDiscounts(data){
-            console.log(discounts[0]?.id);
-            let updateDsc = await updateDiscounts(discount[0]?.id, data);
-            if(updateDsc.code === 200){
-                setErrors("")
-                setAdd_list(false);
-                setmodal_list(false);
-                getAllData(pageNumber)
-            }else{
-                setErrors("")
-                setErrors(updateDsc.message)
-            }
+    // ADD DISCOUNT
+    async function addDiscount(val) {
+        let addDsc = await addNewDiscounts(val);
+        if (addDsc.code === 200) {
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+        } else {
+            setErrors("")
+            setErrors(addDsc.message)
         }
+    }
 
-        /**GET DISCOUNTS PAGE DATA*/
-        async function getAllData(page) {
-            let getDiscounts = await getDiscountsPageData(page || 1);
-            setDiscounts(getDiscounts.discounts);
-            setPageNumber(page);
-            setNumberOfData(getDiscounts.totalCount);
+    // UPDATE DISCOUNT
+    async function editDiscounts(data) {
+        let updateDsc = await updateDiscounts(discount[0]?.id, data);
+        if (updateDsc.code === 200) {
+            setErrors("")
+            setAdd_list(false);
+            setmodal_list(false);
+            getAllData(pageNumber)
+        } else {
+            setErrors("")
+            setErrors(updateDsc.message)
         }
+    }
 
-        /**This function is used to remove a discount*/
-        async function remove_data(id) {
-          let Dsc =   await removeDiscount(id)
+    /**GET DISCOUNTS PAGE DATA*/
+    async function getAllData(page) {
+        let getDiscounts = await getDiscountsPageData(page || 1);
+        setDiscounts(getDiscounts.discounts);
+        setPageNumber(page);
+        setNumberOfData(getDiscounts.totalCount);
+    }
+
+    /**This function is used to REMOVE A DISCOUNT.*/
+    async function remove_data(id) {
+        let Dsc = await removeDiscount(id)
         if (Dsc.code === 200) {
             getAllData(pageNumber)
-           } 
         }
+    }
 
     return (
         <React.Fragment>
@@ -156,7 +156,7 @@ const DiscountsDeatails = () => {
                                                 <div className="d-flex gap-1">
                                                     <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn"><i className="ri-add-line align-bottom me-1"></i> Add</Button>
                                                 </div>
-                                           </Col>
+                                            </Col>
                                         </Row>
                                         <div className="table-responsive table-card mt-3 mb-1">
                                             <table className="table align-middle table-nowrap" id="customerTable">
@@ -180,27 +180,27 @@ const DiscountsDeatails = () => {
                                                             <td className="abbreviation">{item.rate}</td>
                                                             <td className="created_at">{item.created_at}</td>
                                                             <td>
-                                                    {item.status === "ACTIVE" ?
-                                                        <button
-                                                            className="btn btn-sm btn-success status-item-btn"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#showModal"
-                                                            onClick={(event) => toggleStatus(event.target, item.id)}
-                                                        >
-                                                            {item.status}
-                                                        </button> :
-                                                        <button
-                                                            className="btn btn-sm btn-danger status-item-btn"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#showModal"
-                                                            onClick={(event) => toggleStatus(event.target, item.id)}
-                                                        >
-                                                            {item.status}
-                                                        </button>
-                                                    }
-                                                </td>
-                                                        <td>
-                                                            <div className="d-flex gap-2">
+                                                                {item.status === "ACTIVE" ?
+                                                                    <button
+                                                                        className="btn btn-sm btn-success status-item-btn"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#showModal"
+                                                                        onClick={(event) => toggleStatus(event.target, item.id)}
+                                                                    >
+                                                                        {item.status}
+                                                                    </button> :
+                                                                    <button
+                                                                        className="btn btn-sm btn-danger status-item-btn"
+                                                                        data-bs-toggle="modal"
+                                                                        data-bs-target="#showModal"
+                                                                        onClick={(event) => toggleStatus(event.target, item.id)}
+                                                                    >
+                                                                        {item.status}
+                                                                    </button>
+                                                                }
+                                                            </td>
+                                                            <td>
+                                                                <div className="d-flex gap-2">
                                                                     <div className="edit">
                                                                         <button
                                                                             className="btn btn-sm btn-success edit-item-btn"
@@ -231,19 +231,19 @@ const DiscountsDeatails = () => {
                                         <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">
                                                 {pageNumber > 1 ?
-                                                    <Link 
-                                                        className="page-item pagination-prev disabled" 
-                                                        onClick={()=> getAllData(pageNumber - 1)}
+                                                    <Link
+                                                        className="page-item pagination-prev disabled"
+                                                        onClick={() => getAllData(pageNumber - 1)}
                                                     >
                                                         Previous
                                                     </Link>
-                                                : null }
+                                                    : null}
                                                 <ul className="pagination listjs-pagination mb-0"></ul>
-                                                {numberOfData > pageLimit * pageNumber ? 
+                                                {numberOfData > pageLimit * pageNumber ?
                                                     <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}>
                                                         Next
-                                                    </Link> 
-                                                : null }
+                                                    </Link>
+                                                    : null}
                                             </div>
                                         </div>
                                     </div>
@@ -255,12 +255,12 @@ const DiscountsDeatails = () => {
             </div>
 
             {/* Add Modal */}
-            <Modal className="extra-width" isOpen={modal_list} toggle={() =>  { setmodal_list(false); setAdd_list(false); }}  centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() =>  { setmodal_list(false); setAdd_list(false); }}>{add_list ? 'Add discount' : 'Edit discount'}</ModalHeader>
+            <Modal className="extra-width" isOpen={modal_list} toggle={() => { setmodal_list(false); setAdd_list(false); }} centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); setAdd_list(false); }}>{add_list ? 'Add discount' : 'Edit discount'}</ModalHeader>
                 <form className="tablelist-form"
                     onSubmit={validation.handleSubmit}>
                     <ModalBody>
-                    {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
+                        {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
                         <div className="mb-3">
                             <label htmlFor="taxationname-field" className="form-label">Name</label>
                             <input type="text" id="taxationname-field" name='name' className="form-control" placeholder="Enter Name" value={validation.values.name || ""}

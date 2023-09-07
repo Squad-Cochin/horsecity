@@ -16,7 +16,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { getInvoiceReport } from '../../helpers/ApiRoutes/getApiRoutes';
 import config from '../../config';
 
-//Import reports
+
 const InvoiceReport  = () => {
 
     const [ invoiceReport, setInvoiceReport ] = useState([])
@@ -25,8 +25,10 @@ const InvoiceReport  = () => {
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ role, setRole ] = useState('');
+
     const pageLimit = config.pageLimit;
 
+    /**THIS HOOK WILL RENDER INITIAL TIME SETTING THE FROMDATE BEFORE 60 DAYS TODATE CURRENT DATE */
     useEffect(()=>{
         const today = new Date();
         const sixtyDaysAgo = new Date(today);
@@ -41,13 +43,15 @@ const InvoiceReport  = () => {
 
         setRole(user_role)
         getData(1, value,userId)
-    },[])
+    },[]);
 
+    /**INITIAL VALUES */
     const initialValues = { 
         from_date : "",
         to_date : "",
     }
     
+   /**VALIDATION */
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,

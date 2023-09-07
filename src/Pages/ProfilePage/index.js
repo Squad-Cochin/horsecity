@@ -1,10 +1,8 @@
 import React from 'react';
 import { Container } from "reactstrap";
-
 import {useNavigate} from "react-router-dom"
-//Import Breadcrumb
+/**IMPORTED FILE */
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-
     const ProfilePage = () => {
         const navigate = useNavigate();
         document.title = "Profile | Horscity";
@@ -18,7 +16,6 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
                         <div>
                             <button onClick={()=>navigate("/change-password")}>Change password</button>
                         </div>
-
                     </Container>
                 </div>
             </>

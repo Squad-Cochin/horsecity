@@ -3,6 +3,7 @@
 //                       Language page functionality done over here.                          //
 //                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////
+
 import React, { useState, useEffect } from 'react';
 import { Button, Alert, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
@@ -52,7 +53,7 @@ const LanguageDeatails = () => {
         abbreviation: !add_list ? language[0]?.abbreviation : '',
         language_file: !add_list ? language[0]?.file : '',
     };
-
+    /**VALIDATION */
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
@@ -141,6 +142,7 @@ const LanguageDeatails = () => {
             getAllData(pageNumber)
         }
     }
+
     return (
         <React.Fragment>
             <div className="page-content">
@@ -314,8 +316,6 @@ const LanguageDeatails = () => {
                     </ModalFooter>
                 </form>
             </Modal>
-
-
         </React.Fragment>
     );
 };

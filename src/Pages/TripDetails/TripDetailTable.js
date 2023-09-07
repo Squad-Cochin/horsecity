@@ -7,7 +7,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Alert,
-  Button,
   Card,
   CardBody,
   CardHeader,
@@ -50,7 +49,6 @@ const TripDeatails = () => {
   const [ store_trip_status,setStoreTripStatus] = useState("")
   const [booking_id, setBooking_id ] = useState("");
   const [invoice_id, setInvoice_id ] = useState("");
-  const [modal_delete, setmodal_delete] = useState(false);
   const [userId, setUserId ] = useState("");
   const [module,setModule] = useState({});
   const [list_or_view, setListOrView ] = useState(false);
@@ -101,7 +99,7 @@ const TripDeatails = () => {
     setNumberOfData(Tripdetails?.totalCount);
     }
   }
-
+  /**ADDING BREAKDOWN */
   async function updateTrip(values){
   let updateTrip = await   updateTripStatus(values);
       if(updateTrip.code == 200){
@@ -235,7 +233,6 @@ const TripDeatails = () => {
                                   data-bs-toggle="modal"
                                   data-bs-target="#showModal"
                                   onClick={() => breakdown_list(item?.booking_id)}
-                                  //disabled={trip_list_data.length !== 0} // Typo: should be "disabled" instead of "disbled"
                                 >
                                   View
                                 </button>
@@ -426,7 +423,6 @@ const TripDeatails = () => {
                   name="air_conditioner"
                   className="form-check-input"
                   value={tripStatus.compleated}
-                  // checked={validation.values.air_conditioner === 'YES'}
                   onChange={(e) => {
                     tripStatusSelected(e.target.value);
                   }}
@@ -446,7 +442,6 @@ const TripDeatails = () => {
                   name="air_conditioner"
                   className="form-check-input"
                   value={tripStatus.breakout}
-                  // checked={validation.values.air_conditioner === 'NO'}
                   onChange={(e) => {
                     tripStatusSelected(e.target.value);
                   }}

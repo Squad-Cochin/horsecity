@@ -7,13 +7,12 @@
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
 import { Row, Col, CardBody, Card, Alert, Container, Form, Input, FormFeedback, Label } from "reactstrap";
-//redux
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
-// Formik validation
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
+/**IMPORTED FILES */
 import withRouter from "../../components/Common/withRouter";
 import logo from "../../assets/images/logo.png";
 import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 
@@ -27,10 +26,12 @@ const ChangePassword = props => {
   const [ appName, setAppName ] = useState('');
 
   const dispatch = useDispatch();
+
   useEffect(() => {
     dispatch(logoutUser());
   }, [dispatch]);
-
+  
+  /**THIS HOOK WILL RENDER INITIAL TIME */
   useEffect(()=>{
     getAllData()
   },[])
@@ -38,7 +39,6 @@ const ChangePassword = props => {
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-
     initialValues: {
       oldPassword: "" || '',
       password: "" || '',
@@ -57,7 +57,6 @@ const ChangePassword = props => {
         newpassword : values.password,
         confirmnewpassword : values.confirmPassword
       }
-
       dispatch(updateNewPwd(updatePwdValues));
     }
   });
@@ -69,7 +68,6 @@ const ChangePassword = props => {
   /**SET BACKGROUND IMAGE */
   async function getAllData() {
     let settingsData = await getSettingsPageData();
-
     setBackgroundImage(settingsData?.settingsPageData[0]?.loginpage_bg_image);
     setAppName(settingsData?.settingsPageData[0]?.application_title)
    }
@@ -196,9 +194,7 @@ const ChangePassword = props => {
             </Card>
             <div className="mt-5 text-center">
                 <p className="text-white-50">Go back to <Link to="/login" className="fw-medium text-primary"> Login  </Link> </p>
-                {/* <p className="text-white-50">© {new Date().getFullYear()} HORSCITY. Crafted with <i className="mdi mdi-heart text-danger"></i> by Themesdesign</p> */}
             </div>
-  
           </Col>
         </Row>
       </Container>

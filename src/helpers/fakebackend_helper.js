@@ -78,14 +78,11 @@ const postJwtRegister = (url,data) => {
     });
 };
 
-// Login Method
-const postJwtLogin = data => api.create(url.POST_FAKE_JWT_LOGIN, data);
+
 
 // postForgetPwd
 const postJwtForgetPwd = data => api.create(url.POST_FAKE_JWT_PASSWORD_FORGET, data);
 
-// postSocialLogin
-export const postSocialLogin = data => api.create(url.SOCIAL_LOGIN, data);
 
 // get Events
 export const getEvents = () => api.get(url.GET_EVENTS);
@@ -111,7 +108,6 @@ export {
   postFakeProfile,
   postFakeForgetPwd,
   postJwtRegister,
-  postJwtLogin,
   postJwtForgetPwd,
   postJwtProfile,
   recoverPassword,

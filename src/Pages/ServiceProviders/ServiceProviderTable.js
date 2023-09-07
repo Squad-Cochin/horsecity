@@ -5,22 +5,20 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 import React, { useState, useEffect } from 'react';
-//IMPORTED FROM REACT BOOTSTRAP
 import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
-/**Navigation UI element */
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-/**Using for form validation */
 import { useFormik } from "formik";
 
-/**IMPORTED APIs */
+/**IMPORTED FILES */
 import { addNewProvider } from '../../helpers/ApiRoutes/addApiRoutes';  //For adding new service providers
 import { removeSProvider } from '../../helpers/ApiRoutes/removeApiRoutes'; //For removing service providers
-import { updateSProvider , updateSPStatus } from '../../helpers/ApiRoutes/editApiRoutes'; //For updating  service providers
-import { getSPAllData, getSPSingleData } from '../../helpers/ApiRoutes/getApiRoutes';  //For getting all service providers
+import { updateSProvider, updateSPStatus } from '../../helpers/ApiRoutes/editApiRoutes'; //For updating  service providers
+import { getSPAllData, getSPSingleData,getRoleList } from '../../helpers/ApiRoutes/getApiRoutes';  //For getting all service providers
 import config from '../../config';
 
 const ListTables = () => {
+
     const [modal_list, setmodal_list] = useState(false); /**Using for showing ADD & EDIT modal */
     const [view_modal, setView_modal] = useState(false); /**Using for showing VIEW modal */
     const [add_list, setAdd_list] = useState(false); /**Using for controlling ADD & EDIT modal */
@@ -28,18 +26,19 @@ const ListTables = () => {
     const [sprovider, setSprovider] = useState([]);  /**Using for storing All particul  service providers based of there ID */
     const [updateImage, setUpdateImage] = useState("") /**Using for storing licensce image file */
     const [licenscePreview, setLicenscePreview] = useState(null);  /**Using for storing licensce image URL*/
-    const [ pageNumber, setPageNumber ] = useState(1);
-    const [ numberOfData, setNumberOfData ] = useState(0);
-    const [userId, setUserId ] = useState("");
-    const [ role, setRole ] = useState('');
-    const [module,setModule] = useState({});
-    const [ errors, setErrors ] = useState("");
+    const [pageNumber, setPageNumber] = useState(1);
+    const [numberOfData, setNumberOfData] = useState(0);
+    const [userId, setUserId] = useState("");
+    const [role, setRole] = useState('');
+    const [module, setModule] = useState({});
+    const [errors, setErrors] = useState("");
+    const [roleList, setRoleList] = useState([]);
+
     const pageLimit = config.pageLimit;
 
 
-    /**This hook is used to fetch service provider data */
-    useEffect(() =>
-    {
+    /**THIS HOOK WILL RENDER INITIAL TIME */
+    useEffect(() => {
         const data = JSON.parse(localStorage.getItem("authUser"));
         let userIdd = data[0]?.user[0]?.id
         const user_role = data[0]?.user[0]?.role_Id
@@ -47,11 +46,11 @@ const ListTables = () => {
         setRole(user_role)
         setUserId(userIdd);
         getAllData(1)
-    }, [userId,role])
+    }, [userId, role])
 
-    /**This object sets the initial values for the form fields managed by formik */
+    /**INITIAL VALUES */
     const initialValues = {
-        service_provider_id : userId,
+        service_provider_id: userId,
         name: !add_list ? sprovider[0]?.name : '',
         email: !add_list ? sprovider[0]?.email : '',
         user_name: !add_list ? sprovider[0]?.user_name : '',
@@ -66,7 +65,7 @@ const ListTables = () => {
         licence_image: !add_list ? sprovider[0]?.licence_image : '',
     };
 
-    // validation function
+    /**VALIDATION */
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
@@ -83,35 +82,35 @@ const ListTables = () => {
         }
     });
 
-    // Add service provider
-    async function addProvider(val){
+    // ADD SERVICE PROVIDER
+    async function addProvider(val) {
         let addSP = await addNewProvider(val);
-        if(addSP.code === 200){
+        if (addSP.code === 200) {
             setErrors("")
             setAdd_list(false);
             setmodal_list(false);
             getAllData(pageNumber)
-        }else{
+        } else {
             setErrors("")
             setErrors(addSP.message)
         }
     }
 
-    // Update service provider
-    async function editProvider(data){
+    // UPDATE SERVICE PROVIDER
+    async function editProvider(data) {
         let updateSP = await updateSProvider(sprovider[0]?.id, data);
-        if(updateSP.code === 200){
+        if (updateSP.code === 200) {
             setErrors("")
             setAdd_list(false);
             setmodal_list(false);
             getAllData(pageNumber)
-        }else{
+        } else {
             setErrors("")
             setErrors(updateSP.message)
         }
     }
 
-    /**This function is an event handler that triggers when the user
+    /**
      *  selects a file for the license image */
     const handleLicensceImageChange = (event) => {
         const file = event.target.files[0];
@@ -121,7 +120,7 @@ const ListTables = () => {
 
     /**Function for changing service provider status */
     function toggleStatus(button, serviceProviderId) {
-        var currentStatus  = button.innerText.trim();
+        var currentStatus = button.innerText.trim();
         const service_provider = sproviders.find((s) => s.id === serviceProviderId);
         updateSPStatus(service_provider.id)
         if (currentStatus === 'ACTIVE') {
@@ -141,17 +140,25 @@ const ListTables = () => {
             }
         }
     }
+
     /**This function is used to toggle the modal for adding/editing service providers 
      * and set the selected service provider */
     async function tog_list(param, productId) {
-        if (param === 'ADD') {
-            setAdd_list(!add_list);
+        let role_items = await getRoleList()
+        if(role_items.code == 200){
+             setRoleList(role_items.data?.roles)
+            if (param === 'ADD') {
+                setAdd_list(!add_list);
+            } else {
+                let serviceProvider = await getSPSingleData(productId)
+                setSprovider(serviceProvider.serviceProvider)
+                setLicenscePreview(serviceProvider.serviceProvider[0]?.licence_image);
+            }
+            setmodal_list(!modal_list);
         }else{
-            let serviceProvider = await getSPSingleData(productId)
-            setSprovider(serviceProvider.serviceProvider)
-            setLicenscePreview(serviceProvider.serviceProvider[0]?.licence_image);
+            //ERRRRR
         }
-        setmodal_list(!modal_list);
+
     }
 
     /**This function toggles the view modal for displaying details
@@ -170,23 +177,16 @@ const ListTables = () => {
 
     // function for get data all service provider data
     async function getAllData(page) {
-        
-        if(userId){ 
-        let getSPdataNext = await getSPAllData(page || 1, userId);
-        setSproviders(getSPdataNext.serviceProviders);
-        setModule(getSPdataNext.module[0])
-        setPageNumber(page);
-        setNumberOfData(getSPdataNext.totalCount);
+        if (userId) {
+            let getSPdataNext = await getSPAllData(page || 1, userId);
+            setSproviders(getSPdataNext.serviceProviders);
+            setModule(getSPdataNext.module[0])
+            setPageNumber(page);
+            setNumberOfData(getSPdataNext.totalCount);
         }
     }
 
-    const role_items = 
-    [
-        { id: '1', name : 'ADMIN' },
-        { id: '2', name : 'SERVICE PROVIDER' },
-        { id: '3', name : 'SUPER ADMIN' },
 
-      ];
 
     return (
         <React.Fragment>
@@ -205,124 +205,124 @@ const ListTables = () => {
                                         <Row className="g-4 mb-3">
                                             <Col className="col-sm-auto">
                                                 <div className="d-flex gap-1">
-                                                {
-                                            JSON.parse(module?.create ||  'true') ? (
-                                                <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn">
-                                                <i className="ri-add-line align-bottom me-1"></i> Add
-                                                </Button>
-                                            ) : null
-                                            }
+                                                    {
+                                                        JSON.parse(module?.create || 'true') ? (
+                                                            <Button color="success" className="add-btn" onClick={() => tog_list('ADD')} id="create-btn">
+                                                                <i className="ri-add-line align-bottom me-1"></i> Add
+                                                            </Button>
+                                                        ) : null
+                                                    }
                                                 </div>
                                             </Col>
                                         </Row>
                                         <div className="table-responsive table-card mt-3 mb-1">
-                                        <table className="table align-middle table-nowrap" id="customerTable">
-                                        <thead className="table-light">
-                                            <tr>
-                                            <th className="index" data-sort="index">#</th>
-                                            <th className="sprovider_name" data-sort="sprovider_name">Name</th>
-                                            <th className="email" data-sort="email">Email</th>
-                                            <th className="contactperson" data-sort="contactperson">Contact Person</th>
-                                            <th className="phone" data-sort="phone">Contact Number</th>
-                                            {!(config.Role.service_provider  === role)? (
-                                            <th className="status" data-sort="status">Status</th>
-                                            ) : null
-                                            }
-                                            <th className="action" data-sort="action">Action</th>
-                                            </tr>
-                                        </thead>
-                                        <tbody className="list form-check-all">
-                                            {sproviders.map((value, index) => (
-                                            <tr key={value?.id}>
-                                                <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
-                                                <td className="name">{value.name}</td>
-                                                <td className="email">{value.email}</td>
-                                                <td className="contact_person">{value.contact_person}</td>
-                                                <td className="phone">{value.contact_no}</td>
-                                                {!(config.Role.service_provider  === role)? (
-                                                <td className="status">
-                                                    {value.status === "ACTIVE" ?
-                                                        <button
-                                                            className="btn btn-sm btn-success status-item-btn"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#showModal"
-                                                            onClick={(event) => toggleStatus(event.target, value.id)}
-                                                        >
-                                                            {value.status}
-                                                        </button> :
-                                                        <button
-                                                            className="btn btn-sm btn-danger status-item-btn"
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#showModal"
-                                                            onClick={(event) => toggleStatus(event.target, value.id)}
-                                                        >
-                                                            {value.status}
-                                                        </button>
+                                            <table className="table align-middle table-nowrap" id="customerTable">
+                                                <thead className="table-light">
+                                                    <tr>
+                                                        <th className="index" data-sort="index">#</th>
+                                                        <th className="sprovider_name" data-sort="sprovider_name">Name</th>
+                                                        <th className="email" data-sort="email">Email</th>
+                                                        <th className="contactperson" data-sort="contactperson">Contact Person</th>
+                                                        <th className="phone" data-sort="phone">Contact Number</th>
+                                                        {!(config.Role.service_provider === role) ? (
+                                                            <th className="status" data-sort="status">Status</th>
+                                                        ) : null
+                                                        }
+                                                        <th className="action" data-sort="action">Action</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody className="list form-check-all">
+                                                    {sproviders.map((value, index) => (
+                                                        <tr key={value?.id}>
+                                                            <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
+                                                            <td className="name">{value.name}</td>
+                                                            <td className="email">{value.email}</td>
+                                                            <td className="contact_person">{value.contact_person}</td>
+                                                            <td className="phone">{value.contact_no}</td>
+                                                            {!(config.Role.service_provider === role) ? (
+                                                                <td className="status">
+                                                                    {value.status === "ACTIVE" ?
+                                                                        <button
+                                                                            className="btn btn-sm btn-success status-item-btn"
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#showModal"
+                                                                            onClick={(event) => toggleStatus(event.target, value.id)}
+                                                                        >
+                                                                            {value.status}
+                                                                        </button> :
+                                                                        <button
+                                                                            className="btn btn-sm btn-danger status-item-btn"
+                                                                            data-bs-toggle="modal"
+                                                                            data-bs-target="#showModal"
+                                                                            onClick={(event) => toggleStatus(event.target, value.id)}
+                                                                        >
+                                                                            {value.status}
+                                                                        </button>
 
-                                                    }
-                                                </td>
-                                                ) : null }
-                                                <td>
-                                                <div className="d-flex gap-2">
-                                                {JSON.parse(module?.read ||  'true') ?(
-                                                    <div className="edit">
-                                                    <button
-                                                        className="btn btn-sm btn-success edit-item-btn"
-                                                        onClick={() => tog_view(value.id)}
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#showModal"
-                                                    >
-                                                        View
-                                                    </button>
-                                                    </div>
-                                                     ) : null }
-                                                    <div className="edit">
-                                                    {JSON.parse(module?.update ||  'true') ?(
-                                                        <button
-                                                            className="btn btn-sm btn-primary edit-item-btn"
-                                                            onClick={() => tog_list("EDIT", value.id)}
-                                                            data-bs-toggle="modal"
-                                                            data-bs-target="#showModal"
-                                                        >
-                                                            Edit
-                                                        </button>
-                                                         ) : null }
-                                                    </div>
-                                                    <div className="remove">
-                                                        {JSON.parse(module?.delete ||  'true') ?(
-                                                    <button
-                                                        className="btn btn-sm btn-danger remove-item-btn"
-                                                        onClick={() => remove_data(value?.id)}
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#deleteRecordModal"
-                                                    >
-                                                        Remove
-                                                    </button>
-                                                       ) : null }
-                                                    </div>
-                                                </div>
-                                                </td>
-                                            </tr>
-                                            ))}
-                                        </tbody>
-                                        </table>
+                                                                    }
+                                                                </td>
+                                                            ) : null}
+                                                            <td>
+                                                                <div className="d-flex gap-2">
+                                                                    {JSON.parse(module?.read || 'true') ? (
+                                                                        <div className="edit">
+                                                                            <button
+                                                                                className="btn btn-sm btn-success edit-item-btn"
+                                                                                onClick={() => tog_view(value.id)}
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#showModal"
+                                                                            >
+                                                                                View
+                                                                            </button>
+                                                                        </div>
+                                                                    ) : null}
+                                                                    <div className="edit">
+                                                                        {JSON.parse(module?.update || 'true') ? (
+                                                                            <button
+                                                                                className="btn btn-sm btn-primary edit-item-btn"
+                                                                                onClick={() => tog_list("EDIT", value.id)}
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#showModal"
+                                                                            >
+                                                                                Edit
+                                                                            </button>
+                                                                        ) : null}
+                                                                    </div>
+                                                                    <div className="remove">
+                                                                        {JSON.parse(module?.delete || 'true') ? (
+                                                                            <button
+                                                                                className="btn btn-sm btn-danger remove-item-btn"
+                                                                                onClick={() => remove_data(value?.id)}
+                                                                                data-bs-toggle="modal"
+                                                                                data-bs-target="#deleteRecordModal"
+                                                                            >
+                                                                                Remove
+                                                                            </button>
+                                                                        ) : null}
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
                                         </div>
                                         <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">
                                                 {pageNumber > 1 ?
-                                                    <Link 
-                                                        className="page-item pagination-prev disabled" 
-                                                        onClick={()=> getAllData(pageNumber - 1)}
+                                                    <Link
+                                                        className="page-item pagination-prev disabled"
+                                                        onClick={() => getAllData(pageNumber - 1)}
                                                     >
                                                         Previous
                                                     </Link>
-                                                : null }
+                                                    : null}
                                                 <ul className="pagination listjs-pagination mb-0"></ul>
-                                                {numberOfData > pageLimit * pageNumber ? 
+                                                {numberOfData > pageLimit * pageNumber ?
                                                     <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}>
                                                         Next
-                                                    </Link> 
-                                                : null }
+                                                    </Link>
+                                                    : null}
                                             </div>
                                         </div>
                                     </div>
@@ -340,185 +340,185 @@ const ListTables = () => {
                     onSubmit={validation.handleSubmit}>
                     <ModalBody>
                         {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
-         
-                                {/* Provider Name */}
-                                <div className="mb-3">
-                                    <label htmlFor="providerName-field" className="form-label">Provider Name</label>
-                                    <input
-                                        type="text"
-                                        name="name"
-                                        id="providerName-field"
-                                        className="form-control"
-                                        value={validation.values.name || ""}
-                                        onChange={validation.handleChange}
-                                        placeholder="Enter Provider Name"
-                                        required
-                                    />
-                                </div>
-                                {/* Email */}
-                                {add_list ?
-                                <div className="mb-3">
-                                    <label htmlFor="email-field" className="form-label">Email</label>
-                                    <input
-                                        type="email"
-                                        name="email"
-                                        id="email-field"
-                                        className="form-control"
-                                        value={validation.values.email || ""}
-                                        onChange={validation.handleChange}
-                                        placeholder="Enter Email"
-                                        required
-                                    />
-                                </div> : null}
-                                {/* User Name */}
-                                <div className="mb-3">
-                                    <label htmlFor="userName-field" className="form-label">User Name</label>
-                                    <input
-                                        type="text"
-                                        id="userName-field"
-                                        name="user_name"
-                                        className="form-control"
-                                        value={validation.values.user_name || ""}
-                                        onChange={validation.handleChange}
-                                        placeholder="Enter User Name"
-                                        required
-                                    />
-                                </div>
-                                {/* Password */}
-                                {add_list ?
-                                <div className="mb-3">
-                                    <label htmlFor="userName-field" className="form-label">Password</label>
-                                    <input
-                                        type="password"
-                                        id="password-field"
-                                        name="password"
-                                        className="form-control"
-                                        value={validation.values.password || ""}
-                                        onChange={validation.handleChange}
-                                        placeholder="Enter User Password"
-                                        required
-                                    />
-                                </div>: null}
-                                {!(config.Role.service_provider === role) ? (
+
+                        {/* Provider Name */}
+                        <div className="mb-3">
+                            <label htmlFor="providerName-field" className="form-label">Provider Name</label>
+                            <input
+                                type="text"
+                                name="name"
+                                id="providerName-field"
+                                className="form-control"
+                                value={validation.values.name || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Provider Name"
+                                required
+                            />
+                        </div>
+                        {/* Email */}
+                        {add_list ?
+                            <div className="mb-3">
+                                <label htmlFor="email-field" className="form-label">Email</label>
+                                <input
+                                    type="email"
+                                    name="email"
+                                    id="email-field"
+                                    className="form-control"
+                                    value={validation.values.email || ""}
+                                    onChange={validation.handleChange}
+                                    placeholder="Enter Email"
+                                    required
+                                />
+                            </div> : null}
+                        {/* User Name */}
+                        <div className="mb-3">
+                            <label htmlFor="userName-field" className="form-label">User Name</label>
+                            <input
+                                type="text"
+                                id="userName-field"
+                                name="user_name"
+                                className="form-control"
+                                value={validation.values.user_name || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter User Name"
+                                required
+                            />
+                        </div>
+                        {/* Password */}
+                        {add_list ?
+                            <div className="mb-3">
+                                <label htmlFor="userName-field" className="form-label">Password</label>
+                                <input
+                                    type="password"
+                                    id="password-field"
+                                    name="password"
+                                    className="form-control"
+                                    value={validation.values.password || ""}
+                                    onChange={validation.handleChange}
+                                    placeholder="Enter User Password"
+                                    required
+                                />
+                            </div> : null}
+                        {!(config.Role.service_provider === role) ? (
                             <div className="mb-3">
                                 <label htmlFor="status-field" className="form-label">Role</label>
                                 <select
-                                className="form-control"
-                                data-trigger
-                                name="role_id"
-                                id="status-field"
-                                value={validation.values.role_id || ""}
-                                onChange={validation.handleChange}
-                                onBlur={validation.handleBlur}
+                                    className="form-control"
+                                    data-trigger
+                                    name="role_id"
+                                    id="status-field"
+                                    value={validation.values.role_id || ""}
+                                    onChange={validation.handleChange}
+                                    onBlur={validation.handleBlur}
                                 >
-                                {!add_list ? (
-                                    <>
-                                    {role_items.map((item) => (
-                                        <option key={item?.id} value={item?.id}> {item?.name} </option>
-                                    ))}
-                                    </>
-                                ) : (
-                                    <>
-                                    <option value="">Select Role</option>
-                                    {role_items.map((item) => (
-                                        <option key={item.id} value={item.id}> {item.name} </option>
-                                    ))}
-                                    </>
-                                )}
+                                    {!add_list ? (
+                                        <>
+                                            {roleList.map((item) => (
+                                                <option key={item?.id} value={item?.id}> {item?.name} </option>
+                                            ))}
+                                        </>
+                                    ) : (
+                                        <>
+                                            <option value="">Select Role</option>
+                                            {roleList.map((item) => (
+                                                <option key={item.id} value={item.id}> {item.name} </option>
+                                            ))}
+                                        </>
+                                    )}
                                 </select>
                             </div>
-                            ) : null }
+                        ) : null}
 
-                                {/* Contact Person */}
-                                <div className="mb-3">
-                                    <label htmlFor="contactPerson-field" className="form-label">Contact Person</label>
-                                    <input
-                                        type="text"
-                                        id="contactPerson-field"
-                                        className="form-control"
-                                        name="contact_person"
-                                        value={validation.values.contact_person || ""}
-                                        onChange={validation.handleChange}
-                                        placeholder="Enter Person Name"
-                                        required
-                                    />
-                                </div>
-                                {/* Contact Number */}
-                                <div className="mb-3">
-                                    <label htmlFor="phone-field" className="form-label">Contact Number</label>
-                                    <input
-                                        type="text"
-                                        id="phone-field"
-                                        className="form-control"
-                                        name="contact_no"
-                                        value={validation.values.contact_no || ""}
-                                        onChange={validation.handleChange}
-                                        placeholder="Enter Phone No"
-                                        required
-                                    />
-                                </div>
-                                {/* Emergency Contact Number */}
-                                <div className="mb-3">
-                                    <label htmlFor="emergencyPhone-field" className="form-label">Emergency Contact Number</label>
-                                    <input
-                                        type="text"
-                                        id="emergencyPhone-field"
-                                        name="emergency_contact_no"
-                                        className="form-control"
-                                        value={validation.values.emergency_contact_no || ""}
-                                        onChange={validation.handleChange}
-                                        placeholder="Enter Emergency Phone No."
-                                        required
-                                    />
-                                </div>
-                                {/* Contact Address */}
-                                <div className="mb-3">
-                                    <label htmlFor="contactAddress-field" className="form-label">Contact Address</label>
-                                    <input
-                                        type="text"
-                                        id="contactAddress-field"
-                                        name="contact_address"
-                                        className="form-control"
-                                        value={validation.values.contact_address || ""}
-                                        onChange={validation.handleChange}
-                                        placeholder="Enter Contact Address"
-                                        required
-                                    />
-                                </div>
-                                {/* Certificate Number */}
-                                <div className="mb-3">
-                                    <label htmlFor="LicenceNumber-field" className="form-label">Licence Number</label>
-                                    <input
-                                        type="text"
-                                        id="LicenceNumber-field"
-                                        name="licence_no"
-                                        value={validation.values.licence_no || ""}
-                                        onChange={validation.handleChange}
-                                        className="form-control"
-                                        placeholder="Enter Licence Number"
-                                        required
-                                    />
-                                </div>
-                                {/* Certificate Image */}
-                                <div className="mb-3">
-                                    <label htmlFor="LicenseImage-field" className="form-label">Licence Image</label>
-                                    <div className="col-md-10">
-                                        {licenscePreview && (
-                                            <div>
-                                                <img src={licenscePreview} alt="Licensce Preview" style={{ maxWidth: '100px' }} />
-                                            </div>
-                                        )}
-                                            <input
-                                                className="form-control"
-                                                name="licence_image"
-                                                type="file"
-                                                placeholder="Licence Image"
-                                                onChange={handleLicensceImageChange}
-                                            />
+                        {/* Contact Person */}
+                        <div className="mb-3">
+                            <label htmlFor="contactPerson-field" className="form-label">Contact Person</label>
+                            <input
+                                type="text"
+                                id="contactPerson-field"
+                                className="form-control"
+                                name="contact_person"
+                                value={validation.values.contact_person || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Person Name"
+                                required
+                            />
+                        </div>
+                        {/* Contact Number */}
+                        <div className="mb-3">
+                            <label htmlFor="phone-field" className="form-label">Contact Number</label>
+                            <input
+                                type="text"
+                                id="phone-field"
+                                className="form-control"
+                                name="contact_no"
+                                value={validation.values.contact_no || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Phone No"
+                                required
+                            />
+                        </div>
+                        {/* Emergency Contact Number */}
+                        <div className="mb-3">
+                            <label htmlFor="emergencyPhone-field" className="form-label">Emergency Contact Number</label>
+                            <input
+                                type="text"
+                                id="emergencyPhone-field"
+                                name="emergency_contact_no"
+                                className="form-control"
+                                value={validation.values.emergency_contact_no || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Emergency Phone No."
+                                required
+                            />
+                        </div>
+                        {/* Contact Address */}
+                        <div className="mb-3">
+                            <label htmlFor="contactAddress-field" className="form-label">Contact Address</label>
+                            <input
+                                type="text"
+                                id="contactAddress-field"
+                                name="contact_address"
+                                className="form-control"
+                                value={validation.values.contact_address || ""}
+                                onChange={validation.handleChange}
+                                placeholder="Enter Contact Address"
+                                required
+                            />
+                        </div>
+                        {/* Certificate Number */}
+                        <div className="mb-3">
+                            <label htmlFor="LicenceNumber-field" className="form-label">Licence Number</label>
+                            <input
+                                type="text"
+                                id="LicenceNumber-field"
+                                name="licence_no"
+                                value={validation.values.licence_no || ""}
+                                onChange={validation.handleChange}
+                                className="form-control"
+                                placeholder="Enter Licence Number"
+                                required
+                            />
+                        </div>
+                        {/* Certificate Image */}
+                        <div className="mb-3">
+                            <label htmlFor="LicenseImage-field" className="form-label">Licence Image</label>
+                            <div className="col-md-10">
+                                {licenscePreview && (
+                                    <div>
+                                        <img src={licenscePreview} alt="Licensce Preview" style={{ maxWidth: '100px' }} />
                                     </div>
-                                </div>
-         
-              
+                                )}
+                                <input
+                                    className="form-control"
+                                    name="licence_image"
+                                    type="file"
+                                    placeholder="Licence Image"
+                                    onChange={handleLicensceImageChange}
+                                />
+                            </div>
+                        </div>
+
+
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
@@ -530,8 +530,8 @@ const ListTables = () => {
             </Modal>
 
             {/****************************  View Modal*************** */}
-            <Modal className="extra-width" isOpen={view_modal} toggle={() => { tog_view('view'); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_view('view'); setView_modal(false);}}>View service provider</ModalHeader>
+            <Modal className="extra-width" isOpen={view_modal} toggle={() => { setView_modal(false); }} centered >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_view('view'); setView_modal(false); }}>View service provider</ModalHeader>
                 <form className="tablelist-form">
                     <ModalBody>
                         {sprovider?.map((item, index) => (

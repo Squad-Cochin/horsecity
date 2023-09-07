@@ -8,20 +8,16 @@ import React, { useState, useEffect } from 'react';
 //IMPORTED FROM REACT BOOTSTRAP
 import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
-/**Using for form validation */
 import { useFormik } from "formik";
-// Import Flatepicker for using  date pick
 import Flatpickr from "react-flatpickr";
 
 
-/**Navigation UI element */
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
-/**IMPORTED APIs */
-// import { getCustomersData } from '../../../helpers/ApiRoutes/authApiRoutes'; //For getting all customers
+/**IMPORTED FILES */
 import { removeCustomer } from '../../../helpers/ApiRoutes/removeApiRoutes'; //For removing customers
 import { addNewCustomer } from '../../../helpers/ApiRoutes/addApiRoutes'; //For adding new customer
 import { updateCustomer, updateCustomerStatus } from '../../../helpers/ApiRoutes/editApiRoutes'; //For updating  customer
 import { getSingleCustomerData, getCustomersData } from '../../../helpers/ApiRoutes/getApiRoutes';
+import Breadcrumbs from "../../../components/Common/Breadcrumb";
 import config from '../../../config';
 
 // Function for customer page
@@ -43,7 +39,7 @@ const ListCustomerTable = () => {
     const [errors, setErrors] = useState("")
     const pageLimit = config.pageLimit;
 
-    /**This hook is used to fetch customers data */
+    /**This hook is used to fetch customers data initital time */
     useEffect(() => {
         const data = JSON.parse(localStorage.getItem("authUser"));
         let user_Id = data[0]?.user[0]?.id
@@ -407,21 +403,6 @@ const ListCustomerTable = () => {
                                 required
                             />
                         </div>
-                        {/** Customer Date of Birth */}
-                        {/* <div className="mb-3">
-                            <label htmlFor="date_of_birth-field" className="form-label">Date Of Birth</label>
-                            <Flatpickr
-                                className="form-control"
-                                name='date_of_birth'
-                                options={{
-                                    dateFormat: "d-m-Y",
-                                    maxDate :new Date(),
-                                }}
-                                value= ""
-                                onChange={(dates) =>validation.setFieldValue('date_of_birth', dates[0])}
-                                placeholder={validation.values.date_of_birth || "Select Date"}
-                            />
-                        </div> */}
 
                         <div className="mb-3">
                             <label htmlFor="date_of_birth-field" className="form-label">Date Of Birth</label>
@@ -486,7 +467,7 @@ const ListCustomerTable = () => {
             </Modal>
 
             {/***************** View Modal *************/}
-            <Modal className="extra-width" isOpen={view_modal} toggle={() => { tog_view('view'); }}>
+            <Modal className="extra-width" isOpen={view_modal} toggle={() => { setView_modal(false);}}>
                 <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setView_modal(false); }}>View Customer</ModalHeader>
                 <form className="tablelist-form"
                     onSubmit={validation.handleSubmit}>

@@ -47,6 +47,7 @@ export const PUT_SP_UPDATE_STATUS = apiBaseUrl + token + "/update-status/service
 export const POST_SP_EDIT_URL = apiBaseUrl + token + "/update/serviceprovider"
 export const PUT_SP_REMOVE = apiBaseUrl + token + "/remove/serviceprovider"
 export const GET_SP_USER_NAME = apiBaseUrl + token + "/getAll/serviceprovidersName"
+export const GET_SP_ROLELIST = apiBaseUrl + token + "/role/list"
 
 // Discount
 export const GET_DISCOUNTS = apiBaseUrl + token + "/getAll/active/discounts"
