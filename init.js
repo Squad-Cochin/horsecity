@@ -128,7 +128,7 @@ module.exports = async function ()
                                                                                     ('${process.env.moduleEleven}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
                                                                                     ('${process.env.moduleTwelve}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
                                                                                     ('${process.env.moduleThirteen}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}') `;
-                                                                                     console.log('Insert data into the module table query: ', insModules);
+                                                                                    //  console.log('Insert data into the module table query: ', insModules);
                                                                                     con.query(insModules, (err , resultinsModules)=>
                                                                                     {
                                                                                         if(resultinsModules)
@@ -220,23 +220,23 @@ module.exports = async function ()
                                                                                                                                     {
                                                                                                                                         if(resultInsDiscountType)
                                                                                                                                         {
-                                                                                                                                            console.log(`Discount insert data is successfully inserted from the backend`);
-                                                                                                                                            let insTemplate = `INSERT INTO ${constants.tableName.templates} (name, subject, purpose, type, created_at) VALUES
-                                                                                                                                            ('${process.env.templateFirstInvoiceName}', '${process.env.templateFirstInvoiceSubject}', '${process.env.templateFirstInvoicePurpose}', '${process.env.templateFirstInvoiceType}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
-                                                                                                                                            ('${process.env.templateSecondQuotationName}', '${process.env.templateSecondQuotationSubject}', '${process.env.templateSecondQuotationPurpose}', '${process.env.templateSecondQuotationType}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                                                                                                                                            // console.log(`Discount insert data is successfully inserted from the backend`);
+                                                                                                                                            let insTemplate = `INSERT INTO ${constants.tableName.templates} (name, subject, template,  purpose, type, created_at) VALUES
+                                                                                                                                            ('${process.env.templateFirstInvoiceName}', '${process.env.templateFirstInvoiceSubject}', 'NULL', '${process.env.templateFirstInvoicePurpose}', '${process.env.templateFirstInvoiceType}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'),
+                                                                                                                                            ('${process.env.templateSecondQuotationName}', '${process.env.templateSecondQuotationSubject}', 'NULL', '${process.env.templateSecondQuotationPurpose}', '${process.env.templateSecondQuotationType}', '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                                                                                                                                             // console.log(`Insert Template Table Query: `, insTemplate);
                                                                                                                                             con.query(insTemplate, (err, resultInsTemplate)=> // Executing the above query
                                                                                                                                             {
-                                                                                                                                                if(resultInsTemplate)
-                                                                                                                                                {
+                                                                                                                                                 if(resultInsTemplate)
+                                                                                                                                                 {
                                                                                                                                                     console.log(`Data inserted into the templates table`);
                                                                                                                                                     console.log(`All the data are successfully inserted`);
-                                                                                                                                                }
+                                                                                                                                                 }
                                                                                                                                                 else
-                                                                                                                                                {
-                                                                                                                                                    return console.log(`Error while inserting the data into the discount types table from the backend.`, err);
-                                                                                                                                                }
-                                                                                                                                            });
+                                                                                                                                                 {
+                                                                                                                                                     return console.log(`Error while inserting the data into the templates table from the backend.`, err);
+                                                                                                                                                 }
+                                                                                                                                             });
 
                                                                                                                                         }
                                                                                                                                         else
