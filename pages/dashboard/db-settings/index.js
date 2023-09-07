@@ -6,7 +6,7 @@ import Footer from "../common/Footer";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { IoIosArrowBack } from "react-icons/io";
-const index = () => {
+const Index = () => {
   const [url,setUrl] =useState(false);
   const router = useRouter();
 
@@ -69,4 +69,4 @@ async function initialLoad(){
   );
 };
 
-export default index;
+export default Index;

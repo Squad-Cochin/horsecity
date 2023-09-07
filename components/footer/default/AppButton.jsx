@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//              File using for showing the app downloading options in footer of all pages            //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Function for app buttons
 const AppButton = () => {
   const appContent = [
     {

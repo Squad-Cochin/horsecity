@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//         File using for showing the subscribe option at the top of the FOOTER of all pages         //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Function for showing the inputbox for email and subscribe button
 const CallToActions = () => {
   return (
     <section className="layout-pt-md layout-pb-md bg-dark-2">

@@ -1,5 +1,12 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                     File using for showing dropdown box in LISTING page(Feature)                  //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import { useState } from "react";
 
+// Function for showing dropdown
 const useDropdowns = (dropdowns) => {
   const [values, setValues] = useState(() =>
     dropdowns.reduce((acc, curr) => {
@@ -8,6 +15,7 @@ const useDropdowns = (dropdowns) => {
     }, {})
   );
 
+  // Function for handle changes in dropdown value
   const handleChange = (title, value) => {
     setValues((prevValues) => ({
       ...prevValues,
@@ -37,18 +45,6 @@ const useDropdowns = (dropdowns) => {
 
         <div className="toggle-element -dropdown js-click-dropdown dropdown-menu">
           <div className="text-15 y-gap-15 js-dropdown-list">
-            {dropdown.options.map((item, index) => (
-              <div key={index}>
-                <button
-                  className={`${
-                    item === values[dropdown.title] ? "text-blue-1 " : ""
-                  }d-block js-dropdown-link`}
-                  onClick={() => handleChange(dropdown.title, item)}
-                >
-                  {item}
-                </button>
-              </div>
-            ))}
           </div>
         </div>
         {/* End dropdown-menu */}

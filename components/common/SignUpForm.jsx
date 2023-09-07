@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                          File using for registration form design                                  //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import Link from "next/link";
 import { useState } from "react";
 import DatePicker from "react-datepicker";
@@ -6,6 +12,7 @@ import registrationApi from "../../pages/api/registrationApi";
 import { Alert } from 'reactstrap'
 import Router from "next/router";
 
+// Function for regsitration form 
 const SignUpForm = () => {
   const [dateOfBirth, setDateOfBirth] = useState(new Date());
   const [ errors, setErrors ] = useState("");
@@ -40,7 +47,6 @@ const SignUpForm = () => {
       // ... and so on
 
       // Perform any actions with the form data
-      // // console.log('Form submitted:', event.target);
       let res = await registrationApi(registrationData);
       if(res.code !== 200){
         setErrors(res.message);
@@ -93,7 +99,6 @@ const SignUpForm = () => {
             selected={dateOfBirth}
             onChange={(date) => {
               setDateOfBirth(date) ; 
-              // dispatch(addDepart(date))
             }}
             maxDate={new Date()}
             dateFormat="MMM dd"
@@ -102,14 +107,6 @@ const SignUpForm = () => {
           <label className="lh-1 text-14 text-light-1 spl-space-top">Date Of Birth</label>
         </div>
       </div>
-
-      {/* <div className="col-12">
-        <div className="form-input ">
-          <input type="date" required  />
-          <label className="lh-1 text-14 text-light-1">Date Of Birth</label>
-        </div>
-      </div> */}
-      {/* End .col */}
 
       <div className="col-12">
         <div className="form-input ">
@@ -143,24 +140,7 @@ const SignUpForm = () => {
       </div>
       {/* End .col */}
 
-      {/* <div className="col-12">
-        <div className="d-flex ">
-          <div className="form-checkbox mt-5">
-            <input type="checkbox" name="name" />
-            <div className="form-checkbox__mark">
-              <div className="form-checkbox__icon icon-check" />
-            </div>
-          </div>
-          <div className="text-15 lh-15 text-light-1 ml-10">
-            Email me exclusive Agoda promotions. I can opt out later as stated
-            in the Privacy Policy.
-          </div>
-        </div>
-      </div> */}
-      {/* End .col */}
-
       <div className="col-12">
-       
         <button
           type="submit"
           href="#top"

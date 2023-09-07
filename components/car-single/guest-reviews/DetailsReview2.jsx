@@ -1,11 +1,15 @@
-import Image from "next/image";
-import ReviewGallery from "./ReviewGallery";
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                   File using for showing reviews of each person in DETAILS page                   //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
+import Image from "next/image";
+
+// Function for showing detail review
 const DetailsReview2 = () => {
   return (
     <div className="row y-gap-40">
- 
-
       <div className="col-lg-12">
         <div className="row x-gap-20 y-gap-20 items-center">
           <div className="col-auto">
@@ -29,10 +33,6 @@ const DetailsReview2 = () => {
         when an unknown printer took a galley of type and scrambled it to make a type specimen book.
         It has survived not only five centuries,.{" "}
         </p>
-
-        {/* <ReviewGallery /> */}
-
-
       </div>
       {/* End .col */}
 

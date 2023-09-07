@@ -1,15 +1,21 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                     File using for showing date picker in LISTING page                            //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addDepart, addReturn } from "../../../features/search/initalSearch";
 
+// Function for showing date picker
 const DateSearch = (props) => {
   const dispatch = useDispatch();
   const [fromDate, setFromDate] = useState(new Date());
   const [toDate, setToDate] = useState(new Date());
   useEffect(()=>{
-    // console.log(props,"propssssssssssss")
     if(props.use == "fromDate"){
       setFromDate(new Date(props.dateDate))
     }else{

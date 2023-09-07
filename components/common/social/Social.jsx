@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//         File using for showing the social media options in the FOOTER of all pages                //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Function for showing the social media options as link
 const Social = () => {
   const socialContent = [
     { id: 1, icon: "icon-facebook", link: "https://facebok.com/" },

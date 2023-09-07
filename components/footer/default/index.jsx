@@ -1,8 +1,15 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//              File using for showing the whole footer in all pages                                 //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import AppButton from "./AppButton";
 import ContactInfo from "./ContactInfo";
 import Copyright from "./Copyright";
 import FooterContent from "./FooterContent";
 
+// Function for showing the footer
 const index = () => {
   return (
     <footer className="footer -type-1">

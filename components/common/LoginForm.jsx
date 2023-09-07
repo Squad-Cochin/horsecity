@@ -1,38 +1,31 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                          File using for login form in LOGIN pages                                 //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import Link from "next/link";
 import loginApi from "../../pages/api/loginApi";
 import { Alert } from 'reactstrap'
 import { useState } from "react";
 import Router from "next/router";
 
+// Function for login form
 const LoginForm = () => {
   const [ errors, setErrors ] = useState("");
   const [ success, setSuccess ] = useState("");
+
+  // Function for form submit
   const handleSubmit = async (event) => {
     event.preventDefault();
-    // Here, you can access form field values and perform any necessary actions
-    // For example, you might want to send the form data to an API or dispatch Redux actions
-
     // Access form fields using event.target
     const formData = new FormData(event.target);
     const userName = formData.get('userName');
     const password = formData.get('password');
-    // console.log("rea",userName,password)
-    // const name = formData.get('name');
-    // const email = formData.get('email');
-    // const userName = formData.get('userName');
-    // const password = formData.get('password');
-    // const confirmPassword = formData.get('confirmPassword');
-    // const phone = formData.get('phone');
-    // if( password !== confirmPassword ){
-    //   setSuccess("")
-    //   setErrors("Password and confirm password must be same.")
-    // } else {
     let loginData = {
       "userName" : userName,
       "password" : password
     }
-      // ... and so on
-
     let res = await loginApi(loginData);
     if(res.code === 200){
       Router.push("/car/car-list-v1")
@@ -43,7 +36,6 @@ const LoginForm = () => {
       setErrors(res.message);
       setSuccess("")
     }
-    // }
   };
   return (
     <form className="row y-gap-20" onSubmit={handleSubmit}>
@@ -74,14 +66,6 @@ const LoginForm = () => {
           <label className="lh-1 text-14 text-light-1">Password</label>
         </div>
       </div>
-      {/* End .col */}
-
-      {/* <div className="col-12">
-        <a href="#" className="text-14 fw-500 text-blue-1 underline">
-          Forgot your password?
-        </a>
-      </div> */}
-      {/* End .col */}
 
       <div className="col-12">
         <button

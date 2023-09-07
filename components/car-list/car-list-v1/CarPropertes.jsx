@@ -1,11 +1,15 @@
-import vehicleData from "../../../data/cars";
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//               File using for showing contents in a package in LISTING page                        //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Pagination } from "swiper";
 import Image from "next/image";
 import Link from "next/link";
 import { GiHorseHead } from "react-icons/gi";
 import { TbBus, TbArrowAutofitWidth, TbArrowAutofitHeight, TbLineHeight } from "react-icons/tb";
-import { HiAdjustments } from "react-icons/hi";
 import { useEffect } from "react";
 import listingDataApi from "../../../pages/api/listingDataApi";
 import isWishlist from "../../../pages/api/wishlistApi";
@@ -13,9 +17,8 @@ import { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { add_list_data } from "../../../features/listData/listData";
 
-
+// Functions for showing details of packages 
 const CarPropertes = () => {
-  const [ searchData, setSearchData ] = useState({});
   const { price_from, price_to, suppliers, sort, page, limit } = useSelector((state) => state.listingFilter) || {};
   const { list_data } = useSelector((state) => state.listData) || {};
   const [ isLogin, setLogin ] = useState(false);
@@ -26,6 +29,7 @@ const CarPropertes = () => {
     initialLoad();
   },[])
 
+  // Function for doing the functions at the first load of a page
   async function initialLoad(){
     const search = await JSON.parse(localStorage.getItem('searchObject'));
     const loginData = await JSON.parse(localStorage.getItem('loginData'));
@@ -34,10 +38,15 @@ const CarPropertes = () => {
       setCustomerId(loginData.id);
       setLogin(true);
     }
-    setSearchData(search)
     listingData(search);
   }
 
+  // function for image loader
+  const imageLoader = ({ src }) => {
+    return `${src}`;
+  };
+
+  // Function for getting packages through api and storing in redux
   async function listingData(search){
     let reqObj = {
       "trip_type": search.trip_type,
@@ -54,6 +63,7 @@ const CarPropertes = () => {
     dispatch(add_list_data(packageList))
   }
 
+  // Function hor handle wish list
   const handleWishlist =async (wishlist,pId) =>{
     let reqObj= {
       customer_id :customer_id,
@@ -97,11 +107,12 @@ const CarPropertes = () => {
                           <SwiperSlide key={i}>
                             <div className="ratio ratio-1:1">
                               <div className="cardImage__content">
-                                <img
+                                <Image
                                   width={250}
                                   height={250}
                                   className="rounded-4 col-12 js-lazy"
                                   src={slide}
+                                  loader={imageLoader}
                                   priority
                                   alt="image"
                                 />
@@ -143,22 +154,8 @@ const CarPropertes = () => {
               <div className="col-md">
                 <div className="d-flex flex-column h-full justify-between">
                   <div>
-                    {/* <div className="row x-gap-5 items-center">
-                      <div className="col-auto">
-                        <div className="text-14 text-light-1">
-                          {item?.location}
-                        </div>
-                      </div>
-                      <div className="col-auto">
-                        <div className="size-3 rounded-full bg-light-1" />
-                      </div>
-                      <div className="col-auto">
-                        <div className="text-14 text-light-1">SUV</div>
-                      </div>
-                    </div> */}
                     <h3 className="text-18 lh-16 fw-500 mt-5">
                       {item.title}
-                      {/* <span className="text-15 text-light-1">or similar</span> */}
                     </h3>
                   </div>
                   <div className="col-lg-7 mt-20">
@@ -215,21 +212,6 @@ const CarPropertes = () => {
               {/* End col-md */}
 
               <div className="col-md-auto text-right md:text-left">
-                {/* <div className="row x-gap-10 y-gap-10 justify-end items-center md:justify-start">
-                  <div className="col-auto">
-                    <div className="text-14 lh-14 fw-500">Exceptional</div>
-                    <div className="text-14 lh-14 text-light-1">
-                      {item?.numberOfReviews} reviews
-                    </div>
-                  </div>
-                  <div className="col-auto">
-                    <div className="flex-center text-dark-1 fw-600 text-14 size-40 rounded-4 bg-yellow-1">
-                      {item?.ratings}
-                    </div>
-                  </div>
-                </div> */}
-                {/* End .row */}
-
                 <div className="text-22 lh-12 fw-600 mt-70 md:mt-20">
                   AED {item?.price}
                 </div>

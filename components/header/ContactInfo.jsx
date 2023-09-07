@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//              File using for showing contact info in mobile menu of DETAILS page                   //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Function for showing contact info
 const ContactInfo = () => {
   const contactContent = [
     {

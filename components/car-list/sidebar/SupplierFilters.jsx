@@ -1,63 +1,54 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                     File using for sidebar supplier filter in LISTING page                        //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { useSelector, useDispatch } from "react-redux";
 import { filter_suppliers } from "../../../features/listingFilter/listingFilter";
 import { useEffect } from "react";
 import serviceProvidersApi from "../../../pages/api/serviceProvidersApi";
-import axios from "axios";
 import { useState } from "react";
 import { add_list_data } from "../../../features/listData/listData";
 import listingDataApi from "../../../pages/api/listingDataApi";
 
+// Function for supplier filter
 const SupplierFilters = () => {
   const { price_from, price_to, sort, page, limit, suppliers } = useSelector((state) => state.listingFilter) || {};
-  // const [ suppliers, setSuppliers ] = useState([])
   const [ suppliersData, setSuppliersData ] = useState([]);
-  const [ searchData, setSearchData ] = useState({});
   const dispatch = useDispatch();
   useEffect(()=>{
     initialLoad()
   },[])
   
+  // Function for initial load of the page for showing service providers list
   async function initialLoad(){
-    // setSearchData(search)
-    // // console.log("searchsearch",search)
-    // setSuppliersData(search.suppliers)
     let packageList = await serviceProvidersApi()
-    // console.log("response",packageList)
     setSuppliersData(packageList)
   }
 
+  // Function for onclick of the check box
   async function checkType(val){
-    // console.log(val,"val")
-    // console.log("suppliersData",suppliers)
     let search = await JSON.parse(localStorage.getItem('searchObject'));
     if(suppliers.includes(val)){
-      // console.log("yes")
       const newArray = suppliers.filter(value => value !== val);
-      
-      // setSuppliersData(newArray);
       let modifiedData = search;
       modifiedData.suppliers = newArray;
-      // setSearchData(modifiedData);
       localStorage.setItem('searchObject', JSON.stringify(modifiedData));
       dispatch(filter_suppliers(newArray))
-      // applySearch(newArray);
       updateListData(modifiedData);
     } else {
-      // console.log("no")
       const newArray = [...suppliers];
       newArray.push(val);
       dispatch(filter_suppliers(newArray))
-      // setSuppliersData(newArray);
       let modifiedData = search;
       modifiedData.suppliers = newArray;
-      // setSearchData(modifiedData);
       localStorage.setItem('searchObject', JSON.stringify(modifiedData));
-      // applySearch(modifiedData);
       updateListData(modifiedData);
     }
   }
 
+  // Function for getting new package list on the basis of new filter list
   async function updateListData(modifiedData){
     let reqObj = {
       "trip_type": modifiedData.trip_type,
@@ -69,9 +60,7 @@ const SupplierFilters = () => {
       "page" : page,
       "limit" : limit
     }
-    // console.log("reqqqqq", reqObj)
     let packageList = await listingDataApi(reqObj)
-    // console.log("response",packageList)
     dispatch(add_list_data(packageList))
   }
 

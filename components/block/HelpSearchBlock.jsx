@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                    File using for showing search bar in HEPL CENTER screen                        //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Function for search box in hepl center
 const HelpSearchBlock = () => {
   return (
     <form className="single-field d-flex items-center justify-end x-gap-10 y-gap-20 pt-40">

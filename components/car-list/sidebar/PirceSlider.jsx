@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                     File using for sidebar price slider filter in LISTING page                    //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import { useState } from "react";
 import InputRange from "react-input-range";
 import { useSelector, useDispatch } from "react-redux";
@@ -5,6 +11,7 @@ import { filter_price_from, filter_price_to } from "../../../features/listingFil
 import { add_list_data } from "../../../features/listData/listData";
 import listingDataApi from "../../../pages/api/listingDataApi";
 
+// Function for price slider
 const PirceSlider = () => {
   const dispatch = useDispatch();
   const { price_from, price_to, suppliers, sort, page, limit } = useSelector((state) => state.listingFilter) || {};
@@ -12,6 +19,7 @@ const PirceSlider = () => {
     value: { min: 0, max: 2000 },
   });
 
+  // Function for showing change while making change in price slider
   const handleOnChange = (value) => {
     setPrice({ value });
     dispatch(filter_price_from(value.min))
@@ -19,9 +27,8 @@ const PirceSlider = () => {
     applySearch(value)
   };
 
+  // Function for make new search with the new search object
   async function applySearch(val){
-    // console.log("min",val.min)
-    // console.log("max",val.max)
     let search = await JSON.parse(localStorage.getItem('searchObject'));
     let reqObj = {
       "trip_type": search.trip_type,
@@ -33,9 +40,7 @@ const PirceSlider = () => {
       "page" : page,
       "limit" : limit
     }
-    // console.log("req", reqObj)
     let packageList = await listingDataApi(reqObj)
-    // console.log("response",packageList)
     dispatch(add_list_data(packageList))
     
   } 

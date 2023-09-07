@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//              File using for add review option at the bottam of the DETAILS page                   //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Function for enter new report
 const ReplyForm = () => {
   return (
     <form className="row y-gap-30 pt-20">

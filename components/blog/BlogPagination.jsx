@@ -1,12 +1,22 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                      File using for showing pagination in BLOG page                               //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 import { useState } from "react";
 
+// Function for pagination in blog
 const BlogPagination = () => {
   const [currentPage, setCurrentPage] = useState(1);
 
+  // Function for handle page number 
   const handlePageClick = (pageNumber) => {
     setCurrentPage(pageNumber);
   };
 
+  // Function for showing active page number
   const renderPage = (pageNumber, isActive = false) => {
     const className = `size-40 flex-center rounded-full cursor-pointer ${
       isActive ? "bg-dark-1 text-white" : ""
@@ -20,6 +30,7 @@ const BlogPagination = () => {
     );
   };
 
+  // Function for showing page numbers
   const renderPages = () => {
     const totalPages = 5; // Change this to the actual total number of pages
     const pageNumbers = [];

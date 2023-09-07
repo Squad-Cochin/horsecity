@@ -1,9 +1,15 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                              File using for showing the BLOG page                                 //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import Image from "next/image";
-import Link from "next/link";
 import { useState } from "react";
 import blogsData from "../../data/blogs";
 import BlogPagination from "./BlogPagination";
 
+// Function for showing blog content
 const Blog1 = () => {
   const [filterOption, setFilterOption] = useState("art_culture");
   const filterOptions = [
@@ -39,10 +45,6 @@ const Blog1 = () => {
         <div className="row y-gap-30 pt-30">
           {blogsData.slice(0, 9).map((item) => (
             <div className="col-lg-4 col-sm-6" key={item.id}>
-              <Link
-                href={`/blog/blog-details/${item.id}`}
-                className="blogCard -type-1 d-block "
-              >
                 <div className="blogCard__image">
                   <div className="rounded-8">
                     <Image
@@ -60,7 +62,7 @@ const Blog1 = () => {
                     {item.date}
                   </div>
                 </div>
-              </Link>
+              {/* </Link> */}
             </div>
           ))}
         </div>

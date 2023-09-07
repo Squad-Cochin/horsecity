@@ -7,7 +7,6 @@ import WhyChoose from "../components/block/BlockGuide";
 import Address from "../components/block/Address";
 import Social from "../components/common/social/Social";
 import ContactForm from "../components/common/ContactForm";
-import LocationTopBar from "../components/common/LocationTopBar";
 
 const Contact = () => {
   return (
@@ -20,9 +19,6 @@ const Contact = () => {
 
       <DefaultHeader />
       {/* End Header 1 */}
-
-      {/* <LocationTopBar /> */}
-      {/* End location top bar section */}
 
       <div className="map-outer">
         <div className="map-canvas">

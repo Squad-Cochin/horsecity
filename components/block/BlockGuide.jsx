@@ -1,3 +1,13 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                      File using for showing WHY CHOOSE US at home screen                          //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+import Image from "next/image";
+
+// Function for content in why choose us
 const BlockGuide = () => {
   const blockContent = [
     {
@@ -33,7 +43,7 @@ const BlockGuide = () => {
         >
           <div className="featureIcon -type-1 ">
             <div className="d-flex justify-center">
-              <img src={item.icon} alt="image" className="js-lazy" />
+              <Image width={100} height={100} src={item.icon} alt="image" className="js-lazy" />
             </div>
             <div className="text-center mt-30">
               <h4 className="text-18 fw-500">{item.title}</h4>

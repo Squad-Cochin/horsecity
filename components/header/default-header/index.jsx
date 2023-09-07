@@ -1,15 +1,21 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//              File using for showing the header for all pages                                      //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import MainMenu from "../MainMenu";
-import CurrenctyMegaMenu from "../CurrenctyMegaMenu";
-import LanguageMegaMenu from "../LanguageMegaMenu";
 
 import MobileMenu from "../MobileMenu";
 
+// Function for showing the header
 const Header1 = () => {
   const [navbar, setNavbar] = useState(false);
   const [ login, setLogin ] = useState({});
 
+  // Function for set background for header while scrolling
   const changeBackground = () => {
     if (window.scrollY >= 10) {
       setNavbar(true);
@@ -21,7 +27,6 @@ const Header1 = () => {
   useEffect(() => {
     window.addEventListener("scroll", changeBackground);
     let loginData = JSON.parse(localStorage.getItem("loginData"))
-    // console.log(loginData,"loginData")
     setLogin(loginData);
   }, []);
 
@@ -51,36 +56,17 @@ const Header1 = () => {
 
             <div className="col-auto">
               <div className="d-flex items-center">
-                <div className="row x-gap-20 items-center xxl:d-none">
-                  {/* <CurrenctyMegaMenu textClass="text-dark-1" /> */}
-                  {/* End Megamenu for Currencty */}
-
-                  {/* Start vertical devider*/}
-                  {/* <div className="col-auto">
-                    <div className="w-1 h-20 bg-white-20" />
-                  </div> */}
-                  {/* End vertical devider*/}
-
-                  {/* <LanguageMegaMenu textClass="text-dark-1" /> */}
-                  {/* End Megamenu for Language */}
-                </div>
-                {/* End language and currency selector */}
-
                 {/* Start btn-group */}
-                { Object.keys(login)?.length == 0 ? <div className="d-flex items-center ml-20 is-menu-opened-hide md:d-none">
-                  {/* <Link
-                    href="/others-pages/login"
-                    className="button px-30 fw-400 text-14 -blue-1 bg-blue-1 h-50 text-white"
-                  >
-                    Become An Expert
-                  </Link> */}
-                  <Link
-                    href="/others-pages/signup"
-                    className="button px-30 fw-400 text-14 -outline-blue-1 h-50 text-blue-1 ml-20"
-                  >
-                    Sign In / Register
-                  </Link>
-                  </div> : null }
+                { Object.keys(login)?.length == 0 ? 
+                  <div className="d-flex items-center ml-20 is-menu-opened-hide md:d-none">
+                    <Link
+                      href="/others-pages/signup"
+                      className="button px-30 fw-400 text-14 -outline-blue-1 h-50 text-blue-1 ml-20"
+                    >
+                      Sign In / Register
+                    </Link>
+                  </div> 
+                : null }
                 {/* End btn-group */}
 
                 {/* Start mobile menu icon */}

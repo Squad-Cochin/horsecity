@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                          File using for applay sort in LISTING page                               //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import { useSelector, useDispatch } from "react-redux";
 import { filter_sort } from "../../../features/listingFilter/listingFilter";
 import { useState } from "react";
@@ -5,6 +11,7 @@ import { useEffect } from "react";
 import { add_list_data } from "../../../features/listData/listData";
 import listingDataApi from "../../../pages/api/listingDataApi";
 
+// Function for applying sort 
 const TopHeaderFilter = () => {
   const dispatch = useDispatch();
   const [ searchData, setSearchData] = useState({})
@@ -12,16 +19,19 @@ const TopHeaderFilter = () => {
                                                                       listing_data :[],
                                                                       totalCount : 0
                                                                   } ;
-  // const { trip_type, number_of_horses } = useSelector((state) => state.initialSearch) || {};
+  const { price_from, price_to, suppliers, limit } = useSelector((state) => state.listingFilter) || {};
+
   useEffect(()=>{
     initialLoad();
   },[])
+
+  // Function for work at the initial page load
   async function initialLoad(){
     let search = await JSON.parse(localStorage.getItem('searchObject'));
-    // console.log("Ss",search)
     setSearchData(search)
   }
-  const { price_from, price_to, suppliers, limit } = useSelector((state) => state.listingFilter) || {};
+
+  // Function for handle changes while selecting different sort options
   const handleSelectChange = async (event) => {
     const newValue = event.target.value;
     dispatch(filter_sort(newValue))
@@ -35,11 +45,10 @@ const TopHeaderFilter = () => {
       page : 1,
       limit : limit
     };
-    // console.log("req",reqObj)
     let packageList = await listingDataApi(reqObj)
-    // console.log("response",packageList)
     dispatch(add_list_data(packageList))
   };
+  
   return (
     <>
       <div className="row y-gap-10 items-center justify-between">

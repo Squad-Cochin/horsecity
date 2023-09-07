@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//          File using for showing Leave a Reply at the bottam of the in DETAILS page                //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Function for showing the rating from replay given by customer
 const ReplyFormReview2 = () => {
   const replyReviewContent = [
     {
@@ -68,19 +75,6 @@ const ReplyFormReview2 = () => {
     {
       id: 6,
       reasonOfreview: "Facilities",
-      ratings: (
-        <>
-          <div className="icon-star text-10 text-yellow-1" />
-          <div className="icon-star text-10 text-yellow-1" />
-          <div className="icon-star text-10 text-yellow-1" />
-          <div className="icon-star text-10 text-yellow-1" />
-          <div className="icon-star text-10 text-yellow-1" />
-        </>
-      ),
-    },
-    {
-      id: 7,
-      reasonOfreview: "Free WiFi",
       ratings: (
         <>
           <div className="icon-star text-10 text-yellow-1" />

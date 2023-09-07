@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//              File using for showing frequently asked question in HELP CENTER page                 //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Function for showing frequently asked questions
 const Faq = () => {
   const faqContent = [
     {

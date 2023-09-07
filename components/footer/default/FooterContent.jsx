@@ -1,6 +1,13 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//              File using for showing all contents in footer of all pages                           //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import Link from "next/link";
 import footerDataContent from "../../../data/footerContent";
 
+// Function for showing footer content
 const FooterContent = () => {
   return (
     <>

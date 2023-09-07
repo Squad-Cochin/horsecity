@@ -1,6 +1,13 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                 File using for showing the working of app in PARTNERS page                        //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import Image from "next/image";
 import React from "react";
 
+// Function for showing the working of app
 const HowWorks = () => {
   const blockContent = [
     {

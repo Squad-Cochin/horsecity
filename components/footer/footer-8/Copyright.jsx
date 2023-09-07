@@ -1,5 +1,10 @@
-import Social from "../../common/social/Social";
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//       File using for showing copyright, currency and language in footer of HOME page              //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
+// Function for bottam footer
 const Copyright = () => {
   return (
     <div className="row justify-between items-center y-gap-10">

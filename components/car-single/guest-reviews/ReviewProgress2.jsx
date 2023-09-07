@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                   File using for showing ratings of a product in DETAILS page                     //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Function for showing guest reviews
 const ReviewProgress2 = (props) => {
   const reviewProgressContent = [
     {
@@ -28,8 +35,6 @@ const ReviewProgress2 = (props) => {
   ];
   return (
     <>
-  
-
       <div className="d-flex items-center mt-20">
         <div className="flex-center bg-blue-1 rounded-4 size-70 text-22 fw-600 text-white">
           4.8

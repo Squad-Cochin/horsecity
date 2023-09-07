@@ -1,7 +1,6 @@
 import Router from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import DateSearch from "../DateSearch";
-import GuestSearch from "./GuestSearch";
 import FlyingFromLocation from "./FlyingFromLocation";
 import FlyingToLocation from "./FlyingToLocation";
 import { useEffect } from "react";
@@ -65,9 +64,6 @@ const MainFilterSearchBox = () => {
           </div>
           : null }
           {/* End Return */}
-
-          {/* <GuestSearch /> */}
-          {/* End guest */}
 
           <div className="button-item">
             <button

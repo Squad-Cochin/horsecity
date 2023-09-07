@@ -1,18 +1,22 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//              File using for showing the images at top of the DETAILS page                         //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Navigation, Thumbs, Mousewheel } from "swiper";
-import { useEffect, useState } from "react";
+import { useState } from "react";
+import Image from "next/image";
 
-const slides = [
-  "/img/cars/slides/horseV1.jpg",
-  "/img/cars/slides/horseV2.jpg",
-  "/img/cars/slides/horseV3.jpg",
-  "/img/cars/slides/horseV1.jpg",
-];
-
+// Function for showing the images in details page top
 export default function SlideGallery(props) {
   const [imagesNavSlider, setImagesNavSlider] = useState(null);
-  // const [ images ,setImage] = useState([]);
 
+  // function for image loader
+  const imageLoader = ({ src }) => {
+    return `${src}`;
+  };
 
   return (
     <section className="slider">
@@ -39,7 +43,13 @@ export default function SlideGallery(props) {
                 return (
                   <SwiperSlide key={index}>
                     <div className="slider__image">
-                      <img src={slide?.url} alt="" />
+                      <Image 
+                        width={250}
+                        height={250}
+                        loader={imageLoader}
+                        src={slide?.url} 
+                        alt="Vechile Image" 
+                      />
                     </div>
                   </SwiperSlide>
                 );
@@ -70,7 +80,13 @@ export default function SlideGallery(props) {
               return (
                 <SwiperSlide key={index}>
                   <div className="slider__image">
-                    <img src={slide.url} alt="" />
+                    <Image 
+                      width={250}
+                      height={250}
+                      loader={imageLoader}
+                      src={slide?.url} 
+                      alt="Vechile Image" 
+                    />
                   </div>
                 </SwiperSlide>
               );

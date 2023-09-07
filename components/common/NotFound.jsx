@@ -1,5 +1,13 @@
-import Link from "next/link";
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                          File using for 404 design for error page                                 //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
+import Link from "next/link";
+import Image from "next/image";
+
+// Function for 404 error design
 const NotFound = () => {
   const data = {
     imageSrc: "/img/general/404.svg",
@@ -15,7 +23,11 @@ const NotFound = () => {
       <div className="container">
         <div className="row y-gap-30 justify-between items-center">
           <div className="col-lg-6">
-            <img src={data.imageSrc} alt="image" />
+            <Image 
+              width={400}
+              height={300}
+              src={data.imageSrc} 
+              alt="image" />
           </div>
           <div className="col-lg-5">
             <div className="no-page">

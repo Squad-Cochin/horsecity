@@ -1,13 +1,11 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                   File using for showing amenities of a product in DETAILS page                   //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Function for showing amenities
 const Amenities = (props) => {
-  const amenitiesContent = [
-    { id: 1, name: "Airbag" },
-    { id: 2, name: "FM Radio" },
-    { id: 3, name: "Power Windows" },
-    { id: 4, name: "Sensor" },
-    { id: 5, name: "Speed Km" },
-    { id: 6, name: "Steering Wheel" },
-  ];
-  // console.log("Amenties",props.vehicleData.air_condition);
   return (
     <>
       <div className="row y-gap-10 pt-15">

@@ -1,24 +1,31 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                     File using for sidebar trip type filter in LISTING page                       //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import { useSelector, useDispatch } from "react-redux";
-import { addTripType } from "../../../features/search/initalSearch";
 import { useEffect,useState } from "react";
 import { add_list_data } from "../../../features/listData/listData";
 import listingDataApi from "../../../pages/api/listingDataApi";
  
+// Function for trip type filter
 const CategorieFilters = () => {
   const { price_from, price_to, suppliers, sort, limit, page } = useSelector((state) => state.listingFilter) || {};
   const [ trip_type, setTrip_type ] = useState([])
   const [ searchData, setSearchData ] = useState({})
   const dispatch = useDispatch();
+
   useEffect(()=>{
     initialLoad();
   },[])
+
+  // Function for the initial load of the page
   async function initialLoad(){
     let search = await JSON.parse(localStorage.getItem('searchObject'));
-    // console.log("Ss",search)
     setTrip_type(search.trip_type)
     setSearchData(search)
   }
-  // dispatch(addTripType(trip_type_data))
 
   let data = [
     {
@@ -35,8 +42,8 @@ const CategorieFilters = () => {
     },
   ]  
 
+  // Function use for make change while the checkbox is clicked
   async function checkType(val){
-    // console.log(val,"val")
     if(trip_type?.includes(val)){
       const newArray = trip_type.filter(value => value !== val);
       setTrip_type(newArray);
@@ -44,7 +51,6 @@ const CategorieFilters = () => {
       modifiedData.trip_type = newArray;
       setSearchData(modifiedData);
       localStorage.setItem('searchObject', JSON.stringify(modifiedData));
-      // await dispatch(addTripType(newArray))
       updateListData(modifiedData);
     } else {
       const newArray = [...trip_type];
@@ -58,6 +64,7 @@ const CategorieFilters = () => {
     }
   }
 
+  // Function for make search of list items with new filter data
   async function updateListData(search){
     let reqObj = {
       "trip_type": search.trip_type,
@@ -69,9 +76,7 @@ const CategorieFilters = () => {
       "page" : page,
       "limit" : limit
     }
-    // console.log("req", reqObj)
     let packageList = await listingDataApi(reqObj)
-    // console.log("response",packageList)
     dispatch(add_list_data(packageList))
   }
 

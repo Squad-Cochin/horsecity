@@ -1,34 +1,27 @@
+
+
 import { useEffect, useState } from "react";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addTrip, addTripType, addNumberOfHorses } from "../../../features/search/initalSearch";
 
 const FilterSelect = () => {
   const dispatch = useDispatch();
   const [ways, setWays] = useState("");
   const [tripTypeValue, setTripTypeValue] = useState("");
-  const [noOfHorsesValue, setNoOfHorsesValue] = useState("");
-  const [ searchData, setSearchData ] = useState({});
-
-  // const { trip } = useSelector((state) => state.initialSearch) || {};
-  // // console.log(" tess",trip)
-  // useEffect(() => {
-    useEffect(() => {
-      let searchObject = {
-        "from_location" : "",
-        "to_location" : "",
-        "departDate" : "",
-        "returnDate" : "",
-        "trip" : "",
-        "suppliers" : [],
-        "trip_type" : [],
-        "number_of_horses" : ""
-      }
-      localStorage.setItem('searchObject', JSON.stringify(searchObject));
-      // const searchData = JSON.parse(localStorage.getItem('searchObject'));
-      // // console.log("ss",searchData)
-    })
-    
-  // })
+  const [noOfHorsesValue, setNoOfHorsesValue] = useState("")
+  useEffect(() => {
+    let searchObject = {
+      "from_location" : "",
+      "to_location" : "",
+      "departDate" : "",
+      "returnDate" : "",
+      "trip" : "",
+      "suppliers" : [],
+      "trip_type" : [],
+      "number_of_horses" : ""
+    }
+    localStorage.setItem('searchObject', JSON.stringify(searchObject));
+  })
 
   const handleWaysChange = (value) => {
     setWays(value);
@@ -87,14 +80,11 @@ const FilterSelect = () => {
       onChange: handleNoOfHorsesValueChange,
     },
   ];
-  // // console.log(searchData);
-  // console.log();
   return (
     <>
       {dropdownOptions.map((option, index) => (
         
         <div className="col-auto" key={index}>
-          {/* <h1>{searchData[option.key]}</h1> */}
           <div className="dropdown js-dropdown">
             <div
               className="dropdown__button d-flex items-center text-15"

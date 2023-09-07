@@ -1,5 +1,13 @@
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                File using for showing the use of the app in HELP CENTER screen                    //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import Image from "next/image";
 
+// function for show functionality in help center screen
 const HelpBlock = () => {
   const helpBlockContent = [
     {

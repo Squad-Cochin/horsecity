@@ -1,11 +1,19 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//              File using for showing the header for HOME page                                      //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import MainMenu from "../MainMenu";
 import MobileMenu from "../MobileMenu";
 
+// Function for showing the header
 const Header1 = () => {
   const [navbar, setNavbar] = useState(false);
 
+    // Function for set background for header while scrolling
   const changeBackground = () => {
     if (window.scrollY >= 10) {
       setNavbar(true);
@@ -45,22 +53,6 @@ const Header1 = () => {
 
             <div className="col-auto">
               <div className="d-flex items-center">
-                <div className="d-flex items-center is-menu-opened-hide md:d-none">
-                  {/* <Link
-                    href="/others-pages/login"
-                    className="button px-30 fw-400 text-14 -blue-1 bg-dark-4 h-50 text-white"
-                  >
-                    Become An Expert
-                  </Link> */}
-                  {/* <Link
-                    href="/others-pages/signup"
-                    className="button px-30 fw-400 text-14 border-dark-4 -blue-1 h-50 text-dark-4 ml-20"
-                  >
-                    Sign In / Register
-                  </Link> */}
-                </div>
-                {/* End d-flex */}
-
                 {/* Start mobile menu icon */}
                 <div className="d-none xl:d-flex x-gap-20 items-center pl-30 text-dark-1">
                   <div>

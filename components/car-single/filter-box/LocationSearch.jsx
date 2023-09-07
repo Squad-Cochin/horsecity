@@ -1,12 +1,19 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//            File using for showing input boxes of booking details in DETAILS page                  //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 import { useEffect,useState } from "react";
 import {addbooking} from "../../../pages/api/detailDataApi";
 import { useSelector } from "react-redux";
 import { toast } from 'react-toastify';
-import DatePicker from "react-datepicker";
 import DateSearch from "../../hero/DateSearch";
 import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
+
+// Function for showing input boxes of booking details
 const LocationSearch = () => {
   const [filteredNoOfHorse, setFilteredNoOfHorse] = useState([]);
   const [pickupCountry, setPickupCountry] = useState("");
@@ -19,13 +26,13 @@ const LocationSearch = () => {
   const [pickupDate, setPickupDate] = useState("");
   const [isLogin, setLogin] = useState(false);
 
-
   const { customer_id, vehicle_id, serviceprovider_id, no_of_horse } = useSelector((state) => state.bookingData) || {};
   const router = useRouter();
   useEffect(() => {
-    // console.log("no",no_of_horse);
     initialLoad();
   },[no_of_horse])
+
+  // Options for selecting number of horses
   const noOfHorses = [
     {
       id: 1,
@@ -67,8 +74,29 @@ const LocationSearch = () => {
       id: 10,
       no: "10"
     },
+    {
+      id: 11,
+      no: "11"
+    },
+    {
+      id: 12,
+      no: "12"
+    },
+    {
+      id: 13,
+      no: "13"
+    },
+    {
+      id: 14,
+      no: "14"
+    },
+    {
+      id: 15,
+      no: "15"
+    }
   ];
 
+  // Function for work at the begining of the page loading
   async function initialLoad(){
     const bookings = await JSON.parse(localStorage.getItem('searchObject'));
     const loginData = await JSON.parse(localStorage.getItem('loginData'));
@@ -85,6 +113,7 @@ const LocationSearch = () => {
    setFilteredNoOfHorse(filterData);
   }
 
+  // Options for selecting country
   const locationSearchContent = [
     {
       id: 1,
@@ -111,14 +140,15 @@ const LocationSearch = () => {
       name: "United Arab Emirates"
     },
   ];
-  
-// console.log("piii",pickupDate);
 
+  // Options for selecting trip type
   const tripTypes = [
     {id : 1,name : "PRIVATE"},
     {id : 2,name : "SHARING"},
     {id : 3,name : "GCC"},
   ]
+
+  // Funtion for getting data form and for making new enquery
   const handleSubmit = async (e) => {
     e.preventDefault();
 
@@ -138,12 +168,9 @@ const LocationSearch = () => {
       pickup_date : pickupDate,
       description : description,
     };
-    // console.log("data",formData);
       if(customer_id){
         let packageDetails = await addbooking(formData,customer_id);
-        // console.log("package",packageDetails);
         if(packageDetails?.code == 200){
-          // console.log("success",packageDetails);
           toast.success(packageDetails?.message, {
             position: 'top-right', // Position of the toast on the screen
           });
@@ -155,17 +182,11 @@ const LocationSearch = () => {
             position: 'top-right',
           });
         }
-
       }
-
-
   };
-
-
 
   return (
     <>
-
     <form onSubmit={handleSubmit}>
       <div className="searchMenu-loc mt-3 px-20 py-10 border-light rounded-4 js-form-dd js-liverSearch">
         <div>
@@ -253,7 +274,6 @@ const LocationSearch = () => {
         </div>
       </div>
 
-
       <div className="searchMenu-loc px-20 mt-3 py-10 border-light rounded-4 js-form-dd js-liverSearch">
         <h4 className="text-15 fw-500 ls-2 lh-16">No Of Horse</h4>
         <div className="text-15 text-light-1 ls-2 lh-16">
@@ -275,7 +295,6 @@ const LocationSearch = () => {
       <div className="searchMenu-loc px-20 mt-3 py-10 border-light rounded-4 js-form-dd js-liverSearch">
       <h4 className="text-15 fw-500 ls-2 lh-16">Pickup Date</h4>
       <div className="text-15 text-light-1 ls-2 lh-16">
-      {/* {pickupDate != "" ? <DateSearch use="pickupDate" pickupDate={pickupDate} setPickupDate={setPickupDate} /> : <DateSearch use="pickupDate" pickupDate={new Date()} setPickupDate={setPickupDate} />}   */}
       <DateSearch use="pickupDate" pickupDate={pickupDate} setPickupDate={setPickupDate} />
       </div>
       </div>

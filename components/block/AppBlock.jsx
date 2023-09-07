@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//           File using for showing download options at the bottam of home screen                    //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Function for showing the downloading platform.
 const AppBlock = () => {
   return (
     <>

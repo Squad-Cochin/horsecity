@@ -1,9 +1,15 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                File using for showing the send a message form in CONTACT pages                    //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import React from "react";
 
+// Function for contact form
 const ContactForm = () => {
   const handleSubmit = (event) => {
     event.preventDefault();
-    // handle form submission logic here
   };
 
   return (

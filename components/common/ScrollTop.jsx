@@ -1,5 +1,12 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                  File using for scroll the current page to the top of the page                    //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import { useEffect, useState } from "react";
 
+// Function for scroll the page to top
 export default function ScrollToTop() {
   const [isVisible, setIsVisible] = useState(false);
 
@@ -23,7 +30,6 @@ export default function ScrollToTop() {
     };
 
     window.addEventListener("scroll", toggleVisibility);
-
     return () => window.removeEventListener("scroll", toggleVisibility);
   }, []);
 

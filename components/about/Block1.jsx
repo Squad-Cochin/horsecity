@@ -7,6 +7,7 @@
 
 import Image from "next/image";
 
+// Function for the content of about Kailplus(Page Who We Are)
 const Block1 = () => {
   return (
     <>

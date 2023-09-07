@@ -1,33 +1,17 @@
-import Map from "../sidebar/Map";
-import LocationFilters from "../sidebar/LocationFilters";
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                  File using for sidebar for apply filter in LISTING page                          //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 import PirceSlider from "../sidebar/PirceSlider";
 import CategorieFilters from "../sidebar/CategorieFilters";
 import SupplierFilters from "../sidebar/SupplierFilters";
-import SpecificationsFilter from "../sidebar/SpecificationsFilter";
-import MileageFilter from "../sidebar/MileageFilter";
-import TransmissionFilter from "../sidebar/TransmissionFilter";
-import FuelPolicyFilter from "../sidebar/FuelPolicyFilter";
-import { useSelector, useDispatch } from "react-redux";
 
 const Sidebar = () => {
-  // const { trip_type, number_of_horses } = useSelector((state) => state.initialSearch) || {};
-  const { price_from, price_to, suppliers, sort, page, limit } = useSelector((state) => state.listingFilter) || {};
   return (
     <>
-      {/* <div className="sidebar__item -no-border position-relative">
-        <Map />
-      </div> */}
-      {/* End find map */}
-
-      {/* <div className="sidebar__item">
-        <h5 className="text-18 fw-500 mb-10">Location (Heathrow Airport)</h5>
-        <div className="sidebar-checkbox">
-          <LocationFilters />
-        </div> */}
-        {/* End Sidebar-checkbox */}
-      {/* </div> */}
-      {/* End Location filter */}
-
       <div className="sidebar__item">
         <h5 className="text-18 fw-500 mb-10">Trip Type</h5>
         <div className="sidebar-checkbox">
@@ -55,41 +39,6 @@ const Sidebar = () => {
         {/* End Sidebar-checkbox */}
       </div>
       {/* End Supplier filter */}
-{/* 
-      <div className="sidebar__item">
-        <h5 className="text-18 fw-500 mb-10">Car Specifications</h5>
-        <div className="sidebar-checkbox">
-          <SpecificationsFilter />
-        </div>
-      </div> */}
-      {/* End Specifications filter */}
-
-      {/* <div className="sidebar__item">
-        <h5 className="text-18 fw-500 mb-10">Mileage/Kilometres</h5>
-        <div className="sidebar-checkbox">
-          <MileageFilter />
-        </div> */}
-        {/* End Sidebar-checkbox */}
-      {/* </div> */}
-      {/* End Kilometres filter */}
-
-      {/* <div className="sidebar__item">
-        <h5 className="text-18 fw-500 mb-10">Transmission</h5>
-        <div className="sidebar-checkbox">
-          <TransmissionFilter />
-        </div> */}
-        {/* End Sidebar-checkbox */}
-      {/* </div> */}
-      {/* End Transmission filter */}
-
-      {/* <div className="sidebar__item">
-        <h5 className="text-18 fw-500 mb-10">Fuel Policy</h5>
-        <div className="sidebar-checkbox">
-          <FuelPolicyFilter />
-        </div> */}
-        {/* End Sidebar-checkbox */}
-      {/* </div> */}
-      {/* End Fuel Policy filter */}
     </>
   );
 };

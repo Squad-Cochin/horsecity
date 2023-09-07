@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//              File using for showing the subscribe form in HOME page                               //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Function for showing subscribe option in footer
 const Subscribe = () => {
   return (
     <div className="single-field relative d-flex justify-end items-center pb-30">

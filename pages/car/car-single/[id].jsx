@@ -3,12 +3,10 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { IoIosArrowBack } from "react-icons/io";
 import "photoswipe/dist/photoswipe.css";
-import carsData from "../../../data/cars";
 import Seo from "../../../components/common/Seo";
 import Header11 from "../../../components/header/header-11";
 import Overview from "../../../components/car-single/Overview";
 import PropertyHighlights from "../../../components/car-single/PropertyHighlights";
-import TopBreadCrumb from "../../../components/car-single/TopBreadCrumb";
 import ReviewProgress2 from "../../../components/car-single/guest-reviews/ReviewProgress2";
 import DetailsReview2 from "../../../components/car-single/guest-reviews/DetailsReview2";
 import ReplyForm from "../../../components/car-single/ReplyForm";
@@ -18,7 +16,6 @@ import DefaultFooter from "../../../components/footer/default";
 import SlideGallery from "../../../components/car-single/SlideGallery";
 import FilterBox from "../../../components/car-single/filter-box";
 import Faq from "../../../components/faq/Faq";
-import MapPropertyFinder from "../../../components/car-single/MapPropertyFinder";
 import { useDispatch } from "react-redux";
 import DetailsDataApi from "../../api/detailDataApi";
 import { booking_data } from "../../../features/bookingData/bookingData";
@@ -78,9 +75,6 @@ const TourSingleV1Dynamic = () => {
 
       <Header11 />
       {/* End Header 1 */}
-
-      {/* <TopBreadCrumb /> */}
-      {/* End top breadcrumb */}
 
       <section className="pt-40">
      

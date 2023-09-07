@@ -1,5 +1,12 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//       File using for showing copyright, currency and language in footer of all pages              //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import Social from "../../common/social/Social";
 
+// Function for bottam footer
 const Copyright = () => {
   return (
     <div className="row justify-between items-center y-gap-10">
@@ -19,15 +26,6 @@ const Copyright = () => {
               All rights reserved.
             </div>
           </div>
-          {/* End .col */}
-
-          {/* <div className="col-auto">
-            <div className="d-flex x-gap-15">
-              <a href="#">Privacy</a>
-              <a href="#">Terms</a>
-              <a href="#">Site Map</a>
-            </div>
-          </div> */}
           {/* End .col */}
         </div>
         {/* End .row */}
