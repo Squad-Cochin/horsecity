@@ -11,7 +11,6 @@
 
 const constant = require('../../utils/constants'); // Constant elements are stored in this file
 const invoice = require('../../models/invoices/invoice.model');  // The model from where the logic is intantiate are written in invoice model
-const time = require('../../utils/helper/date'); // All the time related formating are written in this fi
 
 /**
  * The below function is for getting all the invoices details. Those invoices who deleted at feild are having

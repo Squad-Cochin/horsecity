@@ -99,13 +99,67 @@ exports.getAllInvoice = (data) =>
 
 
 
-exports.GetOne = () =>
-{
-  const dataResult =
-  {
-    "invoice": [],
-    "vehicles" : [],
-    "payment": []
+exports.getOneInvoiceResponse = (data, data2) => {
+  const invoiceResponse = {
+    invoice: [],
+    vehicles: [],
+    payment: [],
+  };
+
+  if (data.length !== 0) {
+    invoiceResponse.invoice.push({
+      "id": data[0].id,
+      "iId": data[0].iId,
+      "iDate": data[0].iDate,
+      "pickup_time": data[0].Ptime,
+      "drop_time": data[0].Dtime,
+      "customer_name": data[0].customer_name,
+      "companyName": data[0].companyName,
+      "customerAddress": data[0].customerAddress,
+      "companyAddress": data[0].companyAddress,
+      "cusCountry": data[0].cusCountry,
+      "comCountry": data[0].comCountry,
+      "customer_email": data[0].customer_email,
+      "com_email": data[0].com_email,
+      "iSubTotal": data[0].iSubTotal,
+      "iTaxRate": data[0].iTaxRate,
+      "iTaxAmount": data[0].iTaxAmount,
+      "iDiscountRate": data[0].iDiscountRate,
+      "iDiscountAmount": data[0].iDiscountAmount,
+      "iFinalAmount": data[0].iFinalAmount,
+      "service_provider_name": data[0].service_provider_name,
+      "quotation_id": data[0].quotation_id,
+      "pickup_date": data[0].pickup_date,
+      "drop_date": data[0].drop_date,
+      "special_requirement": data[0].special_requirement,
+      "no_of_horse": data[0].no_of_horse,
+    });
   }
-  
-}
+  for (let row of data) 
+  {
+    invoiceResponse.payment.push
+    ({
+      "id": row.id,
+      "paymentRecord_Id" : row.paymentId,
+      "total_amount": row.iFinalAmount,
+      "received_amount": row.received_amount,
+      "received_date": row.received_date,
+      "remaining_amount": row.remaining_amount
+      });
+  }
+    for (let row of data2)
+    {
+      invoiceResponse.vehicles.push
+      ({
+          "id": row.id,
+          "vehicle_number" : row.vehicle_no,
+          "driver_name" : row.dName,
+          "pickup_location": row.pickup_point,
+          "drop_location": row.drop_point,
+      });
+    }
+
+  return invoiceResponse;
+};
+
+
