@@ -3,7 +3,6 @@
 //                       invoice page functionality done over here.                           //
 //                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////
-
 import React, { useState, useEffect, useRef  } from 'react';
 import List from "list.js";
 import { useFormik} from "formik";
@@ -15,17 +14,13 @@ import html2pdf from 'html2pdf.js'; // Make sure to include the library properly
 import config from '../../config';
 /**IMPORTED APIs */
 import { getInvoicesData, getSingleInvoiceData, getLatestPayementHistroy, getSendEmailButtonData , startTrip, cancelTrip} from '../../helpers/ApiRoutes/getApiRoutes'; 
-import { addAmount, sendEmail } from '../../helpers/ApiRoutes/addApiRoutes';
-
- 
-const InvoiceDetails = () =>
+import { addAmount, sendEmail } from '../../helpers/ApiRoutes/addApiRoutes'; 
+const ListInvoiceDetails = () =>
 {
     const [ledg, setLedg] = useState([]);
     const [vehicles, setVehicles] = useState([]);
     const [paymentHistroy, setPaymentHistroy] = useState([]);
     const [sendEmailButtonData, setsendEmailButtonData] = useState([]);
-    const [modal_list, setmodal_list] = useState(false);
-    const [modalEmail, setModalEmail] = useState(false);
     const [view_modal, setView_modal] = useState(false);
     const [modal, setModal] = useState(false);
     const [invoices, setInvoices] = useState([]);
@@ -40,41 +35,25 @@ const InvoiceDetails = () =>
     const [startedTrips, setStartedTrips] = useState([]);
     const [cancelledTrip, setCancelledTrip] = useState([]);
     const [userId, setUserId ] = useState("");
-    const [role, setRole ] = useState(false);
-    const [module, setModule] = useState({});
-    const [selectedInvoiceData, setSelectedInvoiceData] = useState(null);
     const invoiceRef = useRef(null); // Reference to the invoice section for PDF generation
     const pageLimit = config.pageLimit;
-    const role_name  = config.roles.service_provider
-
-    /**THIS HOOK WILL RENDER INITIAL TIME */
     useEffect(() => 
     {
       const data = JSON.parse(localStorage.getItem("authUser"));
       let user_Id = data[0]?.user[0]?.id
-      let role_Name = data[0]?.user[0]?.role_name
-      setUserId(user_Id);
+      setUserId(user_Id);    
       getAllData(1);  
     }, [userId]);
-
-
     const handleOpenModal = async (productId) =>
     {
       let sendEmailbuttondata = await getSendEmailButtonData(productId);
       setsendEmailButtonData(sendEmailbuttondata);     
-      setModalOpen(true); 
-      // Fetch the invoice data for the selected productId
-      let invoiceData = await getSingleInvoiceData(productId);
-      // Store the invoice data in the state variable
-      setSelectedInvoiceData(invoiceData);
       setModalOpen(true);    
     };
-
     const toggleEnterAmountModal = () => 
     {
       setShowEnterAmountModal(!showEnterAmountModal);
     }
-
     const initialValues =
     {
       totalInvoiceAmount: "",
@@ -83,13 +62,11 @@ const InvoiceDetails = () =>
       recepientEmail: sendEmailButtonData[0]?.email,
       invoiceSubject: `${sendEmailButtonData[0]?.subject} - ${sendEmailButtonData[0]?.invoice_no}`,
       invoiceBody: sendEmailButtonData[0]?.template
-    };
-                      
+    };                      
   const handleCloseModal = () => {
     setModalOpen(false);
     setErrors("");
-  };
-  
+  };  
   const toggleModal = () => 
   {
     setModal(!modal);
@@ -102,7 +79,6 @@ const InvoiceDetails = () =>
     initialValues,
     onSubmit: async (values) =>
     {
-      setmodal_list(false);
       if(modal)
       {
         let addedData = await addAmount(values.invoiceId, values.totalRecievedAmount);
@@ -111,7 +87,8 @@ const InvoiceDetails = () =>
           setErrors("");
           getAllData(pageNumber)
           setModal(!modal);
-          modalClose(values.invoiceId)
+          modalClose(values.invoiceId);
+          values.totalRecievedAmount = ""
         }
         else
         {
@@ -119,7 +96,6 @@ const InvoiceDetails = () =>
           setErrors(addedData.message)
         }
       }
-
       if(modalOpen)
       {
         let email = await sendEmail(sendEmailButtonData[0]?.id, values.recepientEmail, values.invoiceSubject);
@@ -138,23 +114,6 @@ const InvoiceDetails = () =>
       }
     }
   });
-
-    const handleSendEmail = async () => 
-    {
-      const { recepientEmail, invoiceSubject } = validation.values;
-      const sendEmailResponse = await sendEmail(sendEmailButtonData[0]?.id, recepientEmail, invoiceSubject);  
-      if(sendEmailResponse.code === 200)
-      {
-        setErrors("")
-        // setModalEmail(false);
-        modalClose();
-      }
-      else{
-        setErrors("")
-        setErrors(sendEmailResponse.message)
-      }
-    };
-
   async function modalClose(productId)
   {
     let invoiceData = await getSingleInvoiceData(productId)
@@ -163,7 +122,6 @@ const InvoiceDetails = () =>
     setLedg(invoiceData.payment)
     setVehicles(invoiceData.vehicles)
   }
-
   const handleDownloadPDF = () => {
     const invoiceSection = invoiceRef.current;
     if (invoiceSection) {
@@ -178,8 +136,7 @@ const InvoiceDetails = () =>
       const customWidth = 800; // Width in pixels
       const customHeight = 1000; // Height in pixels
       opt.jsPDF.unit = 'px';
-      opt.jsPDF.format = [customWidth, customHeight]; // Set the custom width and height
-  
+      opt.jsPDF.format = [customWidth, customHeight]; // Set the custom width and height  
       html2pdf().from(invoiceSection).set(opt).save().then(() =>
       {
         setDownloadingPDF(false);
@@ -187,39 +144,30 @@ const InvoiceDetails = () =>
       });
     }
   };
-
   const handleStartTrip = async (tripId) => {
     const tripButton = await startTrip(tripId);
     if (tripButton.code === 200) {
-      // Trip started successfully, add the tripId to the list of started trips
       setStartedTrips((prevStartedTrips) => [...prevStartedTrips, tripId]);
     }
     if (tripButton.code === 404) {
-      // Trip started successfully, add the tripId to the list of started trips
       setStartedTrips((prevStartedTrips) => [...prevStartedTrips, tripId]);
     }
   };
-
   const handleCancelTrip = async (tripId) =>
   {
     const tripButton = await cancelTrip(tripId);
     if(tripButton.code === 200)
     {
       setCancelledTrip((prevStartedTrips) => [...prevStartedTrips, tripId]);
+      await getAllData(pageNumber);
     }
     if (tripButton.code === 404) {
-      // Trip started successfully, add the tripId to the list of started trips
       setCancelledTrip((prevStartedTrips) => [...prevStartedTrips, tripId]);
     }
-
   };
-
   const isTripStarted = (tripId) => startedTrips.includes(tripId)
   const isTripActive = (status) => status === 'ACTIVE';
-
-
   const isTripCancel = (tripId) => cancelledTrip.includes(tripId)
-
   async function tog_view(productId)
   {
     let invoiceData = await getSingleInvoiceData(productId);
@@ -238,12 +186,10 @@ const InvoiceDetails = () =>
     {
       let getInvoices = await getInvoicesData(page || 1, userId);
       setInvoices(getInvoices.invoices);
-      setModule(getInvoices.module[0]);
       setPageNumber(page);
       setNumberOfData(getInvoices.totalCount);    
     }
   }
-
   useEffect(() =>
   {
     const existOptionsList =
@@ -262,7 +208,6 @@ const InvoiceDetails = () =>
       pagination: true,
     });
   });
-
   return (
     <React.Fragment>
       <div className="page-content">
@@ -290,7 +235,7 @@ const InvoiceDetails = () =>
                             </thead>
                             <tbody className="list form-check-all">
                               {invoices.map((item, index) => (
-                                <tr key={index.id}>
+                                <tr key={index}>
                                   <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                   <td className="invoice_number">{item.iId}</td>
                                   <td className="quotation_id">{item.quotation_id}</td>
@@ -319,7 +264,6 @@ const InvoiceDetails = () =>
             </Row>
         </Container>
       </div>
-
       {/* View invoice model*/}
       <Modal className="extra-width" isOpen={view_modal} toggle={() => {setView_modal(false);}} centered>
         <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => {setView_modal(false); }} >Invoice</ModalHeader>
@@ -433,7 +377,7 @@ const InvoiceDetails = () =>
                           </thead>
                           <tbody>
                             {ledg.map((item, index) => (
-                              <tr key = {index.id}>
+                              <tr key = {index}>
                                 <td className="tm_width_3 text-center">{index + 1}</td>
                                 <td className="tm_width_2 text-center">{item.received_amount === 0 ? "0 AED" : `${item.received_amount} AED`}</td>
                                 <td className="tm_width_1 text-center">{item.received_amount === 0 ? "" : item.received_date}</td>
@@ -451,9 +395,7 @@ const InvoiceDetails = () =>
             <Button color="secondary" onClick={() => { setView_modal(false); }}>Close</Button>
             <Button color="primary" onClick={handleDownloadPDF}>Download PDF </Button>
         </ModalFooter>
-
         {/* This is the enter amount model */}
-        
         <Modal className="extra-width" isOpen={modal} toggle={toggleModal}>
           <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={toggleModal}>Enter Amount</ModalHeader>
             <form className="tablelist-form" onSubmit={validation.handleSubmit}>
@@ -482,7 +424,6 @@ const InvoiceDetails = () =>
                   placeholder="Enter Received Amount" 
                   required
                   />
-                  <input type="hidden" name="invoiceId" value="1" />
                 </div>
               </ModalBody>
               <ModalFooter>
@@ -531,4 +472,4 @@ const InvoiceDetails = () =>
     </React.Fragment>
   );
 };
-export default InvoiceDetails;
+export default ListInvoiceDetails ;
