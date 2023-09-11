@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                           File for showing the whole DETAILS page                                 //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import dynamic from "next/dynamic";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
@@ -19,6 +25,8 @@ import Faq from "../../../components/faq/Faq";
 import { useDispatch } from "react-redux";
 import DetailsDataApi from "../../api/detailDataApi";
 import { booking_data } from "../../../features/bookingData/bookingData";
+
+// Function for the whole details page
 const TourSingleV1Dynamic = () => {
   const router = useRouter();
   const [vehicle, setVehicle] = useState([]);
@@ -27,19 +35,15 @@ const TourSingleV1Dynamic = () => {
   const [url,setUrl] =useState(false);
   const id = router.query.id;
   const dispatch = useDispatch();
-  // useEffect(() => {
-
-  //   else setVehicle(carsData.find((item) => item.id == id));
-
-  //   return () => {};
-  // }, [id]);
-
 
   useEffect(() => {
     if (!id) <h1>Loading...</h1>;
+
     else  getProductDetails();
   },[id])
-// console.log("vehicle images");
+
+
+  // Function for getting product details through api
   async function getProductDetails(){
     const loginData = await JSON.parse(localStorage.getItem('loginData'));
     const searchData = await JSON.parse(localStorage.getItem('searchObject'));
@@ -60,14 +64,11 @@ const TourSingleV1Dynamic = () => {
       no_of_horse : packageDetails?.vehicle[0]?.no_of_horses
       }))
     }
-    // let packageList = await axios.post(`/api/initialSearch`,{})
-    // console.log("first",packageDetails)
   }
 
-  // console.log("vehicle",vehicle);
   return (
     <>
-      <Seo pageTitle="Car Single" />
+      <Seo pageTitle="Package details" />
       {/* End Page Title */}
 
       <div className="header-margin"></div>
@@ -77,7 +78,6 @@ const TourSingleV1Dynamic = () => {
       {/* End Header 1 */}
 
       <section className="pt-40">
-     
         <div className="container">
           <div className="row y-gap-30">
             <div className="col-lg-8">
@@ -86,23 +86,6 @@ const TourSingleV1Dynamic = () => {
                 <a onClick={() =>url ? router.push("/car/car-list-v1") : router.push("/dashboard/db-wishlist")}  style={{ cursor: 'pointer' }}><IoIosArrowBack/><b>Back to page</b></a>
                   <h1 className="text-30 sm:text-24 fw-600">{vehicle?.make} {vehicle?.model}</h1>
                   <div className="row x-gap-10 items-center pt-10">
-                    {/* <div className="col-auto">
-                      <div className="d-flex x-gap-5 items-center">
-                        <i className="icon-location text-16 text-light-1" />
-                        <div className="text-15 text-light-1">
-                          {car?.location}
-                        </div>
-                      </div>
-                    </div> */}
-                    {/* End .col */}
-                    {/* <div className="col-auto">
-                      <button
-                        data-x-click="mapFilter"
-                        className="text-blue-1 text-15 underline"
-                      >
-                        Show on map
-                      </button>
-                    </div> */}
                   </div>
                 </div>
                 {/* End title and other info */}
@@ -157,13 +140,6 @@ const TourSingleV1Dynamic = () => {
                           </div>
                         </div>
                         {/* End div */}
-
-                        <div className="size-40 flex-center bg-yellow-1 rounded-4">
-                          <div className="text-14 fw-600 text-dark-1">
-                            {/* {vehicle?.ratings} */}
-                          </div>
-                        </div>
-                        {/* End div */}
                       </div>
                     </div>
                     {/* End .col-auto */}
@@ -206,16 +182,6 @@ const TourSingleV1Dynamic = () => {
       {/* End pt-40 */}
 
       {/* End main content section */}
-{/* 
-      <section className="mt-40 pt-40">
-        <div className="container">
-          <h3 className="text-22 fw-500 mb-20">Car Location</h3>
-          <div className=" rounded-4 overflow-hidden map-500">
-            <MapPropertyFinder />
-          </div>
-        </div>
-      </section> */}
-      {/* End Map */}
 
       <section className="pt-40">
         <div className="container ">

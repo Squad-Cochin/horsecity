@@ -1,25 +1,27 @@
-import axios from 'axios';
-// req, res
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//              File using for getting ACTIVE BOOKING LIST API data                                  //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
+import axios from 'axios';
 import API_CONFIG from "../../config";
 
+// Function for api connection
 export default async function activeBookingListApi(id) {
-    
 	try{   
-        const apiUrl = API_CONFIG.ACTIVE_BOOKING_LIST_DATA_API + id;
-        const apiTocken = API_CONFIG.API_TOKEN;
-        // console.log("enqlistData", apiUrl, apiTocken)
-        const response = await axios.get(apiUrl, {
-            headers: {
-              "Authorization": `Bearer ${apiTocken}`,
-            },
-        });
-        // console.log("enqlistDataRR",response.data)
-        return response.data.data
-    }
-    catch{
-           
-    }
+    const apiUrl = API_CONFIG.ACTIVE_BOOKING_LIST_DATA_API + id;
+    const apiTocken = API_CONFIG.API_TOKEN;
+    const response = await axios.get(apiUrl, {
+        headers: {
+          "Authorization": `Bearer ${apiTocken}`,
+        },
+    });
+    return response.data.data
+  }
+  catch{
+          
+  }
 }
 
 

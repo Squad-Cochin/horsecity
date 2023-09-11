@@ -1,5 +1,10 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                   File for functionalities if WISH LIST in DASHBORD pages                         //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import Image from "next/image";
-import { hotelsData } from "../../../../data/hotels";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { useEffect, useState } from "react";
 import WishlistData from '../../../api/wishList';
@@ -10,8 +15,9 @@ import Link from "next/link";
 import { useDispatch,useSelector } from "react-redux";
 import { wishlist_items } from "../../../../features/wishlist/wishlist";
 import { TbBus, TbArrowAutofitWidth, TbArrowAutofitHeight, TbLineHeight } from "react-icons/tb";
-const Properties = () => {
 
+// Function for the working of functionality in wish list
+const Properties = () => {
   const [ wishlist,setWishlist ] = useState([])
   const [ customer_id, setCustomerId ] =  useState('');
   const [ isLogin, setLogin ] = useState(false);
@@ -19,13 +25,14 @@ const Properties = () => {
   const dispatch = useDispatch();
   const { page } = useSelector((state) => state.wishlist) || {};
   const { limit } = useSelector((state) => state.listingFilter) || {};
+
   useEffect(()=>{
     initialLoad();
   },[])
 
+  // Function for the initial load of the page for getting wishlist items
   async function initialLoad(){
     const loginData = await JSON.parse(localStorage.getItem('loginData'));
-
     if (Object.keys(loginData).length !== 0) {
       setCustomerId(loginData.id);
       setLogin(true);
@@ -39,11 +46,10 @@ const Properties = () => {
         setWishlist(wishlist.data)
         dispatch(wishlist_items({total_count : wishlist.data.totalCount}))
       }
-      // console.log("wishlist",wishlist);
-
     }
   }
 
+  // Function for remove from wishlist
   const handleWishlist =async (wishlist,pId) =>{
     let reqObj= {
       customer_id :customer_id,
@@ -51,21 +57,17 @@ const Properties = () => {
     }
     if(wishlist){
       reqObj.flag = false;
-     
       let wishlisted = await isWishlist(reqObj);
-      
       if(wishlisted.code == 200){
         initialLoad();
       }
     }
-    // else{
-    //   reqObj.flag = true;
-    //   let wishlisted = await isWishlist(reqObj);
-    //   if(wishlisted.code == 200){
-    //     initialLoad();
-    //   }
-    // } 
   }
+
+  // FUNCTION FOR IMAGE LOADER
+  const imageLoader = ({ src, width, quality }) => {
+    return `${src}`;
+  };
 
   return (
     <>
@@ -89,7 +91,8 @@ const Properties = () => {
                           <SwiperSlide key={i}>
                             <div className="ratio ratio-1:1">
                               <div className="cardImage__content">
-                                <img
+                                <Image
+                                  loader={imageLoader}
                                   width={250}
                                   height={250}
                                   className="rounded-4 col-12 js-lazy"
@@ -135,22 +138,8 @@ const Properties = () => {
               <div className="col-md">
                 <div className="d-flex flex-column h-full justify-between">
                   <div>
-                    {/* <div className="row x-gap-5 items-center">
-                      <div className="col-auto">
-                        <div className="text-14 text-light-1">
-                          {item?.location}
-                        </div>
-                      </div>
-                      <div className="col-auto">
-                        <div className="size-3 rounded-full bg-light-1" />
-                      </div>
-                      <div className="col-auto">
-                        <div className="text-14 text-light-1">SUV</div>
-                      </div>
-                    </div> */}
                     <h3 className="text-18 lh-16 fw-500 mt-5">
                       {item.title}
-                      {/* <span className="text-15 text-light-1">or similar</span> */}
                     </h3>
                   </div>
                   <div className="col-lg-12 mt-20">
@@ -207,21 +196,6 @@ const Properties = () => {
               {/* End col-md */}
 
               <div className="col-md-auto text-right md:text-left">
-                {/* <div className="row x-gap-10 y-gap-10 justify-end items-center md:justify-start">
-                  <div className="col-auto">
-                    <div className="text-14 lh-14 fw-500">Exceptional</div>
-                    <div className="text-14 lh-14 text-light-1">
-                      {item?.numberOfReviews} reviews
-                    </div>
-                  </div>
-                  <div className="col-auto">
-                    <div className="flex-center text-dark-1 fw-600 text-14 size-40 rounded-4 bg-yellow-1">
-                      {item?.ratings}
-                    </div>
-                  </div>
-                </div> */}
-                {/* End .row */}
-
                 <div className="text-22 lh-12 fw-600 mt-70 md:mt-20">
                   AED {item?.price}
                 </div>

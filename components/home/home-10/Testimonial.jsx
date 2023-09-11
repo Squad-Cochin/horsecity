@@ -1,10 +1,15 @@
-import Image from "next/image";
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                   File using for showing the comments given by users at HOME page                 //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Import Swiper React components
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Scrollbar } from "swiper";
 import { testimonial1 } from "../../../data/testimonialData";
 
+// Function for Testimonial data
 const Testimonial = () => {
   return (
     <>
@@ -19,7 +24,7 @@ const Testimonial = () => {
           <SwiperSlide key={item.id}>
             <div className="row items-center x-gap-30 y-gap-20">
               <div className="col-auto">
-                <Image width={80} height={80} src={item.avatar} alt="image" />
+                <div className="user-name">{item.name.split('')[0]}</div>
               </div>
               <div className="col-auto">
                 <h5 className="text-16 text-white fw-500">{item.name}</h5>

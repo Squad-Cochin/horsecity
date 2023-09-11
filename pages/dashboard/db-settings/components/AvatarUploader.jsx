@@ -1,15 +1,21 @@
-import Image from "next/image";
-import React, { useState ,useEffect} from "react";
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//           File using for showing image and making change in image in DASHBORD SETTINGS            //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
+import Image from "next/image";
+import React, { useState } from "react";
+
+// Function for showing and uploading image
 const AvatarUploader = (props) => {
   const [image, setImage] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState(false);
-  // console.log("Date",props.formData.id_proof_image);
 
+  // Function for making change in mage
   const handleImageChange = (e) => {
     const file = e.target.files[0];
-    const reader = new FileReader();
     setImage(URL.createObjectURL(file));
     if (!file) {
       setError("Please select an image.");
@@ -28,56 +34,50 @@ const AvatarUploader = (props) => {
       setSuccess(false);
       return;
     }
+
     const newFormData = {
       ...props.formData,
       id_proof_image : file
     }
-
-      props.setFormData(newFormData)
-
-
+    props.setFormData(newFormData)
   };
 
 
-// FUNCTION FOR IMAGE LOADER
-
+  // FUNCTION FOR IMAGE LOADER
   const imageLoader = ({ src, width, quality }) => {
-
     return `${src}`;
-
   };
 
   return (
     <div className="row y-gap-30 items-center">
-   <div className="col-auto">
-    <div className="d-flex ratio ratio-1:1 w-200">
-      {props.formData.id_proof_image? ( 
-      <Image
-      src={props.formData.id_proof_image}
-      loader={imageLoader}
-      width={200}
-      height={200}
-      alt="ID Proof"
-      className="img-ratio rounded-4"
-    />):null}
-     {image? ( 
-      <Image
-      src={image}
-      width={200}
-      height={200}
-      alt="ID Proof"
-      className="img-ratio rounded-4"
-    />):null}
- 
-  </div>
-</div>
+      <div className="col-auto">
+        <div className="d-flex ratio ratio-1:1 w-200">
+          {props.formData.id_proof_image? ( 
+            <Image
+              src={props.formData.id_proof_image}
+              loader={imageLoader}
+              width={200}
+              height={200}
+              alt="ID Proof"
+              className="img-ratio rounded-4"
+          />
+          ):null}
+        {image? ( 
+            <Image
+              loader={imageLoader}
+              src={image}
+              width={200}
+              height={200}
+              alt="ID Proof"
+              className="img-ratio rounded-4"
+            />
+          ):null}
+        </div>
+      </div>
 
 
       <div className="col-auto">
         <h4 className="text-16 fw-500">Id Proof Image</h4>
-        {/* <div className="text-14 mt-5">
-          PNG or JPG no bigger than 800px wide and tall.
-        </div> */}
         <div className="d-inline-block mt-15">
           <label
             htmlFor="avatar-upload"
@@ -93,7 +93,6 @@ const AvatarUploader = (props) => {
             accept="image/png, image/jpeg"
             onChange={handleImageChange}
             style={{ display: "none" }}
-
           />
         </div>
         {error && !success && <div className="text-red-1 mt-1">{error}</div>}

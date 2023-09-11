@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                               File for SETTINGS in DASHBORD pages                                 //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import Seo from "../../../components/common/Seo";
 import Sidebar from "../common/Sidebar";
 import Header from "../../../components/header/dashboard-header";
@@ -6,22 +12,25 @@ import Footer from "../common/Footer";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { IoIosArrowBack } from "react-icons/io";
+
+// Function for showing the settings page also it can update
 const Index = () => {
   const [url,setUrl] =useState(false);
   const router = useRouter();
 
-useEffect(()=>{
-  initialLoad();
-},[]);
+  useEffect(()=>{
+    initialLoad();
+  },[]);
 
-async function initialLoad(){
-  const searchData = await JSON.parse(localStorage.getItem('searchObject'));
-  if (searchData.number_of_horses !='' && searchData.trip_type.length != 0) {
-    setUrl(true);
-  }else{
-    setUrl(false);
+  // Function for getting search object in the initial load of a page for setting back to the page route
+  async function initialLoad(){
+    const searchData = await JSON.parse(localStorage.getItem('searchObject'));
+    if (searchData.number_of_horses !='' && searchData.trip_type.length != 0) {
+      setUrl(true);
+    }else{
+      setUrl(false);
+    }
   }
-}
 
   return (
     <>

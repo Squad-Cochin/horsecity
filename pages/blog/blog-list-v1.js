@@ -11,6 +11,7 @@ import DefaultHeader from "../../components/header/default-header";
 import DefaultFooter from "../../components/footer/default";
 import Blog1 from "../../components/blog/Blog1";
 
+// Function for showing the whole blog page
 const BlogListV1 = () => {
   return (
     <>

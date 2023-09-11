@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//               File using for createSlice function of redux for storing WISHLIST DATA              //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -5,6 +11,7 @@ const initialState = {
     page  : 1
 };
 
+// Create slice function
 export const wishlist = createSlice({
   name: "wishlist-items",
   initialState,

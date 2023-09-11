@@ -7,6 +7,7 @@
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import MainMenu from "../MainMenu";
+import Image from "next/image";
 
 import MobileMenu from "../MobileMenu";
 
@@ -38,8 +39,8 @@ const Header1 = () => {
             <div className="col-auto">
               <div className="d-flex items-center">
                 <Link href="/" className="header-logo mr-20">
-                  <img src="/img/general/white-logo.png" alt="logo icon" />
-                  <img src="/img/general/white-logo.png" alt="logo icon" />
+                  <Image height={50} width={50} src="/img/general/white-logo.png" alt="logo icon" />
+                  <Image height={50} width={50} src="/img/general/white-logo.png" alt="logo icon" />
                 </Link>
                 {/* End logo */}
 

@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                               File for WISH LIST in DASHBORD pages                                //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import Seo from "../../../components/common/Seo";
 import Sidebar from "../common/Sidebar";
 import Header from "../../../components/header/dashboard-header";
@@ -7,39 +13,37 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { IoIosArrowBack } from "react-icons/io";
 
+// Function for wishlist in dashboad
 const Index = () => {
-
   const [url,setUrl] =useState(false);
   const router = useRouter();
-useEffect(()=>{
-  initialLoad();
-},[])
-async function initialLoad(){
-  const searchData = await JSON.parse(localStorage.getItem('searchObject'));
-  
-  if (searchData.number_of_horses !='' && searchData.trip_type.length != 0) {
-    setUrl(true);
-  }else{
-    setUrl(false);
+  useEffect(()=>{
+    initialLoad();
+  },[])
+
+  // Function for getting search object in the initial load of a page for setting back to the page route
+  async function initialLoad(){
+    const searchData = await JSON.parse(localStorage.getItem('searchObject'));
+    if (searchData.number_of_horses !='' && searchData.trip_type.length != 0) {
+      setUrl(true);
+    }else{
+      setUrl(false);
+    }
   }
-}
+
   return (
     <>
       <Seo pageTitle="Wishlist" />
       {/* End Page Title */}
-
       <div className="header-margin"></div>
-
       <Header />
       {/* End dashboard-header */}
-
       <div className="dashboard">
         <div className="dashboard__sidebar bg-white scroll-bar-1">
           <Sidebar />
           {/* End sidebar */}
         </div>
         {/* End dashboard__sidebar */}
-
         <div className="dashboard__main">
           <div className="dashboard__content bg-light-2">
             <div className="row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32">

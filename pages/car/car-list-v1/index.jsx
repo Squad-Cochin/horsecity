@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                           File for showing the whole LISTING page                                 //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import CallToActions from "../../../components/common/CallToActions";
 import Seo from "../../../components/common/Seo";
 import Header11 from "../../../components/header/header-11";
@@ -7,28 +13,10 @@ import TopHeaderFilter from "../../../components/car-list/car-list-v1/TopHeaderF
 import Pagination from "../../../components/car-list/common/Pagination";
 import Sidebar from "../../../components/car-list/car-list-v1/Sidebar";
 import CarPropertes from "../../../components/car-list/car-list-v1/CarPropertes";
-import React, { useEffect, useState } from "react";
-// import axios from "axios";
-// import initialSearch from "../../api/initialSearch";
-// import { useSelector, useDispatch } from "react-redux";
-// import { addTripType, addNumberOfHorses } from "../../../features/search/initalSearch";
-// import { add_list_data } from "../../../features/listData/listData";
+import React from "react";
 
+// Function for the whole listing page
 const Index = () => {
-  // const dispatch = useDispatch();
-  useEffect(() => {
-    getPackageList();
-  },[])
-
-  async function getPackageList(){
-    // const { price_from, price_to, suppliers, limit } = useSelector((state) => state.listingFilter) || {};
-    
-    // const searchObject = JSON.parse(localStorage.getItem('searchObject'));
-    // // console.log("local",searchObject)
-    // let packageList = await initialSearch(searchObject)
-    // let packageList = await axios.post(`/api/initialSearch`,{})
-    // // console.log("first")
-  }
   return (
     <>
       <Seo pageTitle="Listing" />

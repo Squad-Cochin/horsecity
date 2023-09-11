@@ -24,14 +24,7 @@ const Copyright = () => {
               All rights reserved.
             </div>
           </div>
-          {/* End .col */}
-          <div className="col-auto">
-            <div className="d-flex x-gap-15">
-              <a href="#">Privacy</a>
-              <a href="#">Terms</a>
-              <a href="#">Site Map</a>
-            </div>
-          </div>
+          
           {/* End .col */}
         </div>
         {/* End .row */}

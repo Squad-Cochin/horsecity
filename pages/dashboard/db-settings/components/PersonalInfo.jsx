@@ -1,18 +1,17 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                  File using for PERSONAL INFORMATION in DASHBORD SETTINGS                         //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import AvatarUploader from "./AvatarUploader";
 import { useEffect, useState } from "react";
 import DateSearch from "../../../../components/hero/DateSearch";
 import getCustomerInfo from "../../../api/getCustomInfo";
 import postCustomerInfo from "../../../api/postCustomerInfo";
 import { Alert } from 'reactstrap'
-// const resObj = {
-//   name: 'shaheer',
-//   userName: 'shaheer123',
-//   email: 'shaheer@gmail.com',
-//   contact_no: '4567894564',
-//   birthday: '',
-//   id_proof_no: '315464646468',
-//   id_proof_image : ''
-// }
+
+// Function for personal information in settings
 const PersonalInfo = () => {
   const [formData, setFormData] = useState({
     name: '',
@@ -26,30 +25,28 @@ const PersonalInfo = () => {
   const [ errors, setErrors ] = useState("");
   const [ success, setSuccess ] = useState("");
 
-
- useEffect(() => {
-  initialLoad();
-
+  useEffect(() => {
+    initialLoad();
   }, []);
+
+  // Function for initial load of the page for getting current data for the customer
   async function initialLoad(){
     const loginData = await JSON.parse(localStorage.getItem('loginData'));
-
     if (Object.keys(loginData).length !== 0) {
-        const  resObj = await getCustomerInfo(loginData.id) ;
-        // console.log("REAAA",resObj);
-        setFormData({
-          name: resObj?.name || '',
-          userName: resObj?.userName || '',
-          email: resObj?.email || '',
-          contact_no: resObj?.contact_no || '',
-          birthday: resObj?.birthday || '',
-          id_proof_no: resObj?.id_proof_no || '',
-          id_proof_image: resObj?.id_proof_image || '',
-        });
+      const  resObj = await getCustomerInfo(loginData.id) ;
+      setFormData({
+        name: resObj?.name || '',
+        userName: resObj?.userName || '',
+        email: resObj?.email || '',
+        contact_no: resObj?.contact_no || '',
+        birthday: resObj?.birthday || '',
+        id_proof_no: resObj?.id_proof_no || '',
+        id_proof_image: resObj?.id_proof_image || '',
+      });
     }
-
   }
 
+  // Function for on change in the current value in the form
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -58,6 +55,7 @@ const PersonalInfo = () => {
     }));
   };
 
+  // Function for scroll the page to the top
   const scrollToTop = () => {
     window.scrollTo({
       top: 0,
@@ -65,35 +63,28 @@ const PersonalInfo = () => {
     });
   };
 
+  // Function for handle submit dor update the personal information
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log(formData);
-
-
-
-
     const loginData = await JSON.parse(localStorage.getItem('loginData'));
     if (Object.keys(loginData).length !== 0) {
-    let Customerinfo  = await postCustomerInfo(formData,loginData.id)
-    // console.log("VVVV",Customerinfo);
-        if(Customerinfo.code == 200){
-          setSuccess(Customerinfo.message)
-          setErrors("");
-          initialLoad();
-          scrollToTop()
-        }else{
-          setErrors(Customerinfo.message);
-          setSuccess("")
-          scrollToTop()
-        }
-  }
+      let Customerinfo  = await postCustomerInfo(formData,loginData.id)
+      if(Customerinfo.code == 200){
+        setSuccess(Customerinfo.message)
+        setErrors("");
+        initialLoad();
+        scrollToTop()
+      }else{
+        setErrors(Customerinfo.message);
+        setSuccess("")
+        scrollToTop()
+      }
+    }
   };
 
   return (
     <>
       <form onSubmit={handleSubmit}>
-        {/* <AvatarUploader /> */}
-        {/* End AvatarUploader*/}
         {success !== "" ? <Alert color="success"  className="custom-alert"><div>{success}</div></Alert> : null}
         {errors !== "" ? <Alert color="danger" ><div>{errors}</div></Alert> : null}
         <div className="border-top-light mt-30 mb-30" />
@@ -150,14 +141,9 @@ const PersonalInfo = () => {
 
             <div className="col-md-6">
               <div className="form-input ">
-                {/* {
-                  formData.birthday ? ( <DateSearch use='date-of-birth' formData={formData}  setFormData={setFormData} />) : (
-                    <DateSearch use='date-of-birth' formData={new Date()}  setFormData={setFormData} />
-                  )
-                } */}
-                  <DateSearch use='date-of-birth' formData={formData}  setFormData={setFormData} />
+                <DateSearch use='date-of-birth' formData={formData}  setFormData={setFormData} />
                 <label className="lh-1 text-16 text-light-1">
-                  Birthday
+                  Date of Birth
                 </label>
               </div>
             </div>

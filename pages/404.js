@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                      File using for showing the 404 ERROR pages                                   //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import dynamic from "next/dynamic";
 import CallToActions from "../components/common/CallToActions";
 import Seo from "../components/common/Seo";

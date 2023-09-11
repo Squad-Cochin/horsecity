@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//               File using for from, to, travelling dates search box in HOME page                   //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import Router from "next/router";
 import { useSelector, useDispatch } from "react-redux";
 import DateSearch from "../DateSearch";
@@ -6,6 +12,7 @@ import FlyingToLocation from "./FlyingToLocation";
 import { useEffect } from "react";
 import { filter_tripType, filter_number_of_horses, filter_price_from, filter_price_to, filter_suppliers, filter_sort, filter_page } from "../../../features/listingFilter/listingFilter";
 
+// Function for main filter searchbox
 const MainFilterSearchBox = () => {
   const { from_location, to_location, departDate, returnDate, trip, trip_type, number_of_horses } = useSelector((state) => state.initialSearch) || {};
   const dispatch = useDispatch();
@@ -19,6 +26,7 @@ const MainFilterSearchBox = () => {
     dispatch(filter_page(1));
   })
 
+  // Function for save location while make a click on search and redirect to the listing
   function saveLocal(){
     let searchObject = {
       "from_location" : from_location,
@@ -30,13 +38,10 @@ const MainFilterSearchBox = () => {
       "trip_type" : trip_type,
       "number_of_horses" : number_of_horses
     }
-    // console.log("before",searchObject)
     localStorage.setItem('searchObject', JSON.stringify(searchObject));
     if(number_of_horses && number_of_horses != "" && number_of_horses != 0 && trip_type && trip_type != [] && trip && trip != ""){
       Router.push("/car/car-list-v1")
     }
-    
-    // return false;
   }
   return (
     <>

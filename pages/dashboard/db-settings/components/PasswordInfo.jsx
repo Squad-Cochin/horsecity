@@ -1,7 +1,14 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                       File using for CHANGE PASSWORD in DASHBORD SETTINGS                         //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import {  useState } from "react";
 import changePassword from "../../../api/changePassword";
 import { Alert } from 'reactstrap'
 
+// Function for change password in settings
 const PasswordInfo = () => {
   const [ errors, setErrors ] = useState("");
   const [ success, setSuccess ] = useState("");
@@ -11,7 +18,7 @@ const PasswordInfo = () => {
     confirmnewpassword: '',
   });
 
-  
+  // Function for onchange while change in input password
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
@@ -19,6 +26,8 @@ const PasswordInfo = () => {
       [name]: value,
     }));
   };
+
+  // Function for clear form data while clicking on cancel
   const clearForm = () => {
     setFormData({
       password: '',
@@ -26,14 +35,13 @@ const PasswordInfo = () => {
       confirmnewpassword: '',
     });
   };
+
+  // Function for submit with new password
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log(formData);
     const loginData = await JSON.parse(localStorage.getItem('loginData'));
     if (Object.keys(loginData).length !== 0) {
         let changePwd  = await changePassword(formData,loginData.id)
-        // console.log("REsponsee",changePwd);
-
         if(changePwd.code === 200){
           setSuccess(changePwd.message)
           setErrors("");

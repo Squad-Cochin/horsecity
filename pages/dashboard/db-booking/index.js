@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                        File for showing the ENQUIRIES HISTORY in DASHBORD pages                   //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import Seo from "../../../components/common/Seo";
 import Sidebar from "../common/Sidebar";
 import Header from "../../../components/header/dashboard-header";
@@ -6,25 +12,28 @@ import BookingTable from "./components/BookingTable";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { IoIosArrowBack } from "react-icons/io";
-const Index = () => {
 
+// Function for showing the enquiries history in dashboard
+const Index = () => {
   const [url,setUrl] =useState(false);
   const router = useRouter();
-useEffect(()=>{
-  initialLoad();
-},[])
-async function initialLoad(){
-  const searchData = await JSON.parse(localStorage.getItem('searchObject'));
-  
-  if (searchData.number_of_horses !='' && searchData.trip_type.length != 0) {
-    setUrl(true);
-  }else{
-    setUrl(false);
+
+  useEffect(()=>{
+    initialLoad();
+  },[])
+
+  // Function for getting search object in the initial load of a page for setting back to the page route
+  async function initialLoad(){
+    const searchData = await JSON.parse(localStorage.getItem('searchObject'));
+    if (searchData.number_of_horses !='' && searchData.trip_type.length != 0) {
+      setUrl(true);
+    }else{
+      setUrl(false);
+    }
   }
-}
   return (
     <>
-      <Seo pageTitle="Booking History" />
+      <Seo pageTitle="Enquiries History" />
       {/* End Page Title */}
 
       <div className="header-margin"></div>
@@ -45,9 +54,6 @@ async function initialLoad(){
               <div className="col-12">
               <a onClick={() =>{url ? router.push("/car/car-list-v1") : router.push("/")}}  style={{ cursor: 'pointer' }}><IoIosArrowBack/><b>Back to page</b></a>
                 <h1 className="text-30 lh-14 fw-600">Enquiries History</h1>
-                {/* <div className="text-15 text-light-1">
-                  Lorem ipsum dolor sit amet, consectetur.
-                </div> */}
               </div>
               {/* End .col-12 */}
             </div>

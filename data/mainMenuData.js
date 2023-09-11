@@ -63,42 +63,6 @@ export const pageItems = [
       name: "Become a partner",
       routePath: "/others-pages/signup",
     },
-  // {
-  //   name: "404",
-  //   routePath: "/404",
-  // },
-  // {
-  //   name: "About",
-  //   routePath: "/others-pages/about",
-  // },
-  // {
-  //   name: "Become Expert",
-  //   routePath: "/others-pages/become-expert",
-  // },
-  // {
-  //   name: "Help Center",
-  //   routePath: "/others-pages/help-center",
-  // },
-  // {
-  //   name: "Login",
-  //   routePath: "/others-pages/login",
-  // },
-  // {
-  //   name: "Register",
-  //   routePath: "/others-pages/signup",
-  // },
-  // {
-  //   name: "Terms",
-  //   routePath: "/others-pages/terms",
-  // },
-  // {
-  //   name: "Invoice",
-  //   routePath: "/others-pages/invoice",
-  // },
-  // {
-  //   name: "Dashboard",
-  //   routePath: "/dashboard/db-dashboard",
-  // },
 ];
 export const dashboardItems = [
   {
@@ -120,26 +84,6 @@ export const dashboardItems = [
   {
     name: "Settings",
     routePath: "/dashboard/db-settings",
-  },
-  {
-    name: "Vendor Dashboard",
-    routePath: "/vendor-dashboard/dashboard",
-  },
-  {
-    name: "Vendor Add Hotel",
-    routePath: "/vendor-dashboard/add-hotel",
-  },
-  {
-    name: "Vendor Booking",
-    routePath: "/vendor-dashboard/booking",
-  },
-  {
-    name: "Vendor Hotels",
-    routePath: "/vendor-dashboard/hotels",
-  },
-  {
-    name: "Vendor Recovery",
-    routePath: "/vendor-dashboard/recovery",
   },
   {
     name: "Logout",

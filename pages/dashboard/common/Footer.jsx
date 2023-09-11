@@ -1,12 +1,13 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                           File for showing the footer for DASHBORD pages                          //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import React from "react";
 
+// Function for showing dashboard footer
 function Footer() {
-  const linksData = [
-    { label: "Privacy", url: "#" },
-    { label: "Terms", url: "#" },
-    { label: "Site Map", url: "#" },
-  ];
-
   return (
     <footer className="footer -dashboard mt-60">
       <div className="footer__row row y-gap-10 items-center justify-between">
@@ -17,18 +18,6 @@ function Footer() {
                 © {new Date().getFullYear()} Kailplus LLC All rights reserved.
               </div>
             </div>
-
-            {/* <div className="col-auto">
-              <div className="row x-gap-20 y-gap-10 items-center text-14">
-                {linksData.map((link, index) => (
-                  <div className="col-auto" key={index}>
-                    <a href={link.url} className="text-13 lh-1">
-                      {link.label}
-                    </a>
-                  </div>
-                ))}
-              </div>
-            </div> */}
           </div>
         </div>
         {/* End .col-auto */}

@@ -1,3 +1,10 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//        File using for showing the overall comment and rating given by users at HOME page          //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+// Function for Testimonial Rating
 const TestimonialRating = () => {
   return (
     <>

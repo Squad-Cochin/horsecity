@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//         File using for createSlice function of redux for storing BOOKING DATA(imp data)           //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -7,6 +13,7 @@ const initialState = {
     no_of_horse : ''
 };
 
+// Create slice function
 export const bookingData = createSlice({
   name: "bookingData",
   initialState,

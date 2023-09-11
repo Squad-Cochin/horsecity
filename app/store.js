@@ -8,7 +8,6 @@
 import { configureStore } from "@reduxjs/toolkit";
 
 // Importing redux value storing files
-import findPlaceSlice from "../features/hero/findPlaceSlice";
 import initialSearch from "../features/search/initalSearch";
 import listingFilter from "../features/listingFilter/listingFilter";
 import listData from "../features/listData/listData";
@@ -17,7 +16,6 @@ import bookingData  from "../features/bookingData/bookingData";
 import wishlist  from "../features/wishlist/wishlist";
 export const store = configureStore({
     reducer: {
-        hero: findPlaceSlice,
         initialSearch: initialSearch,
         listingFilter: listingFilter,
         listData: listData,

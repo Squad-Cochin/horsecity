@@ -1,26 +1,25 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                     File using for getting WISHLIST LIST API data                                 //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import axios from 'axios';
-// req, res
-
 import API_CONFIG from "../../config";
 
+// Function for api connection
 export default async function WishlistData(body) {
-    
 	try{   
-        // console.log("body",body);
-        const wishlistApi = API_CONFIG.GET_WISHLIST_API;
-        // console.log("body2",wishlistApi);
-        const apiToken = API_CONFIG.API_TOKEN;
-
-        const response = await axios.post(`${wishlistApi}`,body,{
-            headers: {
-              "Authorization": `Bearer ${apiToken}`, 
-            },
-        });
-
-        return response.data
-    }
-    catch{
-           
-    }
+    const wishlistApi = API_CONFIG.GET_WISHLIST_API;
+    const apiToken = API_CONFIG.API_TOKEN;
+    const response = await axios.post(`${wishlistApi}`,body,{
+        headers: {
+          "Authorization": `Bearer ${apiToken}`, 
+        },
+    });
+    return response.data
+  }
+  catch{
+          
+  }
 }

@@ -1,5 +1,13 @@
-import AppBlock from "../../block/AppBlock";
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//            File using for showing app banner just above to the footer at HOME page                //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
+import AppBlock from "../../block/AppBlock";
+import Image from "next/image";
+
+// Function for showing app banner
 const AppBanner = () => {
   return (
     <section
@@ -15,7 +23,7 @@ const AppBanner = () => {
           {/* End .col */}
 
           <div className="col-lg-6">
-            <img src="/img/app/1.png" alt="image" />
+            <Image width={600} height={600} src="/img/app/1.png" alt="image" />
           </div>
           {/* End .col */}
         </div>

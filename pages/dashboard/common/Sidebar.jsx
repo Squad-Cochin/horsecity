@@ -1,13 +1,18 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                        File for showing the sidebar in DASHBORD pages                             //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { isActiveLink } from "../../../utils/linkActiveChecker";
 import logoutApi from "../../api/logoutApi";
 
-import { useEffect, useState } from "react";
+// Function for side bar in dashbord
 const Sidebar = () => {
   const router = useRouter();
-
   const sidebarContent = [
     {
       id: 1,
@@ -39,16 +44,10 @@ const Sidebar = () => {
       name: " Settings",
       routePath: "/dashboard/db-settings",
     },
-    // {
-    //   id: 6,
-    //   icon: "/img/dashboard/sidebar/log-out.svg",
-    //   name: " Logout",
-    //   routePath: "/others-pages/login",
-    // },
   ];
 
+  // Function for logout
   async function userLogout(){
-    // console.log("rr1")
     let loginData = await JSON.parse(localStorage.getItem("loginData"))
     await logoutApi(loginData?.id)
     localStorage.setItem('loginData', JSON.stringify({}));
@@ -64,7 +63,6 @@ const Sidebar = () => {
             } sidebar__button `}
           >
             <Link
-              // { (item.name === " Logout") ? null : null}
               href={item.routePath}
               className="d-flex items-center text-15 lh-1 fw-500"
             >
@@ -88,22 +86,16 @@ const Sidebar = () => {
             <button
               onClick={userLogout}
             >
-              {/* <Link
-                // { (item.name === " Logout") ? null : null}
-                href='/others-pages/login'
-                className="d-flex items-center text-15 lh-1 fw-500"
-              > */}
-                <Image
-                  width={20}
-                  height={20}
-                  src='/img/dashboard/sidebar/log-out.svg'
-                  alt="image"
-                  className="mr-15"
-                />
-                Logout
+              <Image
+                width={20}
+                height={20}
+                src='/img/dashboard/sidebar/log-out.svg'
+                alt="image"
+                className="mr-15"
+              />
+              Logout
               {/* </Link> */}
             </button>
-            
           </div>
         </div>
     </div>

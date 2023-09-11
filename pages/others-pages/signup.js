@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                               File for showing REGISTRATION pages                                 //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import dynamic from "next/dynamic";
 import CallToActions from "../../components/common/CallToActions";
 import Seo from "../../components/common/Seo";
@@ -5,6 +11,7 @@ import DefaultHeader from "../../components/header/default-header";
 import DefaultFooter from "../../components/footer/default";
 import SignUpForm from "../../components/common/SignUpForm";
 
+// Function for showing registration page
 const SignUp = () => {
   return (
     <>

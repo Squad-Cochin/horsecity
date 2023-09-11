@@ -1,26 +1,28 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                     File using for getting DASHBOARD API data                                     //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 
 import axios from 'axios';
-// req, res
-
 import API_CONFIG from "../../config";
 
+// Function for api connection
 export default async function dashboardDataApi(id) {
-    
 	try{   
-        const apiUrl = API_CONFIG.DASHBOARD_DATA_API + id;
-        const apiTocken = API_CONFIG.API_TOKEN;
-        // console.log("dashboardDataApi", apiUrl, apiTocken)
-        const response = await axios.get(apiUrl, {
-            headers: {
-              "Authorization": `Bearer ${apiTocken}`,
-            },
-        });
-        // console.log("dashboardDataApi",response.data)
-        return response.data.data
-    }
-    catch{
-           
-    }
+    const apiUrl = API_CONFIG.DASHBOARD_DATA_API + id;
+    const apiTocken = API_CONFIG.API_TOKEN;
+    const response = await axios.get(apiUrl, {
+        headers: {
+          "Authorization": `Bearer ${apiTocken}`,
+        },
+    });
+    return response.data.data
+  }
+  catch{
+          
+  }
 }
 
 

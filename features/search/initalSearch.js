@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//               File using for createSlice function of redux for storing INITIAL SEARCH DATA        //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -10,6 +16,7 @@ const initialState = {
   number_of_horses : 0
 };
 
+// Create slice function
 export const initialSearch = createSlice({
   name: "initial-search",
   initialState,

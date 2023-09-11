@@ -8,6 +8,7 @@ import Link from "next/link";
 import { useEffect, useState } from "react";
 import MainMenu from "../MainMenu";
 import MobileMenu from "../MobileMenu";
+import Image from "next/image";
 
 // Function for showing the header
 const Header1 = () => {
@@ -35,8 +36,8 @@ const Header1 = () => {
             <div className="col-auto">
               <div className="d-flex items-center">
                 <Link href="/" className="header-logo mr-50">
-                  <img src="/img/general/black-logo.png" alt="logo icon" />
-                  <img src="/img/general/white-logo.png" alt="logo icon" />
+                  <Image height={50} width={50} src="/img/general/black-logo.png" alt="logo icon" />
+                  <Image height={50} width={50} src="/img/general/white-logo.png" alt="logo icon" />
                 </Link>
                 {/* End logo */}
 

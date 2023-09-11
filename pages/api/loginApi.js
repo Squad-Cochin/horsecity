@@ -1,25 +1,27 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                             File using for LOGIN API                                              //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import axios from 'axios';
-// req, res
-
 import API_CONFIG from "../../config";
 
+// Function for api connection
 export default async function loginApi(data) { 
 	try{   
-        const loginAPI = API_CONFIG.LOGIN_API;
-        const apiTocken = API_CONFIG.API_TOKEN;
-        // console.log("login", loginAPI, apiTocken, data)
-        const response = await axios.post(loginAPI, data ,{
-            headers: {
-              "Authorization": `Bearer ${apiTocken}`,
-            },
-        });
-        // console.log("loginData",response.data)
-        return response.data
-    }
-    catch{
-           
-    }
+    const loginAPI = API_CONFIG.LOGIN_API;
+    const apiTocken = API_CONFIG.API_TOKEN;
+    const response = await axios.post(loginAPI, data ,{
+        headers: {
+          "Authorization": `Bearer ${apiTocken}`,
+        },
+    });
+    return response.data
+  }
+  catch{
+          
+  }
 }
 
 

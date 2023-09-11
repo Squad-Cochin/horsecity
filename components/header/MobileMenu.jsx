@@ -7,6 +7,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 import { useRouter } from "next/router";
 import {
   ProSidebarProvider,
@@ -38,7 +39,7 @@ const MobileMenu = () => {
     <>
       <div className="pro-header d-flex align-items-center justify-between border-bottom-light">
         <Link href="/">
-          <img src="/img/general/black-logo.png" alt="brand" width = "50px" />
+          <Image height={50} width={50} src="/img/general/black-logo.png" alt="brand" />
         </Link>
         {/* End logo */}
 

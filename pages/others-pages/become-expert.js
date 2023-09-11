@@ -1,13 +1,19 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                                 File for showing PARTNERS pages                                   //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import dynamic from "next/dynamic";
 import CallToActions from "../../components/common/CallToActions";
 import Seo from "../../components/common/Seo";
 import DefaultHeader from "../../components/header/default-header";
 import DefaultFooter from "../../components/footer/default";
-import Image from "next/image";
 import HowWorks from "../../components/block/HowWorks";
 import Faq from "../../components/faq/Faq";
 import Link from "next/link";
 
+// Function for showing partners page
 const BecomeExpert = () => {
   return (
     <>
@@ -16,41 +22,6 @@ const BecomeExpert = () => {
 
       <div className="header-margin"></div>
       {/* header top margin */}
-
-      {/* <section className="section-bg layout-pt-lg layout-pb-lg">
-        <div className="section-bg__item col-12">
-          <Image
-            width={1920}
-            height={400}
-            src="/img/pages/about/1.png"
-            alt="image"
-            priority
-          />
-        </div>
-
-        <div className="container">
-          <div className="row justify-center text-center">
-            <div className="col-xl-6 col-lg-8 col-md-10">
-              <h1 className="text-40 md:text-25 fw-600 text-white">
-                Let&apos;s Show the Beauty of Your City to the World
-              </h1>
-              <div className="text-white mt-15">
-                Discover amzaing places at exclusive deals
-              </div>
-              <div className="d-inline-block">
-                <Link
-                  href="/pages/signup"
-                  className="button -md -blue-1 w-180 bg-white text-dark-1 mt-30 md:mt-20"
-                >
-                  Register
-                </Link>
-              </div>
-            </div>
-          </div>
-        </div>
-        
-      </section> */}
-      {/* End About Banner Section */}
 
       <section className="layout-pt-lg layout-pb-lg">
         <div className="container">
@@ -67,8 +38,8 @@ const BecomeExpert = () => {
           {/* End .row */}
 
           <div className="row y-gap-30 justify-between pt-40">
-              <HowWorks />
-              <div className="mt-20">
+            <HowWorks />
+            <div className="mt-20">
               <Link
                 className=" button -dark-1 px-30 fw-400 text-14 bg-blue-1 h-50 text-white"
                 href="/others-pages/signup"

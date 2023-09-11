@@ -1,13 +1,18 @@
-import { use, useEffect, useState } from "react";
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                  File for showing the BOOKING HISTORY table in DASHBORD pages                     //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import { useEffect, useState } from "react";
 import Pagination from "../../common/Pagination";
-import ActionsButton from "../components/ActionsButton";
 import allBookingListApi from "../../../api/allBookingListApi";
 import activeBookingListApi from "../../../api/activeBookingListApi";
 import inactiveBookingListApi from "../../../api/inactiveBookingListApi";
 import startedBookingListApi from "../../../api/startedBookingListApi";
 
+// Function for showing the BOOKING history table in dashboard
 const BookingTable = () => {
-
   const [ data, setData ] = useState([]);
   const [activeTab, setActiveTab] = useState(0);
   const [ customerId, setCustomer ] = useState();
@@ -16,44 +21,44 @@ const BookingTable = () => {
     initialLoad();
   },[])
 
+   // Function at the initial load of the page for getting the data from api
   async function initialLoad(){
     let loginData = await JSON.parse(localStorage.getItem("loginData"))
-    // if(loginData){
-    //   setLogin(loginData);
-    // }
     let enqList = await allBookingListApi(loginData?.id)
     setCustomer(loginData?.id)
     setData(enqList);
     setActiveTab(0)
   }
 
+  // Getting active booking data only
   async function activeData(){
     let activeEnqList = await activeBookingListApi(customerId)
     setData(activeEnqList);
   }
 
+  // Getting inactive booking data only
   async function inactiveData(){
     let activeEnqList = await inactiveBookingListApi(customerId)
     setData(activeEnqList);
   }
 
+  // Getting started data only
   async function startedData(){
     let activeEnqList = await startedBookingListApi(customerId)
     setData(activeEnqList);
   }
 
+  // Function for set the hedding as active
   const handleTabClick = (index) => {
     setActiveTab(index);
   };
 
+  // Tabs just above to the table
   const tabItems = [
     {name :"All Booking", fun : initialLoad},
     {name :"Confirmed", fun : activeData},
     {name :"Cancelled", fun : inactiveData},
     {name :"Started", fun : startedData},
-    // "Confirmed",
-    // "Cancelled",
-    // "Started"
   ];
 
 
@@ -92,135 +97,25 @@ const BookingTable = () => {
                     <th>Total Amount</th>
                     <th>Pending Amount</th>
                     <th>Status</th>
-                    {/* <th>Action</th> */}
                   </tr>
                 </thead>
                 <tbody>
-                {data?.map((item, index)=>{
-                  // console.log("ddddd",data)
-                  return(
-                    <tr key={index}>
-                      <td>{item.service_provider_name}</td>
-                      <td>{item.vehicle_number}</td>
-                      <td>{item.pickup_point}</td>
-                      <td>{item.drop_point}</td>
-                      <td>{item.pickup_date}</td>
-                      <td>{item.trip_type}</td>
-                      <td>{item.no_of_horse}</td>
-                      <td>{item.invoice_amount}</td>
-                      <td>{item.remaining_payment}</td>
-                      <td>{item.invoice_status}</td>
-                    </tr>
-                  )
-                })}
-                  
-
-
-                  {/* <tr>
-                    <td>Hotel</td>
-                    <td>The May Fair Hotel</td>
-                    <td>04/04/2022</td>
-                    <td className="lh-16">
-                      Check in : 05/14/2022
-                      <br />
-                      Check out : 05/29/2022
-                    </td>
-                    <td className="fw-500">$130</td>
-                    <td>$0</td>
-                    <td>$35</td>
-                    <td>
-                      <span className="rounded-100 py-4 px-10 text-center text-14 fw-500 bg-yellow-4 text-yellow-3">
-                        Pending
-                      </span>
-                    </td>
-                    <td>
-                      <ActionsButton />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Hotel</td>
-                    <td>The May Fair Hotel</td>
-                    <td>04/04/2022</td>
-                    <td className="lh-16">
-                      Check in : 05/14/2022
-                      <br />
-                      Check out : 05/29/2022
-                    </td>
-                    <td className="fw-500">$130</td>
-                    <td>$0</td>
-                    <td>$35</td>
-                    <td>
-                      <span className="rounded-100 py-4 px-10 text-center text-14 fw-500 bg-blue-1-05 text-blue-1">
-                        Confirmed
-                      </span>
-                    </td>
-                    <td>
-                      <ActionsButton />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Hotel</td>
-                    <td>The May Fair Hotel</td>
-                    <td>04/04/2022</td>
-                    <td className="lh-16">
-                      Check in : 05/14/2022
-                      <br />
-                      Check out : 05/29/2022
-                    </td>
-                    <td className="fw-500">$130</td>
-                    <td>$0</td>
-                    <td>$35</td>
-                    <td>
-                      <span className="rounded-100 py-4 px-10 text-center text-14 fw-500 bg-red-3 text-red-2">
-                        Rejected
-                      </span>
-                    </td>
-                    <td>
-                      <ActionsButton />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Hotel</td>
-                    <td>The May Fair Hotel</td>
-                    <td>04/04/2022</td>
-                    <td className="lh-16">
-                      Check in : 05/14/2022
-                      <br />
-                      Check out : 05/29/2022
-                    </td>
-                    <td className="fw-500">$130</td>
-                    <td>$0</td>
-                    <td>$35</td>
-                    <td>
-                      <span className="rounded-100 py-4 px-10 text-center text-14 fw-500 bg-blue-1-05 text-blue-1">
-                        Confirmed
-                      </span>
-                    </td>
-                    <td>
-                      <ActionsButton />
-                    </td>
-                  </tr>
-                  <tr>
-                    <td>Hotel</td>
-                    <td>The May Fair Hotel</td>
-                    <td>04/04/2022</td>
-                    <td className="lh-16">
-                      Check in : 05/14/2022
-                      <br />
-                      Check out : 05/29/2022
-                    </td>
-                    <td className="fw-500">$130</td>
-                    <td>$0</td>
-                    <td>$35</td>
-                    <td>
-                      <span className="rounded-100 py-4 px-10 text-center text-14 fw-500 bg-blue-1-05 text-blue-1">
-                        Confirmed
-                      </span>
-                    </td>
-                    <td>
-                      <ActionsButton />
-                    </td>
-                  </tr> */}
+                  {data?.map((item, index)=>{
+                    return(
+                      <tr key={index}>
+                        <td>{item.service_provider_name}</td>
+                        <td>{item.vehicle_number}</td>
+                        <td>{item.pickup_point}</td>
+                        <td>{item.drop_point}</td>
+                        <td>{item.pickup_date}</td>
+                        <td>{item.trip_type}</td>
+                        <td>{item.no_of_horse}</td>
+                        <td>{item.invoice_amount}</td>
+                        <td>{item.remaining_payment}</td>
+                        <td>{item.invoice_status}</td>
+                      </tr>
+                    )
+                  })}
                 </tbody>
               </table>
             </div>

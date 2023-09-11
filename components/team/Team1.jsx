@@ -1,7 +1,14 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                     File using for showing team details in WHO WE ARE page                        //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import Image from "next/image";
 import Slider from "react-slick";
 import teamData from "../../data/teamData";
 
+// Function for showing the team details
 const Team1 = () => {
   var settings = {
     dots: true,

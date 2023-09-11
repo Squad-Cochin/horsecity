@@ -1,7 +1,12 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                                 File using for showing HOME page                                  //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import { useEffect } from "react";
 import FilterSelect from "./FilterSelect";
 import MainFilterSearchBox from "./MainFilterSearchBox";
-// import { useSelector, useDispatch } from "react-redux";
 
 const Index = () => {
   useEffect(()=>{

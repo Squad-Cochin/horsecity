@@ -1,9 +1,14 @@
-
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                      File using for main filters search in HOME page                              //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { useEffect, useState } from "react";
 import { useDispatch } from "react-redux";
 import { addTrip, addTripType, addNumberOfHorses } from "../../../features/search/initalSearch";
 
+// Function for filter
 const FilterSelect = () => {
   const dispatch = useDispatch();
   const [ways, setWays] = useState("");
@@ -23,14 +28,17 @@ const FilterSelect = () => {
     localStorage.setItem('searchObject', JSON.stringify(searchObject));
   })
 
+  // Function for make change in number of trips
   const handleWaysChange = (value) => {
     setWays(value);
   };
 
+  // Function for make change in trip type
   const handleTripTypeValueChange = (value) => {
     setTripTypeValue(value);
   };
 
+  // Function for make change in number of horces
   const handleNoOfHorsesValueChange = (value) => {
     setNoOfHorsesValue(value);
   };
@@ -83,7 +91,6 @@ const FilterSelect = () => {
   return (
     <>
       {dropdownOptions.map((option, index) => (
-        
         <div className="col-auto" key={index}>
           <div className="dropdown js-dropdown">
             <div

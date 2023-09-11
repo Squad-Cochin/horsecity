@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//               File using for createSlice function of redux for storing LISTING PAGE DATA          //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -7,6 +13,7 @@ const initialState = {
     } 
 };
 
+// Create slice function
 export const listData = createSlice({
   name: "listData-filter",
   initialState,

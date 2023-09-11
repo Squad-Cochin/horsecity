@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//               File using for createSlice function of redux for storing FILTERS DATA               //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
@@ -11,6 +17,7 @@ const initialState = {
   limit : 3 
 };
 
+// Create slice function
 export const listingFilter = createSlice({
   name: "listing-filter",
   initialState,

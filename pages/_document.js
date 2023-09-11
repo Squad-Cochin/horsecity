@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                      File using for showing overall structure for all pages                       //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import { Html, Head, Main, NextScript } from "next/document";
 
 export default function Document() {
@@ -6,7 +12,7 @@ export default function Document() {
       <Head>
         <meta
           name="description"
-          content="GoTrip - Tour & Travel React NextJS Template"
+          content="Kailplus"
         />
         {/* <!-- Google fonts --> */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />

@@ -100,7 +100,6 @@ const LocationSearch = () => {
   async function initialLoad(){
     const bookings = await JSON.parse(localStorage.getItem('searchObject'));
     const loginData = await JSON.parse(localStorage.getItem('loginData'));
-
     if (Object.keys(loginData).length !== 0) {
       setLogin(true);
     }

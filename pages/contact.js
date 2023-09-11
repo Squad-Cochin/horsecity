@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                      File using for showing CONTACT pages                                         //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import dynamic from "next/dynamic";
 import CallToActions from "../components/common/CallToActions";
 import Seo from "../components/common/Seo";
@@ -8,6 +14,7 @@ import Address from "../components/block/Address";
 import Social from "../components/common/social/Social";
 import ContactForm from "../components/common/ContactForm";
 
+// Function for contact page
 const Contact = () => {
   return (
     <>

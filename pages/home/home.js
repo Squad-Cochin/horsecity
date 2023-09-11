@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                               File for showing HOME pages                                         //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import dynamic from "next/dynamic";
 import Seo from "../../components/common/Seo";
 import Header from "../../components/header/header";
@@ -8,6 +14,7 @@ import AppBanner from "../../components/home/home-10/AppBanner";
 import TestimonialRating from "../../components/home/home-10/TestimonialRating";
 import Testimonial from "../../components/home/home-10/Testimonial";
 
+// Function for home page
 const home = () => {
   return (
     <>

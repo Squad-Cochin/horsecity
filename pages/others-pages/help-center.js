@@ -1,3 +1,9 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                               File for showing HELP CENTER pages                                  //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
 import dynamic from "next/dynamic";
 import CallToActions from "../../components/common/CallToActions";
 import Seo from "../../components/common/Seo";
@@ -7,6 +13,7 @@ import DefaultFooter from "../../components/footer/default";
 import HelpSearchBlock from "../../components/block/HelpSearchBlock";
 import HelpBlock from "../../components/block/HelpBlock";
 
+// Function for showing help center
 const HelpCenter = () => {
   return (
     <>

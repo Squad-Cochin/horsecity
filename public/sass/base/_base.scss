@@ -83,3 +83,12 @@ p {
   font-size: $font-size;
   color: var(--color-light-1);
 }
+.user-name{
+  background-color: #8d8686;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}

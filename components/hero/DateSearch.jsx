@@ -1,20 +1,18 @@
-import React, { useState ,useEffect} from "react";
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                     File using for datepickers in search box of HOME page                         //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import React, { useState } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
-import { useSelector, useDispatch } from "react-redux";
+import { useDispatch } from "react-redux";
 import { addDepart, addReturn } from "../../features/search/initalSearch";
 
 const DateSearch = (props) => {
   const dispatch = useDispatch();
-
   const [ dateData, setDateData ] = useState(new Date()) 
-  // const today = new Date();
-  // const minDate = new Date();
-  // minDate.setFullYear(today.getFullYear() - 18);
-  // async function initialLoad(){
-  //   const bookings = await JSON.parse(localStorage.getItem('searchObject'));
-  //   setPickupDate(bookings?.departDate)
-  // }
   const today = new Date();
   const maxdate= new Date();
   maxdate.setFullYear(today.getFullYear() - 18);
@@ -39,7 +37,6 @@ const DateSearch = (props) => {
         containerClassName="custom_container-picker"
         selected={props.pickupDate ? new Date(props.pickupDate) : null}
         onChange={(date) => {
-          // console.log("FFF",date);
           props.setPickupDate(date);
         }}
         minDate={new Date()}
