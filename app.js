@@ -5,11 +5,13 @@ require('dotenv').config({
     path: path.resolve(__dirname + "/env", process.env.NODE_ENV + '.env')
 });
 
-if (process.env.NODE_MODE == 'start') {
+const host = '0.0.0.0'; // Listen on all available interfaces
+const port = process.env.PORT || 80; // Use an environment variable or a default
+
+if (process.env.NODE_MODE === 'start') {
     const cli = require('next/dist/cli/next-start');
-    cli.nextStart(['-p', process.env.PORT || 3000]);
-}
-else {
+    cli.nextStart(['-p', port, '-H', host]);
+} else {
     const cli = require('next/dist/cli/next-dev');
-    cli.nextDev(['-p', process.env.PORT || 3000]);
+    cli.nextDev(['-p', port, '-H', host]);
 }
