@@ -1,9 +1,9 @@
 const path = require('path');
 
 
-require('dotenv').config({
-    path: path.resolve(__dirname + "/env", process.env.NODE_ENV + '.env')
-});
+// require('dotenv').config({
+//     path: path.resolve(__dirname + "/env", process.env.NODE_ENV + '.env')
+// });
 
 const host = '0.0.0.0'; // Listen on all available interfaces
 const port = process.env.PORT || 80; // Use an environment variable or a default
