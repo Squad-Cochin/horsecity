@@ -47,7 +47,6 @@ const ListTables = () =>
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("")
     const pageLimit = config.pageLimit;
-    const role_name = config.roles
     const role_id =  config.Role
   
      
@@ -395,7 +394,7 @@ const ListTables = () =>
                                                             </div>
                                                             {/* This is the place from where we are calling the remove button and function. */}
                                                             <div className="remove">
-                                                            {role === role_name.admin ? (
+                                                            {roleId === role_id.admin? (
                                                                 <button
                                                                 className="btn btn-sm btn-danger remove-item-btn"
                                                                 onClick={() => remove_data(item.id)}
@@ -722,7 +721,7 @@ const ListTables = () =>
                             >
                                 <option value="">Select Service Provider</option>
                             {sproviders.map((item, index) => (
-                                <option key={index} value={item.id}>{item.username}</option>
+                                <option key={index} value={item.id}>{item.name}</option>
                             ))}
                             </select>
                         </div>
@@ -739,7 +738,7 @@ const ListTables = () =>
                                     {assignedSProviders.map((item,index) => (
                                         <tr key={item.id}> 
                                             <td>{index + 1}</td>
-                                            <td>{item.username}</td>
+                                            <td>{item.name}</td>
                                             <td>
                                                 <button onClick={()=> {removeAsigned(item.id)}} className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
                                             </td>

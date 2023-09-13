@@ -34,7 +34,9 @@ const token = "/horsecity661809"
 export const LOGIN_URL = apiBaseUrl + token + "/login"
 export const RECOVER_PWD_URL = apiBaseUrl + token + "/recoveryPassword"
 export const CHANGE_PASSWORD_URL = apiBaseUrl + token + "/changePassword"
-
+export const FORGET_PASSWORD_URL = apiBaseUrl + token + "/forgotPassword"
+export const VERIFY_RESET_PASSWORD_URL = apiBaseUrl + token + "/update-password"
+export const VERIFY_TOKEN_URL = apiBaseUrl + token + "/verify/reset-password"
 /**NEW */
 export const RECOVER_PASSWORD = "/fake-recover-password";
 export const POST_FAKE_CHANGE_PWD = "/post-fake-change-password";
@@ -86,7 +88,6 @@ export const GET_SEND_EMAIL_BUTTON_DATA_OF_INVOICE = apiBaseUrl + token + `/emai
 export const POST_SENT_INVOICE_ON_EMAIL = apiBaseUrl + token + `/send/email`
 export const POST_ADD_AMOUNT_URL = apiBaseUrl + token + `/add/amount`
 export const GET_START_TRIP = apiBaseUrl + token + `/booking/started`
-export const GET_BOOKING_DATA_FROM_INVOICE_ID = apiBaseUrl + token + '/getInvoice/Data/From/Booking'
 export const PUT_CANCEL_INVOICE = apiBaseUrl + token + '/booking/cancel'
 
 // Dashboard Page
@@ -188,6 +189,7 @@ export const POST_VEHICLE_BREAKDOWN_DATA_URL = apiBaseUrl + token + "/add/breakD
 export const POST_FAKE_LOGIN = "/post-fake-login";
 export const POST_FAKE_JWT_LOGIN = "/post-jwt-login";
 export const POST_FAKE_PASSWORD_FORGET = "/fake-forget-pwd";
+export const POST_FAKE_PASSWORD_RESET = "/fake-reset-pwd";
 export const POST_FAKE_JWT_PASSWORD_FORGET = "/jwt-forget-pwd";
 export const SOCIAL_LOGIN = "/social-login";
 

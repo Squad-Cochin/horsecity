@@ -32,7 +32,7 @@ const Dashboard = () => {
     let settingsData = await getSettingsPageData();
     setPageTitle(settingsData?.settingsPageData[0]?.application_title);
    }
-  document.title = `Dashboard | ${pageTitle} - React Admin & Dashboard Template`;
+  document.title = `Dashboard | ${pageTitle} `;
 
 
   return (

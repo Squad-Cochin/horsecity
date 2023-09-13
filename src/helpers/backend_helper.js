@@ -47,7 +47,8 @@ const recoverPassword = data => api.create(url.RECOVER_PASSWORD, data);
 const changePassword = data =>  api.create(url.POST_FAKE_CHANGE_PWD, data);
 // postForgetPwd
 const postFakeForgetPwd = data => api.create(url.POST_FAKE_PASSWORD_FORGET, data);
-
+// postResetpassword
+const postFakeResetPwd = data => api.create(url.POST_FAKE_PASSWORD_RESET, data);
 // Edit profile
 const postJwtProfile = data => api.create(url.POST_EDIT_JWT_PROFILE, data);
 
@@ -107,6 +108,7 @@ export {
   postFakeLogin,
   postFakeProfile,
   postFakeForgetPwd,
+  postFakeResetPwd,
   postJwtRegister,
   postJwtForgetPwd,
   postJwtProfile,

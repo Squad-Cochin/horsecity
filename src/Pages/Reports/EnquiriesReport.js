@@ -25,6 +25,7 @@ const EnquiryReport = () => {
     const [pageNumber, setPageNumber] = useState(1);
     const [numberOfData, setNumberOfData] = useState(0);
     const [role, setRole] = useState('');
+    const [ userId ,setUserId ] = useState('');
     const pageLimit = config.pageLimit;
 
     /**THIS HOOK WILL RENDER INITIAL TIME SETTING THE FROMDATE BEFORE 60 DAYS TODATE CURRENT DATE */
@@ -40,8 +41,9 @@ const EnquiryReport = () => {
         let userID = data[0]?.user[0]?.id;
         const user_role = data[0]?.user[0]?.role_Id
         setRole(user_role)
-        getData(1, value, userID)
-    }, []);
+        setUserId(userId);
+        getData(1, value)
+    }, [userId])
 
     /**INITIAL VALUES */
     const initialValues = {
@@ -60,13 +62,15 @@ const EnquiryReport = () => {
     });
 
     /**GET ENQUIRY REPORTS */
-    async function getData(page, val, spId) {
+    async function getData(page, val) {
         setFromDate(val.from_date)
         setToDate(val.to_date)
-        let getAllData = await getEnquiryReport(page || 1, val, spId)
+        if (userId) {
+        let getAllData = await getEnquiryReport(page || 1, val, userId)
         setEnquiryReport(getAllData?.enquiries);
         setPageNumber(page);
         setNumberOfData(getAllData?.totalCount);
+        }
     }
 
     return (

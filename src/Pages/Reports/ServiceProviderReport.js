@@ -22,11 +22,13 @@ const ServiceProviderReport = () => {
     const [toDate, setToDate] = useState("");
     const [pageNumber, setPageNumber] = useState(1);
     const [numberOfData, setNumberOfData] = useState(0);
+    const [ userId ,setUserId ] = useState('');
     const pageLimit = config.pageLimit;
 
     /**THIS HOOK WILL RENDER INITIAL TIME SETTING THE FROMDATE BEFORE 60 DAYS TODATE CURRENT DATE */
     useEffect(() => {
         const today = new Date();
+        console.log();
         const sixtyDaysAgo = new Date(today);
         sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
         let value = {
@@ -35,8 +37,9 @@ const ServiceProviderReport = () => {
         }
         const data = JSON.parse(localStorage.getItem("authUser"));
         let userId = data[0]?.user[0]?.id
-        getData(1, value, userId)
-    }, [])
+        setUserId(userId);
+        getData(1, value)
+    }, [userId])
 
     /**INITIAL VALUES */
     const initialValues = {
@@ -50,16 +53,18 @@ const ServiceProviderReport = () => {
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
-            getData(1, values)
+            console.log("values",values);
+            getData(1, values);
         }
     });
 
     /**GETTING SERVICE PROVIDER REPORT */
-    async function getData(page, val, spId) {
+    async function getData(page, val) {
         setFromDate(val.from_date)
         setToDate(val.to_date)
-        if (spId) {
-            let getAllData = await getSeviceProviderReport(page || 1, val, spId)
+        if (userId) {
+            let getAllData = await getSeviceProviderReport(page || 1, val, userId)
+            console.log("getall data",getAllData);
             setServiceProviderReport(getAllData?.serviceProviders);
             setPageNumber(page);
             setNumberOfData(getAllData?.totalCount);

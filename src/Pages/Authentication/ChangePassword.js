@@ -61,9 +61,11 @@ const ChangePassword = props => {
     }
   });
 
-  const { error } = useSelector(state => ({
+  const { error,changePasswordSuccess } = useSelector(state => ({
     error: state.login.error,
+    changePasswordSuccess: state.login.changePasswordSuccess,
   }));
+
 
   /**SET BACKGROUND IMAGE */
   async function getAllData() {
@@ -123,6 +125,11 @@ const ChangePassword = props => {
                     }}
                   >
                     {error ? <Alert color="danger"><div>{error}</div></Alert> : null}
+                    {changePasswordSuccess ? (
+                      <Alert color="success" style={{ marginTop: "13px" }}>
+                            {changePasswordSuccess} 
+                      </Alert>
+                    ) : null}
                     <Row>
                       <Col md={12}>
                       <div className="mb-4">

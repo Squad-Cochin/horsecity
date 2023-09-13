@@ -19,7 +19,7 @@ const Breadcrumbs = (props) => {
                 </BreadcrumbItem>
               </Breadcrumb>
             </div>
-          </div>
+          </div> 
         </Col>
       </Row>
     </React.Fragment>

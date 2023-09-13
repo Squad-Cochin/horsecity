@@ -21,6 +21,7 @@ const TripDetailsReport  = () => {
     const [ toDate, setToDate ] = useState("");
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
+    const [ userId ,setUserId ] = useState('');
     const [ role, setRole ] = useState('');
 
     const pageLimit = config.pageLimit;
@@ -39,8 +40,9 @@ const TripDetailsReport  = () => {
         const user_role = data[0]?.user[0]?.role_Id
 
         setRole(user_role)
-        getData(1, value,userId)
-    },[role])
+        setUserId(userId);
+        getData(1, value)
+    }, [userId])
 
     /**INITIAL VALUES */
     const initialValues = { 
@@ -59,11 +61,11 @@ const TripDetailsReport  = () => {
     });
 
     /**GETTING TRIPDETAILS REPORT */
-    async function getData(page, val,spId){
+    async function getData(page, val){
         setFromDate(val.from_date)
         setToDate(val.to_date)
-        if(spId){
-        let getAllData = await getTripDetailsReport(page || 1, val,spId)
+        if (userId) {
+        let getAllData = await getTripDetailsReport(page || 1, val,userId)
         setTripDetailsReport(getAllData?.tripDetails);
         setPageNumber(page);
         setNumberOfData(getAllData?.totalCount);

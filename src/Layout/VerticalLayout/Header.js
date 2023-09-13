@@ -8,7 +8,6 @@
 import React, { useEffect, useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
-import LanguageDropdown from "../../components/Common/TopbarDropdown/LanguageDropdown";
 import { withTranslation } from "react-i18next";
 import logo from "../../assets/images/white-logo.png";
 import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 

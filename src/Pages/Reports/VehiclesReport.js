@@ -23,6 +23,7 @@ const VehicleReport = () => {
     const [toDate, setToDate] = useState("");
     const [pageNumber, setPageNumber] = useState(1);
     const [numberOfData, setNumberOfData] = useState(0);
+    const [ userId ,setUserId ] = useState('');
     const [role, setRole] = useState('');
 
     const pageLimit = config.pageLimit;
@@ -30,6 +31,7 @@ const VehicleReport = () => {
     /**THIS HOOK WILL RENDER INITIAL TIME SETTING THE FROMDATE BEFORE 60 DAYS TODATE CURRENT DATE */
     useEffect(() => {
         const today = new Date();
+        
         const sixtyDaysAgo = new Date(today);
         sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
         let value = {
@@ -40,8 +42,9 @@ const VehicleReport = () => {
         let userId = data[0]?.user[0]?.id;
         const user_role = data[0]?.user[0]?.role_Id
         setRole(user_role)
-        getData(1, value, userId)
-    }, []);
+        setUserId(userId);
+        getData(1, value)
+    }, [userId])
 
     /**INITIAL VALUES */
     const initialValues = {
@@ -60,11 +63,11 @@ const VehicleReport = () => {
     });
 
     /**GETTING VEHICLES REPORT */
-    async function getData(page, val, spId) {
+    async function getData(page, val) {
         setFromDate(val.from_date)
         setToDate(val.to_date)
-        if (spId) {
-            let getAllData = await getVehicleReport(page || 1, val, spId)
+        if (userId) {
+            let getAllData = await getVehicleReport(page || 1, val,userId )
             setVehicleReport(getAllData?.vehicles);
             setPageNumber(page);
             setNumberOfData(getAllData?.totalCount);

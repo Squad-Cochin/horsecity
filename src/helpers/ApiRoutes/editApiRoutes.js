@@ -154,6 +154,7 @@ export async function updatQuotation(id, data){
   }
 }
 
+/**Update settings page */
 export async function updateSettings(data){
   try {
       const formData = new FormData();
@@ -173,7 +174,7 @@ export async function updateSettings(data){
   }
 }
 
-
+/**Update service provider status  */
 export async function updateSPStatus(id){
   try{
     const { data } = await axios.put(`${url.PUT_SP_UPDATE_STATUS}/${id}`);
@@ -182,7 +183,7 @@ export async function updateSPStatus(id){
     return { error : "Faild !"}
   }
 }
-
+/**Update customer status */
 export async function updateCustomerStatus(id){
   try{
     const { data } = await axios.put(`${url.PUT_CUSTOMER_UPDATE_STATUS}/${id}`);
@@ -191,7 +192,7 @@ export async function updateCustomerStatus(id){
     return { error : "Faild !"}
   }
 }
-
+/**Cunfime quotation */
 export async function confirmQuotation(id){
   try{
     const { data } = await axios.get(`${url.PUT_QUOTATION_CONFIRM_URL}/${id}`);
@@ -200,7 +201,7 @@ export async function confirmQuotation(id){
     return { error : "Faild !"}
   }
 }
-
+/**update vehicle status */
 export async function updateVechileStatus(id){
   try{
     const { data } = await axios.put(`${url.PUT_VEHICLES_UPDATE_STATUS}/${id}`);
@@ -209,7 +210,7 @@ export async function updateVechileStatus(id){
     return { error : "Faild !"}
   }
 }
-
+/**Update vehicle image status */
 export async function updateVechileImageStatus(id){
   try{
     const { data } = await axios.put(`${url.PUT_VEHICLES_IMAGE_UPDATE_STATUS}/${id}`);
@@ -218,7 +219,7 @@ export async function updateVechileImageStatus(id){
     return { error : "Faild !"}
   }
 }
-
+/**Update taxation status */
 export async function updateTaxationStatus(id){
   try{
     const { data } = await axios.put(`${url.PUT_TAXATION_UPDATE_STATUS}/${id}`);
@@ -227,7 +228,7 @@ export async function updateTaxationStatus(id){
     return { error : "Faild !"}
   }
 }
-
+/**update driver status */
 export async function updateDriverStatus(id){
   try{
     const { data } = await axios.put(`${url.PUT_DRIVERS_UPDATE_STATUS}/${id}`);
@@ -237,7 +238,7 @@ export async function updateDriverStatus(id){
   }
 }
 
-
+/**Update discount status */
 export async function updateDiscountStatus(id){
   try{
     const { data } = await axios.put(`${url.PUT_DISCOUNTS_UPDATE_STATUS}/${id}`);
@@ -246,6 +247,7 @@ export async function updateDiscountStatus(id){
     return { error : "Faild !"}
   }
 }
+/**Update language status */
 export async function updateLanguageStatus(id){
   try{
     const { data } = await axios.put(`${url.PUT_LANGUAGES_UPDATE_STATUS}/${id}`);

@@ -170,7 +170,7 @@ const ListVehiclesTable = () => {
             setVehicles(getvehicles?.vehicles);
             setModule(getvehicles.module[0]);
             setPageNumber(page);
-            setNumberOfData(getvehicles?.totalCodunt);
+            setNumberOfData(getvehicles?.totalCount);
         }
     }
     // Update vehicle
@@ -190,6 +190,7 @@ const ListVehiclesTable = () => {
     }
     /**Add new vehicle */
     async function addVechile(values) {
+      
         let addedVechile = await addNewVehicle(values, userId);
         if (addedVechile.code === 200) {
             setErrors("")
@@ -344,7 +345,7 @@ const ListVehiclesTable = () => {
                                     <option value="">Select Service Provider</option>
                                     {sproviders.map((item, index) => (
                                         <option key={index} value={item.id}>
-                                            {item.user_name}
+                                            {item.name}
                                         </option>
                                     ))}
                                 </select>

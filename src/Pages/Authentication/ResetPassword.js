@@ -11,56 +11,83 @@ import { Row, Col, Alert, Card, CardBody, Container, FormFeedback, Input, Label,
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
-
+import { useParams } from 'react-router-dom';
 /**IMPORTED */
+import { verifyResetPasswordUrl } from '../../helpers/ApiRoutes/getApiRoutes';
 import { useFormik } from "formik";
-import { userForgetPassword } from "../../store/actions";
+import { userResetPassword } from "../../store/actions";
 import logo from "../../assets/images/logo.png";
 import withRouter from "../../components/Common/withRouter";
-
-const ForgetPasswordPage = props => {
+import { useNavigate } from "react-router-dom"
+const ResetPasswordPage = props => {
+  const [ pageVerify , setPageVerify ] = useState(true)
   const dispatch = useDispatch();
-  const [ isActive, setActive ] = useState(false);
-  
+  const { id,token } = useParams();
+  const navigate = useNavigate();
   /**THIS HOOK WILL RENDER INITIAL TIME */
   useEffect(() => {
-    document.body.style.backgroundImage = "none";
-    document.body.className = "";
+
+     initialLoad();
+    // if(id == 12 && token == 'abc'){
+    //   document.body.style.backgroundImage = "none";
+    //   document.body.className = "";
+    // }else{
+    //   navigate(`/pages-404`)
+    // }
+
   }, [])
+
+  async function initialLoad(){
+    if(id && token){
+      let reqObj = {
+        flag : true
+      }
+      const verifyUrl = await  verifyResetPasswordUrl(id,token,reqObj);  
+      if(verifyUrl.code === 200){
+        document.body.style.backgroundImage = "none";
+        document.body.className = "";
+        navigate(`/reset-password/${verifyUrl.data?.id}/${verifyUrl.data?.token}`)
+      }else{
+        navigate(`/pages-404`)
+      }
+
+    }
+  }
 
   /**VALIDATION */
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      email: '',
+      newpassword: '',
+      confirmnewpassword : '',
+      user_id : '',
+      token : ''
+
     },
     validationSchema: Yup.object({
-      email: Yup.string().required("Please Enter Your Email"),
+      newpassword: Yup.string().required("Please Enter Your New Password"),
+      confirmnewpassword: Yup.string().required("Please Enter Your Confirm Password"),
     }),
     onSubmit: (values) => {
-      setActive(true);
-  
-      dispatch(userForgetPassword(values, props.router.navigate));
+      // console.log("values",values);
+      values.user_id = id
+      values.token = token
+      dispatch(userResetPassword(values, props.router.navigate));
     }
   });
 
   /**FETCHING IN THE REDUX */
-  const { forgetError, forgetSuccessMsg } = useSelector(state => ({
-    forgetSuccessMsg: state.forgetPassword.forgetSuccessMsg,
-    forgetError: state.forgetPassword.forgetError,
+  const { resetError, resetSuccessMsg } = useSelector(state => ({
+    resetError: state.forgetPassword.resetError,
+    resetSuccessMsg: state.forgetPassword.resetSuccessMsg
   }));
-
-  /**THIS HOOK WILL RENDER IF THERE ANY CHANGES ON THE  forgetSuccessMsg OR  forgetError
-   * THAT IT WILL RENDER 
-  */
   useEffect(() => {
-    if(forgetSuccessMsg || forgetError){
-      setActive(false);
-    }
-  }, [forgetError,forgetSuccessMsg])
+    resetError = '';
+    resetSuccessMsg = '';
+ }, [])
 
-  return (
+return (
     <React.Fragment>
 
       <div className="account-pages my-5 pt-sm-5">
@@ -88,14 +115,17 @@ const ForgetPasswordPage = props => {
                     </Link>
                   </div>
                   <div className="p-2">
-                    {forgetError && forgetError ? (
+                    {resetError && resetError ? (
                       <Alert color="danger" style={{ marginTop: "13px" }}>
-                        {forgetError}
+                        {resetError}
                       </Alert>
                     ) : null}
-                    {forgetSuccessMsg ? (
+                    {resetSuccessMsg ? (
                       <Alert color="success" style={{ marginTop: "13px" }}>
-                        {forgetSuccessMsg}
+                            {resetSuccessMsg} 
+                            {/* <Link to="/login" style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
+                                Go Back To Login  ?
+                              </Link> */}
                       </Alert>
                     ) : null}
                     <Form
@@ -107,21 +137,39 @@ const ForgetPasswordPage = props => {
                       }}
                     >
                       <div className="mb-3">
-                        <Label className="form-label">Email</Label>
+                        <Label className="form-label">New Password</Label>
                         <Input
-                          name="email"
+                          name="newpassword"
                           className="form-control"
-                          placeholder="Enter email"
-                          type="email"
+                          placeholder="Enter password"
+                          type="text"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
-                          value={validation.values.email || ""}
+                          value={validation.values.newpassword || ""}
                           invalid={
-                            validation.touched.email && validation.errors.email ? true : false
+                            validation.touched.newpassword && validation.errors.newpassword ? true : false
                           }
                         />
-                        {validation.touched.email && validation.errors.email ? (
-                          <FormFeedback type="invalid"><div>{validation.errors.email}</div></FormFeedback>
+                        {validation.touched.newpassword && validation.errors.newpassword ? (
+                          <FormFeedback type="invalid"><div>{validation.errors.newpassword}</div></FormFeedback>
+                        ) : null}
+                      </div>
+                      <div className="mb-3">
+                        <Label className="form-label">Confirm Password</Label>
+                        <Input
+                          name="confirmnewpassword"
+                          className="form-control"
+                          placeholder="Enter confirm password"
+                          type="password"
+                          onChange={validation.handleChange}
+                          onBlur={validation.handleBlur}
+                          value={validation.values.confirmnewpassword || ""}
+                          invalid={
+                            validation.touched.confirmnewpassword && validation.errors.confirmnewpassword ? true : false
+                          }
+                        />
+                        {validation.touched.confirmnewpassword && validation.errors.confirmnewpassword ? (
+                          <FormFeedback type="invalid"><div>{validation.errors.confirmnewpassword}</div></FormFeedback>
                         ) : null}
                       </div>
                       <Row className="mb-3">
@@ -129,9 +177,8 @@ const ForgetPasswordPage = props => {
                           <button
                             className="btn btn-primary w-md "
                             type="submit"
-                            disabled={isActive}
                           >
-                            Send
+                            Reset
                           </button>
                         </Col>
                       </Row>
@@ -139,24 +186,16 @@ const ForgetPasswordPage = props => {
                   </div>
                 </CardBody>
               </Card>
-              <div className="mt-5 text-center">
-                <p>
-                  Go back to{" "}
-                  <Link to="/login" className="font-weight-medium text-primary">
-                    Login
-                  </Link>{" "}
-                </p>
-              </div>
             </Col>
           </Row>
         </Container>
       </div>
     </React.Fragment>
-  );
-};
+) };
+ 
 
-ForgetPasswordPage.propTypes = {
+ResetPasswordPage.propTypes = {
   history: PropTypes.object,
 };
 
-export default withRouter(ForgetPasswordPage);
+export default withRouter(ResetPasswordPage);

@@ -4,7 +4,7 @@ import React, { useState } from "react";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 
-import LanguageDropdown from "../../components/Common/TopbarDropdown/LanguageDropdown";
+
 //i18n
 import { withTranslation } from "react-i18next";
 
@@ -140,7 +140,7 @@ const Header = (props) => {
               </div>
             </div>
 
-            <LanguageDropdown />
+           
 
             {/* <AppsDropdown /> */}
 

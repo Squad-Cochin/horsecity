@@ -5,9 +5,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container, Row } from 'reactstrap';
+import {  Card, CardBody, CardHeader, Col, Container, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import List from 'list.js';
 import Flatpickr from "react-flatpickr";
 import { useFormik } from "formik";
 
@@ -23,6 +22,7 @@ const CustomerReport = () => {
     const [toDate, setToDate] = useState("");
     const [pageNumber, setPageNumber] = useState(1);
     const [numberOfData, setNumberOfData] = useState(0);
+    const [ userId ,setUserId ] = useState('');
     const pageLimit = config.pageLimit;
 
     /**THIS HOOK WILL RENDER INITIAL TIME SETTING THE FROMDATE BEFORE 60 DAYS TODATE CURRENT DATE */
@@ -36,8 +36,9 @@ const CustomerReport = () => {
         }
         const data = JSON.parse(localStorage.getItem("authUser"));
         let userId = data[0]?.user[0]?.id;
-        getData(1, value, userId)
-    }, [])
+        setUserId(userId);
+        getData(1, value)
+    }, [userId])
 
     /**INITIAL VALUES */
     const initialValues = {
@@ -56,11 +57,11 @@ const CustomerReport = () => {
     });
 
     /**GET CUSTOMERDATA */
-    async function getData(page, val, spId) {
+    async function getData(page, val) {
         setFromDate(val.from_date)
         setToDate(val.to_date);
-        if (spId) {
-            let getAllData = await getCustomerReport(page || 1, val, spId)
+        if (userId) {
+            let getAllData = await getCustomerReport(page || 1, val, userId)
             setCustomerReport(getAllData?.customers);
             setPageNumber(page);
             setNumberOfData(getAllData?.totalCount);

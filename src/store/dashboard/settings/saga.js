@@ -33,14 +33,15 @@ function* loginUser({ payload: { user, history } }) {
       });
       localStorage.setItem("authUser", JSON.stringify(response));
       yield put(loginSuccess(response));
-    } else if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
+    } 
+    // else if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
       const response = yield call(postFakeLogin, {
         userName: user.userName,
         password: user.password,
       });
       localStorage.setItem("authUser", JSON.stringify(response));
       yield put(loginSuccess(response));
-    }
+    // }
     const data = new Promise((resolve, reject)=>{
       let storeData = localStorage.getItem("authUser")
       resolve(storeData)

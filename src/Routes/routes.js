@@ -51,7 +51,7 @@ import Login from "../Pages/Authentication/Login";
 import ChangePassword from "../Pages/Authentication/ChangePassword";
 import ForgetPasswordPage from "../Pages/Authentication/ForgetPassword";
 import Logout from "../Pages/Authentication/Logout";
-import UserProfile from "../Pages/Authentication/user-profile";
+import ResetPasswordPage from "../Pages/Authentication/ResetPassword";
 import ListEnquiriesTable from "../Pages/Tables/ListTables/ListEnquiriesTable";
 import ListQuotationsTable from "../Pages/Tables/ListTables/ListQuotationsTable";
 import InvoiceReport from "../Pages/Reports/InvoiceReport";
@@ -65,19 +65,16 @@ import ListJs from "../Pages/ServiceProviders/ServiceProviderTable";
 import ImageGallery from "..//Pages/Tables/ListTables/ListVehicleImages"
 
 //Profile page
-import Profile from "../Pages/ProfilePage";
+// import Profile from "../Pages/ProfilePage";
 import InvoiceDetails from "../Pages/Invoices/InvoicesList";
 
 // Dashboard Page
-
 import DashboardPanel from "../Pages/Dashboard/UserPanel";
-
+import Error404 from "../Pages/Utility/Error404-Page";
 const authProtectedRoutes = [
   //dashboard
   { path: "/dashboard", component: <Dashboard /> },
 
-  // Profile
-  { path: "/userprofile", component: <UserProfile /> },
 
   // **************************
   //ServiceProvider
@@ -142,9 +139,8 @@ const publicRoutes = [
   { path: "/login", component: <Login /> },
   { path: "/change-password", component: <ChangePassword /> },
   { path: "/forgot-password", component: <ForgetPasswordPage /> },
-
-  //Profile page
-  { path: "/profile-page", component: <Profile /> },
+  { path: "/reset-password/:id/:token", component: <ResetPasswordPage /> },
+  { path: "/pages-404", component: <Error404 /> },
 
 ];
 

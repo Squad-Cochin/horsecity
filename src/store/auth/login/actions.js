@@ -7,13 +7,23 @@ import {
   SOCIAL_LOGIN,
   RECOVER_PASSWORD,
   CHANGE_NEW_PASSWORD,
-  CHANGE_PASSWORD_SUCCESS
+  CHANGE_PASSWORD_SUCCESS,
+  CLEAR_RESPONSE_MESSAGE
 } from "./actionTypes"
 
 export const loginUser = (user, history) => {
   return {
     type: LOGIN_USER,
     payload: { user, history },
+  }
+}
+
+
+
+export const clearResponseMessages = () => {
+  return {
+    type: CLEAR_RESPONSE_MESSAGE
+    
   }
 }
 

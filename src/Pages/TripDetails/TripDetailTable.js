@@ -13,7 +13,7 @@ import {
   Col,
   Container,
   Modal,
-  ModalBody,
+  ModalBody, 
   ModalFooter,
   Row,
   ModalHeader,
@@ -479,7 +479,7 @@ const TripDeatails = () => {
                       <option value={validation.values.service_provider_id || ""}>{validation.values.service_provider}</option>
                       {serviceProviders.map((item, index) => (
                         <option key={index} value={item.id}>
-                          {item.user_name}
+                          {item.name}
                         </option>
                       ))}
                     </select>

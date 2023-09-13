@@ -17,6 +17,7 @@ import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes';
 import withRouter from "../../components/Common/withRouter";
 import logo from "../../assets/images/black-logo.png";
 import { loginUser } from "../../store/actions";
+import { clearResponseMessages } from "../../store/actions";
 
 const Login = props => {
 
@@ -27,6 +28,7 @@ const Login = props => {
 
   /**THIS HOOK WILL RENDER INITIAL TIME */
   useEffect(() => {
+    dispatch(clearResponseMessages());
     getAllData()
   }, [])
 
@@ -78,6 +80,7 @@ const Login = props => {
   const { error } = useSelector(state => ({
     error: state.login.error
   }));
+
 
   return (
     <React.Fragment>

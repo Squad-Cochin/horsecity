@@ -148,8 +148,10 @@ const ListTables = () => {
         if(role_items.code == 200){
              setRoleList(role_items.data?.roles)
             if (param === 'ADD') {
+                setLicenscePreview(null);
                 setAdd_list(!add_list);
             } else {
+                
                 let serviceProvider = await getSPSingleData(productId)
                 setSprovider(serviceProvider.serviceProvider)
                 setLicenscePreview(serviceProvider.serviceProvider[0]?.licence_image);

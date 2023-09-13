@@ -17,7 +17,6 @@ import { useSelector, useDispatch } from "react-redux";
 import Navbar from "./NavBar";
 import Header from "./Header";
 import Footer from "./Footer";
-import RightSidebar from "../../components/Common/RightSideBar";
 
 const Layout = (props) => {
   const dispatch = useDispatch();
@@ -101,7 +100,6 @@ const Layout = (props) => {
         <Footer />
       </div>
 
-      {showRightSidebar ? <RightSidebar /> : null}
     </React.Fragment>
   );
 };

@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { Link } from 'react-router-dom';
-import List from 'list.js';
+
 
 //IMPORTED FILES
 import { removeTaxation } from '../../helpers/ApiRoutes/removeApiRoutes'

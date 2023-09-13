@@ -677,22 +677,6 @@ export async function cancelTrip(iId)
     }
 };
 
-export async function geBookingDataOnInvoiceId(iId)
-{
-    try
-    {
-        const data = await axios.get(`${url.GET_BOOKING_DATA_FROM_INVOICE_ID}/${iId}`);
-        return (data);
-    } catch (error) {
-        console.error("Error occurred:", error);
-        let errObj = {
-            code: error.response ? error.response.status : 500,
-            error: error.message || "Failed!",
-        };
-        return errObj;
-    }
-}
-
 export async function getTripDeatails(pageNumber,userId){
     try {
         let pageLimit = config.pageLimit;
@@ -975,6 +959,21 @@ export async function getRoleList(){
     try {
   
         const  response  = await axios.get(`${url.GET_SP_ROLELIST}`);
+        return response
+    } catch (error) {
+        let errorObj =  {
+            "code": 500,
+            "status": false,
+            "message": "Server error",
+        }
+        return errorObj.data
+    }
+}
+
+export async function verifyResetPasswordUrl(userId,token,reqObj){
+    try {
+
+        const  response  = await axios.post(`${url.VERIFY_TOKEN_URL}/${userId}/${token}`,reqObj);
         return response
     } catch (error) {
         let errorObj =  {

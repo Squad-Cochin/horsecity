@@ -1,20 +1,20 @@
-import { call, put, takeEvery, takeLatest } from "redux-saga/effects";
-import { LOGIN_USER, LOGOUT_USER, SOCIAL_LOGIN , RECOVER_PASSWORD, CHANGE_NEW_PASSWORD} from "./actionTypes";
+import { call, put, takeEvery} from "redux-saga/effects";
+import { LOGIN_USER, LOGOUT_USER , RECOVER_PASSWORD, CHANGE_NEW_PASSWORD} from "./actionTypes";
 import { apiError, loginSuccess, logoutUserSuccess, updatePWDSuccess } from "./actions";
 //Include Both Helper File with needed methods
-import { getFirebaseBackend } from "../../../helpers/firebase_helper";
+
 import {
   postFakeLogin,
   recoverPassword,
   changePassword,
-} from "../../../helpers/fakebackend_helper";
+} from "../../../helpers/backend_helper";
 
-const fireBaseBackend = getFirebaseBackend();
+
 
 function* loginUser({ payload: { user, history } }) {
   try {
-   
-    if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
+
+    // if (process.env.REACT_APP_DEFAULTAUTH === "fake") {
       const response = yield call(postFakeLogin, {
         userName: user.userName,
         password: user.password,
@@ -22,7 +22,7 @@ function* loginUser({ payload: { user, history } }) {
 
       localStorage.setItem("authUser", JSON.stringify(response));
       yield put(loginSuccess(response));
-    }
+    // }
     const data = new Promise((resolve, reject)=>{
       let storeData = localStorage.getItem("authUser")
       resolve(storeData)
@@ -57,7 +57,8 @@ function* recoverNewPassword({ payload: { user } }) {
 function* updateNewPassword({ payload: { user } }) {
   try{
    const response =   yield call(changePassword, user);
-      yield put(updatePWDSuccess(response));
+   console.log("RES",response);
+      yield put(updatePWDSuccess(response.message));
 }catch (error) {
   yield put(apiError(error));
 }

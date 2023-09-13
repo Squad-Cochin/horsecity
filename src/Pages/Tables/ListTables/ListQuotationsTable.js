@@ -661,7 +661,7 @@ const ListQuotationsTable = () => {
                     >
                         <option value="">Select Service Provider</option>
                     {serviceProviders.map((item, index) => (
-                        <option key={index} value={item.id}>{item.user_name}</option>
+                        <option key={index} value={item.id}>{item.name}</option>
                     ))}
                     </select>
                 </div>
