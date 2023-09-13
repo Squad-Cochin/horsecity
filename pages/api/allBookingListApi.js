@@ -10,7 +10,7 @@ import API_CONFIG from "../../config";
 // Function for api connection
 export default async function allBookingListApi(id) {
 	try{   
-    const apiUrl = API_CONFIG.ALL_BOOKING_LIST_DATA_API + id;
+    const apiUrl = API_CONFIG.API_BASE_URL + API_CONFIG.ALL_BOOKING_LIST_DATA_API + id;
     const apiTocken = API_CONFIG.API_TOKEN;
     const response = await axios.get(apiUrl, {
         headers: {

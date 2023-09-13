@@ -10,7 +10,7 @@ import API_CONFIG from "../../config";
 // Function for api connection
 export default async function listingDataApi(searchData) {
 	try{   
-    const listingDataApi = API_CONFIG.LISTING_DATA_API;
+    const listingDataApi = API_CONFIG.API_BASE_URL + API_CONFIG.LISTING_DATA_API;
     const apiTocken = API_CONFIG.API_TOKEN;
     const response = await axios.post(listingDataApi, searchData ,{
         headers: {

@@ -10,7 +10,7 @@ import API_CONFIG from "../../config";
 // Function for api connection
 export default async function serviceProvidersApi() {
 	try{   
-    const serviceProviders = API_CONFIG.SERVICE_PROVIDER_API;
+    const serviceProviders = API_CONFIG.API_BASE_URL + API_CONFIG.SERVICE_PROVIDER_API;
     const apiTocken = API_CONFIG.API_TOKEN;
     const response = await axios.get(serviceProviders, {
         headers: {

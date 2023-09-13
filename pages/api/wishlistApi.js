@@ -10,7 +10,7 @@ import API_CONFIG from "../../config";
 // Function for api connection
 export default async function isWishlist(body) {
 	try{   
-    const wishlistApi = API_CONFIG.WISHLIST_API;
+    const wishlistApi = API_CONFIG.API_BASE_URL + API_CONFIG.WISHLIST_API;
     const apiToken = API_CONFIG.API_TOKEN;
     const response = await axios.post(`${wishlistApi}`,body,{
         headers: {

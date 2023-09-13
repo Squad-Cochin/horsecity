@@ -13,6 +13,7 @@
 // });
 // console.log(process.env.NEXT_PUBLIC_API_KEY)
 const API_CONFIG = {
+	API_BASE_URL: `${process.env.NEXT_PUBLIC_API_BASE_URL}`,
 	API_KEY: `${process.env.NEXT_PUBLIC_API_KEY}`,
 	API_TOKEN: `${process.env.NEXT_PUBLIC_API_TOKEN}`,
 	SERVICE_PROVIDER_API : `${process.env.NEXT_PUBLIC_SERVICE_PROVIDER_API}`,

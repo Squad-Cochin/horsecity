@@ -10,7 +10,7 @@ import API_CONFIG from "../../config";
 // Function for api connection
 export default async function changePassword(body, id) {
 	try{   
-    const changePassword = API_CONFIG.CHANGE_PASSWORD_API;
+    const changePassword = API_CONFIG.API_BASE_URL + API_CONFIG.CHANGE_PASSWORD_API;
     const apiToken = API_CONFIG.API_TOKEN;
     const response = await axios.post(`${changePassword}/${id}`, body, {
         headers: {

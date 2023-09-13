@@ -10,7 +10,7 @@ import API_CONFIG from "../../config";
 // Function for api connection(DETAILS DATA)
 export default async function DetailsDataApi(id) {
 	try{   
-    const detailsDataApi = API_CONFIG.DETAILS_DATA_API;
+    const detailsDataApi = API_CONFIG.API_BASE_URL + API_CONFIG.DETAILS_DATA_API;
     const apiTocken = API_CONFIG.API_TOKEN;
     const response = await axios.get(`${detailsDataApi}/${id}` ,{
         headers: {

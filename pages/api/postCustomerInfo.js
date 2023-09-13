@@ -15,7 +15,7 @@ export default async function postCustomerInfo(data,id) {
         for (const key in data) {
             formData.append(key, data[key]);
         }
-        const editCustomerInfo = API_CONFIG.POST_CUSTOMER_INFORMATION_API;
+        const editCustomerInfo = API_CONFIG.API_BASE_URL + API_CONFIG.POST_CUSTOMER_INFORMATION_API;
         const apiToken = API_CONFIG.API_TOKEN;
         const response = await axios.put(`${editCustomerInfo}/${id}`,formData,{
             headers: {
