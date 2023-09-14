@@ -21,7 +21,7 @@ module.exports = (app) =>
     checkInput.isPageSizeEntered,
     customerController.getAll);
 
-    // Below route is for getting data of any particular customer
+    // Below route is for getting data of any  customer
     app.get(`/${process.env.apiToken}/getOne/customer/:id`, 
     isValidIdInTheParams(constants.tableName.customers),
     customerController.getOne);
@@ -128,7 +128,7 @@ module.exports = (app) =>
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.getParticularBookinDetailsCancelled);
 
-    // The below route is for fetching the recent five enquiried made by the particular customer. This route is used in the NEXTJS
+    // The below route is for fetching the recent five enquiried made by the  customer. This route is used in the NEXTJS
     app.get(`/customer/booking/recent/:id`,
     validateHeaders.verifyToken,   
     isValidIdInTheParams(constants.tableName.customers), 
@@ -140,19 +140,19 @@ module.exports = (app) =>
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.getParticularCustomerAllBookings);
 
-    // The below route is for fetching all the enquiries made by the particular customer in the decending order from the created_at.
+    // The below route is for fetching all the enquiries made by the  customer in the decending order from the created_at.
     app.get(`/customer/all/enquiries/:id`,
     validateHeaders.verifyToken,   
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.getParticularCustomerAllEnquiry);
 
-    // The below route is fetching all the booking details of a particular customer. The data will be taken from the quotations, invoices, payment_records
+    // The below route is fetching all the booking details of a  customer. The data will be taken from the quotations, invoices, payment_records
     app.get(`/customer/all/booking/data/invoice/table/:id`,
     validateHeaders.verifyToken,   
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.getParticularCustomerAllBookingsDataFromInvoice);
 
-    // The below route is fetching all the ACTIVE bookings details of a particular customer. The data will come from the quotations, invoices, payment_records tables.
+    // The below route is fetching all the ACTIVE bookings details of a  customer. The data will come from the quotations, invoices, payment_records tables.
     app.get(`/customer/active/booking/data/invoice/table/:id`,
     validateHeaders.verifyToken,   
     isValidIdInTheParams(constants.tableName.customers), 

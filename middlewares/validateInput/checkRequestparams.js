@@ -81,10 +81,10 @@ exports.CheckRole = async (req, res, next) =>
                                 ({
                                     code : 400,
                                     status : false,
-                                    message : 'Invalid format of driver licence image is upload'
+                                    message : ``
                                 });
                             }
-                            else if(uploadlicence_img === 'NOATTACH')
+                            else if(uploadlicence_img === 'NOATTACHEMENT')
                             {
                                 return res.status(200).send
                                 ({
@@ -99,10 +99,10 @@ exports.CheckRole = async (req, res, next) =>
                                 ({
                                     code : 400,
                                     status : false,
-                                    message : 'Invalid format of driver profile image is upload'
+                                    message : `We're sorry, but the image format of driver profile photo you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
                                 });
                             }
-                            else if(uploadprofile_image === 'NOATTACH')
+                            else if(uploadprofile_image === 'NOATTACHEMENT')
                             {
                                 return res.status(200).send
                                 ({
@@ -120,10 +120,10 @@ exports.CheckRole = async (req, res, next) =>
                                     ({
                                         code : 400,
                                         status : false,
-                                        message : 'Invalid format of driver profile image is upload'
+                                        message : `We're sorry, but the image format of driver profile photo you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
                                     });
                                 }
-                                else if(uploadprofile_image === 'NOATTACH')
+                                else if(uploadprofile_image === 'NOATTACHEMENT')
                                 {
                                     return res.status(200).send
                                     ({
@@ -220,7 +220,7 @@ exports.CheckRole = async (req, res, next) =>
                                         message : 'Invalid format of driver licence image is upload'
                                     });
                                 }
-                                else if(uploadlicence_img === 'NOATTACH')
+                                else if(uploadlicence_img === 'NOATTACHEMENT')
                                 {
                                     return res.status(200).send
                                     ({
@@ -235,10 +235,10 @@ exports.CheckRole = async (req, res, next) =>
                                     ({
                                         code : 400,
                                         status : false,
-                                        message : 'Invalid format of driver profile image is upload'
+                                        message : `We're sorry, but the image format of driver profile photo you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
                                     });
                                 }
-                                else if(uploadprofile_image === 'NOATTACH')
+                                else if(uploadprofile_image === 'NOATTACHEMENT')
                                 {
                                     return res.status(200).send
                                     ({
@@ -294,7 +294,7 @@ exports.CheckRole = async (req, res, next) =>
                                                     message : 'Invalid format of driver licence image is upload'
                                                 });
                                             }
-                                            else if(uploadlicence_img === 'NOATTACH')
+                                            else if(uploadlicence_img === 'NOATTACHEMENT')
                                             {
                                                 return res.status(200).send
                                                 ({
@@ -309,10 +309,10 @@ exports.CheckRole = async (req, res, next) =>
                                                 ({
                                                     code : 400,
                                                     status : false,
-                                                    message : 'Invalid format of driver profile image is upload'
+                                                    message : `We're sorry, but the image format of driver profile photo you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
                                                 });
                                             }
-                                            else if(uploadprofile_image === 'NOATTACH')
+                                            else if(uploadprofile_image === 'NOATTACHEMENT')
                                             {
                                                 return res.status(200).send
                                                 ({
@@ -367,7 +367,7 @@ exports.CheckRole = async (req, res, next) =>
                                                         message : 'Invalid format of driver licence image is upload'
                                                     });
                                                 }
-                                                else if(uploadlicence_img === 'NOATTACH')
+                                                else if(uploadlicence_img === 'NOATTACHEMENT')
                                                 {
                                                     return res.status(200).send
                                                     ({
@@ -382,10 +382,10 @@ exports.CheckRole = async (req, res, next) =>
                                                     ({
                                                         code : 400,
                                                         status : false,
-                                                        message : 'Invalid format of driver profile image is upload'
+                                                        message : `We're sorry, but the image format of driver profile photo you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
                                                     });
                                                 }
-                                                else if(uploadprofile_image === 'NOATTACH')
+                                                else if(uploadprofile_image === 'NOATTACHEMENT')
                                                 {
                                                     return res.status(200).send
                                                     ({
@@ -441,7 +441,7 @@ exports.CheckRole = async (req, res, next) =>
                                                             message : 'Invalid format of driver licence image is upload'
                                                         });
                                                     }
-                                                    else if(uploadlicence_img === 'NOATTACH')
+                                                    else if(uploadlicence_img === 'NOATTACHEMENT')
                                                     {
                                                         return res.status(200).send
                                                         ({
@@ -456,10 +456,10 @@ exports.CheckRole = async (req, res, next) =>
                                                         ({
                                                             code : 400,
                                                             status : false,
-                                                            message : 'Invalid format of driver profile image is upload'
+                                                            message : `We're sorry, but the image format of driver profile photo you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
                                                         });
                                                     }
-                                                    else if(uploadprofile_image === 'NOATTACH')
+                                                    else if(uploadprofile_image === 'NOATTACHEMENT')
                                                     {
                                                         return res.status(200).send
                                                         ({
@@ -491,7 +491,7 @@ exports.CheckRole = async (req, res, next) =>
                                                                 ({
                                                                     code: 200,
                                                                     status: true,
-                                                                    message: ` Driver ${constants.responseMessage.insert}`,
+                                                                    message: `${constants.responseMessage.insert}`,
                                                                 });
                                                             }
                                                         }

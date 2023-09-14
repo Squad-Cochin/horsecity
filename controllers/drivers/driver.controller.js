@@ -46,17 +46,17 @@ exports.getAll = async (req, res) =>
 }
 
 /**
- * The below function is for getting all the details of a particular driver. Only single driver
+ * The below function is for getting all the details of a  driver. Only single driver
  * details we get through the below function.
  * 
- * For get the details of a particular driver. We need to give the driver Id in the params.
- * On the basis of that, All the details of a particular driver will be fetched.
+ * For get the details of a  driver. We need to give the driver Id in the params.
+ * On the basis of that, All the details of a  driver will be fetched.
  * 
  */
 
 exports.getOne= async (req, res) =>
 {
-    // The below line is for going to the model function to implement the code for getting all details of particular driver.
+    // The below line is for going to the model function to implement the code for getting all details of  driver.
     const drivers = await driver.getone(req.params.id);
     
     // If any wrong id or some thing wrong entered, If that Id has no data then this if block of code will be executed
@@ -120,7 +120,7 @@ exports.addDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `We're sorry, but the image format of profile photo you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
+            message : `We're sorry, but the image format of driver profile photo you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
         });
     }
     else if(drivers === 'NOATTACHP')
@@ -289,7 +289,7 @@ exports.editDriver = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : `Data updated successfully`,
+            message : `Data updated successfully.`,
         });
     }
 };
@@ -354,7 +354,7 @@ exports.AssignServiceProvider = async (req, res, next) =>
         ({
             code : 400,
             success : false,
-            message : 'Error: The driver is already employed by other service provider, so we cannot permit them to work here at this time..'
+            message : 'Error: The driver is already employed by other service provider, so we cannot permit them to work here at this time.'
         });
     }
     // If every thing went well and no issue came then,  this else if block of code will be executed.
@@ -426,7 +426,7 @@ exports.UnAssignServiceProvider = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : "Error while driver is unassigned to their particular service provider"
+            message : "Unable to proceed because the driver is not currently assigned to a service provider."
         });
     }
     // If driver is successfully unassigned to the respective service provider then this if block of code will be executed.
@@ -437,7 +437,7 @@ exports.UnAssignServiceProvider = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : "Driver is unassigned to their particular service provider"
+            message : "The driver is not currently assigned to a service provider."
         });
     }
     // If driver is already unassigned to the respective service provider then this if block of code will be executed.
@@ -448,7 +448,7 @@ exports.UnAssignServiceProvider = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : "Driver is already unassigned to their particular service provider"
+            message : "This driver is no longer assigned to any service provider."
         });
     }
 };

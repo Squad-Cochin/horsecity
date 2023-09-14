@@ -13,7 +13,7 @@ module.exports = class wishlist
 {
     /**
     * The below model function is for the CUSTOMER side FRONTEND page. 
-    * The function is adding or updating wishlist of a particular customer id on the basis of customer id.
+    * The function is adding or updating wishlist of a  customer id on the basis of customer id.
     */
     static async isWishlistAdd(body)
     {
@@ -63,7 +63,7 @@ module.exports = class wishlist
 
     /**
     * The below model function is for the CUSTOMER side FRONTEND page.
-    * The function is FOR FETCHING all items of wishlist of a particular customer id on the basis of customer id.
+    * The function is FOR FETCHING all items of wishlist of a  customer id on the basis of customer id.
     */
     static async wishlistItems(body)
     {
@@ -138,7 +138,7 @@ module.exports = class wishlist
             }
             catch(err)
             {
-                console.log('Error while feching wishlist items for particular customer', err); 
+                console.log('Error while feching wishlist items for  customer', err); 
             }
         });
     }

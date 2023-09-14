@@ -48,7 +48,7 @@ module.exports = (app) =>
     isValidIdInTheParams(constants.tableName.vehicles), 
     vehicleController.getOne);
 
-    // The below route is for updating particular vehicle data.
+    // The below route is for updating  vehicle data.
     app.put(`/${process.env.apiToken}/edit/vehicle/:id`,
     isValidIdInTheParams(constants.tableName.vehicles), 
     checkInputGetAll.isIdEntered('service_provider_id', constants.tableName.service_providers, 'Service provider'),
@@ -64,12 +64,12 @@ module.exports = (app) =>
     checkInput.isSafetyCertificateAdded,
     vehicleController.updateData);
 
-    // The below route is for getting all the images of a particular vehicle data.
+    // The below route is for getting all the images of a  vehicle data.
     app.get(`/${process.env.apiToken}/getAllImages/vehicle/:id`, 
     isValidIdInTheParams(constants.tableName.vehicles),  
     vehicleController.getAllImages);
 
-    // The below route is for removing or deleting the particular vehicle data.
+    // The below route is for removing or deleting the  vehicle data.
     app.put(`/${process.env.apiToken}/removeVehicle/:id`, 
     isValidIdInTheParams(constants.tableName.vehicles),  
     vehicleController.removeVehicle);

@@ -13,7 +13,7 @@ const constant = require('../../utils/constants'); // Constant elements are stor
 const vehicleImage = require('../../models/vehicles/vehicleImages.model');  // The model from where the logic is intantiate are written in vehicleImage model
 
 /**
- * The below function is for add the new image to a particular vehicle in the database. We need number of inputs from the end user to add or upload the vehicle vehicle. 
+ * The below function is for add the new image to a  vehicle in the database. We need number of inputs from the end user to add or upload the vehicle vehicle. 
  */
 exports.addImages = async (req, res, next) =>
 {
@@ -43,7 +43,7 @@ exports.addImages = async (req, res, next) =>
             message : `We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
         });
     }
-    else if(vehicleImages === 'NOATTACH')
+    else if(vehicleImages === 'NOATTACHEMENT')
     {
         return res.status(200).send
         ({
@@ -65,11 +65,11 @@ exports.addImages = async (req, res, next) =>
 };
 
 /**
- * The below function is fetching all the images of a particular vehicle
+ * The below function is fetching all the images of a  vehicle
  */
 exports.allImages = async (req, res, next) =>
 {
-    // The below line is for going to the model function to implement the code for getting or fetching all the images of a particular vehicle.
+    // The below line is for going to the model function to implement the code for getting or fetching all the images of a  vehicle.
     const vehicleImages = await vehicleImage.allimages(req.params.id, req.body.page, req.body.limit)
 
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
@@ -106,11 +106,11 @@ exports.allImages = async (req, res, next) =>
 };
 
 /**
- * The below function is for updating the status of the particular images of the vehicle. We need to give the vehicle image id in the params.
+ * The below function is for updating the status of the  images of the vehicle. We need to give the vehicle image id in the params.
  */
 exports.updateStatus = async (req, res, next) =>
 {
-    // The below line is for going to the model function to implement the code for updating the status of the existing image of a particular vehcile. We need to give the vehicle image id in the params.
+    // The below line is for going to the model function to implement the code for updating the status of the existing image of a  vehcile. We need to give the vehicle image id in the params.
     const vehicleImages = await vehicleImage.updatestatus(req.params.id);
     // If status not updated then this if block of code.
     if(vehicleImages.length === 0)
@@ -135,7 +135,7 @@ exports.updateStatus = async (req, res, next) =>
 };
 
 /**
- * The below function is for removing the particular vehcile image from the view page. The data will be in the database but it will never shown on the front-end
+ * The below function is for removing the  vehcile image from the view page. The data will be in the database but it will never shown on the front-end
  */
 exports.removeImage = async (req, res, next) =>
 {

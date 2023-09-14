@@ -78,7 +78,7 @@ exports.addNew = async (req, res, next) =>
             message : `We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG)."`
         });
     }
-    else if(vehicles === 'NOATTACH')
+    else if(vehicles === 'NOATTACHEMENT')
     {
         return res.status(200).send
         ({
@@ -304,7 +304,7 @@ exports.updateData = async (req, res, next) =>
             message : `We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
         });
     }
-    else if(vehicles === 'NOATTACH')
+    else if(vehicles === 'NOATTACHEMENT')
     {
         return res.status(200).send
         ({

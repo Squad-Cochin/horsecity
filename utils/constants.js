@@ -128,12 +128,12 @@ module.exports =
     },
     responseMessage :
     {
-        getAll : `Data Fetched Sucessfully.`,
+        getAll : `Data fetched sucessfully.`,
         getNoData : `No data to display.`,
         getAllErr : `Error while fetching all the data.`,
-        getOne : `Particular data fetched Successfully.`,
+        getOne : `Data fetched successfully.`,
         getOneErr : `Error while fetching the data.`,
-        insert : `Data inserted succesfully.`,
+        insert : `Data inserted successfully.`,
         errorInsert : `Data insertion failed.`,
         statusinactive : `status changed to INACTIVE.`,
         statusactive : `status changed to ACTIVE.`,

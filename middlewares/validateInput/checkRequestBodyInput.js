@@ -65,7 +65,7 @@ exports.validateCommonInputAtStartingTime = (tableName, feildName, Value, id, me
         ({
             code : 500,
             status : false, 
-            message : `Internal server error. While checking the ${messageFeild} at the registration time. POST` 
+            message : `Internal server error.` 
         });
     }
     else if(checkEntry.length > 0)
@@ -92,7 +92,7 @@ exports.validateCommonInputAtUpdateTime = (tableName, feildName, Value, id, mess
         ({
             code : 400,
             status : false,
-            message : `Internal server error while checking the ${messageFeild} at the time of update` 
+            message : `Internal server error.` 
         });
     }                
     if(checkEmail === `valuenotavailable`)
@@ -171,7 +171,7 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
                     ({
                         code : 500,
                         status : false, 
-                        message : `Internal server error. While checking the email from the middleware.` 
+                        message : `Internal server error.` 
                     });
                 }
             }
@@ -340,7 +340,7 @@ exports.isValidLicenceNumber = async (req, res, next) =>
             ({
                 code : 500,
                 status : false, 
-                message : `Internal server error. While checking the licence number.` 
+                message : `Internal server error.` 
             });
         }
     }    
@@ -377,7 +377,7 @@ exports.idProofNumberValidation = async (req, res, next) =>
             ({
                 code : 500,
                 status : false, 
-                message : `Internal server error. While checking the id proof number.` 
+                message : `Internal server error.` 
             });
         }   
     }    
@@ -511,7 +511,7 @@ exports.idProofValidationWhileUpdate = async(req, res, next) =>
             ({
                 code : 500,
                 status : false,
-                message : `Internal server error` 
+                message : `Internal server error.` 
             });
         }
         
@@ -755,7 +755,7 @@ exports.isPageNumberEntered = (req, res, next) =>
         ({
             code : 500,
             success: false,
-            message : `Internal Server Error. Page Number value is nt entered`
+            message : `Internal server error.`
         });     
     }
     else
@@ -772,7 +772,7 @@ exports.isPageSizeEntered = (req, res, next) =>
         ({
             code : 500,
             success: false,
-            message : `Internal Server Error. Page size is not entered`
+            message : `Internal server error.`
         });     
     }
     else
@@ -949,7 +949,7 @@ exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) => {
         res.status(500).send({
             code: 500,
             status: false,
-            message: 'Internal server error',
+            message: 'Internal server error.',
         });
     }
 };
@@ -1012,7 +1012,7 @@ exports.isIdEntered = (feildName, tableName, MessageFeild) => async (req, res, n
             ({
                 code: 400,
                 status : "failed",
-                error: `Internal server error while fetching the data of '${MessageFeild}' from the database`
+                error: `Internal server error.`
             });
         }
         else if(data.length > 0)
@@ -1073,7 +1073,7 @@ exports.checkingDuplicateEnquiry = async (req, res, next) =>
                         ({
                             code : 500,
                             status : false,
-                            message : `Internal server error`
+                            message : `Internal server error.`
                         });
                     }
                 }
@@ -1100,8 +1100,8 @@ exports.CustomerAddRequestBody = async (req, res, next)  =>
         await this.checkValueEntered(req.body.password, 'Password')(req, res, next);
         await this.checkValueEntered(req.body.contact_no, 'Contact number')(req, res, next);
         await this.checkValueEntered(req.body.date_of_birth, 'Date of birth')(req, res, next);
-        await this.checkValueEntered(req.body.id_proof_no, 'Id proof number')(req, res, next);
-        await this.checkValueEntered(req.files.id_proof_image, 'Id proof image is not uploaded')(req, res, next);
+        // await this.checkValueEntered(req.body.id_proof_no, 'Id proof number')(req, res, next);
+        // await this.checkValueEntered(req.files.id_proof_image, 'Id proof image is not uploaded')(req, res, next);
         next();
     }
     catch(error)
@@ -1111,7 +1111,7 @@ exports.CustomerAddRequestBody = async (req, res, next)  =>
         ({
             code: 500,
             status: false,
-            message: 'Internal server error from the customer add reqest body',
+            message: 'Internal server error.',
         });
 
     }
@@ -1142,7 +1142,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                     ({
                         code : 400,
                         status : false,
-                        message : "Invalid Format of file submit for upload",
+                        message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
                     });
                 }
                 else if(uploadIdproofImage === 'NOATTACHEMENT')
@@ -1151,7 +1151,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                     ({
                         code : 400,
                         status : false,
-                        message : "No image uploaded for customer",
+                        message : "An ID proof image is required.",
                     });
                 }
                 else
@@ -1167,7 +1167,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                         ({
                             code: 200,
                             status: true,
-                            message: ` Customer ${constants.responseMessage.insert}`,
+                            message: ` ${constants.responseMessage.insert}`,
                         });
                     }
                     else
@@ -1176,7 +1176,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                         ({
                             code : 500,
                             status : false,
-                            message : `Internal Server Error from the params`
+                            message : `Internal server error.`
                         });
                     }
                 }
@@ -1199,7 +1199,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                         ({
                             code : 400,
                             status : false,
-                            message : "Invalid Format of file submit for upload",
+                            message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
                         });
                     }
                     else if(uploadIdproofImage === 'NOATTACHEMENT')
@@ -1208,7 +1208,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                         ({
                             code : 400,
                             status : false,
-                            message : "No image uploaded for customer",
+                            message : "An ID proof image is required.",
                         });
                     }
                     else
@@ -1243,7 +1243,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                             ({
                                 code : 500,
                                 status : false,
-                                message : `Internal Server Error from the params`
+                                message : `Internal server error.`
                             });  
                         }
                     }
@@ -1264,7 +1264,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                             ({
                                 code : 400,
                                 status : false,
-                                message : "Invalid Format of file submit for upload",
+                                message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
                             });
                         }
                         else if(uploadIdproofImage === 'NOATTACHEMENT')
@@ -1273,7 +1273,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                             ({
                                 code : 400,
                                 status : false,
-                                message : "No image uploaded for customer",
+                                message : "An ID proof image is required.",
                             });
                         }
                         else
@@ -1310,7 +1310,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                 ({
                                     code : 500,
                                     status : false,
-                                    message : `Internal Server Error from the params`
+                                    message : `Internal server error.`
                                 });  
                             }
                         }                        
@@ -1331,7 +1331,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                 ({
                                     code : 400,
                                     status : false,
-                                    message : "Invalid Format of file submit for upload",
+                                    message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
                                 });
                             }
                             else if(uploadIdproofImage === 'NOATTACHEMENT')
@@ -1340,7 +1340,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                 ({
                                     code : 400,
                                     status : false,
-                                    message : "No image uploaded for customer",
+                                    message : "An ID proof image is required.",
                                 });
                             }
                             else
@@ -1377,7 +1377,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                     ({
                                         code : 500,
                                         status : false,
-                                        message : `Internal Server Error from the params`
+                                        message : `Internal server error.`
                                     });  
                                 }
                             }
@@ -1398,7 +1398,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                     ({
                                         code : 400,
                                         status : false,
-                                        message : "Invalid Format of file submit for upload",
+                                        message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
                                     });
                                 }
                                 else if(uploadIdproofImage === 'NOATTACHEMENT')
@@ -1407,7 +1407,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                     ({
                                         code : 400,
                                         status : false,
-                                        message : "No image uploaded for customer",
+                                        message : "An ID proof image is required.",
                                     });
                                 }
                                 else
@@ -1444,7 +1444,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                         ({
                                             code : 500,
                                             status : false,
-                                            message : `Internal Server Error from the params`
+                                            message : `Internal server error.`
                                         });  
                                     }
                                 }
@@ -1459,22 +1459,23 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                 if(result16.length != 0)
                                 {
                                     uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
-                                    if(uploadIdproofImage === 'INVALIDFORMAT')
+                                    if (customers === 'INVALIDFORMAT')
                                     {
                                         return res.status(200).send
                                         ({
                                             code : 400,
                                             status : false,
-                                            message : "Invalid Format of file submit for upload",
+                                            message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
                                         });
                                     }
-                                    else if(uploadIdproofImage === 'NOATTACHEMENT')
+                                    // If the id proof image is not uploaded then this else if block of code will be executed.
+                                    else if(customers === 'NOATTACHEMENT')
                                     {
                                         return res.status(200).send
                                         ({
                                             code : 400,
                                             status : false,
-                                            message : "No image uploaded for customer",
+                                            message : "An ID proof image is required.",
                                         });
                                     }
                                     else
@@ -1511,7 +1512,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                             ({
                                                 code : 500,
                                                 status : false,
-                                                message : `Internal Server Error from the params`
+                                                message : `Internal server error.`
                                             });  
                                         }
                                     }
@@ -1533,7 +1534,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
             ({
                 code: 500,
                 status: false,
-                message: `Internal server error`,
+                message: `Internal server error.`,
             });
         }
     });
@@ -1551,27 +1552,232 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
             let result11 = await commonoperation.queryAsync(selQuery);
             if(result11.length != 0)
             {
-                uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
-                if(uploadIdproofImage === 'INVALIDFORMAT')
+                const upQuery1 = `  UPDATE ${constants.tableName.customers} c
+                                    SET c.deleted_at = NULL,
+                                    c.name = '${req.body.name}',
+                                    c.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
+                                    c.password = SHA2('${process.env.PASSWORD}', 256),
+                                    c.status = '${constants.status.active}',
+                                    c.phone_verified = 'TRUE',
+                                    c.email_verified = 'TRUE',
+                                    c.id_proof_image = 'NULL',
+                                    c.id_proof_no = 'NULL',
+                                    c.user_name = '${req.body.userName}',
+                                    c.id_proof_no = '${req.body.id_proof_no}',
+                                    c.contact_no = '${req.body.contact_no}',
+                                    c.expiry_at = '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}',
+                                    c.created_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}',
+                                    c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                    WHERE c.id = ${result11[0].id}  `;
+                const result21 = await commonoperation.queryAsync(upQuery1);
+                if (result21.affectedRows > 0)
                 {
                     return res.status(200).send
                     ({
-                        code : 400,
-                        status : false,
-                        message : "Invalid Format of file submit for upload",
-                    });
-                }
-                else if(uploadIdproofImage === 'NOATTACHEMENT')
-                {
-                    return res.status(200).send
-                    ({
-                        code : 400,
-                        status : false,
-                        message : "No image uploaded for customer",
+                        code: 200,
+                        status: true,
+                        message: `${constants.responseMessage.insert}`,
                     });
                 }
                 else
                 {
+                    return res.status(200).send
+                    ({
+                        code : 500,
+                        status : false,
+                        message : `Internal server error.`
+                    });  
+                }
+            }
+            else
+            {
+                let selQuery2 = `   SELECT * FROM ${constants.tableName.customers} c
+                                    WHERE c.user_name = '${req.body.userName}'
+                                    AND c.deleted_at IS NOT NULL
+                                `;
+                let result12 = await commonoperation.queryAsync(selQuery2);
+                if(result12.length != 0)
+                {
+                    console.log('here2');
+                    const upQuery2 = `  UPDATE ${constants.tableName.customers} c
+                                        SET c.deleted_at = NULL,
+                                        c.name = '${req.body.name}',
+                                        c.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
+                                        c.password = SHA2('${process.env.PASSWORD}', 256),
+                                        c.id_proof_image = 'NULL',
+                                        c.id_proof_no - 'NULL',
+                                        c.status = '${constants.status.active}',
+                                        c.phone_verified = 'TRUE',
+                                        c.email_verified = 'TRUE',
+                                        c.email = '${req.body.email}',
+                                        c.id_proof_no = '${req.body.id_proof_no}',
+                                        c.contact_no = '${req.body.contact_no}',
+                                        c.expiry_at = '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}',
+                                        c.created_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}',
+                                        c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                        WHERE c.id = ${result12[0].id}  `;
+                    const result22 = await commonoperation.queryAsync(upQuery2);
+                    console.log('21: ', result21);
+                    if (result22.affectedRows > 0)
+                    {
+                        return res.status(200).send
+                        ({
+                            code: 200,
+                            status: true,
+                            message: `${constants.responseMessage.insert}`,
+                        });
+                    }
+                    else
+                    {
+                        return res.status(200).send
+                        ({
+                            code : 500,
+                            status : false,
+                            message : `Internal server error.`
+                        });  
+                    }
+                }
+                else
+                {
+                    let selQuery3 = `   SELECT * FROM ${constants.tableName.customers} c
+                                        WHERE c.contact_no = '${req.body.contact_no}'
+                                        AND c.deleted_at IS NOT NULL
+                                    `;
+                    let result13 = await commonoperation.queryAsync(selQuery3);
+                    if(result13.length != 0)
+                    {
+                        console.log('here3');
+                        const upQuery3 = `  UPDATE ${constants.tableName.customers} c
+                                            SET c.deleted_at = NULL,
+                                            c.name = '${req.body.name}',
+                                            c.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
+                                            c.password = SHA2('${process.env.PASSWORD}', 256),
+                                            c.id_proof_image = 'NULL',
+                                            c.id_proof_no - 'NULL',
+                                            c.status = '${constants.status.active}',
+                                            c.phone_verified = 'TRUE',
+                                            c.email_verified = 'TRUE',
+                                            c.email = '${req.body.email}',
+                                            c.id_proof_no = '${req.body.id_proof_no}',
+                                            c.user_name = '${req.body.userName}',
+                                            c.expiry_at = '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}',
+                                            c.created_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}',
+                                            c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                            WHERE c.id = ${result13[0].id}  `;
+                        const result23 = await commonoperation.queryAsync(upQuery3);
+                        console.log('21: ', result21);
+                        if (result23.affectedRows > 0)
+                        {
+                            return res.status(200).send
+                            ({
+                                code: 200,
+                                status: true,
+                                message: `${constants.responseMessage.insert}`,
+                            });
+                        }
+                        else
+                        {
+                            return res.status(200).send
+                            ({
+                                code : 500,
+                                status : false,
+                                message : `Internal server error.`
+                            });  
+                        }
+                    }
+                    else
+                    {
+                        let selQuery4 = `   SELECT * FROM ${constants.tableName.customers} c
+                                            WHERE c.id_proof_no = '${req.body.id_proof_no}'
+                                            AND c.deleted_at IS NOT NULL
+                                        `;
+                        let result14 = await commonoperation.queryAsync(selQuery4);
+                        if(result14.length != 0)
+                        {
+                            console.log('here4');
+                            let upQuery4 = `UPDATE ${constants.tableName.customers} c
+                                            SET c.deleted_at = NULL,
+                                            c.name = '${req.body.name}',
+                                            c.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
+                                            c.password = SHA2('${process.env.PASSWORD}', 256),
+                                            c.id_proof_image = 'NULL',
+                                            c.id_proof_no - 'NULL',
+                                            c.status = '${constants.status.active}',
+                                            c.phone_verified = 'TRUE',
+                                            c.email_verified = 'TRUE',
+                                            c.email = '${req.body.email}',
+                                            c.contact_no = '${req.body.contact_no}',
+                                            c.user_name = '${req.body.userName}',
+                                            c.expiry_at = '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}',
+                                            c.created_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}',
+                                            c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                            WHERE c.id = ${result14[0].id} `;
+                            const result24 = await commonoperation.queryAsync(upQuery4);
+                            console.log('21: ', result21);                
+                            if (result24.affectedRows > 0)
+                            {
+                                return res.status(200).send
+                                ({
+                                    code: 200,
+                                    status: true,
+                                    message: `${constants.responseMessage.insert}`,
+                                });
+                            }
+                            else
+                            {
+                                return res.status(200).send
+                                ({
+                                    code : 500,
+                                    status : false,
+                                    message : `Internal server error.`
+                                });  
+                            }
+                        }
+                        else
+                        {
+                            const selQuery5 = ` SELECT * FROM ${constants.tableName.customers} c 
+                                                WHERE c.name = '${req.body.name}' 
+                                                AND c.email = '${req.body.email}'
+                                                AND c.contact_no = '${req.body.contact_no}'
+                                                AND c.user_name = '${req.body.userName}'
+                                                AND c.password = '${req.body.password}' 
+                                                AND c.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}' 
+                                                AND c.id_proof_no = '${req.body.id_proof_no}' 
+                                                AND c.deleted_at IS NOT NULL`;
+                            const result15 = await commonoperation.queryAsync(selQuery5);
+                            if(result15.length != 0)
+                            {
+                                const upQuery = `   UPDATE ${constants.tableName.customers} c 
+                                                    SET c.deleted_at = NULL,
+                                                    c.id_proof_image = '${uploadIdproofImage}',
+                                                    WHERE c.id = ${result15[0].id}`;
+                                const result25 = await commonoperation.queryAsync(upQuery);
+                                console.log('25: ', result21);                                
+                                if (result25.affectedRows > 0)
+                                {
+                                    return res.status(200).send
+                                    ({
+                                        code: 200,
+                                        status: true,
+                                        message: `${constants.responseMessage.insert}`,
+                                    });
+                                }
+                                else
+                                {
+                                    return res.status(200).send
+                                    ({
+                                        code : 500,
+                                        status : false,
+                                        message : `Internal server error.`
+                                    });
+                                }
+                            }
+                            else
+                            {
+                                next();
+                            }
+                        }
+                    }
                 }
             }      
         }
@@ -1581,7 +1787,7 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
             ({
                 code: 500,
                 status: false,
-                message: `Internal server error`,
+                message: `Internal server error.`,
             });
         }
     });

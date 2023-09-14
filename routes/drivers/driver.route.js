@@ -27,7 +27,7 @@ module.exports = function(app)
         isValidIdInTheParams(constants.tableName.service_providers),
         driverController.getAll);
 
-    // Below route is for getting data of any particular driver
+    // Below route is for getting data of any  driver
     app.get(`/${process.env.apiToken}/getOne/driver/:id`, 
     isValidIdInTheParams(constants.tableName.drivers), 
     driverController.getOne);
@@ -76,7 +76,7 @@ module.exports = function(app)
     driverController.editDriver
     );
 
-    // The below route is for assigning a driver to a particular service provider.
+    // The below route is for assigning a driver to a  service provider.
     app.post(`/${process.env.apiToken}/assign/driver`,
     checkInput.isIdEntered('driver_id', constants.tableName.drivers, 'Driver'),
     checkInput.isIdEntered('serviceProvider_id', constants.tableName.service_providers, 'Service provider'),

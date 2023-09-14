@@ -22,14 +22,14 @@ module.exports = function (app)
         invoiceController.getAll
         ); 
 
-    // The below route is for fetching a particular invoices on the basis of the id of a invoice in the params. This will be used in the reactjs front
+    // The below route is for fetching a  invoices on the basis of the id of a invoice in the params. This will be used in the reactjs front
     app.get(
             `/${process.env.apiToken}/getOne/invoice/:id`, 
             isValidIdInTheParams(constants.tableName.invoices),
             invoiceController.getOne
             );
             
-    // The below route is for entering the amount a particular invoices on the basis of the id of a invoice in the params. This will be used in the reactjs front
+    // The below route is for entering the payment a  invoices on the basis of the id of a invoice in the params. This will be used in the reactjs front
     app.post(
         `/${process.env.apiToken}/add/amount/:id`, 
         isValidIdInTheParams(constants.tableName.invoices),
@@ -37,7 +37,7 @@ module.exports = function (app)
         invoiceController.enterAmountForParticularInvoice
         );
 
-    // The below route is for fetching a particular invoices overall payment histroy on the basis of the id of a invoice in the params. This will be used in the reactjs front
+    // The below route is for fetching a  invoices overall payment histroy on the basis of the id of a invoice in the params. This will be used in the reactjs front
     app.get(
         `/${process.env.apiToken}/payment/histroy/:id`, 
         isValidIdInTheParams(constants.tableName.invoices),

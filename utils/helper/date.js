@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                     //
-//    This file is designed to add the amount of days to the current date.             //
+//    This file is designed to add the payment of days to the current date.             //
 //                                                                                     //
 /////////////////////////////////////////////////////////////////////////////////////////
 

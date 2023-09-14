@@ -279,7 +279,7 @@ exports.fileUploadTwo = async (attachments, path) =>
     {
         if (!attachments) // || !attachments.file || !Array.isArray(attachments.file)) 
         {
-            resolve('NOATTACH')
+            resolve('NOATTACHEMENT')
         }
         else
         {

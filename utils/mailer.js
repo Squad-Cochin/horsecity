@@ -36,7 +36,7 @@ exports.SendEmail = async (id, to, subject) =>
         let invoiceData = await commonfetching.getOneInvoice(id);
 
         // Example usage: Assuming you have the invoiceData object containing invoice, vehicles, and payment details.
-        const htmlContent = generateInvoiceHTML(invoiceData);
+        const htmlContent = commonfetching.getInvoiceHtmlTemplate(invoiceData);
         const transporter = nodemailer.createTransport 
         ({
             // service: 'Gmail', // replace with your email service provider

@@ -135,7 +135,7 @@ module.exports = class drivers
 
     /**
     * The below model function is for the Admin side page. 
-    * The function for fetching particular driver details present in the database on the basis of driver id.
+    * The function for fetching  driver details present in the database on the basis of driver id.
     */
     static async getone(Id)
     {
@@ -158,7 +158,7 @@ module.exports = class drivers
         }
         catch (error)
         {
-            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "getone". Which is designed to fetch particular data of the drivers.');            
+            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "getone". Which is designed to fetch  data of the drivers.');            
         }
     };
 
@@ -187,7 +187,7 @@ module.exports = class drivers
                         {
                             resolve('INVALIDATTACHMENTP')
                         }
-                        else if(uploadprofile_image === 'NOATTACH')
+                        else if(uploadprofile_image === 'NOATTACHEMENT')
                         {
                             resolve('NOATTACHP')
                         }
@@ -195,7 +195,7 @@ module.exports = class drivers
                         {
                             resolve('INVALIDATTACHMENTL')
                         }
-                        else if(uploadlicence_img === 'NOATTACH')
+                        else if(uploadlicence_img === 'NOATTACHEMENT')
                         {
                             resolve('NOATTACHL')
                         }
@@ -259,12 +259,12 @@ module.exports = class drivers
         }
         catch (error)
         {
-            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "addcustomer". Which is designed to add particular data of the drivewr.');            
+            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "addcustomer". Which is designed to add  data of the drivewr.');            
         }
     };
 
     /**
-    * The below model function is for the Admin side page. The function is updating the status of a particular driver on the basis of driver id in the params.
+    * The below model function is for the Admin side page. The function is updating the status of a  driver on the basis of driver id in the params.
     */
     static async updatestatus(Id)
     {
@@ -287,7 +287,7 @@ module.exports = class drivers
     };
 
     /**
-    * The below model function is for the Admin side page. The function is updating or adding the deleted_at of a particular driver on the basis of driver id in the params.
+    * The below model function is for the Admin side page. The function is updating or adding the deleted_at of a  driver on the basis of driver id in the params.
     * This will be considered as the driver is deleted
     */
     static async removedriver(Id)
@@ -333,7 +333,7 @@ module.exports = class drivers
             }
             catch (error)
             {
-                console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "removedriver". Which is designed to remove particular driver.', error);            
+                console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "removedriver". Which is designed to remove  driver.', error);            
             }
         });
     };    
@@ -354,7 +354,7 @@ module.exports = class drivers
                 {
                     resolve('INVALIDATTACHMENTP')
                 }
-                if(uploadprofile_image === 'NOATTACH')
+                if(uploadprofile_image === 'NOATTACHEMENT')
                 {
                     resolve('NOATTACHP')
                 }
@@ -367,7 +367,7 @@ module.exports = class drivers
                 {
                     resolve('INVALIDATTACHMENTL')
                 }
-                if(uploadlicence_img === 'NOATTACH')
+                if(uploadlicence_img === 'NOATTACHEMENT')
                 {
                     resolve('NOATTACHL')
                 }  
@@ -409,7 +409,7 @@ module.exports = class drivers
         }
         catch (error)
         {
-            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "editdriver". Which is designed to edit particular data of the driver.');
+            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "editdriver". Which is designed to edit  data of the driver.');
         }
     };
 
@@ -540,7 +540,7 @@ module.exports = class drivers
 
     /**
      *  The below model function is for the admin side page.
-     *  Is the unassign the driver to a particular service provider
+     *  Is the unassign the driver to a  service provider
      */
     static async unassignserviceprovider(Id)
     {
@@ -574,7 +574,7 @@ module.exports = class drivers
         }
         catch (error)
         {
-            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "unassignserviceprovider". Which is designed to unassigned particular driver to their service provider.', error);            
+            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "unassignserviceprovider". Which is designed to unassigned  driver to their service provider.', error);            
         }        
     };
 
@@ -616,7 +616,7 @@ module.exports = class drivers
         }
         catch (error)
         {
-            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "unassignserviceproviderandboth". Which is designed to unassigned particular driver to their service provider.', error);            
+            console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "unassignserviceproviderandboth". Which is designed to unassigned  driver to their service provider.', error);            
         }        
     };
 };

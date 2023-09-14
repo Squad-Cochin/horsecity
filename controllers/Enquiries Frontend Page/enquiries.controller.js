@@ -50,7 +50,7 @@ exports.createNewEnquiry = async (req, res, next) =>
 };
 
 /**
- * The below function is for fetching all enquiries of a particular customer on the basis of customer id. 
+ * The below function is for fetching all enquiries of a  customer on the basis of customer id. 
  * This is for NEXT JS front end 
  */
 exports.getParticularCustomerAllEnquiries = async (req, res, next) =>

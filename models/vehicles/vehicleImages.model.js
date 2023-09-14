@@ -15,7 +15,7 @@ module.exports = class vehicleImages
 
     /**
     * The below model function is for the Admin side page. 
-    * The function is adding image to a particular vehicle on the basis of vehicle id.
+    * The function is adding image to a  vehicle on the basis of vehicle id.
     */
     static async addimages(id, image, title)
     {
@@ -28,9 +28,9 @@ module.exports = class vehicleImages
                 {
                     resolve('INVALIDATTACHMENT')
                 }
-                else if(uploadVehicleImage === 'NOATTACH')
+                else if(uploadVehicleImage === 'NOATTACHEMENT')
                 {
-                    resolve('NOATTACH')
+                    resolve('NOATTACHEMENT')
                 }
                 else
                 {
@@ -57,7 +57,7 @@ module.exports = class vehicleImages
 
     /**
     * The below model function is for the Admin side page. 
-    * This function is for fetching the list of all the images of a particular vehicles on the basis of the vehicle id.
+    * This function is for fetching the list of all the images of a  vehicles on the basis of the vehicle id.
     */
     static async allimages (id, pageNumber, pageSize)
     {
@@ -104,7 +104,7 @@ module.exports = class vehicleImages
 
     /**
     * The below model function is for the Admin side page.
-    * The function is updating the status of a particular images of a vehicle on the basis of vehicle_image id in the params.
+    * The function is updating the status of a  images of a vehicle on the basis of vehicle_image id in the params.
     */
     static async updatestatus(Id)
     {
@@ -122,14 +122,14 @@ module.exports = class vehicleImages
         }
         catch (error)
         {
-            console.log('Error while changing the status of the particular vehicle images. In the vehicleImage.model.js');  
+            console.log('Error while changing the status of the  vehicle images. In the vehicleImage.model.js');  
         }
 
     }
 
     /**
     * The below model function is for the Admin side page.
-    * The function is updating or adding the deleted_at of a particular vehicles_iamge on the basis of vehicles_image id in the params.
+    * The function is updating or adding the deleted_at of a  vehicles_iamge on the basis of vehicles_image id in the params.
     * This will be considered as the vehicles_image is deleted
     */
     static async removeimage (Id)

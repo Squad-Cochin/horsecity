@@ -8,8 +8,6 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const auth = require('../../models/auth/auth.model'); // Impoting the auth models details
-const constants = require('../../utils/constants');
-
 
 /**
  * The below function is for the login of the service provider user
@@ -29,7 +27,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 400,
-            message : "Username not found",
+            message : "Username not found.",
         });
     }
     // If any unspecified or unencountered error came. Which is not as per our code thinking, then this else if block
@@ -40,7 +38,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 500,
-            message : "Internal server error .",
+            message : "Internal server error.",
         });
     }
     // If wrong password is entered then, this below response will be displayed
@@ -51,7 +49,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 400,
-            message : "Incorrect password .",
+            message : "Incorrect password.",
         });
     }
     // If service provider user is inactive then, this below response will be displayed
@@ -62,7 +60,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 400,
-            message : "Inactive service provider",
+            message : "Inactive service provider.",
         });
     } 
     // If password of the service provider user is expired then, this below response will be displayed
@@ -73,7 +71,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "expired",
             code : 400,
-            message : "Your password is expired. Please make a new password",
+            message : "Your password has expired. Please create a new one.",
         });
     }
     // If every thing run smoothly then, this below response will be displayed
@@ -109,7 +107,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         ({
             success : false,
             code : 400,
-            message : "This username must be incorrect or no user is registered with this username",
+            message : "This username must be incorrect, or no customer is registered with this username.",
         });
     }
     // The below if block will execute. when any unhandled error came
@@ -143,9 +141,6 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
     }
 };
 
-
-
-
 /**
  * The below function if for the logout. 
  */
@@ -173,7 +168,7 @@ exports.serviceProviderLogout = async(req, res)=>
         ({
             status : "success",
             code : 400,
-            message : "Incorrect Password"
+            message : "Incorrect Password."
         });
     }
     if(loginauth === 'noserviceprovider')

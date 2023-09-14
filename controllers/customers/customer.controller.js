@@ -46,16 +46,16 @@ exports.getAll = async (req, res, next) =>
 };
 
 /**
- * The below function is for getting all the details of a particular customers. Only single customer
+ * The below function is for getting all the details of a  customers. Only single customer
  * details we get through the below function.
  * 
- * For get the details of a particular customer. We need to give the customer Id in the params.
- * On the basis of that, All the details of a particular customer will be fetched.
+ * For get the details of a  customer. We need to give the customer Id in the params.
+ * On the basis of that, All the details of a  customer will be fetched.
  * 
  */
 exports.getOne= async (req, res, next) =>
 {
-    // The below line is for going to the model function to implement the code for getting all details of particular customer.
+    // The below line is for going to the model function to implement the code for getting all details of  customer.
     const customers = await customer.getone(req.params.id);
     // If any wrong id or some thing wrong entered, If that Id has no data then this if block of code will be executed
     if(customers === 'nodata')
@@ -507,7 +507,7 @@ exports.getParticularCustomerLogs = async(req, res, next) =>
 };
 
 /**
- * The below controller is for fetching the details of the particular customer for their individual dashboard.
+ * The below controller is for fetching the details of the  customer for their individual dashboard.
  * This function is for the nextjs
  */
 exports.getParticularCustomerDashboard = async (req, res, next) =>
@@ -536,7 +536,7 @@ exports.getParticularCustomerDashboard = async (req, res, next) =>
 };
 
 /**
- * The below controller is for fetching the details of the particular customer for their completed bookings.
+ * The below controller is for fetching the details of the  customer for their completed bookings.
  * This function is for the nextjs
  */
 exports.getParticularBookinDetailsCompleted = async (req, res, next) =>
@@ -565,7 +565,7 @@ exports.getParticularBookinDetailsCompleted = async (req, res, next) =>
 };
 
 /**
- * The below controller is for fetching the details of the particular customer for their active and confirm booking.
+ * The below controller is for fetching the details of the  customer for their active and confirm booking.
  * This function is for the nextjs
  */
 exports.getParticularBookinDetailsConfirm = async (req, res, next) =>
@@ -594,7 +594,7 @@ exports.getParticularBookinDetailsConfirm = async (req, res, next) =>
 };
 
 /**
- * The below controller is for fetching the details of the particular customer for their inactive or cancelled booking.
+ * The below controller is for fetching the details of the  customer for their inactive or cancelled booking.
  */
 exports.getParticularBookinDetailsCancelled = async (req, res, next) =>
 {
@@ -622,7 +622,7 @@ exports.getParticularBookinDetailsCancelled = async (req, res, next) =>
 };
 
 /**
- * The below controller is for fetching the details of the particular customer for their recent five bookings.
+ * The below controller is for fetching the details of the  customer for their recent five bookings.
  * This function is for the nextjs. 
  * 
  * The data woill come from the enquiries table. * 
@@ -654,7 +654,7 @@ exports.getParticularBookinDetailsRecent = async (req, res, next) =>
 
 
  /**
- * The below controller is for fetching the details of all the bookings of a particular customer.
+ * The below controller is for fetching the details of all the bookings of a  customer.
  * This function is for the nextjs
  */
 exports.getParticularCustomerAllBookings = async (req, res, next) =>
@@ -683,7 +683,7 @@ exports.getParticularCustomerAllBookings = async (req, res, next) =>
 }
 
 /**
- * The below controller is for fetching all the enquiries of a particular customer.
+ * The below controller is for fetching all the enquiries of a  customer.
  * This will be in the descending order on the basis of the created at.
  */
 exports.getParticularCustomerAllEnquiry = async (req, res, next)=>
@@ -744,7 +744,7 @@ exports.getParticularCustomerAllBookingsDataFromInvoice = async (req, res, next)
 };
 
 /**
- * The below controller is for fetching all the ACTIVE bookings details of a particular customer.
+ * The below controller is for fetching all the ACTIVE bookings details of a  customer.
  * The data will come from the quotations, invoices, payment_records tables.
  * No data is taken from the bookings table.
  * 
@@ -891,7 +891,7 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : "An ID proof image is required.",
+            message : "An ID proof image of customer is required.",
         });
     }
 
@@ -902,7 +902,7 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : `Data updated successfully`,
+            message : `Data updated successfully.`,
         });
     }
     

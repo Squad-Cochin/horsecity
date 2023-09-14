@@ -42,9 +42,9 @@ module.exports = class vehicles
                         {
                             resolve('INVALIDATTACHMENT')
                         }
-                        else if(uploadSafetyCertificate === 'NOATTACH')
+                        else if(uploadSafetyCertificate === 'NOATTACHEMENT')
                         {
-                            resolve('NOATTACH')
+                            resolve('NOATTACHEMENT')
                         }
                         else
                         {
@@ -195,7 +195,7 @@ module.exports = class vehicles
 
     /**
     * The below model function is for the Admin side page.
-    * The function is updating the status of a particular vehicle on the basis of vehicle id in the params.
+    * The function is updating the status of a  vehicle on the basis of vehicle id in the params.
     */
     static async updatestatus(id)
     {
@@ -256,7 +256,7 @@ module.exports = class vehicles
 
     /**
     * The below model function is for the Admin side page. 
-    * The function for fetching particular vehicle details present in the database on the basis of vehicle id.
+    * The function for fetching  vehicle details present in the database on the basis of vehicle id.
     */
     static async getone(Id)
     {
@@ -312,7 +312,7 @@ module.exports = class vehicles
         }
         catch(error)
         {
-            return console.log(`Error from the vehicle.model.js file from the models > vehicles folder. In the static function "getone". Which is designed to fetch all the data of a particular vehicles.`, error);                        
+            return console.log(`Error from the vehicle.model.js file from the models > vehicles folder. In the static function "getone". Which is designed to fetch all the data of a  vehicles.`, error);                        
         }
     };
 
@@ -346,9 +346,9 @@ module.exports = class vehicles
                 {
                     resolve('INVALIDATTACHMENT')
                 }
-                else if(uploadSafetyCertificate === 'NOATTACH')
+                else if(uploadSafetyCertificate === 'NOATTACHEMENT')
                 {
-                    resolve('NOATTACH')
+                    resolve('NOATTACHEMENT')
                 }
                 else
                 {
@@ -375,7 +375,7 @@ module.exports = class vehicles
 
     /**
     * The below model function is for the Admin side page. 
-    * This function is for fetching the list of all the images of a particular vehicles on the basis of the vehicle id.
+    * This function is for fetching the list of all the images of a  vehicles on the basis of the vehicle id.
     */
     static async getallimages(id)
     {
@@ -420,13 +420,13 @@ module.exports = class vehicles
         }
         catch(error)
         {
-            return console.log(`Error from the vehicle.model.js file from the models > vehicles folder. In the static function "getallimages". Which is designed to fetch all the images of a particular vehicles.`);
+            return console.log(`Error from the vehicle.model.js file from the models > vehicles folder. In the static function "getallimages". Which is designed to fetch all the images of a  vehicles.`);
         }
     };
 
     /**
     * The below model function is for the Admin side page.
-    * The function is updating or adding the deleted_at of a particular vehicles on the basis of vehicles id in the params.
+    * The function is updating or adding the deleted_at of a  vehicles on the basis of vehicles id in the params.
     * This will be considered as the vehicles is deleted
     */
     static async removevehicle(Id)
@@ -446,13 +446,13 @@ module.exports = class vehicles
         }
         catch(error)
         {
-            return console.log(`Error from the vehicle.model.js file from the models > vehicles folder. In the static function "removevehicle". Which is designed to delete or remove the data of a particular vehicles.`);                        
+            return console.log(`Error from the vehicle.model.js file from the models > vehicles folder. In the static function "removevehicle". Which is designed to delete or remove the data of a  vehicles.`);                        
         }
     };
 
     /**
     * The below model function is for the Admin side page.
-    * The function is for showing the particular vehicle on the front end of the customer [NEXTJS]
+    * The function is for showing the  vehicle on the front end of the customer [NEXTJS]
     */
     static async getvehicledetailforcustomerpage(Id)
     {
@@ -583,7 +583,7 @@ module.exports = class vehicles
         }
         catch (error)
         {
-            return console.log(`Error from the vehicle.model.js file from the models > vehicles folder. In the static function "getvehicledetailforcustomerpage". Which is designed to fetch the details of a particular vehicle for the details page in the customer side`);                        
+            return console.log(`Error from the vehicle.model.js file from the models > vehicles folder. In the static function "getvehicledetailforcustomerpage". Which is designed to fetch the details of a  vehicle for the details page in the customer side`);                        
         }
     };
 

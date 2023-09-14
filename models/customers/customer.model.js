@@ -115,7 +115,7 @@ module.exports = class customers
 
     /**
     * The below model function is for the Admin side page. 
-    * The function for fetching particular customer details present in the database on the basis of customer id.
+    * The function for fetching  customer details present in the database on the basis of customer id.
     */
     static async getone(Id)
     {
@@ -141,7 +141,7 @@ module.exports = class customers
         }
         catch (error)
         {
-            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getone". Which is designed to fetch particular data of the customers.', error);            
+            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getone". Which is designed to fetch  data of the customers.', error);            
         }
     };
 
@@ -208,7 +208,7 @@ module.exports = class customers
         }
         catch (error)
         {
-            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "addcustomer". Which is designed to add particular data of the customers.');            
+            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "addcustomer". Which is designed to add  data of the customers.');            
         }
     };
 
@@ -272,12 +272,12 @@ module.exports = class customers
         }
         catch (error)
         {
-            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "editcustomer". Which is designed to edit particular data of the customer.');            
+            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "editcustomer". Which is designed to edit  data of the customer.');            
         }
     };
 
     /**
-    * The below model function is for the Admin side page. The function is updating the status of a particular customer on the basis of customer id in the params.
+    * The below model function is for the Admin side page. The function is updating the status of a  customer on the basis of customer id in the params.
     */
     static async updatestatus(Id)
     {
@@ -295,12 +295,12 @@ module.exports = class customers
         }
         catch (error)
         {
-            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getone". Which is designed to fetch particular data of the customers.');            
+            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getone". Which is designed to fetch  data of the customers.');            
         }
     };
 
     /**
-    * The below model function is for the Admin side page. The function is updating or adding the deleted_at of a particular customer on the basis of customer id in the params.
+    * The below model function is for the Admin side page. The function is updating or adding the deleted_at of a  customer on the basis of customer id in the params.
     * This will be considered as the customer is deleted
     */
     static async removecustomer(Id)
@@ -319,7 +319,7 @@ module.exports = class customers
         }
         catch (error)
         {
-            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getone". Which is designed to fetch particular data of the customers.');            
+            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getone". Which is designed to fetch  data of the customers.');            
         }
     };
 
@@ -518,9 +518,9 @@ module.exports = class customers
     };
 
     /**
-    * The below model function is for the customer frontend side page. This function is for fetching the logs of a particular customer
+    * The below model function is for the customer frontend side page. This function is for fetching the logs of a  customer
     */
-    static async getparticularcustomerlogs(Id)
+    static async getcustomerlogs(Id)
     {
         try
         {
@@ -560,14 +560,14 @@ module.exports = class customers
         }
         catch (error)
         {
-           console.log(`Error from the try catch block of the getparticularcustomerlogs model from the customer.model.js`); 
+           console.log(`Error from the try catch block of the getcustomerlogs model from the customer.model.js`); 
         }        
     };
 
     /**
     * The below model function is for the customer frontend side page. This function is for fetching the data. Which we are showing on the dashboard of the customer
     */
-    static async getparticularcustomerdashboard(Id)
+    static async getcustomerdashboard(Id)
     {
         try
         {
@@ -646,15 +646,15 @@ module.exports = class customers
         }
         catch (error)
         {
-            console.log(`Error while fetching the dashboard data of the customer from the backend. Please check the getparticularcustomerdasboard model in the customer.model.js`);                        
+            console.log(`Error while fetching the dashboard data of the customer from the backend. Please check the getcustomerdasboard model in the customer.model.js`);                        
         }
     }
 
     /**
-    * The below model function is for the customer frontend side page. This function is for fetching all the booking of a particular customer
+    * The below model function is for the customer frontend side page. This function is for fetching all the booking of a  customer
     * whose status is completed
     */
-    static async getparticularbookindetailscompleted(Id)
+    static async getbookindetailscompleted(Id)
     {
         try
         {
@@ -702,15 +702,15 @@ module.exports = class customers
         }
         catch (error)
         {
-         console.log(`Error from the try catch block of the getparticularbookindetailscompleted model file function`);
+         console.log(`Error from the try catch block of the getbookindetailscompleted model file function`);
         }
     };
 
     /**
-    * The below model function is for the customer frontend side page. This function is for fetching all the booking of a particular customer
+    * The below model function is for the customer frontend side page. This function is for fetching all the booking of a  customer
     * whose status is CONFIRM
     */
-    static async getparticularbookindetailsconfirm(Id)
+    static async getbookindetailsconfirm(Id)
     {
         try
         {
@@ -758,15 +758,15 @@ module.exports = class customers
         }
         catch (error)
         {
-         console.log(`Error from the try catch block of the getparticularbookindetailscompleted model file function`);
+         console.log(`Error from the try catch block of the getbookindetailscompleted model file function`);
         }
     };
 
     /**
-    * The below model function is for the customer frontend side page. This function is for fetching all the booking of a particular customer
+    * The below model function is for the customer frontend side page. This function is for fetching all the booking of a  customer
     * whose status is CANCELLED
     */
-    static async getparticularbookindetailscancelled(Id)
+    static async getbookindetailscancelled(Id)
     {
         try
         {
@@ -817,15 +817,15 @@ module.exports = class customers
         }
         catch (error)
         {
-            console.log(`Error from the try catch block of the getparticularbookindetailscancelled model file function`);
+            console.log(`Error from the try catch block of the getbookindetailscancelled model file function`);
         }
     };
 
     /**
-    * The below model function is for the customer frontend side page. This function is for fetching all the enquiries of a particular customer
+    * The below model function is for the customer frontend side page. This function is for fetching all the enquiries of a  customer
     * We will get only five recent enquiries because of the limit.  
     */
-    static async getparticularbookindetailsrecent(Id)
+    static async getbookindetailsrecent(Id)
     {
         try
         {
@@ -858,15 +858,15 @@ module.exports = class customers
         }
         catch (error)
         {
-            console.log(`Error from the try catch block of the getparticularbookindetailsrecent model file function`);
+            console.log(`Error from the try catch block of the getbookindetailsrecent model file function`);
         }
     };
 
     /**
-    * The below model function is for the customer frontend side page. This function is for fetching all the bookings of a particular customer
+    * The below model function is for the customer frontend side page. This function is for fetching all the bookings of a  customer
     * The data will be fetched from the bookings table
     */
-    static async getparticularcustomerallbookings(Id)
+    static async getcustomerallbookings(Id)
     {
         try
         {
@@ -910,16 +910,16 @@ module.exports = class customers
         }
         catch (error)
         {
-            console.log(`Error from the try catch block of the getparticularcustomerallbookings model file function`);
+            console.log(`Error from the try catch block of the getcustomerallbookings model file function`);
         }
     };
 
     /**
-     * The below model is for fetching all the enquiries of a particular customer.
+     * The below model is for fetching all the enquiries of a  customer.
      * From here we will send the data to the controller. The response of the route will be taken from the 
      * controller. Whatever data  is there in the response it is coming from this model.
      */
-    static async getparticularcustomerallenquiry(Id)
+    static async getcustomerallenquiry(Id)
     {
         try
         {
@@ -951,17 +951,17 @@ module.exports = class customers
         }
         catch (error)
         {
-            console.log(`Error from the try catch block of the getparticularbookindetailsrecent model file function`);
+            console.log(`Error from the try catch block of the getbookindetailsrecent model file function`);
         }        
     }
 
     /**
-     * The below model is for fetching all the booking details of a particular customer.
+     * The below model is for fetching all the booking details of a  customer.
      * The data will be taken from the quotations, invoices, payment_records.
      * From here we will send the data to the controller. The response of the route will be taken from the 
      * controller. Whatever data  is there in the response it is coming from this model.
      */
-    static async getparticularcustomerallbookingsdatafrominvoice(Id)
+    static async getcustomerallbookingsdatafrominvoice(Id)
     {
         try
         {
@@ -1015,12 +1015,12 @@ module.exports = class customers
     }
 
      /**
-     * The below model is for fetching all the booking details(ACTIVE STATUS FROM THE INVVOICES TABLE) of a particular customer. 
+     * The below model is for fetching all the booking details(ACTIVE STATUS FROM THE INVVOICES TABLE) of a  customer. 
      * The data will be taken from the quotations, invoices, payment_records.
      * From here we will send the data to the controller. The response of the route will be taken from the 
      * controller. Whatever data  is there in the response it is coming from this model.
      */
-    static async getparticularcustomeractivebookingsdatafrominvoice(Id)
+    static async getcustomeractivebookingsdatafrominvoice(Id)
     {
         try
         {
@@ -1080,7 +1080,7 @@ module.exports = class customers
      * From here we will send the data to the controller. The response of the route will be taken from the 
      * controller. Whatever data is there in the json response it is coming from this model. 
      */
-    static async getparticularcustomerinactivebookingsdatafrominvoice(Id)
+    static async getcustomerinactivebookingsdatafrominvoice(Id)
     {
         try
         {
@@ -1140,7 +1140,7 @@ module.exports = class customers
      * From here we will send the data to the controller. The response of the route will be taken from the 
      * controller. Whatever data is there in the json response it is coming from this model. 
      */
-    static async getparticularcustomerongoingbookingsdatafrominvoice(Id)
+    static async getcustomerongoingbookingsdatafrominvoice(Id)
     {
         try
         {
@@ -1289,7 +1289,7 @@ module.exports = class customers
     };
     
     /**
-     * The model function is for view details of a particular customer.
+     * The model function is for view details of a  customer.
      * The function will be used when the data is inserted from the front end of customer (NEXT JS)
      */
     static async getonedetailsoncustomerpage(Id)
@@ -1322,13 +1322,13 @@ module.exports = class customers
         }
         catch (error)
         {
-            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getone". Which is designed to fetch particular data of the customers.', error);            
+            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getone". Which is designed to fetch  data of the customers.', error);            
         }
     };
 };
 
 
-// The below function is used for calculating the total remaining amount of a particular customers
+// The below function is used for calculating the total remaining payment of a  customers
 const remainingAmount = async (Id) =>
 {
     return await new Promise(async (resolve, reject) =>
@@ -1385,7 +1385,7 @@ const remainingAmount = async (Id) =>
     });
 };
 
-// The below function is used for calculating the total paid amount of a particular customers
+// The below function is used for calculating the total paid payment of a  customers
 const paidAmount = async (Id) => 
 {
     return await new Promise(async (resolve, reject) =>

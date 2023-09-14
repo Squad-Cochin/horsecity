@@ -15,7 +15,7 @@ const verifyBody = require(`../../middlewares/requestValidator`); // Importing t
 
 module.exports = function (app)
 {
-    // The below route is for creating a new enquiry of a particular customer on the basis of customer id in the params. This will be used in the NEXTJS FRONT END
+    // The below route is for creating a new enquiry of a  customer on the basis of customer id in the params. This will be used in the NEXTJS FRONT END
     app.post(`/add/enquiry/:id`,
     verifyBody.verifyToken,
     validateParamsId.isValidIdInTheParams(constants.tableName.customers),
@@ -26,7 +26,7 @@ module.exports = function (app)
     checkInput.checkingDuplicateEnquiry,
     frontEnquiriesController.createNewEnquiry);
 
-    // The below route is for fetching all the enquiries of a particular customer on the basis of customer id in the params. This will be used in the NEXTJS FRONT END
+    // The below route is for fetching all the enquiries of a  customer on the basis of customer id in the params. This will be used in the NEXTJS FRONT END
     app.get(`/${process.env.apiToken}/get/all/enquiry/customer/:id`,
     validateParamsId.isValidIdInTheParams(constants.tableName.customers),
     checkInput.isPageNumberEntered,

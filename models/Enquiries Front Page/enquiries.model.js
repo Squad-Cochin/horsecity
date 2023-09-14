@@ -47,7 +47,7 @@ module.exports = class enquiries
         }
     };
 
-    // The below model function is used for fetching all the enquiries of a particular customer on the basis of customer id in the params. This is for the frontend of the customer(NEXTJS)
+    // The below model function is used for fetching all the enquiries of a  customer on the basis of customer id in the params. This is for the frontend of the customer(NEXTJS)
     static async getparticularcustomerallenquiries(pageNumber, pageSize,Id)
     {
         try

@@ -90,7 +90,7 @@ module.exports = class invoices
                                         WHERE i.deleted_at IS NULL 
                                         AND i.service_provider_id = ${Id}
                                         LIMIT ${pageSize} OFFSET ${offset}`;
-                        const count = await commonoperation.totalCountParticularServiceProvider(constants.tableName.invoices, Id);
+                        const count = await commonoperation.totalCountServiceProvider(constants.tableName.invoices, Id);
                         con.query(selQuery, async (err, result2) =>
                         {
                             if(err)
@@ -137,7 +137,7 @@ module.exports = class invoices
     };
 
     /**
-     * The below model is for getting all the details of a particular invoice. This model will be executed when the controller will call this.
+     * The below model is for getting all the details of a  invoice. This model will be executed when the controller will call this.
      * We need the invoice id from the controller to execute this function
      */
     static async getone(Id) 
@@ -157,18 +157,18 @@ module.exports = class invoices
     };
 
     /**
-     * the below static function is for adding the amount in the database for a particular invoice. 
+     * the below static function is for adding the payment in the database for a  invoice. 
      * We require two things to execute this below function
      * 1.   Id
-     * 2.   amount
+     * 2.   payment
      */
-    static async enteramountforparticularinvoice(Id, amount)
+    static async enteramountforparticularinvoice(Id, payment)
     {
         try 
         {
             return await new Promise(async(resolve, reject)=>
             {
-                if (amount < 0)
+                if (payment < 0)
                 {
                     resolve('lessThanZero');
                 }
@@ -184,8 +184,8 @@ module.exports = class invoices
                         let paymentRecordData = await commonfetching.dataOnCondition(constants.tableName.payment_records, Id, 'invoice_id')
                         if(paymentRecordData[0].invoice_id == Id && paymentRecordData[0].updated_at === null)
                         {
-                            let ra = paymentRecordData[0].total_amount - amount
-                            let upQuery = `UPDATE ${constants.tableName.payment_records} pr SET pr.invoice_prefix_id = '${paymentRecordData[0].invoice_prefix_id}', pr.received_amount = ${amount}, pr.received_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', pr.remaining_amount = ${ra}, pr.status = '${constants.status.partPaid}', pr.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE pr.invoice_id = ${Id}`;
+                            let ra = paymentRecordData[0].total_amount - payment
+                            let upQuery = `UPDATE ${constants.tableName.payment_records} pr SET pr.invoice_prefix_id = '${paymentRecordData[0].invoice_prefix_id}', pr.received_amount = ${payment}, pr.received_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', pr.remaining_amount = ${ra}, pr.status = '${constants.status.partPaid}', pr.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE pr.invoice_id = ${Id}`;
                             con.query(upQuery, (err, result) =>
                             {                            
                                 if(result.affectedRows > 0)
@@ -203,10 +203,10 @@ module.exports = class invoices
                             let latestData = `SELECT * FROM ${constants.tableName.payment_records} WHERE invoice_id = '${Id}' ORDER BY remaining_amount ASC LIMIT 1`;
                             con.query(latestData, (err, result) =>
                             {
-                                let ra = result[0].remaining_amount - amount
+                                let ra = result[0].remaining_amount - payment
                                 if(ra > 0)
                                 {
-                                    let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, invoice_prefix_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, '${result[0].invoice_prefix_id}', ${result[0].total_amount}, ${amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${ra}, '${constants.status.partPaid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                                    let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, invoice_prefix_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, '${result[0].invoice_prefix_id}', ${result[0].total_amount}, ${payment}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${ra}, '${constants.status.partPaid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                                     con.query(insQuery, (err, result) =>
                                     {
                                         if(result.affectedRows > 0)
@@ -221,7 +221,7 @@ module.exports = class invoices
                                 }
                                 if(ra == 0)
                                 {
-                                    let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, invoice_prefix_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, '${result[0].invoice_prefix_id}', ${result[0].total_amount}, ${amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${ra}, '${constants.status.paid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                                    let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, invoice_prefix_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, '${result[0].invoice_prefix_id}', ${result[0].total_amount}, ${payment}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${ra}, '${constants.status.paid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                                     con.query(insQuery, (err, insResult) =>
                                     {
                                         if(insResult.affectedRows > 0)
@@ -264,15 +264,15 @@ module.exports = class invoices
         }
         catch (error)
         {
-            console.log(`Error from invoice.model.js. It is in the folder models > invoices > invoice.model.js. In the static function "enteramountforparticularinvoice". Which is designed to fetch all the data of invoices.`, error);
+            console.log(`Error from invoice.model.js. It is in the folder models > invoices > invoice.model.js. In the static function "enteramountforinvoice". Which is designed to fetch all the data of invoices.`, error);
         }
     };
 
     /**
-     * The below static function is for getting payment histroy for a particular invoice.
+     * The below static function is for getting payment histroy for a  invoice.
      * We need the invoice id from the controller to execute this function
      */
-    static async getpaymenthistroyofparticularinvoice(Id)
+    static async getpaymenthistroyofinvoice(Id)
     {
         try 
         {
@@ -291,12 +291,12 @@ module.exports = class invoices
         }
         catch (error)
         {
-            console.log(`Error from invoice.model.js. It is in the folder models > invoices > invoice.model.js. In the static function "getpaymenthistroyofparticularinvoice". Which is designed to fetch all the data of invoices.`, error);
+            console.log(`Error from invoice.model.js. It is in the folder models > invoices > invoice.model.js. In the static function "getpaymenthistroyofinvoice". Which is designed to fetch all the data of invoices.`, error);
         }
     };
 
     /**
-     * The below static function is for getting latest amount payed for a particular invoice.
+     * The below static function is for getting latest payment payed for a  invoice.
      * We need the invoice id from the controller to execute this function
      */
     static async getlatestpaymenthistroy(Id)
@@ -398,7 +398,7 @@ module.exports = class invoices
 
     /**
      * The below static function is for starting the trip. 
-     * This function can be executed only once for a particular invoice id.  
+     * This function can be executed only once for a  invoice id.  
      * We need the invoice id from the controller to execute this function
      */
     static async bookingstart(Id)
@@ -462,7 +462,7 @@ module.exports = class invoices
 
     /**
      * The below static function is for canceling the trip.
-     * This function can be executed only once for a particular invoice id.   
+     * This function can be executed only once for a invoice id.   
      * We need the invoice id from the controller to execute this function
      */
     static async bookingcancel(Id)

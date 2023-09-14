@@ -123,9 +123,9 @@ exports.getOneInvoiceResponse = (data, data2) =>
  *  the output consist of 
  *     Total bookings
  *     Pending bookings
- *     Total Paid amount
- *     Total Remaining amount
- *     Recent Five Enquiries
+ *     Total paid payment
+ *     Total remaining payment
+ *     Recent five Enquiries
  */
 exports.convertNextJSCustomerDashboardResponse = (value1, value2, rAmount, pAmount) =>
 {
