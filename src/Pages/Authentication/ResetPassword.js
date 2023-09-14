@@ -82,10 +82,6 @@ const ResetPasswordPage = props => {
     resetError: state.forgetPassword.resetError,
     resetSuccessMsg: state.forgetPassword.resetSuccessMsg
   }));
-  useEffect(() => {
-    resetError = '';
-    resetSuccessMsg = '';
- }, [])
 
 return (
     <React.Fragment>
