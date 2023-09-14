@@ -1,9 +1,17 @@
-const vehicleController = require('../../controllers/vehicles/vehicles.controller');
-const checkInput = require(`../../middlewares/validateInput/checkRequestInputVehicles`);
-const checkInputGetAll = require(`../../middlewares/validateInput/checkRequestBodyInput`);
-const constants = require('../../utils/constants');
-const { isValidIdInTheParams } = require('../../middlewares/validateInput/checkRequestparams');
-const verifyBody = require(`../../middlewares/requestValidator`); 
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                              //
+//     This is the vehicle.route.file . Where all the routes of the vehicle.controller.js is written. If        //
+//     anyone want to use any function of the vehicle.controller.js file from the frontend. Then they           //
+//     have to use the routes which are listed in this file.                                                    //
+//                                                                                                              //
+//////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const vehicleController = require('../../controllers/vehicles/vehicles.controller');  // For fetching the controller export functions reference. We will instantiate to the variable
+const checkInput = require(`../../middlewares/validateInput/checkRequestInputVehicles`); // Importing the body Middleware
+const checkInputGetAll = require(`../../middlewares/validateInput/checkRequestBodyInput`); // Importing the body Middleware
+const constants = require('../../utils/constants'); // Constant elements are stored in this file
+const { isValidIdInTheParams } = require('../../middlewares/validateInput/checkRequestparams');  // Importing the params middleware
+const verifyBody = require(`../../middlewares/requestValidator`); // Importing the headers middleware
 
 module.exports = (app) =>
 {
@@ -15,20 +23,11 @@ module.exports = (app) =>
     checkInput.isInsurancePolicyNumberEntered,
     checkInput.isVehicleRegistrationNumberEntered,
     checkInput.checkVehicleBodyEntered,
-    checkInput.isLengthEntered,
-    checkInput.isBreadthEntered,
-    checkInput.isheightEntered,
-    checkInput.isMaximumHorseCarryingCapicityEntered,
     checkInput.isAirConditionerValueEntered,
     checkInput.isTemperaturControlValueEntered,
     checkInput.isGCCTravelValueEntered,
     checkInput.isInsuranceCoverValueEntered,
     checkInput.isValidVehicleTypeEntered,
-    checkInput.isPriceEntered,
-    // checkInput.isValidInsuranceCoverDateEntered,
-    // checkInput.isValidInsuranceExpirationDateEntered,
-    // checkInput.isValidVehicleRegistrationDateEntered,
-    // checkInput.isValidVehicleExpirationDateEntered,
     checkInput.isSafetyCertificateAdded,            
     vehicleController.addNew);
     
@@ -57,20 +56,11 @@ module.exports = (app) =>
     checkInput.isVehicleRegistrationNumberEntered,
     checkInput.isInsurancePolicyNumberEntered,
     checkInput.checkVehicleBodyEntered,
-    checkInput.isLengthEntered,
-    checkInput.isBreadthEntered,
-    checkInput.isheightEntered,
-    checkInput.isMaximumHorseCarryingCapicityEntered,
     checkInput.isAirConditionerValueEntered,
     checkInput.isTemperaturControlValueEntered,
     checkInput.isGCCTravelValueEntered,
     checkInput.isInsuranceCoverValueEntered,
     checkInput.isValidVehicleTypeEntered,
-    checkInput.isPriceEntered,
-    // checkInput.isValidInsuranceCoverDateEntered,
-    // checkInput.isValidInsuranceExpirationDateEntered,
-    // checkInput.isValidVehicleRegistrationDateEntered,
-    // checkInput.isValidVehicleExpirationDateEntered,
     checkInput.isSafetyCertificateAdded,
     vehicleController.updateData);
 
@@ -84,6 +74,7 @@ module.exports = (app) =>
     isValidIdInTheParams(constants.tableName.vehicles),  
     vehicleController.removeVehicle);
 
+    // The below route will be used in the next js for showing the details of sprticulart vehicle on the cyustomer front end
     app.get(`/customer/getOne/vehicle/:id`, 
     verifyBody.verifyToken,
     isValidIdInTheParams(constants.tableName.vehicles),

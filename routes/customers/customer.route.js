@@ -1,8 +1,16 @@
-const customerController = require('../../controllers/customers/customer.controller');
-const checkInput = require(`../../middlewares/validateInput/checkRequestBodyInput`);
-const { isValidIdInTheParams } = require('../../middlewares/validateInput/checkRequestparams');
-const constants = require('../../utils/constants');
-const validateHeaders = require(`../../middlewares/requestValidator`);
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                            //
+//     This is the customer route file. Where all the routes of the customer.controller.js is written. If     //
+//     anyone want to use any function of the customer.controller.js file from the frontend. Then they        //
+//     have to use the routes which are listed in this file.                                                  //
+//                                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+const customerController = require('../../controllers/customers/customer.controller');  // importing the auth controller details and assigning it to the authcontroller variable
+const checkInput = require(`../../middlewares/validateInput/checkRequestBodyInput`); // Importing the body Middleware
+const { isValidIdInTheParams } = require('../../middlewares/validateInput/checkRequestparams'); // Importing the params middleware
+const constants = require('../../utils/constants');  // Constant elements are stored in this file
+const validateHeaders = require(`../../middlewares/requestValidator`); // Importing the headers middleware
 
 module.exports = (app) =>
 {
@@ -21,6 +29,8 @@ module.exports = (app) =>
     // Below route is for adding the customer data
     app.post(`/${process.env.apiToken}/add/customer/:id`,
     isValidIdInTheParams(constants.tableName.service_providers),
+    checkInput.CustomerAddRequestBody,
+    checkInput.CheckDataPresentWithDeletedAt,
     checkInput.nameValidation,
     checkInput.emailValidation(constants.tableName.customers),
     checkInput.usernameValidation(constants.tableName.customers),
@@ -51,7 +61,7 @@ module.exports = (app) =>
             // checkInput.dateOfBirthValidation,
             checkInput.idProofNumberValidation,
             checkInput.isCustomerIdProofImageSubmitted,
-    customerController.editCustomer);
+            customerController.editCustomer);
     
     // Below route is for the login of the customer. This is for NEXTJS front end.
     app.post(`/customer/login`,
