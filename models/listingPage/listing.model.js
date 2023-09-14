@@ -162,7 +162,7 @@ static async getUsernameServiceProvider()
         FROM service_providers AS sp
         LEFT JOIN ${constants.tableName.vehicles} AS vh ON vh.service_provider_id = sp.id
         JOIN ${constants.tableName.roles} AS rl ON sp.role_Id = rl.id
-        WHERE sp.deleted_at IS NULL
+        WHERE sp.deleted_at IS NULL AND vh.deleted_at IS NULL AND vh.status = '${constants.status.active}'
         AND sp.status = '${constants.status.active}'
         AND rl.id <> '${constants.Roles.admin}'  
         AND rl.id <> '${constants.Roles.super_admin}'
