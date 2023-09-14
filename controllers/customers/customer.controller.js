@@ -25,7 +25,7 @@ exports.getAll = async (req, res, next) =>
     if(customers.length === 0)
     {
         // If there are no customer in the database. Then these lines of code will be executed
-        console.log('No Customer data present');
+        // console.log('No Customer data present');
         return res.status(200).send
         ({
             code : 200,
@@ -37,7 +37,7 @@ exports.getAll = async (req, res, next) =>
     else
     {
         // If there are customers in the database. Then these lines of code will be executed
-        console.log('Customer data fetched successfully');
+        // console.log('Customer data fetched successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -64,7 +64,6 @@ exports.getOne= async (req, res, next) =>
     // If any wrong id or some thing wrong entered, If that Id has no data then this if block of code will be executed
     if(customers === 'nodata')
     {
-        console.log('No customer data present');
         return res.status(200).send
         ({
             code : 400,
@@ -87,7 +86,7 @@ exports.getOne= async (req, res, next) =>
     else
     {
         // Every things went well and customer data is available then this else block of code will executed.
-        console.log('Particular customer data fetched successfully');
+        // console.log('Particular customer data fetched successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -124,7 +123,6 @@ exports.addCustomer = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if (customers === 'err')
     {
-        console.log('Error while inserting the customer data');
         return res.status(200).json
         ({
             code: 400,
@@ -135,44 +133,40 @@ exports.addCustomer = async (req, res, next) =>
     // If the id proof image is in invalid format then this else if block of code will be executed.
     else if (customers === 'INVALIDFORMAT')
     {
-        console.log('Invalid Format of file submit for upload');
         return res.status(200).send
         ({
             code : 400,
             status : false,
-            message : "Invalid Format of file submit for upload",
+            message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
         });
     }
     // If the id proof image is not uploaded then this else if block of code will be executed.
     else if(customers === 'NOATTACHEMENT')
     {
-        console.log('No image uploaded for customer');
         return res.status(200).send
         ({
             code : 400,
             status : false,
-            message : "No image uploaded for customer",
+            message : "No id proof image is uploaded.",
         });
     }
     else if(customers.length === 0)
     {
-        console.log('Service provider is not allowed to add customer');
         return res.status(200).send
         ({
             code : 400,
             status : false,
-            message : "Service provider is not allowed to add customer",
+            message : "Restricted Access",
         });
     }
     // If input feild are in correct format and not already presnet in the database, then this else block of code will be executed.
     else
     {
-        // console.log('Customer data inserted successfully');
         return res.status(200).send
         ({
             code: 200,
             status: true,
-            message: `Customer ${constant.responseMessage.insert}`,
+            message: `${constant.responseMessage.insert}`,
         });
     }
 };
@@ -204,12 +198,11 @@ exports.editCustomer = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        console.log('Error while editing the customer data');
         return res.status(200).send
         ({
             code : 400,
             status : true,
-            message : constant.responseMessage.erroredit,
+            message : constant.responseMessage.universalError,
         });
     }
     // If the id proof image is in invalid format then this else if block of code will be executed.
@@ -220,18 +213,26 @@ exports.editCustomer = async (req, res, next) =>
         ({
             code : 400,
             status : true,
-            message : "Invalid Format of file submit for upload",
+            message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g. JPG, PNG).",
+        });
+    }
+    else if(customers === 'NOATTACHEMENT')
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : "No id proof image is uploaded.",
         });
     }
     // If input feild are in correct format and not already present in the database, then this else block of code will be executed.
     else
     {
-        console.log('Customer data edited successfully');
         return res.status(200).send
         ({
             code : 200,
             status : true,
-            message : ` Customer ${constant.responseMessage.edit} `,
+            message : `${constant.responseMessage.edit} `,
         });
     }
 };
@@ -244,25 +245,23 @@ exports.updateStatus= async (req, res) =>
 {
     // The below line is for going to the model function to implement the code for updating the status of the existing customer.
     const customers = await customer.updatestatus(req.params.id);
-    // console.log(customers);
     if(customers.length === 0)
     {
-        console.log('No Customer data present and status is not updated');
         return res.status(200).send
         ({
             code : 400,
             status : true,
-            message : constant.responseMessage.statuserror
+            message : 'Status update failed.'
         });
     }
     else
     {
-        console.log('Customer Status updated successfully');
+        // console.log('Customer Status updated successfully');
         return res.status(200).send
         ({
             code : 200,
             status : true,
-            message : `Customer ${constant.responseMessage.statusChanged}`
+            message : `Status update successful.`
         });
     }
 };
@@ -281,17 +280,17 @@ exports.removeCustomer = async (req, res) =>
         ({
             code : 400,
             status : true,
-            message : constant.responseMessage.removeerror
+            message : 'Data removal failed.'
         });
     }
     else
     {
-        console.log('Customer is removed');
+        // console.log('Customer is removed');
         return res.status(200).send
         ({
             code : 200,
             status : true,
-            message : `Customer ${constant.responseMessage.removesuccess}`
+            message : `Data removal successful`
         });
     }
 }
@@ -302,75 +301,43 @@ exports.removeCustomer = async (req, res) =>
  */
 exports.customerLogin = async (req, res) =>
 {
-    // const { user_name, email, contact_no, password } = req.body;
-    // let fieldName = null;
-    // let uniqueData = null;
-    // if(user_name)
-    // {
-    //     fieldName = 'user_name';
-    //     uniqueData = user_name;
-    // }
-    // else if(email)
-    // {
-    //     fieldName = 'email';
-    //     uniqueData = email;
-    // }
-    // else if(contact_no)
-    // {
-    //     fieldName = 'contact_no';
-    //     uniqueData = contact_no ;
-    // }
-    // else
-    // {
-    //     return res.status(200).send
-    //     ({
-    //         code : 400,
-    //         success : false,
-    //         message: "Invalid login credentials" 
-    //     });
-    // }
     const customers = await customer.customerlogin(req.body.userName, req.body.password)
-    // console.log(`Customers: `, customers);
     if(customers === 'nocustomer')
     {
-        console.log('Unavailable username or incorrect username. While customer login');
         return res.status(200).send
         ({
             status : "failure",
             code : 400,
-            message : "Username not found",
+            message : "Username not found.",
         });
     }
     // If any unspecified or unencountered error came. Which is not as per our code thinking, then this else if block
     else if(customers === 'err')
     {
-        console.log('Unexpected error. While customer login');
         return res.status(200).send
         ({
             status : "failure",
             code : 500,
-            message : "Internal server error while sign in",
+            message : constant.responseMessage.universalError,
         });
     }
     // If wrong password is entered then, this below response will be displayed
     else if(customers === 'passwordnotmatched')
     {
-        console.log('Incorrect password. While customer login');
         return res.status(200).send
         ({
             status : "failure",
             code : 400,
-            message : "Password is incorrect",
+            message : "Incorrect password.",
         });
     }
     else
     {
-        console.log(`Customer successfully login`);
         return res.status(200).send
         ({
             status : "success",
             code : 200,
-            message : "Login successful",
+            message : "Login successful.",
             data : customers
         });
     }
@@ -385,43 +352,20 @@ exports.customerLogout = async (req, res) =>
     const customers = await customer.customerlogout(req.params.id);
     if(customers === 'logoutdone')
     {
-        console.log('Customer logout successfully done');
         res.status(200).send
         ({
             status : "success",
             code : 200,
-            message : "Customer logout done"
-        });
-    }
-    // If any unspecified or unencountered error came. Which is not as per you code thinking, then this else if block
-    if(customers ==='incorrectpassword')
-    {
-        console.log('Customer incorrect password');
-        res.status(200).send
-        ({
-            status : "false",
-            code : 400,
-            message : "Customer incorrect password"
-        });
-    }
-    if(customers === 'nocustomer')
-    {
-        console.log('Incorrect customer username');
-        res.status(200).send
-        ({
-            status : "false",
-            code : 400,
-            message : "Incorrect customer username"
+            message : "Logout Successful"
         });
     }
     if(customers === 'notLogin')
     {
-        // console.log('Customer is not login. We cannot logout directly');
         res.status(200).send
         ({
             status : "false",
             code : 400,
-            message : "Customer is not login. We cannot logout directly"
+            message : "Restricted access."
         });
     }
 };
@@ -434,46 +378,41 @@ exports.customerChangePassword = async (req, res, next) =>
 {
     const customers = await customer.customerchangepassword(req.params.id, req.body.password, req.body.newpassword);
     // The below if block will execute. when the entered username is not correct
-    // console.log(`Customer: `, customers);
     if(customers === 'nocustomer')
     {
-        console.log('Unavailable username or incorrect username. While customer password update');
         return res.status(200).send
         ({
             status : "failure",
             code : 400,
-            message : "This username must be incorect or no customer is registered with this username",
+            message : "This username must be incorect or no user is registered with this username",
         });
     }
     // The below if block will execute. when any unhandled error came
     else if(customers === 'err')
     {
-        console.log('Unexpected error. While customer password update');
         return res.status(200).send
         ({
             status : "failure",
             code : 500,
-            message : "Internal server error while updating the password of the customer",
+            message : constant.responseMessage.universalError,
         });
     }
     else if(customers === 'incorrectpassword')
     {
-        console.log('Incorrect password. While customer password update');
         return res.status(200).send
         ({
             status : "failure",
             code : 400,
-            message : "Customer password is incorrect.",
+            message : "Incorrect password.",
         });
     }
     else
     {
-        console.log('Password updated successfully from the customer side.');
         return res.status(200).send
         ({
             status : "success",
-            code : 200,
-            message : "Customer password updated successfully",
+            code : 200
+            // message : "Customer password updated successfully",
         });
     }
 };
@@ -501,7 +440,6 @@ exports.signup = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if (customers === 'err')
     {
-        console.log('Error while inserting the customer data');
         return res.status(200).json
         ({
             code: 400,
@@ -512,33 +450,30 @@ exports.signup = async (req, res, next) =>
     // If the id proof image is in invalid format then this else if block of code will be executed.
     else if (customers === 'INVALIDFORMAT')
     {
-        console.log('Invalid Format of file submit for upload');
         return res.status(200).send
         ({
             code : 400,
             status : false,
-            message : "Invalid Format of file submit for upload",
+            message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
         });
     }
     // If the id proof image is not uploaded then this else if block of code will be executed.
     else if(customers === 'NOATTACHEMENT')
     {
-        console.log('No image uploaded for customer');
         return res.status(200).send
         ({
             code : 400,
             status : false,
-            message : "No image uploaded for customer",
+            message : "An ID proof image is required.",
         });
     }
     else (customers === 'registered')
     {
-        console.log('Customer registered successfully');
         return res.status(200).send
         ({
             code: 200,
             status: true,
-            message: `Customer registered successfully`,
+            message: `Customer registration successful`,
         });
     }    
 };
@@ -549,39 +484,34 @@ exports.signup = async (req, res, next) =>
  */
 exports.getParticularCustomerLogs = async(req, res, next) =>
 {
-    const customers = await customer.getparticularcustomerlogs(req.params.id);
-    // console.log(`Get Particular Customer Logs: `, customers);
-    
+    const customers = await customer.getparticularcustomerlogs(req.params.id);    
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        console.log('Errro while fetching the data from the logs table');
         return res.status(200).json
         ({
             code: 500,
             status: false,
-            message: `Internal server error. While fetching the data from the logs table of customers`,
+            message: constant.responseMessage.universalError,
         });
     }
     else if(customers.length == 0)
     {
-        console.log(`No logs present for this particular customer`);
         res.status(200).send
         ({
             code : 200,
             status : true,
-            message : `No logs present for this customer`,
+            message : `No logs found for this customer.`,
             data : customers
         });
     }
     else 
     {
-        console.log(`Logs present for this particular customer`);
         res.status(200).send
         ({
             code : 200,
             status : true,
-            message : `Logs present for this particular customer`,
+            message : `Logs found for this customer.`,
             data : customers
         });
     }
@@ -594,26 +524,23 @@ exports.getParticularCustomerLogs = async(req, res, next) =>
 exports.getParticularCustomerDashboard = async (req, res, next) =>
 {
     const customers = await customer.getparticularcustomerdashboard(req.params.id);
-    // console.log(`Customer dashboard response: `, customers);
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        console.log('Error while fetching the dashboard data for the customer');
         return res.status(200).json
         ({
             code: 500,
             status: false,
-            message: `Internal server error. While fetching the dashboard data for the customer`,
+            message: constant.responseMessage.universalError,
         });
     }
     else
     {
-        console.log(`Data fetched successfully for the customer dashboard`);
         return res.status(200).json
         ({
             code: 200,
             status: true,
-            message: `Data fetched successfully for the customer dashboard`,
+            message: constant.responseMessage.getAll,
             data : customers
         });
     }
@@ -626,26 +553,23 @@ exports.getParticularCustomerDashboard = async (req, res, next) =>
 exports.getParticularBookinDetailsCompleted = async (req, res, next) =>
 {
     const customers = await customer.getparticularbookindetailscompleted(req.params.id);
-    // console.log(`Customer dashboard response: `, customers);
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        console.log('Error while fetching the completed booking dashboard data for the customer');
         return res.status(200).json
         ({
             code: 500,
             status: false,
-            message: `Internal server error. While fetching the completed booking dashboard data for the customer`,
+            message: constant.responseMessage.universalError
         });
     }
     else
     {
-        console.log(`Data fetched successfully for the customer dashboard`);
         return res.status(200).json
         ({
             code: 200,
             status: true,
-            message: `Data fetched successfully for the customer dashboard`,
+            message: constant.responseMessage.getAll,
             data : customers
         });
     }
@@ -658,26 +582,23 @@ exports.getParticularBookinDetailsCompleted = async (req, res, next) =>
 exports.getParticularBookinDetailsConfirm = async (req, res, next) =>
 {
     const customers = await customer.getparticularbookindetailsconfirm(req.params.id);
-    // console.log(`Customer dashboard response: `, customers);
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        console.log('Error while fetching the confirm booking dashboard data for the customer');
         return res.status(200).json
         ({
             code: 500,
             status: false,
-            message: `Internal server error. While fetching the confirm booking dashboard data for the customer`,
+            message: constant.responseMessage.universalError
         });
     }
     else
     {
-        console.log(`Data fetched successfully for the customer dashboard`);
         return res.status(200).json
         ({
             code: 200,
             status: true,
-            message: `Data fetched successfully for the customer dashboard`,
+            message:  constant.responseMessage.getAll,
             data : customers
         });
     }
@@ -689,26 +610,23 @@ exports.getParticularBookinDetailsConfirm = async (req, res, next) =>
 exports.getParticularBookinDetailsCancelled = async (req, res, next) =>
 {
     const customers = await customer.getparticularbookindetailscancelled(req.params.id);
-    // console.log(`Customer dashboard response: `, customers);
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        console.log('Error while fetching the cancelled booking dashboard data for the customer');
         return res.status(200).json
         ({
             code: 500,
             status: false,
-            message: `Internal server error. While fetching the cancelled booking dashboard data for the customer`,
+            message: constant.responseMessage.universalError,
         });
     }
     else
     {
-        console.log(`Booking cancel data fetched successfully for the customer dashboard`);
         return res.status(200).json
         ({
             code: 200,
             status: true,
-            message: `Booking cancel data fetched successfully for the customer dashboard`,
+            message: constant.responseMessage.getAll,
             data : customers
         });
     }
@@ -723,26 +641,23 @@ exports.getParticularBookinDetailsCancelled = async (req, res, next) =>
 exports.getParticularBookinDetailsRecent = async (req, res, next) =>
 {
     const customers = await customer.getparticularbookindetailsrecent(req.params.id);
-    // console.log(`Customer dashboard response: `, customers);
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        console.log('Error while fetching the recent enquiry data for the customer dashboard');
         return res.status(200).json
         ({
             code: 500,
             status: false,
-            message: `Internal server error. While fetching the recent enquiry data for the customer dashboard`,
+            message : constant.responseMessage.universalError,
         });
     }
     else
     {
-        console.log(`Enquiry data fetched successfully for the particular customer dashboard`);
         return res.status(200).json
         ({
             code: 200,
             status: true,
-            message: `Enquiry data fetched successfully for the particular customer dashboard`,
+            message: constant.responseMessage.getAll,
             data : customers
         });
     }
@@ -755,18 +670,15 @@ exports.getParticularBookinDetailsRecent = async (req, res, next) =>
  */
 exports.getParticularCustomerAllBookings = async (req, res, next) =>
 {
-    let customers = await customer.getparticularcustomerallbookings(req.params.id);
-    // console.log(`Customer dashboard response: `, customers);
-    
+    let customers = await customer.getparticularcustomerallbookings(req.params.id);    
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        console.log('Error while fetching all the booking data for the customer dashboard');
         return res.status(200).json
         ({
             code: 500,
             status: false,
-            message: `Internal server error. While fetching all the booking data for the customer dashboard`,
+            message: constant.responseMessage.universalError,
         });
     }
     else
@@ -776,7 +688,7 @@ exports.getParticularCustomerAllBookings = async (req, res, next) =>
         ({
             code: 200,
             status: true,
-            message: `All the booking of a particular customer is fetched successfully for the dashboard`,
+            message: constant.responseMessage.getAll,
             data : customers
         });
     }
@@ -791,12 +703,11 @@ exports.getParticularCustomerAllEnquiry = async (req, res, next)=>
     let customers = await customer.getparticularcustomerallenquiry(req.params.id);
     if(customers === 'err')
     {
-        console.log('Error while fetching particular customer enquiries data');
         return res.status(200).json
         ({
             code: 500,
             status: false,
-            message: `Internal server error while fetching particular customer enquiries data. `,
+            message: constant.responseMessage.universalError,
         });
     }
     else
@@ -806,7 +717,7 @@ exports.getParticularCustomerAllEnquiry = async (req, res, next)=>
         ({
             code: 200,
             status: true,
-            message: `All the enquiries of a particular customer is fetched successfully for the dashboard`,
+            message: constant.responseMessage.getAll,
             data : customers
         });
     }
@@ -822,17 +733,14 @@ exports.getParticularCustomerAllEnquiry = async (req, res, next)=>
 exports.getParticularCustomerAllBookingsDataFromInvoice = async (req, res, next) =>
 {
     let customers = await customer.getparticularcustomerallbookingsdatafrominvoice(req.params.id);
-    // console.log(`Data from 'getParticularCustomerAllBookingsDataFromInvoice' function: `, customers);
-    
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        console.log('Error while fetching all the booking data for the customer dashboard from the invoice table');
         return res.status(200).json
         ({
             code: 500,
             status: false,
-            message: `Internal server error. While fetching all the booking data for the customer dashboard from the invoice table`,
+            message: constant.responseMessage.universalError
         });
     }
     else
@@ -842,7 +750,7 @@ exports.getParticularCustomerAllBookingsDataFromInvoice = async (req, res, next)
         ({
             code: 200,
             status: true,
-            message: `Booking data of a particular customer is fetched successfully data is coming from the invoice table.`,
+            message: constant.responseMessage.getAll,
             data : customers
         });
     }
@@ -859,26 +767,23 @@ exports.getParticularCustomerAllBookingsDataFromInvoice = async (req, res, next)
 exports.getParticularCustomerActiveBookingsDataFromInvoice = async (req, res, next) =>
 {
     let customers = await customer.getparticularcustomeractivebookingsdatafrominvoice(req.params.id)
-    // console.log(`Data from 'getParticularCustomerActiveBookingsDataFromInvoice' function: `, customers);
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        console.log('Error while fetching all the active booking data for the customer dashboard from the invoice table');
         return res.status(200).json
         ({
             code: 500,
             status: false,
-            message: `Internal server error. While fetching all the active booking data for the customer dashboard from the invoice table`,
+            message: constant.responseMessage.universalError
         });
     }
     else
     {
-        // console.log(`All the booking data of a particular customer is fetched successfully from the invoice table`);
         return res.status(200).json
         ({
             code: 200,
             status: true,
-            message: `Active Booking data of a particular customer is fetched successfully data is coming from the invoice table.`,
+            message: constant.responseMessage.getAll,
             data : customers
         });
     }
@@ -896,27 +801,23 @@ exports.getParticularCustomerActiveBookingsDataFromInvoice = async (req, res, ne
 exports.getParticularCustomerInactiveBookingsDataFromInvoice = async (req, res, next) =>
 {
     let customers = await customer.getparticularcustomerinactivebookingsdatafrominvoice(req.params.id)
-    // console.log(`Data from 'getParticularCustomerActiveBookingsDataFromInvoice' function: `, customers);
-    
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        console.log('Error while fetching all the inactive booking data for the customer dashboard from the invoice table');
         return res.status(200).json
         ({
             code: 500,
             status: false,
-            message: `Internal server error. While fetching all the inactive booking data for the customer dashboard from the invoice table`,
+            message: constant.responseMessage.universalError
         });
     }
     else
     {
-        // console.log(`All the booking data of a particular customer is fetched successfully from the invoice table`);
         return res.status(200).json
         ({
             code: 200,
             status: true,
-            message: `Inactive booking data of a particular customer is fetched successfully data is coming from the invoice table.`,
+            message: constant.responseMessage.getAll,
             data : customers
         });
     }
@@ -934,9 +835,7 @@ exports.getParticularCustomerInactiveBookingsDataFromInvoice = async (req, res, 
  */
 exports.getParticularCustomerOngoingBookingsDataFromInvoice = async (req, res, next) =>
 {
-    let customers = await customer.getparticularcustomerongoingbookingsdatafrominvoice(req.params.id)
-    // console.log(`Data from 'getParticularCustomerActiveBookingsDataFromInvoice' function: `, customers);
-    
+    let customers = await customer.getparticularcustomerongoingbookingsdatafrominvoice(req.params.id);   
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
@@ -945,17 +844,16 @@ exports.getParticularCustomerOngoingBookingsDataFromInvoice = async (req, res, n
         ({
             code: 500,
             status: false,
-            message: `Internal server error. While fetching all the ongoing booking data for the customer dashboard from the invoice table`,
+            message: constant.responseMessage.universalError
         });
     }
     else
     {
-        // console.log(`All the booking data of a particular customer is fetched successfully from the invoice table`);
         return res.status(200).json
         ({
             code: 200,
             status: true,
-            message: `Ongoing booking data of a particular customer is fetched successfully data is coming from the invoice table.`,
+            message: constant.responseMessage.getAll,
             data : customers
         });
     }
@@ -984,7 +882,6 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        console.log('Error while editing the customer data');
         return res.status(200).send
         ({
             code : 400,
@@ -992,6 +889,27 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
             message : constant.responseMessage.erroredit,
         });
     }
+    // If the id proof image is in invalid format then this else if block of code will be executed.
+    else if (customers === 'INVALIDFORMAT')
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
+        });
+    }
+    // If the id proof image is not uploaded then this else if block of code will be executed.
+    else if(customers === 'NOATTACHEMENT')
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : "An ID proof image is required.",
+        });
+    }
+
     // If input feild are in correct format and not already present in the database, then this else block of code will be executed.
     else
     {
@@ -1013,7 +931,6 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
 exports.getOneDetailsOnCustomerPage = async(req, res, next) =>
 {
     let customers = await customer.getonedetailsoncustomerpage(req.params?.id);
-    // console.log('Customer One Data: ',customers);    
     // If any wrong id or some thing wrong entered, If that Id has no data then this if block of code will be executed
     if(customers === 'nodata')
     {
@@ -1040,7 +957,6 @@ exports.getOneDetailsOnCustomerPage = async(req, res, next) =>
     else
     {
         // Every things went well and customer data is available then this else block of code will executed.
-        console.log('Particular customer data fetched successfully');
         return res.status(200).send
         ({
             code : 200,
