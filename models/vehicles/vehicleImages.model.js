@@ -25,21 +25,32 @@ module.exports = class vehicleImages
             {
                 let uploadVehicleImage = await commonoperation.fileUploadTwo(image, constants.attachmentLocation.vehicle.upload.images);
                 // console.log(uploadVehicleImage);
-                let insQuery = `INSERT INTO vehicles_images(vehicle_id, image, title, uploaded_at) VALUES(${id}, '${uploadVehicleImage}', '${title}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                // console.log(insQuery);
-                con.query(insQuery, (err, result) =>
+                if(uploadVehicleImage === 'INVALIDFORMAT')
                 {
-                    if(result.length != 0)
+                    resolve('INVALIDATTACHMENT')
+                }
+                else if(uploadVehicleImage === 'NOATTACH')
+                {
+                    resolve('NOATTACH')
+                }
+                else
+                {
+                    let insQuery = `INSERT INTO vehicles_images(vehicle_id, image, title, uploaded_at) VALUES(${id}, '${uploadVehicleImage}', '${title}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                    // console.log(insQuery);
+                    con.query(insQuery, (err, result) =>
                     {
-                        console.log('Vehicles image added successfully');
-                        resolve(result);
-                    }
-                    else
-                    {
-                        console.log(err);
-                        resolve('err');
-                    }
-                });
+                        if(result.length != 0)
+                        {
+                            console.log('Vehicles image added successfully');
+                            resolve(result);
+                        }
+                        else
+                        {
+                            console.log(err);
+                            resolve('err');
+                        }
+                    });
+                }
             });
         }
         catch (error)

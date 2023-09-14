@@ -6,6 +6,7 @@
 
 const constants = require('../../utils/constants'); // Constant elements are stored in this file
 const con = require('../../configs/db.configs'); // Calling the db file for making the database connection
+const objectConvertor = require('../../utils/objectConvertor');
 
 module.exports = class dashboard
 {
@@ -153,10 +154,6 @@ module.exports = class dashboard
                     {
                         if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
                         {
-                            // let query = `   SELECT YEAR(created_at) AS year, MONTH(created_at) AS month, MONTHNAME(created_at) AS month_name, SUM(final_amount) AS total_final_amount
-                            //                 FROM ${constants.tableName.invoices}
-                            //                 GROUP BY YEAR(created_at), MONTH(created_at), MONTHNAME(created_at)
-                            //                 ORDER BY YEAR(created_at), MONTH(created_at)`;
                             let query = `   SELECT
                                             YEAR(created_at) AS year, 
                                             MONTH(created_at) AS month, 
@@ -165,10 +162,8 @@ module.exports = class dashboard
                                             FROM ${constants.tableName.invoices}
                                             WHERE created_at >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
                                             GROUP BY YEAR(created_at), MONTH(created_at), LEFT(MONTHNAME(created_at), 3)
-                                            ORDER BY YEAR(created_at), MONTH(created_at)`;
-                            
+                                            ORDER BY YEAR(created_at), MONTH(created_at)`;                            
                             // console.log(`Dashboard query at the time of admin: `, query);
-
                             con.query(query, async(err, result) =>
                             {
                                 if(err)
@@ -178,14 +173,14 @@ module.exports = class dashboard
                                 }
                                 else
                                 {
-                                    // console.log(result);
                                     if(result.length === 0)
                                     {
-                                        resolve({revenue: result});
+                                        let revenue = objectConvertor.customizeMonthlySalesReportForReactFrontEnd(result);
+                                        resolve({revenue});
                                     }
                                     else
                                     {
-                                        let revenue = custoizeMonthlySalesReport(result);
+                                        let revenue = objectConvertor.customizeMonthlySalesReportForReactFrontEnd(result);
                                         resolve({revenue})
                                     }                                         
                                 }
@@ -214,11 +209,12 @@ module.exports = class dashboard
                                 {
                                     if(result.length === 0)
                                     {
-                                        resolve({revenue: result});
+                                        let revenue = objectConvertor.customizeMonthlySalesReportForReactFrontEnd(result);
+                                        resolve({revenue});
                                     }
                                     else
                                     {
-                                        let revenue = custoizeMonthlySalesReport(result);
+                                        let revenue = objectConvertor.customizeMonthlySalesReportForReactFrontEnd(result);
                                         resolve({revenue})
                                     }
                                 }
@@ -283,7 +279,7 @@ module.exports = class dashboard
                                     }
                                     else
                                     {
-                                        let quoatationData = customizeQuotationStatusReport(result);
+                                        let quoatationData = objectConvertor.customizeQuotationStatusReportForReactFrontEnd(result);
                                         resolve(quoatationData)
                                     }                                         
                                 }
@@ -295,7 +291,8 @@ module.exports = class dashboard
                             COUNT(*) AS total_quotations,
                             COALESCE(SUM(CASE WHEN status = '${constants.quotation_status.confirmed}' THEN 1 ELSE 0 END), 0) AS total_confirmed,
                             COALESCE(SUM(CASE WHEN status = '${constants.quotation_status.notconfirmed}' THEN 1 ELSE 0 END), 0) AS total_not_confirmed
-                            FROM ${constants.tableName.quotations} q WHERE q.serviceprovider_id = ${Id}`;
+                            FROM ${constants.tableName.quotations} q 
+                            WHERE q.serviceprovider_id = ${Id}`;
                             // console.log('Query: ', Query);
                             con.query(Query, async (err, result) =>
                             {
@@ -313,7 +310,7 @@ module.exports = class dashboard
                                     }
                                     else
                                     {
-                                        let quoatationData = customizeQuotationStatusReport(result);
+                                        let quoatationData = objectConvertor.customizeQuotationStatusReportForReactFrontEnd(result);
                                         resolve(quoatationData)
                                     }                                         
                                 }
@@ -431,135 +428,3 @@ module.exports = class dashboard
     }
 };
 
-/**
- * The monthly sales report need a customize set of response. For making it according to front end object.
- * This function will be used for customizing the function output.
- */
-
-const custoizeMonthlySalesReport = (salesData) =>
-{
-    var monthlySalesData =
-    {
-        series: [
-            {
-                name: "Revenue",
-                type: "column",
-                data: salesData.map(item => parseFloat(item.total_final_amount)),
-            },
-        ],
-      
-        options:
-        {
-            chart:
-            {
-                stacked: false,
-                toolbar: 
-                {
-                    show: false,
-                },
-            },
-          stroke: {
-            width: [0, 0.5, 1],
-            curve: "smooth",
-            dashArray: [0, 8, 5],
-          },
-          plotOptions: {
-            bar: {
-              columnWidth: "18%",
-            },
-          },
-          colors: ["#0ab39c", "rgba(212, 218, 221, 0.18)", "rgb(251, 77, 83)"],
-      
-          fill: {
-            opacity: [0.85, 0.25, 1],
-            gradient: {
-              inverseColors: false,
-              shade: "light",
-              type: "vertical",
-              opacityFrom: 0.85,
-              opacityTo: 0.55,
-              stops: [0, 100, 100, 100],
-            },
-          },
-      
-        //   labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
-          markers:
-          {
-            size: 0,
-          },
-          legend:
-          {
-            offsetY: 11,
-          },
-          xaxis:
-          {
-            title:
-            {
-              text: "Months",
-            },
-            type: "category", // Changed type to "category" for month labels
-            categories: salesData.map(item => item.month_name), // Use month names as categories
-          },
-      
-          yaxis:
-          {
-            title:
-            {
-              text: "Revenue",
-            },
-          },
-      
-          tooltip: {
-            shared: true,
-            intersect: false,
-            y: {
-              formatter: function (y) {
-                if (typeof y !== "undefined") {
-                  return y.toFixed(0) + " Total Invoice";
-                }
-                return y;
-              },
-            },
-          },
-      
-          grid: {
-            borderColor: "#f1f1f1",
-          },
-        },
-    };
-    
-    return monthlySalesData ;
-}
-
-/**
- * The quotation status report need a customize set of response. For making it according to front end object.
- * This function will be used for customizing the function output.
- */
-
-const customizeQuotationStatusReport = (data) =>
-{
-    var OrderStatusData = [
-        {
-            id: 1,
-            title: "Confirmed",
-            icon: "ri-checkbox-circle-line",
-            color: "success",
-            width: data[0].total_confirmed,
-        },
-        {
-            id: 2,
-            title: "Not Confirmed",
-            icon: "ri-close-circle-line",
-            color: "warning",
-            width: data[0].total_not_confirmed,
-        },
-        {
-            id: 3,
-            title: "Total Quotations",
-            icon: "ri-add-circle-line",
-            color: "primary",
-            width: data[0].total_quotations,
-        },
-    ]
-    return OrderStatusData;
-}

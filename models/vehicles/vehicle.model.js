@@ -24,11 +24,13 @@ module.exports = class vehicles
         { 
             return await new Promise(async(resolve, reject)=>
             {
-                let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
-                // console.log(checkRole);
+                let checkRole = `   SELECT sp.id , r.id AS role_id, r.name 
+                                    FROM ${constants.tableName.service_providers} sp, 
+                                    ${constants.tableName.service_providers} r 
+                                    WHERE sp.id = ${Id} 
+                                    AND sp.role_Id = r.id`;
                 con.query(checkRole, async (err, resultRole) =>
                 {
-                    // console.log(resultRole);
                     if(err)
                     {
                         console.log('Error while fetching the role name at the time of add vehicle');
@@ -38,51 +40,57 @@ module.exports = class vehicles
                     {
                         let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);
                         // console.log(uploadSafetyCertificate);
-                        if(resultRole[0].role_id === constants.Roles.admin)
+                        if(uploadSafetyCertificate === 'INVALIDFORMAT')
                         {
-                            console.log('Admin block when adding of the vehicles');
-                            let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, price,no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${serviceProviderId}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${price}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
-                            // console.log(insQuery);
-                            con.query(insQuery, (err, result) =>
-                            {
-                                // console.log(result);
-                                if(result.affectedRows > 0) 
-                                {
-                                    console.log('Vehicles data added successfully');
-                                    resolve(result);
-                                }
-                                else
-                                {
-                                    console.log(err);
-                                    resolve('err');
-                                }
-                            });
+                            resolve('INVALIDATTACHMENT')
                         }
-                        else if(resultRole[0].role_id === constants.Roles.service_provider)
+                        else if(uploadSafetyCertificate === 'NOATTACH')
                         {
-                            console.log('Service provider block when adding of the vehicle');
-                            let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, price, no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${Id}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${price}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
-                            // console.log(insQuery);
-                            con.query(insQuery, (err, result) =>
-                            {
-                                // console.log(result);
-                                if(result.affectedRows > 0) 
-                                {
-                                    console.log('Vehicles data added successfully');
-                                    resolve(result);
-                                }
-                                else
-                                {
-                                    console.log(err);
-                                    resolve('err');
-                                }
-                            });
+                            resolve('NOATTACH')
                         }
                         else
                         {
-                            console.log('I think the role name which we got is not present in the database at the time of vehicle');
-                            resolve('err');
-                        }                       
+                            if(resultRole[0].role_id === constants.Roles.admin)
+                            {
+                                let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, price,no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${serviceProviderId}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${price}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
+                                con.query(insQuery, (err, result) =>
+                                {
+                                    if(result.affectedRows > 0) 
+                                    {
+                                        resolve(result);
+                                    }
+                                    else
+                                    {
+                                        console.log(err);
+                                        resolve('err');
+                                    }
+                                });
+                            }
+                            else if(resultRole[0].role_id === constants.Roles.service_provider)
+                            {
+                                let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, price, no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${Id}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${price}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
+                                // console.log(insQuery);
+                                con.query(insQuery, (err, result) =>
+                                {
+                                    // console.log(result);
+                                    if(result.affectedRows > 0) 
+                                    {
+                                        // console.log('Vehicles data added successfully');
+                                        resolve(result);
+                                    }
+                                    else
+                                    {
+                                        console.log(err);
+                                        resolve('err');
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                console.log('I think the role name which we got is not present in the database at the time of vehicle');
+                                resolve('err');
+                            }
+                        }              
                     }
                 });
             });        
@@ -103,27 +111,25 @@ module.exports = class vehicles
         {
             return await new Promise(async(resolve, reject)=>
             {
-                var checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
-                // console.log('Check Role Data: ', checkRole);
+                var checkRole = `   SELECT sp.id , r.id AS role_id, r.name FROM 
+                                    ${constants.tableName.service_providers} sp, 
+                                    ${constants.tableName.roles} r
+                                    WHERE sp.id = ${Id} 
+                                    AND sp.role_Id = r.id`;
                 con.query(checkRole, async (err, result) =>
                 {
-                    // console.log(`Role: `, result);
                     if(err)
                     {
                        console.log('Error while checking the role');
                        resolve('err') 
                     }
-
                     if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
                     {
                         const offset = (pageNumber - 1) * pageSize;
                         let selQuery = `SELECT v.id, sp.name AS service_provider, v.vehicle_number, v.make, v.no_of_horse, v.status FROM  ${constants.tableName.service_providers} sp, ${constants.tableName.vehicles} v WHERE sp.id = v.service_provider_id AND v.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
-                        // console.log(selQuery);
                         const count = await commonoperation.totalCount(constants.tableName.vehicles)
-                        // console.log('Total Data', count[0]['count(t.id)']);
                         con.query(selQuery, (err, result2) =>
                         {
-                            // console.log(result2);
                             if(err)
                             {
                                 resolve(err);
@@ -136,7 +142,6 @@ module.exports = class vehicles
                                 JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
                                 WHERE pm.role_id = '${result[0].role_id}' AND md.id = '${constants.modules.vehicles}'
                                `;
-                                // console.log(Query);
                                 con.query(Query, (err, moduleResult) =>
                                 {
                                     if(err)
@@ -147,7 +152,6 @@ module.exports = class vehicles
                                     else
                                     {
                                         resolve ({totalCount : count[0]['count(t.id)'], vehicles : result2, module : moduleResult});
-                                        // resolve(result)
                                     }
                                 });
                             }
@@ -155,16 +159,11 @@ module.exports = class vehicles
                     }
                     else if(result[0].role_id === constants.Roles.service_provider)
                     {
-                        // console.log(`SERVICE PROVIDER`);
-                        // console.log(result[0].role_id);
                         const offset = (pageNumber - 1) * pageSize;
                         let selQuery = `SELECT v.id, v.vehicle_number, v.make, v.no_of_horse, v.status FROM  ${constants.tableName.service_providers} sp, ${constants.tableName.vehicles} v WHERE sp.id = v.service_provider_id AND v.service_provider_id = ${Id} AND v.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
-                        // console.log(selQuery);
                         const count = await commonoperation.totalCountParticularServiceProvider(constants.tableName.vehicles, Id)
-                        // console.log('Total Data', count[0]['count(t.id)']);
                         con.query(selQuery, (err, result2) =>
                         {
-                            // console.log(result2);
                             if(err)
                             {
                                 resolve(err);
@@ -177,7 +176,6 @@ module.exports = class vehicles
                                 JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
                                 WHERE pm.role_id = '${result[0].role_id}' AND md.name = 'VEHICLES'
                                `;
-                                // console.log(Query);
                                 con.query(Query, (err, moduleResult) =>
                                 {
                                     if(err)
@@ -188,7 +186,6 @@ module.exports = class vehicles
                                     else
                                     {
                                         resolve ({totalCount : count[0]['count(t.id)'], vehicles : result2, module : moduleResult});
-                                        // resolve(result)
                                     }
                                 });
                             }
@@ -219,7 +216,6 @@ module.exports = class vehicles
             return await new Promise(async(resolve, reject)=>
             {
                 const vehicleData = await commonfetching.dataOnCondition(constants.tableName.vehicles, id, 'id');
-                // console.log(vehicleData);
                 if(vehicleData.length === 0)
                 {
                     console.log('No data present on this Id');
@@ -239,7 +235,7 @@ module.exports = class vehicles
                         {
                             if(result.length != 0) // if ticket updated then if block
                             {
-                                console.log('Status Changed to INACTIVE');
+                                // console.log('Status Changed to INACTIVE');
                                 resolve(result);
                             }
                             else
@@ -252,12 +248,11 @@ module.exports = class vehicles
                     else
                     {
                         let UpdateQuery = `UPDATE ${constants.tableName.vehicles} v SET v.status ='${constants.status.active}', v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE v.id = '${id}' `;
-                        // console.log(UpdateQuery);
                         con.query(UpdateQuery, (err, result) => // executing the above query 
                         {
                             if(result.length != 0) // if ticket updated then if block
                             {
-                                console.log('Status Changed to ACTIVE');
+                                // console.log('Status Changed to ACTIVE');
                                 resolve(result);
                             }
                             else
@@ -286,11 +281,7 @@ module.exports = class vehicles
         try
         {
             const data = await commonfetching.dataOnCondition(constants.tableName.vehicles, Id, 'id');
-            // console.log('Data', data);
-
             let getserviceProviderName = await commonfetching.dataOnCondition(constants.tableName.service_providers,  data[0].service_provider_id, 'id')
-
-            // console.log('Provider Name', getserviceProviderName[0].name);
             let returnObj =
                 {
                     "id": data[0].id,
@@ -322,7 +313,7 @@ module.exports = class vehicles
                     "created_at": time.formatDateToDDMMYYYY(data[0].created_at),
                     "updated_at": time.formatDateToDDMMYYYY(data[0].updated_at),
                     "deleted_at": time.formatDateToDDMMYYYY(data[0].deleted_at)
-                    }
+                }
             if(data.length === 0)
             {                
                 console.log('No data present on this Id');
@@ -335,7 +326,6 @@ module.exports = class vehicles
             }
             else
             {
-                // return ({serproviderName : getserviceProviderName[0].name, vehicles : data});
                 return returnObj;
             }     
             
@@ -354,23 +344,18 @@ module.exports = class vehicles
     {
         try
         {
-            // console.log(safety_certicate);
             if(safety_certicate === null || safety_certicate === undefined)
             {
-                // let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);
-                // console.log(uploadSafetyCertificate);
                 let upQuery = `UPDATE ${constants.tableName.vehicles} v SET v.service_provider_id = '${serviceProviderId}', v.vehicle_number = '${vehicle_number}', v.make = '${make}', v.model = '${model}', v.color = '${color}', v.length = '${length}', v.breadth = '${breadth}', v.height = '${height}', v.price = '${price}', v.no_of_horse = '${max_no_of_horse}', v.air_conditioner = '${air_conditioner}', v.temperature_manageable ='${temp_manageable}', v.registration_no ='${registration_no}', v.gcc_travel_allowed = '${gcc_travel_allowed}', v.insurance_cover = '${insurance_cover}', v.insurance_date = '${insurance_date}', v.insurance_policy_no = '${insurance_policy_no}', v.insurance_provider = '${insurance_provider}', v.insurance_expiration_date = '${insurance_expiration_date}', v.vehicle_type = '${vehicle_type}', v.vehicle_registration_date = '${vehicle_registration_date}', v.vehicle_exipration_date = '${vehicle_exipration_date}', v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE id = '${id}' `;
-                // console.log(upQuery);
                 con.query(upQuery, (err, result) =>
                 {
-                    // console.log(result);
                     if(result.affectedRows > 0)
                     {
-                        console.log('Vehicle data updated successfully');
                         return result;
                     }
                     else
                     {
+                        console.log(err);
                         return('err')
                     }
                 });
@@ -378,22 +363,30 @@ module.exports = class vehicles
             else
             {
                 let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);
-                // console.log(uploadSafetyCertificate);
-                let upQuery = `UPDATE ${constants.tableName.vehicles} v SET v.service_provider_id = '${serviceProviderId}', v.vehicle_number = '${vehicle_number}', v.make = '${make}', v.model = '${model}', v.color = '${color}', v.length = '${length}', v.breadth = '${breadth}', v.height = '${height}', v.price = '${price}', v.no_of_horse = '${max_no_of_horse}', v.air_conditioner = '${air_conditioner}', v.temperature_manageable ='${temp_manageable}', v.registration_no ='${registration_no}', v.gcc_travel_allowed = '${gcc_travel_allowed}', v.insurance_cover = '${insurance_cover}', v.insurance_date = '${insurance_date}', v.insurance_policy_no = '${insurance_policy_no}', v.insurance_provider = '${insurance_provider}', v.insurance_expiration_date = '${insurance_expiration_date}', v.vehicle_type = '${vehicle_type}', v.vehicle_registration_date = '${vehicle_registration_date}', v.vehicle_exipration_date = '${vehicle_exipration_date}', v.safety_certicate ='${uploadSafetyCertificate}', v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE id = '${id}' `;
-                // console.log(upQuery);
-                con.query(upQuery, (err, result) =>
+                if(uploadSafetyCertificate === 'INVALIDFORMAT')
                 {
-                    // console.log(result);
-                    if(result.affectedRows > 0)
+                    resolve('INVALIDATTACHMENT')
+                }
+                else if(uploadSafetyCertificate === 'NOATTACH')
+                {
+                    resolve('NOATTACH')
+                }
+                else
+                {
+                    let upQuery = `UPDATE ${constants.tableName.vehicles} v SET v.service_provider_id = '${serviceProviderId}', v.vehicle_number = '${vehicle_number}', v.make = '${make}', v.model = '${model}', v.color = '${color}', v.length = '${length}', v.breadth = '${breadth}', v.height = '${height}', v.price = '${price}', v.no_of_horse = '${max_no_of_horse}', v.air_conditioner = '${air_conditioner}', v.temperature_manageable ='${temp_manageable}', v.registration_no ='${registration_no}', v.gcc_travel_allowed = '${gcc_travel_allowed}', v.insurance_cover = '${insurance_cover}', v.insurance_date = '${insurance_date}', v.insurance_policy_no = '${insurance_policy_no}', v.insurance_provider = '${insurance_provider}', v.insurance_expiration_date = '${insurance_expiration_date}', v.vehicle_type = '${vehicle_type}', v.vehicle_registration_date = '${vehicle_registration_date}', v.vehicle_exipration_date = '${vehicle_exipration_date}', v.safety_certicate ='${uploadSafetyCertificate}', v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE id = '${id}' `;
+                    con.query(upQuery, (err, result) =>
                     {
-                        console.log('Vehicle data updated successfully');
-                        return result;
-                    }
-                    else
-                    {
-                        return('err')
-                    }
-                });
+                        if(result.affectedRows > 0)
+                        {
+                            return result;
+                        }
+                        else
+                        {
+                            console.log(err);
+                            return('err')
+                        }
+                    });
+                }
             }
         }
         catch(error)
@@ -412,11 +405,14 @@ module.exports = class vehicles
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let selQuery = `SELECT vi.id, vi.title, vi.vehicle_id, vi.image, vi.uploaded_at, vi.status FROM vehicles_images vi JOIN vehicles v ON vi.vehicle_id = v.id WHERE vi.vehicle_id = ${id} AND vi.deleted_at IS NULL`;
+                let selQuery = `SELECT vi.id, vi.title, vi.vehicle_id, vi.image, vi.uploaded_at, vi.status 
+                                FROM ${constants.tableName.vehicles_images} vi 
+                                JOIN ${constants.tableName.vehicles} v ON vi.vehicle_id = v.id 
+                                WHERE vi.vehicle_id = ${id} 
+                                AND vi.deleted_at IS NULL`;
                 // console.log(selQuery);
                 con.query(selQuery, (err, result) =>
                 {
-                    // console.log('Model:', result);
                     if (result.length !== 0)
                     {
                         // Create an array to store the return objects
@@ -619,7 +615,7 @@ module.exports = class vehicles
                             resolve(vehicleResponse);
                         }
                     }
-                });            
+                });
             });
         }
         catch (error)

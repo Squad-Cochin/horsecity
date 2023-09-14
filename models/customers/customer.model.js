@@ -9,7 +9,7 @@ const time = require('../../utils/helper/date'); // All the time relateed format
 const commonfetching = require('../../utils/helper/commonfetching'); // helper file function. This file consist of functions Which is written universally for fetching the data from the database
 const commonoperation = require('../../utils/helper/commonoperation'); // helper file function. This file consist of functions Which is written universally for some common operations.
 const con = require('../../configs/db.configs'); // Calling the db file for making the database connection
-
+const objectConvertor = require(`../../utils/objectConvertor`);
 
 module.exports = class customers
 {
@@ -171,7 +171,7 @@ module.exports = class customers
             return await new Promise(async(resolve, reject)=>
             {
                 let uploadAttachment = await commonoperation.fileUploadTwo(files, constants.attachmentLocation.customer.upload.idProof);
-                // console.log(uploadAttachment);
+                // console.log('Upload Attahcment', uploadAttachment);
                 if(uploadAttachment === 'INVALIDFORMAT')
                 {
                     resolve('INVALIDFORMAT');
@@ -208,7 +208,7 @@ module.exports = class customers
                                     // console.log(result);
                                     if(result.affectedRows > 0)
                                     {
-                                        console.log('Customer data added successfully');
+                                        // console.log('Customer data added successfully');
                                         resolve(result);
                                     }
                                     else
@@ -270,20 +270,20 @@ module.exports = class customers
                 else
                 {
                 let uploadAttachment = await commonoperation.fileUploadTwo(id_proof_image, constants.attachmentLocation.customer.upload.idProof);
-                // if(uploadAttachment === 'INVALIDFORMAT')
-                // {
-                //     resolve('INVALIDFORMAT');
-                // }
-                // else if(uploadAttachment === 'ERR')
-                // {
-                //     resolve('err');
-                // }
-                // else if(uploadAttachment === 'NOATTACHEMENT')
-                // {
-                //     resolve('NOATTACHEMENT');
-                // }
-                // else
-                // {
+                if(uploadAttachment === 'INVALIDFORMAT')
+                {
+                    resolve('INVALIDFORMAT');
+                }
+                else if(uploadAttachment === 'ERR')
+                {
+                    resolve('err');
+                }
+                else if(uploadAttachment === 'NOATTACHEMENT')
+                {
+                    resolve('NOATTACHEMENT');
+                }
+                else
+                {
                     let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.id_proof_image = '${uploadAttachment}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
                     // console.log(upQuery);
                     con.query(upQuery, (err, result) =>
@@ -300,8 +300,9 @@ module.exports = class customers
                             resolve('err')
                         }
                     });
-                }                
-            });            
+                }
+            }                
+        });            
         }
         catch (error)
         {
@@ -403,13 +404,6 @@ module.exports = class customers
                                     resolve(`err`);
                                 }
                             });
-                            // if(customerData[0].status === constants.status.inactive)
-                            // {
-                            //     resolve('customerinactive')
-                            // }
-                            // else
-                            // {
-                            // }
                         }
                         else
                         {
@@ -690,43 +684,26 @@ module.exports = class customers
                     }
                     else
                     {
-                        // console.log('Result one:', result1);
-                        // let recentBookingQuery = `  SELECT 
-                        //                             b.id AS booking_id,
-                        //                             p.id AS payment_id,
-                        //                             s.name,
-                        //                             b.pickup_location,
-                        //                             b.drop_location,
-                        //                             b.final_amount,
-                        //                             p.remaining_amount,
-                        //                             b.booking_status 
-                        //                             FROM
-                        //                             ${constants.tableName.service_providers} s
-                        //                             INNER JOIN ${constants.tableName.bookings} b ON b.service_provider_id = s.id
-                        //                             LEFT JOIN ${constants.tableName.payment_records} p ON p.invoice_prefix_id = b.invoice_prefix_id
-                        //                             WHERE b.customer_id = ${Id}
-                        //                             AND p.id = ( SELECT MAX(pr.id) FROM ${constants.tableName.payment_records} pr WHERE pr.invoice_prefix_id = b.invoice_prefix_id )
-                        //                             ORDER BY p.id DESC LIMIT 5`;
                         let receivedBookingQuery = `SELECT
-                                    e.id,
-                                    s.name AS service_provider_name,
-                                    e.vehicle_id,
-                                    v.vehicle_number,
-                                    v.make,
-                                    v.model,
-                                    e.pickup_location,
-                                    e.drop_location,
-                                    e.trip_type,
-                                    e.no_of_horse,
-                                    e.pickup_date,
-                                    e.status,
-                                    e.created_at
-                                    FROM enquiries e
-                                    INNER JOIN vehicles v ON v.id = e.vehicle_id
-                                    INNER JOIN service_providers s ON s.id = e.serviceprovider_id
-                                    WHERE e.customer_id = ${Id}
-                                    ORDER BY e.created_at DESC
-                                    LIMIT 5`
+                                                    e.id,
+                                                    s.name AS service_provider_name,
+                                                    e.vehicle_id,
+                                                    v.vehicle_number,
+                                                    v.make,
+                                                    v.model,
+                                                    e.pickup_location,
+                                                    e.drop_location,
+                                                    e.trip_type,
+                                                    e.no_of_horse,
+                                                    e.pickup_date,
+                                                    e.status,
+                                                    e.created_at
+                                                    FROM enquiries e
+                                                    INNER JOIN vehicles v ON v.id = e.vehicle_id
+                                                    INNER JOIN service_providers s ON s.id = e.serviceprovider_id
+                                                    WHERE e.customer_id = ${Id}
+                                                    ORDER BY e.created_at DESC
+                                                    LIMIT 5`
                         // console.log(`Query for the recent booking: `, recentBookingQuery);                            
                         con.query(receivedBookingQuery, async (err, result2) =>
                         {
@@ -738,45 +715,24 @@ module.exports = class customers
                             }
                             else
                             {
-                                // // console.log(`Result 1: `, result1);
-                                // // console.log(`Result 2: `, result2);
                                 let remainingamount = await remainingAmount(Id);
                                 let PaidAmount = await paidAmount(Id);
-                                // // console.log('Remaining Amount: ', remainingamount);
-                                // // console.log('Paid Amount: ', PaidAmount);
-                                // if(remainingamount == 'false' && PaidAmount == 'false')
-                                // {
-                                //     // console.log(`If block`);
-                                //     let result = customizeCustomerDashboardData(result1, result2, 0, 0)
-                                //     resolve(result);
-                                //     // remainingAmount(Id);
-                                // }
-                                // else
-                                // {
-                                //     // console.log(`Else block`);
-                                //     // console.log(result1);
-                                //     // console.log(result2);
-                                //     // console.log(remainingamount);
-                                //     // console.log(PaidAmount);
-                                    if(!remainingamount && !PaidAmount)
-                                    {
-                                        // console.log(`Else block if`);
-                                        let result = customizeCustomerDashboardData(result1, result2, 0, 0)
-                                        resolve(result);
-                                    }
-                                    else
-                                    {
-                                        // console.log(`Else block else`);
-                                        let result = customizeCustomerDashboardData(result1, result2, remainingamount, PaidAmount)
-                                        resolve(result);
-                                        // remainingAmount(Id);
-                                    }
-                                // }
+                                if(!remainingamount && !PaidAmount)
+                                {
+                                    
+                                    let result = objectConvertor.convertNextJSCustomerDashboardResponse(result1, result2, 0, 0)
+                                    resolve(result);
+                                }
+                                else
+                                {
+                                    let result = objectConvertor.convertNextJSCustomerDashboardResponse(result1, result2, remainingamount, PaidAmount)
+                                    resolve(result);
+                                }
                             }
                         });
                     }
-                });                
-            });        
+                });
+            });
         }
         catch (error)
         {
@@ -823,7 +779,7 @@ module.exports = class customers
                     LEFT JOIN ${constants.tableName.payment_records} pr_check ON pr_check.invoice_id = b.inv_id AND pr_check.status = 'PAID'
                     WHERE b.customer_id = ${Id}
                     AND b.booking_status = 'COMPLETED' `;                    
-                let result = await queryAsync(query)
+                let result = await commonoperation.queryAsync(query)
                 if(result == 'err')
                 {
                     resolve('err');
@@ -879,7 +835,7 @@ module.exports = class customers
                 WHERE b.customer_id = ${Id}
                     AND b.booking_status = 'CONFIRM' `;
                     
-                let result = await queryAsync(query)
+                let result = await commonoperation.queryAsync(query)
                 if(result == 'err')
                 {
                     resolve('err');
@@ -938,7 +894,7 @@ module.exports = class customers
                                 AND pr_check.status = '${constants.status.paid}'
                                 WHERE b.customer_id = ${Id}
                                 AND b.booking_status = '${constants.booking_status.cancelled}' `;
-                let result = await queryAsync(query)
+                let result = await commonoperation.queryAsync(query)
                 if(result == 'err')
                 {
                     resolve('err');
@@ -986,9 +942,9 @@ module.exports = class customers
                                     ORDER BY e.created_at DESC
                                     LIMIT 5`;
                 // console.log(`Query from the recent enquiry of a particular customer: `, recEnquiry);
-                let queryresult = await queryAsync(recEnquiry);
+                let queryresult = await commonoperation.queryAsync(recEnquiry);
                 // console.log('Most Recent enuiry: ', queryresult);
-                let result = recentEnquiryCustomizeResponse(queryresult)
+                let result = objectConvertor.convertNEXTJSRecentEnquiriesCustomizeResponse(queryresult)
                 resolve(result)
             });
         }
@@ -1041,7 +997,7 @@ module.exports = class customers
                                         AND pr_check.status = '${constants.status.paid}'
                                         WHERE b.customer_id = ${Id}`;
                 // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
-                let queryresult = await queryAsync(bookingQuery);
+                let queryresult = await commonoperation.queryAsync(bookingQuery);
                 // // console.log('Most Recent enuiry: ', queryresult);
                 resolve(queryresult)
             });
@@ -1083,9 +1039,9 @@ module.exports = class customers
                                     WHERE e.customer_id = ${Id}
                                     ORDER BY e.created_at DESC`;
                 // console.log(`Query from the recent enquiry of a particular customer: `, recEnquiry);
-                let queryresult = await queryAsync(recEnquiry);
+                let queryresult = await commonoperation.queryAsync(recEnquiry);
                 // console.log('Most Recent enuiry: ', queryresult);
-                let result = recentEnquiryCustomizeResponse(queryresult)
+                let result = objectConvertor.convertNEXTJSRecentEnquiriesCustomizeResponse(queryresult)
                 resolve(result)
             });
         }
@@ -1146,7 +1102,7 @@ module.exports = class customers
                 WHERE q.customer_id = ${Id}
                 `;
                 // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
-                let queryresult = await queryAsync(bookingQuery);
+                let queryresult = await commonoperation.queryAsync(bookingQuery);
                 // // console.log('Most Recent enuiry: ', queryresult);
                 // let result = recentEnquiryCustomizeResponse(queryresult)
                 resolve(queryresult)
@@ -1209,7 +1165,7 @@ module.exports = class customers
                 WHERE q.customer_id = ${Id} 
                 AND i.status = '${constants.status.active}'`;
                 // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
-                let queryresult = await queryAsync(bookingQuery);
+                let queryresult = await commonoperation.queryAsync(bookingQuery);
                 // // console.log('Most Recent enuiry: ', queryresult);
                 resolve(queryresult)
             });
@@ -1271,7 +1227,7 @@ module.exports = class customers
                                         WHERE q.customer_id = ${Id} 
                                         AND i.status = '${constants.status.inactive}' `;
                 // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
-                let queryresult = await queryAsync(bookingQuery);
+                let queryresult = await commonoperation.queryAsync(bookingQuery);
                 // // console.log('Most Recent enuiry: ', queryresult);
                 resolve(queryresult)
             });
@@ -1336,7 +1292,7 @@ module.exports = class customers
                 AND b.booking_status = 'CONFIRM'
                 `;                
                 // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
-                let queryresult = await queryAsync(bookingQuery);
+                let queryresult = await commonoperation.queryAsync(bookingQuery);
                 // // console.log('Most Recent enuiry: ', queryresult);
                 resolve(queryresult)
             });
@@ -1400,31 +1356,47 @@ module.exports = class customers
                      */
 
                     let uploadAttachment = await commonoperation.fileUploadTwo(id_proof_image, constants.attachmentLocation.customer.upload.idProof);
-                    let upQuery = `     UPDATE ${constants.tableName.customers} c 
-                                        SET c.name = '${name}',
-                                        c.email = '${email}',
-                                        c.user_name = '${userName}',
-                                        c.contact_no = '${contact_no}',
-                                        c.date_of_birth = '${date_of_birth}', 
-                                        c.id_proof_no = '${id_proof_no}',
-                                        c.id_proof_image = '${uploadAttachment}',
-                                        c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
-                                        WHERE c.id = '${Id}'`;
-                    // console.log(upQuery);
-                    con.query(upQuery, (err, result) =>
+                    if(uploadAttachment === 'INVALIDFORMAT')
                     {
-                        // console.log(result);
-                        if(result.affectedRows > 0)
+                        resolve('INVALIDFORMAT');
+                    }
+                    else if(uploadAttachment === 'ERR')
+                    {
+                        resolve('err');
+                    }
+                    else if(uploadAttachment === 'NOATTACHEMENT')
+                    {
+                        resolve('NOATTACHEMENT');
+                    }
+                    else
+                    {
+                        let upQuery = `     UPDATE ${constants.tableName.customers} c 
+                                            SET c.name = '${name}',
+                                            c.email = '${email}',
+                                            c.user_name = '${userName}',
+                                            c.contact_no = '${contact_no}',
+                                            c.date_of_birth = '${date_of_birth}', 
+                                            c.id_proof_no = '${id_proof_no}',
+                                            c.id_proof_image = '${uploadAttachment}',
+                                            c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                            WHERE c.id = '${Id}'
+                                        `;
+                        // console.log(upQuery);
+                        con.query(upQuery, (err, result) =>
                         {
-                            console.log('Customer data updated successfully');
-                            resolve(result);
-                        }
-                        else
-                        {
-                            console.log(err);
-                            resolve('err')
-                        }
-                    });
+                            // console.log(result);
+                            if(result.affectedRows > 0)
+                            {
+                                console.log('Customer data updated successfully');
+                                resolve(result);
+                            }
+                            else
+                            {
+                                console.log(err);
+                                resolve('err')
+                            }
+                        });
+                    }
                 }                   
             });
         }
@@ -1476,46 +1448,6 @@ module.exports = class customers
     };
 };
 
-/**
- * The below function is created for customize the received output according to the frontend.
- *  the output consist of 
- *     Total bookings
- *     Pending bookings
- *     Total Paid amount
- *     Total Remaining amount
- *     Recent Five Enquiries
- */
-const customizeCustomerDashboardData = (value1, value2, rAmount, pAmount) =>
-{
-    return {
-        count:
-        {
-            // total_enquiry: value1[0].total_enquiry,
-            // total_enquiry_confirmed : value1[0].total_enquiry_confirmed,
-            // total_enquiry_not_confirmed : value1[0].total_enquiry_not_confirmed,
-            total_booking: value1[0].total_invoices,
-            total_pending_booking: value1[0].total_invoices_not_started,
-            total_paid_amount: pAmount,
-            total_pending_amount: rAmount
-        },
-        enquiries: value2.map(item => ({
-            // id: item.booking_id,
-            // service_provider_name: item.name,
-            // pickup_location: item.pickup_location,
-            // drop_location: item.drop_location,
-            // pending_amount: item.remaining_amount,
-            // final_amount: item.final_amount,
-            // booking_status: item.booking_status
-            id : item.id,
-            service_provider_name: item.service_provider_name,
-            vehicle_number : item.vehicle_number,
-            pickup_location: item.pickup_location,
-            drop_location: item.drop_location,
-            enquiry_status: item.status,
-            horse : item.no_of_horse
-        }))
-    };
-}
 
 // The below function is used for calculating the total remaining amount of a particular customers
 const remainingAmount = async (Id) =>
@@ -1523,8 +1455,12 @@ const remainingAmount = async (Id) =>
     // console.log(`Remaining Amount`);
     return await new Promise(async (resolve, reject) =>
     {
-        let getQuotationDataOnCustomerId = `SELECT * FROM ${constants.tableName.quotations} q WHERE q.customer_id = ${Id} AND q.status = 'CONFIRMED'`
-        let result1 = await queryAsync(getQuotationDataOnCustomerId)
+        let getQuotationDataOnCustomerId = `
+                                                SELECT * FROM ${constants.tableName.quotations} q 
+                                                WHERE q.customer_id = ${Id}
+                                                AND q.status = '${constants.quotation_status.confirmed}'
+                                            `
+        let result1 = await commonoperation.queryAsync(getQuotationDataOnCustomerId)
         // console.log(`Quotation Data from remaining amount: `, result1);
         if (result1?.length !== 0)
         {
@@ -1535,46 +1471,41 @@ const remainingAmount = async (Id) =>
             for (let i = 0; i < result1.length; i++)
             {
                 result2[i] = await commonfetching.dataOnCondition(constants.tableName.invoices, result1[i].id, 'quot_id');
-                // console.log(i,result2[i]);
-                // console.log(result2[i][0]?.id);
+                // console.log(`Id of the invoice. Whose dashboard data we are fetching`,result2[i][0]?.id);
                 // Push the id value into the invoiceId array
                 if(result2[i].length > 0)
                 {
-                    // console.log('Came insides');
                     invoiceId.push(result2[i][0].id);
                 }
             }
-            // console.log('Invoice Id we got from the remaingn amount: ',invoiceId); // This will log the invoiceId array
+            // console.log('Invoice Id we got from the remaining amount: ',invoiceId); // This will log the invoiceId array
             for (let i = 0; i < invoiceId.length; i++)
             {
-                let dataFromThePaymentRecords = 
-                `
-                SELECT 
-                pr.remaining_amount
-                FROM ${constants.tableName.payment_records} pr
-                WHERE pr.invoice_id = ${invoiceId[i]}
-                AND pr.status <> '${constants.status.paid}'
-                AND NOT EXISTS (
-                SELECT 1
-                FROM ${constants.tableName.payment_records} pr_paid
-                WHERE pr_paid.invoice_id = pr.invoice_id
-                AND pr_paid.status = '${constants.status.paid}'
-                )
-                ORDER BY pr.created_at DESC
-                LIMIT 1`
-                // console.log(dataFromThePaymentRecords);
-                let result3 = await queryAsync(dataFromThePaymentRecords)
+                let dataFromThePaymentRecords = `
+                                                    SELECT 
+                                                    pr.remaining_amount
+                                                    FROM ${constants.tableName.payment_records} pr
+                                                    WHERE pr.invoice_id = ${invoiceId[i]}
+                                                    AND pr.status <> '${constants.status.paid}'
+                                                    AND NOT EXISTS (
+                                                    SELECT 1
+                                                    FROM ${constants.tableName.payment_records} pr_paid
+                                                    WHERE pr_paid.invoice_id = pr.invoice_id
+                                                    AND pr_paid.status = '${constants.status.paid}'
+                                                    )
+                                                    ORDER BY pr.created_at DESC
+                                                    LIMIT 1`
+                // console.log(`Data from the payments records table:  `,dataFromThePaymentRecords);
+                let result3 = await commonoperation.queryAsync(dataFromThePaymentRecords)
                 // console.log('Result 3: ', result3);
                 if(result3?.length !== 0)
                 {
                     remainingAmountEntry.push(parseFloat(result3[0].remaining_amount)); // Parse as float
-                    //  }
-                    // remainingAmountEntry.push(result3[0].remaining_amount);
                 }
             }
-            // console.log(remainingAmountEntry);
+            // console.log('List of remaining amounts: ', remainingAmountEntry);
             const totalRemainingAmountSum = remainingAmountEntry.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-            // console.log(totalRemainingAmountSum);
+            // console.log('Sum of all the remaining amounts: ', totalRemainingAmountSum);
             resolve(totalRemainingAmountSum)
         }
         else 
@@ -1590,35 +1521,30 @@ const paidAmount = async (Id) =>
     // console.log(`Paid Amount`);
     return await new Promise(async (resolve, reject) =>
     {
-        let getQuotationDataOnCustomerId = `SELECT * FROM ${constants.tableName.quotations} q WHERE q.customer_id = ${Id} AND q.status = 'CONFIRMED'`
-        let result1 = await queryAsync(getQuotationDataOnCustomerId)
-        // console.log(`Quotation Data from paid amount: `, result1);
+        let getQuotationDataOnCustomerId = `SELECT * FROM ${constants.tableName.quotations} q 
+                                            WHERE q.customer_id = ${Id} 
+                                            AND q.status = '${constants.quotation_status.confirmed}' `
+        let result1 = await commonoperation.queryAsync(getQuotationDataOnCustomerId)
+        // console.log(`Confirmed quotation data from paid amount: `, result1);
         if (result1?.length !== 0)
         {
-            // console.log('No of confirmed quotation present of a submitted customer id in the paid amount: ',result1.length);
-            // console.log(result1.length);
+            // console.log('No of confirmed quotation present of a submitted customer id in the paid amount: ', result1.length);
             var result2 = [];
             var invoiceId = [];
             var paidAmount = [];
             for (let i = 0; i < result1.length; i++)
             {
                 result2[i] = await commonfetching.dataOnCondition(constants.tableName.invoices, result1[i].id, 'quot_id');
-                // console.log(i,result2[i]);
-                // console.log(result2[i][0]?.id);
-                // console.log(result2[i][0].id);
                 // Push the id value into the invoiceId array
                 if(result2[i].length > 0)
                 {
-                    invoiceId.push(result2[i][0].id);
+                    invoiceId.push(result2[i][0]?.id);
                 }
-                // invoiceId.push(result2[i][0].id);
             }
-            // console.log('Invoice Id we got from the paid amount: ',invoiceId); // This will log the invoiceId array
-            // console.log(invoiceId); // This will log the invoiceId arra
+            // console.log('Invoice Id we got from the invoices table. Which is related to the customer id. Whose dashboard data we want to fetched from the paid amount: ',invoiceId); // This will log the invoiceId array
             for (let i = 0; i < invoiceId.length; i++)
             {
-                let dataFromThePaymentRecords =
-                ` 
+                let dataFromThePaymentRecords =` 
                     SELECT 
                     CASE
                     WHEN EXISTS 
@@ -1627,6 +1553,15 @@ const paidAmount = async (Id) =>
                         WHERE pr_pending.invoice_id = ${invoiceId[i]} 
                         AND pr_pending.status = '${constants.status.pending}' 
                         AND pr_pending.received_amount = 0
+                    )
+                    THEN 0
+                    WHEN EXISTS 
+                    ( 
+                        SELECT 1 FROM ${constants.tableName.payment_records} pr_cancel 
+                        WHERE pr_cancel.invoice_id = ${invoiceId[i]} 
+                        AND pr_cancel.status = '${constants.booking_status.cancelled}' 
+                        AND pr_cancel.received_amount = 0
+                        AND pr_cancel.deleted_at IS NOT NULL
                     )
                     THEN 0
                     WHEN EXISTS
@@ -1663,8 +1598,8 @@ const paidAmount = async (Id) =>
                     )
                     END AS paid_amount
                 `;
-                // console.log(dataFromThePaymentRecords);
-                let result3 = await queryAsync(dataFromThePaymentRecords)
+                // console.log(`Query: `, dataFromThePaymentRecords);
+                let result3 = await commonoperation.queryAsync(dataFromThePaymentRecords)
                 // console.log('Result 3 from the paid amount: ', result3);
                 if(result3?.length !== 0)
                 {
@@ -1681,44 +1616,4 @@ const paidAmount = async (Id) =>
             resolve(false);
         }        
     });
-};
-
-function queryAsync(query)
-{
-    return new Promise((resolve, reject) =>
-    {
-        con.query(query, (err, result) =>
-        {
-            if (err)
-            {
-                reject(err);
-            }
-            else
-            {
-                resolve(result);
-            }
-        });
-    });
-}
-
-// The function will be used for changing response according to the front end object
-const recentEnquiryCustomizeResponse = async (value) =>
-{
-    return {
-        enquiries : value.map(item => (
-        {
-            enquiry_id : item.id,
-            service_provider_name : item.service_provider_name,
-            vehicle_number : item.vehicle_number,
-            manufacturer : item.make,
-            model : item.model,
-            pickup_location : item.pickup_location,
-            drop_location: item.drop_location,
-            trip_type: item.trip_type,
-            no_of_horse: item.no_of_horse,
-            pickup_date: time.formatDateToDDMMYYYY(item.pickup_date),
-            status: item.status,
-            created_at: time.formatDateToDDMMYYYY(item.created_at)
-        }))
-    }
 };
