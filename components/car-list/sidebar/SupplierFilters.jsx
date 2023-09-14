@@ -75,7 +75,7 @@ const SupplierFilters = () => {
               <div className="form-checkbox__mark">
                 <div className="form-checkbox__icon icon-check" />
               </div>
-              <div className="text-15 ml-10">{val.user_name}</div>
+              <div className="text-15 ml-10">{val.name}</div>
             </div>
           </div>
           <div className="col-auto">

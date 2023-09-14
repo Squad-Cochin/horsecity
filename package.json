@@ -3,7 +3,7 @@
   "version": "1.2.0",
   "private": true,
   "scripts": {
-    "dev": "set NODE_ENV=development NODE_MODE=dev && node app.js",
+    "dev": "export NODE_ENV=development NODE_MODE=dev && node app.js",
     "build": "next build",
     "start": "export NODE_ENV=development NODE_MODE=dev && node app.js",
     "lint": "next lint"
