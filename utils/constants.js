@@ -53,7 +53,8 @@ module.exports =
     },
     password :
     { 
-        expiry_after : 90, // Days after which the token will expire
+        expiry_after : 90, // Days after which the token will expire,
+        token_expiry : 3600
     },
     attachmentLocation :
     {
@@ -127,29 +128,29 @@ module.exports =
     },
     responseMessage :
     {
-        getAll : `Data Fetched Sucessfully`,
-        getNoData : `No data to display`,
-        getAllErr : `Error while fetching all the data`,
-        getOne : `Particular data fetched Successfully`,
-        getOneErr : `Particular data fetched failed`,
-        insert : `data inserted succesfully`,
-        errorInsert : `Error while inserting data`,
-        statusinactive : `status changed to INACTIVE`,
-        statusactive : `status changed to ACTIVE`,
-        statuserror : `Error while updating the status`,
-        statusChanged : `Status Changed`,
-        removesuccess : `Data Removed`,
-        removeerror : `Error While removing`,
-        edit : `data updated successfully`,
-        erroredit : `Error while updating the data`,
-        vehiclesuccess : `Vehicles data added successfully`,
-        vehicleerror : `Error while adding the vehicles data`,
-        universalError: `Internal server error`,
-        vehicleImgerror : "No images are there for this vehicle now",
-        vehicleImgSuccess : "Images fetched succesfully",
-        imageFormat : 'Only PNG and JPG formats are allowed',
-        particularVehicleImageSuccess : 'Particular vehicle image succesfully uploaded',
-        particularVehicleImageError : 'Error while uploading the particular vehicle image',       
+        getAll : `Data Fetched Sucessfully.`,
+        getNoData : `No data to display.`,
+        getAllErr : `Error while fetching all the data.`,
+        getOne : `Particular data fetched Successfully.`,
+        getOneErr : `Error while fetching the data.`,
+        insert : `Data inserted succesfully.`,
+        errorInsert : `Data insertion failed.`,
+        statusinactive : `status changed to INACTIVE.`,
+        statusactive : `status changed to ACTIVE.`,
+        statuserror : `Error while updating the status.`,
+        statusChanged : `Status Changed.`,
+        removesuccess : `Data Removed.`,
+        removeerror : `Error While removing.`,
+        edit : `Data updated successfully.`,
+        erroredit : `Error while updating the data.`,
+        vehiclesuccess : `Vehicle data successfully added.`,
+        vehicleerror : `Unable to add vehicle data.`,
+        universalError: `Internal server error.`,
+        vehicleImgerror : "No images are there for this vehicle now.",
+        vehicleImgSuccess : "Images fetched succesfully.",
+        imageFormat : 'Only PNG and JPG formats are allowed.',
+        particularVehicleImageSuccess : 'Vehicle image uploaded successfully.',
+        particularVehicleImageError : 'Unable to upload vehicle image.',       
         
     },
     timeOffSet :
