@@ -11,6 +11,8 @@
 const con = require("../../configs/db.configs");  // importing the database details 
 const timeCalculate = require('./date'); // This variable will have the date file data. It is used to add days to current date for expiration of token
 const constant = require('../constants'); // Importing the constant details
+const commonfetching = require('./commonfetching');
+
 
 exports.changePasswordToSQLHashing = (password) => 
 {
@@ -145,7 +147,7 @@ exports.updateUserStatus = (tablename, Id) =>
                         {
                             if(result.length != 0) // if ticket updated then if block
                             {
-                                console.log('Status Changed to INACTIVE');
+                                // console.log('Status Changed to INACTIVE');
                                 resolve(result);
                             }
                             else
@@ -157,12 +159,12 @@ exports.updateUserStatus = (tablename, Id) =>
                     else
                     {
                         let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.active}'WHERE t.id = '${Id}' AND t.deleted_at IS NULL `;
-                        console.log(UpdateQuery);
+                        // console.log(UpdateQuery);
                         con.query(UpdateQuery, (err, result) => // executing the above query 
                         {
                             if(result.length != 0) // if ticket updated then if block
                             {
-                                console.log('Status Changed to ACTIVE');
+                                // console.log('Status Changed to ACTIVE');
                                 resolve(result);
                             }
                             else
@@ -206,7 +208,7 @@ exports.removeUser = (tablename, Id) =>
                         {
                             if(result.length != 0) // if ticket updated then if block
                             {
-                                console.log('Status Changed to INACTIVE and User is Removed');
+                                // console.log('Status Changed to INACTIVE and User is Removed');
                                 resolve(result);
                             }
                         }); 
@@ -219,7 +221,7 @@ exports.removeUser = (tablename, Id) =>
                         {
                             if(result.length != 0) // if ticket updated then if block
                             {
-                                console.log('Status is already INACTIVE and User is Removed');
+                                // console.log('Status is already INACTIVE and User is Removed');
                                 resolve(result);
                             }
                         });
@@ -302,15 +304,15 @@ exports.totalCountParticularServiceProvider = async (tablename, Id) =>
     }
 }
 
-exports.fileUploadTwo = async (attachments, path) =>
+exports.fileUploadTwo = async (attachments, path) => 
 { 
     // console.log(attachments);
     return new Promise((resolve, reject) =>
     {
-        if (!attachments)// || !attachments.file || !Array.isArray(attachments.file)) 
+        if (!attachments) // || !attachments.file || !Array.isArray(attachments.file)) 
         {
             console.log('#### Invalid attachments parameter ####');
-            resolve('NOATTACHEMENT')
+            resolve('NOATTACH')
         }
         else
         {
@@ -342,9 +344,177 @@ exports.fileUploadTwo = async (attachments, path) =>
             else
             {
                 console.log("Invalid Format");
-                resolve('INVALIDFORMAT');
+                resolve('INVALIDFORMAT')
             }
         }
     });
 }
 
+exports.queryAsync = (query) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        con.query(query, (err, result) =>
+        {
+            if (err)
+            {
+                reject(err);
+            }
+            else
+            {
+                // console.log(`Query Executed`);
+                resolve(result);
+            }
+        });
+    });
+}
+
+exports.createCustomizeEmailToken = async (email) => 
+{
+    var email_length = email.length;
+    if (email_length % 2 == 1) 
+    {
+        email += 'y';
+        email_length++;
+    }
+    const emailPart1 = email.substring(0, email_length / 2);
+    const emailTokenSidePart1 = [];
+    for (let i = 0; i < emailPart1.length; i++) 
+    {
+        const charCode = emailPart1.charCodeAt(i);
+        const lastDigit = parseInt(charCode.toString().slice(-1));    
+        emailTokenSidePart1.push(emailPart1[i] + lastDigit);
+    }
+    const emailPart2 = email.substring(email_length / 2);
+    const emailTokenSidePart2 = [];    
+    for (let i = 0; i < emailPart2.length; i++) 
+    {
+        const charCode = emailPart2.charCodeAt(i);
+        const firstDigit = parseInt(charCode.toString()[0]);
+        emailTokenSidePart2.push(emailPart2[i] + firstDigit); 
+    }
+    const currentTimestamp = Math.floor(Date.now() / 1000);
+    const expirationTimestamp = currentTimestamp + constant.password.token_expiry;
+    const customizepasswordToken = `${emailTokenSidePart1.join('')}A${emailTokenSidePart2.join('')}T${expirationTimestamp}`;
+    return customizepasswordToken; // Returning the customize password from where it is called
+};
+
+
+exports.tokenAndIdVerification = async(userId,token) =>
+{
+    try
+    {
+        return await  new Promise(async (resolve, reject) =>
+        {
+                      
+      
+             
+                    let inputString = await token;
+
+                    var substring1, substring2, substring3;
+            
+             
+            
+                    // Find the positions of 'A' and 'T' in the string
+            
+                    const indexA = inputString.indexOf('A');
+            
+                    const indexT = inputString.indexOf('T');
+            
+             
+            
+                    if (indexA !== -1 && indexT !== -1 && indexA < indexT) {
+            
+                        // Extract substrings based on positions
+            
+                        substring1 = inputString.substring(0, indexA);
+            
+                        substring2 = inputString.substring(indexA + 1, indexT);
+            
+                        substring3 = inputString.substring(indexT + 1);
+            
+             
+
+            
+                    } else {
+            
+                        // console.error("Invalid input string. Expected 'A' before 'T'.");
+                        resolve(false);
+                        return;
+                  
+            
+                    }
+            
+                    const currentTimestamp = Math.floor(Date.now() / 1000);
+            
+                    console.log("Current Timestamp:", currentTimestamp);
+            
+                    if (currentTimestamp > substring3)
+            
+                    {
+            
+                     
+                        resolve(false);
+            
+                    }        
+            
+                    // Remove the last character ('y') if present
+            
+                    const emailPart1 = substring1.endsWith('y') ? substring1.slice(0, -1) : substring1;
+            
+                    // Extract the email from substring1
+            
+                    const emailChars = [];
+
+                    for (let i = 0; i < emailPart1.length; i += 2) {
+            
+                        const char = emailPart1[i];
+            
+                        emailChars.push(char);
+            
+                    }
+            
+                    // Extract the email from substring2
+            
+                       // Remove the last character ('y') if present from emailPart2
+
+                        const emailPart2 = substring2.endsWith('y') ? substring2.slice(0, -1) : substring2;
+                        // Extract the email from emailPart2
+                        const emailChars2 = [];
+
+                        for (let i = 0; i < emailPart2.length; i += 2) {
+
+                            const char = emailPart2[i];
+
+                            emailChars2.push(char);
+
+                        }
+            
+                    // Combine the email characters from both parts
+            
+                    const email = (emailChars.join('') + emailChars2.join('')).replace(/y+$/, '');
+                  
+                    let verifyId =  await commonfetching.dataOnCondition(constant.tableName.service_providers,userId,'id')
+                    // console.log(verifyId);
+                    if(verifyId.length != 0){
+                        if(verifyId[0].email === email){
+                            resolve({id :verifyId[0].id,token :token})
+                        }else{
+                            console.log('email_not_found At the time of verification');
+                             resolve(false);
+                        }    
+
+                    }else{
+                     // resolve({mes sage : 'user_not_found'})
+                     console.log('user id not found At the time of verification');
+                     resolve(false);
+                    }
+                   
+        
+        });      
+    }
+    catch (error)
+    {
+        console.log(`Error from the commonfetching.js file from the helper folder. `, error);                
+    }
+};
