@@ -64,9 +64,11 @@ const ListQuotationsTable = () => {
   const [ discounts, setDiscounts ] = useState([]);
   const [ selectedDiscount, setSelectedDiscount ] = useState("");
   const [ discountAmount, setDiscountAmount ] = useState(0);
-
-
+  const [pageTitle, setPageTitle] = useState('KailPlus');
+  const [ isActive, setActive ] = useState(false);
     useEffect(() => {
+      const settings = JSON.parse(localStorage.getItem("settingsData"));
+      setPageTitle(settings.application_title);
       const data = JSON.parse(localStorage.getItem("authUser"));
       let userIdd = data[0]?.user[0]?.id
       setUserId(userIdd);
@@ -162,6 +164,7 @@ const ListQuotationsTable = () => {
     setView_modal(false);
     setQutId("");
     setModalEmail(false);
+    setErrors("")
   }
 
   /**IT WILL OPEN CONFIRM POPUP */
@@ -189,12 +192,15 @@ const ListQuotationsTable = () => {
   
   // SEND EMAIL
   async function sendEmail(data){
+    setActive(true);
     let sendEmail = await sendEmailFunction(qutId, data);
     if(sendEmail.code === 200){
+      setActive(false);
         setErrors("")
         setModalEmail(false);
         modalClose();
     }else{
+      setActive(false);
         setErrors("")
         setErrors(sendEmail.message)
     }
@@ -478,7 +484,7 @@ const ListQuotationsTable = () => {
     setSPVechiles(sPVechilesData.vehicles)
   }
 
-
+  document.title = `Quotation | ${pageTitle} `;
   return (
     <React.Fragment>
       <div className="page-content">
@@ -1510,7 +1516,7 @@ const ListQuotationsTable = () => {
               <ModalFooter>
                   <div className="hstack gap-2 justify-content-end">
                     <button type="button" className="btn btn-light" onClick={() => { modalClose(); }}>Close</button>
-                    <button type="submit" className="btn btn-success" id="add-btn">Send Email</button>
+                    <button type="submit" className="btn btn-success" id="add-btn"  disabled={isActive}>Send Email</button>
                   </div>
               </ModalFooter>
           </form>

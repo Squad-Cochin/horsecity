@@ -23,9 +23,11 @@ const ListVehicleImages = () => {
     const [updateImage, setUpdateImage] = useState(""); // State variable to store the updated image
     const [errors, setErrors] = useState("")
     const { id } = useParams(); // Retrieve the 'id' parameter from the URL using the 'useParams' hook
-
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     /**This hook will render initial time */
     useEffect(() => {
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
         if (id) {
             getAllData()
         }
@@ -114,7 +116,7 @@ const ListVehicleImages = () => {
         await removeVehicleImage(id)
         getAllData()
     }
-
+    document.title = `Vehicle images | ${pageTitle} `;
     return (
         <React.Fragment>
             {id > 0 ? (

@@ -36,11 +36,14 @@ const ListCustomerTable = () => {
     const [roleId, setRoleId] = useState("");
     const [role, setRole] = useState(false);
     const [module, setModule] = useState({});
-    const [errors, setErrors] = useState("")
+    const [errors, setErrors] = useState("");
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const pageLimit = config.pageLimit;
 
     /**This hook is used to fetch customers data initital time */
     useEffect(() => {
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
         const data = JSON.parse(localStorage.getItem("authUser"));
         let user_Id = data[0]?.user[0]?.id
         let role_Name = data[0]?.user[0]?.role_name
@@ -180,7 +183,7 @@ const ListCustomerTable = () => {
             setNumberOfData(getCustomers?.totalCount);
         }
     }
-
+    document.title = `Customers | ${pageTitle} `;
     return (
         <React.Fragment>
             <div className="page-content">

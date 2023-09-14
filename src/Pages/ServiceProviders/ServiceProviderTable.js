@@ -33,12 +33,14 @@ const ListTables = () => {
     const [module, setModule] = useState({});
     const [errors, setErrors] = useState("");
     const [roleList, setRoleList] = useState([]);
-
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const pageLimit = config.pageLimit;
 
 
     /**THIS HOOK WILL RENDER INITIAL TIME */
     useEffect(() => {
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
         const data = JSON.parse(localStorage.getItem("authUser"));
         let userIdd = data[0]?.user[0]?.id
         const user_role = data[0]?.user[0]?.role_Id
@@ -189,7 +191,7 @@ const ListTables = () => {
     }
 
 
-
+    document.title = `Service providers | ${pageTitle} `;
     return (
         <React.Fragment>
             <div className="page-content">

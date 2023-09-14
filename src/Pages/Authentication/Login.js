@@ -25,7 +25,6 @@ const Login = props => {
   const [loginpage_logo, setLoginPageLogo] = useState('')
   const [backgroundImage, setBackgroundImage] = useState('../../assets/images/bg.jpg');
   const [app_name, setAppName] = useState('');
-
   /**THIS HOOK WILL RENDER INITIAL TIME */
   useEffect(() => {
     dispatch(clearResponseMessages());
@@ -81,7 +80,7 @@ const Login = props => {
     error: state.login.error
   }));
 
-
+  document.title = `Login | ${app_name} `;
   return (
     <React.Fragment>
       <div className="bg-overlay"></div>

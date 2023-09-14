@@ -47,12 +47,15 @@ const ListTables = () =>
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("")
     const pageLimit = config.pageLimit;
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const role_id =  config.Role
   
      
     // The below effect for displaying the overall data of the driver page in the front.
     useEffect(() =>
     {
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title)
         const data = JSON.parse(localStorage.getItem("authUser"));
         let user_Id = data[0]?.user[0]?.id
         let role_Name = data[0]?.user[0]?.role_name
@@ -270,7 +273,7 @@ const ListTables = () =>
         setSproviders(data.notexist)
         setAssignedSProviders(data.exist)
     }
-    
+    document.title = `Drivers | ${pageTitle} `;
     
     // the execution of all the object and element are written inside the return. Whenever this file will be called only the code inside the return written will be returned
     return (

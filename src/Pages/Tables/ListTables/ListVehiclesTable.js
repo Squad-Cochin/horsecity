@@ -39,7 +39,8 @@ const ListVehiclesTable = () => {
     const [module, setModule] = useState({});
     const [user_name, setuser_name] = useState('')
     const [numberOfData, setNumberOfData] = useState(0);
-    const [errors, setErrors] = useState("")
+    const [errors, setErrors] = useState("");
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const pageLimit = config.pageLimit;
     const role_Id = config.Role
 
@@ -74,6 +75,8 @@ const ListVehiclesTable = () => {
         safety_certicate: !add_list ? vehicle[0]?.safety_certicate : '',
     };
     useEffect(() => {
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
         const data = JSON.parse(localStorage.getItem("authUser"));
         let user_Id = data[0]?.user[0]?.id
         let role_Name = data[0]?.user[0]?.role_name
@@ -203,6 +206,7 @@ const ListVehiclesTable = () => {
             setErrors(addedVechile?.message)
         }
     }
+    document.title = `Vehicles | ${pageTitle} `;
     return (
         <React.Fragment>
             <div className="page-content">

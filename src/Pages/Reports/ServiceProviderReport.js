@@ -24,9 +24,11 @@ const ServiceProviderReport = () => {
     const [numberOfData, setNumberOfData] = useState(0);
     const [ userId ,setUserId ] = useState('');
     const pageLimit = config.pageLimit;
-
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     /**THIS HOOK WILL RENDER INITIAL TIME SETTING THE FROMDATE BEFORE 60 DAYS TODATE CURRENT DATE */
     useEffect(() => {
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
         const today = new Date();
         console.log();
         const sixtyDaysAgo = new Date(today);
@@ -70,7 +72,7 @@ const ServiceProviderReport = () => {
             setNumberOfData(getAllData?.totalCount);
         }
     }
-
+    document.title = `Report | ${pageTitle} `;
     return (
         <React.Fragment>
             <div className="page-content">

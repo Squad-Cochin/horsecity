@@ -40,10 +40,13 @@ const ListInvoiceDetails = () => {
   const [startedTrips, setStartedTrips] = useState([]);
   const [cancelledTrip, setCancelledTrip] = useState([]);
   const [userId, setUserId] = useState("");
+  const [pageTitle, setPageTitle] = useState('KailPlus');
   const invoiceRef = useRef(null); // Reference to the invoice section for PDF generation
   const pageLimit = config.pageLimit;
-
+  const [ isActive, setActive ] = useState(false);
   useEffect(() => {
+    const settings = JSON.parse(localStorage.getItem("settingsData"));
+    setPageTitle(settings.application_title)
     const data = JSON.parse(localStorage.getItem("authUser"));
     let user_Id = data[0]?.user[0]?.id
     setUserId(user_Id);
@@ -98,13 +101,16 @@ const ListInvoiceDetails = () => {
           }
         }
         if (modalEmailOpen) {
+          setActive(true);
           let email = await sendEmail(sendEmailButtonData[0]?.id, values.recepientEmail, values.invoiceSubject);
           if (email.code === 200) {
+            setActive(false);
             setErrors("")
             setModalEmailOpen(false);
             getAllData(pageNumber)
           }
           else {
+            setActive(false);
             setErrors("")
             setErrors(email.message)
           }
@@ -215,7 +221,7 @@ const ListInvoiceDetails = () => {
       });
 
   });
-
+  document.title = `Invoice | ${pageTitle} `;
   return (
     <React.Fragment>
 
@@ -728,7 +734,7 @@ const ListInvoiceDetails = () => {
 
             <Button color="secondary" onClick={handleCloseModal}>Close</Button>
 
-            <Button color="success" type="submit">Send</Button>
+            <Button color="success" type="submit" disabled={isActive}>Send</Button>
 
           </ModalFooter>
 

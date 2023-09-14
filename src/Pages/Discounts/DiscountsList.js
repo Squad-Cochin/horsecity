@@ -28,10 +28,13 @@ const DiscountsDeatails = () => {
     const [pageNumber, setPageNumber] = useState(1);
     const [numberOfData, setNumberOfData] = useState(0);
     const [errors, setErrors] = useState("");
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const pageLimit = config.pageLimit;
 
     /**THIS HOOK WILL RENDER INITIAL TIME  */
     useEffect(() => {
+        const data = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(data.application_title)
         getAllData(1)
     }, [])
 
@@ -124,6 +127,7 @@ const DiscountsDeatails = () => {
 
     /**GET DISCOUNTS PAGE DATA*/
     async function getAllData(page) {
+
         let getDiscounts = await getDiscountsPageData(page || 1);
         setDiscounts(getDiscounts.discounts);
         setPageNumber(page);
@@ -137,6 +141,7 @@ const DiscountsDeatails = () => {
             getAllData(pageNumber)
         }
     }
+    document.title = `Discount | ${pageTitle} `;
 
     return (
         <React.Fragment>

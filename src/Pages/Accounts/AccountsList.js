@@ -24,12 +24,14 @@ const Accounts = () => {
     const [module, setModule] = useState({});
     const [role, setRole] = useState("")
     const [userId, setUserId] = useState("");
-
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const pageLimit = config.pageLimit;
     const role_id = config.Role
 
     /**THIS HOOK WILL RENDER INITIAL TIME */
     useEffect(() => {
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
         const data = JSON.parse(localStorage.getItem("authUser"));
         let userIdd = data[0]?.user[0]?.id
         let role_id = data[0]?.user[0]?.role_Id
@@ -55,7 +57,7 @@ const Accounts = () => {
         setSingleData(singleAccount?.accounts)
         setView_modal(!view_modal);
     }
-
+    document.title = `Accounts | ${pageTitle} `;
     return (
         <React.Fragment>
             <div className="page-content">

@@ -26,6 +26,7 @@ const LanguageDeatails = () => {
     const [pageNumber, setPageNumber] = useState(1);
     const [numberOfData, setNumberOfData] = useState(0);
     const [errors, setErrors] = useState("");
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const [lng_file, setLngFile] = useState(null)
 
     /**PAGE LIMIT */
@@ -33,6 +34,8 @@ const LanguageDeatails = () => {
 
     // THIS HOOK RENDERING INITIAL TIME TAKING FOR ALL LANGUGE DATA 
     useEffect(() => {
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title)
         getAllData(1)
     }, [])
 
@@ -142,7 +145,7 @@ const LanguageDeatails = () => {
             getAllData(pageNumber)
         }
     }
-
+    document.title = `Language | ${pageTitle} `;
     return (
         <React.Fragment>
             <div className="page-content">

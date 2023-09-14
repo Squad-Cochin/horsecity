@@ -17,16 +17,31 @@ import { useFormik } from "formik";
 import { userForgetPassword } from "../../store/actions";
 import logo from "../../assets/images/logo.png";
 import withRouter from "../../components/Common/withRouter";
-
+import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes';
 const ForgetPasswordPage = props => {
   const dispatch = useDispatch();
   const [ isActive, setActive ] = useState(false);
-  
+  const [loginpage_logo, setLoginPageLogo] = useState('')
+  const [backgroundImage, setBackgroundImage] = useState('../../assets/images/bg.jpg');
+  const [app_name, setAppName] = useState('');
   /**THIS HOOK WILL RENDER INITIAL TIME */
   useEffect(() => {
-    document.body.style.backgroundImage = "none";
-    document.body.className = "";
+    getAllData()
   }, [])
+  async function getAllData() {
+    let settingsData = await getSettingsPageData();
+    setBackgroundImage(settingsData?.settingsPageData[0]?.loginpage_bg_image);
+    setLoginPageLogo(settingsData?.settingsPageData[0]?.loginpage_logo);
+    setAppName(settingsData?.settingsPageData[0]?.application_title)
+  }
+  useEffect(() => {
+    document.body.className = "bg-pattern";
+    document.body.style = `background-image: url('${backgroundImage}');`;
+    // remove classname when component will unmount
+    return function cleanup() {
+      document.body.className = "";
+    };
+  });
 
   /**VALIDATION */
   const validation = useFormik({
@@ -45,6 +60,7 @@ const ForgetPasswordPage = props => {
     }
   });
 
+
   /**FETCHING IN THE REDUX */
   const { forgetError, forgetSuccessMsg } = useSelector(state => ({
     forgetSuccessMsg: state.forgetPassword.forgetSuccessMsg,
@@ -59,10 +75,10 @@ const ForgetPasswordPage = props => {
       setActive(false);
     }
   }, [forgetError,forgetSuccessMsg])
-
+  document.title = `Forgot Password | ${app_name} `;
   return (
     <React.Fragment>
-
+  <div className="bg-overlay"></div>
       <div className="account-pages my-5 pt-sm-5">
         <Container>
           <Row className="justify-content-center">
@@ -78,7 +94,7 @@ const ForgetPasswordPage = props => {
                       <div className="avatar-md profile-user-wid mb-4">
                         <span className="avatar-title rounded-circle bg-light">
                           <img
-                            src={logo}
+                            src={loginpage_logo}
                             alt=""
                             className="rounded-circle"
                             height="34"

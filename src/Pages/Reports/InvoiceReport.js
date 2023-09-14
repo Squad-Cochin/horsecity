@@ -26,11 +26,13 @@ const InvoiceReport  = () => {
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ userId ,setUserId ] = useState('');
     const [ role, setRole ] = useState('');
-
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const pageLimit = config.pageLimit;
 
     /**THIS HOOK WILL RENDER INITIAL TIME SETTING THE FROMDATE BEFORE 60 DAYS TODATE CURRENT DATE */
     useEffect(()=>{
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
         const today = new Date();
         const sixtyDaysAgo = new Date(today);
         sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
@@ -74,7 +76,7 @@ const InvoiceReport  = () => {
         setNumberOfData(getAllData?.totalCount);
         }
     }
-
+    document.title = `Report | ${pageTitle} `;
     return (
         <React.Fragment>
             <div className="page-content">

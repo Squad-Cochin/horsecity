@@ -52,13 +52,16 @@ const TripDeatails = () => {
   const [userId, setUserId ] = useState("");
   const [module,setModule] = useState({});
   const [list_or_view, setListOrView ] = useState(false);
-  const [ errors, setErrors ] = useState("")
+  const [ errors, setErrors ] = useState("");
+  const [pageTitle, setPageTitle] = useState('KailPlus');
   const pageLimit = config.pageLimit;
 
 
 
   /**Initial render wIll load this hook */
   useEffect(() => {
+    const settings = JSON.parse(localStorage.getItem("settingsData"));
+    setPageTitle(settings.application_title);
     const data = JSON.parse(localStorage.getItem("authUser"));
     let userIdd = data[0]?.user[0]?.id
     setUserId(userIdd);
@@ -161,6 +164,7 @@ const TripDeatails = () => {
     breakout: "BREAKOUT",
     compleated: "COMPLETED",
   };
+  document.title = `Trip details | ${pageTitle} `;
   return (
     <React.Fragment>
       <div className="page-content">

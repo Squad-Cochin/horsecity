@@ -19,8 +19,10 @@ import { userResetPassword } from "../../store/actions";
 import logo from "../../assets/images/logo.png";
 import withRouter from "../../components/Common/withRouter";
 import { useNavigate } from "react-router-dom"
+import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes';
 const ResetPasswordPage = props => {
-  const [ pageVerify , setPageVerify ] = useState(true)
+  const [backgroundImage, setBackgroundImage] = useState('../../assets/images/bg.jpg');
+  const [app_name, setAppName] = useState('');
   const dispatch = useDispatch();
   const { id,token } = useParams();
   const navigate = useNavigate();
@@ -28,15 +30,23 @@ const ResetPasswordPage = props => {
   useEffect(() => {
 
      initialLoad();
-    // if(id == 12 && token == 'abc'){
-    //   document.body.style.backgroundImage = "none";
-    //   document.body.className = "";
-    // }else{
-    //   navigate(`/pages-404`)
-    // }
-
+     getAllData()
   }, [])
+  
+  useEffect(() => {
+    document.body.className = "bg-pattern";
+    document.body.style = `background-image: url('${backgroundImage}');`;
+    // remove classname when component will unmount
+    return function cleanup() {
+      document.body.className = "";
+    };
+  });
 
+  async function getAllData() {
+    let settingsData = await getSettingsPageData();
+    setBackgroundImage(settingsData?.settingsPageData[0]?.loginpage_bg_image);
+    setAppName(settingsData?.settingsPageData[0]?.application_title)
+  }
   async function initialLoad(){
     if(id && token){
       let reqObj = {
@@ -82,10 +92,10 @@ const ResetPasswordPage = props => {
     resetError: state.forgetPassword.resetError,
     resetSuccessMsg: state.forgetPassword.resetSuccessMsg
   }));
-
+  document.title = `Reset Password | ${app_name} `;
 return (
     <React.Fragment>
-
+    <div className="bg-overlay"></div>
       <div className="account-pages my-5 pt-sm-5">
         <Container>
           <Row className="justify-content-center">

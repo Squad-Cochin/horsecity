@@ -33,10 +33,12 @@ const SettingPage = () =>
     const [ languages, setLanguages ] = useState([]);
     const [ currencies, setCurrencies ] = useState([]);
     const [ taxations, setTaxations ] = useState([]);
-
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const dispatch = useDispatch();
      /**THIS HOOK WILL RENDER INITIAL TIME */
       useEffect(() => {
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
          getAllData(); 
        }, []);
 
@@ -95,6 +97,11 @@ const SettingPage = () =>
                   let updateSettingsPage = await updateSettings(values);
                   if(updateSettingsPage.code === 200){
                       setErrors("");
+                      let obj ={
+                        application_title : values.application_title
+                      }
+                      localStorage.setItem("settingsData", JSON.stringify(obj));
+                      setPageTitle(values.application_title);
                       const data = languages?.find((item)=>item?.id == values.language_id)
                       i18n.changeLanguage('en');
                       localStorage.setItem("I18N_LANGUAGE", 'en');
@@ -140,7 +147,7 @@ const SettingPage = () =>
         { code: '+966', country: 'Saudi Arabia', region: 'GCC' },
         { code: '+971', country: 'United Arab Emirates', region: 'GCC' },
       ];
-
+      document.title = `Settings | ${pageTitle} `;
 
     return (
       <React.Fragment>

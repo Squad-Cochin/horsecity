@@ -43,12 +43,14 @@ const ListEnquiriesTable = () => {
     const [role, setRole] = useState("")
     const [userId, setUserId] = useState("");
     const [errors, setErrors] = useState("")
-
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const pageLimit = config.pageLimit;
     const role_id = config.Role
 
     //  The useEffect hook is used to perform some initialization logic when the component mounts
     useEffect(() => {
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
         const data = JSON.parse(localStorage.getItem("authUser"));
         let userIdd = data[0]?.user[0]?.id
         let role_id = data[0]?.user[0]?.role_Id
@@ -398,7 +400,7 @@ const ListEnquiriesTable = () => {
         }
 
     }
-
+    document.title = `Enquiry | ${pageTitle} `;
     // the execution of all the object and element are written inside the return. Whenever this file will be called only the code inside the return written will be returned
     return (
         <React.Fragment>

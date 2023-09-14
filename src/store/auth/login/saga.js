@@ -68,6 +68,7 @@ function* updateNewPassword({ payload: { user } }) {
 function* logoutUser() {
   try {
        localStorage.removeItem("authUser");
+       localStorage.removeItem("settingsData");
       yield put(logoutUserSuccess(LOGOUT_USER, true));
   } catch (error) {
     yield put(apiError(LOGOUT_USER, error));

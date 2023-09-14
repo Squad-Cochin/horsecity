@@ -31,13 +31,13 @@ const Dashboard = () => {
   async function getAllData() {
     let settingsData = await getSettingsPageData();
     let obj ={
-      application_title : settingsData.application_title
+      application_title : settingsData?.settingsPageData[0]?.application_title
     }
-    console.log("Settings data",obj);
-    // localStorage.setItem("settingsData", JSON.stringify(response));
+    localStorage.setItem("settingsData", JSON.stringify(obj));
     setPageTitle(settingsData?.settingsPageData[0]?.application_title);
    }
   document.title = `Dashboard | ${pageTitle} `;
+
 
 
   return (

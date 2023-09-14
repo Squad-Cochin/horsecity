@@ -27,9 +27,12 @@ const TaxationDeatails = () => {
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("")
     const pageLimit = config.pageLimit;
-
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     /**Initial render wIll load this hook */
     useEffect(() => {
+        
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
         getAllData(1)
     }, []);
 
@@ -134,7 +137,7 @@ const TaxationDeatails = () => {
         getAllData(pageNumber)
     } 
     }
-
+    document.title = `Taxation | ${pageTitle} `;
     return (
         <React.Fragment>
             <div className="page-content">

@@ -82,7 +82,7 @@ const ChangePassword = props => {
       document.body.className = "";
     };
   });
-
+  document.title = `Change Password | ${appName} `;
   return (
     <React.Fragment>
     
