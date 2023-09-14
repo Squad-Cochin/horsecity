@@ -1,12 +1,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                                            //
-//     This is the object convertor file. From here we can customer the response as per front-end.            //                                           //
+//  This is the object convertor file. From here we can customize the response as per front-end requirement   //                                           //
 //                                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 const time = require(`./helper/date`);
-
 
 exports.pastWorkHistroyResponse = (data) =>
 {
@@ -17,7 +15,7 @@ exports.pastWorkHistroyResponse = (data) =>
     dataResult.push({
       // Push a new object to the dataResult array, not to the data array
       id: item.id,
-      username: item.user_name,
+      name: item.name,
       created_at: time.formatDateToDDMMYYYY(item.created_at),
     });
   });
@@ -30,52 +28,10 @@ exports.notWorkedPlace = (data) => {
       dataResult.push
       ({ // Push a new object to the dataResult array, not to the data array
         id: item.id,
-        username: item.user_name,
+        name: item.name,
       });
     });
     return dataResult;
-};
-
-exports.invoiceResponse = (data) =>
-{
-  const dataResult = [];
-  data.forEach(item =>
-  {
-    dataResult.push
-    ({
-        id : item.id, // Id from the invoice table. Primary key
-        iId: item.iId, // Invoice id - We will generate from the backend
-        iDate : item.created_at, // Invoice created date - It will also generated from the backedn
-        customer_name: item.customerName, 
-        companName : item.service_provider_name,
-        customerAddress :
-        {
-            Plot_No : "78",
-            Road_Number : "National Highway",
-            Area : "Cochin"
-        },
-        companyAddress :
-        {
-            Plot_No : "25", 
-            Road_Number : "NH7",
-            Area : "Koratty"
-        },
-        cusCountry : "India",
-        comCountry : "India",
-        customer_email : "Sherif@gmail.com",
-        com_email : "abc@horsecity.com",
-        iSubTotal : "1452",
-        iTaxRate : "5",
-        iTaxAmount: "147",
-        iDiscountRate : "6",
-        iDiscountAmount: "152",
-        iFinalAmount: "1300",
-        service_provider_name:"Sasha",
-        quotation_id: "Q001",
-        link : 'https://invoma.vercel.app/general_1.html'
-    });
-  });
-  return dataResult;
 };
 
 // SELECT i.invoice_no, q.quotation_id, c.name, c.email FROM customers c, quotations q, invoices i WHERE c.id = q.customer_id
@@ -97,16 +53,17 @@ exports.getAllInvoice = (data) =>
   return dataResult;
 };
 
-
-
-exports.getOneInvoiceResponse = (data, data2) => {
-  const invoiceResponse = {
+exports.getOneInvoiceResponse = (data, data2) =>
+{
+  const invoiceResponse = 
+  {
     invoice: [],
     vehicles: [],
     payment: [],
   };
 
-  if (data.length !== 0) {
+  if (data.length !== 0) 
+  {
     invoiceResponse.invoice.push({
       "id": data[0].id,
       "iId": data[0].iId,
@@ -134,7 +91,6 @@ exports.getOneInvoiceResponse = (data, data2) => {
       "special_requirement": data[0].special_requirement,
       "no_of_horse": data[0].no_of_horse,
     });
-  }
   for (let row of data) 
   {
     invoiceResponse.payment.push
@@ -158,8 +114,189 @@ exports.getOneInvoiceResponse = (data, data2) => {
           "drop_location": row.drop_point,
       });
     }
-
+  }
   return invoiceResponse;
 };
 
+/**
+ * The below function is created for customize the received output according to the frontend.
+ *  the output consist of 
+ *     Total bookings
+ *     Pending bookings
+ *     Total Paid amount
+ *     Total Remaining amount
+ *     Recent Five Enquiries
+ */
+exports.convertNextJSCustomerDashboardResponse = (value1, value2, rAmount, pAmount) =>
+{
+  return {
+    count:
+    {
+        total_booking: value1[0].total_invoices,
+        total_pending_booking: value1[0].total_invoices_not_started,
+        total_paid_amount: pAmount,
+        total_pending_amount: rAmount
+    },
+    enquiries: value2.map(item => ({
+        id : item.id,
+        service_provider_name: item.service_provider_name,
+        vehicle_number : item.vehicle_number,
+        pickup_location: item.pickup_location,
+        drop_location: item.drop_location,
+        enquiry_status: item.status,
+        horse : item.no_of_horse
+    }))
+};
+}
 
+// The function will be used for changing response according to the front end object
+exports.convertNEXTJSRecentEnquiriesCustomizeResponse = async (value) =>
+{
+    return {
+        enquiries : value.map(item => (
+        {
+            enquiry_id : item.id,
+            service_provider_name : item.service_provider_name,
+            vehicle_number : item.vehicle_number,
+            manufacturer : item.make,
+            model : item.model,
+            pickup_location : item.pickup_location,
+            drop_location: item.drop_location,
+            trip_type: item.trip_type,
+            no_of_horse: item.no_of_horse,
+            pickup_date: time.formatDateToDDMMYYYY(item.pickup_date),
+            status: item.status,
+            created_at: time.formatDateToDDMMYYYY(item.created_at)
+        }))
+    }
+};
+
+
+/**
+ * The monthly sales report need a customize set of response. For making it according to front end object.
+ * This function will be used for customizing the function output.
+ */
+
+exports.customizeMonthlySalesReportForReactFrontEnd = (salesData) =>
+{
+    var monthlySalesData =
+    {
+        series: [
+            {
+                name: "Revenue",
+                type: "column",
+                data: salesData.map(item => parseFloat(item?.total_final_amount)),
+            },
+        ],      
+        options:
+        {
+            chart:
+            {
+                stacked: false,
+                toolbar: 
+                {
+                    show: false,
+                },
+            },
+          stroke: {
+            width: [0, 0.5, 1],
+            curve: "smooth",
+            dashArray: [0, 8, 5],
+          },
+          plotOptions: {
+            bar: {
+              columnWidth: "18%",
+            },
+          },
+          colors: ["#0ab39c", "rgba(212, 218, 221, 0.18)", "rgb(251, 77, 83)"],      
+          fill: {
+            opacity: [0.85, 0.25, 1],
+            gradient: {
+              inverseColors: false,
+              shade: "light",
+              type: "vertical",
+              opacityFrom: 0.85,
+              opacityTo: 0.55,
+              stops: [0, 100, 100, 100],
+            },
+          },
+          //   labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+          markers:
+          {
+            size: 0,
+          },
+          legend:
+          {
+            offsetY: 11,
+          },
+          xaxis:
+          {
+            title:
+            {
+              text: "Months",
+            },
+            type: "category", // Changed type to "category" for month labels
+            categories: salesData.map(item => item.month_name), // Use month names as categories
+          },
+      
+          yaxis:
+          {
+            title:
+            {
+              text: "Revenue",
+            },
+          },
+      
+          tooltip: {
+            shared: true,
+            intersect: false,
+            y: {
+              formatter: function (y) {
+                if (typeof y !== "undefined") {
+                  return y.toFixed(0) + " Total Invoice";
+                }
+                return y;
+              },
+            },
+          },
+      
+          grid: {
+            borderColor: "#f1f1f1",
+          },
+        },
+    };    
+    return monthlySalesData ;
+}
+
+/**
+ * The quotation status report need a customize set of response. For making it according to front end object.
+ * This function will be used for customizing the function output.
+ */
+
+exports.customizeQuotationStatusReportForReactFrontEnd = (data) =>
+{
+    var OrderStatusData = [
+        {
+            id: 1,
+            title: "Confirmed",
+            icon: "ri-checkbox-circle-line",
+            color: "success",
+            width: data[0].total_confirmed,
+        },
+        {
+            id: 2,
+            title: "Not Confirmed",
+            icon: "ri-close-circle-line",
+            color: "warning",
+            width: data[0].total_not_confirmed,
+        },
+        {
+            id: 3,
+            title: "Total Quotations",
+            icon: "ri-add-circle-line",
+            color: "primary",
+            width: data[0].total_quotations,
+        },
+    ]
+    return OrderStatusData;
+}
