@@ -3,6 +3,7 @@ const con = require(`../../configs/db.configs`); // Calling database details
 const constants = require(`../../utils/constants`); // Constant elements are stored in this file
 const url = require(`../../utils/url_helper`);// Fetching the url details from the url helper file
 const time = require(`../../utils/helper/date`); // All the time related formating are written in this file.
+const commonoperation = require('../../utils/helper/commonoperation');
 
 // Below is function which wille eliminate the space from the string
 function hasOnlyNonSpaces(str) 
@@ -154,26 +155,22 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
             }
             else
             {
-                // console.log(req.method);
-                //console.log(req.url);
-                // console.log(`${url.UPDATE_CUSTOMER_SIDE_URL}${req.params?.id}`);
-                // console.log(url.UPDATE_CUSTOMER_SIDE_URL + req.params.id);
                 if(req.method === `POST`)
                 {
-                    this.validateCommonInputAtStartingTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
+                    this.validateCommonInputAtStartingTime(tableName, `email`, req.body.email, req.params.id, 'Email')(req, res, next);
                 }
                 else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params.id}`)
                 {
-                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
+                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'Email')(req, res, next);
                 }
                 else if(req.method === `PUT` && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params.id}`)
                 {
-                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
+                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'Email')(req, res, next);
                 }
                 else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params?.id}`)
                 {
                     // console.log('Inside');
-                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
+                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'Email')(req, res, next);
                 }
                 else
                 {
@@ -611,24 +608,6 @@ exports.passwordsimilarity = async (req, res, next) =>
     }
 }
 
-
-exports.passwordandconfirmpasswordsimilarity = async (req, res, next) =>
-{
-    if (req.body.confirmnewpassword !== req.body.newpassword)
-    {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : `Password and confirm password are not similar`
-        });
-    }
-    else
-    {
-      next();
-    }
-}
-
 exports.passwordValidation = async (req, res, next) =>
 {
     let password = await req.body.password
@@ -799,7 +778,7 @@ exports.isPageNumberEntered = (req, res, next) =>
 {
     if(!req.body.page)
     {
-        console.log(`Page number value is not entered`);
+        // console.log(`Page number value is not entered`);
         return res.status(200).json
         ({
             code : 500,
@@ -1021,7 +1000,7 @@ exports.checkValueEntered = (fieldName, messageField) => (req, res, next) =>
         }
         else 
         {
-            console.log(`${messageField} is available`);
+            // console.log(`${messageField} is available`);
             resolve();
         }
     });
@@ -1209,3 +1188,560 @@ exports.checkingDuplicateEnquiry = async (req, res, next) =>
         console.log(`Error while checking the duplicate entry of enquiry data`, error);
     }
 };
+
+exports.CustomerAddRequestBody = async (req, res, next)  =>
+{
+    try
+    {
+        await this.checkValueEntered(req.body.name, 'Name')(req, res, next);
+        await this.checkValueEntered(req.body.email, 'Email')(req, res, next);
+        await this.checkValueEntered(req.body.userName, 'Username')(req, res, next);
+        await this.checkValueEntered(req.body.password, 'Password')(req, res, next);
+        await this.checkValueEntered(req.body.contact_no, 'Contact number')(req, res, next);
+        await this.checkValueEntered(req.body.date_of_birth, 'Date of birth')(req, res, next);
+        await this.checkValueEntered(req.body.id_proof_no, 'Id proof number')(req, res, next);
+        await this.checkValueEntered(req.files.id_proof_image, 'Id proof image is not uploaded')(req, res, next);
+        next();
+    }
+    catch(error)
+    {
+        // Handle any errors that might occur during the checks
+        res.status(500).send
+        ({
+            code: 500,
+            status: false,
+            message: 'Internal server error from the customer add reqest body',
+        });
+
+    }
+};
+
+exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
+{
+    return new Promise(async (resolve, reject) =>
+    {
+        try
+        {
+            const selQuery = `  SELECT * FROM ${constants.tableName.customers} c 
+                                WHERE c.name = '${req.body.name}' 
+                                AND c.email = '${req.body.email}'
+                                AND c.contact_no = '${req.body.contact_no}'
+                                AND c.user_name = '${req.body.userName}'
+                                AND c.password = '${req.body.password}' 
+                                AND c.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}' 
+                                AND c.id_proof_no = '${req.body.id_proof_no}' 
+                                AND c.deleted_at IS NOT NULL`;
+            // console.log('First select Query: ', selQuery);
+            const result1 = await commonoperation.queryAsync(selQuery);
+            if(result1.length != 0)
+            {
+                console.log(`result 1`, result1);
+                uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
+                if(uploadIdproofImage === 'INVALIDFORMAT')
+                {
+                    console.log('Invalid Format of file submit for upload');
+                    return res.status(200).send
+                    ({
+                        code : 400,
+                        status : false,
+                        message : "Invalid Format of file submit for upload",
+                    });
+                }
+                else if(uploadIdproofImage === 'NOATTACHEMENT')
+                {
+                    console.log('No image uploaded for customer');
+                    return res.status(200).send
+                    ({
+                        code : 400,
+                        status : false,
+                        message : "No image uploaded for customer",
+                    });
+                }
+                else
+                {
+                    const upQuery = `   UPDATE ${constants.tableName.customers} c 
+                                        SET c.deleted_at = NULL,
+                                        c.id_proof_image = '${uploadIdproofImage}',
+                                        WHERE c.id = ${result1[0].id}`;
+                    console.log('First update Query: ', upQuery);
+                    const result2 = await commonoperation.queryAsync(upQuery);
+                    if (result2.affectedRows > 0)
+                    {
+                        return res.status(200).send
+                        ({
+                            code: 200,
+                            status: true,
+                            message: ` Customer ${constants.responseMessage.insert}`,
+                        });
+                    }
+                    else
+                    {
+                        console.log(`else condtion 1 from the update query`);
+                        return res.status(200).send
+                        ({
+                            code : 500,
+                            status : false,
+                            message : `Internal Server Error from the params`
+                        });
+                    }
+                }
+            }
+            else
+            {
+                // console.log(`else condtion 1 from the select query`);
+                const selQuery2 = `     SELECT * FROM ${constants.tableName.customers} c 
+                                        WHERE c.email = '${req.body.email}'
+                                        AND c.contact_no = '${req.body.contact_no}'
+                                        AND c.id_proof_no = '${req.body.id_proof_no}'
+                                        AND c.user_name = '${req.body.userName}'
+                                        AND c.deleted_at IS NOT NULL`;
+                // console.log('Second select Query: ',selQuery2);
+                const result12 = await commonoperation.queryAsync(selQuery2);
+                if(result12.length != 0)
+                {
+                    // console.log(`result 2`, result12);
+                    uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
+                    if(uploadIdproofImage === 'INVALIDFORMAT')
+                    {
+                        console.log('Invalid Format of file submit for upload');
+                        return res.status(200).send
+                        ({
+                            code : 400,
+                            status : false,
+                            message : "Invalid Format of file submit for upload",
+                        });
+                    }
+                    else if(uploadIdproofImage === 'NOATTACHEMENT')
+                    {
+                        console.log('No image uploaded for customer');
+                        return res.status(200).send
+                        ({
+                            code : 400,
+                            status : false,
+                            message : "No image uploaded for customer",
+                        });
+                    }
+                    else
+                    {
+                        const upQuery2 = `  UPDATE ${constants.tableName.customers} c 
+                                            SET c.deleted_at = NULL,
+                                            c.name = '${req.body.name}',
+                                            c.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
+                                            c.password = SHA2('${process.env.PASSWORD}', 256),
+                                            c.id_proof_image = '${uploadIdproofImage}',
+                                            c.status = '${constants.status.active}',
+                                            c.phone_verified = 'TRUE',
+                                            c.email_verified = 'TRUE',
+                                            c.expiry_at = '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}',
+                                            c.created_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}',
+                                            c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                            WHERE c.id = ${result12[0].id} 
+                                            `;
+                        // console.log(upQuery2);
+                        const result22 = await commonoperation.queryAsync(upQuery2);
+                        if (result22.affectedRows > 0)
+                        {
+                            return res.status(200).send
+                            ({
+                                code: 200,
+                                status: true,
+                                message: ` Customer ${constants.responseMessage.insert}`,
+                            });
+                        }
+                        else
+                        {
+                            console.log(`else condtion 2 from the update query`);
+                            return res.status(200).send
+                            ({
+                                code : 500,
+                                status : false,
+                                message : `Internal Server Error from the params`
+                            });  
+                        }
+                    }
+                }
+                else
+                {
+                    // console.log(`else condtion 2 from the select query`);
+                    let selQuery3 = `   SELECT * FROM ${constants.tableName.customers} c
+                                        WHERE c.email = '${req.body.email}'
+                                        AND c.deleted_at IS NOT NULL
+                                    `;
+                    // console.log('Third select Query: ',selQuery3);
+                    const result13 = await commonoperation.queryAsync(selQuery3);
+                    if(result13.length != 0)
+                    {
+                        // console.log(`result 3`, result13);
+                        uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
+                        if(uploadIdproofImage === 'INVALIDFORMAT')
+                        {
+                            console.log('Invalid Format of file submit for upload');
+                            return res.status(200).send
+                            ({
+                                code : 400,
+                                status : false,
+                                message : "Invalid Format of file submit for upload",
+                            });
+                        }
+                        else if(uploadIdproofImage === 'NOATTACHEMENT')
+                        {
+                            console.log('No image uploaded for customer');
+                            return res.status(200).send
+                            ({
+                                code : 400,
+                                status : false,
+                                message : "No image uploaded for customer",
+                            });
+                        }
+                        else
+                        {
+                            const upQuery3 = `  UPDATE ${constants.tableName.customers} c
+                                                SET c.deleted_at = NULL,
+                                                c.name = '${req.body.name}',
+                                                c.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
+                                                c.password = SHA2('${process.env.PASSWORD}', 256),
+                                                c.id_proof_image = '${uploadIdproofImage}',
+                                                c.status = '${constants.status.active}',
+                                                c.phone_verified = 'TRUE',
+                                                c.email_verified = 'TRUE',
+                                                c.user_name = '${req.body.userName}',
+                                                c.id_proof_no = '${req.body.id_proof_no}',
+                                                c.contact_no = '${req.body.contact_no}',
+                                                c.expiry_at = '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}',
+                                                c.created_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}',
+                                                c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                                WHERE c.id = ${result13[0].id}  `;
+                            const result23 = await commonoperation.queryAsync(upQuery3);
+                            if (result23.affectedRows > 0)
+                            {
+                                return res.status(200).send
+                                ({
+                                    code: 200,
+                                    status: true,
+                                    message: ` Customer ${constants.responseMessage.insert}`,
+                                });
+                            }
+                            else
+                            {
+                                console.log(`else condtion 3 from the update query`);
+                                return res.status(200).send
+                                ({
+                                    code : 500,
+                                    status : false,
+                                    message : `Internal Server Error from the params`
+                                });  
+                            }
+                        }                        
+                    }
+                    else
+                    {
+                        console.log(`else condtion 4 from the select query`);
+                        let selQuery4 = `   SELECT * FROM ${constants.tableName.customers} c
+                                            WHERE c.user_name = '${req.body.userName}'
+                                            AND c.deleted_at IS NOT NULL
+                                        `;
+                        console.log('Fourth select Query: ',selQuery4);
+                        const result14 = await commonoperation.queryAsync(selQuery4);
+                        if(result14.length != 0)
+                        {
+                            console.log(`result 4`, result14);
+                            uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
+                            if(uploadIdproofImage === 'INVALIDFORMAT')
+                            {
+                                console.log('Invalid Format of file submit for upload');
+                                return res.status(200).send
+                                ({
+                                    code : 400,
+                                    status : false,
+                                    message : "Invalid Format of file submit for upload",
+                                });
+                            }
+                            else if(uploadIdproofImage === 'NOATTACHEMENT')
+                            {
+                                console.log('No image uploaded for customer');
+                                return res.status(200).send
+                                ({
+                                    code : 400,
+                                    status : false,
+                                    message : "No image uploaded for customer",
+                                });
+                            }
+                            else
+                            {
+                                const upQuery4 = `  UPDATE ${constants.tableName.customers} c
+                                                    SET c.deleted_at = NULL,
+                                                    c.name = '${req.body.name}',
+                                                    c.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
+                                                    c.password = SHA2('${process.env.PASSWORD}', 256),
+                                                    c.id_proof_image = '${uploadIdproofImage}',
+                                                    c.status = '${constants.status.active}',
+                                                    c.phone_verified = 'TRUE',
+                                                    c.email_verified = 'TRUE',
+                                                    c.email = '${req.body.email}',
+                                                    c.id_proof_no = '${req.body.id_proof_no}',
+                                                    c.contact_no = '${req.body.contact_no}',
+                                                    c.expiry_at = '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}',
+                                                    c.created_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}',
+                                                    c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                                    WHERE c.id = ${result14[0].id}  `;
+                                const result24 = await commonoperation.queryAsync(upQuery4);
+                                if (result24.affectedRows > 0)
+                                {
+                                    return res.status(200).send
+                                    ({
+                                        code: 200,
+                                        status: true,
+                                        message: ` Customer ${constants.responseMessage.insert}`,
+                                    });
+                                }
+                                else
+                                {
+                                    console.log(`else condtion 4 from the update query`);
+                                    return res.status(200).send
+                                    ({
+                                        code : 500,
+                                        status : false,
+                                        message : `Internal Server Error from the params`
+                                    });  
+                                }
+                            }
+                        }
+                        else
+                        {
+                            // console.log(`else condtion 5 from the select query`);
+                            let selQuery5 = `   SELECT * FROM ${constants.tableName.customers} c
+                                                WHERE c.contact_no = '${req.body.contact_no}'
+                                                AND c.deleted_at IS NOT NULL
+                                            `;
+                            // console.log('Fifth select Query: ',selQuery5);
+                            const result15 = await commonoperation.queryAsync(selQuery5);
+                            if(result15.length != 0)
+                            {
+                                console.log(`result 5`, result15);
+                                uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
+                                if(uploadIdproofImage === 'INVALIDFORMAT')
+                                {
+                                    console.log('Invalid Format of file submit for upload');
+                                    return res.status(200).send
+                                    ({
+                                        code : 400,
+                                        status : false,
+                                        message : "Invalid Format of file submit for upload",
+                                    });
+                                }
+                                else if(uploadIdproofImage === 'NOATTACHEMENT')
+                                {
+                                    console.log('No image uploaded for customer');
+                                    return res.status(200).send
+                                    ({
+                                        code : 400,
+                                        status : false,
+                                        message : "No image uploaded for customer",
+                                    });
+                                }
+                                else
+                                {
+                                    const upQuery5 = `  UPDATE ${constants.tableName.customers} c
+                                                        SET c.deleted_at = NULL,
+                                                        c.name = '${req.body.name}',
+                                                        c.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
+                                                        c.password = SHA2('${process.env.PASSWORD}', 256),
+                                                        c.id_proof_image = '${uploadIdproofImage}',
+                                                        c.status = '${constants.status.active}',
+                                                        c.phone_verified = 'TRUE',
+                                                        c.email_verified = 'TRUE',
+                                                        c.email = '${req.body.email}',
+                                                        c.id_proof_no = '${req.body.id_proof_no}',
+                                                        c.user_name = '${req.body.userName}',
+                                                        c.expiry_at = '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}',
+                                                        c.created_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}',
+                                                        c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                                        WHERE c.id = ${result15[0].id}  `;
+                                    const result25 = await commonoperation.queryAsync(upQuery5);
+                                    if (result25.affectedRows > 0)
+                                    {
+                                        return res.status(200).send
+                                        ({
+                                            code: 200,
+                                            status: true,
+                                            message: ` Customer ${constants.responseMessage.insert}`,
+                                        });
+                                    }
+                                    else
+                                    {
+                                        console.log(`else condtion 6 from the update query`);
+                                        return res.status(200).send
+                                        ({
+                                            code : 500,
+                                            status : false,
+                                            message : `Internal Server Error from the params`
+                                        });  
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                console.log(`else condtion 6 from the select query`);
+                                let selQuery6 = `   SELECT * FROM ${constants.tableName.customers} c
+                                                    WHERE c.id_proof_no = '${req.body.id_proof_no}'
+                                                    AND c.deleted_at IS NOT NULL
+                                                `;
+                                console.log('Sixth select query: ',selQuery6);
+                                const result16 = await commonoperation.queryAsync(selQuery6);
+                                if(result16.length != 0)
+                                {
+                                    console.log(`result 6`, result16);
+                                    uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
+                                    if(uploadIdproofImage === 'INVALIDFORMAT')
+                                    {
+                                        console.log('Invalid Format of file submit for upload');
+                                        return res.status(200).send
+                                        ({
+                                            code : 400,
+                                            status : false,
+                                            message : "Invalid Format of file submit for upload",
+                                        });
+                                    }
+                                    else if(uploadIdproofImage === 'NOATTACHEMENT')
+                                    {
+                                        console.log('No image uploaded for customer');
+                                        return res.status(200).send
+                                        ({
+                                            code : 400,
+                                            status : false,
+                                            message : "No image uploaded for customer",
+                                        });
+                                    }
+                                    else
+                                    {
+                                        let upQuery6 = `UPDATE ${constants.tableName.customers} c
+                                                        SET c.deleted_at = NULL,
+                                                        c.name = '${req.body.name}',
+                                                        c.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
+                                                        c.password = SHA2('${process.env.PASSWORD}', 256),
+                                                        c.id_proof_image = '${uploadIdproofImage}',
+                                                        c.status = '${constants.status.active}',
+                                                        c.phone_verified = 'TRUE',
+                                                        c.email_verified = 'TRUE',
+                                                        c.email = '${req.body.email}',
+                                                        c.contact_no = '${req.body.contact_no}',
+                                                        c.user_name = '${req.body.userName}',
+                                                        c.expiry_at = '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}',
+                                                        c.created_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}',
+                                                        c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                                        WHERE c.id = ${result16[0].id} `;
+                                        const result26 = await commonoperation.queryAsync(upQuery6);
+                                        if (result26.affectedRows > 0)
+                                        {
+                                            return res.status(200).send
+                                            ({
+                                                code: 200,
+                                                status: true,
+                                                message: ` Customer ${constants.responseMessage.insert}`,
+                                            });
+                                        }
+                                        else
+                                        {
+                                            console.log(`else condtion 6 from the update query`);
+                                            return res.status(200).send
+                                            ({
+                                                code : 500,
+                                                status : false,
+                                                message : `Internal Server Error from the params`
+                                            });  
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    console.log(`else condtion 6 from the select query`);
+                                    next();
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        catch (error)
+        {
+            console.log('Error in CheckDataPresentWithDeletedAt function:', error);
+            return res.status(500).send
+            ({
+                code: 500,
+                status: false,
+                message: `Internal server error`,
+            });
+        }
+    });
+};
+
+exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, res, next) =>
+{
+    return new Promise(async (resolve, reject) =>
+    {
+        try
+        {
+            let selQuery = `SELECT * FROM ${constants.tableName.customers} c
+                            WHERE c.email = '${req.body.email}'
+                            AND c.deleted_at IS NOT NULL`;
+            console.log('First select Query: ',selQuery);
+            let result11 = await commonoperation.queryAsync(selQuery);
+            if(result11.length != 0)
+            {
+                console.log(`result 1`, result11);
+                uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
+                if(uploadIdproofImage === 'INVALIDFORMAT')
+                {
+                    console.log('Invalid Format of file submit for upload');
+                    return res.status(200).send
+                    ({
+                        code : 400,
+                        status : false,
+                        message : "Invalid Format of file submit for upload",
+                    });
+                }
+                else if(uploadIdproofImage === 'NOATTACHEMENT')
+                {
+                    console.log('No image uploaded for customer');
+                    return res.status(200).send
+                    ({
+                        code : 400,
+                        status : false,
+                        message : "No image uploaded for customer",
+                    });
+                }
+                else
+                {
+                }
+            }      
+        }
+        catch (error)
+        {
+            console.log('Error in CheckDataPresentWithDeletedAt function:', error);
+            return res.status(500).send
+            ({
+                code: 500,
+                status: false,
+                message: `Internal server error`,
+            });
+        }
+    });
+};
+
+exports.passwordandconfirmpasswordsimilarity = async (req, res, next) =>
+{
+    if (req.body.confirmnewpassword !== req.body.newpassword)
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : `Password and confirm password are not similar`
+        });
+    }
+    else
+    {
+      next();
+    }
+}

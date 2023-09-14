@@ -9,7 +9,15 @@ exports.checkVehicleBodyEntered = async (req, res, next) =>
         await checkInput.checkValueEntered(req.body.make, 'Manufacturer')(req, res, next);
         await checkInput.checkValueEntered(req.body.model, 'Model')(req, res, next);
         await checkInput.checkValueEntered(req.body.color, 'Color')(req, res, next);
-        await checkInput.checkValueEntered(req.body.insurance_policy_provider, 'Insurance policy provider name')(req, res, next);
+        await checkInput.checkValueEntered(req.body.insurance_policy_provider, 'Insurance policy provider name')(req, res, next); 
+        await this.checkNumericalValues(req.body.length, 'Vehicle length')(req, res, next);
+        await this.checkNumericalValues(req.body.breadth, 'Vehicle breadth')(req, res, next);
+        await this.checkNumericalValues(req.body.height, 'Vehicle height')(req, res, next);
+        await this.checkNumericalValues(req.body.no_of_horse, 'Vehicle maximum horse carrying capicity')(req, res, next);
+        await checkInput.checkValueEntered(req.body.insurance_date, 'Vehicle insurance date')(req, res, next);
+        await checkInput.checkValueEntered(req.body.vehicle_exipration_date, 'Vehicle insurance expiration date')(req, res, next);
+        await checkInput.checkValueEntered(req.body.vehicle_registration_date, 'Vehicle registration date')(req, res, next);
+        await checkInput.checkValueEntered(req.body.vehicle_exipration_date, 'Vehicle expiration date')(req, res, next);
         next();
     }
     catch (error)
@@ -17,118 +25,46 @@ exports.checkVehicleBodyEntered = async (req, res, next) =>
         console.log(`Error from the 'checkVehicleBodyEntered' function. It is in validator folder. Which is inside the middlewares. While checking the vehicle body.`, error); 
     }
 };
-
-exports.isLengthEntered = (req, res, next) => 
+ 
+exports.checkNumericalValues = (value, feildName) => (req, res, next) =>
 {
-    const length = req.body.length;
-    const numericLength = parseFloat(length);
-    if (!length)
+    return new Promise((resolve, reject) =>
     {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: "Vehicle length required",
-        });
-    }
-    else if (typeof numericLength !== "number" || isNaN(numericLength) || !isFinite(numericLength)) 
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: "failure",
-            message: "Vehicle length must be a numeric value",
-        });
-    }
-    else if (length <= 0)
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: "failure",
-            message: "Vehicle length must be greater than zero.",
-        });
-    } 
-    else
-    {
-        next();
-    }
+        const numericLength = parseFloat(value);
+        if (!value)
+        {
+            return res.status(200).send
+            ({
+                code: 400,
+                status: false,
+                message: `${feildName} is required`,
+            });
+        }
+        else if (typeof numericLength !== "number" || isNaN(numericLength) || !isFinite(numericLength)) 
+        {
+            return res.status(200).send
+            ({
+                code: 400,
+                status: "failure",
+                message: `${feildName} must be a numeric value`,
+            });
+        }
+        else if (value <= 0)
+        {
+            return res.status(200).send
+            ({
+                code: 400,
+                status: "failure",
+                message: `${feildName} must be greater than zero.`,
+            });
+        } 
+        else
+        {
+            resolve();
+        }
+    });
 };
 
-exports.isBreadthEntered = (req, res, next) => 
-{
-    const breadth = req.body.breadth;
-    const numericLength = parseFloat(breadth);
-    if (!breadth)
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: "Vehicle breadth required",
-        });
-    }
-    else if (typeof numericLength !== "number" || isNaN(numericLength) || !isFinite(numericLength)) 
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: "failure",
-            message: "Vehicle breadth must be a numeric value",
-        });
-    }
-    else if (breadth <= 0)
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: "failure",
-            message: "Vehicle breadth must be greater than zero.",
-        });
-    } 
-    else
-    {
-        next();
-    }
-};
-
-exports.isheightEntered = (req, res, next) => 
-{
-    const height = req.body.height;
-    const numericLength = parseFloat(height);
-    if (!height)
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: "Vehicle height required",
-        });
-    }
-    else if (typeof numericLength !== "number" || isNaN(numericLength) || !isFinite(numericLength)) 
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: "failure",
-            message: "Vehicle height must be a numeric value",
-        });
-    }
-    else if (height <= 0)
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: "failure",
-            message: "Vehicle height must be greater than zero.",
-        });
-    } 
-    else
-    {
-        next();
-    }
-};
-  
 exports.isMaximumHorseCarryingCapicityEntered = (req,res,next) =>
 {
     const numericLength = parseFloat(req.body.no_of_horse);
@@ -363,133 +299,6 @@ exports.isInsurancePolicyNumberEntered = async (req, res, next) =>
     }
 }
 
-const isValidDateEntered = (DOB) =>  
-{
-    // This is regex or regular expression for verify the Date or birth validation
-    return DOB.match(/^\d{2}\s(?:Jan|Feb|Mar|Apr|May|Jun|Jul|Aug|Sep|Oct|Nov|Dec)\s\d{4}$/); // REGEX or regurlar expression
-}
-
-exports.isValidInsuranceCoverEntered = (req, res, next) =>
-{
-    if (!req.body.insurance_date) 
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: "Insurance Taken Date is required. Format - DD/Month starting three Letters/YYYY"
-        });
-    }
-    else
-    {
-        console.log(isValidDateEntered(req.body.insurance_date));
-        if(!isValidDateEntered(req.body.insurance_date))
-        {
-            return res.status(200).send
-            ({
-                code: 400,
-                status: "failure",
-                message: "Insurance date is not in valid. The correct format is DD/Month starting three Letters/YYYY"
-            });                                
-        }
-        else
-        {
-            next();
-        }
-    }
-}
-
-exports.isValidInsuranceExpirationDateEntered = (req, res, next) =>
-{
-    if (!req.body.insurance_expiry_date) 
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: "Insurance expiry date is required. Format - DD/Month starting three Letters/YYYY"
-        });
-    }
-    else
-    {
-        console.log(isValidDateEntered(req.body.insurance_expiration_date));
-        if(!isValidDateEntered(req.body.insurance_expiration_date))
-        {
-            return res.status(200).send
-            ({
-                code: 400,
-                status: "failure",
-                message: "Insurance expiry date is not in valid. The correct format is DD/Month starting three Letters/YYYY"
-            });                                
-        }
-        else
-        {
-            next();
-        }
-    }
-}
-
-exports.isValidVehicleRegistrationDateEntered = (req, res, next) =>
-{
-    if (!req.body.vehicle_registration_date) 
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: "Vehicle registration date is required. Format - DD/Month starting three Letters/YYYY"
-        });
-    }
-    else
-    {
-        console.log(isValidDateEntered(req.body.vehicle_registration_date));
-        if(!isValidDateEntered(req.body.vehicle_registration_date))
-        {
-            return res.status(200).send
-            ({
-                code: 400,
-                status: "failure",
-                message: "Vehicle registration date is not in valid. The correct format is DD/Month starting three Letters/YYYY"
-            });                                
-        }
-        else
-        {
-            next();
-        }
-    }
-}
-
-exports.isValidVehicleExpirationDateEntered = (req, res, next) =>
-{
-    if (!req.body.vehicle_exipration_date) 
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: "Vehicle expiration date is required. Format - DD/Month starting three Letters/YYYY"
-        });
-    }
-    else
-    {
-        console.log(isValidDateEntered(req.body.vehicle_exipration_date));
-        if(!isValidDateEntered(req.body.vehicle_exipration_date))
-        {
-            return res.status(200).send
-            ({
-                code: 400,
-                status: "failure",
-                message: "Vehicle expiry date is not in valid. The correct format is DD/Month starting three Letters/YYYY"
-            });                                
-        }
-        else
-        {
-            next();
-        }
-    }
-    
-}
-
 exports.isValidVehicleTypeEntered = (req, res, next) =>
 {
     if (!req.body.vehicle_type) 
@@ -672,40 +481,3 @@ exports.isVehicleImageTitleAdded = (req, res, next) =>
         next();
     }
 }
-
-exports.isPriceEntered = (req, res, next) => 
-{
-    const price = req.body.price;
-    const numericLength = parseFloat(price);
-    if (!price)
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: "Vehicle price required",
-        });
-    }
-    else if (typeof numericLength !== "number" || isNaN(numericLength) || !isFinite(numericLength)) 
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: "failure",
-            message: "Vehicle price must be a numeric value",
-        });
-    }
-    else if (price <= 0)
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: "failure",
-            message: "Vehicle price must be greater than zero.",
-        });
-    } 
-    else
-    {
-        next();
-    }
-};
