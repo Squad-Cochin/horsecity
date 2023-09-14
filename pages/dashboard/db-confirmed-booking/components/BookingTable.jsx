@@ -94,8 +94,8 @@ const BookingTable = () => {
                     <th>Pickup Date</th>
                     <th>Trip Type</th>
                     <th>Number Of Horse</th>
-                    <th>Total Amount</th>
-                    <th>Pending Amount</th>
+                    <th>Total Payment</th>
+                    <th>Pending Payment</th>
                     <th>Status</th>
                   </tr>
                 </thead>
