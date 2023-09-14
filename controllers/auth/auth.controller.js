@@ -139,6 +139,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         ({
             success : "true",
             code : 200,
+            message : "Password updated successfully"
         }); 
     }
 };

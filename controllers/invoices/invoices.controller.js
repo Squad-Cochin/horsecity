@@ -11,7 +11,6 @@
 
 const constant = require('../../utils/constants'); // Constant elements are stored in this file
 const invoice = require('../../models/invoices/invoice.model');  // The model from where the logic is intantiate are written in invoice model
-
 /**
  * The below function is for getting all the invoices details. Those invoices who deleted at feild are having
  * 'NULL' only those details will be shown or fetched.
@@ -98,7 +97,7 @@ exports.getOne = async (req, res) =>
     else
     {
         // Everythings went well and invoices data is available then this else block of code will executed.
-        console.log('Invoices data fetched successfully');
+        // console.log('Invoices data fetched successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -150,7 +149,7 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: 'Amount is less than zero. It is not allowed',
+            message: 'The value is negative. It is not permitted.',
         });
     }    
     // If all the things are done accordingly and data is stored in the database.
@@ -161,7 +160,7 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
         ({
             code: 200,
             status: true,
-            message: "Amount data inserted successfully",
+            message: "Data inserted successfully.",
         });
     }
     // If the remaining amount is 0 then this if block will be executed
@@ -172,7 +171,7 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
         ({
             code: 200,
             status: true,
-            message: "Amount is already paid fully",
+            message: "The payment has already been made in full.",
         });
     }
     // If we are entering the amount more than the remaining amount, then this if block of code will be executed
@@ -244,7 +243,7 @@ exports.getLatestPaymentHistroy = async (req, res) =>
     // If function executed and data present, then this if block of code will be executed.
     if(invoices.length != 0)
     {
-        console.log('Data Fetched Succesfully');
+        // console.log('Data Fetched Succesfully');
         return res.status(200).json
         ({
             code: 200,
@@ -294,7 +293,7 @@ exports.sendEmailAtInvoice = async(req, res) =>
     // If invoice is send on email. Then this if block of code will be executed.
     if(invoices === true)
     {
-        console.log(`Email sent from the invoice controller function`);
+        // console.log(`Email sent from the invoice controller function`);
         return res.status(200).json
         ({
             code: 200,
@@ -325,7 +324,7 @@ exports.getSendEmailButtonData = async(req, res) =>
     // If the function execute and data is present, Then this else block of code will be executed
     else if(invoices.length != 0)
     {
-        console.log('Data Fetched Succesfully');
+        // console.log('Data Fetched Succesfully');
         return res.status(200).json
         ({
             code: 200,
@@ -402,40 +401,6 @@ exports.bookingStarted = async (req, res) =>
     }
 }
 
-// The below function is for getting the booking data on the basis of the invoice id from the booking table.
-exports.getDataFromBookingTable = async (req, res, next) =>
-{
-    // The below will take us to the model. Which will fetch data from booking table on the basis of invoice id.
-    let invoices = await invoice.getdatafrombookingtable(req.params.id);
-    // console.log('Invoices', invoices);
-    
-    // If no data present in the booking table on the basis of invoice id. Then this if block of code will be executed
-    if(invoices === 'noData')
-    {
-        console.log(`Invoice data not present in the booking table from the controller table`);
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : 'Data not found',
-            data : invoices
-        });
-    }
-    // If data present in the booking table on the basis of invoice id. Then this if block of code will be executed.
-    if(invoices.length !== 0)
-    {
-        console.log(`Invoice data present in the booking table from the controller table`);
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : 'Data found',
-            data : invoices
-        });
-    }
-};
-
-
 // The below function will take us to the model. Which is desinged for the cancel button in the invoice page.
 exports.BookingCancel = async (req, res) =>
 {
@@ -485,7 +450,3 @@ exports.BookingCancel = async (req, res) =>
         });
     }
 };
-
-
-
-

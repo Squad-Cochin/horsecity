@@ -12,7 +12,6 @@
 const constant = require('../../utils/constants'); // Constant elements are stored in this file
 const vehicle = require('../../models/vehicles/vehicle.model'); // The model from where the logic is intantiate are written in vehicle model
 const time = require('../../utils/helper/date'); // All the time related formating are written in this file.
-const vehicles = require('../../models/vehicles/vehicle.model');
 
 /**
  * The below function is for add the new vehicle in the database. We need number of input from the end user to add or register the vehicle. 
@@ -63,7 +62,6 @@ exports.addNew = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(vehicles === 'err')
     {
-        console.log('Error while inserting the vehicles data ');
         return res.status(200).send
         ({
             code : 500,
@@ -71,10 +69,27 @@ exports.addNew = async (req, res, next) =>
             message : constant.responseMessage.vehicleerror,
         });
     }
+    else if(vehicles === 'INVALIDATTACHMENT')
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : `We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG)."`
+        });
+    }
+    else if(vehicles === 'NOATTACH')
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : 'An safety certicate of the vehicle is required.',
+        });
+    }
     // If input feild are in correct format and not present in the database, then this else block of code will be executed.
     else
     {
-        console.log('Vehicles data inserted successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -92,8 +107,6 @@ exports.getAll = async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for get all vehicles logic.
     const vehicles = await vehicle.getall(req.body.page, req.body.limit, req.params.id)
-    // console.log(vehicles);
-
     // If any unwanted, unencounter, or unconventionaal error came then this else if block of code will be executed.
     if(vehicles === 'err')
     {
@@ -109,7 +122,6 @@ exports.getAll = async (req, res, next) =>
     // If there are no vehicles in the database. Then these lines of code will be executed
     else if(vehicles.length == 0)
     {
-        console.log('No vehicles data present');
         return res.status(200).send
         ({
             code : 400,
@@ -122,7 +134,6 @@ exports.getAll = async (req, res, next) =>
     // Every things went well and vehicle data is available then this else block of code will executed.
     else
     {
-        console.log('All vehicle data fetched successfully ');
         return res.status(200).send
         ({
             code : 200,
@@ -194,13 +205,11 @@ exports.updateStatus = async (req, res, next) =>
 exports.getOne = async (req, res, next) =>
 {
     const vehicles = await vehicle.getone(req.params.id)
-    // console.log('vehicles : ',vehicles);
     if(vehicles === 'nodata')
     {
         // The below line is for going to the model function to implement the code for getting all details of particular vehicle.
         // If any wrong id or some thing wrong entered, If that Id has no data then this if block of code will be executed
         // Because we need vehicle id in the params for working of this route
-        console.log('No vehicle data present');
         return res.status(200).send
         ({
             code : 400,
@@ -223,7 +232,6 @@ exports.getOne = async (req, res, next) =>
     else
     {
         // Every things went well and vehicle data is available then this else block of code will executed.
-        console.log('Particular Vehicles data fetched successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -281,11 +289,9 @@ exports.updateData = async (req, res, next) =>
         time.changeDateToSQLFormat(req.body.vehicle_exipration_date),
         req.files && req.files.safety_certicate !== undefined ? req.files.safety_certicate : null  // Perform the null check here // Image of dafety certificate
     );
-
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(vehicles === 'err')
     {
-        console.log('Error while editing the vehicle data ');
         return res.status(200).send
         ({
             code : 500,
@@ -293,15 +299,32 @@ exports.updateData = async (req, res, next) =>
             message : constant.responseMessage.erroredit,
         });
     }
+    else if(vehicles === 'INVALIDATTACHMENT')
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : `We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
+        });
+    }
+    else if(vehicles === 'NOATTACH')
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : 'An safety certicate of the vehicle is required.',
+        });
+    }
     // If input feild are in correct format and not already present in the database, then this else block of code will be executed
     else
     {
-        console.log('Vehicle data edited successfully');
         return res.status(200).send
         ({
             code : 200,
             status : true,
-            message : `Vehicle ${constant.responseMessage.edit}`,
+            message : `${constant.responseMessage.edit}`,
         });
     }
 };
@@ -330,7 +353,7 @@ exports.getAllImages = async (req, res, next) =>
     // No images are there for the vehicle whose id submitted in the params, then this else if block will be executed
     else if(vehicles.length === 0)
     {
-        console.log('No images are there for this vehicle now');
+        // console.log('No images are there for this vehicle now');
         return res.status(200).send
         ({
             code : 400,
@@ -342,7 +365,6 @@ exports.getAllImages = async (req, res, next) =>
     // Every things went well and vehcile image data of a particular vehcle is available then this else block of code will executed.
     else
     {
-        console.log(`Images fetched successfuly for this particular image`);
         return res.status(200).send
         ({
             code : 200,
@@ -361,12 +383,9 @@ exports.removeVehicle = async (req, res, next) =>
     // We need to add the vehicle id in the params
     // The below line is for going to the model function to implement the code for removing vehicle logic.
     const vehicles = await vehicle.removevehicle(req.params.id);
-    // console.log(vehicles);
-
     // The id present in the params, But incorrect id then this if block of code will be executed
     if(vehicles.length === 0)
     {
-        console.log('No vehicles data present and remove is not done');
         return res.status(200).send
         ({
             code : 400,
@@ -377,7 +396,6 @@ exports.removeVehicle = async (req, res, next) =>
     // If vehicle remove is done successfully
     else
     {
-        console.log('Vehicle is removed');
         return res.status(200).send
         ({
             code : 200,
@@ -395,8 +413,6 @@ exports.getVehicleDetailForCustomerPage = async (req, res, next) =>
     // We need to add the vehicle id in the params
     // The below line is for going to the model function to implement the code for removing vehicle logic.
     const vehicles = await vehicle.getvehicledetailforcustomerpage(req.params.id);
-    // console.log(vehicles);
-
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(vehicles === 'err')
     {
@@ -411,7 +427,6 @@ exports.getVehicleDetailForCustomerPage = async (req, res, next) =>
     // If the vehicle data is not present, then this else if block of code will be executed. It will never come into play. But for safety purpose it is written because we are already checking the param id in the middleware 
     else if(vehicles.length === 0)
     {
-        console.log('No vehicle data present');
         return res.status(200).send
         ({
             code : 400,
@@ -423,7 +438,6 @@ exports.getVehicleDetailForCustomerPage = async (req, res, next) =>
     else
     {
         // Everythings went well and driver data is available then this else block of code will executed.
-        console.log('Vehicle data fetched successfully');
         return res.status(200).send
         ({
             code : 200,

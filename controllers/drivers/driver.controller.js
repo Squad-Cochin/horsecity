@@ -21,11 +21,9 @@ exports.getAll = async (req, res) =>
 {
     // The below line is for going to the model function to implement the code for get all drivers logic.
     const drivers = await driver.getall(req.body.page, req.body.limit, req.params.id);
-    // console.log(drivers);
     if(drivers.length == 0)
     {
         // If there are no drivers in the database. Then these lines of code will be executed
-        console.log('No driver data present');
         return res.status(200).send
         ({
             code : 400,
@@ -37,7 +35,6 @@ exports.getAll = async (req, res) =>
     else
     {
         // If there are drivers in the database. Then these lines of code will be executed
-        console.log('Driver data fetched successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -61,12 +58,10 @@ exports.getOne= async (req, res) =>
 {
     // The below line is for going to the model function to implement the code for getting all details of particular driver.
     const drivers = await driver.getone(req.params.id);
-    // console.log(drivers);
     
     // If any wrong id or some thing wrong entered, If that Id has no data then this if block of code will be executed
     if(drivers.length === 0)
     {
-        console.log('No driver data present');
         return res.status(200).send
         ({
             code : 400,
@@ -78,7 +73,6 @@ exports.getOne= async (req, res) =>
     else
     {
         // Everythings went well and driver data is available then this else block of code will executed.
-        console.log('Drivers data fetched successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -110,12 +104,9 @@ exports.addDriver = async (req, res, next) =>
         req.files.profile_image, // profile image of the driver 
         req.files.licence_img // Licence image of the driver 
     );
-
-    // console.log('Driver kya aarha hain: ',drivers);
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if (drivers === 'err')
     {
-        console.log('Error while inserting the driver data ');
         return res.status(200).json
         ({
             code: 400,
@@ -123,15 +114,51 @@ exports.addDriver = async (req, res, next) =>
             message: constant.responseMessage.errorInsert,
         });
     }
+    else if(drivers === 'INVALIDATTACHMENTP')
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : `We're sorry, but the image format of profile photo you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
+        });
+    }
+    else if(drivers === 'NOATTACHP')
+    {
+        console.log('No attachment for the driver profile image');
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : 'An profile photo of driver is required.',
+        });
+    }
+    else if(drivers === 'INVALIDATTACHMENTL')
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : `We're sorry, but the image format of licence you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
+        });
+    }
+    else if(drivers === 'NOATTACHL')
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : 'An licence image of driver is required.',
+        });
+    }
     // If input feild are in correct format and not already presnet in the database, then this else block of code will be executed.
     else
     {
-        console.log('Driver data inserted successfully');
         return res.status(200).send
         ({
             code: 200,
             status: true,
-            message: ` Driver ${constant.responseMessage.insert}`,
+            message: `${constant.responseMessage.insert}`,
         });
     }
 };
@@ -143,10 +170,8 @@ exports.addDriver = async (req, res, next) =>
 exports.updateStatus= async (req, res) =>
 {
     const drivers = await driver.updatestatus(req.params.id);
-    // console.log(drivers);
     if(drivers.length === 0)
     {
-        console.log('No Driver data present and status is not updated');
         return res.status(200).send
         ({
             code : 400,
@@ -156,7 +181,6 @@ exports.updateStatus= async (req, res) =>
     }
     else
     {
-        console.log('Driver Status updated successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -172,10 +196,8 @@ exports.updateStatus= async (req, res) =>
 exports.removeDriver = async (req, res) =>
 {
     const drivers = await driver.removedriver(req.params.id);
-    // console.log('Here: ',drivers);
     if(drivers.length === 0)
     {
-        console.log('No driver data present and remove is not done');
         return res.status(200).send
         ({
             code : 400,
@@ -185,7 +207,6 @@ exports.removeDriver = async (req, res) =>
     }
     else
     {
-        console.log('Drivers is removed');
         return res.status(200).send
         ({
             code : 200,
@@ -216,11 +237,9 @@ exports.editDriver = async (req, res, next) =>
         req.files && req.files.profile_image !== undefined ? req.files.profile_image : null, // profile image of the driver
         req.files && req.files.licence_img !== undefined ? req.files.licence_img : null // Licence image of the driver
     );
-
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(drivers === 'err')
     {
-        console.log('Error while editing the driver data ');
         return res.status(200).send
         ({
             code : 400,
@@ -228,16 +247,51 @@ exports.editDriver = async (req, res, next) =>
             message : constant.responseMessage.erroredit,
         });
     }
-
+    else if(drivers === 'INVALIDATTACHMENTP')
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : `We're sorry, but the image format of profile photo you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
+        });
+    }
+    else if(drivers === 'NOATTACHP')
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : 'An profile photo of driver is required.',
+        });
+    }
+    else if(drivers === 'INVALIDATTACHMENTL')
+    {
+        console.log('Invalid format of driver licence image is upload');
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : `We're sorry, but the image format of licence you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
+        });
+    }
+    else if(drivers === 'NOATTACHL')
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : 'An licence image of driver is required.',
+        });
+    }
     // If input feild are in correct format and not already present in the database, then this else block of code will be executed.
     else
     {
-        console.log('Drivers data edited successfully');
         return res.status(200).send
         ({
             code : 200,
             status : true,
-            message : `Driver ${constant.responseMessage.edit}`,
+            message : `Data updated successfully`,
         });
     }
 };
@@ -258,67 +312,61 @@ exports.AssignServiceProvider = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(drivers === 'err')
     {
-        console.log('Error while assigning service provider to a driver');
         res.status(200).send
         ({
             code : 500,
             success : false,
-            message : 'Internal server error while driver is assigned to a service provider'
+            message : 'Internal server error.'
         });
     }
     // If the entered driver id in the request body is not available in the database then this else if block of code will be executed.
     else if(drivers === 'noDriver')
     {
-        console.log('Error while assigning service provider to a driver. Because the driver id. Which is submitted is not available');
         res.status(200).send
         ({
             code : 400,
             success : false,
-            message : 'Error while assigning service provider to a driver. Because the driver id. Which is submitted is not available'
+            message : `Driver ID not found. Unable to assign service provider.`
         });
     }
     // If the entered service provider id in the request body is not available in the database then this else if block of code will be executed.
     else if(drivers === 'noServiceProvider')
     {
-        console.log('Error while assigning service provider to a driver. Because the service provider id. Which is submitted is not available');
         res.status(200).send
         ({
             code : 400,
             success : false,
-            message : 'Error while assigning service provider to a driver. Because the service provider id. Which is submitted is not available'
+            message : 'Service provider ID not found. Unable to assign service provider.'
         });
     }
     // When we want the details of driver where they worked last and any error came at that time then this else if block of code will be executed.
     else if(drivers === 'lastworkplaceerror')
     {
-        console.log('Internal server error. While fetching the information of driver. Whether the driver left the last work place');
         res.status(200).send
         ({
             code : 400,
             success : false,
-            message : 'Error fetching the information of driver. Whether the driver left the last work place'
+            message : `Unable to fetch driver's last workplace status.`
         });
     }
     // If the submitted driver id is already associated with some service provider id and not left the job, then this else if block of code will be executed.
     else if(drivers === 'notallowed')
     {
-        console.log('Internal server error. The driver is already working under this service provider. We cannot allow them to work here.');
         res.status(200).send
         ({
             code : 400,
             success : false,
-            message : 'Error the driver is already working under this service provider. We cannot allow them to work here as per now.'
+            message : 'Error: The driver is already employed by other service provider, so we cannot permit them to work here at this time..'
         });
     }
     // If every thing went well and no issue came then,  this else if block of code will be executed.
     else if(drivers === 'datainserted')
     {
-        console.log(`Driver is assigned to a service provider`);
         res.status(200).send
         ({
             code : 200,
             success : true,
-            message : 'Driver is assigned to a service provider'
+            message : 'Driver successfully assigned to service provider.'
         });
     }
 };
@@ -331,38 +379,34 @@ exports.getWorkPastServiceProvider = async (req, res, next) =>
     // The below line is for going to the model function to implement the code for get the service provider details. If a driver is registered under any driver.
     // We need to give driver id in the params to look this otherwise it will not work
     const drivers = await driver.getworkpastserviceprovider(req.params.id);
-    // console.log('Checking whether the data comming to controller: ', drivers);
     if(drivers.exist.length == 0)
     {
-        // console.log('This driver has no past histroy working with server provider that are registered with us');
         return res.status(200).send
         ({
             code : 200,
             status : true,
-            message : `This driver has no past histroy working with server provider that are registered with us`,
+            message : `Driver has no prior experience working with any of our registered service providers.`,
             data : drivers
         });
     }
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     else if(drivers === 'err')
     {
-        console.log('Internal server error. While fetching the driver past service provider details');
         return res.status(200).send
         ({
             code : 500,
             status : false,
-            message : `Internal server error. While fetching the driver past service provider details`
+            message : `Internal server error.`
         });
     }
     // If every thing went well and no issue came then,  this else if block of code will be executed.
     else
     {
-        console.log('Drivers past service provider details fetched');
         return res.status(200).send
         ({
             code : 200,
             status : true,
-            message : 'Drivers past service provider details fetched',
+            message : `Driver's history.`,
             data : drivers
         });
     }
@@ -424,62 +468,56 @@ exports.UnAssignServiceProviderAndDriverBoth = async (req, res, next) =>
         req.body.driver_id, // Driver id in the request body
         req.body.serviceProvider_id // Service Provider id in the request body
     );
-    // console.log(drivers);
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(drivers === 'err')
     {
-        console.log('Error while driver is unassigned to their particular service provider');
         return res.status(200).send
         ({
             code : 400,
             status : false,
-            message : "Error while driver is unassigned to their particular service provider"
+            message : "Unable to unassign driver from service provider."
         });
     }
     // If driver is successfully unassigned to the respective service provider then this if block of code will be executed.
     // We need to give assign_drivers table id in the params to remove this otherwise it will not work
     if(drivers === 'unassigned')
     {
-        console.log('Driver is unassigned to their particular service provider');
         return res.status(200).send
         ({
             code : 200,
             status : true,
-            message : "Driver is unassigned to their particular service provider"
+            message : "Driver successfully unassigned from service provider."
         });
     }
     // If driver is already unassigned to the respective service provider then this if block of code will be executed.
     // We need to give assign_drivers table id in the params to remove this otherwise it will not work
     if(drivers === 'alreadyunassigned')
     {
-        console.log('Driver is already unassigned to their particular service provider');
         return res.status(200).send
         ({
             code : 200,
             status : true,
-            message : "Driver is already unassigned to their particular service provider"
+            message : "Driver is already unassigned from service provider."
         });
     }
 
     if(drivers === 'noDriver')
     {
-        console.log('Error while assigning service provider to a driver. Because the driver id. Which is submitted is not available');
         res.status(200).send
         ({
             code : 400,
             success : false,
-            message : 'Error while assigning service provider to a driver. Because the driver id. Which is submitted is not available'
+            message : 'Driver ID not found. Unable to assign service provider.'
         });
     }
     // If the entered service provider id in the request body is not available in the database then this else if block of code will be executed.
     if(drivers === 'noServiceProvider')
     {
-        console.log('Error while assigning service provider to a driver. Because the service provider id. Which is submitted is not available');
         res.status(200).send
         ({
             code : 400,
             success : false,
-            message : 'Error while assigning service provider to a driver. Because the service provider id. Which is submitted is not available'
+            message : 'Service provider ID not found. Unable to assign service provider.'
         });
     }
 };

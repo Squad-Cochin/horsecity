@@ -147,7 +147,7 @@ exports.addCustomer = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : "No id proof image is uploaded.",
+            message : "An ID proof image is required.",
         });
     }
     else if(customers.length === 0)
@@ -222,7 +222,7 @@ exports.editCustomer = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : "No id proof image is uploaded.",
+            message : "An ID proof image is required.",
         });
     }
     // If input feild are in correct format and not already present in the database, then this else block of code will be executed.
@@ -411,8 +411,8 @@ exports.customerChangePassword = async (req, res, next) =>
         return res.status(200).send
         ({
             status : "success",
-            code : 200
-            // message : "Customer password updated successfully",
+            code : 200,
+            message : "Password updated successfully",
         });
     }
 };

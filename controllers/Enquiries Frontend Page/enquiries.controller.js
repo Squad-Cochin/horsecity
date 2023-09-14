@@ -15,7 +15,6 @@ const time = require('../../utils/helper/date'); // All the time related formati
  */
 exports.createNewEnquiry = async (req, res, next) =>
 {
-    // console.log(req.body);
     const data = await enquiriesModel.createnewenquiry(
         req.params.id,
         // req.body.customer_id,
@@ -30,21 +29,17 @@ exports.createNewEnquiry = async (req, res, next) =>
         req.body.description,
         time.changeDateToSQLFormat(req.body.pickup_date)
         );
-
     if(data === 'err') 
     {
-        console.log('Error while inserting the enquiry data ');
         return res.status(200).json
         ({
             code: 400,
             status: false,
-            message: `Booking faild !`,
+            message: `Booking failed !`,
         });
     }
-
     if(data === 'inserted')
     {
-        console.log(`Customer enquiry added`);
         res.status(200).send
         ({
             code : 200,
@@ -63,33 +58,30 @@ exports.getParticularCustomerAllEnquiries = async (req, res, next) =>
     const data = await enquiriesModel.getparticularcustomerallenquiries(req.body.page, req.body.limit, req.params.id);
     if(data === 'err')
     {
-        console.log('Error while fetching the enquiry data of a particular customer. ');
         return res.status(200).json
         ({
             code: 400,
             status: false,
-            message: `Error while fetching the enquiry data of a particular customer.`,
+            message: `Unable to fetch enquiry data for customer.`,
         });
     }
     else if (data.length === 0)
     {
-        console.log('No enquiry present of this particular customers. ');
         return res.status(200).json
         ({
             code: 200,
             status: true,
-            message: `No enquiry present of this particular customers.`,
+            message: `No enquiry found for this customer.`,
             data : []
         });
     }
     else
     {
-        console.log(`Particular customer all the enquiry fetched successfully.`);
         res.status(200).send
         ({
             code : 200,
             success : true,
-            message : 'Particular customer all the enquiry fetched successfully.',
+            message : `Successfully fetched all enquiries for customer.`,
             data : data
         });
     }

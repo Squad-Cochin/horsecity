@@ -35,10 +35,28 @@ exports.addImages = async (req, res, next) =>
             message : constant.responseMessage.particularVehicleImageError,
         });
     }
+    else if(vehicleImages === 'INVALIDATTACHMENT')
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : `We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
+        });
+    }
+    else if(vehicleImages === 'NOATTACH')
+    {
+        console.log('No attachment');
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : 'An image of the vehicle is required.',
+        });
+    }
     // If input feild are in correct format and not present in the database, then this else block of code will be executed.
     else
     {
-        console.log('Particular vehicle image uploaded successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -55,12 +73,10 @@ exports.allImages = async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for getting or fetching all the images of a particular vehicle.
     const vehicleImages = await vehicleImage.allimages(req.params.id, req.body.page, req.body.limit)
-    // console.log('Vehicle Image', vehicleImages);
 
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(vehicleImages === 'err')
     {
-        console.log('Error while fetching the particular vehicle all images');
         return res.status(200).send
         ({
             code : 500,
@@ -71,7 +87,6 @@ exports.allImages = async (req, res, next) =>
     // Every things went well but vehicle has no image data available of the vehicle id which is submitted in the params then this else if block of code will executed.    
     else if(vehicleImages.length == 0)
     {
-        console.log('There are no images on this Id');
         return res.status(200).send
         ({
             code : 200,
@@ -82,7 +97,6 @@ exports.allImages = async (req, res, next) =>
     // Every things went well and vehicle image data is available of the vehicle id which is submitted in the params then this else block of code will executed.
     else
     {
-        console.log('Particular vehicle all the images fetched successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -99,8 +113,7 @@ exports.allImages = async (req, res, next) =>
 exports.updateStatus = async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for updating the status of the existing image of a particular vehcile. We need to give the vehicle image id in the params.
-    const vehicleImages = await vehicleImage.updatestatus(req.params.id)
-
+    const vehicleImages = await vehicleImage.updatestatus(req.params.id);
     // If status not updated then this if block of code.
     if(vehicleImages.length === 0)
     {
@@ -115,7 +128,6 @@ exports.updateStatus = async (req, res, next) =>
     // If status is updated then this else block of code will be executed
     else
     {
-        console.log('Vehicle images Status updated successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -133,11 +145,9 @@ exports.removeImage = async (req, res, next) =>
     // We need to add the vehicleImage id in the params
     // The below line is for going to the model function to implement the code for removing vehicleImage logic.
     const vehicleImages = await vehicleImage.removeimage(req.params.id);
-
     // The id present in the params, But incorrect id then this if block of code will be executed
     if(vehicleImages.length === 0)
     {
-        console.log('No vehicle image is removed');
         return res.status(200).send
         ({
             code : 400,
@@ -148,7 +158,6 @@ exports.removeImage = async (req, res, next) =>
     // If vehicleImage remove is done successfully
     else
     {
-        console.log('Vehicle image is removed');
         return res.status(200).send
         ({
             code : 200,
