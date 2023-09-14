@@ -337,8 +337,7 @@ exports.getAllImages = async (req, res, next) =>
 {
     // We need to add the vehicle id in the params
     // The below line is for going to the model function to implement the code for get all vehcile image logic.
-    const vehicles = await vehicle.getallimages(req.params.id);
-    
+    const vehicles = await vehicle.getallimages(req.params.id);    
     // If any unwanted, unencounter, or unconventionaal error came then this else if block of code will be executed.
     if(vehicles === 'err')
     {
@@ -353,7 +352,6 @@ exports.getAllImages = async (req, res, next) =>
     // No images are there for the vehicle whose id submitted in the params, then this else if block will be executed
     else if(vehicles.length === 0)
     {
-        // console.log('No images are there for this vehicle now');
         return res.status(200).send
         ({
             code : 400,
