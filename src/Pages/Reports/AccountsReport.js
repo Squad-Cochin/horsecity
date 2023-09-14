@@ -139,8 +139,8 @@ const AccountsReport  = () => {
                                                         ) : null
                                                     }
                                                         <th className="sort" data-sort="number">Quotation Id</th>
-                                                        <th className="sort" data-sort="number">Total Amount</th>
-                                                        <th className="sort" data-sort="number">Pending Amount</th>
+                                                        <th className="sort" data-sort="number">Total Payment</th>
+                                                        <th className="sort" data-sort="number">Pending Payment</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">

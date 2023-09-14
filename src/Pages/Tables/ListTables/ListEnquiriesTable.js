@@ -829,7 +829,7 @@ const ListEnquiriesTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="vehicle_amount-field" className="form-label">Vehicle Amount</label>
+                            <label htmlFor="vehicle_amount-field" className="form-label">Vehicle Payment</label>
                             <input
                                 type="text"
                                 name="vehicle_amount"
@@ -842,7 +842,7 @@ const ListEnquiriesTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="driver_amount-field" className="form-label">Driver Amount</label>
+                            <label htmlFor="driver_amount-field" className="form-label">Driver Payment</label>
                             <input
                                 type="text"
                                 name="driver_amount"
@@ -855,7 +855,7 @@ const ListEnquiriesTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="discount_amount-field" className="form-label">Discount Amount</label>
+                            <label htmlFor="discount_amount-field" className="form-label">Discount Payment</label>
                             <input
                                 type="text"
                                 name="discount_amount"
@@ -909,7 +909,7 @@ const ListEnquiriesTable = () => {
                             </div>
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="tax_amount-field" className="form-label">Tax Amount</label>
+                            <label htmlFor="tax_amount-field" className="form-label">Tax Payment</label>
                             <input
                                 type="text"
                                 name="tax_amount"
@@ -922,7 +922,7 @@ const ListEnquiriesTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="final_amount-field" className="form-label">Final Amount</label>
+                            <label htmlFor="final_amount-field" className="form-label">Final Payment</label>
                             <input
                                 type="text"
                                 name="final_amount"

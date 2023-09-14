@@ -76,8 +76,8 @@ const Accounts = () => {
                                                             <th className="sort" data-sort="month">Service Provider Name</th>
                                                         ) : null}
                                                         <th className="sort" data-sort="number">Quotation Id</th>
-                                                        <th className="sort" data-sort="number">Total Amount</th>
-                                                        <th className="sort" data-sort="number">Pending Amount</th>
+                                                        <th className="sort" data-sort="number">Total Payment</th>
+                                                        <th className="sort" data-sort="number">Pending Payment</th>
                                                         <th className="sort" data-sort="number">Status</th>
                                                         <th className="sort" data-sort="number">Payment Details</th>
                                                     </tr>
@@ -152,9 +152,9 @@ const Accounts = () => {
                                 <thead className="table-light">
                                     <tr>
                                         <th className="index" data-sort="index">#</th>
-                                        <th className="sort" data-sort="month">Recived Amount</th>
+                                        <th className="sort" data-sort="month">Received Payment</th>
                                         <th className="sort" data-sort="month">Recived Date</th>
-                                        <th className="sort" data-sort="number">Pending Amount</th>
+                                        <th className="sort" data-sort="number">Pending Payment</th>
                                     </tr>
                                 </thead>
                                 <tbody className="list form-check-all">

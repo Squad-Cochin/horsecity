@@ -539,11 +539,11 @@ const ListInvoiceDetails = () => {
 
                         <th className="tm_width_6 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center">#</th>
 
-                        <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center">Recieved Money</th>
+                        <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center">Received Payment</th>
 
                         <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center">Received Date</th>
 
-                        <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center">Remaining Amount</th>
+                        <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center">Remaining Payment</th>
 
                       </tr>
 
@@ -593,7 +593,7 @@ const ListInvoiceDetails = () => {
 
         <Modal className="extra-width" isOpen={modal} toggle={toggleModal}>
 
-          <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={toggleModal}>Enter Amount</ModalHeader>
+          <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={toggleModal}>Enter Payment</ModalHeader>
 
           <form className="tablelist-form" onSubmit={validation.handleSubmit}>
 
@@ -607,7 +607,7 @@ const ListInvoiceDetails = () => {
 
                   <div className="mb-3">
 
-                    <label htmlFor="total_amount-field" className="form-label">Total Invoice Amount</label>
+                    <label htmlFor="total_amount-field" className="form-label">Total Invoice Payment</label>
 
                     <input type="text" name='totalInvoiceAmount' className="form-control mb-3" placeholder={item.total_amount} readOnly />
 
@@ -615,7 +615,7 @@ const ListInvoiceDetails = () => {
 
                   <div className="mb-3">
 
-                    <label htmlFor="remaining_amount-field" className="form-label">Total Remaining Amount</label>
+                    <label htmlFor="remaining_amount-field" className="form-label">Total Remaining Payment</label>
 
                     <input type="text" name='totalRemainingAmount' className="form-control mb-3" placeholder={item.remaining_amount} readOnly />
 
@@ -627,7 +627,7 @@ const ListInvoiceDetails = () => {
 
               <div className="mb-3">
 
-                <label htmlFor="total_amount-field" className="form-label">Received Amount</label>
+                <label htmlFor="total_amount-field" className="form-label">Received Payment</label>
 
                 <input type="text"
 

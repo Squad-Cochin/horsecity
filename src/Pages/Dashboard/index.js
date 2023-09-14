@@ -31,13 +31,9 @@ const Dashboard = () => {
   async function getAllData() {
     let settingsData = await getSettingsPageData();
     let obj ={
-      application_title : settingsData.application_title,
-      favicon : settingsData.favicon,
-      loginpage_bg_image : settingsData.loginpage_bg_image,
-      loginpage_logo : settingsData.loginpage_logo,
-      logo : settingsData.logo,
+      application_title : settingsData.application_title
     }
-    console.log("Settings data     ",settingsData);
+    console.log("Settings data",obj);
     // localStorage.setItem("settingsData", JSON.stringify(response));
     setPageTitle(settingsData?.settingsPageData[0]?.application_title);
    }
