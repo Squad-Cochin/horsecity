@@ -344,7 +344,7 @@ module.exports = class invoices
         {
             return await new Promise(async(resolve, reject)=>
             {
-                const emailSent = await mail.SendEmail(id, to, subject);
+                const emailSent = await mail.SendEmail(id, to, subject, constants.tableName.invoices);
                 if(emailSent === false)
                 {
                     resolve(false)

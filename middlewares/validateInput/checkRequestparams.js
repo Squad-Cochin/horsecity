@@ -28,7 +28,7 @@ exports.isValidIdInTheParams = (tableName) => async (req, res, next) =>
             ({
                 code : 500,
                 status : "failed",
-                error: 'Internal server error while checking the id in params' 
+                message: constants.responseMessage.universalError 
             });
         }
         else if(data.length > 0)
@@ -159,7 +159,7 @@ exports.CheckRole = async (req, res, next) =>
                                             ({
                                                 code : 500,
                                                 status : false,
-                                                message : `Internal Server Error from the params`
+                                                message : constants.responseMessage.universalError
                                             })
                                         }
                                     }
@@ -169,7 +169,7 @@ exports.CheckRole = async (req, res, next) =>
                                         ({
                                             code : 500,
                                             status : false,
-                                            message : `Internal Server Error from the params`
+                                            message : constants.responseMessage.universalError
                                         })
                                     }
                                 }
@@ -201,7 +201,7 @@ exports.CheckRole = async (req, res, next) =>
                                         ({
                                             code : 500,
                                             status : false,
-                                            message : `Internal Server Error from the params`
+                                            message : constants.responseMessage.universalError
                                         })
                                     }
                                 }
@@ -518,7 +518,7 @@ exports.CheckRole = async (req, res, next) =>
                         ({
                             code : 500,
                             status : false,
-                            message : `Internal Server Error from the params`
+                            message : constants.responseMessage.universalError
                         });
                     }
                 }
@@ -531,7 +531,7 @@ exports.CheckRole = async (req, res, next) =>
             ({
                 code: 500,
                 status: false,
-                message: `Internal Server Error from the params`,
+                message: constants.responseMessage.universalError,
             });
         }
     });
@@ -557,7 +557,7 @@ exports.driverRequestAddBody = async (req, res, next) =>
         ({
             code: 500,
             status: false,
-            message: 'Internal server error',
+            message: constants.responseMessage.universalError
         });
     }
 }; 

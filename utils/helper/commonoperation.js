@@ -356,116 +356,126 @@ exports.createCustomizeEmailToken = async (email) =>
     return customizepasswordToken; // Returning the customize password from where it is called
 };
 
-
 exports.tokenAndIdVerification = async(userId,token) =>
 {
     try
     {
         return await  new Promise(async (resolve, reject) =>
         {
-                      
-      
-             
-                    let inputString = await token;
+            let inputString = await token;
+            var substring1, substring2, substring3;
+            // Find the positions of 'A' and 'T' in the string
+            const indexA = inputString.indexOf('A');
+            const indexT = inputString.indexOf('T');
+            if (indexA !== -1 && indexT !== -1 && indexA < indexT) 
+            {
+                // Extract substrings based on positions
+                substring1 = inputString.substring(0, indexA);
+                substring2 = inputString.substring(indexA + 1, indexT);
+                substring3 = inputString.substring(indexT + 1);
+            }
+            else
+            {
+                // console.error("Invalid input string. Expected 'A' before 'T'.");
+                resolve(false);
+                return;
+            }
+            
+            const currentTimestamp = Math.floor(Date.now() / 1000);
+            if (currentTimestamp > substring3)
+            {
+                resolve(false);
+            }        
+            
+            // Remove the last character ('y') if present
+            const emailPart1 = substring1.endsWith('y') ? substring1.slice(0, -1) : substring1;
+            // Extract the email from substring1
+            const emailChars = [];
+            for (let i = 0; i < emailPart1.length; i += 2) 
+            {
+                const char = emailPart1[i];
+                emailChars.push(char);
+            }
+            
+            // Extract the email from substring2
+            // Remove the last character ('y') if present from emailPart2
 
-                    var substring1, substring2, substring3;
-            
-             
-            
-                    // Find the positions of 'A' and 'T' in the string
-            
-                    const indexA = inputString.indexOf('A');
-            
-                    const indexT = inputString.indexOf('T');
-            
-             
-            
-                    if (indexA !== -1 && indexT !== -1 && indexA < indexT) {
-            
-                        // Extract substrings based on positions
-            
-                        substring1 = inputString.substring(0, indexA);
-            
-                        substring2 = inputString.substring(indexA + 1, indexT);
-            
-                        substring3 = inputString.substring(indexT + 1);
-            
-             
+            const emailPart2 = substring2.endsWith('y') ? substring2.slice(0, -1) : substring2;
+            // Extract the email from emailPart2
+            const emailChars2 = [];
 
+            for (let i = 0; i < emailPart2.length; i += 2)
+            {
+                const char = emailPart2[i];
+                emailChars2.push(char);
+            }
             
-                    } else {
+            // Combine the email characters from both parts
+            const email = (emailChars.join('') + emailChars2.join('')).replace(/y+$/, '');
             
-                        // console.error("Invalid input string. Expected 'A' before 'T'.");
-                        resolve(false);
-                        return;
-                  
-            
-                    }
-            
-                    const currentTimestamp = Math.floor(Date.now() / 1000);
-            
-            
-                    if (currentTimestamp > substring3)
-            
-                    {
-            
-                     
-                        resolve(false);
-            
-                    }        
-            
-                    // Remove the last character ('y') if present
-            
-                    const emailPart1 = substring1.endsWith('y') ? substring1.slice(0, -1) : substring1;
-            
-                    // Extract the email from substring1
-            
-                    const emailChars = [];
-
-                    for (let i = 0; i < emailPart1.length; i += 2) {
-            
-                        const char = emailPart1[i];
-            
-                        emailChars.push(char);
-            
-                    }
-            
-                    // Extract the email from substring2
-            
-                       // Remove the last character ('y') if present from emailPart2
-
-                        const emailPart2 = substring2.endsWith('y') ? substring2.slice(0, -1) : substring2;
-                        // Extract the email from emailPart2
-                        const emailChars2 = [];
-
-                        for (let i = 0; i < emailPart2.length; i += 2) {
-
-                            const char = emailPart2[i];
-
-                            emailChars2.push(char);
-
-                        }
-            
-                    // Combine the email characters from both parts
-            
-                    const email = (emailChars.join('') + emailChars2.join('')).replace(/y+$/, '');
-                  
-                    let verifyId =  await commonfetching.dataOnCondition(constant.tableName.service_providers,userId,'id')
-                    if(verifyId.length != 0){
-                        if(verifyId[0].email === email){
-                            resolve({id :verifyId[0].id,token :token})
-                        }else{
-                             resolve(false);
-                        }    
-
-                    }else{
-                     resolve(false);
-                    }
-                   
-        
+            let verifyId =  await commonfetching.dataOnCondition(constant.tableName.service_providers,userId,'id')
+            if(verifyId.length != 0)
+            {
+                if(verifyId[0].email === email)
+                {
+                    resolve({id :verifyId[0].id,token :token})
+                }
+                else
+                {
+                    resolve(false);
+                }
+            }
+            else
+            {
+                resolve(false);
+            }
         });      
     }
     catch (error)
     {
+
+    }
+};
+
+exports.tokenGeneration = async(email) =>
+{
+    try
+    {
+        return await  new Promise(async (resolve, reject) =>
+        {
+            let email_length = email.length;
+            if (email_length % 2 == 1)        
+            {        
+                email += 'y';
+                email_length++;
+            }
+
+            const emailPart1 = email.substring(0, email_length / 2);
+            const emailTokenSidePart1 = [];
+
+            for (let i = 0; i < emailPart1.length; i++)
+            {
+                const charCode = emailPart1.charCodeAt(i);
+                const lastDigit = parseInt(charCode.toString().slice(-1));
+                emailTokenSidePart1.push(emailPart1[i] + lastDigit);
+            }
+            const emailPart2 = email.substring(email_length / 2);
+            const emailTokenSidePart2 = [];
+            for (let i = 0; i < emailPart2.length; i++)
+            {
+                const charCode = emailPart2.charCodeAt(i);        
+                const firstDigit = parseInt(charCode.toString()[0]);        
+                emailTokenSidePart2.push(emailPart2[i] + firstDigit);
+            }
+            const currentTimestamp = Math.floor(Date.now() / 1000);
+            const expirationTimestamp = currentTimestamp + 3600; 
+            // constant.password.token_expiry;
+            const customizepasswordToken = `${emailTokenSidePart1.join('')}A${emailTokenSidePart2.join('')}T${expirationTimestamp}`;
+            resolve({token : customizepasswordToken});
+        });      
+    }
+    catch (error)
+    {
+        console.log(`Error from the commonfetching.js file from the helper folder,at the time of token generation. `, error);                
     }
 };

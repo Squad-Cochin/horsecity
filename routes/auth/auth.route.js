@@ -55,4 +55,5 @@ module.exports = function(app)
     checkInput.passwordandconfirmpasswordsimilarity,
     authcontroller.resetPasswordForForgotPassword);    
 
+    app.post(`/verify`,authcontroller.Verifiy);   
 }

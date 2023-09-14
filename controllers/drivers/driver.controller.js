@@ -28,7 +28,7 @@ exports.getAll = async (req, res) =>
         ({
             code : 400,
             status : false,
-            message : constant.responseMessage.getAll,
+            message : constant.responseMessage.getNoData,
             data : drivers
         });
     }
@@ -289,7 +289,7 @@ exports.editDriver = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : `Data updated successfully.`,
+            message : constant.responseMessage.edit,
         });
     }
 };
@@ -314,7 +314,7 @@ exports.AssignServiceProvider = async (req, res, next) =>
         ({
             code : 500,
             success : false,
-            message : 'Internal server error.'
+            message : constant.responseMessage.universalError
         });
     }
     // If the entered driver id in the request body is not available in the database then this else if block of code will be executed.
@@ -394,7 +394,7 @@ exports.getWorkPastServiceProvider = async (req, res, next) =>
         ({
             code : 500,
             status : false,
-            message : `Internal server error.`
+            message : constant.responseMessage.universalError
         });
     }
     // If every thing went well and no issue came then,  this else if block of code will be executed.

@@ -46,18 +46,17 @@ exports.ListQuotation = async(req,res)=>
 /**For feching particlar quotation basis of quotation id */
 exports.getOneQuotation = async(req,res)=>
 {
-
-    let getOneQuotation = await quotation.getOneQuotation(req.params.id);
-
-   if(getOneQuotation){
-    return res.status(200).send
-    ({
-        code: 200,
-        success: true,
-        message: constants.responseMessage.getOne,
-        data : getOneQuotation
-    });
-   }
+    let getOneQuotation = await quotation.getonequotation(req.params.id);
+    if(getOneQuotation)
+    {
+        return res.status(200).send
+        ({
+            code: 200,
+            success: true,
+            message: constants.responseMessage.getOne,
+            data : getOneQuotation
+        });
+    }
 }
 
 

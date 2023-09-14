@@ -151,6 +151,25 @@ function formatDateToMMDDYYYY(inputDate)
     }    
 }
 
+const formattedToDate = async (toDate) =>
+{
+    try
+    {
+        return await  new Promise(async (resolve, reject) =>
+        {
+            // Split the toDate string into date and time parts
+            const [datePart, timePart] = toDate.split(' ');
+            // Concatenate the date part and the desired time (23:59:59)
+            const formattedToDate = `${datePart} 23:59:59`;
+            resolve(formattedToDate);  
+        });      
+    }
+    catch (error)
+    {
+        console.log(`Error from the commonfetching.js file from the helper folder,at the time of format toDate. `, error);                
+    }
+};
+
 const timeexportfunction = 
 {
     addingSpecifiedDaysToCurrentDate,
@@ -158,7 +177,8 @@ const timeexportfunction =
     changeDateToSQLFormat,
     formatDateToDDMMYYYY,
     formatDateToMMDDYYYY,
-    changeCustomerPageDateToSQLFormat
+    changeCustomerPageDateToSQLFormat,
+    formattedToDate
 }
 
 module.exports = timeexportfunction;

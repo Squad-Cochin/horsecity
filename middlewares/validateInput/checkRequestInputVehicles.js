@@ -248,7 +248,7 @@ exports.isVehicleRegistrationNumberEntered = async (req, res, next) =>
             ({
                 code : 500,
                 status : false, 
-                message : `Internal server error. While checking the vehicle insurance policy number.` 
+                message : constants.responseMessage.universalError 
             });
         }   
     }
@@ -281,7 +281,7 @@ exports.isInsurancePolicyNumberEntered = async (req, res, next) =>
             ({
                 code : 500,
                 status : false, 
-                message : `Internal server error. While checking the vehicle insurance policy number.` 
+                message : constants.responseMessage.universalError 
             });
         }     
     }
@@ -365,7 +365,7 @@ exports.isValidVehicleNumberEntered =  async (req, res, next) =>
                 ({
                     code : 500,
                     status : false, 
-                    message : `Internal server error. While checking the vehicle number.` 
+                    message : constants.responseMessage.universalError
                 });
             }
 

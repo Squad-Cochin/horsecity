@@ -10,6 +10,7 @@ const time = require('../../utils/helper/date');
 const commonfetching = require('../../utils/helper/commonfetching'); 
 require('dotenv').config()
 
+
 module.exports = class reports
 {
 
@@ -38,7 +39,7 @@ static async getReportsServiceProviders (requestBody,fromDate,toDate,spID)
                     let role_id  = data[0].id
            
                        
-            const formattedToDate = await commonfetching.formattedToDate(toDate);
+            const formattedToDate = await time.formattedToDate(toDate);
                       
               
             const selQuery = `SELECT sp.id, sp.name AS service_provider_name, sp.contact_person, sp.contact_address, sp.contact_no AS contact_number, sp.created_at, sp.status
@@ -111,7 +112,7 @@ static async getReportsCustomers (requestBody,fromDate,toDate,spID)
                 if(data.length != 0){ 
             
                     let role_id  = data[0].id
-            const formattedToDate = await commonfetching.formattedToDate(toDate);     
+            const formattedToDate = await time.formattedToDate(toDate);     
 
             const selQuery = `SELECT cu.id, cu.name AS customer_name, cu.email,cu.contact_no AS contact_number,cu.created_at, cu.status
             FROM ${constants.tableName.customers} AS cu
@@ -176,7 +177,7 @@ static async getReportsVehicles  (requestBody,fromDate,toDate,spID)
                 if(data.length != 0){ 
           
                     let role_id  = data[0].id
-                    const formattedToDate = await commonfetching.formattedToDate(toDate);     
+                    const formattedToDate = await time.formattedToDate(toDate);     
                     const selQuery = `SELECT vh.id, sp.name AS service_provider_name,vh.make,vh.model,vh.no_of_horse AS max_no_horse, vh.vehicle_number ,vh.vehicle_registration_date,vh.created_at,vh.status
                     FROM ${constants.tableName.vehicles} AS vh
                     JOIN ${constants.tableName.service_providers} sp ON vh.service_provider_id  = sp.id
@@ -258,7 +259,7 @@ static async getReportsDrivers (requestBody,fromDate,toDate,spID)
                 if(data.length != 0){ 
 
             let role_id  = data[0].id;
-            const formattedToDate = await commonfetching.formattedToDate(toDate);     
+            const formattedToDate = await time.formattedToDate(toDate);     
             const selQuery = `SELECT dvr.id,dvr.name AS driver_name,dvr.email,dvr.contact_no AS contact_number,dvr.created_at,dvr.status
             FROM ${constants.tableName.drivers} dvr
             JOIN ${constants.tableName.assign_drivers} asd ON dvr.id  = asd.driver_id
@@ -341,7 +342,7 @@ static async getReportsEnquiries  (requestBody,fromDate,toDate,spID)
                 if(data.length != 0){ 
            
             let role_id  = data[0].id;
-            const formattedToDate = await commonfetching.formattedToDate(toDate);     
+            const formattedToDate = await time.formattedToDate(toDate);     
             const selQuery = `SELECT enq.id AS enquiry_id, cu.name AS customer_name,sp.name AS service_provider_name,enq.created_at,enq.status
             FROM ${constants.tableName.enquiries} AS enq
             JOIN ${constants.tableName.service_providers} sp ON enq.serviceprovider_id  = sp.id
@@ -423,7 +424,7 @@ static async getReportsQuotations  (requestBody,fromDate,toDate,spID)
                 if(data.length != 0){ 
              
             let role_id  = data[0].id ;
-            const formattedToDate = await commonfetching.formattedToDate(toDate); 
+            const formattedToDate = await time.formattedToDate(toDate); 
             const selQuery = `SELECT quo.id,quo.quotation_id AS quotation_id , cu.name AS customer_name,sp.name AS service_provider_name,quo.created_at,quo.status
             FROM ${constants.tableName.quotations} AS quo
             JOIN ${constants.tableName.service_providers} sp ON quo.serviceprovider_id  = sp.id
@@ -506,7 +507,7 @@ static async getReportsTripDetails  (requestBody,fromDate,toDate,spID)
                 if(data.length != 0){ 
 
             let role_id  = data[0].id ;
-            const formattedToDate = await commonfetching.formattedToDate(toDate); 
+            const formattedToDate = await time.formattedToDate(toDate); 
             const selQuery = `SELECT td.id,inv.quotation_prefix_id AS quotation_id , cu.name AS customer_name,sp.name AS service_provider_name,td.pickup_date AS start_date ,td.drop_date AS end_date,td.created_at,td.booking_status AS status
             FROM ${constants.tableName.bookings} AS td
             JOIN ${constants.tableName.service_providers} sp ON td.service_provider_id   = sp.id
@@ -591,7 +592,7 @@ static async getReportsInvoices  (requestBody,fromDate,toDate,spID)
                 if(data.length != 0){ 
   
              let role_id  = data[0].id ;
-             const formattedToDate = await commonfetching.formattedToDate(toDate); 
+             const formattedToDate = await time.formattedToDate(toDate); 
              const selQuery = `SELECT inv.id, inv.invoice_no  AS invoice_id, cu.name AS customer_name, sp.name AS service_provider_name,inv.created_at
                                FROM ${constants.tableName.invoices} AS inv
                                JOIN ${constants.tableName.service_providers} sp ON inv.service_provider_id = sp.id
@@ -677,7 +678,7 @@ static async getAccountsReports (requestBody,fromDate,toDate,spID)
                 if(data.length != 0){ 
                     let role_name = data[0].role_name ;
                     let role_id  = data[0].id ;
-                    const formattedToDate = await commonfetching.formattedToDate(toDate); 
+                    const formattedToDate = await time.formattedToDate(toDate); 
             const selQuery = `SELECT pr.id, inv.quotation_prefix_id AS quotation_id, cu.name AS customer_name, sp.name AS service_provider_name,
                         pr.total_amount AS final_amount, pr.remaining_amount,
                         pr.created_at

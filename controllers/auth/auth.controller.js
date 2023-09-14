@@ -8,7 +8,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const auth = require('../../models/auth/auth.model'); // Impoting the auth models details
-
+const constants = require('../../utils/constants');
 /**
  * The below function is for the login of the service provider user
  *      We need to two things from the users
@@ -38,7 +38,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 500,
-            message : "Internal server error.",
+            message : constants.responseMessage.universalError
         });
     }
     // If wrong password is entered then, this below response will be displayed
@@ -118,7 +118,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         ({
             success : false,
             code : 500,
-            message : "Internal server error",
+            message : constants.responseMessage.universalError,
         });
     }
     else if(loginauth === 'incorrectpassword')
@@ -195,7 +195,7 @@ exports.sendEmailForgotPassword = async(req, res)=>
         ({
             status : true,
             code : 200,  
-            message : `Mail successfully sent to ${req.body.mail}`
+            message : `Mail successfully sent to ${req.body.email}`
         })
     
     }
@@ -279,3 +279,70 @@ exports.resetPasswordForForgotPassword = async(req, res)=>
     }
 
 }
+
+
+exports.Verifiy = async (req, res) =>
+{
+    try
+    {
+        return await  new Promise(async (resolve, reject) =>
+        {
+            let inputString = await req.body.token;
+            var substring1, substring2, substring3;
+            // Find the positions of 'A' and 'T' in the string
+            const indexA = inputString.indexOf('A');
+            const indexT = inputString.indexOf('T');
+            if (indexA !== -1 && indexT !== -1 && indexA < indexT) 
+            {
+                // Extract substrings based on positions
+                substring1 = inputString.substring(0, indexA);
+                substring2 = inputString.substring(indexA + 1, indexT);
+                substring3 = inputString.substring(indexT + 1);
+            }
+            else
+            {
+                // console.error("Invalid input string. Expected 'A' before 'T'.");
+                resolve(false);
+                return;
+            }
+            
+            const currentTimestamp = Math.floor(Date.now() / 1000);
+            if (currentTimestamp > substring3)
+            {
+                resolve(false);
+            }        
+            
+            // Remove the last character ('y') if present
+            const emailPart1 = substring1.endsWith('y') ? substring1.slice(0, -1) : substring1;
+            // Extract the email from substring1
+            const emailChars = [];
+            for (let i = 0; i < emailPart1.length; i += 2) 
+            {
+                const char = emailPart1[i];
+                emailChars.push(char);
+            }
+            
+            // Extract the email from substring2
+            // Remove the last character ('y') if present from emailPart2
+
+            const emailPart2 = substring2.endsWith('y') ? substring2.slice(0, -1) : substring2;
+            // Extract the email from emailPart2
+            const emailChars2 = [];
+
+            for (let i = 0; i < emailPart2.length; i += 2)
+            {
+                const char = emailPart2[i];
+                emailChars2.push(char);
+            }
+            
+            // Combine the email characters from both parts
+            const email = (emailChars.join('') + emailChars2.join('')).replace(/y+$/, '');
+            console.log(email);
+            
+        });      
+    }
+    catch (error)
+    {
+
+    }
+};

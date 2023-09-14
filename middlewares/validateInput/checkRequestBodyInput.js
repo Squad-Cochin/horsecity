@@ -5,6 +5,8 @@ const url = require(`../../utils/url_helper`);// Fetching the url details from t
 const time = require(`../../utils/helper/date`); // All the time related formating are written in this file.
 const commonoperation = require('../../utils/helper/commonoperation');
 
+
+
 // Below is function which wille eliminate the space from the string
 function hasOnlyNonSpaces(str) 
 {
@@ -65,7 +67,7 @@ exports.validateCommonInputAtStartingTime = (tableName, feildName, Value, id, me
         ({
             code : 500,
             status : false, 
-            message : `Internal server error.` 
+            message : constants.responseMessage.universalError 
         });
     }
     else if(checkEntry.length > 0)
@@ -92,7 +94,7 @@ exports.validateCommonInputAtUpdateTime = (tableName, feildName, Value, id, mess
         ({
             code : 400,
             status : false,
-            message : `Internal server error.` 
+            message : constants.responseMessage.universalError 
         });
     }                
     if(checkEmail === `valuenotavailable`)
@@ -171,7 +173,7 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
                     ({
                         code : 500,
                         status : false, 
-                        message : `Internal server error.` 
+                        message : constants.responseMessage.universalError 
                     });
                 }
             }
@@ -240,7 +242,7 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
                     ({
                         code : 500,
                         status : false, 
-                        message : `Internal server error.` 
+                        message : constants.responseMessage.universalError 
                     });
                 }
             // }
@@ -305,7 +307,7 @@ exports.contactNumberValidation = (tableName) => async (req, res, next) =>
                         ({
                             code : 500,
                             status : false, 
-                            message : `Internal server error.` 
+                            message : constants.responseMessage.universalError 
                         });
                     }
             // }
@@ -340,7 +342,7 @@ exports.isValidLicenceNumber = async (req, res, next) =>
             ({
                 code : 500,
                 status : false, 
-                message : `Internal server error.` 
+                message : constants.responseMessage.universalError 
             });
         }
     }    
@@ -377,7 +379,7 @@ exports.idProofNumberValidation = async (req, res, next) =>
             ({
                 code : 500,
                 status : false, 
-                message : `Internal server error.` 
+                message : constants.responseMessage.universalError 
             });
         }   
     }    
@@ -511,7 +513,7 @@ exports.idProofValidationWhileUpdate = async(req, res, next) =>
             ({
                 code : 500,
                 status : false,
-                message : `Internal server error.` 
+                message : constants.responseMessage.universalError 
             });
         }
         
@@ -755,7 +757,7 @@ exports.isPageNumberEntered = (req, res, next) =>
         ({
             code : 500,
             success: false,
-            message : `Internal server error.`
+            message : constants.responseMessage.universalError
         });     
     }
     else
@@ -772,7 +774,7 @@ exports.isPageSizeEntered = (req, res, next) =>
         ({
             code : 500,
             success: false,
-            message : `Internal server error.`
+            message : constants.responseMessage.universalError
         });     
     }
     else
@@ -946,10 +948,11 @@ exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) => {
         next();
     } catch (error) { 
         // Handle any errors that might occur during the checks
-        res.status(500).send({
+        res.status(500).send
+        ({
             code: 500,
             status: false,
-            message: 'Internal server error.',
+            message: constants.responseMessage.universalError
         });
     }
 };
@@ -1012,7 +1015,7 @@ exports.isIdEntered = (feildName, tableName, MessageFeild) => async (req, res, n
             ({
                 code: 400,
                 status : "failed",
-                error: `Internal server error.`
+                error: constants.responseMessage.universalError
             });
         }
         else if(data.length > 0)
@@ -1073,7 +1076,7 @@ exports.checkingDuplicateEnquiry = async (req, res, next) =>
                         ({
                             code : 500,
                             status : false,
-                            message : `Internal server error.`
+                            message : constants.responseMessage.universalError
                         });
                     }
                 }
@@ -1111,7 +1114,7 @@ exports.CustomerAddRequestBody = async (req, res, next)  =>
         ({
             code: 500,
             status: false,
-            message: 'Internal server error.',
+            message: constants.responseMessage.universalError
         });
 
     }
@@ -1176,7 +1179,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                         ({
                             code : 500,
                             status : false,
-                            message : `Internal server error.`
+                            message : constants.responseMessage.universalError
                         });
                     }
                 }
@@ -1243,7 +1246,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                             ({
                                 code : 500,
                                 status : false,
-                                message : `Internal server error.`
+                                message : constants.responseMessage.universalError
                             });  
                         }
                     }
@@ -1310,7 +1313,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                 ({
                                     code : 500,
                                     status : false,
-                                    message : `Internal server error.`
+                                    message : constants.responseMessage.universalError
                                 });  
                             }
                         }                        
@@ -1377,7 +1380,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                     ({
                                         code : 500,
                                         status : false,
-                                        message : `Internal server error.`
+                                        message : constants.responseMessage.universalError
                                     });  
                                 }
                             }
@@ -1444,7 +1447,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                         ({
                                             code : 500,
                                             status : false,
-                                            message : `Internal server error.`
+                                            message : constants.responseMessage.universalError
                                         });  
                                     }
                                 }
@@ -1512,7 +1515,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                             ({
                                                 code : 500,
                                                 status : false,
-                                                message : `Internal server error.`
+                                                message : constants.responseMessage.universalError
                                             });  
                                         }
                                     }
@@ -1534,7 +1537,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
             ({
                 code: 500,
                 status: false,
-                message: `Internal server error.`,
+                message: constants.responseMessage.universalError,
             });
         }
     });
@@ -1585,7 +1588,7 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                     ({
                         code : 500,
                         status : false,
-                        message : `Internal server error.`
+                        message : constants.responseMessage.universalError
                     });  
                 }
             }
@@ -1633,7 +1636,7 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                         ({
                             code : 500,
                             status : false,
-                            message : `Internal server error.`
+                            message : constants.responseMessage.universalError
                         });  
                     }
                 }
@@ -1681,7 +1684,7 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                             ({
                                 code : 500,
                                 status : false,
-                                message : `Internal server error.`
+                                message : constants.responseMessage.universalError
                             });  
                         }
                     }
@@ -1729,7 +1732,7 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                                 ({
                                     code : 500,
                                     status : false,
-                                    message : `Internal server error.`
+                                    message : constants.responseMessage.universalError
                                 });  
                             }
                         }
@@ -1768,7 +1771,7 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                                     ({
                                         code : 500,
                                         status : false,
-                                        message : `Internal server error.`
+                                        message : constants.responseMessage.universalError
                                     });
                                 }
                             }
@@ -1787,7 +1790,7 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
             ({
                 code: 500,
                 status: false,
-                message: `Internal server error.`,
+                message: constants.responseMessage.universalError,
             });
         }
     });

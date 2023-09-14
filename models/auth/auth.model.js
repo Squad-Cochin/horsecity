@@ -170,31 +170,51 @@ module.exports = class authentication
     /**This below function for sending email for forgot password  */
     static async sendEmailForgotPassword(email) 
     {
-        return new Promise(async (resolve, reject) => {
-            try {
-           
-            let generateToken = await commonfetching.tokenGeneration(email);
-            let selQuery = `SELECT  id
-                            FROM ${constants.tableName.service_providers}
-                            WHERE email = '${email}'`;
-            con.query(selQuery,async(err,result)=>{
-                if(result[0].length != 0 && generateToken.token){
-                    // let sendEmail = await mail.SendEmailOfForgotpassword(result[0].id,email,"Reset Password",generateToken.token);
-                    //     if(sendEmail){
-                    //         resolve(true);
-                    //     }else{
-                    //         resolve(false);
-                    //     } 
-                }else{
-                    resolve(false)
-                }
-            })                
-
-            } catch (err) {
+        return new Promise(async (resolve, reject) =>
+        {
+            try
+            {
+                // let generateToken = await commonoperation.tokenGeneration(email);
+                let selQuery = `    SELECT  id
+                                    FROM ${constants.tableName.service_providers}
+                                    WHERE email = '${email}'
+                                `;
+                con.query(selQuery,async(err,result)=>
+                {
+                    // if(result[0].length != 0 && generateToken.token)
+                    if(result[0].length != 0)
+                    {
+                        let sendEmail = await mail.SendEmail(result[0].id, email, "Reset Password", constant.tableName.service_providers);
+                        if(sendEmail)
+                        {
+                            resolve(true);
+                        }
+                        else
+                        {
+                            resolve(false);
+                        } 
+                        // let sendEmail = await mail.SendEmailOfForgotpassword(result[0].id,email,"Reset Password",generateToken.token);
+                        //     if(sendEmail)
+                        //     {
+                        //          resolve(true);
+                        //     }
+                        //     else
+                        //     {
+                        //          resolve(false);
+                        //     } 
+                    }
+                    else
+                    {
+                        resolve(false)
+                    }
+                });
+            }
+            catch (err)
+            {
                 resolve(false)
                 console.log('Error while sending email', err);
             }
-        })
+        });
     };
 
 
