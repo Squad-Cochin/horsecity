@@ -1,6 +1,6 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 //                                                                                         //
-//   This is language model file. Where all the logic of the language program is written. //
+//   This is language model file. Where all the logic of the language program is written.  //
 //                                                                                         //
 /////////////////////////////////////////////////////////////////////////////////////////////
 

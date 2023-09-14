@@ -27,7 +27,7 @@ const ADD_SERVICEPROVIDER__URL = token + `/add/serviceprovider`
 const UPDATE_SERVICE_PROVIDER_PASSWORD = token + `/changePassword`
 
 
-
+const FORGOT_PASSWORD__URL = token + `/forgotPassword`
 
 module.exports = 
 {
@@ -46,4 +46,6 @@ module.exports =
     
     UPDATE_VEHICLE_PAGE_URL, // update vehicle link    
     ADD_VEHICLE_PAGE_URL, // Add vehicle link
+
+    FORGOT_PASSWORD__URL // Forgot password link
 }

@@ -1,3 +1,10 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                             //
+//  This is tripdetails model file. Where all the logic of the tripdetails page program is written. //
+//                                                                                                             //
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 const con = require("../../configs/db.configs");
 const timeCalculate = require('../../utils/helper/date'); // This variable will have the date file data.
 const commonoperation = require('../../utils/helper/commonoperation');

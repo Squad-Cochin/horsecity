@@ -1,12 +1,17 @@
+/////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                         //
+//   This is account model file. Where all the logic of the accounts program is written.  //
+//                                                                                         //
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+
 const con = require("../../configs/db.configs"); 
-const timeCalculate = require('../../utils/helper/date'); // This variable will have the date file data.
-const commonoperation = require('../../utils/helper/commonoperation');
 const constants = require('../../utils/constants');
 const time = require('../../utils/helper/date');
 require('dotenv').config()
 
-
-exports.getAllAcounts = (requestBody,spId) =>
+/***This function for fetching getting all accounts basis of page & limit & service provider id  */
+exports.getAllAccounts = (requestBody,spId) =>
 {
     return new Promise((resolve, reject) =>
     {
@@ -54,7 +59,7 @@ exports.getAllAcounts = (requestBody,spId) =>
 
                                                   
             con.query(selQuery,(err,data)=>{
-                console.log("data",data);
+       
                 if(!err){
                     if(data.length != 0 ){
 
@@ -80,7 +85,7 @@ exports.getAllAcounts = (requestBody,spId) =>
                         ) AS latest_payment_records
                          `
                         con.query(totalCountQuery,(err,result)=>{
-                            console.log(err);
+              
                             if(!err){
                                 const count = result[0]['COUNT(*)'];
 
@@ -95,7 +100,7 @@ exports.getAllAcounts = (requestBody,spId) =>
 
 
                                       con.query(Query,(err,modules)=>{
-                                        console.log("result",modules);
+                          
                                         if(!err){
                                   
                                   
@@ -129,7 +134,7 @@ exports.getAllAcounts = (requestBody,spId) =>
 
 
 
-
+/*******This function for fetching particular account details*****/
 exports.getOneAccountDetails = (quotId) =>
 {
     return new Promise((resolve, reject) =>
@@ -144,7 +149,7 @@ exports.getOneAccountDetails = (quotId) =>
                         WHERE inv.quotation_prefix_id = '${quotId}'`
                                                   
             con.query(selQuery,(err,data)=>{
-                console.log(err);
+   
                 if(!err){
                     if(data.length != 0 ){
                        for(let i = 0;i<data.length;i++){

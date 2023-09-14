@@ -10,7 +10,7 @@ const quotation = require('../../models/quotation/quotation')
 const constants = require('../../utils/constants');
 const time = require('../../utils/helper/date');
 
-// the below function is for creating new Quotation 
+// The below function is for creating new Quotation 
 exports.addNewQuotation = async(req,res)=>
 {
 
@@ -103,7 +103,7 @@ exports.updateStatusQuotation = async(req,res)=>
 {
 
     let removedQuotations = await quotation.updateStatusQuotation(req.params.id);
-    console.log("RRR",removedQuotations);
+
    if(!removedQuotations){
     return res.status(200).send
     ({
@@ -116,7 +116,7 @@ exports.updateStatusQuotation = async(req,res)=>
     return res.status(200).send ({
         code: 400,
         success: false,
-        message: 'Quot id allredy in the bookings'
+        message: 'The quote number is already in the bookings'
 
     });
 
@@ -141,14 +141,14 @@ exports.sendMail = async(req,res)=>
         return res.status(200).send({
             code: 200,
             success: true,
-            message: `Mail success fully sended to `
+            message: ` Mail successfully sent to ${req.body.customer_email} .`
 
         });
    }else{
     return res.status(200).send({
         code: 400,
         success: false,
-        message: `Mail sending faild `
+        message: `Mail sending faild .`
 
     });
    }
@@ -156,7 +156,8 @@ exports.sendMail = async(req,res)=>
 
 
 
-/** For feching quotations */
+
+/***** For feching email template data ******* */
 exports.getsendemailbuttondata = async(req,res)=>
 {
 

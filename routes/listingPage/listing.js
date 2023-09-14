@@ -9,7 +9,7 @@ module.exports = function(app)
     // /**For geting all service provider basis of from date to date */
     app.post(`/listing/search`,verifyBody.verifyToken,controller.listingPageData); 
 
-    // /**For geting all service provider basis of from date to date */
+    // /**For geting all service provider Names */
     app.get(`/getAll/serviceproviders`,verifyBody.verifyToken,controller.getUsernameServiceProvider); 
 
   

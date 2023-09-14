@@ -1,14 +1,12 @@
 const accounts = require(`../../controllers/accounts/accounts`);   // importing the auth controller details and assigning it to the authcontroller variable
 
 
-
-
 module.exports = function(app)
 {
-    /**For listing accounts  basis of page & limit  */
-    app.post(`/${process.env.apiToken}/getAll/accounts/:id`,accounts.getAllAcounts);  
+    /**Below route For listing accounts  basis of page & limit & service provider id  */
+    app.post(`/${process.env.apiToken}/getAll/accounts/:id`,accounts.getAllAccounts);  
     
-    /**List particular accounts details  */
+    /**Below route list particular accounts details  */
     app.get(`/${process.env.apiToken}/getOne/accountsDetails/:id`,accounts.getOneAccountDetails);  
 
 }

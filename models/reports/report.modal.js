@@ -7,6 +7,7 @@
 const con = require("../../configs/db.configs"); 
 const constants = require('../../utils/constants');
 const time = require('../../utils/helper/date');
+const commonfetching = require('../../utils/helper/commonfetching'); 
 require('dotenv').config()
 
 module.exports = class reports
@@ -19,7 +20,7 @@ static async getReportsServiceProviders (requestBody,fromDate,toDate,spID)
     {
         try
         {        
-   
+       
          
             const {page, limit} = requestBody;
             const offset = (page - 1) * limit; 
@@ -30,15 +31,19 @@ static async getReportsServiceProviders (requestBody,fromDate,toDate,spID)
             JOIN ${constants.tableName.roles} AS rl ON sp.role_Id   = rl.id
             WHERE sp.id = '${spID}'`;
 
-            con.query(selRoleName,(err,data)=>{ 
+            con.query(selRoleName,async(err,data)=>{ 
               
                 if(data.length != 0){ 
-                 
+
                     let role_id  = data[0].id
-         
+           
+                       
+            const formattedToDate = await commonfetching.formattedToDate(toDate);
+                      
+              
             const selQuery = `SELECT sp.id, sp.name AS service_provider_name, sp.contact_person, sp.contact_address, sp.contact_no AS contact_number, sp.created_at, sp.status
             FROM ${constants.tableName.service_providers} AS sp
-            WHERE sp.deleted_at IS NULL AND sp.created_at BETWEEN '${fromDate}' AND '${toDate}'
+            WHERE sp.deleted_at IS NULL AND sp.created_at BETWEEN '${fromDate}' AND '${formattedToDate}'
             AND (
                 ('${role_id}' = '${constants.Roles.admin}')
                 OR
@@ -54,7 +59,7 @@ static async getReportsServiceProviders (requestBody,fromDate,toDate,spID)
                         data[i].created_at = `${time.formatDateToDDMMYYYY(data[i].created_at)}`;
                     }
                     const totalCountQuery = `SELECT count(*) FROM service_providers sp
-                                             WHERE sp.deleted_at IS NULL AND sp.created_at BETWEEN '${fromDate}' AND '${toDate}'
+                                             WHERE sp.deleted_at IS NULL AND sp.created_at BETWEEN '${fromDate}' AND '${formattedToDate}'
                                              AND (
                                                 ('${role_id}' = '${constants.Roles.admin}')
                                                 OR
@@ -67,6 +72,7 @@ static async getReportsServiceProviders (requestBody,fromDate,toDate,spID)
                         }
                 })
             }})
+        
 
         }else {
             resolve({totalCount : 0, serviceProviders : [],module : []})
@@ -100,15 +106,16 @@ static async getReportsCustomers (requestBody,fromDate,toDate,spID)
             JOIN ${constants.tableName.roles} AS rl ON sp.role_Id   = rl.id
             WHERE sp.id = '${spID}'`;
 
-            con.query(selRoleName,(err,data)=>{ 
+            con.query(selRoleName,async(err,data)=>{ 
               
                 if(data.length != 0){ 
             
                     let role_id  = data[0].id
+            const formattedToDate = await commonfetching.formattedToDate(toDate);     
 
             const selQuery = `SELECT cu.id, cu.name AS customer_name, cu.email,cu.contact_no AS contact_number,cu.created_at, cu.status
             FROM ${constants.tableName.customers} AS cu
-            WHERE cu.deleted_at IS NULL AND cu.created_at BETWEEN '${fromDate}' AND '${toDate}' AND ('${role_id}' = '${constants.Roles.admin}' 
+            WHERE cu.deleted_at IS NULL AND cu.created_at BETWEEN '${fromDate}' AND '${formattedToDate}' AND ('${role_id}' = '${constants.Roles.admin}' 
             OR 
             '${role_id}' = '${constants.Roles.super_admin}' )
             LIMIT ${+limit} OFFSET ${+offset}`;
@@ -120,7 +127,7 @@ static async getReportsCustomers (requestBody,fromDate,toDate,spID)
                         data[i].created_at = `${time.formatDateToDDMMYYYY(data[i].created_at)}`;
                     }
                     const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.customers} cu
-                                             WHERE cu.deleted_at IS NULL AND cu.created_at BETWEEN '${fromDate}' AND '${toDate}' AND ('${role_id}' = '${constants.Roles.admin}' 
+                                             WHERE cu.deleted_at IS NULL AND cu.created_at BETWEEN '${fromDate}' AND '${formattedToDate}' AND ('${role_id}' = '${constants.Roles.admin}' 
                                              OR 
                                              '${role_id}' = '${constants.Roles.super_admin}' )`
                     con.query(totalCountQuery,(err,result)=>{
@@ -130,6 +137,7 @@ static async getReportsCustomers (requestBody,fromDate,toDate,spID)
                         }
                 })
             }})
+        
 
         }else {
             resolve({totalCount : 0, customers : []})
@@ -163,16 +171,16 @@ static async getReportsVehicles  (requestBody,fromDate,toDate,spID)
             JOIN ${constants.tableName.roles} AS rl ON sp.role_Id   = rl.id
             WHERE sp.id = '${spID}'`;
 
-            con.query(selRoleName,(err,data)=>{ 
+            con.query(selRoleName,async(err,data)=>{ 
               
                 if(data.length != 0){ 
           
                     let role_id  = data[0].id
-
+                    const formattedToDate = await commonfetching.formattedToDate(toDate);     
                     const selQuery = `SELECT vh.id, sp.name AS service_provider_name,vh.make,vh.model,vh.no_of_horse AS max_no_horse, vh.vehicle_number ,vh.vehicle_registration_date,vh.created_at,vh.status
                     FROM ${constants.tableName.vehicles} AS vh
                     JOIN ${constants.tableName.service_providers} sp ON vh.service_provider_id  = sp.id
-                    WHERE vh.deleted_at IS NULL AND vh.created_at BETWEEN '${fromDate}' AND '${toDate}'
+                    WHERE vh.deleted_at IS NULL AND vh.created_at BETWEEN '${fromDate}' AND '${formattedToDate}'
                     AND (
                         ('${role_id}' = '${constants.Roles.admin}')
                         OR
@@ -195,7 +203,7 @@ static async getReportsVehicles  (requestBody,fromDate,toDate,spID)
                             }
                             const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.vehicles} vh
                             JOIN ${constants.tableName.service_providers} sp ON vh.service_provider_id  = sp.id
-                                                    WHERE vh.deleted_at IS NULL AND vh.created_at BETWEEN '${fromDate}' AND '${toDate}'
+                                                    WHERE vh.deleted_at IS NULL AND vh.created_at BETWEEN '${fromDate}' AND '${formattedToDate}'
                                                     AND (
                                                         ('${role_id}' = '${constants.Roles.admin}')
                                                         OR
@@ -245,16 +253,17 @@ static async getReportsDrivers (requestBody,fromDate,toDate,spID)
             JOIN ${constants.tableName.roles} AS rl ON sp.role_Id   = rl.id
             WHERE sp.id = '${spID}'`;
 
-            con.query(selRoleName,(err,data)=>{ 
+            con.query(selRoleName,async(err,data)=>{ 
               
                 if(data.length != 0){ 
 
-                    let role_id  = data[0].id
+            let role_id  = data[0].id;
+            const formattedToDate = await commonfetching.formattedToDate(toDate);     
             const selQuery = `SELECT dvr.id,dvr.name AS driver_name,dvr.email,dvr.contact_no AS contact_number,dvr.created_at,dvr.status
             FROM ${constants.tableName.drivers} dvr
             JOIN ${constants.tableName.assign_drivers} asd ON dvr.id  = asd.driver_id
             JOIN ${constants.tableName.service_providers} sp ON asd.service_provider_id   = sp.id
-            WHERE dvr.deleted_at IS NULL AND dvr.created_at BETWEEN '${fromDate}' AND '${toDate}'
+            WHERE dvr.deleted_at IS NULL AND dvr.created_at BETWEEN '${fromDate}' AND '${formattedToDate}'
             AND (
                 ('${role_id}' = '${constants.Roles.admin}')
                 OR
@@ -277,7 +286,7 @@ static async getReportsDrivers (requestBody,fromDate,toDate,spID)
                     const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.drivers} dvr
                     JOIN ${constants.tableName.assign_drivers} asd ON dvr.id  = asd.driver_id
                     JOIN ${constants.tableName.service_providers} sp ON asd.service_provider_id   = sp.id
-                        WHERE dvr.deleted_at IS NULL AND dvr.created_at BETWEEN '${fromDate}' AND '${toDate}'
+                        WHERE dvr.deleted_at IS NULL AND dvr.created_at BETWEEN '${fromDate}' AND '${formattedToDate}'
                         AND (
                             ('${role_id}' = '${constants.Roles.admin}')
                             OR
@@ -327,16 +336,17 @@ static async getReportsEnquiries  (requestBody,fromDate,toDate,spID)
             JOIN ${constants.tableName.roles} AS rl ON sp.role_Id   = rl.id
             WHERE sp.id = '${spID}'`;
 
-            con.query(selRoleName,(err,data)=>{ 
+            con.query(selRoleName,async(err,data)=>{ 
               
                 if(data.length != 0){ 
            
-                    let role_id  = data[0].id
+            let role_id  = data[0].id;
+            const formattedToDate = await commonfetching.formattedToDate(toDate);     
             const selQuery = `SELECT enq.id AS enquiry_id, cu.name AS customer_name,sp.name AS service_provider_name,enq.created_at,enq.status
             FROM ${constants.tableName.enquiries} AS enq
             JOIN ${constants.tableName.service_providers} sp ON enq.serviceprovider_id  = sp.id
             JOIN ${constants.tableName.customers} cu ON enq.customer_id  = cu.id
-            WHERE  enq.created_at BETWEEN '${fromDate}' AND '${toDate}'
+            WHERE  enq.created_at BETWEEN '${fromDate}' AND '${formattedToDate}'
             AND (
                 ('${role_id}' = '${constants.Roles.admin}')
                 OR
@@ -358,7 +368,7 @@ static async getReportsEnquiries  (requestBody,fromDate,toDate,spID)
                     }
                     const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.enquiries} enq
                     JOIN ${constants.tableName.service_providers} sp ON enq.serviceprovider_id   = sp.id
-                                             WHERE enq.created_at BETWEEN '${fromDate}' AND '${toDate}'
+                                             WHERE enq.created_at BETWEEN '${fromDate}' AND '${formattedToDate}'
                                              AND (
                                                 ('${role_id}' = '${constants.Roles.admin}')
                                                 OR
@@ -408,16 +418,17 @@ static async getReportsQuotations  (requestBody,fromDate,toDate,spID)
             WHERE sp.id = '${spID}'`;
 
             
-            con.query(selRoleName,(err,data)=>{ 
+            con.query(selRoleName,async(err,data)=>{ 
               
                 if(data.length != 0){ 
              
-                    let role_id  = data[0].id
+            let role_id  = data[0].id ;
+            const formattedToDate = await commonfetching.formattedToDate(toDate); 
             const selQuery = `SELECT quo.id,quo.quotation_id AS quotation_id , cu.name AS customer_name,sp.name AS service_provider_name,quo.created_at,quo.status
             FROM ${constants.tableName.quotations} AS quo
             JOIN ${constants.tableName.service_providers} sp ON quo.serviceprovider_id  = sp.id
             JOIN ${constants.tableName.customers} cu ON quo.customer_id  = cu.id
-            WHERE quo.deleted_at IS NULL  AND  quo.created_at BETWEEN '${fromDate}' AND '${toDate}'
+            WHERE quo.deleted_at IS NULL  AND  quo.created_at BETWEEN '${fromDate}' AND '${formattedToDate}'
             AND (
                 ('${role_id}' = '${constants.Roles.admin}')
                 OR
@@ -439,7 +450,7 @@ static async getReportsQuotations  (requestBody,fromDate,toDate,spID)
                     }
                     const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.quotations} quo
                     JOIN ${constants.tableName.service_providers} sp ON quo.serviceprovider_id  = sp.id
-                                             WHERE quo.deleted_at IS NULL AND quo.created_at BETWEEN '${fromDate}' AND '${toDate}'
+                                             WHERE quo.deleted_at IS NULL AND quo.created_at BETWEEN '${fromDate}' AND '${formattedToDate}'
                                              AND (
                                                 ('${role_id}' = '${constants.Roles.admin}')
                                                 OR
@@ -490,17 +501,18 @@ static async getReportsTripDetails  (requestBody,fromDate,toDate,spID)
             WHERE sp.id = '${spID}'`;
 
             
-            con.query(selRoleName,(err,data)=>{ 
+            con.query(selRoleName,async(err,data)=>{ 
               
                 if(data.length != 0){ 
 
-                    let role_id  = data[0].id
+            let role_id  = data[0].id ;
+            const formattedToDate = await commonfetching.formattedToDate(toDate); 
             const selQuery = `SELECT td.id,inv.quotation_prefix_id AS quotation_id , cu.name AS customer_name,sp.name AS service_provider_name,td.pickup_date AS start_date ,td.drop_date AS end_date,td.created_at,td.booking_status AS status
             FROM ${constants.tableName.bookings} AS td
             JOIN ${constants.tableName.service_providers} sp ON td.service_provider_id   = sp.id
             JOIN ${constants.tableName.customers} cu ON td.customer_id  = cu.id
             JOIN ${constants.tableName.invoices} inv ON td.inv_id   = inv.id
-            WHERE td.deleted_at IS NULL AND td.created_at BETWEEN '${fromDate}' AND '${toDate}' 
+            WHERE td.deleted_at IS NULL AND td.created_at BETWEEN '${fromDate}' AND '${formattedToDate}'
                                              AND (
                                                 ('${role_id}' = '${constants.Roles.admin}')
                                                 OR
@@ -524,7 +536,7 @@ static async getReportsTripDetails  (requestBody,fromDate,toDate,spID)
                     }
                     const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.bookings} bk
                     JOIN ${constants.tableName.service_providers} sp ON bk.service_provider_id  = sp.id
-                                             WHERE bk.deleted_at IS NULL AND bk.created_at BETWEEN '${fromDate}' AND '${toDate}' 
+                                             WHERE bk.deleted_at IS NULL AND bk.created_at BETWEEN '${fromDate}' AND '${formattedToDate}'
                                              AND (
                                                 ('${role_id}' = '${constants.Roles.admin}')
                                                 OR
@@ -574,17 +586,18 @@ static async getReportsInvoices  (requestBody,fromDate,toDate,spID)
             WHERE sp.id = '${spID}'`;
 
              
-            con.query(selRoleName,(err,data)=>{ 
+            con.query(selRoleName,async(err,data)=>{ 
               
                 if(data.length != 0){ 
   
-                    let role_id  = data[0].id
+             let role_id  = data[0].id ;
+             const formattedToDate = await commonfetching.formattedToDate(toDate); 
              const selQuery = `SELECT inv.id, inv.invoice_no  AS invoice_id, cu.name AS customer_name, sp.name AS service_provider_name,inv.created_at
                                FROM ${constants.tableName.invoices} AS inv
                                JOIN ${constants.tableName.service_providers} sp ON inv.service_provider_id = sp.id
                                JOIN ${constants.tableName.quotations} quo ON inv.quot_id = quo.id
                                JOIN ${constants.tableName.customers} cu ON quo.customer_id = cu.id
-                               WHERE inv.deleted_at IS NULL AND inv.created_at BETWEEN '${fromDate}' AND '${toDate}'
+                               WHERE inv.deleted_at IS NULL AND inv.created_at BETWEEN '${fromDate}' AND '${formattedToDate}'
                                AND (
                                   ('${role_id}' = '${constants.Roles.admin}')
                                   OR
@@ -608,7 +621,7 @@ static async getReportsInvoices  (requestBody,fromDate,toDate,spID)
                     }
                     const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.invoices}   inv
                     JOIN ${constants.tableName.service_providers} sp ON inv.service_provider_id  = sp.id
-                                             WHERE inv.deleted_at IS NULL AND inv.created_at BETWEEN '${fromDate}' AND '${toDate}'
+                                             WHERE inv.deleted_at IS NULL AND inv.created_at BETWEEN '${fromDate}' AND '${formattedToDate}'
                                              AND (
                                                 ('${role_id}' = '${constants.Roles.admin}')
                                                 OR
@@ -659,11 +672,12 @@ static async getAccountsReports (requestBody,fromDate,toDate,spID)
             WHERE sp.id = '${spID}'`;
 
              
-            con.query(selRoleName,(err,data)=>{ 
+            con.query(selRoleName,async(err,data)=>{ 
               
                 if(data.length != 0){ 
                     let role_name = data[0].role_name ;
-                    let role_id  = data[0].id
+                    let role_id  = data[0].id ;
+                    const formattedToDate = await commonfetching.formattedToDate(toDate); 
             const selQuery = `SELECT pr.id, inv.quotation_prefix_id AS quotation_id, cu.name AS customer_name, sp.name AS service_provider_name,
                         pr.total_amount AS final_amount, pr.remaining_amount,
                         pr.created_at
@@ -677,7 +691,7 @@ static async getAccountsReports (requestBody,fromDate,toDate,spID)
                             FROM payment_records
                             GROUP BY invoice_id
                         ) max_pr ON pr.id = max_pr.max_id
-                        WHERE pr.created_at BETWEEN '${fromDate}' AND '${toDate}'
+                        WHERE pr.created_at BETWEEN '${fromDate}' AND '${formattedToDate}'
                         AND (
                             ('${role_id}' = '${constants.Roles.admin}')
                             OR
@@ -707,7 +721,7 @@ static async getAccountsReports (requestBody,fromDate,toDate,spID)
                         FROM payment_records
                         GROUP BY invoice_id
                     ) max_pr ON pr.id = max_pr.max_id
-                                             WHERE  pr.created_at BETWEEN '${fromDate}' AND '${toDate}'
+                                             WHERE  pr.created_at BETWEEN '${fromDate}' AND '${formattedToDate}'
                                              AND (
                                                 ('${role_id}' = '${constants.Roles.admin}')
                                                 OR

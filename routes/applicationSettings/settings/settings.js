@@ -10,6 +10,6 @@ module.exports = function(app)
     // Below route is for updating settings page data
     app.put(`/${process.env.apiToken}/update/settings`,verifyBody.appTitleAvailable,verifyBody.contactAddressAvailable,verifyBody.emailValidation,verifyBody.validateUAEMobileNumber,verifyBody.validateUAELicenseNumber,settings.updateSettings);
 
-    // Below route is for getting settings page data
+    // Below route is for getting settings page language details
     app.get(`/${process.env.apiToken}/getFile/lngFile`, settings.getLngFile);
 }

@@ -1,9 +1,8 @@
-
 const serviceProvider = require('../../models/service-provider/service-provider.modal')
 const constants = require('../../utils/constants');
 const commonoperation = require('../../utils/helper/commonoperation');
 
-/**For gitting all data  */
+/**The below controller for geting all service provider basis of page & limit */
 exports.getAllServiceProviders = async(req,res)=>
 {
     let getAllSProviders = await serviceProvider.getAllServiceProviders(req.body,req.params.id);
@@ -19,19 +18,25 @@ exports.getAllServiceProviders = async(req,res)=>
    }
 }
 
-/**For add new service provider  */
+/**For adding new service provider  */
 exports.addNewServiceProvider = async(req,res)=>
 {
-    console.log("1",req.body);
+   
     let addNewProvider = await serviceProvider.addNewServiceProviders(req.body,req.files.licence_image);
-    console.log("addNew",addNewProvider);
-   if(addNewProvider){
-    return res.status(200).send
-    ({
-        code: 200,
-        success: true,
-        message: "Successfully added service providers",
-    });
+    if(addNewProvider.status == 'INVALIDFORMAT'){
+        return res.status(200).send({
+            code: 400,
+            success: false,
+            message: constants.responseMessage.imageFormat
+        });
+        
+    }else{
+        return res.status(200).send
+        ({
+            code: 200,
+            success: true,
+            message:  constants.responseMessage.insert
+        });
    }
 }
 
@@ -42,7 +47,7 @@ exports.updateServiceProvider = async(req,res)=>
 
 
    if(updateSProvider.status == 'INVALIDFORMAT'){
-    return res.status(400).send({
+    return res.status(200).send({
         code: 400,
         success: false,
         message: constants.responseMessage.imageFormat
@@ -67,7 +72,7 @@ exports.updateServiceProvider = async(req,res)=>
 }
 
 
-/**For add new service provider  */
+/**For updating servoceprovider status  */
 exports.updateStatus = async(req,res)=>
 {
 
@@ -96,7 +101,7 @@ exports.updateStatus = async(req,res)=>
 }
 
 
-/**For change status service provider  */
+/**The below function is for showing removing service provider */
 exports.removeServiceProvider = async(req,res)=>
 {
 

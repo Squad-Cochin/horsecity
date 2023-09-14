@@ -69,7 +69,7 @@ exports.listBreakDowns = async(req,res)=>
     ({
         code: 400,
         success: false,
-        message: 'No data found',
+        message: constants.responseMessage.getNoData,
         data  : getAllBreakDowns
   
     });

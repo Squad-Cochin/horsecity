@@ -19,7 +19,7 @@ exports.getAllTaxations = async(req,res)=>
    }
 }
 
-/**For gitting all data  */
+/**For gitting active taxation details */
 exports.getTaxationsNames = async(req,res)=>
 {
     let getAllTaxations = await tax.getTaxationsNames();
@@ -51,7 +51,7 @@ exports.addNewTaxation = async(req,res)=>
    }
 }
 
-/**For update service provider  */
+/**For updating taxation  */
 exports.updateTaxation = async(req,res)=>
 {
     let updateTaxation = await tax.updateTaxation(req.body,req.params.id);
@@ -75,7 +75,7 @@ exports.updateTaxation = async(req,res)=>
 }
 
 
-// /**For add new service provider  */
+// /**For changing status taxations  */
 exports.updateStatus = async(req,res)=>
 {
 
@@ -130,7 +130,7 @@ exports.removeTaxation = async(req,res)=>
     }
 }
 
-
+/**For getting data of any particular tax details */
 exports.getOneTaxation = async(req,res)=>
 {
     let getOneTaxation = await tax.getOneTaxation(req.params.id);

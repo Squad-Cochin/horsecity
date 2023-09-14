@@ -5,25 +5,25 @@ const validator = require('../../middlewares/validateInput/checkRequestBodyInput
 
 module.exports = function(app)
 {
-    /**For adding new quotation */
+    /**Below route is for  adding new quotation */
     app.post(`/${process.env.apiToken}/add/quotation`,validator.checkValuesEnteredInTheQuotationBody,quotation.addNewQuotation); 
     
-    /**List quotation basis of page & limit */
+    /**Below route is for  list quotation basis of page & limit */
     app.post(`/${process.env.apiToken}/getAll/quotations/:id`,quotation.ListQuotation);  
 
-    /**For feching particlar quotation basis of quotation id */
+    /**Below route is for feching particlar quotation basis of quotation id */
     app.get(`/${process.env.apiToken}/getOne/quotation/:id`,quotation.getOneQuotation);  
     
-    // /**For updating quataion That means add new one  */
+    // /**Below route is for   updating quataion That means add new one  */
     app.put(`/${process.env.apiToken}/update/quotation/:id`,quotation.updateQuotation);   
 
-    //**For listing removed quotaions  */ 
+    //**Below route is for  listing removed quotaions  */ 
     app.get(`/${process.env.apiToken}/list/quotations/:id`,quotation.removedQuotations);    
 
-    //**For chainging qutation status    */ 
+    //**Below route is for chainging qutation status    */ 
     app.get(`/${process.env.apiToken}/update-status/quotations/:id`,quotation.updateStatusQuotation);   
 
-    //**For sending email qutation     */ 
+    //**Below route is for sending email qutation     */ 
     app.post(`/${process.env.apiToken}/send-email/quotations/:id`,quotation.sendMail);   
   
 

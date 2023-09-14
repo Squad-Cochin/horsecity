@@ -5,8 +5,7 @@ const verifyBody = require(`../../../middlewares/requestValidator`); // Importin
 module.exports = function(app)
 {
 
-    /**For listing taxations basis of page limit  */ 
+    /**Below route is for getting data of all  active  currencies  */ 
     app.get(`/${process.env.apiToken}/getAll/currencies`,currencies.getCurrenciesNames);   
-
 
 }

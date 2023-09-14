@@ -1,14 +1,12 @@
-
 const modalAccounts = require('../../models/accounts/accounts')
 const constants = require('../../utils/constants');
-const commonoperation = require('../../utils/helper/commonoperation');
-const time = require('../../utils/helper/date');
 
 
-exports.getAllAcounts = async(req,res)=>
+/**Below controller For getting listing accounts  basis of page & limit & service provider id  */
+exports.getAllAccounts = async(req,res)=>
 {
 
-    let getAccounts = await modalAccounts.getAllAcounts(req.body,req.params.id);
+    let getAccounts = await modalAccounts.getAllAccounts(req.body,req.params.id);
 
    if(!getAccounts){
     return res.status(200).send
@@ -28,7 +26,7 @@ exports.getAllAcounts = async(req,res)=>
    }
 }
 
-/**List quotation basis of page & limit */
+/**Below controller For getting particular account details  */
 exports.getOneAccountDetails = async(req,res)=>
 {
 

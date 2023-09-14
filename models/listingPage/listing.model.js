@@ -159,7 +159,7 @@ static async getUsernameServiceProvider()
         {       
             
             const selQuery = `
-             SELECT sp.id, sp.user_name,
+             SELECT sp.id, sp.name,
              COALESCE(COUNT(vh.id), 0) AS vehicle_count
         FROM service_providers AS sp
         LEFT JOIN ${constants.tableName.vehicles} AS vh ON vh.service_provider_id = sp.id
@@ -168,7 +168,7 @@ static async getUsernameServiceProvider()
         AND sp.status = '${constants.status.active}'
         AND rl.id <> '${constants.Roles.admin}'  
         AND rl.id <> '${constants.Roles.super_admin}'
-        GROUP BY sp.id, sp.user_name;
+        GROUP BY sp.id, sp.name;
         `;
         
             con.query(selQuery,(err,data)=>{

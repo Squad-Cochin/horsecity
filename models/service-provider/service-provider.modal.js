@@ -1,5 +1,11 @@
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                             //
+//  This is service provider model file. Where all the logic of the service providers page program is written. //
+//                                                                                                             //
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 const con = require("../../configs/db.configs"); 
-const timeCalculate = require('../../utils/helper/date'); // This variable will have the date file data.
 const commonoperation = require('../../utils/helper/commonoperation');
 const constants = require('../../utils/constants');
 const time = require('../../utils/helper/date');
@@ -8,8 +14,9 @@ require('dotenv').config()
 
 
 module.exports = class serviceProviders
-{
-    static async getAllServiceProviders  (requestBody,spId) 
+{   
+/****This function for fetching service providers basis of page and limit basis of service provider id */
+static async getAllServiceProviders  (requestBody,spId) 
 {
     return new Promise((resolve, reject) =>
     {
@@ -76,10 +83,8 @@ module.exports = class serviceProviders
                                 JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                                 JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
                                 WHERE pm.role_id = '${role_id}'  AND md.id = '${constants.modules.service_provider}'`;
-                            //   console.log(Query);
-                            //    console.log(role_id);
+                
                                     con.query(Query,(err,result)=>{
-                                        // console.log("result",result);
                                         if(!err){
                         
                                             resolve({totalCount : count, serviceProviders : data ,module : result})
@@ -101,7 +106,7 @@ module.exports = class serviceProviders
    
 }
 
-
+/********This function for adding new service providers *******/
 static async addNewServiceProviders  (requestBody,file) 
 {
     return new Promise(async(resolve, reject) =>
@@ -110,30 +115,35 @@ static async addNewServiceProviders  (requestBody,file)
         {  
        
         let uploadAttachment = await commonoperation.fileUpload(file, constants.attachmentLocation.serviceProvider.licenceImage.upload);
-        const {name,email,user_name,password,contact_person,contact_no,emergency_contact_no,contact_address,licence_no,role_id} = requestBody ;
+        const invalidFormat = "INVALIDFORMAT";
+        if(uploadAttachment.message == invalidFormat ){  
+            resolve({ status: invalidFormat });
+        }else{
+            const {name,email,user_name,password,contact_person,contact_no,emergency_contact_no,contact_address,licence_no,role_id} = requestBody ;
 
-        let insQuery = `INSERT INTO ${constants.tableName.service_providers} (name, email, user_name, password,role_Id , contact_person, contact_no, contact_address, emergency_contact_no, licence_image, licence_no, expiry_at, created_at)
-        VALUES ('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}','${role_id}', '${contact_person}', '${contact_no}', '${contact_address}', '${emergency_contact_no}', '${uploadAttachment}', '${licence_no}', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-         
-        con.query(insQuery,async(err,data)=>{
-            console.log("data",data);
-            if(!err){
-                resolve(true)
-            }
-        })
+            let insQuery = `INSERT INTO ${constants.tableName.service_providers} (name, email, user_name, password,role_Id , contact_person, contact_no, contact_address, emergency_contact_no, licence_image, licence_no, expiry_at, created_at)
+            VALUES ('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}','${role_id}', '${contact_person}', '${contact_no}', '${contact_address}', '${emergency_contact_no}', '${uploadAttachment}', '${licence_no}', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+            
+            con.query(insQuery,async(err,data)=>{
+                console.log("data",data);
+                if(!err){
+                    resolve(true)
+                }
+            })
+    }
         }catch(err){
             console.log('Error while adding service providers', err);
         }
     })    
 }
-
+/********This function for updating service providers *******/
 static async updateServiceProvider  (requestBody,file,id) 
 {
     return new Promise(async(resolve, reject) =>
     {
         try
         {  
-            // console.log("hereee");
+      
         let uploadLicence = await commonoperation.fileUpload(file?.licence_image, constants.attachmentLocation.serviceProvider.licenceImage.upload);
         const invalidFormat = "INVALIDFORMAT";
         const invalidAttachment = 'INVALIDATTACHMENT'
@@ -175,7 +185,7 @@ static async updateServiceProvider  (requestBody,file,id)
 }
 
 
-
+/********This function for feching particular service provider*******/
 static async getOneServiceProvider(id) 
 {
     return new Promise((resolve, reject) =>
@@ -203,7 +213,7 @@ static async getOneServiceProvider(id)
         }
     })    
 }
-
+/********This function for feching getting service provider username*******/
 static async getNameServiceProviders()
 {
     return new Promise((resolve, reject) =>
@@ -211,7 +221,7 @@ static async getNameServiceProviders()
         try
         {       
             const selQuery = `
-            SELECT sp.id, sp.user_name
+            SELECT sp.id, sp.name
             FROM service_providers AS sp
             JOIN ${constants.tableName.roles} AS rl ON sp.role_Id = rl.id
             WHERE sp.deleted_at IS NULL AND sp.status = '${constants.status.active}'

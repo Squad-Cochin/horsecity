@@ -41,7 +41,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 500,
-            message : "Internal server error while sign in",
+            message : "Internal server error .",
         });
     }
     // If wrong password is entered then, this below response will be displayed
@@ -52,7 +52,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 400,
-            message : "Password is incorrect",
+            message : "Incorrect password .",
         });
     }
     // If service provider user is inactive then, this below response will be displayed
@@ -63,7 +63,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 400,
-            message : "Service provider is inactive",
+            message : "Inactive service provider",
         });
     } 
     // If password of the service provider user is expired then, this below response will be displayed
@@ -87,32 +87,7 @@ exports.serviceProviderLogin = async(req, res)=>
             code : 200,
             message : "Login successful",
             data : loginauth
-        });
-        // if(loginauth[0].role_name === constants.roles.admin)
-        // {
-        //     console.log('Admin login Successful');
-        //     const check = await res.set('role', constants.roles.admin);
-        //     console.log(check);
-        //     return res.status(200).send
-        //     ({
-        //         status : "success",
-        //         code : 200,
-        //         message : "Admin login Successful",
-        //         data : loginauth
-        //     });
-        // }
-        // if(loginauth[0].role_name === constants.roles.service_provider)
-        // {
-        //     console.log('Service provider login successful');
-        //     res.set('role', constants.roles.service_provider);
-        //     return res.status(200).send
-        //     ({
-        //         status : "success",
-        //         code : 200,
-        //         message : "Service provider login successful",
-        //         data : loginauth
-        //     });
-        // }        
+        });     
     }
 };
 
@@ -127,18 +102,15 @@ exports.serviceProviderLogin = async(req, res)=>
 
 exports.serviceProviderChangePassword = async(req, res, next)=>
 {
-    let loginauth = await auth.serviceproviderchangepassword(req.body.userName, req.body.password, req.body.newpassword, req.body.confirmnewpassword);
-    // console.log('Login Auth', loginauth );
-    
+    let loginauth = await auth.serviceproviderchangepassword(req.body.userName, req.body.password, req.body.newpassword, req.body.confirmnewpassword);   
     // The below if block will execute. when the entered username is not correct
     if(loginauth === 'noserviceprovider')
-    {
-        
+    {        
         return res.status(200).send
         ({
             success : false,
             code : 400,
-            message : "This username must be incorect or no user is registered with this username",
+            message : "This username must be incorrect or no user is registered with this username",
         });
     }
     // The below if block will execute. when any unhandled error came
@@ -149,12 +121,11 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         ({
             success : false,
             code : 500,
-            message : "Internal server error while updating the password",
+            message : "Internal server error",
         });
     }
     else if(loginauth === 'incorrectpassword')
-    {
-       
+    {       
         return res.status(200).send
         ({
             success : false,
@@ -163,16 +134,17 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         });
     }
     else
-    {
-        
+    {        
         return res.status(200).send
         ({
             success : "true",
             code : 200,
-            message : "Password updated successfully",
         }); 
     }
 };
+
+
+
 
 /**
  * The below function if for the logout. 
@@ -181,7 +153,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
 exports.serviceProviderLogout = async(req, res)=>
 {
     // We are calling the function. Which will look for logout functionality. We are sending username and password because it is needed
-    let loginauth = await auth.serviceproviderlogout(req.body.userName, req.body.password);    
+    let loginauth = await auth.serviceproviderlogout(req.params.id);    
     // If things are smoothly working, Then the below response will work 
     if(loginauth === 'logoutdone')
     {
@@ -217,26 +189,98 @@ exports.serviceProviderLogout = async(req, res)=>
     
 }
 
-exports.resetPasswordUsingEmail = async(req, res, next)=>
+exports.sendEmailForgotPassword = async(req, res)=>
 {
-    let sendingEmail = await mailer.SendEmail(req.body.email,"Hai","Reset password")
+   
+   let sendingEmail  = await auth.sendEmailForgotPassword(req.body.email)
+
     if(sendingEmail)
     {
         res.status(200).send
         ({
             status : true,
-            code : 200,
-            message : "Email sent successfully"
+            code : 200,  
+            message : `Mail successfully sent to ${req.body.mail}`
         })
+    
     }
     else
-    {
+    { 
         res.status(500).send
         ({
             status : false,
             code : 500,
             message : "Error while sending email"
         });        
+    }
+
+}
+
+exports.verifyAndRedirectingToPage = async(req, res)=>
+{
+   let resetPassword = await auth.resetPasswordUsingEmail(req.params);
+        if (resetPassword)
+            {
+                const {id , token} = resetPassword ;  
+                res.redirect(`${process.env.ADMIN_UI_URL}/reset-password/${id}/${token}`)
+            }
+            else
+            { 
+                res.redirect(`${process.env.ADMIN_UI_URL}/pages-404`);  
+            }
+}
+
+
+exports.verifyUrlForResetPassword = async(req, res)=>
+{
+   let resetPassword = await auth.resetPasswordUsingEmail(req.params);
+   if(req.body?.flag){
+            if (resetPassword)
+            {
+                const {id , token} = resetPassword ; 
+                return res.status(200).send({
+                    code: 200,
+                    status: true,
+                    message: "Successfully verified !",
+                    data  : resetPassword 
+                });   
+            }
+            else
+            { 
+                return res.status(200).send({
+                    code: 400,
+                    status: false,
+                    message: "Verification faild !"
+                });    
+            }
+
+
+   }
+
+}
+
+
+
+/**This controller for update forgot password  */
+exports.resetPasswordForForgotPassword = async(req, res)=>
+{
+   
+   let resetPassword = await auth.updateForgotPassword(req.params,req.body);
+    if(resetPassword){
+        res.status(200).send
+        ({
+            status : true,
+            code : 200,  
+            message : "Password updated successfully"
+        })
+    }
+    else
+    { 
+        return res.status(200).send({
+            code: 400,
+            status: false,
+            message: "Password updation faild !"
+        });    
     }
 
 }

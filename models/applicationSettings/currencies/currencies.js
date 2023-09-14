@@ -1,12 +1,16 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//   This is currencies model file. Where all the logic of the currencies program is written. //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 const con = require("../../../configs/db.configs"); 
-const timeCalculate = require('../../../utils/helper/date'); // This variable will have the date file data.
-const commonoperation = require('../../../utils/helper/commonoperation');
 const constants = require('../../../utils/constants');
-const time = require('../../../utils/helper/date');
 require('dotenv').config()
 
 module.exports = class currencie
 {
+    /****This function for fetching currencie names */
     static async getCurrenciesNames  ()
 {
     return new Promise((resolve, reject) =>

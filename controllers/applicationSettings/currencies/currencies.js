@@ -3,7 +3,7 @@ const currencies = require('../../../models/applicationSettings/currencies/curre
 const constants = require('../../../utils/constants');
 const commonoperation = require('../../../utils/helper/commonoperation');
 
-/**For gitting all data  */
+/**For gitting active currencie names  */
 exports.getCurrenciesNames = async(req,res)=>
 {
     let getAllCurrencies = await currencies.getCurrenciesNames();

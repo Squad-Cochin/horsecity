@@ -8,10 +8,11 @@
 
 const reportsModal = require('../../models/reports/report.modal')
 const time = require('../../utils/helper/date');
-
+const constants = require('../../utils/constants');
 /**For geting all service provider basis of from date & to date */
 exports.getReportsServiceProviders = async(req,res)=>
 {
+ 
     let getSProviders = await reportsModal.getReportsServiceProviders(req.body,time.changeDateToSQLFormat(req.body.from_date),time.changeDateToSQLFormat(req.body.to_date),req.params.id);
 
    if(getSProviders){
@@ -19,7 +20,7 @@ exports.getReportsServiceProviders = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: "Successfully fetched service providers",
+        message: constants.responseMessage.getAll,
         data : getSProviders
     });
    }
@@ -35,7 +36,7 @@ exports.getReportsCustomers = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: "Successfully fetched customers",
+        message: constants.responseMessage.getAll,
         data : getcustomers
     });
    }
@@ -53,7 +54,7 @@ exports.getReportsVehicles = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: "Successfully fetched vehicles",
+        message: constants.responseMessage.getAll,
         data : getVehicles
     });
    }
@@ -71,7 +72,7 @@ exports.getReportsDrivers = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: "Successfully fetched drivers",
+        message: constants.responseMessage.getAll,
         data : getDrivers
     });
    }
@@ -89,7 +90,7 @@ exports.getReportsEnquiries = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: "Successfully fetched enquiries",
+        message: constants.responseMessage.getAll,
         data : getEnquiries
     });
    }
@@ -108,7 +109,7 @@ exports.getReportsQuotations = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: "Successfully fetched quatations",
+        message: constants.responseMessage.getAll,
         data : getQuotations
     });
    }

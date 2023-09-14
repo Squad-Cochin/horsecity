@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const wishlistModel = require('../../models/wishlist/wishlist.model');
-
+const constants = require('../../utils/constants');
 /**For adding & remove wishlist  */
 exports.isWishlistAdd = async(req,res)=>
 {
@@ -17,7 +17,7 @@ exports.isWishlistAdd = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: "Succesfully updated",
+        message: constants.responseMessage.edit,
     });
    }
 }
@@ -34,7 +34,7 @@ exports.wishlistItems = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: "Succesfully feched",
+        message:constants.responseMessage.getAll,
         data : wishlistItems
     });
    }
