@@ -21,11 +21,9 @@ exports.getAll = async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for get all customer logic.
     const customers = await customer.getall(req.body.page, req.body.limit, req.params.id);
-    // console.log("Customer :", customers);
     if(customers.length === 0)
     {
         // If there are no customer in the database. Then these lines of code will be executed
-        // console.log('No Customer data present');
         return res.status(200).send
         ({
             code : 200,
@@ -37,7 +35,6 @@ exports.getAll = async (req, res, next) =>
     else
     {
         // If there are customers in the database. Then these lines of code will be executed
-        // console.log('Customer data fetched successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -60,7 +57,6 @@ exports.getOne= async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for getting all details of particular customer.
     const customers = await customer.getone(req.params.id);
-    // console.log('Customer One Data: ',customers);    
     // If any wrong id or some thing wrong entered, If that Id has no data then this if block of code will be executed
     if(customers === 'nodata')
     {
@@ -86,7 +82,6 @@ exports.getOne= async (req, res, next) =>
     else
     {
         // Every things went well and customer data is available then this else block of code will executed.
-        // console.log('Particular customer data fetched successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -194,7 +189,6 @@ exports.editCustomer = async (req, res, next) =>
         req.body.id_proof_no, // Identity proof number of the customer
         req.files && req.files.id_proof_image !== undefined ? req.files.id_proof_image : null // Perform the null check here // Image of the identity proof
     );
-    // console.log('Result from the edit customer from the admin side: ', customers);
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
@@ -208,7 +202,6 @@ exports.editCustomer = async (req, res, next) =>
     // If the id proof image is in invalid format then this else if block of code will be executed.
     else if(customers === 'INVALIDFORMAT')
     {
-        console.log('Invalid Format of file submit for upload');
         return res.status(200).send
         ({
             code : 400,
@@ -256,7 +249,6 @@ exports.updateStatus= async (req, res) =>
     }
     else
     {
-        // console.log('Customer Status updated successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -272,10 +264,8 @@ exports.updateStatus= async (req, res) =>
 exports.removeCustomer = async (req, res) =>
 {
     const customers = await customer.removecustomer(req.params.id);
-    // console.log(customers);
     if(customers.length === 0)
     {
-        console.log('No Customer data present and remove is not done');
         return res.status(200).send
         ({
             code : 400,
@@ -285,7 +275,6 @@ exports.removeCustomer = async (req, res) =>
     }
     else
     {
-        // console.log('Customer is removed');
         return res.status(200).send
         ({
             code : 200,
@@ -683,7 +672,6 @@ exports.getParticularCustomerAllBookings = async (req, res, next) =>
     }
     else
     {
-        // console.log(`All the booking of a particular customer is fetched successfully`);
         return res.status(200).json
         ({
             code: 200,
@@ -712,7 +700,6 @@ exports.getParticularCustomerAllEnquiry = async (req, res, next)=>
     }
     else
     {
-        // console.log(`All the booking of a particular customer is fetched successfully`);
         return res.status(200).json
         ({
             code: 200,
@@ -745,7 +732,6 @@ exports.getParticularCustomerAllBookingsDataFromInvoice = async (req, res, next)
     }
     else
     {
-        // console.log(`All the booking data of a particular customer is fetched successfully from the invoice table`);
         return res.status(200).json
         ({
             code: 200,
@@ -839,7 +825,6 @@ exports.getParticularCustomerOngoingBookingsDataFromInvoice = async (req, res, n
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        console.log('Error while fetching all the ongoing booking data for the customer dashboard from the invoice table');
         return res.status(200).json
         ({
             code: 500,
@@ -913,7 +898,6 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
     // If input feild are in correct format and not already present in the database, then this else block of code will be executed.
     else
     {
-        // console.log('Customer data edited successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -934,7 +918,6 @@ exports.getOneDetailsOnCustomerPage = async(req, res, next) =>
     // If any wrong id or some thing wrong entered, If that Id has no data then this if block of code will be executed
     if(customers === 'nodata')
     {
-        console.log('No customer data present');
         return res.status(200).send
         ({
             code : 400,

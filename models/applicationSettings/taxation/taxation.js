@@ -118,7 +118,6 @@ static async updateTaxation  (requestBody,id)
         let validateQuery  = `SELECT * FROM ${constants.tableName.taxations} tx
                               WHERE id = '${id}' AND tx.deleted_at IS NULL`
         con.query(validateQuery,async(err,data)=>{
-           console.log("data",data);
         if(data?.length != 0 ){
 
                     let updateQuery = `UPDATE ${constants.tableName.taxations} SET 

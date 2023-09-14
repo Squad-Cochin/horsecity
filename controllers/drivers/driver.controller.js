@@ -125,7 +125,6 @@ exports.addDriver = async (req, res, next) =>
     }
     else if(drivers === 'NOATTACHP')
     {
-        console.log('No attachment for the driver profile image');
         return res.status(200).send
         ({
             code : 400,
@@ -267,7 +266,6 @@ exports.editDriver = async (req, res, next) =>
     }
     else if(drivers === 'INVALIDATTACHMENTL')
     {
-        console.log('Invalid format of driver licence image is upload');
         return res.status(200).send
         ({
             code : 400,
@@ -420,12 +418,10 @@ exports.UnAssignServiceProvider = async (req, res, next) =>
     // The below line is for going to the model function to implement the code for unassigning the driver from a service provider.
     // We need to give assign_drivers table id in the params to remove this otherwise it will not work
     const drivers = await driver.unassignserviceprovider(req.params.id);
-    // console.log(drivers);
 
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(drivers === 'err')
     {
-        console.log('Error while driver is unassigned to their particular service provider');
         return res.status(200).send
         ({
             code : 400,
@@ -437,7 +433,6 @@ exports.UnAssignServiceProvider = async (req, res, next) =>
     // We need to give assign_drivers table id in the params to remove this otherwise it will not work
     if(drivers === 'unassigned')
     {
-        console.log('Driver is unassigned to their particular service provider');
         return res.status(200).send
         ({
             code : 200,
@@ -449,7 +444,6 @@ exports.UnAssignServiceProvider = async (req, res, next) =>
     // We need to give assign_drivers table id in the params to remove this otherwise it will not work
     if(drivers === 'alreadyunassigned')
     {
-        console.log('Driver is already unassigned to their particular service provider');
         return res.status(200).send
         ({
             code : 200,

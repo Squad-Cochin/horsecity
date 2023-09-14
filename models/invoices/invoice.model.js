@@ -30,13 +30,10 @@ module.exports = class invoices
             return await new Promise(async(resolve, reject)=>
             {
                 let checkRole = `SELECT sp.id, r.id AS role_id, r.name FROM ${constants.tableName.service_providers} sp, ${constants.tableName.roles} r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
-                // console.log('Check Role Data from the invoice model: ', checkRole);
                 con.query(checkRole, async (err, result) =>
                 {
-                    // console.log(`Role from the invoice model: `, result);
                     if(err)
                     {
-                       console.log('Error while checking the role at the time of invoice');
                        resolve('err') 
                     }
                     if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.superAdmin)
@@ -49,9 +46,7 @@ module.exports = class invoices
                                         JOIN ${constants.tableName.customers} c ON q.customer_id = c.id
                                         WHERE i.deleted_at IS NULL
                                         LIMIT ${pageSize} OFFSET ${offset}`;
-                        // console.log('Selquery of invoice when user is admin or suport admin: ',selQuery);
                         const count = await commonoperation.totalCount(constants.tableName.invoices);
-                        // console.log('Total Data', count[0]['count(t.id)']);
                         con.query(selQuery, async (err, result2) =>
                         {
                             if(err)
@@ -64,12 +59,10 @@ module.exports = class invoices
                             JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                             JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
                             WHERE pm.role_id = '${result[0].role_id}' AND md.name = 'INVOICES' `;
-                            // console.log(Query);
                             con.query(Query, (err, moduleResult) =>
                             {
                                 if(err)
                                 {
-                                    console.log('Error while fetching the module name at the time of getall vehicles');
                                     resolve('err') 
                                 }
                                 else
@@ -77,12 +70,10 @@ module.exports = class invoices
                                     const data =  objectConvertor.getAllInvoice(result2)
                                     if(result2.length === 0)
                                     {
-                                        // console.log(`totalCount = ${count}, invoices = ${data}`);
                                         resolve ({totalCount : count[0]['count(t.id)'], invoices : data, module : moduleResult});
                                     }
                                     else
                                     {
-                                        // console.log(`totalCount = ${count}, invoices = ${data}`);
                                         resolve ({totalCount : count[0]['count(t.id)'], invoices : data, module : moduleResult});
                                     }
                                 }
@@ -91,7 +82,6 @@ module.exports = class invoices
                     }
                     else if(result[0].role_id === constants.Roles.service_provider)
                     {
-                        // console.log(`CAME TO SERVICE PROVIDER`);
                         const offset = (pageNumber - 1) * pageSize;
                         let selQuery = `SELECT i.id, i.invoice_no, i.quotation_prefix_id, c.name, c.email, i.status
                                         FROM ${constants.tableName.invoices} i
@@ -100,14 +90,11 @@ module.exports = class invoices
                                         WHERE i.deleted_at IS NULL 
                                         AND i.service_provider_id = ${Id}
                                         LIMIT ${pageSize} OFFSET ${offset}`;
-                        // console.log('Selquery of invoice when user is service provider: ',selQuery);
                         const count = await commonoperation.totalCountParticularServiceProvider(constants.tableName.invoices, Id);
-                        // console.log('Total Data', count[0]['count(t.id)']);
                         con.query(selQuery, async (err, result2) =>
                         {
                             if(err)
                             {
-                                console.log(err);
                                 resolve('err');
                             }
                             let Query = `SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
@@ -115,12 +102,10 @@ module.exports = class invoices
                             JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                             JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
                             WHERE pm.role_id = '${result[0].role_id}' AND md.name = 'INVOICES' `;
-                            // console.log(Query);
                             con.query(Query, (err, moduleResult) =>
                             {
                                 if(err)
                                 {
-                                    console.log('Error while fetching the module name at the time of getall vehicles');
                                     resolve('err') 
                                 }
                                 else
@@ -128,12 +113,10 @@ module.exports = class invoices
                                     const data =  objectConvertor.getAllInvoice(result2)
                                     if(result2.length === 0)
                                     {
-                                        // console.log(`totalCount = ${count}, invoices = ${data}`);
                                         resolve ({totalCount : count[0]['count(t.id)'], invoices : data, module : moduleResult});
                                     }
                                     else
                                     {
-                                        // console.log(`totalCount = ${count}, invoices = ${data}`);
                                         resolve ({totalCount : count[0]['count(t.id)'], invoices : data, module : moduleResult});
                                     }
                                 }
@@ -142,7 +125,6 @@ module.exports = class invoices
                     }
                     else
                     {
-                        console.log('I think the role name which we got is not present in the database at the time of invoice');
                         resolve('err') 
                     }                    
                 });
@@ -165,13 +147,11 @@ module.exports = class invoices
             return await new Promise(async (resolve, reject) =>
             {
                 let invoiceResponse = await commonfetching.getOneInvoice(Id)
-                // console.log('REesponse from the model: ', invoiceResponse);
                 resolve(invoiceResponse);
             });
         }
         catch (error)
         {
-            console.log (error) ;
             return 'err';
         }    
     };
@@ -202,51 +182,39 @@ module.exports = class invoices
                     else
                     {
                         let paymentRecordData = await commonfetching.dataOnCondition(constants.tableName.payment_records, Id, 'invoice_id')
-                        // console.log('Payment Record Date: ', paymentRecordData);                        
                         if(paymentRecordData[0].invoice_id == Id && paymentRecordData[0].updated_at === null)
                         {
                             let ra = paymentRecordData[0].total_amount - amount
                             let upQuery = `UPDATE ${constants.tableName.payment_records} pr SET pr.invoice_prefix_id = '${paymentRecordData[0].invoice_prefix_id}', pr.received_amount = ${amount}, pr.received_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', pr.remaining_amount = ${ra}, pr.status = '${constants.status.partPaid}', pr.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE pr.invoice_id = ${Id}`;
-                            // console.log(upQuery);
                             con.query(upQuery, (err, result) =>
                             {                            
                                 if(result.affectedRows > 0)
                                 {
-                                    // console.log('Update query executed, That means the entry is done by first time');
                                     resolve('affectedRows')
                                 }
                                 else
                                 {
-                                    console.log(`Error while updating the query that me at the first time`);
-                                    console.log(err);
                                     resolve('err');
                                 }
                             });
                         }
                         else
                         {
-                            // console.log('Amount:', amount);
                             let latestData = `SELECT * FROM ${constants.tableName.payment_records} WHERE invoice_id = '${Id}' ORDER BY remaining_amount ASC LIMIT 1`;
                             con.query(latestData, (err, result) =>
                             {
-                                // console.log('Latest Data: ', result);
                                 let ra = result[0].remaining_amount - amount
-                                // console.log('ra: ', ra);
                                 if(ra > 0)
                                 {
                                     let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, invoice_prefix_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, '${result[0].invoice_prefix_id}', ${result[0].total_amount}, ${amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${ra}, '${constants.status.partPaid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                                    // console.log(insQuery);
                                     con.query(insQuery, (err, result) =>
                                     {
                                         if(result.affectedRows > 0)
                                         {
-                                            // console.log('Insert query executed, Payment is still partially paid');
                                             resolve('affectedRows')
                                         }
                                         else
                                         {
-                                            console.log(`Error while inserting the query that me payment is tiall partially paid`);
-                                            console.log(err);
                                             resolve('err');
                                         }
                                     });
@@ -254,12 +222,10 @@ module.exports = class invoices
                                 if(ra == 0)
                                 {
                                     let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, invoice_prefix_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, '${result[0].invoice_prefix_id}', ${result[0].total_amount}, ${amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${ra}, '${constants.status.paid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                                    // console.log(insQuery);
                                     con.query(insQuery, (err, insResult) =>
                                     {
                                         if(insResult.affectedRows > 0)
                                         {
-                                            // console.log('Insert query executed, Payment is fully made');
                                             let updateBookingTable = `  UPDATE ${constants.tableName.bookings} b 
                                                                         SET b.status = '${constants.status.paid}',
                                                                         b.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
@@ -268,27 +234,20 @@ module.exports = class invoices
                                                                         AND (b.booking_status <> '${constants.vehicles_breakouts_status.break_out}'
                                                                         OR b.booking_status <> '${constants.booking_status.completed}') 
                                                                         AND b.status = '${constants.status.pending}' `
-                                            // console.log(`Update query when the amount is fully paid: `, updateBookingTable);
                                             con.query(updateBookingTable, (err, upBoResult) =>
                                             {
-                                                // console.log('Result from the updateBookingTable query: ', upBoResult);
                                                 if(upBoResult.affectedRows > 0)
                                                 {
-                                                    // console.log(`Data is successfully entered in the payment records and bookings table. `);
                                                     resolve('fullypaid');
                                                 }
                                                 else
                                                 {
-                                                    console.log(`Error while executing the update query in the booking table. Which need to be executed when the amount is fully paid by the customer`);
-                                                    console.log(err);
                                                     resolve('err');
                                                 }
                                             });
                                         }
                                         else
                                         {
-                                            console.log(`Error while inserting the query that me payment is fully made`);
-                                            console.log(err);
                                             resolve('err');
                                         }
                                     });
@@ -349,12 +308,10 @@ module.exports = class invoices
                 let latdate = ` SELECT p.invoice_id, p.total_amount, p.remaining_amount FROM ${constants.tableName.payment_records} p 
                                 WHERE p.invoice_id  = ${Id} 
                                 ORDER BY remaining_amount ASC LIMIT 1`
-                // console.log(latdate);
                 con.query(latdate, (err, result) =>
                 {
                     if(result.length != 0)
                     {
-                        // console.log('Date Fetched: ');
                         resolve(result);
                     }
                     if(result.length == 0)
@@ -390,13 +347,10 @@ module.exports = class invoices
                 const emailSent = await mail.SendEmail(id, to, subject);
                 if(emailSent === false)
                 {
-                    console.log(`Error while sending the email from the model function`);
                     resolve(false)
                 }
                 if(emailSent === true)
                 {
-                    // console.log('True');
-                    // console.log(`Email send successfully from the model`);
                     resolve(true);
                 }
             });            
@@ -425,16 +379,12 @@ module.exports = class invoices
                 AND t.subject = '${process.env.TemplateInvoiceConditionName}'`;
                 con.query(selQuery,(err, result) =>
                 {
-                    // console.log(`Email details: `, result);
                     if(result.length != 0)
                     {
-                        // console.log('Send email button data for the invoice page fetched successfully');
                         resolve(result);
                     }
                     else
                     {
-                        console.log(err);
-                        console.log('Error while fetching the email details');
                         resolve('err')
                     }
                 });
@@ -458,26 +408,20 @@ module.exports = class invoices
             return await new Promise(async(resolve, reject)=>
             {
                 let data = await commonfetching.dataOnCondition(constants.tableName.invoices, Id, 'id')
-                // console.log(`Data at the booking got start button from the invoice table: `, data);
 
                 let data3 = await commonfetching.dataOnCondition(constants.tableName.bookings, data[0].invoice_no, 'invoice_prefix_id')
-                // console.log('Data 3: ', data3);
                 if(data3.length != 0)
                 {
-                    console.log(`Duplicate invoice number. Cannot enter`);
                     resolve('duplicate');
                 }
                 else
                 {
                     let data2 = await commonfetching.dataOnCondition(constants.tableName.quotations, data[0].quot_id, 'id');
-                    // console.log(`Data at the booking got start button from the quotation table: `, data2);
 
                     const insQuery = `INSERT INTO ${constants.tableName.bookings}(customer_id, inv_id, invoice_prefix_id, service_provider_id, vehicle_id, driver_id, taxation_id, discount_type_id, status, booking_status, pickup_location, pickup_country, pickup_date, pickup_time, drop_location, drop_country, drop_date, drop_time ,confirmation_sent, sub_total, tax_amount, discount_amount, final_amount, created_at) VALUES(${data2[0].customer_id}, ${data[0].id}, '${data[0].invoice_no}', ${data[0].service_provider_id}, ${data[0].vehicle_id}, ${data[0].driver_id}, ${data2[0].taxation_id}, ${data2[0].discount_type_id}, 'PENDING', 'CONFIRM', '${data[0].pickup_point}', '${data2[0].pickup_country}', '${time.changeDateToSQLFormat(data2[0].pickup_date)}', '${data2[0].pickup_time}','${data[0].drop_point}', '${data2[0].drop_country}', '${time.changeDateToSQLFormat(data2[0].drop_date)}', '${data2[0].drop_time}', 'YES',  ${data[0].sub_total},  ${data[0].tax_amount},  ${data[0].discount_amount},  ${data[0].final_amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
 
-                    // console.log('Insert Booking Query: ',insQuery);
                     con.query(insQuery, (err, result) =>
                     {
-                        // console.log(`Insert result of the booking : `, result);
                         if(result === 'undefined')
                         {
                             resolve('NotEntered')
@@ -490,7 +434,6 @@ module.exports = class invoices
                         if(result.affectedRows > 0)
                         {
                             let upQuery = `UPDATE ${constants.tableName.invoices} i SET i.status = 'STARTED', i.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE i.id = ${Id}`;
-                            // console.log('Update Query: ', upQuery);
                             con.query(upQuery, (err, result2) =>
                             {
                                 if(err)
@@ -529,73 +472,55 @@ module.exports = class invoices
             return await new Promise(async(resolve, reject) =>
             {
                 let data = await commonfetching.dataOnCondition(constants.tableName.invoices, Id, 'id');
-                // console.log(`Data at the booking got cancel button from the invoice table: `, data);
                 let data3 = await commonfetching.dataOnCondition(constants.tableName.bookings, data[0].invoice_no, 'invoice_prefix_id')
-                // console.log('Data 3 from the booking cancel: ', data3);
                 if(data3.length != 0)
                 {
-                    console.log(`Duplicate invoice number. Cannot enter during cancel`);
                     resolve('duplicate');
                 }
                 else
                 {
                     let data2 = await commonfetching.dataOnCondition(constants.tableName.quotations, data[0].quot_id, 'id');
-                    // console.log(`Data at the booking got cancel button from the quotation table: `, data2);
                     const insQuery = `INSERT INTO ${constants.tableName.bookings}(customer_id, inv_id, invoice_prefix_id, service_provider_id, vehicle_id, driver_id, taxation_id, discount_type_id, status, booking_status, pickup_location, pickup_country, pickup_date, pickup_time, drop_location, drop_country, drop_date, drop_time ,confirmation_sent, sub_total, tax_amount, discount_amount, final_amount, created_at, deleted_at) VALUES(${data2[0].customer_id}, ${data[0].id}, '${data[0].invoice_no}', ${data[0].service_provider_id}, ${data[0].vehicle_id}, ${data[0].driver_id}, ${data2[0].taxation_id}, ${data2[0].discount_type_id}, '${constants.booking_status.cancelled}', '${constants.booking_status.cancelled}', '${data[0].pickup_point}', '${data2[0].pickup_country}', '${time.changeDateToSQLFormat(data2[0].pickup_date)}', '${data2[0].pickup_time}','${data[0].drop_point}', '${data2[0].drop_country}', '${time.changeDateToSQLFormat(data2[0].drop_date)}', '${data2[0].drop_time}', 'YES',  ${data[0].sub_total},  ${data[0].tax_amount},  ${data[0].discount_amount},  ${data[0].final_amount}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                    // console.log('Insert query during the cancel button: ',insQuery);
                     con.query(insQuery, (err, result) =>
                     {
-                        // console.log(`Insert result of the booking at the time of cancel button: `, result);
                         if(result === 'undefined')
                         {
-                            console.log(`Result is underfine while inserting the query into the booking table at the time of cancel button`);
                             resolve('NotEntered');
                         }
                         if(err)
                         {
-                            console.log(`Error while inserting the query into the booking table at the time of cancel button`);
                             resolve('err');
                         }
                         if(result.affectedRows > 0)
                         {
-                            // console.log(`Data is inserted in the booking table at the time of cancel button`);
                             let upQuery = `UPDATE ${constants.tableName.invoices} i SET i.status = '${constants.status.inactive}', i.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE i.id = ${Id}`;
-                            // console.log('Update Query at the time of cancel button: ', upQuery);
                             con.query(upQuery, (err, result2) =>
                             {
                                 if(err)
                                 {
-                                    console.log(`Error while updating the query into the invoice table at the time of cancel button`);
                                     resolve('err')
                                 }
                                 if(result2.affectedRows > 0)
                                 {
-                                    // console.log(`Data is updated in the invoice table at the time of cancel button`);
                                     let upQuery2 = `UPDATE ${constants.tableName.payment_records} p SET p.status = '${constants.booking_status.cancelled}', p.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', p.received_amount = '0.00', p.remaining_amount = '0.00' WHERE p.invoice_id = ${Id} AND p.updated_at IS NULL AND p.deleted_at IS NULL`;
-                                    // console.log(`Update Query: `, upQuery2);
                                     con.query(upQuery2, (err, result3) =>
                                     {
-                                        // console.log(result3);
                                         if(err)
                                         {
-                                            console.log(`Error while update query into the payment_record table at the time of cancel button`);
                                             resolve('err')
                                         }
                                         if(result3 === 'undefined')
                                         {
-                                            console.log(`Result is underfined while update the query into the payment record table at the time of cancel button`);
                                             resolve('NotEntered');
                                         }
                                         if(result3.affectedRows > 0)
                                         {
-                                            // console.log(`Booking data is cancelled and entered into the bookings table`);
                                             resolve('Entered');
                                         }                                        
                                     });
                                 }
                                 if(result2 === 'undefined')
                                 {
-                                    console.log(`Result is underfined while update the query into the invoices table at the time of cancel button`);
                                     resolve('NotEntered')
                                 }
                             });                            

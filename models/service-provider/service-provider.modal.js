@@ -125,7 +125,6 @@ static async addNewServiceProviders  (requestBody,file)
             VALUES ('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}','${role_id}', '${contact_person}', '${contact_no}', '${contact_address}', '${emergency_contact_no}', '${uploadAttachment}', '${licence_no}', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
             
             con.query(insQuery,async(err,data)=>{
-                console.log("data",data);
                 if(!err){
                     resolve(true)
                 }
@@ -153,7 +152,6 @@ static async updateServiceProvider  (requestBody,file,id)
                 uploadLicence ){
 
         const {name,email,user_name,contact_person,contact_no,emergency_contact_no,contact_address,licence_no,role_id,service_provider_id} = requestBody ;
-        // console.log(constants.Roles.service_provider,service_provider_id);
         let updateQuery = `UPDATE ${constants.tableName.service_providers} SET 
         name = '${name}',
         email = '${email}',
@@ -170,7 +168,6 @@ static async updateServiceProvider  (requestBody,file,id)
         WHERE id = '${id}'`;
     
         con.query(updateQuery,async(err,data)=>{
-            console.log(err);
             if(data?.length != 0 ){
                 resolve({status : "SUCCESS"})
             }else{
@@ -199,7 +196,6 @@ static async getOneServiceProvider(id)
 
             con.query(selQuery,async(err,data)=>{
                 if(data?.length != 0){
-                    console.log(data);
                     let licenceImage = data[0].licence_image;
                     data[0].licence_image = `${process.env.PORT_SP}${constants.attachmentLocation.serviceProvider.licenceImage.view}${licenceImage}`;
                     
@@ -249,7 +245,6 @@ static async getSpVehicles(spID)
     {
         try
         {       
-            console.log(spID);
             const selQuery = `SELECT vh.id, vh.vehicle_number
             FROM ${constants.tableName.vehicles} AS vh
             WHERE vh.service_provider_id = '${spID}'

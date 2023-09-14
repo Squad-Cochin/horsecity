@@ -22,7 +22,6 @@ exports.serviceProviderLogin = async(req, res)=>
     // We are calling the function. Which will look for login functionality. We are sending username and password because it is needed
     let loginauth = await auth.serviceproviderlogin(req.body.userName, req.body.password)
     // If no service provider user found with entered username, then this if block code will be executed
-    // console.log('Login Auth from Controller', loginauth);
     if(loginauth === 'noserviceprovider')
     {
  

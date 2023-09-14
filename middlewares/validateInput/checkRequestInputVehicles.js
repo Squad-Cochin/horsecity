@@ -114,17 +114,14 @@ exports.isAirConditionerValueEntered = (req, res, next) =>
     }
     else if(req.body.air_conditioner === 'YES')
     {
-        // console.log('AC present');
         next();
     }
     else if(req.body.air_conditioner === 'NO')
     {
-        console.log('AC Not Present');
         next();
     }
     else
     {
-        console.log('Invalid Input');
         return res.status(200).send
         ({
             code: 400,
@@ -147,17 +144,14 @@ exports.isTemperaturControlValueEntered = (req, res, next) =>
     }
     else if(req.body.temperature_manageable === 'YES')
     {
-        // console.log('Temperature control present');
         next();
     }
     else if(req.body.temperature_manageable === 'NO')
     {
-        console.log('Temperature control Not Present');
         next();
     }
     else
     {
-        console.log('Invalid Input');
         return res.status(200).send
         ({
             code: 400,
@@ -180,17 +174,14 @@ exports.isGCCTravelValueEntered = (req, res, next) =>
     }
     else if(req.body.gcc_travel_allowed === 'YES')
     {
-        // console.log('GCC travel present');
         next();
     }
     else if(req.body.gcc_travel_allowed === 'NO')
     {
-        // console.log('GCC travel Not Present');
         next();
     }
     else
     {
-        console.log('Invalid Input');
         return res.status(200).send
         ({
             code: 400,
@@ -213,17 +204,14 @@ exports.isInsuranceCoverValueEntered = (req, res, next) =>
     }
     else if(req.body.insurance_cover === 'YES')
     {
-        // console.log('Insurance present');
         next();
     }
     else if(req.body.insurance_cover === 'NO')
     {
-        // console.log('Insurance Not Present');
         next();
     }
     else
     {
-        console.log('Invalid Input');
         return res.status(200).send
         ({
             code: 400,
@@ -312,22 +300,18 @@ exports.isValidVehicleTypeEntered = (req, res, next) =>
     }
     else if(req.body.vehicle_type === 'PRIVATE')
     {
-        // console.log('Vehicle Type PRIVATE');
         next();
     }
     else if(req.body.vehicle_type === 'GCC')
     {
-        // console.log('Vehicle Type GCC');
         next();
     }
     else if(req.body.vehicle_type === 'SHARING')
     {
-        // console.log('Vehicle Type SHARING');
         next();
     }
     else
     {
-        console.log('Invalid Vehicle Type Input');
         return res.status(200).send
         ({
             code: 400,
@@ -354,10 +338,8 @@ exports.isValidVehicleNumberEntered =  async (req, res, next) =>
         var isValidVehicleNumber = (number) =>
         {
             const regex = new RegExp(process.env.VEHICLENUMBERREGEX);
-            // console.log('Regex valuie at the checking the vehicle number: ', regex);
             return regex.test(number); // Use the test() method to check if the vehicle number matches the regex pattern
         }
-        // console.log(isValidVehicleNumber(vehicleNumber));
         if(!isValidVehicleNumber(vehicleNumber))
         {
             return res.status(200).json
@@ -388,7 +370,6 @@ exports.isValidVehicleNumberEntered =  async (req, res, next) =>
             }
 
             // const data = await commonfetching.dataOnCondition(tableName, req.body.vehicle_number, 'vehicle_number')
-            // console.log('Data while cheking vehicle number plate:', data);
             // if(data === 'err' || !data)
             // {
             //     return res.status(500).json
@@ -421,7 +402,6 @@ exports.isSafetyCertificateAdded = (req, res, next) =>
 {
     if(!req.files?.safety_certicate && req.url === url.ADD_VEHICLE_PAGE_URL && req.method === 'POST')
     {
-        console.log(`Vehicle safety certificate is not uploaded`);
         return res.status(200).json
         ({
             code : 400,
@@ -450,7 +430,6 @@ exports.isVehicleImageUploaded = (req, res, next) =>
 {
     if(!req.files?.image)
     {
-        console.log(`Vehicle image is not uploaded`);
         return res.status(200).json
         ({
             code : 400,
@@ -468,7 +447,6 @@ exports.isVehicleImageTitleAdded = (req, res, next) =>
 {
     if(!req.body.title)
     {
-        console.log(`Vehicle image title is not added`);
         return res.status(200).json
         ({
             code : 400,

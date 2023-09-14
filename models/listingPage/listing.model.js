@@ -44,7 +44,6 @@ static async listingPageData  (body)
         // Filtering trip type
         let tripTypeFilter = ''; 
         if (filteredTripTypes.length != 0) {
-            console.log(filteredTripTypes);
             const tripTypeFilterValues = filteredTripTypes.map(type => `'${type}'`).join(',');
             tripTypeFilter = `AND vh.vehicle_type IN (${tripTypeFilterValues})`;
         }
@@ -100,7 +99,6 @@ static async listingPageData  (body)
         LIMIT ${+limit} OFFSET ${+offset};
             `;
         con.query(selQuery,(err,data)=>{
-            console.log(err);
             if(!err){   
                 for(let i = 0;i < data.length ;  i++){
            

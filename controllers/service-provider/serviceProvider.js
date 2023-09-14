@@ -77,8 +77,6 @@ exports.updateStatus = async(req,res)=>
 {
 
     const sprovider = await commonoperation.updateUserStatus(constants.tableName.service_providers,req.params.id);
-    // console.log("addNew",data);
-    console.log("status",sprovider);
     if(sprovider.length === 0)
     {
 
@@ -132,7 +130,6 @@ exports.removeServiceProvider = async(req,res)=>
 exports.getOneServiceProvider = async(req,res)=>
 {
     let getOneSProvider = await serviceProvider.getOneServiceProvider(req.params.id);
-    console.log(getOneSProvider);
    if(getOneSProvider?.serviceProvider == 'NOTFOUND'){
     return res.status(200).send
     ({

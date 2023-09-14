@@ -27,23 +27,17 @@ module.exports = class customers
             return await new Promise(async(resolve, reject)=>
             {
                 let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
-                // console.log('Check Role Data At The Get All Customer : ', checkRole);
                 con.query(checkRole, async (err, result) =>
                 {
-                    // console.log(`Roles at the time of the get all of the Customers: `, result);
                     if(err)
                     {
-                       console.log('Error while checking the role at the time of Customer');
                        resolve('err') 
                     }
                     if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
                     {
-                        // console.log(`Role name is admin at the time of the Customer`);
                         const offset = (pageNumber - 1) * pageSize;
                         let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, cd.status FROM ${constants.tableName.customers} cd WHERE cd.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;                        
-                        // console.log('Selquery of customer when user is admin or suport admin: ',selQuery);
                         const count = await commonoperation.totalCount(constants.tableName.customers);
-                        // console.log('Total Data', count[0]['count(t.id)']);
                         con.query(selQuery, async (err, result2) =>
                         {
                             if(err)
@@ -59,12 +53,10 @@ module.exports = class customers
                                 JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
                                 WHERE pm.role_id = '${result[0].role_id}' AND md.id = '${constants.modules.customers}'
                                `;
-                                // console.log(Query);
                                 con.query(Query, (err, moduleResult) =>
                                 {
                                     if(err)
                                     {
-                                        console.log('Error while fetching the module name at the time of getall customer');
                                         resolve('err') 
                                     }
                                     else
@@ -89,12 +81,10 @@ module.exports = class customers
                                 JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                                 JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
                                 WHERE pm.role_id = '${result[0].role_id}' AND md.id = '${constants.modules.customers}'`;
-                                // console.log(Query);
                                 con.query(Query, (err, moduleResult) =>
                                 {
                                     if(err)
                                     {
-                                        console.log('Error while fetching the module name at the time of getall customer');
                                         resolve('err') 
                                     }
                                     else
@@ -112,7 +102,6 @@ module.exports = class customers
                     }
                     else
                     {
-                        console.log('I think the role name which we got is not present in the database at the time of customer');
                         resolve('err') 
                     }                    
                 });
@@ -133,25 +122,20 @@ module.exports = class customers
         try
         {
             const data = await commonfetching.dataOnCondition(constants.tableName.customers, Id, 'id');
-            // console.log('Data : ', data);
             if(data.length === 0)
             {                
-                console.log('No data present on this Id');
                 return ('nodata');
             }
             else if(data === 'err')
             {
-                console.log(`Error while fethcing the vehicle data on the basis if Id. Model folder`);
                 return ('err');
             }
             else
             {
                 let dob = data[0].date_of_birth;
-                // console.log('Dob: ', dob);
                 data[0].date_of_birth = time.formatDateToDDMMYYYY(dob); 
                 let idProofImage = data[0].id_proof_image;
                 data[0].id_proof_image = `${process.env.PORT_SP}${constants.attachmentLocation.customer.view.idProof}${idProofImage}`;
-                // console.log("Link: ", data[0].id_proof_image);
                 return data;
             }     
         }
@@ -171,7 +155,6 @@ module.exports = class customers
             return await new Promise(async(resolve, reject)=>
             {
                 let uploadAttachment = await commonoperation.fileUploadTwo(files, constants.attachmentLocation.customer.upload.idProof);
-                // console.log('Upload Attahcment', uploadAttachment);
                 if(uploadAttachment === 'INVALIDFORMAT')
                 {
                     resolve('INVALIDFORMAT');
@@ -187,28 +170,21 @@ module.exports = class customers
                 else
                 {
                     let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
-                    // console.log(checkRole);
                     con.query(checkRole, async (err, resultRole) =>
                     {
-                        // console.log(resultRole);
                         if(err)
                         {
-                            console.log('Error while fetching the role name at the time of add customer');
                             resolve('err') 
                         }
                         else
                         {
                             if(resultRole[0].role_id === constants.Roles.admin)
                             {
-                                // console.log(`Add customer with the admin side`);
                                 let insQuery = `INSERT INTO customers(name, email, user_name, password, contact_no, date_of_birth, id_proof_no, id_proof_image, phone_verified, email_verified, expiry_at, created_at) VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', '${id_proof_no}', '${uploadAttachment}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                                // console.log('Customer insert query: ', insQuery);
                                 con.query(insQuery, (err, result) =>
                                 {
-                                    // console.log(result);
                                     if(result.affectedRows > 0)
                                     {
-                                        // console.log('Customer data added successfully');
                                         resolve(result);
                                     }
                                     else
@@ -219,12 +195,10 @@ module.exports = class customers
                             }
                             else if(resultRole[0].role_id === constants.Roles.service_provider)
                             {
-                                console.log(`Add customer with the service provider side`);
                                 resolve([]);
                             }
                             else
                             {
-                                console.log('I think the role name which we got is not present in the database at the time of add customers');
                                 resolve('err');
                             }
                         }
@@ -251,18 +225,14 @@ module.exports = class customers
                 if(id_proof_image === null || id_proof_image === undefined)
                 {
                     let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
-                    // console.log(upQuery);
                     con.query(upQuery, (err, result) =>
                     {
-                        // console.log(result);
                         if(result.affectedRows > 0)
                         {
-                            console.log('Customer data updated successfully');
                             resolve(result);
                         }
                         else
                         {
-                            console.log(err);
                             resolve('err')
                         }
                     });
@@ -285,18 +255,14 @@ module.exports = class customers
                 else
                 {
                     let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.id_proof_image = '${uploadAttachment}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
-                    // console.log(upQuery);
                     con.query(upQuery, (err, result) =>
                     {
-                        // console.log(result);
                         if(result.affectedRows > 0)
                         {
-                            console.log('Customer data updated successfully');
                             resolve(result);
                         }
                         else
                         {
-                            console.log(err);
                             resolve('err')
                         }
                     });
@@ -318,7 +284,6 @@ module.exports = class customers
         try
         {
             const data = await commonoperation.updateUserStatus(constants.tableName.customers, Id);
-            // console.log('Data', data);
             if(data.length === 0)
             {
                 return data
@@ -343,7 +308,6 @@ module.exports = class customers
         try
         {
             const data = await commonoperation.removeUser(constants.tableName.customers, Id);
-            // console.log('Data', data);
             if(data.length === 0)
             {
                 return data
@@ -369,38 +333,29 @@ module.exports = class customers
             try
             {
                 let selQuery = `SELECT c.id, c.name, c.email, c.password, c.user_name, c.contact_no, c.id_proof_no, c.id_proof_image, c.status  FROM ${constants.tableName.customers} c WHERE c.user_name = '${username}' `;
-                // console.log(selQuery);
                 con.query(selQuery, async(err, customerData) =>
                 {
                     if(customerData.length === 0)
                     {
-                        console.log(`No customer registered with this username`);
                         resolve('nocustomer');
                     }
                     else
                     {
                         const passwordHashed = await commonoperation.changePasswordToSQLHashing(password);
-                        // console.log(passwordHashed);
-                        // console.log(customerData[0].password);
                         if(customerData[0].password === passwordHashed)
                         {
-                            // console.log(`Password Correct`);
                             let insQuery = `INSERT INTO ${constants.tableName.customer_logs}(customer_id, ip_address, device_information, location, login_time) VALUES(${customerData[0].id}, '192.168.200.130', 'Test purpose currently', 'Kerela', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                            // console.log(`Insert Log Query of the customers: `, insQuery);
                             con.query(insQuery, (err, result1) =>
                             {
-                                // console.log('Result of inserting in the customer logs', result1);
                                 const data = {
                                     id : customerData[0].id
                                 }
                                 if(result1.affectedRows > 0)
                                 {
-                                    // console.log(`Customer log also entered at the login time`);
                                     resolve(data);
                                 }
                                 else
                                 {
-                                    console.log(`Customer login is done successfully bbut error while inserting into the logs table`, err);
                                     resolve(`err`);
                                 }
                             });
@@ -437,15 +392,11 @@ module.exports = class customers
                 }
                 else
                 {
-                    // console.log('Customer logout done');
                     let selQuery = `SELECT * FROM ${constants.tableName.customer_logs} c WHERE c.customer_id = ${customerData[0].id} AND c.login_time IS NOT NULL AND c.logout_time IS NULL`;
-                    // console.log(`Getting login time for entering into the customer logs table query: `, selQuery);
                     con.query(selQuery, (err, result3) =>
                     {
-                        // console.log(`Result 3: `, result3);
                         if(err)
                         {
-                            console.log(`Customer login is done successfully but error while fetching the login time from the logs table`, err);
                             resolve(`err`);
                         }
                         else
@@ -453,30 +404,24 @@ module.exports = class customers
                             if(result3.length != 0)
                             {
                                 let upQuery = `UPDATE ${constants.tableName.customer_logs} c SET c.logout_time = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', c.duration = TIMEDIFF('${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.changeDateToSQLFormat(result3[0].login_time)}') WHERE c.customer_id = ${customerData[0].id} AND c.login_time IS NOT NULL AND c.logout_time IS NULL`;
-                                // console.log(`Update Query of the customers log when we are updatting the logout time in the table: `, upQuery);
                                 con.query(upQuery, (err, result1) =>
                                 {
-                                    // console.log('Result of inserting in the customer logs', result1);
                                     if(result1.affectedRows > 0)
                                     {
-                                        // console.log(`Customer log also entered at the login time`);
                                         resolve(`logoutdone`)
                                     }
                                     else
                                     {
-                                        console.log(`Customer logout is done successfully but error while updating into the logs table`, err);
                                         resolve(`err`);
                                     }
                                 });
                             }
                             else if (result3.length == 0)
                             {
-                                // console.log(`The customer is not signin. We cannot logout before login`);
                                 resolve(`notLogin`)
                             }
                             else
                             {
-                                console.log(`Error came while updating the data in the customer logs. Please check result 3`);
                                 resolve(`err`);
                             }
                         }
@@ -516,17 +461,14 @@ module.exports = class customers
                     {
                         const newpasswordHashed = await commonoperation.changePasswordToSQLHashing(newpassword);
                         let updatePasswordQuery = `UPDATE ${constants.tableName.customers} SET password = '${newpasswordHashed}', updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE id = ${id} `;
-                        // console.log(`Update Password Query: `, updatePasswordQuery);
                         con.query(updatePasswordQuery, (err, result) =>
                         {
                             if(result.affectedRows > 0)
                             {
-                                // console.log('Password Updated');
                                 resolve(customerData);
                             }
                             else
                             {
-                                console.log(`Error while updating the password`);
                                 resolve('err');   
                             }
                         });                                
@@ -550,40 +492,18 @@ module.exports = class customers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                // let uploadAttachment = await commonoperation.fileUploadTwo(files, constants.attachmentLocation.customer.upload.idProof);
-                // console.log(uploadAttachment);
-                // if(uploadAttachment === 'INVALIDFORMAT')
-                // {
-                //     console.log(`Invalid format of the image while uploading at the time of customer registeration`);
-                //     resolve('INVALIDFORMAT');
-                // }
-                // else if(uploadAttachment === 'ERR')
-                // {
-                //     console.log(`Error while uploading the image at the time of customer registeration`);
-                //     resolve('err');
-                // }
-                // else if(uploadAttachment === 'NOATTACHEMENT')
-                // {
-                //     console.log(`No attachement at the time of the customer registration`);
-                //     resolve('NOATTACHEMENT');
-                // }
-                // else
-                // {
+                
                     let insQuery = `INSERT INTO 
                                     customers(name, email, user_name, password, contact_no, date_of_birth, phone_verified, email_verified, expiry_at, created_at) 
                                     VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                    // console.log('Customer register query: ', insQuery);
                     con.query(insQuery, (err, result) =>
                     {
-                        // console.log(result);
                         if(result.affectedRows > 0)
                         {
-                            // console.log('Customer registered successfully');
                             resolve('registered');
                         }
                         else
                         {
-                            console.log(`Error from the insert query of the customer registration models`);
                             resolve('err');
                         }
                     });
@@ -618,24 +538,20 @@ module.exports = class customers
                                 FROM customer_logs c
                                 WHERE c.customer_id = ${Id}
                                 `;
-                // console.log(selQuery);
                 con.query(selQuery, (err, result)=>
                 {
                     if(err)
                     {
-                        console.log(`Error while fetching the details from the logs table for a particular customer`);
                         resolve(err);
                     }
                     else
                     {
                         if(result.length !== 0)
                         {
-                            console.log(`Data fetched for a particular customers`);
                             resolve(result);
                         }
                         else
                         {
-                            console.log(`Data fetched for a particular customer. But no data present`);
                             resolve([]);
                         }
                     }
@@ -673,13 +589,10 @@ module.exports = class customers
                 COALESCE((SELECT COUNT(i.id) FROM ${constants.tableName.quotations} q LEFT JOIN invoices i ON q.id = i.quot_id AND i.status = 'STARTED' WHERE q.customer_id = ${Id}), 0) AS total_invoice_started,
                 COALESCE((SELECT COUNT(i.id) FROM ${constants.tableName.quotations} q LEFT JOIN invoices i ON q.id = i.quot_id AND i.status = 'INACTIVE' WHERE q.customer_id = ${Id}), 0) AS total_invoice_cancelled,
                 COALESCE((SELECT COUNT(i.id) FROM ${constants.tableName.quotations} q LEFT JOIN invoices i ON q.id = i.quot_id WHERE q.customer_id = ${Id} AND i.status <> 'INACTIVE'), 0) AS total_invoices`;
-                // console.log(`Query of the count:`, countQuery);
                 con.query(countQuery, (err, result1) =>
                 {
                     if(err)
                     {
-                        console.log(`Error while executing the count query from the customer dashboard model function`);
-                        console.log(err);
                         resolve('err')
                     }
                     else
@@ -704,13 +617,10 @@ module.exports = class customers
                                                     WHERE e.customer_id = ${Id}
                                                     ORDER BY e.created_at DESC
                                                     LIMIT 5`
-                        // console.log(`Query for the recent booking: `, recentBookingQuery);                            
                         con.query(receivedBookingQuery, async (err, result2) =>
                         {
                             if(err)
                             {
-                                console.log(`Error while executing the fetching 5 recent query from the customer dashboard model function`);
-                                console.log(err);
                                 resolve('err')
                             }
                             else
@@ -941,9 +851,7 @@ module.exports = class customers
                                     WHERE e.customer_id = ${Id}
                                     ORDER BY e.created_at DESC
                                     LIMIT 5`;
-                // console.log(`Query from the recent enquiry of a particular customer: `, recEnquiry);
                 let queryresult = await commonoperation.queryAsync(recEnquiry);
-                // console.log('Most Recent enuiry: ', queryresult);
                 let result = objectConvertor.convertNEXTJSRecentEnquiriesCustomizeResponse(queryresult)
                 resolve(result)
             });
@@ -996,9 +904,7 @@ module.exports = class customers
                                         ON pr_check.invoice_id = b.inv_id 
                                         AND pr_check.status = '${constants.status.paid}'
                                         WHERE b.customer_id = ${Id}`;
-                // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
                 let queryresult = await commonoperation.queryAsync(bookingQuery);
-                // // console.log('Most Recent enuiry: ', queryresult);
                 resolve(queryresult)
             });
         }
@@ -1038,9 +944,7 @@ module.exports = class customers
                                     INNER JOIN ${constants.tableName.service_providers} s ON s.id = e.serviceprovider_id
                                     WHERE e.customer_id = ${Id}
                                     ORDER BY e.created_at DESC`;
-                // console.log(`Query from the recent enquiry of a particular customer: `, recEnquiry);
                 let queryresult = await commonoperation.queryAsync(recEnquiry);
-                // console.log('Most Recent enuiry: ', queryresult);
                 let result = objectConvertor.convertNEXTJSRecentEnquiriesCustomizeResponse(queryresult)
                 resolve(result)
             });
@@ -1101,16 +1005,12 @@ module.exports = class customers
                 ON i.id = b.inv_id
                 WHERE q.customer_id = ${Id}
                 `;
-                // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
                 let queryresult = await commonoperation.queryAsync(bookingQuery);
-                // // console.log('Most Recent enuiry: ', queryresult);
-                // let result = recentEnquiryCustomizeResponse(queryresult)
                 resolve(queryresult)
             });
         }
         catch (error)
         {
-            // console.log(`Error from the try catch block of the getparticularcustomerallbookings model file function`);
         }
     }
 
@@ -1164,15 +1064,12 @@ module.exports = class customers
                 ON i.id = b.inv_id
                 WHERE q.customer_id = ${Id} 
                 AND i.status = '${constants.status.active}'`;
-                // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
                 let queryresult = await commonoperation.queryAsync(bookingQuery);
-                // // console.log('Most Recent enuiry: ', queryresult);
                 resolve(queryresult)
             });
         }
         catch (error)
         {
-            // console.log(`Error from the try catch block of the getparticularcustomerallbookings model file function`);
         }
     };
 
@@ -1226,15 +1123,12 @@ module.exports = class customers
                                         ON i.id = b.inv_id
                                         WHERE q.customer_id = ${Id} 
                                         AND i.status = '${constants.status.inactive}' `;
-                // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
                 let queryresult = await commonoperation.queryAsync(bookingQuery);
-                // // console.log('Most Recent enuiry: ', queryresult);
                 resolve(queryresult)
             });
         }
         catch (error)
         {
-            // console.log(`Error from the try catch block of the getparticularcustomerallbookings model file function`);
         }
     };
 
@@ -1291,15 +1185,12 @@ module.exports = class customers
                 AND i.status = 'STARTED'
                 AND b.booking_status = 'CONFIRM'
                 `;                
-                // console.log(`Query from the recent enquiry of a particular customer: `, bookingQuery);
                 let queryresult = await commonoperation.queryAsync(bookingQuery);
-                // // console.log('Most Recent enuiry: ', queryresult);
                 resolve(queryresult)
             });
         }
         catch (error)
         {
-            // console.log(`Error from the try catch block of the getparticularcustomerallbookings model file function`);
         }
     };
 
@@ -1326,18 +1217,14 @@ module.exports = class customers
                                     c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
                                     WHERE c.id = '${Id}'
                                   `;
-                    // console.log(upQuery);
                     con.query(upQuery, (err, result) =>
                     {
-                        // console.log(result);
                         if(result.affectedRows > 0)
                         {
-                            console.log('Customer data updated successfully');
                             resolve(result);
                         }
                         else
                         {
-                            console.log(err);
                             resolve('err')
                         }
                     });
@@ -1381,18 +1268,14 @@ module.exports = class customers
                                             c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                             WHERE c.id = '${Id}'
                                         `;
-                        // console.log(upQuery);
                         con.query(upQuery, (err, result) =>
                         {
-                            // console.log(result);
                             if(result.affectedRows > 0)
                             {
-                                console.log('Customer data updated successfully');
                                 resolve(result);
                             }
                             else
                             {
-                                console.log(err);
                                 resolve('err')
                             }
                         });
@@ -1402,7 +1285,6 @@ module.exports = class customers
         }
         catch (error)
         {
-            // console.log(`Error from the try catch block of the getparticularcustomerallbookings model file function`);
         }
     };
     
@@ -1415,15 +1297,12 @@ module.exports = class customers
         try
         {
             const data = await commonfetching.dataOnCondition(constants.tableName.customers, Id, 'id');
-            // console.log('Data : ', data);
             if(data.length === 0)
             {                
-                console.log('No data present on this Id');
                 return ('nodata');
             }
             else if(data === 'err')
             {
-                console.log(`Error while fethcing the vehicle data on the basis if Id. Model folder`);
                 return ('err');
             }
             else
@@ -1452,7 +1331,6 @@ module.exports = class customers
 // The below function is used for calculating the total remaining amount of a particular customers
 const remainingAmount = async (Id) =>
 {
-    // console.log(`Remaining Amount`);
     return await new Promise(async (resolve, reject) =>
     {
         let getQuotationDataOnCustomerId = `
@@ -1461,24 +1339,20 @@ const remainingAmount = async (Id) =>
                                                 AND q.status = '${constants.quotation_status.confirmed}'
                                             `
         let result1 = await commonoperation.queryAsync(getQuotationDataOnCustomerId)
-        // console.log(`Quotation Data from remaining amount: `, result1);
         if (result1?.length !== 0)
         {
-            // console.log('No of confirmed quotation present of a submitted customer id: ',result1.length);
             var result2 = [];
             var invoiceId = [];
             var remainingAmountEntry = [];
             for (let i = 0; i < result1.length; i++)
             {
                 result2[i] = await commonfetching.dataOnCondition(constants.tableName.invoices, result1[i].id, 'quot_id');
-                // console.log(`Id of the invoice. Whose dashboard data we are fetching`,result2[i][0]?.id);
                 // Push the id value into the invoiceId array
                 if(result2[i].length > 0)
                 {
                     invoiceId.push(result2[i][0].id);
                 }
             }
-            // console.log('Invoice Id we got from the remaining amount: ',invoiceId); // This will log the invoiceId array
             for (let i = 0; i < invoiceId.length; i++)
             {
                 let dataFromThePaymentRecords = `
@@ -1495,17 +1369,13 @@ const remainingAmount = async (Id) =>
                                                     )
                                                     ORDER BY pr.created_at DESC
                                                     LIMIT 1`
-                // console.log(`Data from the payments records table:  `,dataFromThePaymentRecords);
                 let result3 = await commonoperation.queryAsync(dataFromThePaymentRecords)
-                // console.log('Result 3: ', result3);
                 if(result3?.length !== 0)
                 {
                     remainingAmountEntry.push(parseFloat(result3[0].remaining_amount)); // Parse as float
                 }
             }
-            // console.log('List of remaining amounts: ', remainingAmountEntry);
             const totalRemainingAmountSum = remainingAmountEntry.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-            // console.log('Sum of all the remaining amounts: ', totalRemainingAmountSum);
             resolve(totalRemainingAmountSum)
         }
         else 
@@ -1518,17 +1388,14 @@ const remainingAmount = async (Id) =>
 // The below function is used for calculating the total paid amount of a particular customers
 const paidAmount = async (Id) => 
 {
-    // console.log(`Paid Amount`);
     return await new Promise(async (resolve, reject) =>
     {
         let getQuotationDataOnCustomerId = `SELECT * FROM ${constants.tableName.quotations} q 
                                             WHERE q.customer_id = ${Id} 
                                             AND q.status = '${constants.quotation_status.confirmed}' `
         let result1 = await commonoperation.queryAsync(getQuotationDataOnCustomerId)
-        // console.log(`Confirmed quotation data from paid amount: `, result1);
         if (result1?.length !== 0)
         {
-            // console.log('No of confirmed quotation present of a submitted customer id in the paid amount: ', result1.length);
             var result2 = [];
             var invoiceId = [];
             var paidAmount = [];
@@ -1541,7 +1408,6 @@ const paidAmount = async (Id) =>
                     invoiceId.push(result2[i][0]?.id);
                 }
             }
-            // console.log('Invoice Id we got from the invoices table. Which is related to the customer id. Whose dashboard data we want to fetched from the paid amount: ',invoiceId); // This will log the invoiceId array
             for (let i = 0; i < invoiceId.length; i++)
             {
                 let dataFromThePaymentRecords =` 
@@ -1598,17 +1464,13 @@ const paidAmount = async (Id) =>
                     )
                     END AS paid_amount
                 `;
-                // console.log(`Query: `, dataFromThePaymentRecords);
                 let result3 = await commonoperation.queryAsync(dataFromThePaymentRecords)
-                // console.log('Result 3 from the paid amount: ', result3);
                 if(result3?.length !== 0)
                 {
                     paidAmount.push(parseFloat(result3[0].paid_amount)); // Parse as float
                 }
             }
-            // console.log(paidAmount);
             const totalPaidAmountSum = paidAmount.reduce((accumulator, currentValue) => accumulator + currentValue, 0);
-            // console.log(totalPaidAmountSum);
             resolve(totalPaidAmountSum)
         }
         else

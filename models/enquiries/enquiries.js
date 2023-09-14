@@ -65,7 +65,6 @@ module.exports = class enguiries
                                             )`
                     // resolve(result);
                     con.query(totalCountQuery,(err,result)=>{
-                        console.log(err);
                         if(!err){
 
                             const count = result[0]['count(*)'];
@@ -83,7 +82,6 @@ module.exports = class enguiries
                                       WHERE pm.role_id = '${role_id}'  AND md.id = '${constants.modules.enquiries}'
                                      `;
                                      con.query(Query,(err,result)=>{
-                                        // console.log("result",result);
                                         if(!err){
                                   
                                    
@@ -124,9 +122,7 @@ static async getOneEnquiry(id)
             JOIN ${constants.tableName.vehicles} vh ON enq.vehicle_id = vh.id
             JOIN ${constants.tableName.service_providers} sp ON enq.serviceprovider_id = sp.id
             WHERE enq.id = '${id}'`
-            console.log('14578', selQuery);
             con.query(selQuery,async(err,data)=>{ 
-                console.log(err,data);  
                 if(data?.length != 0){ 
  
                     data[0].created_at = `${time.formatDateToDDMMYYYY(
@@ -142,7 +138,6 @@ static async getOneEnquiry(id)
                                     `
                     con.query(selQuery,async(err,tax)=>{
                         if(tax.length != 0){
-                    //    console.log({tax : tax});
                             resolve({enquiry : data,tax : tax})
                         }else{
                             resolve({enquiry : data,tax : []})

@@ -24,7 +24,6 @@ module.exports = class vehicleImages
             return await new Promise(async(resolve, reject)=>
             {
                 let uploadVehicleImage = await commonoperation.fileUploadTwo(image, constants.attachmentLocation.vehicle.upload.images);
-                // console.log(uploadVehicleImage);
                 if(uploadVehicleImage === 'INVALIDFORMAT')
                 {
                     resolve('INVALIDATTACHMENT')
@@ -36,17 +35,14 @@ module.exports = class vehicleImages
                 else
                 {
                     let insQuery = `INSERT INTO vehicles_images(vehicle_id, image, title, uploaded_at) VALUES(${id}, '${uploadVehicleImage}', '${title}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                    // console.log(insQuery);
                     con.query(insQuery, (err, result) =>
                     {
                         if(result.length != 0)
                         {
-                            console.log('Vehicles image added successfully');
                             resolve(result);
                         }
                         else
                         {
-                            console.log(err);
                             resolve('err');
                         }
                     });
@@ -71,10 +67,8 @@ module.exports = class vehicleImages
             {
                 const offset = (pageNumber - 1) * pageSize;
                 let selQuery = `SELECT vi.id, vi.vehicle_id, vi.image, vi.uploaded_at, vi.status FROM vehicles_images vi JOIN vehicles v ON vi.vehicle_id = v.id WHERE vi.vehicle_id = ${id} AND vi.deleted_at IS NULL`;
-                // console.log(selQuery);
                 con.query(selQuery, (err, result) =>
                 {
-                    // console.log('Model:', result);
                     if (result.length !== 0)
                     {
                         // Create an array to store the return objects
@@ -117,7 +111,6 @@ module.exports = class vehicleImages
         try 
         {
             const data = await commonoperation.updateUserStatus(constants.tableName.vehicles_images, Id);
-            // console.log('Data', data);
             if(data.length === 0)
             {
                 return data
@@ -144,7 +137,6 @@ module.exports = class vehicleImages
         try 
         {
             const data = await commonoperation.removeUser(constants.tableName.vehicles_images, Id);
-            // console.log('Data', data);
             if(data.length === 0)
             {
                 return data

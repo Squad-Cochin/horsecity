@@ -134,7 +134,6 @@ exports.removeTaxation = async(req,res)=>
 exports.getOneTaxation = async(req,res)=>
 {
     let getOneTaxation = await tax.getOneTaxation(req.params.id);
-    console.log(getOneTaxation);
    if(getOneTaxation?.taxation == 'NOTFOUND'){
     return res.status(200).send
     ({

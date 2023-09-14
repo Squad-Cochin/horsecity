@@ -26,8 +26,6 @@ const isValidDateOfBirth = (DOB) =>
 
 const isValidUAENumber = (phoneNumber) =>
 {
-    // console.log(`Phone Number`, phoneNumber);
-    // Phone number format: +9715XXXXXXXX
     const phoneRegex = new RegExp(process.env.PHONENUMBERREGEX);
     return phoneRegex.test(phoneNumber);
 }
@@ -45,18 +43,15 @@ const isvalidEmail = (email) =>
         const domainParts = domain.split(`.`); // split domain name by `.` separator
         if (domainParts[1] === domainParts[2])
         {
-            console.log(`Both the domain names are same. It is not a valid email`);
             return false
         }
         else
         {
-            // console.log(`Valid Email`);
             return true;
         }
     }
     else
     {
-        console.log(`Invalid Email`);
         return false
     }
 };
@@ -64,7 +59,6 @@ const isvalidEmail = (email) =>
 exports.validateCommonInputAtStartingTime = (tableName, feildName, Value, id, messageFeild) => async (req, res, next) =>
 {
     let checkEntry = await commonfetching.dataOnCondition(tableName, Value, feildName, id, messageFeild);
-    // console.log(`Check Entry: `, checkEntry);
     if(checkEntry === `err`)
     {
         return res.status(500).json
@@ -169,7 +163,6 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
                 }
                 else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params?.id}`)
                 {
-                    // console.log('Inside');
                     this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'Email')(req, res, next);
                 }
                 else
@@ -210,7 +203,6 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
         }
         else
         {
-            // console.log(isValidUsername(req.body.userName));
             // if(isValidUsername(req.body.userName))
             // {
             //     return res.status(200).send
@@ -224,17 +216,14 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
             // {
                 if(req.method === `POST` && req.url === url.UPDATE_SERVICE_PROVIDER_PASSWORD)
                 {
-                    // console.log(`Came inside 2`);
                     next();
                 }
                 else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params?.id}`)
                 {
-                    // console.log(`Came inside 3`);
                     this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params.id, 'Username' )(req, res, next);
                 }
                 else if(req.method === `PUT` && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params?.id}`)
                 {
-                    // console.log(`Came inside 4`);
                     this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params.id, 'Username')(req, res, next);
                 }
                 else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params?.id}`)
@@ -243,17 +232,15 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
                 }
                 else if(req.method === `POST`)
                 {
-                    // console.log(`Came inside 5`);
                     this.validateCommonInputAtStartingTime(tableName, `user_name`, req.body.userName, req.params.id, 'Username')(req, res, next);
                 }
                 else 
                 {
-                    // console.log(`Came inside 6`);
                     return res.status(500).json
                     ({
                         code : 500,
                         status : false, 
-                        message : `Internal server error. While checking the username.` 
+                        message : `Internal server error.` 
                     });
                 }
             // }
@@ -285,7 +272,6 @@ exports.contactNumberValidation = (tableName) => async (req, res, next) =>
         }
         else
         {
-            // console.log(isValidUAENumber(req.body.contact_no));
             // if(!isValidUAENumber(req.body.contact_no))
             // {
             //     return res.status(200).send
@@ -319,7 +305,7 @@ exports.contactNumberValidation = (tableName) => async (req, res, next) =>
                         ({
                             code : 500,
                             status : false, 
-                            message : `Internal server error. While checking the contact number.` 
+                            message : `Internal server error.` 
                         });
                     }
             // }
@@ -421,7 +407,6 @@ exports.isValidEmergencyContactNumber =  (req, res, next) =>
         }
         else if (req.body.contact_no === req.body.emergency_contact_no)
         {
-            console.log('Emergency number and contact number cannot be same');
             return res.status(200).send
             ({
                 code : 400,
@@ -431,7 +416,6 @@ exports.isValidEmergencyContactNumber =  (req, res, next) =>
         }
         else
         {
-            // console.log(isValidUAENumber(req.body.emergency_contact_no));
             // if(!isValidUAENumber(req.body.emergency_contact_no))
             // {
             //     return res.status(200).send
@@ -473,7 +457,6 @@ exports.dateOfBirthValidation = (req, res, next) =>
         }
         else
         {
-            // console.log(isValidDateOfBirth(time.formatDateToDDMMYYYY(req.body.date_of_birth)));
             if(!isValidDateOfBirth(time.formatDateToDDMMYYYY(req.body.date_of_birth)))
             {
                 return res.status(200).send
@@ -634,20 +617,16 @@ exports.passwordValidation = async (req, res, next) =>
         let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
         con.query(selQuery, (err, result) =>
         {
-            // console.log('Regex Result from password validation', result);
             if (result)
             {
                 const isValidPassword = (password) =>
                 {
                     const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
                     const regex = new RegExp(regexPattern);
-                    // console.log('Regex after replacing the slashes: ', regex);
                     return regex.test(password); // Use the test() method to check if the password matches the regex pattern
                 };
                 if (isValidPassword(password))
                 {
-                    //console.log('here');
-                    // console.log("password validation done");
                     next();
                 }
                 else
@@ -690,19 +669,16 @@ exports.newpassword = async (req, res, next) =>
         let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
         con.query(selQuery, (err, result) =>
         {
-            // console.log('Regex Result from password validation', result);
             if (result)
             {
                 const isValidPassword = (password) =>
                 {
                     const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
                     const regex = new RegExp(regexPattern);
-                    // console.log('Regex after replacing the slashes: ', regex);
                     return regex.test(password); // Use the test() method to check if the password matches the regex pattern
                 };
                 if (isValidPassword(password))
                 {
-                    // console.log("password validation done");
                     next();
                 }
                 else
@@ -745,19 +721,16 @@ exports.confirmnewpassword = async (req, res, next) =>
         let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
         con.query(selQuery, (err, result) =>
         {
-            // console.log('Regex Result from password validation', result);
             if (result)
             {
                 const isValidPassword = (password) =>
                 {
                     const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
                     const regex = new RegExp(regexPattern);
-                    // console.log('Regex after replacing the slashes: ', regex);
                     return regex.test(password); // Use the test() method to check if the password matches the regex pattern
                 };
                 if (isValidPassword(password))
                 {
-                    // console.log("password validation done");
                     next();
                 }
                 else
@@ -778,7 +751,6 @@ exports.isPageNumberEntered = (req, res, next) =>
 {
     if(!req.body.page)
     {
-        // console.log(`Page number value is not entered`);
         return res.status(200).json
         ({
             code : 500,
@@ -796,7 +768,6 @@ exports.isPageSizeEntered = (req, res, next) =>
 {
     if(!req.body.limit)
     {
-        console.log(`Page size is not entered`);
         return res.status(200).json
         ({
             code : 500,
@@ -812,12 +783,9 @@ exports.isPageSizeEntered = (req, res, next) =>
 
 exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
 {
-    // console.log('We are coming inside the id proof check');
     if(!req.files?.id_proof_image && req.method === 'POST' && req.url === `${url.ADD_CUSTOMER_PAGE_URL}/${req.params?.id}`)
-    // if(!req.files?.id_proof_image)
     // if (!req.files?.id_proof_image && req.method === 'POST' && req.url === url.ADD_CUSTOMER_PAGE_URL + req.params.id)
     {
-        console.log(`Id proof image is not uploaded`);
         return res.status(200).json
         ({
             code : 400,
@@ -829,75 +797,22 @@ exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
     {
         if(req.method === 'PUT' && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params.id}` && !req.files?.id_proof_image)
         {
-            // console.log('Going inside 1');
             next();
         }
         if(req.method === 'PUT' && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params.id}` && req.files?.id_proof_image)
         {
-            // console.log('Going inside 2');
             next();
         }   
         if(req.method === 'PUT' && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params.id}` && req.files?.id_proof_image)
         {
-            // console.log(req.files?.id_proof_image);
-            // console.log('Going inside 3');
             next();
         }
         if(req.method === 'PUT' && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params.id}` && !req.files?.id_proof_image)
         {
-            // console.log('Going inside 5');
             next();
         }
         if(req.method === 'POST')
         {
-            // console.log('Going inside 4');
-            next();
-        }
-    }
-}
-
-exports.isCustomerIdProofImageSubmitted2 = async (req, res, next) =>
-{    
-    if(!req.files?.id_proof_image)
-    {
-        console.log(`Id proof image is not uploaded`);
-        return res.status(200).json
-        ({
-            code : 400,
-            success: false,
-            message : `Customer Id proof image is not uploaded`
-        });     
-    }
-    else
-    {
-        let getCustomerData = await commonfetching.dataOnCondition(constants.tableName.customers, req.body.email, 'email')
-        console.log(getCustomerData);
-        if(getCustomerData === `err`)
-        {
-            return res.status(500).json
-            ({
-                code : 500,
-                status : false, 
-                message : `Internal server error. While checking the email at the registration time. POST`
-            });
-        }
-        else if(getCustomerData.length > 0)
-        {
-            return res.status(200).send
-            ({
-                code : 400,
-                status : false,
-                message : `This email already exists in the database`
-            });
-        }
-        else
-        {
-            let oldimageLink = `http://192.168.200.130:8000/Customers/IdProofs/${getCustomerData[0].id_proof_image} `;
-            console.log(`Old Image Link: `, oldimageLink)
-            // http://192.168.200.130:8000/Customers/IdProofs/508580_a.png
-            let filname = req.files.id_proof_image
-            let newImageName = `http://192.168.200.130:8000/Customers/IdProofs/${filname}`;
-            console.log(`New Image Link :`, newImageName);
             next();
         }
     }
@@ -907,7 +822,6 @@ exports.isDriverProfileImageSubmitted = (req, res, next) =>
 {
     if(!req.files?.profile_image && req.method === 'POST' && req.url === `${url.ADD_DRIVER_PAGE_URL}/${req.params.id}`)
     {
-        console.log(`Driver profile image is not uploaded`);
         return res.status(200).json
         ({
             code : 400,
@@ -936,7 +850,6 @@ exports.isDriverLicenceImageSubmitted = (req, res, next) =>
 {
     if(!req.files?.licence_img && req.method === 'POST' && req.url === `${url.ADD_DRIVER_PAGE_URL}/${req.params.id}`)
     {
-        console.log(`Driver licence image is not uploaded`);
         return res.status(200).json
         ({
             code : 400,
@@ -965,7 +878,6 @@ exports.idProofImageWhileUpdate = (req, res, next) =>
 {
     if(!req.files?.id_proof_image)
     {
-        console.log(`Customer Id Proof image is not uploaded`);
         return res.status(200).json
         ({
             code : 400,
@@ -981,7 +893,7 @@ exports.idProofImageWhileUpdate = (req, res, next) =>
 
 exports.checkAmountEntered = async(req, res, next) =>
 {
-    this.checkValueEntered(req.body.totalRecievedAmount, 'Recieved Amount')(req, res, next);
+    this.checkValueEntered(req.body.totalRecievedAmount, 'Received payment')(req, res, next);
     next();
 };
 
@@ -1000,7 +912,6 @@ exports.checkValueEntered = (fieldName, messageField) => (req, res, next) =>
         }
         else 
         {
-            // console.log(`${messageField} is available`);
             resolve();
         }
     });
@@ -1025,13 +936,13 @@ exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) => {
         await this.checkValueEntered(req.body.special_requirement, 'Special requirement') (req, res, next);
         await this.checkValueEntered(req.body.additional_service, 'Additional service') (req, res, next);
         await this.checkValueEntered(req.body.transportation_insurance_coverage, 'Transportation insurance coverage') (req, res, next);
-        await this.checkValueEntered(req.body.driver_amount, 'Driver amount') (req, res, next);
-        await this.checkValueEntered(req.body.vehicle_amount, 'Vehicle amount') (req, res, next);
-        await this.checkValueEntered(req.body.current_amount, 'Current amount') (req, res, next);
-        await this.checkValueEntered(req.body.tax_amount, 'Tax amount') (req, res, next);
-        await this.checkValueEntered(req.body.tax_amount, 'Tax amount') (req, res, next);
-        await this.checkValueEntered(req.body.discount_amount, 'Discount amount') (req, res, next);
-        await this.checkValueEntered(req.body.final_amount, 'Final amount') (req, res, next);
+        await this.checkValueEntered(req.body.driver_amount, 'Driver payment') (req, res, next);
+        await this.checkValueEntered(req.body.vehicle_amount, 'Vehicle payment') (req, res, next);
+        await this.checkValueEntered(req.body.current_amount, 'Current payment') (req, res, next);
+        await this.checkValueEntered(req.body.tax_amount, 'Tax payment') (req, res, next);
+        await this.checkValueEntered(req.body.tax_amount, 'Tax payment') (req, res, next);
+        await this.checkValueEntered(req.body.discount_amount, 'Discount payment') (req, res, next);
+        await this.checkValueEntered(req.body.final_amount, 'Final payment') (req, res, next);
         next();
     } catch (error) { 
         // Handle any errors that might occur during the checks
@@ -1095,7 +1006,6 @@ exports.isIdEntered = (feildName, tableName, MessageFeild) => async (req, res, n
     else
     {
         const data = await commonfetching.dataOnCondition(tableName, req.body[feildName], 'id');
-        // console.log(data);
         if(data === 'err' || !data)
         {
             return res.status(500).json
@@ -1107,12 +1017,10 @@ exports.isIdEntered = (feildName, tableName, MessageFeild) => async (req, res, n
         }
         else if(data.length > 0)
         {
-            // console.log(`${MessageFeild} id present`);
             next()          
         }
         else
         {
-            console.log(`${MessageFeild} id doesn't exist`);
             return res.status(200).send
             ({
                 code: 400,
@@ -1130,22 +1038,18 @@ exports.checkingDuplicateEnquiry = async (req, res, next) =>
         return new Promise((resolve, reject) =>
         {
             const selQuery = `SELECT * FROM ${constants.tableName.enquiries} e WHERE e.customer_id = ${req.params.id} AND e.vehicle_id = ${req.body.vehicle_id} AND e.serviceprovider_id = ${req.body.service_provider_id} AND e.pickup_location = '${req.body.pickup_location}' AND e.drop_location = '${req.body.drop_location}' AND e.trip_type = '${req.body.vehicle_type}' AND e.pickup_country = '${req.body.pickup_country}' AND e.drop_country = '${req.body.drop_country}' AND e.no_of_horse = ${req.body.no_of_horse} AND e.status = '${constants.enquiry_status.notconfirmed}'`;
-            // console.log(`Query from checking duplicate enquiry: `, selQuery);
             con.query(selQuery, (err, result) =>
             {
                 if(result.length != 0)
                 {
-                    // console.log(`Result from the checking duplicate enquiry: `, result);
                     if(result[0].status === constants.enquiry_status.confirmed)
                     {
-                        // console.log(`Previous enquiry from this same details are confirmed by the service provider. So we can accept this enquiry now.`);
                         next();
                     }
                     else if(result[0].status === constants.enquiry_status.notconfirmed)
                     {                        
                         if(result[0].description === req.body.description)
                         {
-                            // console.log(`Previous enquiry from this same details are not confirmed by the service provider till now. So we can forward this enquiry of your right now. Please wait`);
                             return res.status(200).send
                             ({
                                 code : 400,
@@ -1155,7 +1059,6 @@ exports.checkingDuplicateEnquiry = async (req, res, next) =>
                         }
                         if(result[0].description !== req.body.description)
                         {
-                            // console.log(`Previous enquiry from this same details are not confirmed by the service provider till now. You have changed the description only. It is not allowed. Service provider will reach to you. Please tell them directly`);
                             return res.status(200).send
                             ({
                                 code : 400,
@@ -1166,18 +1069,16 @@ exports.checkingDuplicateEnquiry = async (req, res, next) =>
                     }
                     else
                     {
-                        // console.log(`Internal Server Error From the CheckDuplicateEntry function`);
                         return res.status(200).send
                         ({
                             code : 500,
                             status : false,
-                            message : ``
+                            message : `Internal server error`
                         });
                     }
                 }
                 else
                 {
-                    // console.log(`No data present with the submitted details`);
                     next();
                 }
             });
@@ -1231,15 +1132,12 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                 AND c.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}' 
                                 AND c.id_proof_no = '${req.body.id_proof_no}' 
                                 AND c.deleted_at IS NOT NULL`;
-            // console.log('First select Query: ', selQuery);
             const result1 = await commonoperation.queryAsync(selQuery);
             if(result1.length != 0)
             {
-                console.log(`result 1`, result1);
                 uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
                 if(uploadIdproofImage === 'INVALIDFORMAT')
                 {
-                    console.log('Invalid Format of file submit for upload');
                     return res.status(200).send
                     ({
                         code : 400,
@@ -1249,7 +1147,6 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                 }
                 else if(uploadIdproofImage === 'NOATTACHEMENT')
                 {
-                    console.log('No image uploaded for customer');
                     return res.status(200).send
                     ({
                         code : 400,
@@ -1263,7 +1160,6 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                         SET c.deleted_at = NULL,
                                         c.id_proof_image = '${uploadIdproofImage}',
                                         WHERE c.id = ${result1[0].id}`;
-                    console.log('First update Query: ', upQuery);
                     const result2 = await commonoperation.queryAsync(upQuery);
                     if (result2.affectedRows > 0)
                     {
@@ -1276,7 +1172,6 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                     }
                     else
                     {
-                        console.log(`else condtion 1 from the update query`);
                         return res.status(200).send
                         ({
                             code : 500,
@@ -1288,22 +1183,18 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
             }
             else
             {
-                // console.log(`else condtion 1 from the select query`);
                 const selQuery2 = `     SELECT * FROM ${constants.tableName.customers} c 
                                         WHERE c.email = '${req.body.email}'
                                         AND c.contact_no = '${req.body.contact_no}'
                                         AND c.id_proof_no = '${req.body.id_proof_no}'
                                         AND c.user_name = '${req.body.userName}'
                                         AND c.deleted_at IS NOT NULL`;
-                // console.log('Second select Query: ',selQuery2);
                 const result12 = await commonoperation.queryAsync(selQuery2);
                 if(result12.length != 0)
                 {
-                    // console.log(`result 2`, result12);
                     uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
                     if(uploadIdproofImage === 'INVALIDFORMAT')
                     {
-                        console.log('Invalid Format of file submit for upload');
                         return res.status(200).send
                         ({
                             code : 400,
@@ -1313,7 +1204,6 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                     }
                     else if(uploadIdproofImage === 'NOATTACHEMENT')
                     {
-                        console.log('No image uploaded for customer');
                         return res.status(200).send
                         ({
                             code : 400,
@@ -1337,7 +1227,6 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                             c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                             WHERE c.id = ${result12[0].id} 
                                             `;
-                        // console.log(upQuery2);
                         const result22 = await commonoperation.queryAsync(upQuery2);
                         if (result22.affectedRows > 0)
                         {
@@ -1350,7 +1239,6 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                         }
                         else
                         {
-                            console.log(`else condtion 2 from the update query`);
                             return res.status(200).send
                             ({
                                 code : 500,
@@ -1362,20 +1250,16 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                 }
                 else
                 {
-                    // console.log(`else condtion 2 from the select query`);
                     let selQuery3 = `   SELECT * FROM ${constants.tableName.customers} c
                                         WHERE c.email = '${req.body.email}'
                                         AND c.deleted_at IS NOT NULL
                                     `;
-                    // console.log('Third select Query: ',selQuery3);
                     const result13 = await commonoperation.queryAsync(selQuery3);
                     if(result13.length != 0)
                     {
-                        // console.log(`result 3`, result13);
                         uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
                         if(uploadIdproofImage === 'INVALIDFORMAT')
                         {
-                            console.log('Invalid Format of file submit for upload');
                             return res.status(200).send
                             ({
                                 code : 400,
@@ -1385,7 +1269,6 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                         }
                         else if(uploadIdproofImage === 'NOATTACHEMENT')
                         {
-                            console.log('No image uploaded for customer');
                             return res.status(200).send
                             ({
                                 code : 400,
@@ -1423,7 +1306,6 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                             }
                             else
                             {
-                                console.log(`else condtion 3 from the update query`);
                                 return res.status(200).send
                                 ({
                                     code : 500,
@@ -1435,20 +1317,16 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                     }
                     else
                     {
-                        console.log(`else condtion 4 from the select query`);
                         let selQuery4 = `   SELECT * FROM ${constants.tableName.customers} c
                                             WHERE c.user_name = '${req.body.userName}'
                                             AND c.deleted_at IS NOT NULL
                                         `;
-                        console.log('Fourth select Query: ',selQuery4);
                         const result14 = await commonoperation.queryAsync(selQuery4);
                         if(result14.length != 0)
                         {
-                            console.log(`result 4`, result14);
                             uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
                             if(uploadIdproofImage === 'INVALIDFORMAT')
                             {
-                                console.log('Invalid Format of file submit for upload');
                                 return res.status(200).send
                                 ({
                                     code : 400,
@@ -1458,7 +1336,6 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                             }
                             else if(uploadIdproofImage === 'NOATTACHEMENT')
                             {
-                                console.log('No image uploaded for customer');
                                 return res.status(200).send
                                 ({
                                     code : 400,
@@ -1496,7 +1373,6 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                 }
                                 else
                                 {
-                                    console.log(`else condtion 4 from the update query`);
                                     return res.status(200).send
                                     ({
                                         code : 500,
@@ -1508,20 +1384,16 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                         }
                         else
                         {
-                            // console.log(`else condtion 5 from the select query`);
                             let selQuery5 = `   SELECT * FROM ${constants.tableName.customers} c
                                                 WHERE c.contact_no = '${req.body.contact_no}'
                                                 AND c.deleted_at IS NOT NULL
                                             `;
-                            // console.log('Fifth select Query: ',selQuery5);
                             const result15 = await commonoperation.queryAsync(selQuery5);
                             if(result15.length != 0)
                             {
-                                console.log(`result 5`, result15);
                                 uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
                                 if(uploadIdproofImage === 'INVALIDFORMAT')
                                 {
-                                    console.log('Invalid Format of file submit for upload');
                                     return res.status(200).send
                                     ({
                                         code : 400,
@@ -1531,7 +1403,6 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                 }
                                 else if(uploadIdproofImage === 'NOATTACHEMENT')
                                 {
-                                    console.log('No image uploaded for customer');
                                     return res.status(200).send
                                     ({
                                         code : 400,
@@ -1569,7 +1440,6 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                     }
                                     else
                                     {
-                                        console.log(`else condtion 6 from the update query`);
                                         return res.status(200).send
                                         ({
                                             code : 500,
@@ -1581,20 +1451,16 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                             }
                             else
                             {
-                                console.log(`else condtion 6 from the select query`);
                                 let selQuery6 = `   SELECT * FROM ${constants.tableName.customers} c
                                                     WHERE c.id_proof_no = '${req.body.id_proof_no}'
                                                     AND c.deleted_at IS NOT NULL
                                                 `;
-                                console.log('Sixth select query: ',selQuery6);
                                 const result16 = await commonoperation.queryAsync(selQuery6);
                                 if(result16.length != 0)
                                 {
-                                    console.log(`result 6`, result16);
                                     uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
                                     if(uploadIdproofImage === 'INVALIDFORMAT')
                                     {
-                                        console.log('Invalid Format of file submit for upload');
                                         return res.status(200).send
                                         ({
                                             code : 400,
@@ -1604,7 +1470,6 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                     }
                                     else if(uploadIdproofImage === 'NOATTACHEMENT')
                                     {
-                                        console.log('No image uploaded for customer');
                                         return res.status(200).send
                                         ({
                                             code : 400,
@@ -1642,7 +1507,6 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                         }
                                         else
                                         {
-                                            console.log(`else condtion 6 from the update query`);
                                             return res.status(200).send
                                             ({
                                                 code : 500,
@@ -1654,7 +1518,6 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                 }
                                 else
                                 {
-                                    console.log(`else condtion 6 from the select query`);
                                     next();
                                 }
                             }
@@ -1685,15 +1548,12 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
             let selQuery = `SELECT * FROM ${constants.tableName.customers} c
                             WHERE c.email = '${req.body.email}'
                             AND c.deleted_at IS NOT NULL`;
-            console.log('First select Query: ',selQuery);
             let result11 = await commonoperation.queryAsync(selQuery);
             if(result11.length != 0)
             {
-                console.log(`result 1`, result11);
                 uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
                 if(uploadIdproofImage === 'INVALIDFORMAT')
                 {
-                    console.log('Invalid Format of file submit for upload');
                     return res.status(200).send
                     ({
                         code : 400,
@@ -1703,7 +1563,6 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                 }
                 else if(uploadIdproofImage === 'NOATTACHEMENT')
                 {
-                    console.log('No image uploaded for customer');
                     return res.status(200).send
                     ({
                         code : 400,
@@ -1718,7 +1577,6 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
         }
         catch (error)
         {
-            console.log('Error in CheckDataPresentWithDeletedAt function:', error);
             return res.status(500).send
             ({
                 code: 500,

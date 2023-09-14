@@ -43,20 +43,15 @@ exports.changePasswordToSQLHashing = (password) =>
 
 exports.fileUpload = (attachments, path) =>
 { 
-    // console.log(attachments);
     return new Promise((resolve, reject) =>
     {
         if (!attachments)// || !attachments.file || !Array.isArray(attachments.file)) 
         {
-            console.log('#### Invalid attachments parameter ####');
             resolve({message : 'INVALIDATTACHMENT'}); 
         }
         else
         {
-            // let file = attachments;
-            // console.log(file);
             let fileExtension = attachments.name.split('.').pop().toLowerCase(); // get the file extension
-            // console.log(fileExtension);
             if (['png', 'jpg'].includes(fileExtension)) 
             {
                 // let currentDate = new Date().toISOString().replace(/:/g, '-').replace(//./g, '-'); // generate current date and time
@@ -67,11 +62,10 @@ exports.fileUpload = (attachments, path) =>
                 {
                     if(err)
                     {
-                        console.log("Error occurred while storing the uploaded file in the uploads folder", err);
+                        
                     }
                     else
                     {
-                        console.log('File Uploaded');
                        
                         resolve(filename);
                     }
@@ -80,7 +74,6 @@ exports.fileUpload = (attachments, path) =>
             else
             {
                 resolve({message : 'INVALIDFORMAT'});
-                console.log("Invalid Format");
             }
         }
     });
@@ -88,20 +81,15 @@ exports.fileUpload = (attachments, path) =>
 
 exports.fileNameUpload = (attachments) =>
 { 
-    // console.log(attachments);
     return new Promise((resolve, reject) =>
     {
         if (!attachments)// || !attachments.file || !Array.isArray(attachments.file)) 
         {
-            console.log('#### Invalid attachments parameter ####');
             resolve({message : 'INVALIDATTACHMENT'}); 
         }
         else
         {
-            // let file = attachments;
-            // console.log(file);
             let fileExtension = attachments.name.split('.').pop().toLowerCase(); // get the file extension
-            // console.log(fileExtension);
             if (['json'].includes(fileExtension)) 
             {
                 // let currentDate = new Date().toISOString().replace(/:/g, '-').replace(//./g, '-'); // generate current date and time
@@ -117,7 +105,6 @@ exports.fileNameUpload = (attachments) =>
             else
             {
                 resolve({message : 'INVALIDFORMAT'});
-                console.log("Invalid Format");
             }
         }
     });
@@ -132,7 +119,6 @@ exports.updateUserStatus = (tablename, Id) =>
         {
             if (err)
             {
-                console.log('Error while executing the query:', err);
                 reject(err);
             }
             else
@@ -142,12 +128,10 @@ exports.updateUserStatus = (tablename, Id) =>
                     if(result[0].status === constant.status.active)
                     {
                         let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.inactive}', t.updated_at = '${timeCalculate.getFormattedUTCTime(constant.timeOffSet.UAE)}'  WHERE t.id = '${Id}' AND t.deleted_at IS NULL`;
-                        // console.log(UpdateQuery);
                         con.query(UpdateQuery, (err, result) => // executing the above query 
                         {
                             if(result.length != 0) // if ticket updated then if block
                             {
-                                // console.log('Status Changed to INACTIVE');
                                 resolve(result);
                             }
                             else
@@ -159,12 +143,10 @@ exports.updateUserStatus = (tablename, Id) =>
                     else
                     {
                         let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.active}'WHERE t.id = '${Id}' AND t.deleted_at IS NULL `;
-                        // console.log(UpdateQuery);
                         con.query(UpdateQuery, (err, result) => // executing the above query 
                         {
                             if(result.length != 0) // if ticket updated then if block
                             {
-                                // console.log('Status Changed to ACTIVE');
                                 resolve(result);
                             }
                             else
@@ -188,13 +170,10 @@ exports.removeUser = (tablename, Id) =>
     return new Promise((resolve, reject) => 
     {
         let selQuery = `SELECT * FROM ${tablename} WHERE ${tablename}.id = '${Id}' `;
-        // console.log(selQuery);
         con.query(selQuery, (err, result) =>
         {
-            // console.log(result);
             if (err)
             {
-                console.log('Error while executing the query:', err);
                 reject(err);
             }
             else
@@ -208,7 +187,6 @@ exports.removeUser = (tablename, Id) =>
                         {
                             if(result.length != 0) // if ticket updated then if block
                             {
-                                // console.log('Status Changed to INACTIVE and User is Removed');
                                 resolve(result);
                             }
                         }); 
@@ -221,7 +199,6 @@ exports.removeUser = (tablename, Id) =>
                         {
                             if(result.length != 0) // if ticket updated then if block
                             {
-                                // console.log('Status is already INACTIVE and User is Removed');
                                 resolve(result);
                             }
                         });
@@ -243,22 +220,18 @@ exports.totalCount = async (tablename) =>
         return new Promise((resolve, reject) => 
         {
             let selQuery = `SELECT count(t.id) FROM ${tablename} t WHERE t.deleted_at IS NULL`;
-            // console.log('Query :', selQuery);
             con.query(selQuery, (err, result) =>
             {
                 if (err)
                 {
-                    // console.log('Error while executing the query:', err);
                     reject(err);
                 }
                 if (result.length > 0)
                 {
-                    // console.log('Data present and fetched');
                     resolve(result);
                 }
                 else
                 {
-                    // console.log('Query executed but data not present in the table.');
                     resolve([]);
                 } 
         
@@ -277,22 +250,18 @@ exports.totalCountParticularServiceProvider = async (tablename, Id) =>
         return new Promise((resolve, reject) => 
         {
             let selQuery = `SELECT count(t.id) FROM ${tablename} t WHERE t.deleted_at IS NULL AND t.service_provider_id = ${Id}`;
-            // console.log('Query :', selQuery);
             con.query(selQuery, (err, result) =>
             {
                 if (err)
                 {
-                    // console.log('Error while executing the query:', err);
                     reject(err);
                 }
                 if (result.length > 0)
                 {
-                    // console.log('Data present and fetched');
                     resolve(result);
                 }
                 else
                 {
-                    // console.log('Query executed but data not present in the table.');
                     resolve([]);
                 } 
         
@@ -306,44 +275,33 @@ exports.totalCountParticularServiceProvider = async (tablename, Id) =>
 
 exports.fileUploadTwo = async (attachments, path) => 
 { 
-    // console.log(attachments);
     return new Promise((resolve, reject) =>
     {
         if (!attachments) // || !attachments.file || !Array.isArray(attachments.file)) 
         {
-            console.log('#### Invalid attachments parameter ####');
             resolve('NOATTACH')
         }
         else
         {
-            // let file = attachments;
-            // console.log(file);
             let fileExtension = attachments.name.split('.').pop().toLowerCase(); // get the file extension
-            // console.log(fileExtension);
             if (['png', 'jpg'].includes(fileExtension)) 
             {
-                // let currentDate = new Date().toISOString().replace(/:/g, '-').replace(//./g, '-'); // generate current date and time
                 let randomNumber = Math.floor(Math.random() * 1000000); // generate random number
                 let filename = `${randomNumber}_${attachments.name}`; // use current date, random number and original file name to create a unique file name
                 attachments.mv(path +filename, (err) => 
-                // attachments.id_proof_image.mv('../../Attachements/Customers/IdProof/' +filename, (err) => 
                 {
                     if(err)
                     {
-                        console.log("Error occurred while storing the uploaded file in their respective location", err);
                         resolve('ERR')
                     }
                     else
                     {
-                        // console.log('File Uploaded');
-                        // resolve({message : 'INVALIDFORMAT'});
                         resolve(filename);
                     }
                 });                
             }
             else
             {
-                console.log("Invalid Format");
                 resolve('INVALIDFORMAT')
             }
         }
@@ -362,7 +320,6 @@ exports.queryAsync = (query) =>
             }
             else
             {
-                // console.log(`Query Executed`);
                 resolve(result);
             }
         });
@@ -447,7 +404,6 @@ exports.tokenAndIdVerification = async(userId,token) =>
             
                     const currentTimestamp = Math.floor(Date.now() / 1000);
             
-                    console.log("Current Timestamp:", currentTimestamp);
             
                     if (currentTimestamp > substring3)
             
@@ -495,18 +451,14 @@ exports.tokenAndIdVerification = async(userId,token) =>
                     const email = (emailChars.join('') + emailChars2.join('')).replace(/y+$/, '');
                   
                     let verifyId =  await commonfetching.dataOnCondition(constant.tableName.service_providers,userId,'id')
-                    // console.log(verifyId);
                     if(verifyId.length != 0){
                         if(verifyId[0].email === email){
                             resolve({id :verifyId[0].id,token :token})
                         }else{
-                            console.log('email_not_found At the time of verification');
                              resolve(false);
                         }    
 
                     }else{
-                     // resolve({mes sage : 'user_not_found'})
-                     console.log('user id not found At the time of verification');
                      resolve(false);
                     }
                    
@@ -515,6 +467,5 @@ exports.tokenAndIdVerification = async(userId,token) =>
     }
     catch (error)
     {
-        console.log(`Error from the commonfetching.js file from the helper folder. `, error);                
     }
 };

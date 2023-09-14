@@ -30,13 +30,10 @@ module.exports = class dashboard
             return await new Promise(async(resolve, reject)=>
             {
                 let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
-                // console.log('Check Role Data At The time of dashboard data : ', checkRole);
                 con.query(checkRole, async (err, result) =>
                 {
-                    // console.log(`Roles at the time of the get all of the Customers: `, result);
                     if(err)
                     {
-                        console.log('Error while checking the role at the time of dashboard');
                         resolve('err') 
                     }
                     if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
@@ -58,12 +55,10 @@ module.exports = class dashboard
                                         COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q where q.deleted_at IS NULL), 0) AS total_quotations,
                                         COALESCE((SELECT SUM(i.final_amount) FROM ${constants.tableName.invoices} i WHERE i.deleted_at IS NULL AND i.status <> "INACTIVE"), 0) AS total_revenue
                                     `;
-                        // console.log(`Dashboard query at the time of admin: `,query);
                         con.query(query, (err, result) =>
                         {
                             if(err)
                             {
-                                console.log('Error while fetching the dashboard data');
                                 resolve('err') 
                             }
                             else
@@ -96,12 +91,10 @@ module.exports = class dashboard
                                     COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q WHERE q.serviceprovider_id = ${Id} AND q.deleted_at IS NULL), 0) AS total_quotations,
                                     COALESCE((SELECT SUM(i.final_amount) FROM ${constants.tableName.invoices} i WHERE i.service_provider_id = ${Id} AND i.deleted_at IS NULL AND i.status <> "${constants.status.inactive}"), 0) AS total_revenue
                                 `;
-                        // console.log(`Dashboard query at the time of service provider : `,Query);
                         con.query(Query, (err, result) =>
                         {
                             if(err)
                             {
-                                console.log('Error while fetching the dashboard data');
                                 resolve('err') 
                             }
                             else
@@ -119,7 +112,6 @@ module.exports = class dashboard
                     }
                     else
                     {
-                        console.log('I think the role name which we got is not present in the database at the time of dashboard');
                         resolve('err');
                     }
                 });
@@ -141,13 +133,10 @@ module.exports = class dashboard
             return await new Promise(async (resolve, reject)=>
             {
                 let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM ${constants.tableName.service_providers} sp, ${constants.tableName.roles} r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
-                // console.log('Check Role Data At The time of fetching monthly sales report: ', checkRole);
                 con.query(checkRole, async (err, result) =>
                 {
-                    // console.log(`Roles at the time of the get all of fetching monthly sales report: `, result);
                     if(err)
                     {
-                        console.log('Error while checking the role at the time of fetching monthly sales report');
                         resolve('err') 
                     }
                     else
@@ -163,12 +152,10 @@ module.exports = class dashboard
                                             WHERE created_at >= DATE_SUB(NOW(), INTERVAL 12 MONTH)
                                             GROUP BY YEAR(created_at), MONTH(created_at), LEFT(MONTHNAME(created_at), 3)
                                             ORDER BY YEAR(created_at), MONTH(created_at)`;                            
-                            // console.log(`Dashboard query at the time of admin: `, query);
                             con.query(query, async(err, result) =>
                             {
                                 if(err)
                                 {
-                                    console.log('Error while fetching the dashboard data');
                                     resolve('err') 
                                 }
                                 else
@@ -197,12 +184,10 @@ module.exports = class dashboard
                                             WHERE i.service_provider_id = ${Id}
                                             GROUP BY YEAR(i.created_at), MONTH(i.created_at)
                                             ORDER BY YEAR(i.created_at), MONTH(i.created_at)`;
-                            // console.log(`Dashboard query at the time of service provider : `,Query);
                             con.query(Query, (err, result) =>
                             {
                                 if(err)
                                 {
-                                    console.log('Error while fetching the dashboard data');
                                     resolve('err') 
                                 }
                                 else
@@ -222,7 +207,6 @@ module.exports = class dashboard
                         }
                         else
                         {
-                            console.log('I think the role name which we got is not present in the database at the time of dashboard');
                             resolve('err');
                         }
                     }
@@ -245,13 +229,10 @@ module.exports = class dashboard
             return await new Promise(async (resolve, reject)=>
             {
                 let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
-                // console.log('Check Role Data At The time of fetching monthly sales report: ', checkRole);
                 con.query(checkRole, async (err, result) =>
                 {
-                    // console.log(`Roles at the time of the get all of fetching monthly sales report: `, result);
                     if(err)
                     {
-                        console.log('Error while checking the role at the time of fetching monthly sales report');
                         resolve('err') 
                     }
                     else
@@ -267,12 +248,10 @@ module.exports = class dashboard
                             {
                                 if(err)
                                 {
-                                    console.log('Error while fetching quotation for the dahboard');
                                     resolve('err') 
                                 }
                                 else
                                 {
-                                    // console.log(result);
                                     if(result.length === 0)
                                     {
                                         resolve({result});
@@ -293,17 +272,14 @@ module.exports = class dashboard
                             COALESCE(SUM(CASE WHEN status = '${constants.quotation_status.notconfirmed}' THEN 1 ELSE 0 END), 0) AS total_not_confirmed
                             FROM ${constants.tableName.quotations} q 
                             WHERE q.serviceprovider_id = ${Id}`;
-                            // console.log('Query: ', Query);
                             con.query(Query, async (err, result) =>
                             {
                                 if(err)
                                 {
-                                    console.log('Error while fetching quotation for the dahboard');
                                     resolve('err') 
                                 }
                                 else
                                 {
-                                    // console.log(result);
                                     if(result.length === 0)
                                     {
                                         resolve({result});
@@ -318,7 +294,6 @@ module.exports = class dashboard
                         }
                         else
                         {
-                            console.log('I think the role name which we got is not present in the database at the time of getting quotaion data');
                             resolve('err');
                         }
                     }
@@ -341,13 +316,10 @@ module.exports = class dashboard
             return await new Promise(async (resolve, reject)=>
             {
                 let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
-                // console.log('Check Role Data At The time of fetching monthly sales report: ', checkRole);
                 con.query(checkRole, async (err, result) =>
                 {
-                    // console.log(`Roles at the time of the get all of fetching monthly sales report: `, result);
                     if(err)
                     {
-                        console.log('Error while checking the role at the time of fetching monthly sales report');
                         resolve('err') 
                     }
                     else
@@ -359,18 +331,14 @@ module.exports = class dashboard
                                         WHERE e.customer_id = c.id
                                         ORDER BY e.created_at DESC
                                         LIMIT 5`;
-                                        // console.log(`Query: `, query);
                                         con.query(query, async(err, result) =>
                                         {
                                             if(err)
                                             {
-                                                console.log('Error while fetching latest enquiry for the dahboard', err);
-
                                                 resolve('err') 
                                             }
                                             else
                                             {
-                                                // console.log(result);
                                                 if(result.length === 0)
                                                 {
                                                     resolve(result);
@@ -388,17 +356,14 @@ module.exports = class dashboard
                         else if(result[0].role_id === constants.Roles.service_provider)
                         {
                             let query = `SELECT e.id, c.user_name, c.name, DATE_FORMAT(e.created_at, '%d %b, %Y') AS date, e.pickup_location, e.no_of_horse, e.drop_location, e.status FROM enquiries e, customers c WHERE e.serviceprovider_id = ${Id} AND e.customer_id = c.id ORDER BY e.created_at DESC LIMIT 5`;
-                            // console.log(query);
                             con.query(query, async(err, result) =>
                             {
                                 if(err)
                                 {
-                                    console.log('Error while fetching latest enquiry for the dahboard', err);
                                     resolve('err') 
                                 }
                                 else
                                 {
-                                    // console.log(result);
                                     if(result.length === 0)
                                     {
                                         resolve(result);
@@ -406,15 +371,12 @@ module.exports = class dashboard
                                     else
                                     {
                                         resolve(result);
-                                        // let quoatationData = customizeQuotationStatusReport(result);
-                                        // resolve(quoatationData)
                                     }                                         
                                 }
                             });
                         }
                         else
                         {
-                            console.log('I think the role name which we got is not present in the database at the time of getting quotaion data');
                             resolve('err');
                         }
                     }

@@ -50,13 +50,11 @@ module.exports = class authentication
                                 }
                                 else
                                 { 
-                                    // console.log("User Id: ", userData[0].role_Id);
                                     let selQuery = `SELECT md.name AS module_name ,md.id AS module_id 
                                     FROM ${constants.tableName.permissions} AS pm
                                     JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                                     JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
                                     WHERE pm.role_id = '${userData[0].role_Id}' `;
-                                    // console.log(selQuery);
                                     con.query(selQuery, async (err, data) =>
                                     {
                                         const resObj = [{
@@ -121,17 +119,14 @@ module.exports = class authentication
                                                expiry_at = '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}',
                                                updated_at = '${time.getFormattedUTCTime(constant.timeOffSet.UAE)}'
                                                WHERE user_name = '${username}' `;
-                    // console.log(`Update Password Query: `, updatePasswordQuery);
                     con.query(updatePasswordQuery, (err, result) =>
                     {
                         if(result.affectedRows > 0)
                         {
-                            // console.log('Service provider password updated');
                             return userData;
                         }
                         else
                         {
-                            // console.log(`Error while updating the service provider password`);
                             return 'err';   
                         }
                     });                 
@@ -159,7 +154,6 @@ module.exports = class authentication
                 }
                 else
                 {
-                    // console.log('Logout Done');
                     resolve('logoutdone');            
                        
                 } 
@@ -180,7 +174,6 @@ module.exports = class authentication
             try {
            
             let generateToken = await commonfetching.tokenGeneration(email);
-            console.log(generateToken);
             let selQuery = `SELECT  id
                             FROM ${constants.tableName.service_providers}
                             WHERE email = '${email}'`;

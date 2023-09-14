@@ -78,7 +78,6 @@ module.exports = class tripetails
                     con.query(totalCountQuery, (err, result) => {
                         if (!err) {
                             const count = result[0]['count(*)'];
-                            // console.log(data[0]);
                             for (let i = 0; i < data.length; i++) {
 
                                 data[i].trip_starting_date = `${time.formatDateToDDMMYYYY(
@@ -98,7 +97,6 @@ module.exports = class tripetails
                          `;
 
                          con.query(Query,(err,modules)=>{
-                            // console.log("result",result);
                             if(!err){
                  
                             resolve({ totalCount: count, tripDetails: data,module: modules })
@@ -141,9 +139,7 @@ static async addBreakDowns (requestBody){
                 let selQuery = `SELECT * FROM ${constants.tableName.vehicles_breakouts} 
                             WHERE 	booking_id = '${booking_id}'`;
                  con.query(selQuery, async (err, result) => {
-                    // console.log("resultt",result);
                     if (result.length == 0) {
-                            // console.log("hello");
                         /***This for adding previous booking data   */
                         let selQuery = `SELECT id AS booking_id,inv_id AS invoice_id ,service_provider_id ,vehicle_id  ,driver_id ,pickup_location,	drop_location  FROM ${constants.tableName.bookings}
                             WHERE id  = '${booking_id}'`
@@ -159,7 +155,6 @@ static async addBreakDowns (requestBody){
                                                 VALUES ('${booking_id}', '${invoice_id}', '${service_provider_id}', '${vehicle_id}', '${driver_id}', '${pickup_location}', '${breakDownLocation}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
 
                                 con.query(insQuery, async (err, result) => {
-                                    // console.log("result", err);
                                     if (!err) {
 
                                         const { invoice_id, booking_id, service_provider_id, driver_id, vehicle_id } = requestBody;
@@ -167,7 +162,6 @@ static async addBreakDowns (requestBody){
                                                                 VALUES ('${booking_id}', '${invoice_id}', '${service_provider_id}', '${vehicle_id}', '${driver_id}', '${breakDownLocation}', '${drop_location}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
 
                                         con.query(insQueryy, async (err, result) => {
-                                            // console.log("insert", err);
                                             if (!err) {
 
                                                 /** After inserting we updating trip status on the bookingss */
@@ -176,7 +170,6 @@ static async addBreakDowns (requestBody){
                                                                        WHERE id = '${booking_id}'`;
 
                                                 con.query(updateQuery, async (err, data) => {
-                                                    // console.log("Update", err, data);
 
                                                     if (data?.length != 0) {
 
@@ -204,7 +197,6 @@ static async addBreakDowns (requestBody){
 
                     } else {
                         
-// console.log("gggggggg");
                         /***Ther allredy data in  the vehicle break outs    */
                         let selQuery = `SELECT 	drop_location  FROM ${constants.tableName.bookings}
                                     WHERE id  = '${booking_id}'`
@@ -220,11 +212,9 @@ static async addBreakDowns (requestBody){
                                                     LIMIT 1`;
 
                                 con.query(lastAddedBreakDown, async (err, lastBreakDown) => {
-                                    // console.log(err);
                                     if (lastBreakDown.length != 0) {
                                         let lastId = lastBreakDown[0].id;
                                         let lastPickupLocation = lastBreakDown[0].pickup_location
-                                        // console.log("last id ",lastId,drop_location);
                                         const { invoice_id, booking_id, service_provider_id, driver_id, vehicle_id, pickup_location } = requestBody;
 
                                                 let updateQuery = `UPDATE ${constants.tableName.vehicles_breakouts} 
@@ -306,7 +296,6 @@ static async addBreakDowns (requestBody){
 static async listBreakDowns  (bkId)  {
     return new Promise((resolve, reject) => {
         try {
-            // console.log(bkId);
             let selQuery = `SELECT vb.id, vh.vehicle_number ,dvr.name AS driver_name, vb.pickup_location,vb.drop_location,sp.name AS service_provider
                            FROM ${constants.tableName.vehicles_breakouts} vb
                            JOIN ${constants.tableName.vehicles} vh ON vb.vehicle_id  = vh.id
@@ -316,7 +305,6 @@ static async listBreakDowns  (bkId)  {
 
 
             con.query(selQuery, async (err, data) => {
-                // console.log(data);
                 if (data.length != 0) {
                     resolve({ vehicles_breakouts: data })
                 } else {

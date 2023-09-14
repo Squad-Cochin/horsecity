@@ -27,7 +27,6 @@ exports.addImages = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(vehicleImages === 'err')
     {
-        console.log('Error while uploading the particular vehicle image');
         return res.status(200).send
         ({
             code : 500,
@@ -46,7 +45,6 @@ exports.addImages = async (req, res, next) =>
     }
     else if(vehicleImages === 'NOATTACH')
     {
-        console.log('No attachment');
         return res.status(200).send
         ({
             code : 400,
@@ -117,7 +115,6 @@ exports.updateStatus = async (req, res, next) =>
     // If status not updated then this if block of code.
     if(vehicleImages.length === 0)
     {
-        console.log('No image is updated');
         return res.status(200).send
         ({
             code : 500,

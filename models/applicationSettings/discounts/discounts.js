@@ -38,7 +38,6 @@ module.exports = class discounts
                     con.query(totalCountQuery,(err,result)=>{
                         if(!err){
                             const count = result[0]['count(*)'];
-                            console.log("data",data[0].created_at);
                             for(let i = 0;i<data.length;i++){
                                 data[i].created_at = `${time.formatDateToDDMMYYYY(data[i].created_at)}`;
                             }
@@ -72,7 +71,6 @@ static async  addNewDiscount  (requestBody)
          
         con.query(insQuery,async(err,data)=>{
             if(!err){
-                console.log(data);
                 resolve(true)
             }
         })
@@ -96,7 +94,6 @@ static async  updateDiscount (requestBody,id)
         let validateQuery  = `SELECT * FROM ${constants.tableName.discount_types} 
                               WHERE  id = '${id}' AND deleted_at IS NULL`
         con.query(validateQuery,async(err,data)=>{
-           console.log("data",data);
         if(data?.length != 0 ){
 
                     let updateQuery = `UPDATE ${constants.tableName.discount_types} SET 
@@ -109,9 +106,7 @@ static async  updateDiscount (requestBody,id)
             
                 
                 con.query(updateQuery,async(err,data)=>{
-                    console.log("data",data);
                     if(data?.length != 0 ){
-                        console.log("haii");
                         resolve({status : "SUCCESS"})
                     }else{
                         resolve({status : "FAILD"})
@@ -172,23 +167,18 @@ static async getallactivediscount  ()
         try
         {
             let selQuery = `SELECT ds.id, ds.name,ds.type,ds.rate FROM discount_types ds WHERE ds.deleted_at IS NULL AND ds.status = '${constants.status.active}' `;
-            // console.log(selQuery);
             con.query(selQuery, (err, result) =>
             {
-                // console.log(result);
                 if(result.length !== 0)
                 {
-                    console.log('Data Fetched');
                     resolve(result);
                 }    
                 else if(result.length == 0)
                 {
-                    console.log('No data present to show');
                     resolve(result);
                 }  
                 else
                 {
-                    console.log(err);
                     resolve('err');
                 }                          
             });

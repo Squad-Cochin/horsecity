@@ -14,7 +14,6 @@ let logo = `data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAGQAAABkCAYAAABw4pVUAA
 //     {
 //         if(tableName === constants.tableName.invoices)
 //         {
-//             console.log('HERERERE', id);
 //             let invoiceData = await invocie.getone(id);
 //             console.log('Invoice Data: ', invoiceData);
 //             let htmlContent = await commonfetching.getInvoiceHtmlTemplate(invoiceData)
@@ -35,11 +34,9 @@ exports.SendEmail = async (id, to, subject) =>
     return new Promise(async (resolve, reject) =>
     {
         let invoiceData = await commonfetching.getOneInvoice(id);
-        // console.log('Invoice Data: ', invoiceData);
 
         // Example usage: Assuming you have the invoiceData object containing invoice, vehicles, and payment details.
         const htmlContent = generateInvoiceHTML(invoiceData);
-        // console.log(htmlContent)
         const transporter = nodemailer.createTransport 
         ({
             // service: 'Gmail', // replace with your email service provider
@@ -64,12 +61,10 @@ exports.SendEmail = async (id, to, subject) =>
         {
             if(error)
             {
-                console.log(error);             
                 resolve(false);
             }
             else
             {
-                console.log('Email sent:', info.response);
                 resolve(true); // Resolve the promise with the email response
             }
         });
@@ -81,7 +76,6 @@ exports.SendEmailOfQuotation = async (id, to, subject) =>
     return new Promise(async (resolve, reject) =>
     {        
         const quoteData = await quote.getOneQuotation(id);
-        // console.log(`One Quotation Data: `, quoteData);
 
         // Function to generate the table rows for vehicle details
         function generateInvoiceHTML(quoteData) 
@@ -296,7 +290,7 @@ exports.SendEmailOfQuotation = async (id, to, subject) =>
                                                                         </tr>
                                                                         <tr style="background-color: #d7d4d4;">
                                                                             <td>
-                                                                                <div style="padding: 8px; text-align:left;color: #000000;font-size:14px;">Final Amount</div>
+                                                                                <div style="padding: 8px; text-align:left;color: #000000;font-size:14px;">Final Payment</div>
                                                                             </td>
                                                                             <td>
                                                                                 <div style="padding: 8px; text-align:left;color: #000000;font-size:14px;">${quoteData.quotation[0].final_amount}</div>
@@ -326,7 +320,6 @@ exports.SendEmailOfQuotation = async (id, to, subject) =>
       // Example usage: Assuming you have the invoiceData object containing invoice, vehicles, and payment details.
 
         const htmlContent = generateInvoiceHTML(quoteData);
-        // console.log(htmlContent)
         const transporter = nodemailer.createTransport 
         ({
             // service: 'Gmail', // replace with your email service provider
@@ -351,12 +344,10 @@ exports.SendEmailOfQuotation = async (id, to, subject) =>
         {
             if(error)
             {
-                console.log(error);             
                 resolve(false);
             }
             else
             {
-                console.log('Email sent:', info.response);
                 resolve(true); // Resolve the promise with the email response
             }
         });
@@ -366,8 +357,7 @@ exports.SendEmailOfQuotation = async (id, to, subject) =>
 exports.SendEmailOfForgotpassword = async (id, to, subject,token) =>
 {
     return new Promise(async (resolve, reject) =>
-    {        console.log("here22");
-
+    {
         const transporter = nodemailer.createTransport 
         ({
             // service: 'Gmail', // replace with your email service provider
@@ -397,7 +387,6 @@ exports.SendEmailOfForgotpassword = async (id, to, subject,token) =>
         {
             if(error)
             {        
-                console.log("heree");
                 resolve(false);
             }
             else

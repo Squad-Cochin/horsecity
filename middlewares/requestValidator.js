@@ -43,7 +43,6 @@ exports.usernamevalidation = (req, res, next) => {
                     }
                 });
             } catch (err) {
-                console.log("Error while checking username in the database");
             }
             }else if(requestMethod == 'PUT'  && URL == url.UPDATE_SERVICE_PROVIDER_URL  + req.params?.id){
                 let id = req.params.id
@@ -110,18 +109,14 @@ exports.emailValidation = async (req, res, next) => {
             if (regex.test(email)) {
                 const domain = email.split('@')[1]; // get domain name after '@' symbol
                 const domainParts = domain.split('.'); // split domain name by '.' separator
-                // //console.log(domainParts); // output: ['gmail', 'com', 'com']
                 if (domainParts[1] === domainParts[2]) {
-                    // //console.log('Both the domain names are same. It is not a valid email');
                     return false
                 }
                 else {
-                    // //console.log('Valid Email');
                     return true;
                 }
             }
             else {
-                // //console.log('Invalid Email');
                 return false
             }
         };
@@ -133,7 +128,6 @@ exports.emailValidation = async (req, res, next) => {
              if(requestMethod == 'POST' && URL ==  url.ADD_SERVICEPROVIDER__URL){
                 let selQuery = `SELECT * FROM service_providers WHERE email = '${email}' AND deleted_at IS NULL`;
                 con.query(selQuery, (err, result) => {
-                    //console.log(result);
                     if (result.length != 0) {
                         return res.status(200).send({
                             code: 400,
@@ -198,7 +192,6 @@ exports.emailValidation = async (req, res, next) => {
                
 
             } catch (err) {
-                console.log("Error while Validating email in the database");
             }
         }
         else {
@@ -247,7 +240,6 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                             if(requestMethod == 'POST'){
                             let verifyLicenceQuery = `SELECT * FROM service_providers WHERE licence_no = '${licence_no}' AND deleted_at IS NULL`;
                             con.query(verifyLicenceQuery, (err, result) => {
-                                //console.log(result);
                                 if (result.length != 0) {
                                     return res.status(200).send({
                                         code: 400,
@@ -351,7 +343,6 @@ exports.verifyLanguageBody = async(req,res,next) =>
                 let selQuery = `SELECT * FROM ${constants.tableName.languages}  WHERE name = '${name}' 
                 AND deleted_at IS NULL`;
                 con.query(selQuery, (err, result) => {
-                    // console.log(result);
                     if (result.length != 0) {
                         return res.status(200).send
                             ({
@@ -364,7 +355,6 @@ exports.verifyLanguageBody = async(req,res,next) =>
                         let selQuery = `SELECT * FROM ${constants.tableName.languages}  WHERE abbreviation = '${abbreviation}' 
                         AND deleted_at IS NULL`;
                         con.query(selQuery, (err, result) => {
-                            // console.log(result);
                             if (result.length != 0) {
                                 return res.status(200).send
                                     ({
@@ -666,7 +656,6 @@ exports.passwordValidation = async (req, res, next) => {
        
             let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
             con.query(selQuery, (err, result) => {
-                //console.log(result); 
                 if (result) {
                     const isValidPassword = (password) => {
                         const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
@@ -689,7 +678,6 @@ exports.passwordValidation = async (req, res, next) => {
                     }
                 }
                 else {
-                    //console.log("Error while fetchig the regex from the password policies table");
                 }
             })
         }

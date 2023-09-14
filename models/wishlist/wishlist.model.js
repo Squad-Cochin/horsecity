@@ -28,7 +28,6 @@ module.exports = class wishlist
                     flag
                 } = body ;
                 
-                // console.log("sdhfksd",JSON.parse(flag));
                 if(JSON.parse(flag))
                 {
                     let insQuery = `INSERT INTO ${constants.tableName.wishlist}(customer_id , vehicle_id,created_at)
@@ -58,7 +57,6 @@ module.exports = class wishlist
             }
             catch(err)
             {
-                console.log('Error in wishlist', err); 
             }
         });   
     };
@@ -97,7 +95,6 @@ module.exports = class wishlist
 
                 con.query(selQuery,(err,result)=>
                 {
-                    // console.log(err,result);
                     if(!err)
                     {
                         for(let i = 0;i < result.length;i++)
@@ -127,7 +124,6 @@ module.exports = class wishlist
                         const totalCountQuery = `SELECT count(*) FROM wishlist w WHERE w.customer_id = '${customer_id}' AND w.deleted_at IS NULL`
                         con.query(totalCountQuery,(err,count)=>
                         {   
-                            // console.log(count);
                             if(!err)
                             {
                                 const COUNT = count[0]['count(*)'];

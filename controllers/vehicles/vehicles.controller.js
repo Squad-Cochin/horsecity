@@ -110,7 +110,6 @@ exports.getAll = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this else if block of code will be executed.
     if(vehicles === 'err')
     {
-        // console.log(`Error while fetching all the vehicles ${vehicles}`);
         return res.status(200).send
         ({
             code : 500,
@@ -159,7 +158,6 @@ exports.updateStatus = async (req, res, next) =>
     // If no data on the id is there then this if block will work
     if(vehicles === 'nodata')
     {
-        console.log('No vehicles data on this Id from controller');
         return res.status(200).send
         ({
             code : 400,
@@ -171,7 +169,6 @@ exports.updateStatus = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     else if(vehicles === 'err')
     {
-        console.log('Error');
         return res.status(200).send
         ({
             code : 500,
@@ -184,7 +181,6 @@ exports.updateStatus = async (req, res, next) =>
     // If there are vehiles in the database. Then these lines of code will be executed
     else
     {
-        console.log('Vehicle Status updated successfully');
         return res.status(200).send
         ({
             code : 200,
@@ -353,7 +349,6 @@ exports.getAllImages = async (req, res, next) =>
     // No images are there for the vehicle whose id submitted in the params, then this else if block will be executed
     else if(vehicles.length === 0)
     {
-        // console.log('No images are there for this vehicle now');
         return res.status(200).send
         ({
             code : 400,

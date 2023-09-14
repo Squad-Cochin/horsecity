@@ -14,7 +14,6 @@ const constants = require('../../utils/constants');
 exports.listingPageData = async(req,res)=>
 {
 
-    // console.log("body",req.body);
     let listing = await modal.listingPageData(req.body)
 
    if(listing){

@@ -19,7 +19,6 @@ exports.dataOnCondition = async (tableName, Value, feildName) =>
         return await new Promise(async (resolve, reject) => 
         {
             let selQuery = `SELECT * FROM ${tableName} t WHERE t.${feildName} = '${Value}'`;
-            // console.log(`Universal Query At Normal Condition: `, selQuery);
             con.query(selQuery, (err, result) =>
             {
                 if(err)
@@ -53,32 +52,26 @@ exports.dataOnConditionUpdate = async(tableName, feildName, Value, id, messageFe
         return await  new Promise(async (resolve, reject) =>
         {
             let selQuery = `SELECT * FROM ${tableName} t WHERE t.id = '${id}' AND t.${feildName} = '${Value}'`;
-            // console.log(`Universl Query At Update Condition: `, selQuery);
             con.query(selQuery, async (err, result) =>
             {
                 if(err)
                 {
-                    console.log(`Error in the data on update`);
                     resolve(`internalError`)
                 }
                 
                 if(result.length > 0)
                 {
-                    // console.log(`I think ${messageFeild} is not updating this time`);
                     resolve(`valuenotchanged`);
                 }
                 else
                 {
                     let checkwithOthers = await this.dataOnCondition(tableName, Value, feildName);
-                    // console.log(checkwithOthers);
                     if(checkwithOthers.length > 0)
                     {
-                        console.log(`${messageFeild} Cannot be used. It is already registered`);
                         resolve(`valuenotavailable`);
                     }
                     else
                     {
-                        // console.log(`No one has this ${messageFeild}`);
                         resolve(`true`);
                     }
                 }
@@ -98,7 +91,6 @@ exports.getOneInvoice = async (Id) =>
             return await new Promise(async(resolve, reject) =>
             {
                 const data1 = await this.dataOnCondition(constants.tableName.bookings, Id, 'inv_id');      
-                // console.log('data 1: ', data1.length);
                 if(data1.length == 0)
                 {
                     const selQuery = `  SELECT
@@ -262,7 +254,6 @@ exports.getOneInvoice = async (Id) =>
                 }
                 if (data1[0].booking_status === 'CANCELLED')
                     {
-                        // console.log('Inosed the cancalled one');
                         const selQuery = `  SELECT
                                             i.id,
                                             v.id AS VehicleId,
@@ -463,7 +454,7 @@ exports.getInvoiceHtmlTemplate = async(invoiceData) =>
             <th>#</th>
             <th>Recieved Money</th>
             <th>Received Date</th>
-            <th>Remaining Amount</th>
+            <th>Remaining Payment</th>
             </tr>`;    
             payments.forEach((payment, index) =>
             {

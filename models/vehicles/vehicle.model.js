@@ -33,13 +33,11 @@ module.exports = class vehicles
                 {
                     if(err)
                     {
-                        console.log('Error while fetching the role name at the time of add vehicle');
                         resolve('err') 
                     }
                     else
                     {
                         let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);
-                        // console.log(uploadSafetyCertificate);
                         if(uploadSafetyCertificate === 'INVALIDFORMAT')
                         {
                             resolve('INVALIDATTACHMENT')
@@ -61,7 +59,6 @@ module.exports = class vehicles
                                     }
                                     else
                                     {
-                                        console.log(err);
                                         resolve('err');
                                     }
                                 });
@@ -69,25 +66,20 @@ module.exports = class vehicles
                             else if(resultRole[0].role_id === constants.Roles.service_provider)
                             {
                                 let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, price, no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${Id}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${price}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
-                                // console.log(insQuery);
                                 con.query(insQuery, (err, result) =>
                                 {
-                                    // console.log(result);
                                     if(result.affectedRows > 0) 
                                     {
-                                        // console.log('Vehicles data added successfully');
                                         resolve(result);
                                     }
                                     else
                                     {
-                                        console.log(err);
                                         resolve('err');
                                     }
                                 });
                             }
                             else
                             {
-                                console.log('I think the role name which we got is not present in the database at the time of vehicle');
                                 resolve('err');
                             }
                         }              
@@ -120,7 +112,6 @@ module.exports = class vehicles
                 {
                     if(err)
                     {
-                       console.log('Error while checking the role');
                        resolve('err') 
                     }
                     if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
@@ -146,7 +137,6 @@ module.exports = class vehicles
                                 {
                                     if(err)
                                     {
-                                        console.log('Error while fetching the module name at the time of getall vehicles');
                                         resolve('err') 
                                     }
                                     else
@@ -180,7 +170,6 @@ module.exports = class vehicles
                                 {
                                     if(err)
                                     {
-                                        console.log('Error while fetching the module name at the time of getall vehicles');
                                         resolve('err') 
                                     }
                                     else
@@ -193,7 +182,6 @@ module.exports = class vehicles
                     }
                     else
                     {
-                        console.log('I think the role name which we got is not present in the database');
                         resolve('err') 
                     }                    
                 });
@@ -218,12 +206,10 @@ module.exports = class vehicles
                 const vehicleData = await commonfetching.dataOnCondition(constants.tableName.vehicles, id, 'id');
                 if(vehicleData.length === 0)
                 {
-                    console.log('No data present on this Id');
                     resolve('nodata');
                 }
                 else if(vehicleData.length === 'err')
                 {
-                    console.log(`Error while fethcing the vehicle data on the basis if Id. Model folder`);
                     resolve('err');
                 }
                 else
@@ -235,12 +221,10 @@ module.exports = class vehicles
                         {
                             if(result.length != 0) // if ticket updated then if block
                             {
-                                // console.log('Status Changed to INACTIVE');
                                 resolve(result);
                             }
                             else
                             {
-                                console.log(err);
                                 resolve('err');
                             }
                         }); 
@@ -252,12 +236,10 @@ module.exports = class vehicles
                         {
                             if(result.length != 0) // if ticket updated then if block
                             {
-                                // console.log('Status Changed to ACTIVE');
                                 resolve(result);
                             }
                             else
                             {
-                                console.log(err);
                                 resolve('err');
                             }
                         });
@@ -316,12 +298,10 @@ module.exports = class vehicles
                 }
             if(data.length === 0)
             {                
-                console.log('No data present on this Id');
                 return ('nodata');
             }
             else if(data === 'err')
             {
-                console.log(`Error while fethcing the vehicle data on the basis if Id. Model folder`);
                 return ('err');
             }
             else
@@ -355,7 +335,6 @@ module.exports = class vehicles
                     }
                     else
                     {
-                        console.log(err);
                         return('err')
                     }
                 });
@@ -382,7 +361,6 @@ module.exports = class vehicles
                         }
                         else
                         {
-                            console.log(err);
                             return('err')
                         }
                     });
@@ -410,7 +388,6 @@ module.exports = class vehicles
                                 JOIN ${constants.tableName.vehicles} v ON vi.vehicle_id = v.id 
                                 WHERE vi.vehicle_id = ${id} 
                                 AND vi.deleted_at IS NULL`;
-                // console.log(selQuery);
                 con.query(selQuery, (err, result) =>
                 {
                     if (result.length !== 0)
@@ -438,15 +415,6 @@ module.exports = class vehicles
                         // Resolve with an empty array to indicate no data found
                         resolve([]);
                     }
-                    // if(result)
-                    // {
-                    //     resolve(result);                       
-                    // }
-                    // else
-                    // {
-                    //     console.log(err);
-                    //     resolve('err');
-                    // }
                 });
             });            
         }
@@ -466,7 +434,6 @@ module.exports = class vehicles
         try
         {
             const data = await commonoperation.removeUser(constants.tableName.vehicles, Id);
-            // console.log('Data', data);
             if(data.length === 0)
             {
                 return data
@@ -539,13 +506,10 @@ module.exports = class vehicles
                                 ON v.id = r.vehicle_id
                                 WHERE v.id = ${Id} 
                                 AND v.status = "${constants.status.active}"  `;
-                // console.log(`Fetch data query: `, selQuery);
                 con.query(selQuery, (err, result) =>
                 {
-                    // console.log(`Result of the particular vehicle for the customer page: `, result);
                     if(err)
                     {
-                        console.log(err);
                         resolve('err');
                     }
                     else
@@ -611,7 +575,6 @@ module.exports = class vehicles
                                     uniqueReviewIds.add(row.review_id);
                                 }
                             }
-                            // console.log(`Final Data: `, vehicleResponse);
                             resolve(vehicleResponse);
                         }
                     }

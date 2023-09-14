@@ -696,7 +696,6 @@ static async sendMail(requestBody, quot_id)
                 // let updateQuery = `UPDATE ${constants.tableName.bookings} 
                 //                            SET 	confirmation_sent = '${constants.booking_confirmation_send.yes}'
                 //                            WHERE  quotation_prefix_id = '${quot_id}'`;
-                //                            console.log(updateQuery);
 
                 // con.query(updateQuery, async (err, result) => {
 

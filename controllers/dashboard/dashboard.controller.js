@@ -63,7 +63,6 @@ exports.getMontlySalesReport = async (req, res, next) =>
     }
     else
     {
-        // console.log(`Monthly sales report data fetched successfully`);
         res.status(200).send
         ({
             code : 200,
@@ -114,7 +113,6 @@ exports.getLatestEnquiries = async (req, res) =>
     }
     else
     {
-        // console.log(`Latest enquiries data for the dashboard fetched successfully `);
         res.status(200).send
         ({
             code : 200,
