@@ -28,7 +28,7 @@ const LoginForm = () => {
     }
     let res = await loginApi(loginData);
     if(res.code === 200){
-      Router.push("/car/car-list-v1")
+      Router.push("/package/listing")
       localStorage.setItem('loginData', JSON.stringify(res.data));
       setSuccess(res.message)
       setErrors("");

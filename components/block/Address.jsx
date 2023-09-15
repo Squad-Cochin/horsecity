@@ -21,7 +21,7 @@ const Address = () => {
       title: "Toll Free Customer Care",
       content: (
         <>
-          <a href="tel:+4733378901">+47 333 78 901</a>
+          <a href="tel:+4733378901">+12 345 67 890</a>
         </>
       ),
     },
@@ -32,7 +32,7 @@ const Address = () => {
       content: (
         <>
           {" "}
-          <a href="mailto:i@gotrip.com">hi@gotrip.com</a>
+          <a href="#">hi@Loremipsum.com</a>
         </>
       ),
     },

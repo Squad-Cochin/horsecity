@@ -18,7 +18,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { add_list_data } from "../../../features/listData/listData";
 
 // Functions for showing details of packages 
-const CarPropertes = () => {
+const PackagePropertes = () => {
   const { price_from, price_to, suppliers, sort, page, limit } = useSelector((state) => state.listingFilter) || {};
   const { list_data } = useSelector((state) => state.listData) || {};
   const [ isLogin, setLogin ] = useState(false);
@@ -217,7 +217,7 @@ const CarPropertes = () => {
                 </div>
                 <div className="text-14 text-light-1 mt-5">Total</div>
                 <Link
-                  href={`/car/car-single/${item.id}`}
+                  href={`/package/details/${item.id}`}
                   className="button h-50 px-24 bg-dark-1 -yellow-1 text-white mt-24"
                 >
                   View Detail <div className="icon-arrow-top-right ml-15" />
@@ -233,4 +233,4 @@ const CarPropertes = () => {
   );
 };
 
-export default CarPropertes;
+export default PackagePropertes;

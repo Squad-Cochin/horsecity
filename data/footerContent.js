@@ -24,10 +24,10 @@ module.exports = [
     id: 3,
     title: "Other Services",
     menuList: [
-      { name: "Horse Transportation", routerPath: "/" },
-      { name: "Horse Accessories", routerPath: "/" },
-      { name: "Horse Pharmacy", routerPath: "/" },
-      { name: "Doctor On Call", routerPath: "/" },
+      { name: "Horse Transportation", routerPath: "#" },
+      { name: "Horse Accessories", routerPath: "#" },
+      { name: "Horse Pharmacy", routerPath: "#" },
+      { name: "Doctor On Call", routerPath: "#" },
     ],
   },
 ];

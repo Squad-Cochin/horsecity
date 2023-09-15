@@ -40,7 +40,7 @@ const MainFilterSearchBox = () => {
     }
     localStorage.setItem('searchObject', JSON.stringify(searchObject));
     if(number_of_horses && number_of_horses != "" && number_of_horses != 0 && trip_type && trip_type != [] && trip && trip != ""){
-      Router.push("/car/car-list-v1")
+      Router.push("/package/listing")
     }
   }
   return (

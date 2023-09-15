@@ -291,7 +291,7 @@ export const categorieMegaMenuItems = [
         megaBanner: "/img/backgrounds/5.png",
         title: "Things to do on your Next Car",
         btnText: "See Car",
-        btnRoute: "/car/car-list-v1",
+        btnRoute: "/package/listing",
         menuItems: [
           {
             id: 1,
@@ -299,11 +299,11 @@ export const categorieMegaMenuItems = [
             menuList: [
               {
                 name: "Car List v1",
-                routePath: "/car/car-list-v1",
+                routePath: "/package/listing",
               },
               {
                 name: "Car List v2",
-                routePath: "/car/car-list-v2",
+                routePath: "/package/car-list-v2",
               },
             ],
           },
@@ -313,12 +313,12 @@ export const categorieMegaMenuItems = [
             menuList: [
               {
                 name: "Car Map",
-                routePath: "/car/car-list-v3",
+                routePath: "/package/car-list-v3",
               },
               {
                 name: "Car Single",
-                routePath: "/car/car-single/1",
-                routePath: "/car/car-single/1",
+                routePath: "/package/details/1",
+                routePath: "/package/details/1",
               },
             ],
           },
@@ -563,11 +563,11 @@ export const categorieMobileItems = [
         menuList: [
           {
             name: "Car List v1",
-            routePath: "/car/car-list-v1",
+            routePath: "/package/listing",
           },
           {
             name: "Car List v2",
-            routePath: "/car/car-list-v2",
+            routePath: "/package/car-list-v2",
           },
         ],
       },
@@ -577,11 +577,11 @@ export const categorieMobileItems = [
         menuList: [
           {
             name: "Car Map",
-            routePath: "/car/car-list-v3",
+            routePath: "/package/car-list-v3",
           },
           {
             name: "Car Single",
-            routePath: "/car/car-single/1",
+            routePath: "/package/details/1",
           },
         ],
       },

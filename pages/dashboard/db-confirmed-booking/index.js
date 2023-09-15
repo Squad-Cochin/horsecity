@@ -52,7 +52,7 @@ const Index = () => {
           <div className="dashboard__content bg-light-2">
             <div className="row y-gap-20 justify-between items-end pb-60 lg:pb-40 md:pb-32">
               <div className="col-12">
-              <a onClick={() =>{url ? router.push("/car/car-list-v1") : router.push("/")}}  style={{ cursor: 'pointer' }}><IoIosArrowBack/><b>Back to page</b></a>
+              <a onClick={() =>{url ? router.push("/package/listing") : router.push("/")}}  style={{ cursor: 'pointer' }}><IoIosArrowBack/><b>Back to page</b></a>
                 <h1 className="text-30 lh-14 fw-600">Booking History</h1>
               </div>
               {/* End .col-12 */}

@@ -14,7 +14,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useRouter } from 'next/router';
 
 // Function for showing input boxes of booking details
-const LocationSearch = () => {
+const LocationSearch = (props) => {
   const [filteredNoOfHorse, setFilteredNoOfHorse] = useState([]);
   const [pickupCountry, setPickupCountry] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
@@ -30,7 +30,7 @@ const LocationSearch = () => {
   const router = useRouter();
   useEffect(() => {
     initialLoad();
-  },[no_of_horse])
+  },[no_of_horse,props.noOfHorse])
 
   // Options for selecting number of horses
   const noOfHorses = [
@@ -108,7 +108,13 @@ const LocationSearch = () => {
     setTripType(bookings?.trip_type[0]); 
     setNoOfHorse(bookings?.number_of_horses);
     setPickupDate(bookings?.departDate);
-   const filterData = noOfHorses.filter((value) => parseInt(value.no, 10) <= no_of_horse)
+    let array = [];
+    for(let i = 1 ;i<=parseInt(noOfHorse);i++){
+      array.push(i)
+    }
+    console.log(array);
+   const filterData = array.filter((value) => parseInt(value, 10) <= props.noOfHorse)
+  
    setFilteredNoOfHorse(filterData);
   }
 
@@ -282,9 +288,9 @@ const LocationSearch = () => {
             onChange={(e) => setNoOfHorse(e.target.value)}
             required>
             <option value=''>Select No OF Horse</option>
-            {filteredNoOfHorse.map((item) => (
-              <option value={item.no} key={item.id}>
-                {item.no} 
+            {filteredNoOfHorse.map((item,index) => (
+              <option value={item} key={index}>
+                {item} 
               </option>
             ))}
           </select>

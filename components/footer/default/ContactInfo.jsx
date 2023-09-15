@@ -17,7 +17,7 @@ const ContactInfo = () => {
       id: 2,
       title: "Need live support?",
       action: "mailto:xyz@abc.com",
-      text: "hi@gotrip.com",
+      text: "hi@Loremipsum.com",
     },
   ];
   return (

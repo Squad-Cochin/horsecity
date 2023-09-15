@@ -10,7 +10,7 @@ const Faq = () => {
     {
       id: 1,
       collapseTarget: "One",
-      title: "What do I need to hire a car?",
+      title: "What do I need to hire a package?",
       content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
             enim ad minim veniam, quis nostrud exercitation ullamco.`,
@@ -18,31 +18,23 @@ const Faq = () => {
     {
       id: 2,
       collapseTarget: "Two",
-      title: "How old do I have to be to rent a car?",
-      content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
-            eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
-            enim ad minim veniam, quis nostrud exercitation ullamco.`,
-    },
-    {
-      id: 3,
-      collapseTarget: "Three",
-      title: "Can I book a hire car for someone else?",
+      title: "Can I book a hire package for someone else?",
       content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
             enim ad minim veniam, quis nostrud exercitation ullamco.`,
     },
     {
       id: 4,
-      collapseTarget: "Four",
-      title: "How do I find the cheapest car hire deal?",
+      collapseTarget: "Three",
+      title: "How do I find the cheapest package from here ?",
       content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
             enim ad minim veniam, quis nostrud exercitation ullamco.`,
     },
     {
       id: 5,
-      collapseTarget: "Five",
-      title: "What should I look for when I'm choosing a car?",
+      collapseTarget: "Four",
+      title: "What should I look for when I'm choosing a package?",
       content: `Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do
             eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut
             enim ad minim veniam, quis nostrud exercitation ullamco.`,

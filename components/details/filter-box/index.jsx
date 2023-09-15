@@ -7,11 +7,11 @@
 import LocationSearch from "./LocationSearch";
 
 // Function having the booking details inserting box
-const index = () => {
+const index = (props) => {
   return (
     <>
       <div className="col-12">
-        <LocationSearch />
+        <LocationSearch noOfHorse={props.noOfHorse}/>
       </div>
     </>
   );

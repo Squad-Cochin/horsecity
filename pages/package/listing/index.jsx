@@ -8,11 +8,11 @@ import CallToActions from "../../../components/common/CallToActions";
 import Seo from "../../../components/common/Seo";
 import Header11 from "../../../components/header/header-11";
 import DefaultFooter from "../../../components/footer/default";
-import MainFilterSearchBox from "../../../components/car-list/car-list-v1/MainFilterSearchBox";
-import TopHeaderFilter from "../../../components/car-list/car-list-v1/TopHeaderFilter";
-import Pagination from "../../../components/car-list/common/Pagination";
-import Sidebar from "../../../components/car-list/car-list-v1/Sidebar";
-import CarPropertes from "../../../components/car-list/car-list-v1/CarPropertes";
+import MainFilterSearchBox from "../../../components/package/listing/MainFilterSearchBox";
+import TopHeaderFilter from "../../../components/package/listing/TopHeaderFilter";
+import Pagination from "../../../components/package/common/Pagination";
+import Sidebar from "../../../components/package/listing/Sidebar";
+import PackagePropertes from "../../../components/package/listing/PackagePropertes";
 import React from "react";
 
 // Function for the whole listing page
@@ -89,7 +89,7 @@ const Index = () => {
               <div className="mt-30"></div>
               {/* End mt--30 */}
               <div className="row y-gap-30">
-                <CarPropertes />
+                <PackagePropertes />
               </div>
               {/* End .row */}
               <Pagination />

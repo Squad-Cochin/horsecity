@@ -11,16 +11,16 @@ import { IoIosArrowBack } from "react-icons/io";
 import "photoswipe/dist/photoswipe.css";
 import Seo from "../../../components/common/Seo";
 import Header11 from "../../../components/header/header-11";
-import Overview from "../../../components/car-single/Overview";
-import PropertyHighlights from "../../../components/car-single/PropertyHighlights";
-import ReviewProgress2 from "../../../components/car-single/guest-reviews/ReviewProgress2";
-import DetailsReview2 from "../../../components/car-single/guest-reviews/DetailsReview2";
-import ReplyForm from "../../../components/car-single/ReplyForm";
-import ReplyFormReview2 from "../../../components/car-single/ReplyFormReview2";
+import Overview from "../../../components/details/Overview";
+import PropertyHighlights from "../../../components/details/PropertyHighlights";
+import ReviewProgress2 from "../../../components/details/guest-reviews/ReviewProgress2";
+import DetailsReview2 from "../../../components/details/guest-reviews/DetailsReview2";
+import ReplyForm from "../../../components/details/ReplyForm";
+import ReplyFormReview2 from "../../../components/details/ReplyFormReview2";
 import CallToActions from "../../../components/common/CallToActions";
 import DefaultFooter from "../../../components/footer/default";
-import SlideGallery from "../../../components/car-single/SlideGallery";
-import FilterBox from "../../../components/car-single/filter-box";
+import SlideGallery from "../../../components/details/SlideGallery";
+import FilterBox from "../../../components/details/filter-box";
 import Faq from "../../../components/faq/Faq";
 import { useDispatch } from "react-redux";
 import DetailsDataApi from "../../api/detailDataApi";
@@ -33,6 +33,7 @@ const TourSingleV1Dynamic = () => {
   const [ vehicleImages, setVehicleImages ] = useState([]);
   const [ reviews ,setReviews ] = useState([]);
   const [url,setUrl] =useState(false);
+  const [noOfHorse ,setNoOfHorse ] = useState('')
   const id = router.query.id;
   const dispatch = useDispatch();
 
@@ -56,6 +57,7 @@ const TourSingleV1Dynamic = () => {
     setVehicle(packageDetails?.vehicle[0])
     setVehicleImages(packageDetails?.images);
     setReviews(packageDetails?.reviews)
+    setNoOfHorse(packageDetails?.vehicle[0]?.no_of_horses)
     if (Object.keys(loginData).length !== 0) {
     dispatch(booking_data({
       customer_id : loginData.id, 
@@ -83,31 +85,12 @@ const TourSingleV1Dynamic = () => {
             <div className="col-lg-8">
               <div className="row y-gap-20 justify-between items-end">
                 <div className="col-auto">
-                <a onClick={() =>url ? router.push("/car/car-list-v1") : router.push("/dashboard/db-wishlist")}  style={{ cursor: 'pointer' }}><IoIosArrowBack/><b>Back to page</b></a>
+                <a onClick={() =>url ? router.push("/package/listing") : router.push("/dashboard/db-wishlist")}  style={{ cursor: 'pointer' }}><IoIosArrowBack/><b>Back to page</b></a>
                   <h1 className="text-30 sm:text-24 fw-600">{vehicle?.make} {vehicle?.model}</h1>
                   <div className="row x-gap-10 items-center pt-10">
                   </div>
                 </div>
                 {/* End title and other info */}
-
-                <div className="col-auto">
-                  <div className="row x-gap-10 y-gap-10">
-                    <div className="col-auto">
-                      <button className="button px-15 py-10 -blue-1">
-                        <i className="icon-share mr-10" />
-                        Share
-                      </button>
-                    </div>
-                    {/* End .col */}
-                    <div className="col-auto">
-                      <button className="button px-15 py-10 -blue-1 bg-light-2">
-                        <i className="icon-heart mr-10" />
-                        Save
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                {/* End col button group */}
               </div>
               {/* End .row */}
 
@@ -147,7 +130,7 @@ const TourSingleV1Dynamic = () => {
                   {/* End .row */}
 
                   <div className="row y-gap-20 pt-20">
-                    <FilterBox />
+                    <FilterBox noOfHorse={noOfHorse}/>
                   </div>
                   {/* End .row */}
                 </div>
