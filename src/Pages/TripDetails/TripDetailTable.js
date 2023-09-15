@@ -7,14 +7,13 @@
 import React, { useState, useEffect } from "react";
 import {
   Alert,
-  Button,
   Card,
   CardBody,
   CardHeader,
   Col,
   Container,
   Modal,
-  ModalBody,
+  ModalBody, 
   ModalFooter,
   Row,
   ModalHeader,
@@ -50,17 +49,19 @@ const TripDeatails = () => {
   const [ store_trip_status,setStoreTripStatus] = useState("")
   const [booking_id, setBooking_id ] = useState("");
   const [invoice_id, setInvoice_id ] = useState("");
-  const [modal_delete, setmodal_delete] = useState(false);
   const [userId, setUserId ] = useState("");
   const [module,setModule] = useState({});
   const [list_or_view, setListOrView ] = useState(false);
-  const [ errors, setErrors ] = useState("")
+  const [ errors, setErrors ] = useState("");
+  const [pageTitle, setPageTitle] = useState('KailPlus');
   const pageLimit = config.pageLimit;
 
 
 
   /**Initial render wIll load this hook */
   useEffect(() => {
+    const settings = JSON.parse(localStorage.getItem("settingsData"));
+    setPageTitle(settings.application_title);
     const data = JSON.parse(localStorage.getItem("authUser"));
     let userIdd = data[0]?.user[0]?.id
     setUserId(userIdd);
@@ -85,7 +86,6 @@ const TripDeatails = () => {
     enableReinitialize: true,
     initialValues,
     onSubmit: (values) => {
-      console.log(values);
       updateTrip(values)
 
     },
@@ -102,7 +102,7 @@ const TripDeatails = () => {
     setNumberOfData(Tripdetails?.totalCount);
     }
   }
-
+  /**ADDING BREAKDOWN */
   async function updateTrip(values){
   let updateTrip = await   updateTripStatus(values);
       if(updateTrip.code == 200){
@@ -119,7 +119,6 @@ const TripDeatails = () => {
   async function breakdown_list(productId) {
     setTrip_list_data([]);
     let breakOut = await getLIstBreakDownVehicles(productId);
-    console.log("here",breakOut);
     if(breakOut.vehicles_breakouts.length != 0){
       setTrip_list_data(breakOut.vehicles_breakouts);
       setListOrView(true)
@@ -137,7 +136,6 @@ const TripDeatails = () => {
     setInvoice_id(invId);
     setTrip_status(false);
     let filterTrpDetailsData = tripDatas.filter((item)=> item.booking_id  == bkId)
-    console.log("gtyuy",filterTrpDetailsData[0].service_provider);
     setTrip_list_data(filterTrpDetailsData);
     let serviceProviderData = await getSPUserName();
     setServiceProviders(serviceProviderData.serviceProviders);
@@ -146,10 +144,8 @@ const TripDeatails = () => {
   }
   /**SETTING DRIVER & VEHICLES BASIS OF SERVICE PROVIDER */
   async function serviceProviderSelected(id) {
-    console.log("d",id);
     const sPVechilesData = await getSPVehiclesData(id);
     const sPDriverData = await getSPDriverData(id);
-    console.log("drivers",sPDriverData);
     setSPDrivers(sPDriverData.drivers);
     setSPVechiles(sPVechilesData.vehicles);
   }
@@ -168,6 +164,7 @@ const TripDeatails = () => {
     breakout: "BREAKOUT",
     compleated: "COMPLETED",
   };
+  document.title = `Trip details | ${pageTitle} `;
   return (
     <React.Fragment>
       <div className="page-content">
@@ -240,7 +237,6 @@ const TripDeatails = () => {
                                   data-bs-toggle="modal"
                                   data-bs-target="#showModal"
                                   onClick={() => breakdown_list(item?.booking_id)}
-                                  //disabled={trip_list_data.length !== 0} // Typo: should be "disabled" instead of "disbled"
                                 >
                                   View
                                 </button>
@@ -431,7 +427,6 @@ const TripDeatails = () => {
                   name="air_conditioner"
                   className="form-check-input"
                   value={tripStatus.compleated}
-                  // checked={validation.values.air_conditioner === 'YES'}
                   onChange={(e) => {
                     tripStatusSelected(e.target.value);
                   }}
@@ -451,7 +446,6 @@ const TripDeatails = () => {
                   name="air_conditioner"
                   className="form-check-input"
                   value={tripStatus.breakout}
-                  // checked={validation.values.air_conditioner === 'NO'}
                   onChange={(e) => {
                     tripStatusSelected(e.target.value);
                   }}
@@ -489,7 +483,7 @@ const TripDeatails = () => {
                       <option value={validation.values.service_provider_id || ""}>{validation.values.service_provider}</option>
                       {serviceProviders.map((item, index) => (
                         <option key={index} value={item.id}>
-                          {item.user_name}
+                          {item.name}
                         </option>
                       ))}
                     </select>

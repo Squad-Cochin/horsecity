@@ -1,39 +1,37 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                      Change password page functionality done over here.                    //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
+
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import logo from "../../assets/images/logo.png";
-
 import { Row, Col, CardBody, Card, Alert, Container, Form, Input, FormFeedback, Label } from "reactstrap";
-
-//redux
 import { useSelector, useDispatch } from "react-redux";
-
 import { Link } from "react-router-dom";
-import withRouter from "../../components/Common/withRouter";
-
-// Formik validation
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
+/**IMPORTED FILES */
+import withRouter from "../../components/Common/withRouter";
+import logo from "../../assets/images/logo.png";
 import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 
 import { updateNewPwd } from "../../store/actions";
-
 import { logoutUser } from "../../store/actions";
-
-//Import config
-// import { facebook, google } from "../../config";
 
 const ChangePassword = props => {
   document.title = "Change-Password | HORSCITY";
 
   const [backgroundImage, setBackgroundImage] = useState('../../assets/images/bg.jpg');
-
+  const [ appName, setAppName ] = useState('');
 
   const dispatch = useDispatch();
 
   useEffect(() => {
     dispatch(logoutUser());
   }, [dispatch]);
-
+  
+  /**THIS HOOK WILL RENDER INITIAL TIME */
   useEffect(()=>{
     getAllData()
   },[])
@@ -41,7 +39,6 @@ const ChangePassword = props => {
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-
     initialValues: {
       oldPassword: "" || '',
       password: "" || '',
@@ -60,20 +57,21 @@ const ChangePassword = props => {
         newpassword : values.password,
         confirmnewpassword : values.confirmPassword
       }
-
       dispatch(updateNewPwd(updatePwdValues));
     }
   });
 
-  const { error } = useSelector(state => ({
+  const { error,changePasswordSuccess } = useSelector(state => ({
     error: state.login.error,
+    changePasswordSuccess: state.login.changePasswordSuccess,
   }));
+
 
   /**SET BACKGROUND IMAGE */
   async function getAllData() {
     let settingsData = await getSettingsPageData();
-    console.log("bgimmage",settingsData);
     setBackgroundImage(settingsData?.settingsPageData[0]?.loginpage_bg_image);
+    setAppName(settingsData?.settingsPageData[0]?.application_title)
    }
 
   useEffect(() => {
@@ -84,7 +82,7 @@ const ChangePassword = props => {
       document.body.className = "";
     };
   });
-
+  document.title = `Change Password | ${appName} `;
   return (
     <React.Fragment>
     
@@ -116,7 +114,7 @@ const ChangePassword = props => {
                     Change Password
                   </h4>
                   <p className="mb-5 text-center">
-                    Update password to continue with Horscity.
+                    Update password to continue with {appName}.
                   </p>
                   <Form
                     className="form-horizontal"
@@ -127,6 +125,11 @@ const ChangePassword = props => {
                     }}
                   >
                     {error ? <Alert color="danger"><div>{error}</div></Alert> : null}
+                    {changePasswordSuccess ? (
+                      <Alert color="success" style={{ marginTop: "13px" }}>
+                            {changePasswordSuccess} 
+                      </Alert>
+                    ) : null}
                     <Row>
                       <Col md={12}>
                       <div className="mb-4">
@@ -182,36 +185,6 @@ const ChangePassword = props => {
                             <FormFeedback type="invalid"><div> {validation.errors.confirmPassword} </div></FormFeedback>
                           ) : null}
                         </div>
-
-
-                        {/* <Row>
-                          <Col>
-                            <div className="form-check">
-                              <input
-                                type="checkbox"
-                                className="form-check-input"
-                                id="customControlInline"
-                              />
-                              <label
-                                className="form-label form-check-label"
-                                htmlFor="customControlInline"
-                              >
-                                Remember me
-                              </label>
-                            </div>
-                          </Col>
-                          <Col className="col-7">
-                            <div className="text-md-end mt-3 mt-md-0">
-                              <Link
-                                to="/auth-recoverpw"
-                                className="text-muted"
-                              >
-                                <i className="mdi mdi-lock"></i> Forgot your
-                                password?
-                              </Link>
-                            </div>
-                          </Col>
-                        </Row> */}
                         <div className="d-grid mt-4">
                           <button
                             className="btn btn-primary waves-effect waves-light"
@@ -220,46 +193,6 @@ const ChangePassword = props => {
                             Update Password
                           </button>
                         </div>
-                        {/* <div className="mt-4 text-center">
-                      <h5 className="font-size-14 mb-3">Sign in with</h5>
-
-                      <ul className="list-inline">
-                        <li className="list-inline-item">
-                          <FacebookLogin
-                            appId={facebook.APP_ID}
-                            autoLoad={false}
-                            callback={facebookResponse}
-                            render={renderProps => (
-                              <Link
-                                to="#"
-                                className="social-list-item bg-primary text-white border-primary"
-                                onClick={renderProps.onClick}
-                              >
-                                <i className="mdi mdi-facebook" />
-                              </Link>
-                            )}
-                          />
-                        </li>
-
-                        <li className="list-inline-item">
-                          <GoogleLogin
-                            clientId={google.CLIENT_ID}
-                            render={renderProps => (
-                              <Link
-                                to="#"
-                                className="social-list-item bg-danger text-white border-danger"
-                                onClick={renderProps.onClick}
-                              >
-                                <i className="mdi mdi-google" />
-                              </Link>
-                            )}
-                            onSuccess={googleResponse}
-                            onFailure={() => { }}
-                          />
-                        </li>
-                      </ul>
-                    </div> */}
-
                       </Col>
                     </Row>
                   </Form>
@@ -268,21 +201,7 @@ const ChangePassword = props => {
             </Card>
             <div className="mt-5 text-center">
                 <p className="text-white-50">Go back to <Link to="/login" className="fw-medium text-primary"> Login  </Link> </p>
-                {/* <p className="text-white-50">© {new Date().getFullYear()} HORSCITY. Crafted with <i className="mdi mdi-heart text-danger"></i> by Themesdesign</p> */}
             </div>
-            {/* <div className="mt-5 text-center">
-              <p className="text-white-50">
-                Don't have an account ?{" "}
-                <Link to="/register" className="fw-medium text-primary">
-                  {" "}
-                  Register{" "}
-                </Link>{" "}
-              </p>
-              <p className="text-white-50">
-                © {new Date().getFullYear()} Upzet. Crafted with{" "}
-                <i className="mdi mdi-heart text-danger"></i> by Themesdesign
-              </p>
-            </div> */}
           </Col>
         </Row>
       </Container>

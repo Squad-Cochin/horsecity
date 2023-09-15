@@ -8,7 +8,7 @@ import React, { useState, useEffect } from 'react';
 import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { Link } from 'react-router-dom';
-import List from 'list.js';
+
 
 //IMPORTED FILES
 import { removeTaxation } from '../../helpers/ApiRoutes/removeApiRoutes'
@@ -27,9 +27,12 @@ const TaxationDeatails = () => {
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("")
     const pageLimit = config.pageLimit;
-
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     /**Initial render wIll load this hook */
     useEffect(() => {
+        
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
         getAllData(1)
     }, []);
 
@@ -40,6 +43,7 @@ const TaxationDeatails = () => {
         setPageNumber(page);
         setNumberOfData(getTaxations.totalCount);
     }
+    
     /**IT WILL OPEN ADD & EDIT POPUP */
     async function tog_list(param,productId) {
         if(param === 'ADD'){
@@ -51,24 +55,24 @@ const TaxationDeatails = () => {
         setmodal_list(!modal_list);
     }
 
+    /**INITIAL VALUES */
     const initialValues = {
         name : !add_list ? taxation[0]?.name : '',
         type : !add_list ? taxation[0]?.type : '',
         value : !add_list ? taxation[0]?.value : '',
       };
-
+    /**VALIDATION */
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
-                console.log(values);
+
                 if(add_list){
                     //add new
                     addTaxation(values)
                 }else{
                     //update previes one
-                    console.log("update previues one ");
                     editTxations(values)
                 }
         }
@@ -129,12 +133,11 @@ const TaxationDeatails = () => {
     /**This function is used to remove a service provider*/
     async function remove_data(id) {
       let tax =   await removeTaxation(id)
-      console.log("test",test);
       if (tax.code === 200) {
         getAllData(pageNumber)
     } 
     }
-
+    document.title = `Taxation | ${pageTitle} `;
     return (
         <React.Fragment>
             <div className="page-content">
@@ -224,16 +227,6 @@ const TaxationDeatails = () => {
                                             ))}
                                         </tbody>
                                         </table>
-                                            <div className="noresult" style={{ display: "none" }}>
-                                                <div className="text-center">
-                                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                                        colors="primary:#121331,secondary:#08a88a" style={{ width: "75px", height: "75px" }}>
-                                                    </lord-icon>
-                                                    <h5 className="mt-2">Sorry! No Result Found</h5>
-                                                    <p className="text-muted mb-0">We've searched more than 150+ Orders We did not find any
-                                                        orders for you search.</p>
-                                                </div>
-                                            </div>
                                         </div>
                                         <div className="d-flex justify-content-end">
                                             <div className="pagination-wrap hstack gap-2">

@@ -4,11 +4,13 @@ import {
   LOGOUT_USER,
   LOGOUT_USER_SUCCESS,
   API_ERROR,
-  CHANGE_PASSWORD_SUCCESS
+  CHANGE_PASSWORD_SUCCESS,
+  CLEAR_RESPONSE_MESSAGE
 } from "./actionTypes";
 
 const initialState = {
   error: "",
+  changePasswordSuccess : '',
   user : "",
   role: "",
   loading: false,
@@ -36,10 +38,17 @@ const login = (state = initialState, action) => {
     case LOGOUT_USER_SUCCESS:
       state = { ...state, isUserLogout: true };
       break;
+      case CLEAR_RESPONSE_MESSAGE:
+        state = { 
+          error: "",
+          changePasswordSuccess : '',
+        };
+        break;
     case CHANGE_PASSWORD_SUCCESS ://
       state = {
         ...state,
         error: "",
+        changePasswordSuccess : action.payload,
         loading: false,
       };
       break ;

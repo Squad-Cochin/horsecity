@@ -103,8 +103,7 @@ import * as url from "../url_helper";
     /**Add new vehicle */
     export async function addNewVehicle(data, Id){
         try {
-            console.log('User Id at the time of adding the new vehicle: ', Id);
-            console.log("dd1",data)
+       
             const formData = new FormData();
             // Append the object data to the FormData instance
             for (const key in data) {
@@ -117,7 +116,6 @@ import * as url from "../url_helper";
                 'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log("response11",response)
             return response
         } catch (error) {
             let errObj = {
@@ -127,7 +125,7 @@ import * as url from "../url_helper";
             return errObj;
         }
     }   
-      
+    /**Adding for image */
     export async function addNewImage(data, id){
         try {
             const formData = new FormData();
@@ -142,7 +140,6 @@ import * as url from "../url_helper";
                 'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log("response11",response)
             return response
         } catch (error) {
             let errObj = {
@@ -156,8 +153,7 @@ import * as url from "../url_helper";
     /**Add new driver */
     export async function addNewDriver(data, uId){
         try {
-            console.log(`user Id: `, uId);
-            console.log("dd1",data)
+
             const formData = new FormData();
             // Append the object data to the FormData instance
             for (const key in data) {
@@ -170,7 +166,6 @@ import * as url from "../url_helper";
                 'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log("response11",response)
             return response
         } catch (error) {
             let errObj = {
@@ -180,11 +175,10 @@ import * as url from "../url_helper";
             return errObj;
         }
     }
-    
+    /**This function assign service provider to driver */
     export async function assignNewSP(dId, spId){
     try
     {
-        console.log(`Assign New Service Provider functions`);
             let reqObj = {
                 "driver_id": dId,
                 "serviceProvider_id": spId
@@ -200,15 +194,7 @@ import * as url from "../url_helper";
         }
     }
 
-     /**Add new monthly report */
-    export async function addNewMonthlyReport(data){
-        try {
-            // const { data } = await axios.post(`${url.POST_SP_ADD_URL}`);
-            // return { data };
-        } catch (error) {
-            return { error : "Faild !"}
-        }
-    }   
+
       
      /**Add new discounts */
     export async function addNewLanguage(data){
@@ -248,7 +234,6 @@ import * as url from "../url_helper";
                 'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log("response",response)
             return response
         } catch (error) {
             let errObj = {
@@ -259,16 +244,13 @@ import * as url from "../url_helper";
         }
     }
 
-    /**
-     * Adding amount to the invoice
-     */
 
+
+     /**Adding amount on invoice */   
     export async function addAmount(id, amount)
 {
     try
     {
-        console.log("Amount : ",amount)
-        console.log(`Invoice id at the time of adding the payment data in the table`, id);
         const formData = new FormData();
         // for (const key in data) {
         //     formData.append(key, data[key]);
@@ -281,7 +263,6 @@ import * as url from "../url_helper";
                 'Content-Type': 'multipart/form-data'
             }
         });
-        console.log("Response from the add amount: ",response)
         return response;            
     }
     catch (error) 
@@ -296,18 +277,12 @@ import * as url from "../url_helper";
 };
 
 
-    /**
- * Sending mail of the invoice
- */
 
+/**Send email function for invoice page */
 export async function sendEmail(id, email, subject)
 {
     try
     {
-        console.log("Data we got from in the sendEmail")
-        console.log(`Id we got from the front end while sending the invoice at email`, id);
-        console.log(`Email we got from the front end while sending the invoice at email`, email);
-        console.log(`Subject we got from the front end while sending the invoice at email`, subject);
         const formData = new FormData();
         formData.append('recepientEmail', email);
         formData.append('invoiceSubject', subject);
@@ -318,7 +293,6 @@ export async function sendEmail(id, email, subject)
                 'Content-Type': 'multipart/form-data'
             }
         });
-        console.log("Response from the send email: ",response)
         return response;            
     }
     catch (error)
@@ -331,6 +305,7 @@ export async function sendEmail(id, email, subject)
         return errObj;        
     }
 };
+/**Send email function for quotation page */
 export async function sendEmailFunction(id, data)
 {
     try {
@@ -345,8 +320,6 @@ export async function sendEmailFunction(id, data)
             'Content-Type': 'multipart/form-data'
             }
         });
-        console.log("rss",response)
-        // console.log("response",response)
         return response
     } catch (error) {
         let errObj = {
@@ -357,7 +330,7 @@ export async function sendEmailFunction(id, data)
     }
 };
 
-    /**Add new service provider */
+    /**Add new breakdown */
     export async function updateTripStatus(data){
         try {
             const formData = new FormData();
@@ -371,7 +344,6 @@ export async function sendEmailFunction(id, data)
                 'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log("response",response)
             return response
         } catch (error) {
             let errObj = {

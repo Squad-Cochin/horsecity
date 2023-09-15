@@ -20,7 +20,7 @@ function App() {
       document.title = pageTitle;
     }, [pageTitle]);
 
-  useEffect(() => {
+  useEffect(() => { 
     const link = document.querySelector("link[rel='icon']") || document.createElement('link');
     link.type = 'image/x-icon';
     link.rel = 'icon';
@@ -36,10 +36,10 @@ function App() {
     setFavicon(settingsData?.settingsPageData[0]?.favicon)
   }
   return (
-    <React.Fragment>
+    <React.Fragment> 
       <Routes />
-    </React.Fragment>
-  );
+    </React.Fragment>  
+  );  
 }
 
 export default App;

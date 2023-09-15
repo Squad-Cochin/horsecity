@@ -8,20 +8,16 @@ import React, { useState, useEffect } from 'react';
 //IMPORTED FROM REACT BOOTSTRAP
 import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
-/**Using for form validation */
 import { useFormik } from "formik";
-// Import Flatepicker for using  date pick
 import Flatpickr from "react-flatpickr";
 
 
-/**Navigation UI element */
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
-/**IMPORTED APIs */
-// import { getCustomersData } from '../../../helpers/ApiRoutes/authApiRoutes'; //For getting all customers
+/**IMPORTED FILES */
 import { removeCustomer } from '../../../helpers/ApiRoutes/removeApiRoutes'; //For removing customers
 import { addNewCustomer } from '../../../helpers/ApiRoutes/addApiRoutes'; //For adding new customer
 import { updateCustomer, updateCustomerStatus } from '../../../helpers/ApiRoutes/editApiRoutes'; //For updating  customer
 import { getSingleCustomerData, getCustomersData } from '../../../helpers/ApiRoutes/getApiRoutes';
+import Breadcrumbs from "../../../components/Common/Breadcrumb";
 import config from '../../../config';
 
 // Function for customer page
@@ -40,19 +36,18 @@ const ListCustomerTable = () => {
     const [roleId, setRoleId] = useState("");
     const [role, setRole] = useState(false);
     const [module, setModule] = useState({});
-    const [errors, setErrors] = useState("")
+    const [errors, setErrors] = useState("");
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const pageLimit = config.pageLimit;
 
-    /**This hook is used to fetch customers data */
+    /**This hook is used to fetch customers data initital time */
     useEffect(() => {
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
         const data = JSON.parse(localStorage.getItem("authUser"));
-        console.log('Data from the list invoice page', data);
         let user_Id = data[0]?.user[0]?.id
-        console.log('User id from the customer page: ', user_Id);
         let role_Name = data[0]?.user[0]?.role_name
-        console.log('Role name from the customer page: ', role_Name);
         let role_id = data[0]?.user[0]?.role_Id
-        console.log('Role Id from the customer page: ', role_id);
         setUserId(user_Id);
         setRole(role_Name);
         setRoleId(role_id)
@@ -78,13 +73,11 @@ const ListCustomerTable = () => {
         initialValues,
         onSubmit: (values) => {
             values.id_proof_image = updateImage;
-            console.log(values);
             if (add_list) {
                 //add new customer
                 addCustomer(values)
             } else {
                 //update previes customer
-                console.log("update previues one ");
                 editCustomer(values)
             }
         }
@@ -183,17 +176,14 @@ const ListCustomerTable = () => {
     // function for get data all customer data
     async function getAllData(page) {
         if (userId) {
-            console.log(`User id at the time of getall function in the customer page`, userId);
             let getCustomers = await getCustomersData(page || 1, userId);
-            console.log('Id:', userId);
-            console.log('Customers: ', getCustomers)
             setCustomers(getCustomers?.customer);
             setModule(getCustomers.module[0]);
             setPageNumber(page);
             setNumberOfData(getCustomers?.totalCount);
         }
     }
-
+    document.title = `Customers | ${pageTitle} `;
     return (
         <React.Fragment>
             <div className="page-content">
@@ -416,21 +406,6 @@ const ListCustomerTable = () => {
                                 required
                             />
                         </div>
-                        {/** Customer Date of Birth */}
-                        {/* <div className="mb-3">
-                            <label htmlFor="date_of_birth-field" className="form-label">Date Of Birth</label>
-                            <Flatpickr
-                                className="form-control"
-                                name='date_of_birth'
-                                options={{
-                                    dateFormat: "d-m-Y",
-                                    maxDate :new Date(),
-                                }}
-                                value= ""
-                                onChange={(dates) =>validation.setFieldValue('date_of_birth', dates[0])}
-                                placeholder={validation.values.date_of_birth || "Select Date"}
-                            />
-                        </div> */}
 
                         <div className="mb-3">
                             <label htmlFor="date_of_birth-field" className="form-label">Date Of Birth</label>
@@ -495,7 +470,7 @@ const ListCustomerTable = () => {
             </Modal>
 
             {/***************** View Modal *************/}
-            <Modal className="extra-width" isOpen={view_modal} toggle={() => { tog_view('view'); }}>
+            <Modal className="extra-width" isOpen={view_modal} toggle={() => { setView_modal(false);}}>
                 <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setView_modal(false); }}>View Customer</ModalHeader>
                 <form className="tablelist-form"
                     onSubmit={validation.handleSubmit}>

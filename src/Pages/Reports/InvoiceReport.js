@@ -16,7 +16,7 @@ import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { getInvoiceReport } from '../../helpers/ApiRoutes/getApiRoutes';
 import config from '../../config';
 
-//Import reports
+
 const InvoiceReport  = () => {
 
     const [ invoiceReport, setInvoiceReport ] = useState([])
@@ -24,14 +24,18 @@ const InvoiceReport  = () => {
     const [ toDate, setToDate ] = useState("");
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
+    const [ userId ,setUserId ] = useState('');
     const [ role, setRole ] = useState('');
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const pageLimit = config.pageLimit;
 
+    /**THIS HOOK WILL RENDER INITIAL TIME SETTING THE FROMDATE BEFORE 60 DAYS TODATE CURRENT DATE */
     useEffect(()=>{
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
         const today = new Date();
         const sixtyDaysAgo = new Date(today);
         sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
-        console.log(today,"next",sixtyDaysAgo)
         let value = {
             from_date : sixtyDaysAgo,
             to_date : today,
@@ -41,14 +45,17 @@ const InvoiceReport  = () => {
         const user_role = data[0]?.user[0]?.role_Id
 
         setRole(user_role)
-        getData(1, value,userId)
-    },[])
+        setUserId(userId);
+        getData(1, value)
+    }, [userId])
 
+    /**INITIAL VALUES */
     const initialValues = { 
         from_date : "",
         to_date : "",
     }
     
+   /**VALIDATION */
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
@@ -59,18 +66,17 @@ const InvoiceReport  = () => {
     });
 
     /**GET INVOICE REPORTS */
-    async function getData(page, val,spId){
+    async function getData(page, val){
         setFromDate(val.from_date)
         setToDate(val.to_date)
-        console.log("val",val)
-        if(spId){
-        let getAllData = await getInvoiceReport(page || 1,val ,spId)
+        if (userId) {
+        let getAllData = await getInvoiceReport(page || 1,val ,userId)
         setInvoiceReport(getAllData?.invoices);
         setPageNumber(page);
         setNumberOfData(getAllData?.totalCount);
         }
     }
-
+    document.title = `Report | ${pageTitle} `;
     return (
         <React.Fragment>
             <div className="page-content">

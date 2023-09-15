@@ -1,35 +1,52 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                      Forgot password page functionality done over here.                    //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 import PropTypes from "prop-types";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Row, Col, Alert, Card, CardBody, Container, FormFeedback, Input, Label, Form } from "reactstrap";
-
-//redux
 import { useSelector, useDispatch } from "react-redux";
-
 import { Link } from "react-router-dom";
-import withRouter from "../../components/Common/withRouter";
-
-// Formik Validation
 import * as Yup from "yup";
+
+/**IMPORTED */
 import { useFormik } from "formik";
-
-// action
 import { userForgetPassword } from "../../store/actions";
-
-// import images
 import logo from "../../assets/images/logo.png";
-
+import withRouter from "../../components/Common/withRouter";
+import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes';
 const ForgetPasswordPage = props => {
   const dispatch = useDispatch();
-  document.title = "Forget Password | HORSCITY";
-  useEffect(()=>{
-    document.body.style.backgroundImage = "none";
-    document.body.className = "";
-  },[])
+  const [ isActive, setActive ] = useState(false);
+  const [loginpage_logo, setLoginPageLogo] = useState('')
+  const [backgroundImage, setBackgroundImage] = useState('../../assets/images/bg.jpg');
+  const [app_name, setAppName] = useState('');
+  /**THIS HOOK WILL RENDER INITIAL TIME */
+  useEffect(() => {
+    getAllData()
+  }, [])
+  async function getAllData() {
+    let settingsData = await getSettingsPageData();
+    setBackgroundImage(settingsData?.settingsPageData[0]?.loginpage_bg_image);
+    setLoginPageLogo(settingsData?.settingsPageData[0]?.loginpage_logo);
+    setAppName(settingsData?.settingsPageData[0]?.application_title)
+  }
+  useEffect(() => {
+    document.body.className = "bg-pattern";
+    document.body.style = `background-image: url('${backgroundImage}');`;
+    // remove classname when component will unmount
+    return function cleanup() {
+      document.body.className = "";
+    };
+  });
 
+  /**VALIDATION */
   const validation = useFormik({
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
-
     initialValues: {
       email: '',
     },
@@ -37,18 +54,31 @@ const ForgetPasswordPage = props => {
       email: Yup.string().required("Please Enter Your Email"),
     }),
     onSubmit: (values) => {
+      setActive(true);
+  
       dispatch(userForgetPassword(values, props.router.navigate));
     }
   });
 
+
+  /**FETCHING IN THE REDUX */
   const { forgetError, forgetSuccessMsg } = useSelector(state => ({
-    // forgetError: state.ForgetPassword.forgetError,
     forgetSuccessMsg: state.forgetPassword.forgetSuccessMsg,
+    forgetError: state.forgetPassword.forgetError,
   }));
 
+  /**THIS HOOK WILL RENDER IF THERE ANY CHANGES ON THE  forgetSuccessMsg OR  forgetError
+   * THAT IT WILL RENDER 
+  */
+  useEffect(() => {
+    if(forgetSuccessMsg || forgetError){
+      setActive(false);
+    }
+  }, [forgetError,forgetSuccessMsg])
+  document.title = `Forgot Password | ${app_name} `;
   return (
     <React.Fragment>
-      
+  <div className="bg-overlay"></div>
       <div className="account-pages my-5 pt-sm-5">
         <Container>
           <Row className="justify-content-center">
@@ -56,7 +86,6 @@ const ForgetPasswordPage = props => {
               <Card className="overflow-hidden">
                 <div className="bg-primary bg-softbg-soft-primary">
                   <Row>
-          
                   </Row>
                 </div>
                 <CardBody className="pt-3">
@@ -65,7 +94,7 @@ const ForgetPasswordPage = props => {
                       <div className="avatar-md profile-user-wid mb-4">
                         <span className="avatar-title rounded-circle bg-light">
                           <img
-                            src={logo}
+                            src={loginpage_logo}
                             alt=""
                             className="rounded-circle"
                             height="34"
@@ -85,7 +114,6 @@ const ForgetPasswordPage = props => {
                         {forgetSuccessMsg}
                       </Alert>
                     ) : null}
-
                     <Form
                       className="form-horizontal"
                       onSubmit={(e) => {
@@ -117,8 +145,9 @@ const ForgetPasswordPage = props => {
                           <button
                             className="btn btn-primary w-md "
                             type="submit"
+                            disabled={isActive}
                           >
-                            Reset
+                            Send
                           </button>
                         </Col>
                       </Row>

@@ -10,20 +10,15 @@ import { Alert, Button, Card, CardBody, CardHeader, Col, Container, Modal, Modal
 import { Link } from 'react-router-dom';
 import List from 'list.js';
 import Flatpickr from "react-flatpickr";
-// GET_DRIVERS_ALL_DATA_URL
-//The purpose of the Breadcrumbs component is to display a breadcrumb navigation element. 
 import Breadcrumbs from "../../components/Common/Breadcrumb";
-
 // The code you provided imports the useFormik hook from the "formik" library. The useFormik hook is a custom hook provided by Formik, which is a popular form library for React.
 import { useFormik } from "formik";
-
 /**IMPORTED APIs */
 import { addNewDriver, assignNewSP } from '../../helpers/ApiRoutes/addApiRoutes';
 import { removeDriver, removeAssignedDriver, removeDriverWithServiceProvider } from '../../helpers/ApiRoutes/removeApiRoutes';
 import { updateDriver , updateDriverStatus } from '../../helpers/ApiRoutes/editApiRoutes'; 
 import { getDriversData, getSingleDriverData, getAssignedProviders } from '../../helpers/ApiRoutes/getApiRoutes'; 
 import config from '../../config';
-
 
 // The name of the function. Which will be executed and used all over program. This funtion is having all the code
 const ListTables = () => 
@@ -52,27 +47,25 @@ const ListTables = () =>
     const [ numberOfData, setNumberOfData ] = useState(0);
     const [ errors, setErrors ] = useState("")
     const pageLimit = config.pageLimit;
-    const role_name = config.roles
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const role_id =  config.Role
-
+  
      
     // The below effect for displaying the overall data of the driver page in the front.
     useEffect(() =>
     {
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title)
         const data = JSON.parse(localStorage.getItem("authUser"));
-        console.log('Data from the list invoice page', data);
         let user_Id = data[0]?.user[0]?.id
-        console.log('User id from the drivers page: ', user_Id);
         let role_Name = data[0]?.user[0]?.role_name
-        console.log('Role name from the drivers page: ', role_Name);
         let rId = data[0]?.user[0]?.role_Id
-        console.log('Role Id from the drivers page: ', rId);
         setUserId(user_Id);
         setRole(role_Name);
         setRoleId(rId)
         getAllData(1)
     }, [userId, role, roleId]);
-    console.log(`Module list at the driver page: `, module);
+
 
     // The below intialValues variable is used for having the data the driver. When we will use the edit button.
     // We are usign the add module for editing the driver. That is why if we are having data of a particular then
@@ -104,8 +97,6 @@ const ListTables = () =>
             if (add_list) 
             {
                 //add new
-                // values.licence_img = updateLiscenceImage;
-                // values.profile_image = updateProfileImage;
                 addDriver(values)
             }
             else if(modal_assign)
@@ -126,7 +117,6 @@ const ListTables = () =>
         // Get the selected file from the event
         const file = event.target.files[0];    
         // Update the state variable 'updateImage' with the selected file
-        console.log(`Profile Image Chnage Data: `, file);
         setUpdateProfileImage(file);
         // Generate a preview URL for the selected image using the URL.createObjectURL method
         const previewURL = URL.createObjectURL(file); 
@@ -138,7 +128,6 @@ const ListTables = () =>
     const handleLicenceImageChange = (event) => 
     {
       const file = event.target.files[0];
-      console.log(`Licence Image File Data: `, file);
       setUpdateLiscenceImage(file)
       setLicenceImagePreview(URL.createObjectURL(file));
     };   
@@ -196,7 +185,6 @@ const ListTables = () =>
 
     // function for display assigned drivers modal
     async function toggleAssign(id){
-        console.log(id)
         let data = await getAssignedProviders(id)
         setSproviders(data.notexist)
         setAssignedSProviders(data.exist)
@@ -210,7 +198,6 @@ const ListTables = () =>
     {
         if(userId)
         {
-            console.log(`User id at the time of getall function in the driver page`, userId);
             let getDrivers = await getDriversData(page || 1, userId);
             setDrivers(getDrivers.drivers);
             setModule(getDrivers.module[0]);
@@ -235,7 +222,6 @@ const ListTables = () =>
 
     // function for edit driver
     async function editDriver(data){
-        console.log("Data at the editing",data)
         let updatedDriver = await updateDriver(driver[0]?.id, data);
         if(updatedDriver.code === 200){
             setErrors("")
@@ -266,9 +252,6 @@ const ListTables = () =>
     // function for assign sp
     async function assignNewProvider(val)
     {
-        console.log(`Driver Id: `, selectedDriver);
-        console.log(`Service Provider Id: `, val.service_providers_id);
-        // console.log("val",val.service_providers_id,selectedDriver)
         let assignSP = await assignNewSP(selectedDriver, val.service_providers_id)
         if(assignSP.code === 200){
             setErrors("")
@@ -290,7 +273,7 @@ const ListTables = () =>
         setSproviders(data.notexist)
         setAssignedSProviders(data.exist)
     }
-    
+    document.title = `Drivers | ${pageTitle} `;
     
     // the execution of all the object and element are written inside the return. Whenever this file will be called only the code inside the return written will be returned
     return (
@@ -318,114 +301,130 @@ const ListTables = () =>
                                         </Row>
 
                                         <div className="table-responsive table-card mt-3 mb-1">
-                                            <table className="table align-middle table-nowrap" id="customerTable">
+                                                                                        <table className="table align-middle table-nowrap" id="customerTable">
                                                 <thead className="table-light">
                                                     <tr>
-                                                        {/* This are the columns and column heading in the driver page */}
-                                                        <th className="index" data-sort="index">#</th> 
-                                                        <th className="sort" data-sort="driver_name">Name</th>
-                                                        <th className="sort" data-sort="driver_email">Email</th>
-                                                        <th className="sort" data-sort="driver_phone">Contact Number</th>
-                                                        <th className="sort" data-sort="registered_date">Registered Date</th>
-                                                        { (roleId === role_id.admin)  ? (
+                                                    {/* These are the columns and column heading in the driver page */}
+                                                    <th className="index" data-sort="index">#</th>
+                                                    <th className="sort" data-sort="driver_name">Name</th>
+                                                    <th className="sort" data-sort="driver_email">Email</th>
+                                                    <th className="sort" data-sort="driver_phone">Contact Number</th>
+                                                    <th className="sort" data-sort="registered_date">Registered Date</th>
+                                                    {roleId === role_id.admin ? (
+                                                        <>
                                                         <th className="sort" data-sort="status">Assign To</th>
-                                                        ): null}
-                                                        { (roleId === role_id.admin)  ? (
                                                         <th className="sort" data-sort="status">Status</th>
-                                                        ): null}
-                                                        <th className="sort" data-sort="action">Action</th>
+                                                        </>
+                                                    ) : null}
+                                                    <th className="sort" data-sort="action">Action</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {/* The data we will be getting to showcase on driver page is
-                                                    from a object. We will map and show them one by one. The below function will be used this */}
+                                                    {/* The data we will be getting to showcase on driver page is from an object. We will map and show them one by one. The below function will be used for this */}
                                                     {/* 'Driver' is having all the enquiry data. */}
-                                                    {/* Index is the number of the data. i.e Serial number */}
-                                                    {drivers?.map((item,index) => (
-                                                        <tr key={item.id}> 
-                                                        {/* Below we are intialize the enquiry data */}
-                                                        <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th> {/* // Serial Number */}
-                                                            <td className="driver_name">{item.name}</td> {/* // Driver Name */}
-                                                            <td className="driver_email">{item.email}</td> {/* // Driver Email */}
-                                                            <td className="driver_phone">{item.contact_no}</td> {/* // Driver Contact Number */}
-                                                            <td className="registered_date">{item.created_at}</td> {/* // Driver Created Time */}
-                                                            { (roleId === role_id.admin)  ? (
+                                                    {/* Index is the number of the data. i.e., Serial number */}
+                                                    {drivers?.map((item, index) => (
+                                                    <tr key={item.id}>
+                                                        {/* Below we are initializing the driver data */}
+                                                        <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
+                                                        <td className="driver_name">{item.name}</td>
+                                                        <td className="driver_email">{item.email}</td>
+                                                        <td className="driver_phone">{item.contact_no}</td>
+                                                        <td className="registered_date">{item.created_at}</td>
+                                                        {roleId === role_id.admin ? (
+                                                        <>
                                                             <td className="status">
+                                                            <button
+                                                                className="btn btn-sm btn-success status-item-btn"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#showModal"
+                                                                onClick={() => {toggleAssign(item.id)}}
+                                                            >
+                                                                Assign
+                                                            </button>
+                                                            </td>
+                                                            <td className="status">
+                                                            {item.status === "ACTIVE" ? (
                                                                 <button
-                                                                    className="btn btn-sm btn-success status-item-btn"
-                                                                    data-bs-toggle="modal"
-                                                                    data-bs-target="#showModal"
-                                                                    onClick={ () => {toggleAssign(item.id)} }
+                                                                className="btn btn-sm btn-success status-item-btn"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#showModal"
+                                                                onClick={(event) => toggleStatus(event.target, item.id)}
                                                                 >
-                                                                    Assign
+                                                                {item.status}
                                                                 </button>
+                                                            ) : (
+                                                                <button
+                                                                className="btn btn-sm btn-danger status-item-btn"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#showModal"
+                                                                onClick={(event) => toggleStatus(event.target, item.id)}
+                                                                >
+                                                                {item.status}
+                                                                </button>
+                                                            )}
                                                             </td>
-                                                            ): null}
-                                                            {/* This is the place from where we are calling the status button and function */}
-                                                            { (roleId === role_id.admin)  ? (
-                                                            <td className="status">
-                                                                {item.status === "ACTIVE" ?
-                                                                    <button
-                                                                        className="btn btn-sm btn-success status-item-btn"
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#showModal"
-                                                                        onClick={(event) => toggleStatus(event.target, item.id)}
-                                                                    >
-                                                                        {item.status}
-                                                                    </button> :
-                                                                    <button
-                                                                        className="btn btn-sm btn-danger status-item-btn"
-                                                                        data-bs-toggle="modal"
-                                                                        data-bs-target="#showModal"
-                                                                        onClick={(event) => toggleStatus(event.target, item.id)}
-                                                                    >
-                                                                        {item.status}
-                                                                    </button>
-
-                                                                }
-                                                            </td>
-                                                            ): null}
-                                                            {/* The below column will have the 3 buttons
-                                                                1. View button
-                                                                2. Edit button
-                                                                3. Remove button
-                                                            */}
-                                                            <td>
-                                                                <div className="d-flex gap-2">
-                                                                    {/* This is the place from where we are calling he view button and function. */}
-                                                                    <div className="view">
-                                                                        <button className="btn btn-sm btn-success edit-item-btn" onClick={() => tog_view(item.id)}
-                                                                            data-bs-toggle="modal" data-bs-target="#showModal">View</button>
-                                                                    </div>
-                                                                    {/* This is the place from where we are calling he edit button and function. */}
-                                                                    <div className="edit">
-                                                                        <button className="btn btn-sm btn-success edit-item-btn"
-                                                                            data-bs-toggle="modal" data-bs-target="#showModal" onClick={() => tog_list('EDIT', item.id)}>Edit</button>
-                                                                    </div>
-                                                                    {/* This is the place from where we are calling he remove button and function. */}
-                                                                    <div className="remove">
-                                                                        { (role === role_name.admin)  ? (
-                                                                        <button className="btn btn-sm btn-danger remove-item-btn" onClick={() => remove_data(item.id)} data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
-                                                                        ): <button className="btn btn-sm btn-danger remove-item-btn" onClick={() => uassign_remove_data(item.id)} data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>}
-                                                                    </div>
-                                                                </div>
-                                                            </td>
-                                                        </tr>
+                                                        </>
+                                                        ) : null}
+                                                        {/* The below column will have the 3 buttons
+                                                            1. View button
+                                                            2. Edit button
+                                                            3. Remove button
+                                                        */}
+                                                        <td>
+                                                        <div className="d-flex gap-2">
+                                                            {/* This is the place from where we are calling the view button and function. */}
+                                                            <div className="view">
+                                                            <button
+                                                                className="btn btn-sm btn-success edit-item-btn"
+                                                                onClick={() => tog_view(item.id)}
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#showModal"
+                                                            >
+                                                                View
+                                                            </button>
+                                                            </div>
+                                                            {/* This is the place from where we are calling the edit button and function. */}
+                                                            <div className="edit">
+                                                            <button
+                                                                className="btn btn-sm btn-success edit-item-btn"
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#showModal"
+                                                                onClick={() => tog_list('EDIT', item.id)}
+                                                            >
+                                                                Edit
+                                                            </button>
+                                                            </div>
+                                                            {/* This is the place from where we are calling the remove button and function. */}
+                                                            <div className="remove">
+                                                            {roleId === role_id.admin? (
+                                                                <button
+                                                                className="btn btn-sm btn-danger remove-item-btn"
+                                                                onClick={() => remove_data(item.id)}
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#deleteRecordModal"
+                                                                >
+                                                                Remove
+                                                                </button>
+                                                            ) : (
+                                                                <button
+                                                                className="btn btn-sm btn-danger remove-item-btn"
+                                                                onClick={() => uassign_remove_data(item.id)}
+                                                                data-bs-toggle="modal"
+                                                                data-bs-target="#deleteRecordModal"
+                                                                >
+                                                                Remove
+                                                                </button>
+                                                            )}
+                                                            </div>
+                                                        </div>
+                                                        </td>
+                                                    </tr>
                                                     ))}
                                                 </tbody>
-                                            </table>
+                                                </table>
 
-                                            {/* The below the message when there is not data to showcase on the page */}
-                                            <div className="noresult" style={{ display: "none" }}>
-                                                <div className="text-center">
-                                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                                        colors="primary:#121331,secondary:#08a88a" style={{ width: "75px", height: "75px" }}>
-                                                    </lord-icon>
-                                                    <h5 className="mt-2">Sorry! No Result Found</h5>
-                                                    <p className="text-muted mb-0">We've searched more than 150+ Drivers We did not find any
-                                                        orders for you search.</p>
-                                                </div>
-                                            </div>
+
                                         </div>
 
                                         {/* the below is having the code of the pagination of the page.
@@ -578,7 +577,7 @@ const ListTables = () =>
             </Modal>
 
             {/* This is the view button model. We will get all the details of a particular driver */}
-            <Modal className="extra-width" isOpen={view_modal} toggle={() => { tog_view('view'); }} >
+            <Modal className="extra-width" isOpen={view_modal} toggle={() => { setView_modal(false); }} >
                 {/* The below line is for the heading of pop up of view driver */}
                 <ModalHeader className="bg-light p-3" id="exampleModalLabel"toggle={() => { setView_modal(false); }}>View Driver</ModalHeader>
                 <form className="tablelist-form"
@@ -725,7 +724,7 @@ const ListTables = () =>
                             >
                                 <option value="">Select Service Provider</option>
                             {sproviders.map((item, index) => (
-                                <option key={index} value={item.id}>{item.username}</option>
+                                <option key={index} value={item.id}>{item.name}</option>
                             ))}
                             </select>
                         </div>
@@ -742,7 +741,7 @@ const ListTables = () =>
                                     {assignedSProviders.map((item,index) => (
                                         <tr key={item.id}> 
                                             <td>{index + 1}</td>
-                                            <td>{item.username}</td>
+                                            <td>{item.name}</td>
                                             <td>
                                                 <button onClick={()=> {removeAsigned(item.id)}} className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
                                             </td>

@@ -39,9 +39,9 @@ const ListVehiclesTable = () => {
     const [module, setModule] = useState({});
     const [user_name, setuser_name] = useState('')
     const [numberOfData, setNumberOfData] = useState(0);
-    const [errors, setErrors] = useState("")
+    const [errors, setErrors] = useState("");
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const pageLimit = config.pageLimit;
-    const role_name = config.roles
     const role_Id = config.Role
 
     const navigate = useNavigate();
@@ -74,9 +74,9 @@ const ListVehiclesTable = () => {
         vehicle_exipration_date: !add_list ? vehicle[0]?.vehicle_exipration_date : '',
         safety_certicate: !add_list ? vehicle[0]?.safety_certicate : '',
     };
-
-
     useEffect(() => {
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
         const data = JSON.parse(localStorage.getItem("authUser"));
         let user_Id = data[0]?.user[0]?.id
         let role_Name = data[0]?.user[0]?.role_name
@@ -88,7 +88,6 @@ const ListVehiclesTable = () => {
         setRoleID(role_Id);
         getAllData(1)
     }, [userId, role, user_name, roleID]);
-
     /**This function is an event handler that triggers when the user
      *  selects a file for the idproof image */
     const handleIdProofImageChange = (event) => {
@@ -96,7 +95,6 @@ const ListVehiclesTable = () => {
         setCertificateImage(file)
         setCertificatePreview(URL.createObjectURL(file));
     };
-
     // The Below function is used when we are adding the vehicle
     async function tog_list(param, productId) {
         setErrors("")
@@ -105,37 +103,29 @@ const ListVehiclesTable = () => {
             setAdd_list(!add_list);
         } else {
             let data = await getSingleVechileData(productId)
-            console.log("DDDD", data)
             setVehicle([data]);
             setCertificatePreview(data.safety_certicate)
         }
         setmodal_list(!modal_list);
     }
-
     // The Below function is used when we are displaying the particular vehicle data.
     async function tog_view(productId) {
-        console.log("rr", productId)
         let data = await getSingleVechileData(productId)
-        console.log("DD", data)
         setVehicle([data]);
         setCertificatePreview(data.safety_certicate)
         setView_modal(!view_modal);
     }
-
     // The below function is for remove button of a particular vehicle.
     async function remove_data(id) {
         await removeVehicle(id);
         getAllData(pageNumber)
     }
-
     // The below function is for delete button of a particular vehicle.
     function tog_delete() {
         setmodal_delete(!modal_delete);
     }
-
     // The below function is the changging Status button
     function toggleStatus(button, vehiclesId) {
-        console.log("vid", vehiclesId)
         var currentStatus = button.innerText.trim();
         const vehicle = vehicles.find((v) => v.id === vehiclesId);
         updateVechileStatus(vehicle.id)
@@ -156,8 +146,6 @@ const ListVehiclesTable = () => {
             }
         }
     }
-
-
     const validation = useFormik
         ({
             // enableReinitialize: use this flag when initial values need to be changed
@@ -176,26 +164,20 @@ const ListVehiclesTable = () => {
                 }
             },
         });
-
     // function for get data all Vechile data
     async function getAllData(page) {
         if (userId) {
-            console.log(`User id at the time of getall function`, userId);
             let getvehicles = await getVehiclesData(page || 1, userId);
             let getSP = await getSPUserName();
-            console.log("ss", getSP)
-            console.log("ssv", getvehicles)
             setSproviders(getSP.serviceProviders);
             setVehicles(getvehicles?.vehicles);
             setModule(getvehicles.module[0]);
             setPageNumber(page);
-            setNumberOfData(getvehicles?.totalCodunt);
+            setNumberOfData(getvehicles?.totalCount);
         }
     }
-
     // Update vehicle
     async function editVehicles(data) {
-        console.log("Reach vehicle at the time of edit vehicle")
         let updatedVehicle = await updateVehicle(vehicle[0]?.id, data);
         if (updatedVehicle.code === 200) {
             setErrors("")
@@ -211,7 +193,7 @@ const ListVehiclesTable = () => {
     }
     /**Add new vehicle */
     async function addVechile(values) {
-        console.log("va", values)
+      
         let addedVechile = await addNewVehicle(values, userId);
         if (addedVechile.code === 200) {
             setErrors("")
@@ -224,7 +206,7 @@ const ListVehiclesTable = () => {
             setErrors(addedVechile?.message)
         }
     }
-
+    document.title = `Vehicles | ${pageTitle} `;
     return (
         <React.Fragment>
             <div className="page-content">
@@ -237,7 +219,6 @@ const ListVehiclesTable = () => {
                                 <CardHeader>
                                     <h4 className="card-title mb-0">Add, Edit & Remove</h4>
                                 </CardHeader>
-
                                 <CardBody>
                                     <div id="customerList">
                                         <Row className="g-4 mb-3">
@@ -247,17 +228,12 @@ const ListVehiclesTable = () => {
                                                 </div>
                                             </Col>
                                         </Row>
-
                                         <div className="table-responsive table-card mt-3 mb-1">
                                             <table className="table align-middle table-nowrap" id="vehiclesTable">
                                                 <thead className="table-light">
-
                                                     <tr>
-                                                        {/* This are the columns and column heading in the enquiry page */}
                                                         <th className="index" data-sort="index">#</th>
-                                                        {(roleID === role_Id.admin) ? (
-                                                            <th className="sort" data-sort="customer_name">Provider</th>
-                                                        ) : null}
+                                                        {(roleID === role_Id.admin) ? (<th className="sort" data-sort="customer_name">Provider</th>) : null}
                                                         <th className="sort" data-sort="vNumber">Vehicle Number</th>
                                                         <th className="sort" data-sort="email">Make</th>
                                                         <th className="sort" data-sort="no_of_horse">Number of Horse</th>
@@ -269,31 +245,25 @@ const ListVehiclesTable = () => {
                                                     {vehicles.map((item, index) => (
                                                         <tr key={item.id}>
                                                             <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
-                                                            {(roleID === role_Id.admin) ? (
-                                                                <td className="name">{item.service_provider}</td>
-                                                            ) : null}
-                                                            <td className="vhnumber">{item.vehicle_number}</td> {/* Vehicle number of the vehicle */}
-                                                            <td className="make">{item.make}</td> {/* Manufaturer of the vehicle */}
-                                                            <td className="no_of_horse text-center">{item.no_of_horse}</td> {/* Maximum number of horses a vehicle can carry */}
-                                                            <td>{item.status === "ACTIVE" ?
-                                                                <button
+                                                            {(roleID === role_Id.admin)?(<td className="name">{item.service_provider}</td>) : null}
+                                                            <td className="vhnumber">{item.vehicle_number}</td>
+                                                            <td className="make">{item.make}</td>
+                                                            <td className="no_of_horse text-center">{item.no_of_horse}</td>
+                                                            <td>{item.status === "ACTIVE"?<button
                                                                     className="btn btn-sm btn-success status-item-btn"
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#showModal"
                                                                     onClick={(event) => toggleStatus(event.target, item.id)}
-                                                                >
-                                                                    {item.status}
+                                                                >{item.status}
                                                                 </button> :
                                                                 <button
                                                                     className="btn btn-sm btn-danger status-item-btn"
                                                                     data-bs-toggle="modal"
                                                                     data-bs-target="#showModal"
                                                                     onClick={(event) => toggleStatus(event.target, item.id)}
-                                                                >
-                                                                    {item.status}
+                                                                >{item.status}
                                                                 </button>
-                                                            }
-                                                            </td>
+                                                            }</td>
                                                             <td>
                                                                 <div className="d-flex gap-2">
                                                                     {/* This is the place from where we are calling the view button and function */}
@@ -311,31 +281,17 @@ const ListVehiclesTable = () => {
                                                                         <button className="btn btn-sm btn-success edit-item-btn"
                                                                             data-bs-toggle="modal" data-bs-target="#showModal" onClick={() => navigate(`/image-gallery/${item.id}`)}>View Images</button>
                                                                     </div>
-
                                                                     {/* This is the place from where we are calling the remove button and function */}
                                                                     <div className="remove">
                                                                         <button className="btn btn-sm btn-danger remove-item-btn" onClick={() => remove_data(item.id)} data-bs-toggle="modal" data-bs-target="#deleteRecordModal">Remove</button>
                                                                     </div>
-
                                                                 </div>
                                                             </td>
                                                         </tr>
                                                     ))}
                                                 </tbody>
                                             </table>
-                                            {/* If there are no data to show, then thic line of code will be executed */}
-                                            <div className="noresult" style={{ display: "none" }}>
-                                                <div className="text-center">
-                                                    <lord-icon src="https://cdn.lordicon.com/msoeawqm.json" trigger="loop"
-                                                        colors="primary:#121331,secondary:#08a88a" style={{ width: "75px", height: "75px" }}>
-                                                    </lord-icon>
-                                                    <h5 className="mt-2">Sorry! No Result Found</h5>
-                                                    <p className="text-muted mb-0">We've searched more than 150+ Orders We did not find any
-                                                        orders for you search.</p>
-                                                </div>
-                                            </div>
                                         </div>
-
                                         {/* The below is having the code of the pagination of the page.
                                             The previous and next button are also in side this function */}
                                         <div className="d-flex justify-content-end">
@@ -356,7 +312,6 @@ const ListVehiclesTable = () => {
                                                     : null}
                                             </div>
                                         </div>
-
                                     </div>
                                 </CardBody>
                             </Card>
@@ -364,7 +319,6 @@ const ListVehiclesTable = () => {
                     </Row>
                 </Container>
             </div>
-
             {/* Add new vehicle modal */}
             <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
                 {/* The below line is for the heading of pop up of edit exixing vehicle or adding new vehicle. */}
@@ -395,17 +349,14 @@ const ListVehiclesTable = () => {
                                     <option value="">Select Service Provider</option>
                                     {sproviders.map((item, index) => (
                                         <option key={index} value={item.id}>
-                                            {item.user_name}
+                                            {item.name}
                                         </option>
                                     ))}
                                 </select>
                             ) : (
                                 null
-
                             )}
-
                         </div>
-
                         {/* The below element is adding the number of the number plate of the vehcile */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_number-field" className="form-label">Vehicle Number</label>
@@ -420,7 +371,6 @@ const ListVehiclesTable = () => {
                                 required
                             />
                         </div>
-
                         {/* The below element is adding the name of the manufacturer of the vehicle */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_company-field" className="form-label">Vehicle Company</label>
@@ -449,7 +399,6 @@ const ListVehiclesTable = () => {
                                 required
                             />
                         </div>
-
                         {/* The below element is for adding the color of the vehicle */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_color-field" className="form-label">Vehicle Color</label>
@@ -464,7 +413,6 @@ const ListVehiclesTable = () => {
                                 required
                             />
                         </div>
-
                         {/* The below element is for adding the length of the vehicle */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_length-field" className="form-label">Vehicle Length (feet)</label>
@@ -479,7 +427,6 @@ const ListVehiclesTable = () => {
                                 required
                             />
                         </div>
-
                         {/* The below element is for adding the breadth of the vehicle */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_breadth-field" className="form-label">Vehicle Breadth (feet)</label>
@@ -494,7 +441,6 @@ const ListVehiclesTable = () => {
                                 required
                             />
                         </div>
-
                         {/* The below element is for adding the height of the vehicle */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_height-field" className="form-label">Vehicle Height (feet)</label>
@@ -509,7 +455,6 @@ const ListVehiclesTable = () => {
                                 required
                             />
                         </div>
-
                         {/* The below element is for adding the price of the vehicle */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_price-field" className="form-label">Vehicle Minimum Price</label>
@@ -544,8 +489,6 @@ const ListVehiclesTable = () => {
                                 ))}
                             </select>
                         </div>
-
-
                         {/* The below element is for select. Whether the vehicle have a air conditioner or not. */}
                         <div className="mb-3">
                             <label className="form-label">Air Conditioner</label>
@@ -578,7 +521,6 @@ const ListVehiclesTable = () => {
                                 <label htmlFor="air_conditioner-no" className="form-check-label">NO</label>
                             </div>
                         </div>
-
                         {/* The below element is for select. Whether the vehicle have a Temperature Manageable functionality or not. */}
                         <div className="mb-3">
                             <label className="form-label">Temperature Manageable</label>
@@ -610,7 +552,6 @@ const ListVehiclesTable = () => {
                                 <label htmlFor="temperature_manageable-no" className="form-check-label">NO</label>
                             </div>
                         </div>
-
                         {/* The below element is for uploading the images of safty certificate*/}
                         <div className="mb-3">
                             {certificatePreview && (
@@ -628,7 +569,6 @@ const ListVehiclesTable = () => {
                                 onChange={handleIdProofImageChange}
                             />
                         </div>
-
                         {/* The below element is for adding the registration number of the vehicle. */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_registration_number-field" className="form-label">Vehicle Registration Number</label>
@@ -643,7 +583,6 @@ const ListVehiclesTable = () => {
                                 required
                             />
                         </div>
-
                         {/* The below element is for Selecting. Whether vehicle is allowed to travel within the GCC countries. */}
                         <div className="mb-3">
                             <label className="form-label">GCC Travel Allowed</label>
@@ -674,7 +613,6 @@ const ListVehiclesTable = () => {
                                 <label htmlFor="gcc_travel_allowed-no" className="form-check-label">NO</label>
                             </div>
                         </div>
-
                         {/* The below element is for selecting. Whether vehicle has the insuarance. */}
                         <div className="mb-3">
                             <label className="form-label">Insurance Covered</label>
@@ -705,7 +643,6 @@ const ListVehiclesTable = () => {
                                 <label htmlFor="insurance_covered-no" className="form-check-label">NO</label>
                             </div>
                         </div>
-
                         {/* The below element is for adding the insurance date of the vehicle. */}
                         <div className="mb-3">
                             <label htmlFor="insurance_date-field" className="form-label">Insurance Date</label>
@@ -721,7 +658,6 @@ const ListVehiclesTable = () => {
                                 placeholder="Select Insurance Date"
                             />
                         </div>
-
                         {/* The below element is for adding the insurance policy number of the vehicle. */}
                         <div className="mb-3">
                             <label htmlFor="insurance_policy_no-field" className="form-label">Insurance Policy Number</label>
@@ -737,7 +673,6 @@ const ListVehiclesTable = () => {
                                 required
                             />
                         </div>
-
                         {/* The below element is for adding the company of the insurance provider of the vehicle. */}
                         <div className="mb-3">
                             <label htmlFor="insurance_policy_provider-field" className="form-label">Insurance Policy Provider</label>
@@ -748,7 +683,6 @@ const ListVehiclesTable = () => {
                                 name='insurance_policy_provider'
                                 value={validation.values.insurance_policy_provider || ""}
                                 onChange={validation.handleChange}
-
                                 placeholder="Enter Insurance Policy Provider"
                                 required
                             />
@@ -767,8 +701,6 @@ const ListVehiclesTable = () => {
                                 placeholder="Select Insurance Expiry Date"
                             />
                         </div>
-
-
                         {/* The below element is for seleting the type of vehicle. */}
                         <div className="mb-3">
                             <label className="form-label">Vehicle Type</label>
@@ -801,7 +733,6 @@ const ListVehiclesTable = () => {
                                 <label htmlFor="vehicle_type-sharing" className="form-check-label">SHARING</label>
                             </div>
                         </div>
-
                         {/* The below element is for seleting the vehicle registration date. */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_registration_date-field" className="form-label">Vehicle Registration Date</label>
@@ -817,7 +748,6 @@ const ListVehiclesTable = () => {
                                 placeholder="Select Vehicle Registration Date"
                             />
                         </div>
-
                         <div className="mb-3">
                             <label htmlFor="vehicle_exipration_date-field" className="form-label">Vehicle Expiration Date</label>
                             <Flatpickr
@@ -832,10 +762,6 @@ const ListVehiclesTable = () => {
                                 placeholder="Select Vehicle Expiration Date"
                             />
                         </div>
-
-
-
-
                     </ModalBody>{/* Here all the element will be done*/}
                     {/* All the buttons are add from the footer */}
                     <ModalFooter>
@@ -848,7 +774,6 @@ const ListVehiclesTable = () => {
                     </ModalFooter>
                 </form>
             </Modal>
-
             {/* View Modal */}
             {/* This is the view button model. We will get all the details of a particular vehcile. */}
             <Modal className="extra-width" isOpen={view_modal}>
@@ -856,7 +781,6 @@ const ListVehiclesTable = () => {
                 <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setView_modal(false) }}> View Vehicles</ModalHeader>
                 <form className="tablelist-form" onSubmit={validation.handleSubmit}>
                     <ModalBody>
-
                         {/* The below element is displaying the name of the service provider. Whose vehicle is being added */}
                         <div className="mb-3">
                             <label htmlFor="serviceprovider-field" className="form-label">Service Provider</label>
@@ -869,7 +793,6 @@ const ListVehiclesTable = () => {
                                 readOnly
                             />
                         </div>
-
                         {/* The below element is displaying the number of the number plate of the vehcile */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_number-field" className="form-label">Vehicle Number</label>
@@ -882,7 +805,6 @@ const ListVehiclesTable = () => {
                                 readOnly
                             />
                         </div>
-
                         {/* The below element is displaying the name of the manufacturer of the vehicle */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_company-field" className="form-label">Vehicle Company</label>
@@ -895,7 +817,6 @@ const ListVehiclesTable = () => {
                                 readOnly
                             />
                         </div>
-
                         {/* The below element is displaying the model vehicle */}
                         <div className="mb-3">
                             <label htmlFor="modal-field" className="form-label">Vehicle Model</label>
@@ -908,11 +829,9 @@ const ListVehiclesTable = () => {
                                 readOnly
                             />
                         </div>
-
                         {/* The below element is for displaying the color of the vehicle */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_color-field" className="form-label">Vehicle Color</label>
-
                             <div className="col-md-10">
                                 <input
                                     className="form-control form-control-color mw-100"
@@ -922,7 +841,6 @@ const ListVehiclesTable = () => {
                                 />
                             </div>
                         </div>
-
                         {/* The below element is for displaying the length of the vehicle */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_length-field" className="form-label">Vehicle Length (feet)</label>
@@ -935,7 +853,6 @@ const ListVehiclesTable = () => {
                                 readOnly
                             />
                         </div>
-
                         {/* The below element is for displaying the breadth of the vehicle */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_breadth-field" className="form-label">Vehicle Breadth (feet)</label>
@@ -948,7 +865,6 @@ const ListVehiclesTable = () => {
                                 readOnly
                             />
                         </div>
-
                         {/* The below element is for displaying the height of the vehicle */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_height-field" className="form-label">Vehicle Height (feet)</label>
@@ -961,7 +877,6 @@ const ListVehiclesTable = () => {
                                 readOnly
                             />
                         </div>
-
                         {/* The below element is for displaying the minimum price of the vehicle */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_price-field" className="form-label">Vehicle Minimum Price </label>
@@ -974,9 +889,7 @@ const ListVehiclesTable = () => {
                                 readOnly
                             />
                         </div>
-
                         {/* The below element is for displaying the maximum number of horses a vehicle can carry. */}
-
                         <div className="mb-3">
                             <label htmlFor="no_of_horses-field" className="form-label">Number Of Horses</label>
                             <input
@@ -988,7 +901,6 @@ const ListVehiclesTable = () => {
                                 readOnly
                             />
                         </div>
-
                         {/* The below element is for select2. Whether the vehicle have a air conditioner or not. */}
                         <div className="mb-3">
                             <label className="form-label">Air Conditioner</label>
@@ -1017,7 +929,6 @@ const ListVehiclesTable = () => {
                                 <label htmlFor="air_conditioner-no" className="form-check-label">NO</label>
                             </div>
                         </div>
-
                         {/* The below element is for select2. Whether the vehicle have a Temperature Manageable functionality or not. */}
                         <div className="mb-3">
                             <label className="form-label">Temperature Manageable</label>
@@ -1046,8 +957,6 @@ const ListVehiclesTable = () => {
                                 <label htmlFor="temperature_manageable-no" className="form-check-label">NO</label>
                             </div>
                         </div>
-
-
                         {/* The below element is for displaying the registration number of the vehicle. */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_registration_number-field" className="form-label">Vehicle Registration Number</label>
@@ -1060,7 +969,6 @@ const ListVehiclesTable = () => {
                                 readOnly
                             />
                         </div>
-
                         {/* The below element is for selecting2. Whether vehicle is allowed to travel within the GCC countries. */}
                         <div className="mb-3">
                             <label className="form-label">GCC Travel Allowed</label>
@@ -1089,7 +997,6 @@ const ListVehiclesTable = () => {
                                 <label htmlFor="gcc_travel_allowed-no" className="form-check-label">NO</label>
                             </div>
                         </div>
-
                         {/* The below element is for selecting2. Whether vehicle has the insuarance. */}
                         <div className="mb-3">
                             <label className="form-label">Insurance Covered</label>
@@ -1118,7 +1025,6 @@ const ListVehiclesTable = () => {
                                 <label htmlFor="insurance_covered-no" className="form-check-label">NO</label>
                             </div>
                         </div>
-
                         {/* The below element is for displaying the insurance date of the vehicle. */}
                         <div className="mb-3">
                             <label htmlFor="insurance_date-field" className="form-label">Insurance Date</label>
@@ -1131,7 +1037,6 @@ const ListVehiclesTable = () => {
                                 readOnly
                             />
                         </div>
-
                         {/* The below element is for displaying the insurance policy number of the vehicle. */}
                         <div className="mb-3">
                             <label htmlFor="insurance_policy_no-field" className="form-label">Insurance Policy Number</label>
@@ -1144,7 +1049,6 @@ const ListVehiclesTable = () => {
                                 readOnly
                             />
                         </div>
-
                         {/* The below element is for displaying the company of the insurance provider of the vehicle. */}
                         <div className="mb-3">
                             <label htmlFor="insurance_policy_provider-field" className="form-label">Insurance Policy Provider</label>
@@ -1157,7 +1061,6 @@ const ListVehiclesTable = () => {
                                 readOnly
                             />
                         </div>
-
                         {/* The below element is for displaying the date. When the insurance of the vehicle will expire. */}
                         <div className="mb-3">
                             <label htmlFor="insurance_expiry_date-field" className="form-label">Insurance Expiry Date</label>
@@ -1170,7 +1073,6 @@ const ListVehiclesTable = () => {
                                 readOnly
                             />
                         </div>
-
                         {/* The below element is for displaying the type of vehicle. */}
                         <div className="mb-3">
                             <label className="form-label">Vehicle Type</label>
@@ -1186,7 +1088,6 @@ const ListVehiclesTable = () => {
                                 />
                                 <label htmlFor="vehicle_type-private" className="form-check-label">PRIVATE</label>
                             </div>
-
                             <div className="form-check">
                                 <input
                                     type="radio"
@@ -1200,7 +1101,6 @@ const ListVehiclesTable = () => {
                                 <label htmlFor="vehicle_type-sharing" className="form-check-label">SHARING</label>
                             </div>
                         </div>
-
                         {/* The below element is for displaying the vehicle registration date. */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_registration_date-field" className="form-label">Vehicle Registration Date</label>
@@ -1213,7 +1113,6 @@ const ListVehiclesTable = () => {
                                 readOnly
                             />
                         </div>
-
                         {/* The below element is for displaying the vehicle expiration date. */}
                         <div className="mb-3">
                             <label htmlFor="vehicle_exipration_date-field" className="form-label">Vehicle Expiration Date</label>
@@ -1240,7 +1139,6 @@ const ListVehiclesTable = () => {
                     </ModalFooter>
                 </form>
             </Modal>
-
             {/* Remove Modal */}
             {/* This is the Remove button model. We will remove the particular vehicle from this button. */}
             <Modal isOpen={modal_delete} toggle={() => { tog_delete(); }} className="modal fade zoomIn" id="deleteRecordModal" centered >

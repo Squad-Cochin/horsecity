@@ -33,11 +33,13 @@ const SettingPage = () =>
     const [ languages, setLanguages ] = useState([]);
     const [ currencies, setCurrencies ] = useState([]);
     const [ taxations, setTaxations ] = useState([]);
-
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const dispatch = useDispatch();
-      /**This hook is used to fetch settings data */
+     /**THIS HOOK WILL RENDER INITIAL TIME */
       useEffect(() => {
-         getAllData();
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
+         getAllData(); 
        }, []);
 
 
@@ -57,12 +59,14 @@ const SettingPage = () =>
         let languages = await getLanguagesNames();
         let currencies = await getCurrenciesNames();
         let taxations = await getTaxationsNames();
-        console.log("get",settingsData);
+
         setSetting_data(settingsData.settingsPageData);
         setLanguages(languages?.languages);
         setCurrencies(currencies?.currencies);
         setTaxations(taxations?.taxations)
     }
+
+    /**INITIAL VALUES */
     const initialValues = {
       application_title: settings_data[0]?.application_title || '',
       contact_address: settings_data[0]?.contact_address || '',
@@ -80,7 +84,7 @@ const SettingPage = () =>
       quotation_prefix: settings_data[0]?.quotation_prefix || '',
       licence_number: settings_data[0]?.licence_number || '',
     };
-
+    /**VALIDATION */
     const validation = useFormik({
       // enableReinitialize : use this flag when initial values needs to be changed
       enableReinitialize: true,
@@ -91,17 +95,19 @@ const SettingPage = () =>
         values.loginpage_bg_image = loginPageBackgroundImg
         values.loginpage_logo = loginPageLogo
                   let updateSettingsPage = await updateSettings(values);
-                  console.log("update",updateSettingsPage);
                   if(updateSettingsPage.code === 200){
                       setErrors("");
+                      let obj ={
+                        application_title : values.application_title
+                      }
+                      localStorage.setItem("settingsData", JSON.stringify(obj));
+                      setPageTitle(values.application_title);
                       const data = languages?.find((item)=>item?.id == values.language_id)
-                      console.log("abb",data.abbreviation);
                       i18n.changeLanguage('en');
                       localStorage.setItem("I18N_LANGUAGE", 'en');
                       window.location.reload();
                   }else{
                       setErrors("")
-                      console.log("ERRRRR",updateSettingsPage);
                       setErrors(updateSettingsPage.message)
                   }
       }
@@ -129,7 +135,6 @@ const SettingPage = () =>
     const handleFaviconChange = (event) => {
       const file = event.target.files[0];
       setUploadFavicon(file);
-      console.log(file);
       setFaviconPreview(URL.createObjectURL(file));
     };
     /**CONTREY CODES */
@@ -142,10 +147,7 @@ const SettingPage = () =>
         { code: '+966', country: 'Saudi Arabia', region: 'GCC' },
         { code: '+971', country: 'United Arab Emirates', region: 'GCC' },
       ];
-
-  
-
-
+      document.title = `Settings | ${pageTitle} `;
 
     return (
       <React.Fragment>

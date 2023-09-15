@@ -25,12 +25,16 @@ const DriverReport  = () => {
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
     const pageLimit = config.pageLimit;
+    const [pageTitle, setPageTitle] = useState('KailPlus');
+    const [ userId ,setUserId ] = useState('');
 
+   /**THIS HOOK WILL RENDER INITIAL TIME SETTING THE FROMDATE BEFORE 60 DAYS TODATE CURRENT DATE */
     useEffect(()=>{
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
         const today = new Date();
         const sixtyDaysAgo = new Date(today);
         sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
-        console.log(today,"next",sixtyDaysAgo)
         let value = {
             from_date : sixtyDaysAgo,
             to_date : today,
@@ -38,14 +42,16 @@ const DriverReport  = () => {
         const data = JSON.parse(localStorage.getItem("authUser"));
         let userId = data[0]?.user[0]?.id ;
 
-        getData(1, value,userId)
-    },[])
+        setUserId(userId);
+        getData(1, value)
+    }, [userId])
 
+    /**INITIAL VALUES */
     const initialValues = { 
         from_date : "",
         to_date : "",
     }
-    
+    /**VALIDATION */
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
@@ -56,18 +62,17 @@ const DriverReport  = () => {
     });
 
     /**GET DRIVER REPORTS */
-    async function getData(page, val,spId){
+    async function getData(page, val){
         setFromDate(val.from_date)
         setToDate(val.to_date)
-        console.log("val",val)
-        if(spId){
-        let getAllData = await getDriverReport(page || 1, val,spId)
+        if (userId) {
+        let getAllData = await getDriverReport(page || 1, val,userId)
         setDriverReport(getAllData?.drivers);
         setPageNumber(page);
         setNumberOfData(getAllData?.totalCount);
     }
     }
-
+    document.title = `Report | ${pageTitle} `;
     return (
         <React.Fragment>
             <div className="page-content">

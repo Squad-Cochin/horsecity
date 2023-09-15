@@ -23,9 +23,11 @@ const ListVehicleImages = () => {
     const [updateImage, setUpdateImage] = useState(""); // State variable to store the updated image
     const [errors, setErrors] = useState("")
     const { id } = useParams(); // Retrieve the 'id' parameter from the URL using the 'useParams' hook
-
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     /**This hook will render initial time */
     useEffect(() => {
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
         if (id) {
             getAllData()
         }
@@ -114,7 +116,7 @@ const ListVehicleImages = () => {
         await removeVehicleImage(id)
         getAllData()
     }
-
+    document.title = `Vehicle images | ${pageTitle} `;
     return (
         <React.Fragment>
             {id > 0 ? (
@@ -137,74 +139,68 @@ const ListVehicleImages = () => {
                             </Row>
 
                             <div className="table-responsive table-card mt-3 mb-1">
-                                <table className="table align-middle table-nowrap" id="customerTable" >
-                                    <thead className="table-light">
-                                        <tr>
-                                            {/* This are the columns and column heading in the vehicle page */}
-                                            <th className="index" data-sort="index"> # </th>
-                                            <th className="sort" data-sort="vehicleimage"> Image </th>
-                                            <th className="sort" data-sort="vehicletitle"> Title </th>
-                                            <th className="sort" data-sort="created_at"> Created At </th>
-                                            <th className="sort" data-sort="status"> Status </th>
-                                            <th className="sort" data-sort="action"> Actions </th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className="list form-check-all">
-                                        {vhImages.map((imageItem, index) => (
-                                            <tr key={index}>
-                                                <th scope="row">{index + 1}</th>
-                                                <td className="vehicleimage"> <img src={imageItem?.url} alt={`Static Image ${index + 1}`} className="image-size" /> </td>
-                                                <td className="vehicletitle">{imageItem?.title}</td>
-                                                <td className="created_at">{imageItem?.uploaded_at}</td>
-                                                <td>{imageItem.status === "ACTIVE" ?
-                                                    <button
-                                                        className="btn btn-sm btn-success status-item-btn"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#showModal"
-                                                        onClick={(event) => toggleStatus(event.target, imageItem.id)}
-                                                    >
-                                                        {imageItem.status}
-                                                    </button> :
-                                                    <button
-                                                        className="btn btn-sm btn-danger status-item-btn"
-                                                        data-bs-toggle="modal"
-                                                        data-bs-target="#showModal"
-                                                        onClick={(event) => toggleStatus(event.target, imageItem.id)}
-                                                    >
-                                                        {imageItem.status}
-                                                    </button>
-                                                }
-                                                </td>
-                                                {/* This is the place from where we are calling the Remove button and function */}
-                                                <td>
-                                                    <div className="d-flex gap-2">
-                                                        <button className="btn btn-sm btn-danger remove-item-btn" data-bs-toggle="modal" data-bs-target="#deleteRecordModal" onClick={() => remove_data(imageItem?.id)}>
-                                                            Remove
-                                                        </button>
-                                                    </div>
-                                                </td>
+                            <table className="table align-middle table-nowrap" id="customerTable">
+  <thead className="table-light">
+    <tr>
+      {/* These are the columns and column headings in the vehicle page */}
+      <th className="index" data-sort="index">#</th>
+      <th className="sort" data-sort="vehicleimage">Image</th>
+      <th className="sort" data-sort="vehicletitle">Title</th>
+      <th className="sort" data-sort="created_at">Created At</th>
+      <th className="sort" data-sort="status">Status</th>
+      <th className="sort" data-sort="action">Actions</th>
+    </tr>
+  </thead>
+  <tbody className="list form-check-all">
+    {vhImages.map((imageItem, index) => (
+      <tr key={index}>
+        <th scope="row">{index + 1}</th>
+        <td className="vehicleimage">
+          <img src={imageItem?.url} alt={`Static Image ${index + 1}`} className="image-size" />
+        </td>
+        <td className="vehicletitle">{imageItem?.title}</td>
+        <td className="created_at">{imageItem?.uploaded_at}</td>
+        <td>
+          {imageItem.status === "ACTIVE" ? (
+            <button
+              className="btn btn-sm btn-success status-item-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#showModal"
+              onClick={(event) => toggleStatus(event.target, imageItem.id)}
+            >
+              {imageItem.status}
+            </button>
+          ) : (
+            <button
+              className="btn btn-sm btn-danger status-item-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#showModal"
+              onClick={(event) => toggleStatus(event.target, imageItem.id)}
+            >
+              {imageItem.status}
+            </button>
+          )}
+        </td>
+        {/* This is the place from where we are calling the Remove button and function */}
+        <td>
+          <div className="d-flex gap-2">
+            <button
+              className="btn btn-sm btn-danger remove-item-btn"
+              data-bs-toggle="modal"
+              data-bs-target="#deleteRecordModal"
+              onClick={() => remove_data(imageItem?.id)}
+            >
+              Remove
+            </button>
+          </div>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
-                                            </tr>
-                                        ))}
-                                    </tbody>
-                                </table>
 
-                                {/* If there are no data to show, then thic line of code will be executed */}
-                                <div className="noresult" style={{ display: "none" }}>
-                                    <div className="text-center">
-                                        <lord-icon
-                                            src="https://cdn.lordicon.com/msoeawqm.json"
-                                            trigger="loop"
-                                            colors="primary:#121331,secondary:#08a88a"
-                                            style={{ width: "75px", height: "75px" }}
-                                        ></lord-icon>
-                                        <h5 className="mt-2">Sorry! No Result Found</h5>
-                                        <p className="text-muted mb-0">
-                                            We've searched more than 150+ Orders We did not find
-                                            any orders for you search.
-                                        </p>
-                                    </div>
-                                </div>
+
                             </div>
                         </div>
                     </Container>

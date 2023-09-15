@@ -1,3 +1,10 @@
+////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                            //
+//                        All page routs url done over here.                                  //
+//                                                                                            //
+////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 import React from "react";
 import { Navigate } from "react-router-dom";
 
@@ -16,7 +23,7 @@ import Drivers from "../Pages/Drivers/DriverTable";
 import TripDeatails from "../Pages/TripDetails/TripDetailTable";
 
 //Import monthly reports
-import ServiceProviderReport  from "../Pages/Reports/ServiceProviderReport";
+import ServiceProviderReport from "../Pages/Reports/ServiceProviderReport";
 import CustomerReport from "../Pages/Reports/CustomerReport";
 import DriverReport from "../Pages/Reports/DriversReport";
 import VehicleReport from "../Pages/Reports/VehiclesReport";
@@ -27,7 +34,7 @@ import AccountsReport from "../Pages/Reports/AccountsReport";
 
 
 //Import Accounts
-import Accounts  from "../Pages/Accounts/AccountsList";
+import Accounts from "../Pages/Accounts/AccountsList";
 
 //Languages
 import Language from "../Pages/Languages/ListLanguage";
@@ -44,8 +51,7 @@ import Login from "../Pages/Authentication/Login";
 import ChangePassword from "../Pages/Authentication/ChangePassword";
 import ForgetPasswordPage from "../Pages/Authentication/ForgetPassword";
 import Logout from "../Pages/Authentication/Logout";
-import Register from "../Pages/Authentication/Register";
-import UserProfile from "../Pages/Authentication/user-profile";
+import ResetPasswordPage from "../Pages/Authentication/ResetPassword";
 import ListEnquiriesTable from "../Pages/Tables/ListTables/ListEnquiriesTable";
 import ListQuotationsTable from "../Pages/Tables/ListTables/ListQuotationsTable";
 import InvoiceReport from "../Pages/Reports/InvoiceReport";
@@ -59,21 +65,18 @@ import ListJs from "../Pages/ServiceProviders/ServiceProviderTable";
 import ImageGallery from "..//Pages/Tables/ListTables/ListVehicleImages"
 
 //Profile page
-import Profile from "../Pages/ProfilePage";
+// import Profile from "../Pages/ProfilePage";
 import InvoiceDetails from "../Pages/Invoices/InvoicesList";
 
 // Dashboard Page
-
 import DashboardPanel from "../Pages/Dashboard/UserPanel";
-
+import Error404 from "../Pages/Utility/Error404-Page";
 const authProtectedRoutes = [
   //dashboard
   { path: "/dashboard", component: <Dashboard /> },
 
-  // Profile
-  { path: "/userprofile", component: <UserProfile /> },
 
-// **************************
+  // **************************
   //ServiceProvider
   { path: "/service-providers", component: <ServiceProviders /> },
 
@@ -94,16 +97,16 @@ const authProtectedRoutes = [
   { path: "/account-reports", component: <AccountsReport /> },
   { path: "/invoice-reports", component: <InvoiceReport /> },
 
-  
+
   //Accounts
   { path: "/accounts", component: <Accounts /> },
   /**Image gallery */
-    { path: "/image-gallery/:id", component: <ImageGallery /> },
+  { path: "/image-gallery/:id", component: <ImageGallery /> },
 
   //Language
-  { path: "/languages", component: <Language /> },   
-  { path : "/taxation-list", component : <TaxListing />},
-  { path : "/discount-list", component : <DiscountListing />},
+  { path: "/languages", component: <Language /> },
+  { path: "/taxation-list", component: <TaxListing /> },
+  { path: "/discount-list", component: <DiscountListing /> },
   { path: "/setting-page", component: <SettingPage /> },
 
 
@@ -117,7 +120,7 @@ const authProtectedRoutes = [
   { path: "/quotations", component: <ListQuotationsTable /> },
 
   // Invoice Page
-  { path : "/invoices", component : <InvoiceDetails />},
+  { path: "/invoices", component: <InvoiceDetails /> },
 
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name
@@ -136,10 +139,8 @@ const publicRoutes = [
   { path: "/login", component: <Login /> },
   { path: "/change-password", component: <ChangePassword /> },
   { path: "/forgot-password", component: <ForgetPasswordPage /> },
-  { path: "/register", component: <Register /> },
-
-  //Profile page
-  { path: "/profile-page", component: <Profile /> },
+  { path: "/reset-password/:id/:token", component: <ResetPasswordPage /> },
+  { path: "/pages-404", component: <Error404 /> },
 
 ];
 

@@ -25,16 +25,9 @@ const ProfileMenu = props => {
 
   useEffect(() => {
     if (localStorage.getItem("authUser")) {
-      if (process.env.REACT_APP_DEFAULTAUTH === "firebase") {
-        const obj = JSON.parse(localStorage.getItem("authUser"));
-        setusername(obj.displayName);
-      } else if (
-        process.env.REACT_APP_DEFAULTAUTH === "fake" ||
-        process.env.REACT_APP_DEFAULTAUTH === "jwt"
-      ) {
-        const obj = JSON.parse(localStorage.getItem("authUser"));
-        setusername(obj.username);
-      }
+
+      const obj = JSON.parse(localStorage.getItem("authUser"));
+      setusername(obj.username);
     }
   }, [props.success]);
 
@@ -59,16 +52,24 @@ const ProfileMenu = props => {
           <i className="mdi mdi-chevron-down d-none d-xl-inline-block" />
         </DropdownToggle>
         <DropdownMenu className="dropdown-menu-end">
-          <DropdownItem tag="a" href="/dashboard">
+          {/* <DropdownItem tag="a" href="/dashboard">
             {" "}
             <i className="ri-user-line align-middle me-2" />
             {props.t("Profile")}{" "}
-          </DropdownItem>
+          </DropdownItem> */}
           <DropdownItem tag="a" href="/change-password">
             <i className="ri-wallet-2-line align-middle me-2" />
             {props.t("Change password")}
           </DropdownItem>
-
+          {/* <DropdownItem tag="a" href="#">
+            <span className="badge bg-success float-end mt-1">11</span>
+            <i className="ri-settings-2-line align-middle me-2" />
+            {props.t("Settings")}
+          </DropdownItem> */}
+          {/* <DropdownItem tag="a" href="auth-lock-screen">
+            <i className="ri-lock-unlock-line align-middle me-2" />
+            {props.t("Lock screen")}
+          </DropdownItem> */}
           <div className="dropdown-divider" />
           <Link to="/logout" className="dropdown-item">
             <i className="ri-shut-down-line align-middle me-2 text-danger" />

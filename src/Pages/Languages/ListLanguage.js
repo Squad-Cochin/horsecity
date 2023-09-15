@@ -3,6 +3,7 @@
 //                       Language page functionality done over here.                          //
 //                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////
+
 import React, { useState, useEffect } from 'react';
 import { Button, Alert, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
@@ -25,6 +26,7 @@ const LanguageDeatails = () => {
     const [pageNumber, setPageNumber] = useState(1);
     const [numberOfData, setNumberOfData] = useState(0);
     const [errors, setErrors] = useState("");
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const [lng_file, setLngFile] = useState(null)
 
     /**PAGE LIMIT */
@@ -32,6 +34,8 @@ const LanguageDeatails = () => {
 
     // THIS HOOK RENDERING INITIAL TIME TAKING FOR ALL LANGUGE DATA 
     useEffect(() => {
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title)
         getAllData(1)
     }, [])
 
@@ -52,21 +56,19 @@ const LanguageDeatails = () => {
         abbreviation: !add_list ? language[0]?.abbreviation : '',
         language_file: !add_list ? language[0]?.file : '',
     };
-
+    /**VALIDATION */
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
             values.language_file = lng_file;
-            console.log(values);
+
             if (add_list) {
                 //add new
-                console.log("add new");
                 addLanguage(values);
             } else {
                 //update previes one
-                console.log("update previues one ");
                 editLanguage(values);
             }
         }
@@ -119,7 +121,6 @@ const LanguageDeatails = () => {
             getAllData(pageNumber)
         } else {
             setErrors("")
-            console.log("err", updateLng.message);
             setErrors(updateLng.message)
         }
     }
@@ -144,6 +145,7 @@ const LanguageDeatails = () => {
             getAllData(pageNumber)
         }
     }
+    document.title = `Language | ${pageTitle} `;
     return (
         <React.Fragment>
             <div className="page-content">
@@ -317,8 +319,6 @@ const LanguageDeatails = () => {
                     </ModalFooter>
                 </form>
             </Modal>
-
-
         </React.Fragment>
     );
 };

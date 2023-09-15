@@ -64,9 +64,11 @@ const ListQuotationsTable = () => {
   const [ discounts, setDiscounts ] = useState([]);
   const [ selectedDiscount, setSelectedDiscount ] = useState("");
   const [ discountAmount, setDiscountAmount ] = useState(0);
-
-
+  const [pageTitle, setPageTitle] = useState('KailPlus');
+  const [ isActive, setActive ] = useState(false);
     useEffect(() => {
+      const settings = JSON.parse(localStorage.getItem("settingsData"));
+      setPageTitle(settings.application_title);
       const data = JSON.parse(localStorage.getItem("authUser"));
       let userIdd = data[0]?.user[0]?.id
       setUserId(userIdd);
@@ -134,13 +136,10 @@ const ListQuotationsTable = () => {
       initialValues.current_amount = tAmount
       if (modalEmail) {
         //SEND MAIL 
-        console.log("send mail");
-        console.log(values);
+
         sendEmail(values);
       } else {
         //update previes one
-        console.log("update previues one ");
-        console.log(values);
         editQuotation(values);
       }
     },
@@ -165,6 +164,7 @@ const ListQuotationsTable = () => {
     setView_modal(false);
     setQutId("");
     setModalEmail(false);
+    setErrors("")
   }
 
   /**IT WILL OPEN CONFIRM POPUP */
@@ -192,12 +192,15 @@ const ListQuotationsTable = () => {
   
   // SEND EMAIL
   async function sendEmail(data){
+    setActive(true);
     let sendEmail = await sendEmailFunction(qutId, data);
     if(sendEmail.code === 200){
+      setActive(false);
         setErrors("")
         setModalEmail(false);
         modalClose();
     }else{
+      setActive(false);
         setErrors("")
         setErrors(sendEmail.message)
     }
@@ -225,7 +228,6 @@ const ListQuotationsTable = () => {
     setTAmount(Number(singleQut.quotation[0]?.vehicle_amount) + Number(singleQut.quotation[0]?.driver_amount))
     if(Number(singleQut.quotation[0]?.tax_amount) > 0){
       setTaxApplayed("YES")
-      console.log("YES")
     }
     setModal(!modal);
   }
@@ -264,7 +266,6 @@ const ListQuotationsTable = () => {
             setDiscountAmount(discount)
             setFinalAmount(Number(tAmount) - Number(discount));
             if(taxApplayed === "YES"){
-                console.log("tt",taxation[0])
                 if(taxation[0]?.type === "PERCENTAGE"){
                     let taxAmount = (Number(tAmount) - Number(discount)) * (Number(taxation[0].value) / 100)
                     setTaxAmount(taxAmount)
@@ -288,7 +289,6 @@ const ListQuotationsTable = () => {
                 setDiscountAmount(Number(discountType.rate))
                 setFinalAmount(Number(tAmount) - Number(discountType.rate));
                 if(taxApplayed === "YES"){
-                    console.log("tt",taxation[0])
                     if(taxation[0]?.type === "PERCENTAGE"){
                         let taxAmount = (Number(tAmount) - Number(discountType.rate) ) * (Number(taxation[0].value) / 100)
                         setTaxAmount(Number(taxAmount))
@@ -310,7 +310,6 @@ const ListQuotationsTable = () => {
             }else{
                 setDiscountAmount(0)
                 if(taxApplayed === "YES"){
-                    console.log("tt",taxation[0])
                     if(taxation[0]?.type === "PERCENTAGE"){
                         let taxAmount = (Number(tAmount)) * (Number(taxation[0].value) / 100)
                         setTaxAmount(taxAmount)
@@ -333,7 +332,6 @@ const ListQuotationsTable = () => {
     }else{
         setDiscountAmount(0)
         if(taxApplayed === "YES"){
-            console.log("tt",taxation[0])
             if(taxation[0]?.type === "PERCENTAGE"){
                 let taxAmount = (Number(tAmount)) * (Number(taxation[0].value) / 100)
                 setTaxAmount(taxAmount)
@@ -356,16 +354,13 @@ const ListQuotationsTable = () => {
   }
   /**BASIS OF CHANGING VEHICLE & DRIVER AMOUNT THAT TIME WILL CHANGE FINAL AMOUNT */
   async function totalAmount(val){
-      console.log("total",val,selectedDiscount,taxApplayed, taxAmount)
       if(selectedDiscount !== ""){
           let discountType = discounts.find((d) => d.id === Number(selectedDiscount));
-          console.log("ddt",discountType)
           if(discountType.type === "PERCENTAGE"){
               let discount = Number(val) * (Number(discountType.rate)/100);
               setDiscountAmount(Number(discount))
               setFinalAmount(Number(val) - Number(discount));
               if(taxApplayed === "YES"){
-                  console.log("tt",taxation[0])
                   if(taxation[0]?.type === "PERCENTAGE"){
                       let taxAmount = (Number(val) - Number(discount)) * (Number(taxation[0].value) / 100)
                       setTaxAmount(Number(taxAmount))
@@ -389,7 +384,6 @@ const ListQuotationsTable = () => {
                   setDiscountAmount(Number(discountType.rate))
                   setFinalAmount(Number(val) - Number(discountType.rate));
                   if(taxApplayed === "YES"){
-                      console.log("tt",taxation[0])
                       if(taxation[0]?.type === "PERCENTAGE"){
                           let taxAmount = (Number(val) - Number(discountType.rate)) * (Number(taxation[0].value) / 100)
                           setTaxAmount(Number(taxAmount))
@@ -411,7 +405,6 @@ const ListQuotationsTable = () => {
               }else{
                   setDiscountAmount(0)
                   if(taxApplayed === "YES"){
-                      console.log("tt",taxation[0])
                       if(taxation[0]?.type === "PERCENTAGE"){
                           let taxAmount = Number(val) * (Number(taxation[0].value) / 100)
                           setTaxAmount(taxAmount)
@@ -436,7 +429,6 @@ const ListQuotationsTable = () => {
           setDiscountAmount(0)
           setFinalAmount(Number(val));
           if(taxApplayed === "YES"){
-              console.log("tt",taxation[0])
               if(taxation[0]?.type === "PERCENTAGE"){
                   let taxAmount = Number(val) * (Number(taxation[0].value) / 100)
                   setTaxAmount(taxAmount)
@@ -462,11 +454,8 @@ const ListQuotationsTable = () => {
   }
   /**BASIS OF CHANGING TAX AMOUNT THAT TIME WILL CHANGE FINAL AMOUNT */
   async function applyTaxation(val){
-    console.log("1",val)
-    console.log("2",tAmount,"3",Number(taxation[0].value) / 100)
       setTaxApplayed(val);
       if(val === "YES"){
-          console.log("tt",taxation[0])
           if(taxation[0]?.type === "PERCENTAGE"){
               let taxAmount = (Number(tAmount) - Number(discountAmount)) * (Number(taxation[0].value) / 100)
               setTaxAmount(taxAmount)
@@ -495,7 +484,7 @@ const ListQuotationsTable = () => {
     setSPVechiles(sPVechilesData.vehicles)
   }
 
-
+  document.title = `Quotation | ${pageTitle} `;
   return (
     <React.Fragment>
       <div className="page-content">
@@ -678,7 +667,7 @@ const ListQuotationsTable = () => {
                     >
                         <option value="">Select Service Provider</option>
                     {serviceProviders.map((item, index) => (
-                        <option key={index} value={item.id}>{item.user_name}</option>
+                        <option key={index} value={item.id}>{item.name}</option>
                     ))}
                     </select>
                 </div>
@@ -956,7 +945,7 @@ const ListQuotationsTable = () => {
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="vehicle_amount-field" className="form-label">Vehicle Amount</label>
+                    <label htmlFor="vehicle_amount-field" className="form-label">Vehicle Payment</label>
                     <input
                         type="text"
                         name="vehicle_amount"
@@ -969,7 +958,7 @@ const ListQuotationsTable = () => {
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="driver_amount-field" className="form-label">Driver Amount</label>
+                    <label htmlFor="driver_amount-field" className="form-label">Driver Payment</label>
                     <input
                         type="text"
                         name="driver_amount"
@@ -982,7 +971,7 @@ const ListQuotationsTable = () => {
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="discount_amount-field" className="form-label">Discount Amount</label>
+                    <label htmlFor="discount_amount-field" className="form-label">Discount Payment</label>
                     <input
                         type="text"
                         name="discount_amount"
@@ -1034,7 +1023,7 @@ const ListQuotationsTable = () => {
                     </div>
                 </div>
                 <div className="mb-3">
-                    <label htmlFor="tax_amount-field" className="form-label">Tax Amount</label>
+                    <label htmlFor="tax_amount-field" className="form-label">Tax Payment</label>
                     <input
                         type="text"
                         name="tax_amount"
@@ -1047,7 +1036,7 @@ const ListQuotationsTable = () => {
                 </div>
 
                 <div className="mb-3">
-                    <label htmlFor="final_amount-field" className="form-label">Final Amount</label>
+                    <label htmlFor="final_amount-field" className="form-label">Final Payment</label>
                     <input
                         type="text"
                         name="final_amount"
@@ -1193,7 +1182,7 @@ const ListQuotationsTable = () => {
                                 No Of Horse
                               </th>
                               <th className="sort" data-sort="send_email">
-                                Final Amount
+                                Final Payment
                               </th>
                             </tr>
                           </thead>
@@ -1527,7 +1516,7 @@ const ListQuotationsTable = () => {
               <ModalFooter>
                   <div className="hstack gap-2 justify-content-end">
                     <button type="button" className="btn btn-light" onClick={() => { modalClose(); }}>Close</button>
-                    <button type="submit" className="btn btn-success" id="add-btn">Send Email</button>
+                    <button type="submit" className="btn btn-success" id="add-btn"  disabled={isActive}>Send Email</button>
                   </div>
               </ModalFooter>
           </form>

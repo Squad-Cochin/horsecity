@@ -5,19 +5,16 @@
 /////////////////////////////////////////////////////////////////////////////////////////////
 
 
-// Importing the react component
 import React, { useState, useEffect } from 'react';
 import { Alert, Card, CardBody, CardHeader, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { Link } from 'react-router-dom';
-/**Using for form validation */
 import { useFormik } from "formik";
-// Import Flatepicker for using  date pick
 import Flatpickr from "react-flatpickr";
 
+/**IMPORTED FILES */
 import config from '../../../config';
 import { getEnquiriesData, getSingleEnquiryData, getSPUserName, getSPVehiclesData, getSPDriverData, getDiscounts } from "../../../helpers/ApiRoutes/getApiRoutes";
 import { addNewQuotaion } from "../../../helpers/ApiRoutes/addApiRoutes";
-//The purpose of the Breadcrumbs component is to display a breadcrumb navigation element. 
 import Breadcrumbs from "../../../components/Common/Breadcrumb";
 
 
@@ -46,12 +43,14 @@ const ListEnquiriesTable = () => {
     const [role, setRole] = useState("")
     const [userId, setUserId] = useState("");
     const [errors, setErrors] = useState("")
-
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const pageLimit = config.pageLimit;
     const role_id = config.Role
-    //  The useEffect hook is used to perform some initialization logic when the component mounts
 
+    //  The useEffect hook is used to perform some initialization logic when the component mounts
     useEffect(() => {
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title);
         const data = JSON.parse(localStorage.getItem("authUser"));
         let userIdd = data[0]?.user[0]?.id
         let role_id = data[0]?.user[0]?.role_Id
@@ -60,6 +59,7 @@ const ListEnquiriesTable = () => {
         getAllData(1)
     }, [userId, role]);
 
+    /**INITIAL VALUES */
     const initialValues = {
         customer_id: enquiry ? enquiry[0]?.customer_id : "",
         customer_name: enquiry ? enquiry[0]?.customer_name : "",
@@ -91,7 +91,7 @@ const ListEnquiriesTable = () => {
         final_amount: "",
     };
 
-    // validation function
+    /**VALIDATION */
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
@@ -105,6 +105,7 @@ const ListEnquiriesTable = () => {
         }
     });
 
+    /**After closing modal set state default value */
     function modalClose() {
         setEnquiry(null);
         setTAmount(0);
@@ -124,6 +125,7 @@ const ListEnquiriesTable = () => {
         setView_modal(false);
     }
 
+    /**After editing will add new quotaion  */
     async function addQuatation(val) {
         let addQut = await addNewQuotaion(val)
         if (addQut.code === 200) {
@@ -153,14 +155,12 @@ const ListEnquiriesTable = () => {
      */
     async function tog_view(productId) {
         let singleEnqData = await getSingleEnquiryData(productId)
-        console.log("errq", singleEnqData)
         setEnquiry(singleEnqData.enquiry);
         setView_modal(prevState => !prevState);
     }
     /**CONFIRM ENQUIRY */
     const tog_confirm = async (id) => {
         let singleEnqData = await getSingleEnquiryData(id)
-        console.log("singleP", singleEnqData);
         let serviceProviderData = await getSPUserName()
         const sPVechilesData = await getSPVehiclesData(singleEnqData.enquiry[0]?.service_provider_id)
         setSPVechiles(sPVechilesData.vehicles)
@@ -191,7 +191,6 @@ const ListEnquiriesTable = () => {
                 setDiscountAmount(discount)
                 setFinalAmount(Number(tAmount) - Number(discount));
                 if (taxApplayed === "YES") {
-                    console.log("tt", taxation[0])
                     if (taxation[0]?.type === "PERCENTAGE") {
                         let taxAmount = (Number(tAmount) - Number(discount)) * (Number(taxation[0].value) / 100)
                         setTaxAmount(taxAmount)
@@ -215,7 +214,6 @@ const ListEnquiriesTable = () => {
                     setDiscountAmount(Number(discountType.rate))
                     setFinalAmount(Number(tAmount) - Number(discountType.rate));
                     if (taxApplayed === "YES") {
-                        console.log("tt", taxation[0])
                         if (taxation[0]?.type === "PERCENTAGE") {
                             let taxAmount = (Number(tAmount) - Number(discountType.rate)) * (Number(taxation[0].value) / 100)
                             setTaxAmount(Number(taxAmount))
@@ -237,7 +235,6 @@ const ListEnquiriesTable = () => {
                 } else {
                     setDiscountAmount(0)
                     if (taxApplayed === "YES") {
-                        console.log("tt", taxation[0])
                         if (taxation[0]?.type === "PERCENTAGE") {
                             let taxAmount = (Number(tAmount)) * (Number(taxation[0].value) / 100)
                             setTaxAmount(taxAmount)
@@ -260,7 +257,6 @@ const ListEnquiriesTable = () => {
         } else {
             setDiscountAmount(0)
             if (taxApplayed === "YES") {
-                console.log("tt", taxation[0])
                 if (taxation[0]?.type === "PERCENTAGE") {
                     let taxAmount = (Number(tAmount)) * (Number(taxation[0].value) / 100)
                     setTaxAmount(taxAmount)
@@ -290,7 +286,6 @@ const ListEnquiriesTable = () => {
                 setDiscountAmount(Number(discount))
                 setFinalAmount(Number(val) - Number(discount));
                 if (taxApplayed === "YES") {
-                    console.log("tt", taxation[0])
                     if (taxation[0]?.type === "PERCENTAGE") {
                         let taxAmount = (Number(val) - Number(discount)) * (Number(taxation[0].value) / 100)
                         setTaxAmount(Number(taxAmount))
@@ -314,7 +309,6 @@ const ListEnquiriesTable = () => {
                     setDiscountAmount(Number(discountType.rate))
                     setFinalAmount(Number(val) - Number(discountType.rate));
                     if (taxApplayed === "YES") {
-                        console.log("tt", taxation[0])
                         if (taxation[0]?.type === "PERCENTAGE") {
                             let taxAmount = (Number(val) - Number(discountType.rate)) * (Number(taxation[0].value) / 100)
                             setTaxAmount(Number(taxAmount))
@@ -336,7 +330,6 @@ const ListEnquiriesTable = () => {
                 } else {
                     setDiscountAmount(0)
                     if (taxApplayed === "YES") {
-                        console.log("tt", taxation[0])
                         if (taxation[0]?.type === "PERCENTAGE") {
                             let taxAmount = Number(val) * (Number(taxation[0].value) / 100)
                             setTaxAmount(taxAmount)
@@ -361,7 +354,6 @@ const ListEnquiriesTable = () => {
             setDiscountAmount(0)
             setFinalAmount(Number(val));
             if (taxApplayed === "YES") {
-                console.log("tt", taxation[0])
                 if (taxation[0]?.type === "PERCENTAGE") {
                     let taxAmount = Number(val) * (Number(taxation[0].value) / 100)
                     setTaxAmount(taxAmount)
@@ -408,7 +400,7 @@ const ListEnquiriesTable = () => {
         }
 
     }
-
+    document.title = `Enquiry | ${pageTitle} `;
     // the execution of all the object and element are written inside the return. Whenever this file will be called only the code inside the return written will be returned
     return (
         <React.Fragment>
@@ -433,7 +425,6 @@ const ListEnquiriesTable = () => {
                                             <table className="table align-middle table-nowrap" id="customerTable">
                                                 <thead className="table-light">
                                                     <tr>
-                                                        {/* This are the columns and column heading in the enquiry page */}
                                                         <th className="index" data-sort="index">#</th>
                                                         <th className="sort" data-sort="customer_name">Customer Name</th>
                                                         {!(role === role_id.service_provider) ? (
@@ -445,22 +436,15 @@ const ListEnquiriesTable = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {/* The data we will be getting to showcase on enquiry page is
-                                                    from a object. We will map and show them one by one. The below function will be used this */}
-                                                    {/* 'enquiries' is having all the enquiry data. */}
-                                                    {/* Index is the number of the data. i.e Serial number */}
                                                     {enquiries.map((item, index) => (
                                                         <tr key={item.id}>
-                                                            {/* Below we are intialize the enquiry data */}
-                                                            <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th> {/* // Serial Number */}
-                                                            <td className="customer_name">{item.customer_name}</td> {/* Customer name */}
+                                                            <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
+                                                            <td className="customer_name">{item.customer_name}</td>
                                                             {!(role === role_id.service_provider) ? (
                                                                 <td className="service_provider">{item.service_provider}</td>
                                                             ) : null}
-                                                            <td className="status">{item.status}</td> {/* Customer Phone */}
-                                                            <td className="created_date">{item.created_at}</td> {/* Enquiry Time */}
-                                                            {/* This is the place from where we are calling he view button and function. Which is used to show
-                                                            particular enquiry data fully. */}
+                                                            <td className="status">{item.status}</td>
+                                                            <td className="created_date">{item.created_at}</td>
                                                             <td>
                                                                 {JSON.parse(module?.read || 'true') ? (
                                                                     <div className="d-flex gap-2">
@@ -473,7 +457,7 @@ const ListEnquiriesTable = () => {
                                                                     </div>
                                                                 ) : null}
                                                             </td>
-                                                            {item.status !== "CONFIRMED" ?
+                                                            {item.status !== "CONFIRMED" ? (
                                                                 <td>
                                                                     {JSON.parse(module?.update || 'true') ? (
                                                                         <div className="d-flex gap-2">
@@ -485,11 +469,13 @@ const ListEnquiriesTable = () => {
                                                                             </div>
                                                                         </div>
                                                                     ) : null}
-                                                                </td> : null}
+                                                                </td>
+                                                            ) : null}
                                                         </tr>
                                                     ))}
                                                 </tbody>
                                             </table>
+
 
                                             {/* The below the message when there is not data to showcase on the page */}
                                             <div className="noresult" style={{ display: "none" }}>
@@ -565,7 +551,7 @@ const ListEnquiriesTable = () => {
                             >
                                 <option value="">Select Service Provider</option>
                                 {serviceProviders.map((item, index) => (
-                                    <option key={index} value={item.id}>{item.user_name}</option>
+                                    <option key={index} value={item.id}>{item.name}</option>
                                 ))}
                             </select>
                         </div>
@@ -845,7 +831,7 @@ const ListEnquiriesTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="vehicle_amount-field" className="form-label">Vehicle Amount</label>
+                            <label htmlFor="vehicle_amount-field" className="form-label">Vehicle Payment</label>
                             <input
                                 type="text"
                                 name="vehicle_amount"
@@ -858,7 +844,7 @@ const ListEnquiriesTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="driver_amount-field" className="form-label">Driver Amount</label>
+                            <label htmlFor="driver_amount-field" className="form-label">Driver Payment</label>
                             <input
                                 type="text"
                                 name="driver_amount"
@@ -871,7 +857,7 @@ const ListEnquiriesTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="discount_amount-field" className="form-label">Discount Amount</label>
+                            <label htmlFor="discount_amount-field" className="form-label">Discount Payment</label>
                             <input
                                 type="text"
                                 name="discount_amount"
@@ -925,7 +911,7 @@ const ListEnquiriesTable = () => {
                             </div>
                         </div>
                         <div className="mb-3">
-                            <label htmlFor="tax_amount-field" className="form-label">Tax Amount</label>
+                            <label htmlFor="tax_amount-field" className="form-label">Tax Payment</label>
                             <input
                                 type="text"
                                 name="tax_amount"
@@ -938,7 +924,7 @@ const ListEnquiriesTable = () => {
                         </div>
 
                         <div className="mb-3">
-                            <label htmlFor="final_amount-field" className="form-label">Final Amount</label>
+                            <label htmlFor="final_amount-field" className="form-label">Final Payment</label>
                             <input
                                 type="text"
                                 name="final_amount"

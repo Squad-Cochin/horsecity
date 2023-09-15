@@ -5,13 +5,9 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 import React, { useState, useEffect } from 'react';
-import { Button, Card, CardBody, CardHeader, Col, Container,  Row } from 'reactstrap';
-// import SimpleBar from 'simplebar-react';
+import { Card, CardBody, CardHeader, Col, Container,  Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import List from 'list.js';
-// Import Flatepicker for using  date pick
 import Flatpickr from "react-flatpickr";
-/**Using for form validation */
 import { useFormik } from "formik";
 
 /**IMPORTED */
@@ -25,14 +21,18 @@ const TripDetailsReport  = () => {
     const [ toDate, setToDate ] = useState("");
     const [ pageNumber, setPageNumber ] = useState(1);
     const [ numberOfData, setNumberOfData ] = useState(0);
+    const [ userId ,setUserId ] = useState('');
     const [ role, setRole ] = useState('');
+    const [pageTitle, setPageTitle] = useState('KailPlus');
     const pageLimit = config.pageLimit;
 
+    /**THIS HOOK WILL RENDER INITIAL TIME SETTING THE FROMDATE BEFORE 60 DAYS TODATE CURRENT DATE */
     useEffect(()=>{
+        const settings = JSON.parse(localStorage.getItem("settingsData"));
+        setPageTitle(settings.application_title)
         const today = new Date();
         const sixtyDaysAgo = new Date(today);
         sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
-        console.log(today,"next",sixtyDaysAgo)
         let value = {
             from_date : sixtyDaysAgo,
             to_date : today,
@@ -42,14 +42,17 @@ const TripDetailsReport  = () => {
         const user_role = data[0]?.user[0]?.role_Id
 
         setRole(user_role)
-        getData(1, value,userId)
-    },[role])
+        setUserId(userId);
+        getData(1, value)
+    }, [userId])
 
+    /**INITIAL VALUES */
     const initialValues = { 
         from_date : "",
         to_date : "",
     }
-    
+
+    /**VALIDATION */
     const validation = useFormik({
         // enableReinitialize : use this flag when initial values needs to be changed
         enableReinitialize: true,
@@ -58,20 +61,19 @@ const TripDetailsReport  = () => {
             getData(1, values)
         }
     });
+
     /**GETTING TRIPDETAILS REPORT */
-    async function getData(page, val,spId){
+    async function getData(page, val){
         setFromDate(val.from_date)
         setToDate(val.to_date)
-        console.log("val",val)
-        if(spId){
-        let getAllData = await getTripDetailsReport(page || 1, val,spId)
+        if (userId) {
+        let getAllData = await getTripDetailsReport(page || 1, val,userId)
         setTripDetailsReport(getAllData?.tripDetails);
         setPageNumber(page);
         setNumberOfData(getAllData?.totalCount);
-
         }
     }
-
+    document.title = `Report | ${pageTitle} `;
     return (
         <React.Fragment>
             <div className="page-content">

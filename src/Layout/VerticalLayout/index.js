@@ -6,7 +6,6 @@ import withRouter from "../../components/Common/withRouter";
 import Sidebar from './Sidebar';
 import Header from './Header';
 import Footer from './Footer';
-import RightSidebar from '../../components/Common/RightSideBar';
 
 //redux
 import { useSelector, useDispatch } from "react-redux";
@@ -113,7 +112,7 @@ const Layout = props => {
         <div className="main-content">{props.children}</div>
         <Footer />
       </div>
-      {showRightSidebar ? <RightSidebar /> : null}
+
     </React.Fragment>
   );
 };

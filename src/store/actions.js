@@ -1,8 +1,8 @@
 // Layout
 export * from "./layout/actions";
 
-// Calendar
-export * from "./calendar/actions"
+// // Calendar
+// export * from "./calendar/actions"
 
 // Authentication module
 export * from "./auth/register/actions"

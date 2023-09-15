@@ -2,6 +2,9 @@ import {
   FORGET_PASSWORD,
   FORGET_PASSWORD_SUCCESS,
   FORGET_PASSWORD_ERROR,
+  RESET_PASSWORD,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_ERROR
 } from "./actionTypes"
 
 export const userForgetPassword = (user, history) => {
@@ -25,9 +28,27 @@ export const userForgetPasswordError = message => {
   }
 }
 
-// export const userRecoverPassword = (user ) => {
-//   return {
-//     type: RECOVER_PASSWORD,
-//     payload: { user },
-//   }
-// }
+/******Reset password**********/
+
+export const userResetPassword = (data, history) => {
+  return {
+    type: RESET_PASSWORD,
+    payload: { data, history },
+  }
+}
+
+export const userResetPasswordSuccess = message => {
+  return {
+    type: RESET_PASSWORD_SUCCESS,
+    payload: message,
+  }
+}
+
+export const userResetPasswordError = message => {
+  return {
+    type: RESET_PASSWORD_ERROR,
+    payload: message,
+  }
+}
+
+
