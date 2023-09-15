@@ -41,6 +41,12 @@ const ListVehiclesTable = () => {
     const [numberOfData, setNumberOfData] = useState(0);
     const [errors, setErrors] = useState("");
     const [pageTitle, setPageTitle] = useState('KailPlus');
+    const [ airConditioner, setAirConditioner ] = useState("");
+    const [ temperatureManageable, setTemperatureManageable ] = useState("");
+    const [ gccTravelAllowed, setGccTravelAllowed ] = useState("");
+    const [ insuranceCover, setInsuranceCover ] = useState("");
+    const [ vehicleType, setVehicleType ] = useState("");
+    
     const pageLimit = config.pageLimit;
     const role_Id = config.Role
 
@@ -87,7 +93,8 @@ const ListVehiclesTable = () => {
         setuser_name(userName);
         setRoleID(role_Id);
         getAllData(1)
-    }, [userId, role, user_name, roleID]);
+    }, [userId, role, user_name, roleID, airConditioner, temperatureManageable, gccTravelAllowed, insuranceCover, vehicleType]);
+
     /**This function is an event handler that triggers when the user
      *  selects a file for the idproof image */
     const handleIdProofImageChange = (event) => {
@@ -95,6 +102,7 @@ const ListVehiclesTable = () => {
         setCertificateImage(file)
         setCertificatePreview(URL.createObjectURL(file));
     };
+
     // The Below function is used when we are adding the vehicle
     async function tog_list(param, productId) {
         setErrors("")
@@ -104,10 +112,17 @@ const ListVehiclesTable = () => {
         } else {
             let data = await getSingleVechileData(productId)
             setVehicle([data]);
+            setAirConditioner(data?.air_conditioner)
+            console.log("vv",[data])
             setCertificatePreview(data.safety_certicate)
+            setTemperatureManageable(data.temperature_manageable)
+            setGccTravelAllowed(data.gcc_travel_allowed)
+            setInsuranceCover(data.insurance_cover)
+            setVehicleType(data.vehicle_type)
         }
         setmodal_list(!modal_list);
     }
+
     // The Below function is used when we are displaying the particular vehicle data.
     async function tog_view(productId) {
         let data = await getSingleVechileData(productId)
@@ -115,15 +130,18 @@ const ListVehiclesTable = () => {
         setCertificatePreview(data.safety_certicate)
         setView_modal(!view_modal);
     }
+
     // The below function is for remove button of a particular vehicle.
     async function remove_data(id) {
         await removeVehicle(id);
         getAllData(pageNumber)
     }
+
     // The below function is for delete button of a particular vehicle.
     function tog_delete() {
         setmodal_delete(!modal_delete);
     }
+
     // The below function is the changging Status button
     function toggleStatus(button, vehiclesId) {
         var currentStatus = button.innerText.trim();
@@ -146,6 +164,7 @@ const ListVehiclesTable = () => {
             }
         }
     }
+
     const validation = useFormik
         ({
             // enableReinitialize: use this flag when initial values need to be changed
@@ -163,7 +182,8 @@ const ListVehiclesTable = () => {
                     editVehicles(values);
                 }
             },
-        });
+    });
+
     // function for get data all Vechile data
     async function getAllData(page) {
         if (userId) {
@@ -176,6 +196,7 @@ const ListVehiclesTable = () => {
             setNumberOfData(getvehicles?.totalCount);
         }
     }
+
     // Update vehicle
     async function editVehicles(data) {
         let updatedVehicle = await updateVehicle(vehicle[0]?.id, data);
@@ -191,9 +212,9 @@ const ListVehiclesTable = () => {
             setErrors(updatedVehicle.message)
         }
     }
+
     /**Add new vehicle */
     async function addVechile(values) {
-      
         let addedVechile = await addNewVehicle(values, userId);
         if (addedVechile.code === 200) {
             setErrors("")
@@ -206,6 +227,7 @@ const ListVehiclesTable = () => {
             setErrors(addedVechile?.message)
         }
     }
+
     document.title = `Vehicles | ${pageTitle} `;
     return (
         <React.Fragment>
@@ -319,6 +341,7 @@ const ListVehiclesTable = () => {
                     </Row>
                 </Container>
             </div>
+
             {/* Add new vehicle modal */}
             <Modal className="extra-width" isOpen={modal_list} toggle={() => { tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
                 {/* The below line is for the heading of pop up of edit exixing vehicle or adding new vehicle. */}
@@ -499,8 +522,8 @@ const ListVehiclesTable = () => {
                                     name="air_conditioner"
                                     className="form-check-input"
                                     value="YES"
-                                    // checked={validation.values.air_conditioner === 'YES'}
-                                    onChange={validation.handleChange}
+                                    checked={airConditioner === 'YES'}
+                                    onClick={(e)=> { validation.handleChange(e); setAirConditioner("YES");}}
                                     onBlur={validation.handleBlur}
                                     required
                                 />
@@ -513,8 +536,8 @@ const ListVehiclesTable = () => {
                                     name="air_conditioner"
                                     className="form-check-input"
                                     value="NO"
-                                    // checked={validation.values.air_conditioner === 'NO'}
-                                    onChange={validation.handleChange}
+                                    checked={airConditioner === 'NO'}
+                                    onClick={(e)=> { validation.handleChange(e); setAirConditioner("NO");}}
                                     onBlur={validation.handleBlur}
                                     required
                                 />
@@ -531,8 +554,8 @@ const ListVehiclesTable = () => {
                                     name="temperature_manageable"
                                     className="form-check-input"
                                     value={"YES"}
-                                    // checked={validation.values.temperature_manageable === 'YES'}
-                                    onChange={validation.handleChange}
+                                    checked={temperatureManageable === 'YES'}
+                                    onClick={(e)=> { validation.handleChange(e); setTemperatureManageable("YES");} }
                                     required
                                 />
                                 <label htmlFor="temperature_manageable-yes" className="form-check-label">YES</label>
@@ -543,10 +566,9 @@ const ListVehiclesTable = () => {
                                     id="temperature_manageable-no"
                                     name="temperature_manageable"
                                     className="form-check-input"
-
                                     value={"NO"}
-                                    // checked={validation.values.temperature_manageable === 'NO'}
-                                    onChange={validation.handleChange}
+                                    checked={temperatureManageable === 'NO'}
+                                    onClick={(e)=> { validation.handleChange(e); setTemperatureManageable("NO");} }
                                     required
                                 />
                                 <label htmlFor="temperature_manageable-no" className="form-check-label">NO</label>
@@ -593,8 +615,8 @@ const ListVehiclesTable = () => {
                                     name="gcc_travel_allowed"
                                     className="form-check-input"
                                     value="YES"
-                                    // checked={validation.values.gcc_travel_allowed === "YES"}
-                                    onChange={validation.handleChange}
+                                    checked={gccTravelAllowed === "YES"}
+                                    onClick={(e)=> { validation.handleChange(e); setGccTravelAllowed("YES");} }
                                     required
                                 />
                                 <label htmlFor="gcc_travel_allowed-yes" className="form-check-label">YES</label>
@@ -606,8 +628,8 @@ const ListVehiclesTable = () => {
                                     name="gcc_travel_allowed"
                                     className="form-check-input"
                                     value="NO"
-                                    // checked={validation.values.gcc_travel_allowed === "NO"}
-                                    onChange={validation.handleChange}
+                                    checked={gccTravelAllowed === "NO"}
+                                    onClick={(e)=> { validation.handleChange(e); setGccTravelAllowed("NO");} }
                                     required
                                 />
                                 <label htmlFor="gcc_travel_allowed-no" className="form-check-label">NO</label>
@@ -623,8 +645,8 @@ const ListVehiclesTable = () => {
                                     name="insurance_cover"
                                     className="form-check-input"
                                     value="YES"
-                                    // checked={validation.values.insurance_cover === "YES"}
-                                    onChange={validation.handleChange}
+                                    checked={insuranceCover === "YES"}
+                                    onClick={(e)=> { validation.handleChange(e); setInsuranceCover("YES");} }
                                     required
                                 />
                                 <label htmlFor="insurance_covered-yes" className="form-check-label">YES</label>
@@ -635,8 +657,8 @@ const ListVehiclesTable = () => {
                                     id="insurance_covered-no"
                                     name="insurance_cover"
                                     value='NO'
-                                    // checked={validation.values.insurance_cover === "NO"}
-                                    onChange={validation.handleChange}
+                                    checked={insuranceCover === "NO"}
+                                    onClick={(e)=> { validation.handleChange(e); setInsuranceCover("NO");} }
                                     className="form-check-input"
                                     required
                                 />
@@ -711,8 +733,8 @@ const ListVehiclesTable = () => {
                                     name="vehicle_type"
                                     className="form-check-input"
                                     value="PRIVATE"
-                                    // checked={validation.values.vehicle_type === "PRIVATE"}
-                                    onChange={validation.handleChange}
+                                    checked={vehicleType === "PRIVATE"}
+                                    onClick={(e)=> { validation.handleChange(e); setVehicleType("PRIVATE");} }
                                     onBlur={validation.handleBlur}
                                     required
                                 />
@@ -725,8 +747,8 @@ const ListVehiclesTable = () => {
                                     name="vehicle_type"
                                     className="form-check-input"
                                     value="SHARING"
-                                    // checked={validation.values.vehicle_type === "SHARING"}
-                                    onChange={validation.handleChange}
+                                    checked={vehicleType === "SHARING"}
+                                    onClick={(e)=> { validation.handleChange(e); setVehicleType("SHARING");} }
                                     onBlur={validation.handleBlur}
                                     required
                                 />
@@ -774,6 +796,7 @@ const ListVehiclesTable = () => {
                     </ModalFooter>
                 </form>
             </Modal>
+
             {/* View Modal */}
             {/* This is the view button model. We will get all the details of a particular vehcile. */}
             <Modal className="extra-width" isOpen={view_modal}>
@@ -1139,6 +1162,7 @@ const ListVehiclesTable = () => {
                     </ModalFooter>
                 </form>
             </Modal>
+
             {/* Remove Modal */}
             {/* This is the Remove button model. We will remove the particular vehicle from this button. */}
             <Modal isOpen={modal_delete} toggle={() => { tog_delete(); }} className="modal fade zoomIn" id="deleteRecordModal" centered >

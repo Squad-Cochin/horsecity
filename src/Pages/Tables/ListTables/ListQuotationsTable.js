@@ -66,6 +66,8 @@ const ListQuotationsTable = () => {
   const [ discountAmount, setDiscountAmount ] = useState(0);
   const [pageTitle, setPageTitle] = useState('KailPlus');
   const [ isActive, setActive ] = useState(false);
+  const [ transportationInsuranceCoverage, setTransportationInsuranceCoverage ] = useState("FALSE");
+
     useEffect(() => {
       const settings = JSON.parse(localStorage.getItem("settingsData"));
       setPageTitle(settings.application_title);
@@ -73,7 +75,7 @@ const ListQuotationsTable = () => {
       let userIdd = data[0]?.user[0]?.id
       setUserId(userIdd);
       getAllData(1)
-      }, [userId])
+      }, [userId, transportationInsuranceCoverage, taxApplayed])
  
   // function for getting data all quotation
   async function getAllData(page) {
@@ -85,9 +87,6 @@ const ListQuotationsTable = () => {
     setNumberOfData(quotationData.totalCount);
   }
   }
-
-
-
 
   /**INITIAL VALUES */
   const initialValues = {
@@ -134,12 +133,16 @@ const ListQuotationsTable = () => {
     initialValues,
     onSubmit: (values) => {
       initialValues.current_amount = tAmount
+      values.tax_amount = taxAmount
+      values.final_amount = finalAmount
+      console.log(finalAmount,"finalAmount")
       if (modalEmail) {
         //SEND MAIL 
 
         sendEmail(values);
       } else {
         //update previes one
+        console.log("values",values)
         editQuotation(values);
       }
     },
@@ -226,6 +229,8 @@ const ListQuotationsTable = () => {
     setDriverAmount(Number(singleQut.quotation[0]?.driver_amount))
     setSelectedDiscount(singleQut.quotation[0]?.discount_type_id);
     setTAmount(Number(singleQut.quotation[0]?.vehicle_amount) + Number(singleQut.quotation[0]?.driver_amount))
+    console.log("qq",singleQut.quotation[0]?.transportation_insurance_coverage)
+    setTransportationInsuranceCoverage(singleQut.quotation[0]?.transportation_insurance_coverage)
     if(Number(singleQut.quotation[0]?.tax_amount) > 0){
       setTaxApplayed("YES")
     }
@@ -880,11 +885,8 @@ const ListQuotationsTable = () => {
                         name="transportation_insurance_coverage"
                         className="form-check-input"
                         value="TRUE"
-                        checked={
-                            validation.values.transportation_insurance_coverage ===
-                            "TRUE"
-                        }
-                        onChange={validation.handleChange}
+                        checked={transportationInsuranceCoverage === "TRUE"}
+                        onClick={(e)=> { validation.handleChange(e); setTransportationInsuranceCoverage("TRUE");} }
                         onBlur={validation.handleBlur}
                         required
                         />
@@ -902,10 +904,8 @@ const ListQuotationsTable = () => {
                         name="transportation_insurance_coverage"
                         className="form-check-input"
                         value="FALSE"
-                        checked={
-                            validation.values.transportation_insurance_coverage === "FALSE  "
-                        }
-                        onChange={validation.handleChange}
+                        checked={transportationInsuranceCoverage === "FALSE"}
+                        onClick={(e)=> { validation.handleChange(e); setTransportationInsuranceCoverage("FALSE");} }
                         onBlur={validation.handleBlur}
                         required
                         />
@@ -989,13 +989,14 @@ const ListQuotationsTable = () => {
                     </label>
                     <div className="form-check">
                         <input
-                        type="radio"
-                        id="tax_applayed-yes"
-                        name="tax_applayed"
-                        className="form-check-input"
-                        value="YES"
-                        onChange={(e) => {applyTaxation(e.target.value);}}
-                        onBlur={validation.handleBlur}
+                          type="radio"
+                          id="tax_applayed-yes"
+                          name="tax_applayed"
+                          className="form-check-input"
+                          value="YES"
+                          checked={taxApplayed === "YES"}
+                          onClick={(e)=> {applyTaxation(e.target.value); setTaxApplayed("YES");} }
+                          onBlur={validation.handleBlur}
                         />
                         <label
                         htmlFor="tax_applayed-yes"
@@ -1011,7 +1012,8 @@ const ListQuotationsTable = () => {
                         name="tax_applayed"
                         className="form-check-input"
                         value="NO"
-                        onChange={(e) => {applyTaxation(e.target.value);}}
+                        checked={taxApplayed === "NO"}
+                        onClick={(e)=> {applyTaxation(e.target.value); setTaxApplayed("NO");} }
                         onBlur={validation.handleBlur}
                         />
                         <label
