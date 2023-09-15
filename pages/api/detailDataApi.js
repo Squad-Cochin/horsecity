@@ -28,7 +28,7 @@ export default async function DetailsDataApi(id) {
 // Function for api connection(ADD ENQUIRY)
 export  async function addbooking(body,cuid) {   
 	try{   
-        const addBookingApi = API_CONFIG.ADD_BOOKING_API;
+        const addBookingApi = API_CONFIG.API_BASE_URL + API_CONFIG.ADD_BOOKING_API;
         const apiToken = API_CONFIG.API_TOKEN;
         const response = await axios.post(`${addBookingApi}/${cuid}` ,body,{
             headers: {
