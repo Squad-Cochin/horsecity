@@ -987,7 +987,7 @@ exports.getForgotPasswordHTMLTemplate = async (id, email) =>
     let token = await commonoperation.createCustomizeEmailToken(email);
     let htmlContent =   `
                             <p> Hello </p> 
-                            <p>We received a request to reset your password. Please click the link below to reset your password:</p>
+                            <p>We have received a request to reset your password. Please click the link below to reset your password:</p>
                             <p>
                                 <a href="${process.env.PORT_SP}/reset-password/${id}/${token}">Reset Password</a>
                             </p>

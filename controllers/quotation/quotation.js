@@ -115,7 +115,7 @@ exports.updateStatusQuotation = async(req,res)=>
     return res.status(200).send ({
         code: 400,
         success: false,
-        message: 'The quote number is already in the bookings'
+        message: 'The quotation allredy available .'
 
     });
 
