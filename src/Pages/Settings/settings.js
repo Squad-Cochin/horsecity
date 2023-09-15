@@ -66,6 +66,13 @@ const SettingPage = () =>
         setTaxations(taxations?.taxations)
     }
 
+    const scrollToTop = () => {
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    };
+
     /**INITIAL VALUES */
     const initialValues = {
       application_title: settings_data[0]?.application_title || '',
@@ -109,6 +116,7 @@ const SettingPage = () =>
                   }else{
                       setErrors("")
                       setErrors(updateSettingsPage.message)
+                      scrollToTop();
                   }
       }
     });

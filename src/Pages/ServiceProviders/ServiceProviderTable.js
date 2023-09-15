@@ -33,8 +33,12 @@ const ListTables = () => {
     const [module, setModule] = useState({});
     const [errors, setErrors] = useState("");
     const [roleList, setRoleList] = useState([]);
+    const [errActive,setErrActive] = useState(false);
     const [pageTitle, setPageTitle] = useState('KailPlus');
+    // const [active, setActive] = useState(false)
     const pageLimit = config.pageLimit;
+    // const [modalVisible, setModalVisible] = useState(false);
+
 
 
     /**THIS HOOK WILL RENDER INITIAL TIME */
@@ -73,6 +77,7 @@ const ListTables = () => {
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
+            console.log("GSDFGDS");
             values.licence_image = updateImage;
             if (add_list) {
 
@@ -86,6 +91,7 @@ const ListTables = () => {
 
     // ADD SERVICE PROVIDER
     async function addProvider(val) {
+        setErrActive(false);
         let addSP = await addNewProvider(val);
         if (addSP.code === 200) {
             setErrors("")
@@ -95,23 +101,31 @@ const ListTables = () => {
         } else {
             setErrors("")
             setErrors(addSP.message)
+            setErrActive(true);
+
         }
     }
 
     // UPDATE SERVICE PROVIDER
     async function editProvider(data) {
+        setErrActive(false);
         let updateSP = await updateSProvider(sprovider[0]?.id, data);
+        console.log("uuu",updateSP);
         if (updateSP.code === 200) {
             setErrors("")
             setAdd_list(false);
             setmodal_list(false);
             getAllData(pageNumber)
         } else {
+           setErrActive(true);
             setErrors("")
-            setErrors(updateSP.message)
+            setErrors(updateSP.message);
+            console.log("herrrr");
+     
+
         }
     }
-
+console.log(errActive);
     /**
      *  selects a file for the license image */
     const handleLicensceImageChange = (event) => {
@@ -150,13 +164,16 @@ const ListTables = () => {
         if(role_items.code == 200){
              setRoleList(role_items.data?.roles)
             if (param === 'ADD') {
+                setErrors("");
                 setLicenscePreview(null);
                 setAdd_list(!add_list);
             } else {
-                
+          
+                setErrors("");
                 let serviceProvider = await getSPSingleData(productId)
                 setSprovider(serviceProvider.serviceProvider)
                 setLicenscePreview(serviceProvider.serviceProvider[0]?.licence_image);
+                // setErrActive(true)
             }
             setmodal_list(!modal_list);
         }else{
@@ -338,11 +355,11 @@ const ListTables = () => {
             </div>
 
             {/****************************** Add Modal *************/}
-            <Modal className="extra-width" isOpen={modal_list} toggle={() => { setmodal_list(false); setAdd_list(false); setLicenscePreview(null) }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); setAdd_list(false); setLicenscePreview(null) }}>{add_list ? 'Add service provider' : 'Edit service provider'}</ModalHeader>
+            <Modal className="extra-width" isOpen={modal_list} toggle={() => { setmodal_list(false); setAdd_list(false); setLicenscePreview(null); setErrActive(false) }} centered   >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); setAdd_list(false); setLicenscePreview(null) ;setErrActive(false)}}>{add_list ? 'Add service provider' : 'Edit service provider'}</ModalHeader>
                 <form className="tablelist-form"
                     onSubmit={validation.handleSubmit}>
-                    <ModalBody>
+                    <ModalBody >
                         {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
 
                         {/* Provider Name */}
@@ -526,8 +543,8 @@ const ListTables = () => {
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() => { setmodal_list(false); setAdd_list(false); setLicenscePreview(null) }}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ? 'Add service provider' : 'Update service provider'}</button>
+                            <button type="button" className="btn btn-light" onClick={() => { setmodal_list(false); setAdd_list(false); setLicenscePreview(null) ;setErrActive(false)}}>Close</button>
+                            <button type="submit"  className="btn btn-success" id="add-btn"> <a style={{ color: '#fff',    backgroundColor: "#0ac074",padding: "10px",borderRadius:"0.25rem"}} href={errActive?'#exampleModalLabel' : null}>{add_list ? 'Add service provider' : 'Update service provider'}</a></button>
                         </div>
                     </ModalFooter>
                 </form>
