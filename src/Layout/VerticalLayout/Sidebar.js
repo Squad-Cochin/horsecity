@@ -13,13 +13,15 @@ import MetisMenu from "metismenujs";
 //IMPOTED FILES
 import withRouter from "../../components/Common/withRouter";
 import sidebarData from "./SidebarData";
+import { useLocation } from 'react-router-dom';
 //i18n
 import { withTranslation } from "react-i18next";
 import config from '../../config'
 const Sidebar = (props) => {
   
   const [sidebar_items,setSidebar_items] = useState([]);
-
+  const location = useLocation();
+  const pathName = location.pathname;
   const module_items = config.modules
     /**This hook is used to fetch service provider data */
     useEffect(() => {
@@ -87,6 +89,7 @@ const Sidebar = (props) => {
           }
         }
       }
+      console.log("item",item);
       scrollElement(item);
       return false;
     }
@@ -174,6 +177,10 @@ const Sidebar = (props) => {
       }
     }
   }
+  useEffect(() => {
+    activeMenu();
+  }, [location.pathname, activeMenu]);
+
 
   return (
     <React.Fragment>
