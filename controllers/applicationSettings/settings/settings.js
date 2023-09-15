@@ -56,7 +56,7 @@ exports.getSettingsData = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: constants.responseMessage.getOne,
+        message: constants.responseMessage.getAll,
         data : settingsPage
      
     });
@@ -83,7 +83,7 @@ exports.getLngFile = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: constants.responseMessage.getOne,
+        message: constants.responseMessage.getAll,
         data : getLngFile
      
     });

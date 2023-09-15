@@ -625,7 +625,7 @@ static async updateStatusQuotation  (quotId)  {
 }
 
 /**Tis function for Sending email */
-static async sendMail(requestBody, quot_id) 
+static async sendemail(requestBody, quot_id) 
 {
     return new Promise(async (resolve, reject) =>
     {

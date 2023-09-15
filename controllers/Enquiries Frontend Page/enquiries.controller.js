@@ -8,6 +8,7 @@
 
 
 var enquiriesModel = require('../../models/Enquiries Front Page/enquiries.model'); // The model from where the logic is intantiate are written in enquiries model
+const constants = require('../../utils/constants');
 const time = require('../../utils/helper/date'); // All the time related formating are written in this file
 
 /**
@@ -35,7 +36,7 @@ exports.createNewEnquiry = async (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: `Booking failed !`,
+            message: constants.responseMessage.enquiryBookFailed
         });
     }
     if(data === 'inserted')
@@ -44,7 +45,7 @@ exports.createNewEnquiry = async (req, res, next) =>
         ({
             code : 200,
             success : true,
-            message : 'Successfully Booked !'
+            message : constants.responseMessage.enquiryBooked
         });
     }
 };
@@ -58,30 +59,33 @@ exports.getParticularCustomerAllEnquiries = async (req, res, next) =>
     const data = await enquiriesModel.getparticularcustomerallenquiries(req.body.page, req.body.limit, req.params.id);
     if(data === 'err')
     {
+        // `Unable to fetch enquiry data for customer.`
         return res.status(200).json
         ({
-            code: 400,
+            code: 500,
             status: false,
-            message: `Unable to fetch enquiry data for customer.`,
+            message: constants.responseMessage.universalError,
         });
     }
     else if (data.length === 0)
     {
+        // `No enquiry found for this customer.`
         return res.status(200).json
         ({
             code: 200,
             status: true,
-            message: `No enquiry found for this customer.`,
+            message: constants.responseMessage.getNoData,
             data : []
         });
     }
     else
     {
+        // `Successfully fetched all enquiries for customer.`
         res.status(200).send
         ({
             code : 200,
             success : true,
-            message : `Successfully fetched all enquiries for customer.`,
+            message : constants.responseMessage.getAll,
             data : data
         });
     }

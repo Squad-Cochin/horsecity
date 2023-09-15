@@ -167,7 +167,7 @@ exports.getOneLanguage = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: constants.responseMessage.getOne,
+        message: constants.responseMessage.getAll,
         data : getOneLanguage
     });
    }

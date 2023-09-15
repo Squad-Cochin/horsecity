@@ -74,7 +74,7 @@ exports.isMaximumHorseCarryingCapicityEntered = (req,res,next) =>
         ({
             code: 400,
             status: false,
-            message: "Vehicle maximum horse carrying capicity required"
+            message: constants.responseMessage.vehicle1
         });        
     }
     else if (typeof numericLength !== "number" || isNaN(numericLength) || !isFinite(numericLength)) 
@@ -83,7 +83,7 @@ exports.isMaximumHorseCarryingCapicityEntered = (req,res,next) =>
         ({
             code: 400,
             status: "failure",
-            message: "Vehicle maximum horse carrying capicity must be a numeric value",
+            message: constants.responseMessage.vehicle2,
         });
     }
     else if (req.body.no_of_horse <= 0)
@@ -92,7 +92,7 @@ exports.isMaximumHorseCarryingCapicityEntered = (req,res,next) =>
         ({
             code: 400,
             status: "failure",
-            message: "Vehicle maximum horse carrying capicity must be greater than zero.",
+            message: constants.responseMessage.vehicle3
         });
     }
     else
@@ -109,7 +109,7 @@ exports.isAirConditionerValueEntered = (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: "Vehicle is enabled air conditioner. Details required"
+            message: constants.responseMessage.vehicle4
         });        
     }
     else if(req.body.air_conditioner === 'YES')
@@ -126,7 +126,7 @@ exports.isAirConditionerValueEntered = (req, res, next) =>
         ({
             code: 400,
             status: "failure",
-            message: "Vehicle is air conditioner equiped input is wrong. Please write 'YES' or 'NO'. ",
+            message: constants.responseMessage.vehicle5
         });        
     }
 }
@@ -139,7 +139,7 @@ exports.isTemperaturControlValueEntered = (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: "Vehicle is enabled with temperature control. Details required"
+            message: constants.responseMessage.vehicle6
         });        
     }
     else if(req.body.temperature_manageable === 'YES')
@@ -156,7 +156,7 @@ exports.isTemperaturControlValueEntered = (req, res, next) =>
         ({
             code: 400,
             status: "failure",
-            message: "Vehicle is temperature control equiped input is wrong. Please write 'YES' or 'NO'. ",
+            message: constants.responseMessage.vehicle7
         });        
     }
 }
@@ -169,7 +169,7 @@ exports.isGCCTravelValueEntered = (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: "Vehicle can travel across all the countries of GCC. Details required"
+            message: constants.responseMessage.vehicle8
         });        
     }
     else if(req.body.gcc_travel_allowed === 'YES')
@@ -186,7 +186,7 @@ exports.isGCCTravelValueEntered = (req, res, next) =>
         ({
             code: 400,
             status: "failure",
-            message: "Vehicle can travel across all the countries of GCC input is wrong. Please write 'YES' or 'NO'. ",
+            message: constants.responseMessage.vehicle9
         });        
     }
 }
@@ -199,7 +199,7 @@ exports.isInsuranceCoverValueEntered = (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: "Vehicle have a insurance cover value not entered. Details required"
+            message: constants.responseMessage.vehicle10
         });        
     }
     else if(req.body.insurance_cover === 'YES')
@@ -216,7 +216,7 @@ exports.isInsuranceCoverValueEntered = (req, res, next) =>
         ({
             code: 400,
             status: "failure",
-            message: "Vehicle has a insurance cover input is not given correctly. Please write 'YES' or 'NO'. ",
+            message: constants.responseMessage.vehicle11
         });        
     }
 }
@@ -229,7 +229,7 @@ exports.isVehicleRegistrationNumberEntered = async (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: "Vehicle registration number is not entered. Details required"
+            message: constants.responseMessage.vehicle12
         });        
     }
     else
@@ -238,7 +238,7 @@ exports.isVehicleRegistrationNumberEntered = async (req, res, next) =>
         {
             checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `registration_no`, req.body.vehicle_registration_number, req.params.id, 'Vehicle registration number')(req, res, next);                        
         }
-        else if(req.method === `PUT` && req.url === url.UPDATE_VEHICLE_PAGE_URL + req.params.id)
+        else if(req.method === `PUT` && req.url === `${url.UPDATE_VEHICLE_PAGE_URL}${req.params.id}`)
         {
             checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `registration_no`, req.body.vehicle_registration_number, req.params.id, 'Vehicle registration number')(req, res, next);
         }
@@ -262,7 +262,7 @@ exports.isInsurancePolicyNumberEntered = async (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: "Vehicle insurance cover number is not entered. Details required"
+            message: constants.responseMessage.vehicle13
         });        
     }
     else
@@ -271,7 +271,7 @@ exports.isInsurancePolicyNumberEntered = async (req, res, next) =>
         {
             checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `insurance_policy_no`, req.body.insurance_policy_no, req.params.id, 'Vehicle insurance policy number')(req, res, next);                        
         }
-        else if(req.method === `PUT` && req.url === url.UPDATE_VEHICLE_PAGE_URL + req.params.id)
+        else if(req.method === `PUT` && req.url === `${url.UPDATE_VEHICLE_PAGE_URL}${req.params.id}`)
         {
             checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `insurance_policy_no`, req.body.insurance_policy_no, req.params.id, 'Vehicle insurance policy number')(req, res, next);
         }
@@ -295,7 +295,7 @@ exports.isValidVehicleTypeEntered = (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: "Vehicle type is required. Please enter one amoung these 3 (PRIVATE, GCC, SHARING)"
+            message: constants.responseMessage.vehicle14
         });
     }
     else if(req.body.vehicle_type === 'PRIVATE')
@@ -316,7 +316,7 @@ exports.isValidVehicleTypeEntered = (req, res, next) =>
         ({
             code: 400,
             status: "failure",
-            message: "Vehicle type input is wrong. Please enter one amoung these 3 (PRIVATE, GCC, SHARING)",
+            message: constants.responseMessage.vehicle15,
         }); 
     }
 }
@@ -330,70 +330,27 @@ exports.isValidVehicleNumberEntered =  async (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: "Vehicle number is required"
+            message: constants.responseMessage.vehicle16
         });
     }
     else
     {   
-        var isValidVehicleNumber = (number) =>
+        if(req.method === 'POST')
         {
-            const regex = new RegExp(process.env.VEHICLENUMBERREGEX);
-            return regex.test(number); // Use the test() method to check if the vehicle number matches the regex pattern
+            checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params.id, 'Vehicle number')(req, res, next);                        
         }
-        if(!isValidVehicleNumber(vehicleNumber))
+        else if(req.method === `PUT` && req.url === `${url.UPDATE_VEHICLE_PAGE_URL}${req.params.id}`)
         {
-            return res.status(200).json
-            ({
-                success: false,
-                code: 400,
-                message: "Failed! Not a valid vehicle number. The entered vehicle must be containing symbols please check and enter again",
-            });
+            checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params.id, 'Vehicle number')(req, res, next);
         }
         else
         {
-            if(req.method === 'POST')
-            {
-                checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params.id, 'Vehicle number')(req, res, next);                        
-            }
-            else if(req.method === `PUT` && req.url === url.UPDATE_VEHICLE_PAGE_URL + req.params.id)
-            {
-                checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params.id, 'Vehicle number')(req, res, next);
-            }
-            else
-            {
-                return res.status(200).json
-                ({
-                    code : 500,
-                    status : false, 
-                    message : constants.responseMessage.universalError
-                });
-            }
-
-            // const data = await commonfetching.dataOnCondition(tableName, req.body.vehicle_number, 'vehicle_number')
-            // if(data === 'err' || !data)
-            // {
-            //     return res.status(500).json
-            //     ({
-            //         code: 400,
-            //         status : "failed",
-            //         error: 'Internal server error while number plate' 
-            //     });
-            // }
-            // else if(data.length > 0)
-            // {
-            //     console.log('Vehicle number already Present');
-            //     return res.status(200).send
-            //     ({
-            //         code: 400,
-            //         status: false,
-            //         message: "This vehicle number already exists in the database"
-            //     });
-            // }
-            // else
-            // {
-            //     console.log(`Vehicle number doesn't exist`);
-            //     next();           
-            // }
+            return res.status(200).json
+            ({
+                code : 500,
+                status : false, 
+                message : constants.responseMessage.universalError
+            });
         }
     }
 }
@@ -406,16 +363,16 @@ exports.isSafetyCertificateAdded = (req, res, next) =>
         ({
             code : 400,
             success: false,
-            message : `Vehicle safety certificate is not uploaded`
+            message : constants.responseMessage.validatorError39
         });
     } 
     else
     {
-        if(req.method === 'PUT' && req.url === url.UPDATE_VEHICLE_PAGE_URL + req.params.id && !req.files?.licence_img)
+        if(req.method === 'PUT' && req.url === `${url.UPDATE_VEHICLE_PAGE_URL}${req.params?.id}` && !req.files?.licence_img)
         {
             next();
         }
-        if(req.method === 'PUT' && req.url === url.UPDATE_VEHICLE_PAGE_URL + req.params.id && req.files?.licence_img)
+        if(req.method === 'PUT' && req.url === `${url.UPDATE_VEHICLE_PAGE_URL}${req.params?.id}` && req.files?.licence_img)
         {
             next();
         }
@@ -434,7 +391,7 @@ exports.isVehicleImageUploaded = (req, res, next) =>
         ({
             code : 400,
             success: false,
-            message : `Vehicle image is not uploaded`
+            message : constants.responseMessage.validatorError40
         });
     } 
     else
@@ -451,7 +408,7 @@ exports.isVehicleImageTitleAdded = (req, res, next) =>
         ({
             code : 400,
             success: false,
-            message : `Vehicle image title is not added`
+            message : constants.responseMessage.validatorError41
         });
     } 
     else

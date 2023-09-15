@@ -8,8 +8,7 @@
 //                                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
  
- 
-const constant = require('../../utils/constants'); // Constant elements are stored in this file
+const constants = require('../../utils/constants'); // Constant elements are stored in this file
 const driver = require('../../models/drivers/driver.model');  // The model from where the logic is intantiate are written in driver model
 const time = require('../../utils/helper/date'); // All the time related formating are written in this file.
 
@@ -28,7 +27,7 @@ exports.getAll = async (req, res) =>
         ({
             code : 400,
             status : false,
-            message : constant.responseMessage.getNoData,
+            message : constants.responseMessage.getNoData,
             data : drivers
         });
     }
@@ -39,7 +38,7 @@ exports.getAll = async (req, res) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.getAll,
+            message : constants.responseMessage.getAll,
             data : drivers
         });
     }    
@@ -66,7 +65,7 @@ exports.getOne= async (req, res) =>
         ({
             code : 400,
             status : false,
-            message : constant.responseMessage.getOne,
+            message : constants.responseMessage.getAll,
             data : []
         });
     }
@@ -77,7 +76,7 @@ exports.getOne= async (req, res) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.getOne,
+            message : constants.responseMessage.getAll,
             data : drivers
         });
     }
@@ -111,7 +110,7 @@ exports.addDriver = async (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: constant.responseMessage.errorInsert,
+            message: constants.responseMessage.errorInsert,
         });
     }
     else if(drivers === 'INVALIDATTACHMENTP')
@@ -120,7 +119,7 @@ exports.addDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `We're sorry, but the image format of driver profile photo you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
+            message : constants.responseMessage.attachement4
         });
     }
     else if(drivers === 'NOATTACHP')
@@ -129,7 +128,7 @@ exports.addDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : 'An profile photo of driver is required.',
+            message : constants.responseMessage.attachement1,
         });
     }
     else if(drivers === 'INVALIDATTACHMENTL')
@@ -138,7 +137,7 @@ exports.addDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `We're sorry, but the image format of licence you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
+            message : constants.responseMessage.attachement5
         });
     }
     else if(drivers === 'NOATTACHL')
@@ -147,7 +146,7 @@ exports.addDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : 'An licence image of driver is required.',
+            message : constants.responseMessage.attachement2,
         });
     }
     // If input feild are in correct format and not already presnet in the database, then this else block of code will be executed.
@@ -157,7 +156,7 @@ exports.addDriver = async (req, res, next) =>
         ({
             code: 200,
             status: true,
-            message: `${constant.responseMessage.insert}`,
+            message: constants.responseMessage.insert
         });
     }
 };
@@ -175,7 +174,7 @@ exports.updateStatus= async (req, res) =>
         ({
             code : 400,
             status : false,
-            message : constant.responseMessage.getAll
+            message : constants.responseMessage.getAll
         });
     }
     else
@@ -184,7 +183,7 @@ exports.updateStatus= async (req, res) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.statusChanged
+            message : constants.responseMessage.statusChanged
         });
     }
 }
@@ -201,7 +200,7 @@ exports.removeDriver = async (req, res) =>
         ({
             code : 400,
             status : false,
-            message : constant.responseMessage.removeerror
+            message : constants.responseMessage.removeerror
         });
     }
     else
@@ -210,7 +209,7 @@ exports.removeDriver = async (req, res) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.removesuccess
+            message : constants.responseMessage.removesuccess
         });
     }
 }
@@ -243,7 +242,7 @@ exports.editDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constant.responseMessage.erroredit,
+            message : constants.responseMessage.erroredit,
         });
     }
     else if(drivers === 'INVALIDATTACHMENTP')
@@ -252,7 +251,7 @@ exports.editDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `We're sorry, but the image format of profile photo you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
+            message : constants.responseMessage.attachement4
         });
     }
     else if(drivers === 'NOATTACHP')
@@ -261,7 +260,7 @@ exports.editDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : 'An profile photo of driver is required.',
+            message : constants.responseMessage.attachement1,
         });
     }
     else if(drivers === 'INVALIDATTACHMENTL')
@@ -270,7 +269,7 @@ exports.editDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `We're sorry, but the image format of licence you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
+            message : constants.responseMessage.attachement5
         });
     }
     else if(drivers === 'NOATTACHL')
@@ -279,7 +278,7 @@ exports.editDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : 'An licence image of driver is required.',
+            message : constants.responseMessage.attachement2,
         });
     }
     // If input feild are in correct format and not already present in the database, then this else block of code will be executed.
@@ -289,7 +288,7 @@ exports.editDriver = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.edit,
+            message : constants.responseMessage.edit,
         });
     }
 };
@@ -314,7 +313,7 @@ exports.AssignServiceProvider = async (req, res, next) =>
         ({
             code : 500,
             success : false,
-            message : constant.responseMessage.universalError
+            message : constants.responseMessage.universalError
         });
     }
     // If the entered driver id in the request body is not available in the database then this else if block of code will be executed.
@@ -324,7 +323,7 @@ exports.AssignServiceProvider = async (req, res, next) =>
         ({
             code : 400,
             success : false,
-            message : `Driver ID not found. Unable to assign service provider.`
+            message : constants.responseMessage.backend3
         });
     }
     // If the entered service provider id in the request body is not available in the database then this else if block of code will be executed.
@@ -334,7 +333,7 @@ exports.AssignServiceProvider = async (req, res, next) =>
         ({
             code : 400,
             success : false,
-            message : 'Service provider ID not found. Unable to assign service provider.'
+            message : constants.responseMessage.backend1
         });
     }
     // When we want the details of driver where they worked last and any error came at that time then this else if block of code will be executed.
@@ -344,7 +343,7 @@ exports.AssignServiceProvider = async (req, res, next) =>
         ({
             code : 400,
             success : false,
-            message : `Unable to fetch driver's last workplace status.`
+            message : constants.responseMessage.backend5
         });
     }
     // If the submitted driver id is already associated with some service provider id and not left the job, then this else if block of code will be executed.
@@ -354,7 +353,7 @@ exports.AssignServiceProvider = async (req, res, next) =>
         ({
             code : 400,
             success : false,
-            message : 'Error: The driver is already employed by other service provider, so we cannot permit them to work here at this time.'
+            message : constants.responseMessage.backend2
         });
     }
     // If every thing went well and no issue came then,  this else if block of code will be executed.
@@ -364,7 +363,7 @@ exports.AssignServiceProvider = async (req, res, next) =>
         ({
             code : 200,
             success : true,
-            message : 'Driver successfully assigned to service provider.'
+            message : constants.responseMessage.driverassigned
         });
     }
 };
@@ -383,7 +382,7 @@ exports.getWorkPastServiceProvider = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : `Driver has no prior experience working with any of our registered service providers.`,
+            message : constants.responseMessage.backend6,
             data : drivers
         });
     }
@@ -394,17 +393,18 @@ exports.getWorkPastServiceProvider = async (req, res, next) =>
         ({
             code : 500,
             status : false,
-            message : constant.responseMessage.universalError
+            message : constants.responseMessage.universalError
         });
     }
     // If every thing went well and no issue came then,  this else if block of code will be executed.
     else
     {
+        //`Driver's history.`
         return res.status(200).send
         ({
             code : 200,
             status : true,
-            message : `Driver's history.`,
+            message : constants.responseMessage.getAll,
             data : drivers
         });
     }
@@ -422,11 +422,12 @@ exports.UnAssignServiceProvider = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(drivers === 'err')
     {
+        // "Unable to proceed because the driver is not currently assigned to a service provider."
         return res.status(200).send
         ({
             code : 400,
             status : false,
-            message : "Unable to proceed because the driver is not currently assigned to a service provider."
+            message : constants.responseMessage.universalError
         });
     }
     // If driver is successfully unassigned to the respective service provider then this if block of code will be executed.
@@ -437,7 +438,7 @@ exports.UnAssignServiceProvider = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : "The driver is not currently assigned to a service provider."
+            message : constants.responseMessage.driverunassigned
         });
     }
     // If driver is already unassigned to the respective service provider then this if block of code will be executed.
@@ -448,7 +449,7 @@ exports.UnAssignServiceProvider = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : "This driver is no longer assigned to any service provider."
+            message : constants.responseMessage.backend7
         });
     }
 };
@@ -465,11 +466,12 @@ exports.UnAssignServiceProviderAndDriverBoth = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(drivers === 'err')
     {
+        // "Unable to unassign driver from service provider."
         return res.status(200).send
         ({
-            code : 400,
+            code : 500,
             status : false,
-            message : "Unable to unassign driver from service provider."
+            message : constants.responseMessage.universalError
         });
     }
     // If driver is successfully unassigned to the respective service provider then this if block of code will be executed.
@@ -480,7 +482,7 @@ exports.UnAssignServiceProviderAndDriverBoth = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : "Driver successfully unassigned from service provider."
+            message : constants.responseMessage.driverunassigned
         });
     }
     // If driver is already unassigned to the respective service provider then this if block of code will be executed.
@@ -491,7 +493,7 @@ exports.UnAssignServiceProviderAndDriverBoth = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : "Driver is already unassigned from service provider."
+            message : constants.responseMessage.backend8
         });
     }
 
@@ -501,7 +503,7 @@ exports.UnAssignServiceProviderAndDriverBoth = async (req, res, next) =>
         ({
             code : 400,
             success : false,
-            message : 'Driver ID not found. Unable to assign service provider.'
+            message : constants.responseMessage.backend3
         });
     }
     // If the entered service provider id in the request body is not available in the database then this else if block of code will be executed.
@@ -511,7 +513,7 @@ exports.UnAssignServiceProviderAndDriverBoth = async (req, res, next) =>
         ({
             code : 400,
             success : false,
-            message : 'Service provider ID not found. Unable to assign service provider.'
+            message : constants.responseMessage.backend1
         });
     }
 };

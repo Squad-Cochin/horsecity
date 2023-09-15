@@ -184,19 +184,26 @@ module.exports = class invoices
                         let paymentRecordData = await commonfetching.dataOnCondition(constants.tableName.payment_records, Id, 'invoice_id')
                         if(paymentRecordData[0].invoice_id == Id && paymentRecordData[0].updated_at === null)
                         {
-                            let ra = paymentRecordData[0].total_amount - payment
-                            let upQuery = `UPDATE ${constants.tableName.payment_records} pr SET pr.invoice_prefix_id = '${paymentRecordData[0].invoice_prefix_id}', pr.received_amount = ${payment}, pr.received_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', pr.remaining_amount = ${ra}, pr.status = '${constants.status.partPaid}', pr.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE pr.invoice_id = ${Id}`;
-                            con.query(upQuery, (err, result) =>
-                            {                            
-                                if(result.affectedRows > 0)
-                                {
-                                    resolve('affectedRows')
-                                }
-                                else
-                                {
-                                    resolve('err');
-                                }
-                            });
+                            if(payment > paymentRecordData[0].total_amount)
+                            {
+                                resolve('moreThanActualAmount');
+                            }
+                            else
+                            {
+                                let ra = paymentRecordData[0].total_amount - payment
+                                let upQuery = `UPDATE ${constants.tableName.payment_records} pr SET pr.invoice_prefix_id = '${paymentRecordData[0].invoice_prefix_id}', pr.received_amount = ${payment}, pr.received_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', pr.remaining_amount = ${ra}, pr.status = '${constants.status.partPaid}', pr.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE pr.invoice_id = ${Id}`;
+                                con.query(upQuery, (err, result) =>
+                                {                            
+                                    if(result.affectedRows > 0)
+                                    {
+                                        resolve('affectedRows')
+                                    }
+                                    else
+                                    {
+                                        resolve('err');
+                                    }
+                                });
+                            }
                         }
                         else
                         {
@@ -376,7 +383,7 @@ module.exports = class invoices
                 WHERE i.id = ${Id} 
                 AND c.id = q.customer_id 
                 AND q.id = i.quot_id 
-                AND t.subject = '${process.env.TemplateInvoiceConditionName}'`;
+                AND t.subject = '${constants.firstTimeData.templateFirstInvoiceSubject}'`;
                 con.query(selQuery,(err, result) =>
                 {
                     if(result.length != 0)

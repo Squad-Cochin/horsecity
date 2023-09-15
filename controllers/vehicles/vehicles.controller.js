@@ -9,7 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-const constant = require('../../utils/constants'); // Constant elements are stored in this file
+const constants = require('../../utils/constants'); // Constant elements are stored in this file
 const vehicle = require('../../models/vehicles/vehicle.model'); // The model from where the logic is intantiate are written in vehicle model
 const time = require('../../utils/helper/date'); // All the time related formating are written in this file.
 
@@ -66,7 +66,7 @@ exports.addNew = async (req, res, next) =>
         ({
             code : 500,
             status : false,
-            message : constant.responseMessage.vehicleerror,
+            message : constants.responseMessage.universalError,
         });
     }
     else if(vehicles === 'INVALIDATTACHMENT')
@@ -75,7 +75,7 @@ exports.addNew = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG)."`
+            message : constants.responseMessage.attachement6
         });
     }
     else if(vehicles === 'NOATTACHEMENT')
@@ -84,7 +84,7 @@ exports.addNew = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : 'An safety certicate of the vehicle is required.',
+            message : constants.responseMessage.vehicle18
         });
     }
     // If input feild are in correct format and not present in the database, then this else block of code will be executed.
@@ -94,7 +94,7 @@ exports.addNew = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.vehiclesuccess,
+            message : constants.responseMessage.insert,
         });
     }
 }
@@ -114,7 +114,7 @@ exports.getAll = async (req, res, next) =>
         ({
             code : 500,
             status : false,
-            message : constant.responseMessage.universalError,
+            message : constants.responseMessage.universalError,
             data : vehicles
         });
     }
@@ -125,7 +125,7 @@ exports.getAll = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constant.responseMessage.getAllErr,
+            message : constants.responseMessage.getAllErr,
             data : vehicles
         });
 
@@ -137,7 +137,7 @@ exports.getAll = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.getAll,
+            message : constants.responseMessage.getAll,
             data : 
                 {
                     totalCount : vehicles.length,
@@ -162,7 +162,7 @@ exports.updateStatus = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constant.responseMessage.getOneErr,
+            message : constants.responseMessage.getOneErr,
             data : []
         });
     }
@@ -173,7 +173,7 @@ exports.updateStatus = async (req, res, next) =>
         ({
             code : 500,
             status : false,
-            message : constant.responseMessage.universalError,
+            message : constants.responseMessage.universalError,
             data : []
         });
     }
@@ -185,7 +185,7 @@ exports.updateStatus = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.statusChanged
+            message : constants.responseMessage.statusChanged
         });
     }
 }
@@ -210,7 +210,7 @@ exports.getOne = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constant.responseMessage.getOneErr,
+            message : constants.responseMessage.getOneErr,
             data : []
         });
     }
@@ -221,7 +221,7 @@ exports.getOne = async (req, res, next) =>
         ({
             code : 500,
             status : false,
-            message : constant.responseMessage.universalError,
+            message : constants.responseMessage.universalError,
             data : []
         });
     }
@@ -232,7 +232,7 @@ exports.getOne = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.getAll,
+            message : constants.responseMessage.getAll,
             data : vehicles
         });
     }    
@@ -292,7 +292,7 @@ exports.updateData = async (req, res, next) =>
         ({
             code : 500,
             status : false,
-            message : constant.responseMessage.erroredit,
+            message : constants.responseMessage.erroredit,
         });
     }
     else if(vehicles === 'INVALIDATTACHMENT')
@@ -301,7 +301,7 @@ exports.updateData = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
+            message : constants.responseMessage.attachement6
         });
     }
     else if(vehicles === 'NOATTACHEMENT')
@@ -310,7 +310,7 @@ exports.updateData = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : 'An safety certicate of the vehicle is required.',
+            message : constants.responseMessage.vehicle18
         });
     }
     // If input feild are in correct format and not already present in the database, then this else block of code will be executed
@@ -320,7 +320,7 @@ exports.updateData = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : `${constant.responseMessage.edit}`,
+            message : constants.responseMessage.edit,
         });
     }
 };
@@ -342,7 +342,7 @@ exports.getAllImages = async (req, res, next) =>
         ({
             code : 500,
             status : false,
-            message : constant.responseMessage.universalError,
+            message : constants.responseMessage.universalError,
             data : []
         });
     }
@@ -353,7 +353,7 @@ exports.getAllImages = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constant.responseMessage.vehicleImgerror,
+            message : constants.responseMessage.getNoData,
             data : []
         });
     }
@@ -364,7 +364,7 @@ exports.getAllImages = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.vehicleImgSuccess,
+            message : constants.responseMessage.getAll,
             data : vehicles
         });
     }
@@ -385,7 +385,7 @@ exports.removeVehicle = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constant.responseMessage.removeerror
+            message : constants.responseMessage.removeerror
         });
     }
     // If vehicle remove is done successfully
@@ -395,7 +395,7 @@ exports.removeVehicle = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.removesuccess
+            message : constants.responseMessage.removesuccess
         });
     }
 };
@@ -415,7 +415,7 @@ exports.getVehicleDetailForCustomerPage = async (req, res, next) =>
         ({
             code : 500,
             status : false,
-            message : constant.responseMessage.universalError,
+            message : constants.responseMessage.universalError,
             data : []
         });
     }
@@ -426,7 +426,7 @@ exports.getVehicleDetailForCustomerPage = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constant.responseMessage.getOne,
+            message : constants.responseMessage.getAll,
             data : []
         });
     }
@@ -437,7 +437,7 @@ exports.getVehicleDetailForCustomerPage = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.getOne,
+            message : constants.responseMessage.getAll,
             data : vehicles
         });
     }

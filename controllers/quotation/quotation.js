@@ -53,7 +53,7 @@ exports.getOneQuotation = async(req,res)=>
         ({
             code: 200,
             success: true,
-            message: constants.responseMessage.getOne,
+            message: constants.responseMessage.getAll,
             data : getOneQuotation
         });
     }
@@ -71,7 +71,7 @@ exports.updateQuotation = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: constants.responseMessage.getOne,
+        message: constants.responseMessage.getAll,
         data : constants.responseMessage.edit
     });
    }
@@ -89,7 +89,7 @@ exports.removedQuotations = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: constants.responseMessage.getOne,
+        message: constants.responseMessage.getAll,
         data : removedQuotations
     });
    }
@@ -115,7 +115,7 @@ exports.updateStatusQuotation = async(req,res)=>
     return res.status(200).send ({
         code: 400,
         success: false,
-        message: 'The quote number is already in the bookings'
+        message: 'The quotation number is already in the bookings'
 
     });
 
@@ -135,21 +135,25 @@ exports.updateStatusQuotation = async(req,res)=>
 exports.sendMail = async(req,res)=>
 {
 
-    let sendMail = await quotation.sendMail(req.body,req.params.id);
-    if(sendMail){
-        return res.status(200).send({
+    let sendMail = await quotation.sendemail(req.body,req.params.id);
+    if(sendMail)
+    {
+        return res.status(200).send
+        ({
             code: 200,
             success: true,
-            message: ` Mail successfully sent to ${req.body.customer_email} .`
+            message: `Mail successfully sent to ${req.body.customer_email} .`
 
         });
-   }else{
-    return res.status(200).send({
-        code: 400,
-        success: false,
-        message: `Mail sending faild .`
-
-    });
+    }
+    else
+    {
+        return res.status(200).send
+        ({
+            code: 400,
+            success: false,
+            message: `Unable to email the quotation.`
+        });
    }
 }
 
@@ -166,7 +170,7 @@ exports.getsendemailbuttondata = async(req,res)=>
         return res.status(200).send({
             code: 200,
             success: true,
-            message: constants.responseMessage.getOne,
+            message: constants.responseMessage.getAll,
             data : templates
 
         });

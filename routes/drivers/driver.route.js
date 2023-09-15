@@ -9,12 +9,8 @@
 
 const driverController = require(`../../controllers/drivers/driver.controller`); // For fetching the controller export functions reference. We will instantiate to the variable
 const checkInput = require(`../../middlewares/validateInput/checkRequestBodyInput`);  // This is the middleware for validating the inputs
-const
-    { 
-        isValidIdInTheParams, // This function is for checking the params id
-        CheckRole, // Middleware
-        driverRequestAddBody // For checking the body of the drivers adding
-    } = require(`../../middlewares/validateInput/checkRequestparams`);
+const { isValidIdInTheParams } = require("../../middlewares/validateInput/checkRequestparams");
+
 const constants = require(`../../utils/constants`); // Constant elements are stored in this file
 
 module.exports = function(app)
@@ -35,10 +31,10 @@ module.exports = function(app)
     // Below route is for adding the driver data
     app.post(`/${process.env.apiToken}/add/driver/:id`,
     isValidIdInTheParams(constants.tableName.service_providers),
-    driverRequestAddBody,
+    checkInput.driverRequestAddBody,
     checkInput.isDriverLicenceImageSubmitted,
     checkInput.isDriverProfileImageSubmitted,
-    CheckRole,
+    checkInput.CheckRole,
     checkInput.nameValidation,
     checkInput.emailValidation(constants.tableName.drivers),
     checkInput.contactNumberValidation(constants.tableName.drivers),

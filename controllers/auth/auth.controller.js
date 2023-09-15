@@ -7,6 +7,7 @@
 //                                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+const con = require('../../configs/db.configs');
 const auth = require('../../models/auth/auth.model'); // Impoting the auth models details
 const constants = require('../../utils/constants');
 /**
@@ -27,7 +28,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 400,
-            message : "Username not found.",
+            message : constants.responseMessage.validatorError42,
         });
     }
     // If any unspecified or unencountered error came. Which is not as per our code thinking, then this else if block
@@ -49,7 +50,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 400,
-            message : "Incorrect password.",
+            message : constants.responseMessage.validatorError43
         });
     }
     // If service provider user is inactive then, this below response will be displayed
@@ -60,7 +61,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 400,
-            message : "Inactive service provider.",
+            message : constants.responseMessage.validatorError44,
         });
     } 
     // If password of the service provider user is expired then, this below response will be displayed
@@ -71,7 +72,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "expired",
             code : 400,
-            message : "Your password has expired. Please create a new one.",
+            message : constants.responseMessage.validatorError45
         });
     }
     // If every thing run smoothly then, this below response will be displayed
@@ -82,7 +83,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "success",
             code : 200,
-            message : "Login successful",
+            message : constants.responseMessage.logsuccess,
             data : loginauth
         });     
     }
@@ -107,7 +108,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         ({
             success : false,
             code : 400,
-            message : "This username must be incorrect, or no customer is registered with this username.",
+            message : constants.responseMessage.validatorError46
         });
     }
     // The below if block will execute. when any unhandled error came
@@ -127,7 +128,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         ({
             success : false,
             code : 400,
-            message : "Password is incorrect",
+            message : constants.responseMessage.validatorError47,
         });
     }
     else
@@ -136,7 +137,7 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         ({
             success : "true",
             code : 200,
-            message : "Password updated successfully"
+            message : constants.responseMessage.passwordupdate
         }); 
     }
 };
@@ -157,7 +158,7 @@ exports.serviceProviderLogout = async(req, res)=>
         ({
             status : "success",
             code : 200,
-            message : "Logout Done"
+            message : constants.responseMessage.logoutsuccess
         });
     }
     // If any unspecified or unencountered error came. Which is not as per you code thinking, then this else if block
@@ -168,7 +169,7 @@ exports.serviceProviderLogout = async(req, res)=>
         ({
             status : "success",
             code : 400,
-            message : "Incorrect Password."
+            message : constants.responseMessage.validatorError43
         });
     }
     if(loginauth === 'noserviceprovider')
@@ -178,7 +179,7 @@ exports.serviceProviderLogout = async(req, res)=>
         ({
             status : "success",
             code : 400,
-            message : "Incorrect service provider username"
+            message : constants.responseMessage.validatorError48
         });
     }    
     
@@ -205,7 +206,7 @@ exports.sendEmailForgotPassword = async(req, res)=>
         ({
             status : false,
             code : 500,
-            message : "Error while sending email"
+            message : "Unable to email the password reset link."
         });        
     }
 
@@ -236,7 +237,7 @@ exports.verifyUrlForResetPassword = async(req, res)=>
                 return res.status(200).send({
                     code: 200,
                     status: true,
-                    message: "Successfully verified !",
+                    message: constants.responseMessage.verifiedSuccess,
                     data  : resetPassword 
                 });   
             }
@@ -245,7 +246,7 @@ exports.verifyUrlForResetPassword = async(req, res)=>
                 return res.status(200).send({
                     code: 400,
                     status: false,
-                    message: "Verification faild !"
+                    message: constants.responseMessage.verifiedFailed
                 });    
             }
 
@@ -266,7 +267,7 @@ exports.resetPasswordForForgotPassword = async(req, res)=>
         ({
             status : true,
             code : 200,  
-            message : "Password updated successfully"
+            message : constants.responseMessage.passwordupdate
         })
     }
     else
@@ -274,7 +275,7 @@ exports.resetPasswordForForgotPassword = async(req, res)=>
         return res.status(200).send({
             code: 400,
             status: false,
-            message: "Password updation faild !"
+            message: constants.responseMessage.passwordupdatef
         });    
     }
 

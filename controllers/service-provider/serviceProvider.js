@@ -143,7 +143,7 @@ exports.getOneServiceProvider = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: constants.responseMessage.getOne,
+        message: constants.responseMessage.getAll,
         data : getOneSProvider
     });
    }
@@ -185,7 +185,7 @@ exports.getSpVehicles = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: constants.responseMessage.getOne,
+        message: constants.responseMessage.getAll,
         data : getSpVehicles
     });
    }
@@ -210,7 +210,7 @@ exports.getSpDrivers = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: constants.responseMessage.getOne,
+        message: constants.responseMessage.getAll,
         data : getSpDrivers
     });
    }

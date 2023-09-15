@@ -9,9 +9,10 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-const constant = require('../../utils/constants'); // Constant elements are stored in this file
+const constants = require('../../utils/constants'); // Constant elements are stored in this file
 const customer = require('../../models/customers/customer.model'); // The model from where the logic is intantiate are written in customer model
 const time = require('../../utils/helper/date'); // All the time relateed formating are written in this file.
+const con = require('../../configs/db.configs');
 
 /**
  * The below function is for getting all the customer details. Those customer who deleted at feild are having
@@ -28,7 +29,7 @@ exports.getAll = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.getAll,
+            message : constants.responseMessage.getAll,
             data : customers
         });
     }
@@ -39,7 +40,7 @@ exports.getAll = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.getAll,
+            message : constants.responseMessage.getAll,
             data : customers
         });
     }
@@ -64,7 +65,7 @@ exports.getOne= async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constant.responseMessage.getOneErr,
+            message : constants.responseMessage.getOneErr,
             data : []
         });
     }
@@ -75,7 +76,7 @@ exports.getOne= async (req, res, next) =>
         ({
             code : 500,
             status : false,
-            message : constant.responseMessage.universalError,
+            message : constants.responseMessage.universalError,
             data : []
         });
     }
@@ -86,7 +87,7 @@ exports.getOne= async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.getAll,
+            message : constants.responseMessage.getAll,
             data : customers 
         });
     }    
@@ -122,7 +123,7 @@ exports.addCustomer = async (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: constant.responseMessage.errorInsert,
+            message: constants.responseMessage.errorInsert,
         });
     }
     // If the id proof image is in invalid format then this else if block of code will be executed.
@@ -132,7 +133,7 @@ exports.addCustomer = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
+            message : constants.responseMessage.attachement8
         });
     }
     // If the id proof image is not uploaded then this else if block of code will be executed.
@@ -142,7 +143,7 @@ exports.addCustomer = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : "An ID proof image is required.",
+            message : constants.responseMessage.attachement9,
         });
     }
     else if(customers.length === 0)
@@ -151,7 +152,7 @@ exports.addCustomer = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : "Restricted Access",
+            message : constants.responseMessage.restacc,
         });
     }
     // If input feild are in correct format and not already presnet in the database, then this else block of code will be executed.
@@ -161,7 +162,7 @@ exports.addCustomer = async (req, res, next) =>
         ({
             code: 200,
             status: true,
-            message: `${constant.responseMessage.insert}`,
+            message: constants.responseMessage.insert,
         });
     }
 };
@@ -196,7 +197,7 @@ exports.editCustomer = async (req, res, next) =>
         ({
             code : 400,
             status : true,
-            message : constant.responseMessage.universalError,
+            message : constants.responseMessage.universalError,
         });
     }
     // If the id proof image is in invalid format then this else if block of code will be executed.
@@ -206,7 +207,7 @@ exports.editCustomer = async (req, res, next) =>
         ({
             code : 400,
             status : true,
-            message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g. JPG, PNG).",
+            message : constants.responseMessage.attachement8
         });
     }
     else if(customers === 'NOATTACHEMENT')
@@ -215,7 +216,7 @@ exports.editCustomer = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : "An ID proof image is required.",
+            message : constants.responseMessage.attachement9
         });
     }
     // If input feild are in correct format and not already present in the database, then this else block of code will be executed.
@@ -225,7 +226,7 @@ exports.editCustomer = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : `${constant.responseMessage.edit} `,
+            message : constants.responseMessage.edit,
         });
     }
 };
@@ -244,7 +245,7 @@ exports.updateStatus= async (req, res) =>
         ({
             code : 400,
             status : true,
-            message : 'Status update failed.'
+            message : constants.responseMessage.statuserror
         });
     }
     else
@@ -253,7 +254,7 @@ exports.updateStatus= async (req, res) =>
         ({
             code : 200,
             status : true,
-            message : `Status update successful.`
+            message : constants.responseMessage.statusChanged
         });
     }
 };
@@ -270,7 +271,7 @@ exports.removeCustomer = async (req, res) =>
         ({
             code : 400,
             status : true,
-            message : 'Data removal failed.'
+            message : constants.responseMessage.removeerror
         });
     }
     else
@@ -279,7 +280,7 @@ exports.removeCustomer = async (req, res) =>
         ({
             code : 200,
             status : true,
-            message : `Data removal successful`
+            message : constants.responseMessage.removesuccess
         });
     }
 }
@@ -297,7 +298,7 @@ exports.customerLogin = async (req, res) =>
         ({
             status : "failure",
             code : 400,
-            message : "Username not found.",
+            message : constants.responseMessage.validatorError42,
         });
     }
     // If any unspecified or unencountered error came. Which is not as per our code thinking, then this else if block
@@ -307,7 +308,7 @@ exports.customerLogin = async (req, res) =>
         ({
             status : "failure",
             code : 500,
-            message : constant.responseMessage.universalError,
+            message : constants.responseMessage.universalError,
         });
     }
     // If wrong password is entered then, this below response will be displayed
@@ -317,7 +318,7 @@ exports.customerLogin = async (req, res) =>
         ({
             status : "failure",
             code : 400,
-            message : "Incorrect password.",
+            message : constants.responseMessage.validatorError43,
         });
     }
     else
@@ -326,7 +327,7 @@ exports.customerLogin = async (req, res) =>
         ({
             status : "success",
             code : 200,
-            message : "Login successful.",
+            message : constants.responseMessage.logsuccess,
             data : customers
         });
     }
@@ -345,7 +346,7 @@ exports.customerLogout = async (req, res) =>
         ({
             status : "success",
             code : 200,
-            message : "Logout Successful"
+            message : constants.responseMessage.logoutsuccess
         });
     }
     if(customers === 'notLogin')
@@ -354,7 +355,7 @@ exports.customerLogout = async (req, res) =>
         ({
             status : "false",
             code : 400,
-            message : "Restricted access."
+            message : constants.responseMessage.validatorError49
         });
     }
 };
@@ -373,7 +374,7 @@ exports.customerChangePassword = async (req, res, next) =>
         ({
             status : "failure",
             code : 400,
-            message : "This username must be incorect or no user is registered with this username",
+            message : constants.responseMessage.validatorError46
         });
     }
     // The below if block will execute. when any unhandled error came
@@ -383,7 +384,7 @@ exports.customerChangePassword = async (req, res, next) =>
         ({
             status : "failure",
             code : 500,
-            message : constant.responseMessage.universalError,
+            message : constants.responseMessage.universalError,
         });
     }
     else if(customers === 'incorrectpassword')
@@ -392,7 +393,7 @@ exports.customerChangePassword = async (req, res, next) =>
         ({
             status : "failure",
             code : 400,
-            message : "Incorrect password.",
+            message : constants.responseMessage.validatorError47,
         });
     }
     else
@@ -401,7 +402,7 @@ exports.customerChangePassword = async (req, res, next) =>
         ({
             status : "success",
             code : 200,
-            message : "Password updated successfully",
+            message : constants.responseMessage.passwordupdate,
         });
     }
 };
@@ -433,7 +434,7 @@ exports.signup = async (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: constant.responseMessage.errorInsert,
+            message: constants.responseMessage.errorInsert,
         });
     }
     // If the id proof image is in invalid format then this else if block of code will be executed.
@@ -443,7 +444,7 @@ exports.signup = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
+            message : constants.responseMessage.attachement8
         });
     }
     // If the id proof image is not uploaded then this else if block of code will be executed.
@@ -453,7 +454,7 @@ exports.signup = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : "An ID proof image is required.",
+            message : constants.responseMessage.attachement9
         });
     }
     else (customers === 'registered')
@@ -462,7 +463,7 @@ exports.signup = async (req, res, next) =>
         ({
             code: 200,
             status: true,
-            message: `Customer registration successful`,
+            message: constants.responseMessage.insert,
         });
     }    
 };
@@ -481,26 +482,28 @@ exports.getParticularCustomerLogs = async(req, res, next) =>
         ({
             code: 500,
             status: false,
-            message: constant.responseMessage.universalError,
+            message: constants.responseMessage.universalError,
         });
     }
     else if(customers.length == 0)
     {
+        // `No logs found for this customer.`,
         res.status(200).send
         ({
             code : 200,
             status : true,
-            message : `No logs found for this customer.`,
+            message : constants.responseMessage.getNoData,
             data : customers
         });
     }
     else 
     {
+        // `Logs found for this customer.`,
         res.status(200).send
         ({
             code : 200,
             status : true,
-            message : `Logs found for this customer.`,
+            message : constants.responseMessage.getAll,
             data : customers
         });
     }
@@ -520,7 +523,7 @@ exports.getParticularCustomerDashboard = async (req, res, next) =>
         ({
             code: 500,
             status: false,
-            message: constant.responseMessage.universalError,
+            message: constants.responseMessage.universalError,
         });
     }
     else
@@ -529,7 +532,7 @@ exports.getParticularCustomerDashboard = async (req, res, next) =>
         ({
             code: 200,
             status: true,
-            message: constant.responseMessage.getAll,
+            message: constants.responseMessage.getAll,
             data : customers
         });
     }
@@ -549,7 +552,7 @@ exports.getParticularBookinDetailsCompleted = async (req, res, next) =>
         ({
             code: 500,
             status: false,
-            message: constant.responseMessage.universalError
+            message: constants.responseMessage.universalError
         });
     }
     else
@@ -558,7 +561,7 @@ exports.getParticularBookinDetailsCompleted = async (req, res, next) =>
         ({
             code: 200,
             status: true,
-            message: constant.responseMessage.getAll,
+            message: constants.responseMessage.getAll,
             data : customers
         });
     }
@@ -578,7 +581,7 @@ exports.getParticularBookinDetailsConfirm = async (req, res, next) =>
         ({
             code: 500,
             status: false,
-            message: constant.responseMessage.universalError
+            message: constants.responseMessage.universalError
         });
     }
     else
@@ -587,7 +590,7 @@ exports.getParticularBookinDetailsConfirm = async (req, res, next) =>
         ({
             code: 200,
             status: true,
-            message:  constant.responseMessage.getAll,
+            message:  constants.responseMessage.getAll,
             data : customers
         });
     }
@@ -606,7 +609,7 @@ exports.getParticularBookinDetailsCancelled = async (req, res, next) =>
         ({
             code: 500,
             status: false,
-            message: constant.responseMessage.universalError,
+            message: constants.responseMessage.universalError,
         });
     }
     else
@@ -615,7 +618,7 @@ exports.getParticularBookinDetailsCancelled = async (req, res, next) =>
         ({
             code: 200,
             status: true,
-            message: constant.responseMessage.getAll,
+            message: constants.responseMessage.getAll,
             data : customers
         });
     }
@@ -637,7 +640,7 @@ exports.getParticularBookinDetailsRecent = async (req, res, next) =>
         ({
             code: 500,
             status: false,
-            message : constant.responseMessage.universalError,
+            message : constants.responseMessage.universalError,
         });
     }
     else
@@ -646,7 +649,7 @@ exports.getParticularBookinDetailsRecent = async (req, res, next) =>
         ({
             code: 200,
             status: true,
-            message: constant.responseMessage.getAll,
+            message: constants.responseMessage.getAll,
             data : customers
         });
     }
@@ -667,7 +670,7 @@ exports.getParticularCustomerAllBookings = async (req, res, next) =>
         ({
             code: 500,
             status: false,
-            message: constant.responseMessage.universalError,
+            message: constants.responseMessage.universalError,
         });
     }
     else
@@ -676,7 +679,7 @@ exports.getParticularCustomerAllBookings = async (req, res, next) =>
         ({
             code: 200,
             status: true,
-            message: constant.responseMessage.getAll,
+            message: constants.responseMessage.getAll,
             data : customers
         });
     }
@@ -695,7 +698,7 @@ exports.getParticularCustomerAllEnquiry = async (req, res, next)=>
         ({
             code: 500,
             status: false,
-            message: constant.responseMessage.universalError,
+            message: constants.responseMessage.universalError,
         });
     }
     else
@@ -704,7 +707,7 @@ exports.getParticularCustomerAllEnquiry = async (req, res, next)=>
         ({
             code: 200,
             status: true,
-            message: constant.responseMessage.getAll,
+            message: constants.responseMessage.getAll,
             data : customers
         });
     }
@@ -727,7 +730,7 @@ exports.getParticularCustomerAllBookingsDataFromInvoice = async (req, res, next)
         ({
             code: 500,
             status: false,
-            message: constant.responseMessage.universalError
+            message: constants.responseMessage.universalError
         });
     }
     else
@@ -736,7 +739,7 @@ exports.getParticularCustomerAllBookingsDataFromInvoice = async (req, res, next)
         ({
             code: 200,
             status: true,
-            message: constant.responseMessage.getAll,
+            message: constants.responseMessage.getAll,
             data : customers
         });
     }
@@ -760,7 +763,7 @@ exports.getParticularCustomerActiveBookingsDataFromInvoice = async (req, res, ne
         ({
             code: 500,
             status: false,
-            message: constant.responseMessage.universalError
+            message: constants.responseMessage.universalError
         });
     }
     else
@@ -769,7 +772,7 @@ exports.getParticularCustomerActiveBookingsDataFromInvoice = async (req, res, ne
         ({
             code: 200,
             status: true,
-            message: constant.responseMessage.getAll,
+            message: constants.responseMessage.getAll,
             data : customers
         });
     }
@@ -794,7 +797,7 @@ exports.getParticularCustomerInactiveBookingsDataFromInvoice = async (req, res, 
         ({
             code: 500,
             status: false,
-            message: constant.responseMessage.universalError
+            message: constants.responseMessage.universalError
         });
     }
     else
@@ -803,7 +806,7 @@ exports.getParticularCustomerInactiveBookingsDataFromInvoice = async (req, res, 
         ({
             code: 200,
             status: true,
-            message: constant.responseMessage.getAll,
+            message: constants.responseMessage.getAll,
             data : customers
         });
     }
@@ -829,7 +832,7 @@ exports.getParticularCustomerOngoingBookingsDataFromInvoice = async (req, res, n
         ({
             code: 500,
             status: false,
-            message: constant.responseMessage.universalError
+            message: constants.responseMessage.universalError
         });
     }
     else
@@ -838,7 +841,7 @@ exports.getParticularCustomerOngoingBookingsDataFromInvoice = async (req, res, n
         ({
             code: 200,
             status: true,
-            message: constant.responseMessage.getAll,
+            message: constants.responseMessage.getAll,
             data : customers
         });
     }
@@ -871,7 +874,7 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
         ({
             code : 400,
             status : true,
-            message : constant.responseMessage.erroredit,
+            message : constants.responseMessage.erroredit,
         });
     }
     // If the id proof image is in invalid format then this else if block of code will be executed.
@@ -881,7 +884,7 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
+            message : constants.responseMessage.attachement8
         });
     }
     // If the id proof image is not uploaded then this else if block of code will be executed.
@@ -891,7 +894,7 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : "An ID proof image of customer is required.",
+            message : constants.responseMessage.attachement9,
         });
     }
 
@@ -902,7 +905,7 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : `Data updated successfully.`,
+            message : constants.responseMessage.edit,
         });
     }
     
@@ -922,7 +925,7 @@ exports.getOneDetailsOnCustomerPage = async(req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constant.responseMessage.getOneErr,
+            message : constants.responseMessage.getOneErr,
             data : []
         });
     }
@@ -933,7 +936,7 @@ exports.getOneDetailsOnCustomerPage = async(req, res, next) =>
         ({
             code : 500,
             status : false,
-            message : constant.responseMessage.universalError,
+            message : constants.responseMessage.universalError,
             data : []
         });
     }
@@ -944,7 +947,7 @@ exports.getOneDetailsOnCustomerPage = async(req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.getAll,
+            message : constants.responseMessage.getAll,
             data : customers 
         });
     }

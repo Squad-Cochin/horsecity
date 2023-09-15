@@ -88,6 +88,8 @@ module.exports = (app) =>
     // Below route is for the signup or registration of the customer. This is for NEXTJS front end.
     app.post(`/customer/registration`,
     validateHeaders.verifyToken,
+    checkInput.CustomerAddRequestBody,
+    checkInput.CheckDataPresentWithDeletedAtDuringCustomerRegistration,
     checkInput.nameValidation,
     checkInput.emailValidation(constants.tableName.customers),
     checkInput.usernameValidation(constants.tableName.customers),

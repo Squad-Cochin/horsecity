@@ -6,7 +6,6 @@
 
 const con = require('../../configs/db.configs');
 const constants = require('../../utils/constants');
-const constant = require('../../utils/constants');
 const commonfetching = require('../../utils/helper/commonfetching');
 const commonoperation = require('../../utils/helper/commonoperation');
 const time = require('../../utils/helper/date');
@@ -36,7 +35,7 @@ module.exports = class authentication
                         const passwordHashed = await commonoperation.changePasswordToSQLHashing(password);
                         if (userData[0].password === passwordHashed)
                         { 
-                            if(userData[0].status === constant.status.inactive)
+                            if(userData[0].status === constants.status.inactive)
                             {
                                 resolve('serviceproviderinactive')
                             }
@@ -117,7 +116,7 @@ module.exports = class authentication
                     let updatePasswordQuery = `UPDATE ${constants.tableName.service_providers} SET
                                                password = '${newpasswordHashed}',
                                                expiry_at = '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}',
-                                               updated_at = '${time.getFormattedUTCTime(constant.timeOffSet.UAE)}'
+                                               updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                                WHERE user_name = '${username}' `;
                     con.query(updatePasswordQuery, (err, result) =>
                     {
@@ -184,7 +183,7 @@ module.exports = class authentication
                     // if(result[0].length != 0 && generateToken.token)
                     if(result[0].length != 0)
                     {
-                        let sendEmail = await mail.SendEmail(result[0].id, email, "Reset Password", constant.tableName.service_providers);
+                        let sendEmail = await mail.SendEmail(result[0].id, email, "Reset Password", constants.tableName.service_providers);
                         if(sendEmail)
                         {
                             resolve(true);
@@ -252,7 +251,7 @@ module.exports = class authentication
                 let tokenAndIdVerification  = await commonoperation.tokenAndIdVerification(id,token);
                   if(tokenAndIdVerification.id && tokenAndIdVerification.token){
                     let passwordHashed = await commonoperation.changePasswordToSQLHashing(newpassword);
-                    let updateQuery = `UPDATE ${constant.tableName.service_providers} 
+                    let updateQuery = `UPDATE ${constants.tableName.service_providers} 
                                        SET password = '${passwordHashed}' 
                                        WHERE id = '${id}'`;
                         con.query(updateQuery,async(err,data)=>{

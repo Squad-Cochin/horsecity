@@ -127,7 +127,7 @@ exports.getReportsTripDetails = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: "Successfully fetched trip details",
+        message: constants.responseMessage.getAll,
         data : getTripDetails
     });
    }
@@ -145,7 +145,7 @@ exports.getReportsInvoices = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: "Successfully fetched invoices",
+        message: constants.responseMessage.getAll,
         data : getInvoicesDetails
     });
    }
@@ -162,7 +162,7 @@ exports.getAccountsReports = async(req,res)=>
     ({
         code: 200,
         success: true,
-        message: "Successfully fetched accounts",
+        message: constants.responseMessage.getAll,
         data : getAccountsDetails
     });
    }

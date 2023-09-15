@@ -39,7 +39,8 @@ const isValidUsername = (username) =>
 
 const isvalidEmail = (email) => 
 {
-    if (new RegExp(process.env.EMAILREGEX).test(email))
+    const regex = (/^[a-zA-Z0-9.]+@[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*(\.[a-zA-Z0-9]{2,})+$/);
+    if (regex.test(email))
     {
         const domain = email.split(`@`)[1]; // get domain name after `@` symbol
         const domainParts = domain.split(`.`); // split domain name by `.` separator
@@ -124,7 +125,7 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `Email is required`
+            message : constants.responseMessage.validatorError1
         });
     }
     else
@@ -135,7 +136,7 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : `Email contain space. It is not allowed.`
+                message : constants.responseMessage.validatorError2
             });
         }
         else
@@ -146,26 +147,26 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
                 ({
                     code : 400,
                     status : false,
-                    message : `Email is not in correct format. Please check`
+                    message : constants.responseMessage.validatorError3
                 });                                
             }
             else
             {
                 if(req.method === `POST`)
                 {
-                    this.validateCommonInputAtStartingTime(tableName, `email`, req.body.email, req.params.id, 'Email')(req, res, next);
+                    this.validateCommonInputAtStartingTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
                 }
                 else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params.id}`)
                 {
-                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'Email')(req, res, next);
+                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
                 }
                 else if(req.method === `PUT` && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params.id}`)
                 {
-                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'Email')(req, res, next);
+                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
                 }
                 else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params?.id}`)
                 {
-                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'Email')(req, res, next);
+                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
                 }
                 else
                 {
@@ -189,7 +190,7 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `Username is required`
+            message : constants.responseMessage.validatorError4
         });
     }
     else
@@ -200,7 +201,7 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : `Username contain space. It is not allowed.`
+                message : constants.responseMessage.validatorError5
             });
         }
         else
@@ -211,7 +212,7 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
             //     ({
             //         code : 400,
             //         status : false,
-            //         message : `username is not valid. It must consist atleat 8 letter and less than 16 letters`
+            //         message : constants.responseMessage.validatorError6
             //     });                                
             // }
             // else
@@ -222,19 +223,19 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
                 }
                 else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params?.id}`)
                 {
-                    this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params.id, 'Username' )(req, res, next);
+                    this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params.id, 'username' )(req, res, next);
                 }
                 else if(req.method === `PUT` && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params?.id}`)
                 {
-                    this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params.id, 'Username')(req, res, next);
+                    this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params.id, 'username')(req, res, next);
                 }
                 else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params?.id}`)
                 {
-                    this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params?.id, 'Username')(req, res, next);
+                    this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params?.id, 'username')(req, res, next);
                 }
                 else if(req.method === `POST`)
                 {
-                    this.validateCommonInputAtStartingTime(tableName, `user_name`, req.body.userName, req.params.id, 'Username')(req, res, next);
+                    this.validateCommonInputAtStartingTime(tableName, `user_name`, req.body.userName, req.params.id, 'username')(req, res, next);
                 }
                 else 
                 {
@@ -258,7 +259,7 @@ exports.contactNumberValidation = (tableName) => async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `Contact number is required`
+            message : constants.responseMessage.validatorError7
         });
     }
     else
@@ -269,7 +270,7 @@ exports.contactNumberValidation = (tableName) => async (req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : `Contact Number contain space. It is not allowed.`
+                message : constants.responseMessage.validatorError8
             });
         }
         else
@@ -280,7 +281,7 @@ exports.contactNumberValidation = (tableName) => async (req, res, next) =>
             //     ({
             //         code : 400,
             //         status : false,
-            //         message : `Contact number is valid`
+            //         message : constants.responseMessage.validatorError9
             //     });                                
             // }
             // else
@@ -323,7 +324,7 @@ exports.isValidLicenceNumber = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `Licence number is required`
+            message : constants.responseMessage.validatorError10
         });
     }
     else
@@ -356,7 +357,7 @@ exports.idProofNumberValidation = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `Id proof number is required`
+            message : constants.responseMessage.validatorError11
         });
     }
     else
@@ -393,7 +394,7 @@ exports.isValidEmergencyContactNumber =  (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `Emergency contact number is required`
+            message : constants.responseMessage.validatorError13
         });
     }
     else
@@ -404,7 +405,7 @@ exports.isValidEmergencyContactNumber =  (req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : `Emergency contact number contain space. It is not allowed.`
+                message : constants.responseMessage.validatorError14
             });
         }
         else if (req.body.contact_no === req.body.emergency_contact_no)
@@ -413,7 +414,7 @@ exports.isValidEmergencyContactNumber =  (req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : `Emergency number and contact number cannot be same`
+                message : constants.responseMessage.validatorError15
             });
         }
         else
@@ -424,7 +425,7 @@ exports.isValidEmergencyContactNumber =  (req, res, next) =>
             //     ({
             //         code : 400,
             //         status : false,
-            //         message : `Emergency Contact number is not in valid`
+                    // message : constants.responseMessage.validatorError16
             //     });                                
             // }
             // else
@@ -443,7 +444,7 @@ exports.dateOfBirthValidation = (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `Date of Birth is required`
+            message : constants.responseMessage.validatorError17
         });
     }
     else
@@ -454,7 +455,7 @@ exports.dateOfBirthValidation = (req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : `Date of birth contain space. It is not allowed.`
+                message : constants.responseMessage.validatorError18
             });
         }
         else
@@ -465,7 +466,7 @@ exports.dateOfBirthValidation = (req, res, next) =>
                 ({
                     code : 400,
                     status : false,
-                    message : `Date of birth is not in valid. The correct format is DD/Month starting three Letters/YYYY`
+                    message : constants.responseMessage.validatorError19
                 });                                
             }
             else
@@ -476,19 +477,15 @@ exports.dateOfBirthValidation = (req, res, next) =>
     }
 }
 
-exports.nameValidation = (req, res, next) =>
-{
-    if (!req.body.name) 
-    {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : `Name is required`
+exports.nameValidation = (req, res, next) => {
+    const name = req.body.name;
+    if (!name || !/^[a-zA-Z\s]+$/.test(name)) {
+        return res.status(200).send({
+            code: 400,
+            status: false,
+            message: constants.responseMessage.validatorError50,
         });
-    }
-    else
-    {
+    } else {
         next();
     }    
 };
@@ -501,7 +498,7 @@ exports.idProofValidationWhileUpdate = async(req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `Id proof number is required`
+            message : constants.responseMessage.validatorError20
         });
     }
     else
@@ -523,7 +520,7 @@ exports.idProofValidationWhileUpdate = async(req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : `This id proof number already exists in the database. Someone is already registered with this id proof number`
+                message : constants.responseMessage.validatorError21
             });
         }
         if(checkIdProofNumber === `valuenotchanged`)
@@ -546,7 +543,7 @@ exports.isValidDescription = (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `Description is required`
+            message : constants.responseMessage.validatorError22
         });
     }
     else
@@ -563,7 +560,7 @@ exports.passwordsimilarity = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `Password and confirm password are not similar`
+            message : constants.responseMessage.validatorError23
         });
     }
     else
@@ -574,7 +571,7 @@ exports.passwordsimilarity = async (req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : `New password similar with old password. It is not allowed.`
+                message : constants.responseMessage.validatorError24
             });
         }
         else if (req.body.confirmnewpassword === req.body.password)
@@ -583,7 +580,7 @@ exports.passwordsimilarity = async (req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : `Confirm new password similar with old password. It is not allowed.`
+                message : constants.responseMessage.validatorError25
             });
         }
         else
@@ -602,7 +599,7 @@ exports.passwordValidation = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `Password is required`
+            message : constants.responseMessage.validatorError26
         });
     }
     else if(hasOnlyNonSpaces(password) === true)
@@ -611,7 +608,7 @@ exports.passwordValidation = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `Password contain space. It is not allowed.`
+            message : constants.responseMessage.validatorError27
         });
     }
     else
@@ -637,7 +634,7 @@ exports.passwordValidation = async (req, res, next) =>
                     ({
                         success: false,
                         code: 400,
-                        message: `Failed! Not a valid password. Password must meet the following conditions: The password must contain at least one lowercase or uppercase letter (a-z or A-Z), at least one special character from the set (-, #, $, ., %, &, or *), minimum 8 character, maximum 16 character`,
+                        message: constants.responseMessage.passworderror
                     });
                 }
             }    
@@ -654,7 +651,7 @@ exports.newpassword = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `New password is required`
+            message : constants.responseMessage.validatorError28
         });
     }
     else if(hasOnlyNonSpaces(password) === true)
@@ -663,7 +660,7 @@ exports.newpassword = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `New password contain space. It is not allowed.`
+            message : constants.responseMessage.validatorError29
         });
     }
     else
@@ -689,7 +686,7 @@ exports.newpassword = async (req, res, next) =>
                     ({
                         success: false,
                         code: 400,
-                        message : "Failed! Not a valid password. Password must meet the following conditions: The password must contain at least one lowercase or uppercase letter (a-z or A-Z), at least one special character from the set (-, #, $, ., %, &, or *), minimum 8 character, maximum 16 character",
+                        message : constants.responseMessage.newpassworderror
                     });
                 }
             }    
@@ -706,7 +703,7 @@ exports.confirmnewpassword = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `Confirm password is required`
+            message : constants.responseMessage.validatorError30
         });
     }
     else if(hasOnlyNonSpaces(password) === true)
@@ -715,7 +712,7 @@ exports.confirmnewpassword = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `Confirm password contain space. It is not allowed.`
+            message : constants.responseMessage.validatorError31
         });
     }
     else
@@ -741,7 +738,7 @@ exports.confirmnewpassword = async (req, res, next) =>
                     ({
                         success: false,
                         code: 400,
-                        message : "Failed! Not a valid password. Password must meet the following conditions: The password must contain at least one lowercase or uppercase letter (a-z or A-Z), at least one special character from the set (-, #, $, ., %, &, or *), minimum 8 character, maximum 16 character"
+                        message : constants.responseMessage.confirmpassworderror
                     });
                 }
             }    
@@ -792,7 +789,7 @@ exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
         ({
             code : 400,
             success: false,
-            message : `Customer Id proof image is not uploaded`
+            message : constants.responseMessage.validatorError32
         });     
     }
     else
@@ -828,16 +825,16 @@ exports.isDriverProfileImageSubmitted = (req, res, next) =>
         ({
             code : 400,
             success: false,
-            message : `Driver profile image is not uploaded`
+            message : constants.responseMessage.validatorError33
         });     
     }
     else
     {
-        if(req.method === 'PUT' && req.url === url.UPDATE_DRIVER_PAGE_URL + req.params.id && !req.files?.profile_image)
+        if(req.method === 'PUT' && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params?.id}` && !req.files?.profile_image)
         {
             next();
         }
-        if(req.method === 'PUT' && req.url === url.UPDATE_DRIVER_PAGE_URL + req.params.id && req.files?.profile_image)
+        if(req.method === 'PUT' && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params?.id}` && req.files?.profile_image)
         {
             next();
         }
@@ -856,16 +853,16 @@ exports.isDriverLicenceImageSubmitted = (req, res, next) =>
         ({
             code : 400,
             success: false,
-            message : `Driver licence image is not uploaded`
+            message : constants.responseMessage.validatorError36
         });     
     }
     else
     {
-        if(req.method === 'PUT' && req.url === url.UPDATE_DRIVER_PAGE_URL + req.params.id && !req.files?.licence_img)
+        if(req.method === 'PUT' && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params.id}` && !req.files?.licence_img)
         {
             next();
         }
-        if(req.method === 'PUT' && req.url === url.UPDATE_DRIVER_PAGE_URL + req.params.id && req.files?.licence_img)
+        if(req.method === 'PUT' && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params.id}` && req.files?.licence_img)
         {
             next();
         }
@@ -884,7 +881,7 @@ exports.idProofImageWhileUpdate = (req, res, next) =>
         ({
             code : 400,
             success: false,
-            message : `Customer id proof image is not uploaded`
+            message : constants.responseMessage.validatorError37
         });
     }
     else
@@ -1057,7 +1054,7 @@ exports.checkingDuplicateEnquiry = async (req, res, next) =>
                             ({
                                 code : 400,
                                 status : false,
-                                message : `Previous enquiry from this same details are not confirmed by the service provider till now. So we can forward this enquiry of your right now. Please wait`
+                                message : constants.responseMessage.validatorError34
                             });
                         }
                         if(result[0].description !== req.body.description)
@@ -1066,7 +1063,7 @@ exports.checkingDuplicateEnquiry = async (req, res, next) =>
                             ({
                                 code : 400,
                                 status : false,
-                                message : `Previous enquiry from this same details are not confirmed by the service provider till now. You have changed the description only. It is not allowed. Service provider will reach to you. Please tell them directly`
+                                message : constants.responseMessage.validatorError35
                             });
                         }
                     }
@@ -1145,7 +1142,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                     ({
                         code : 400,
                         status : false,
-                        message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
+                        message : constants.responseMessage.attachement8,
                     });
                 }
                 else if(uploadIdproofImage === 'NOATTACHEMENT')
@@ -1154,7 +1151,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                     ({
                         code : 400,
                         status : false,
-                        message : "An ID proof image is required.",
+                        message : constants.responseMessage.attachement9
                     });
                 }
                 else
@@ -1170,7 +1167,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                         ({
                             code: 200,
                             status: true,
-                            message: ` ${constants.responseMessage.insert}`,
+                            message: constants.responseMessage.insert,
                         });
                     }
                     else
@@ -1202,7 +1199,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                         ({
                             code : 400,
                             status : false,
-                            message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
+                            message : constants.responseMessage.attachement8
                         });
                     }
                     else if(uploadIdproofImage === 'NOATTACHEMENT')
@@ -1211,7 +1208,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                         ({
                             code : 400,
                             status : false,
-                            message : "An ID proof image is required.",
+                            message : constants.responseMessage.attachement9
                         });
                     }
                     else
@@ -1237,7 +1234,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                             ({
                                 code: 200,
                                 status: true,
-                                message: ` Customer ${constants.responseMessage.insert}`,
+                                message: constants.responseMessage.insert,
                             });
                         }
                         else
@@ -1267,7 +1264,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                             ({
                                 code : 400,
                                 status : false,
-                                message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
+                                message : constants.responseMessage.attachement8
                             });
                         }
                         else if(uploadIdproofImage === 'NOATTACHEMENT')
@@ -1276,7 +1273,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                             ({
                                 code : 400,
                                 status : false,
-                                message : "An ID proof image is required.",
+                                message : constants.responseMessage.attachement9
                             });
                         }
                         else
@@ -1304,7 +1301,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                 ({
                                     code: 200,
                                     status: true,
-                                    message: ` Customer ${constants.responseMessage.insert}`,
+                                    message: constants.responseMessage.insert,
                                 });
                             }
                             else
@@ -1334,7 +1331,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                 ({
                                     code : 400,
                                     status : false,
-                                    message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
+                                    message : constants.responseMessage.attachement8
                                 });
                             }
                             else if(uploadIdproofImage === 'NOATTACHEMENT')
@@ -1343,7 +1340,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                 ({
                                     code : 400,
                                     status : false,
-                                    message : "An ID proof image is required.",
+                                    message : constants.responseMessage.attachement9
                                 });
                             }
                             else
@@ -1371,7 +1368,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                     ({
                                         code: 200,
                                         status: true,
-                                        message: ` Customer ${constants.responseMessage.insert}`,
+                                        message: constants.responseMessage.insert,
                                     });
                                 }
                                 else
@@ -1401,7 +1398,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                     ({
                                         code : 400,
                                         status : false,
-                                        message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
+                                        message : constants.responseMessage.attachement8
                                     });
                                 }
                                 else if(uploadIdproofImage === 'NOATTACHEMENT')
@@ -1410,7 +1407,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                     ({
                                         code : 400,
                                         status : false,
-                                        message : "An ID proof image is required.",
+                                        message : constants.responseMessage.attachement9
                                     });
                                 }
                                 else
@@ -1438,7 +1435,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                         ({
                                             code: 200,
                                             status: true,
-                                            message: ` Customer ${constants.responseMessage.insert}`,
+                                            message: constants.responseMessage.insert,
                                         });
                                     }
                                     else
@@ -1468,7 +1465,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                         ({
                                             code : 400,
                                             status : false,
-                                            message : "We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).",
+                                            message : constants.responseMessage.attachement8
                                         });
                                     }
                                     // If the id proof image is not uploaded then this else if block of code will be executed.
@@ -1478,7 +1475,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                         ({
                                             code : 400,
                                             status : false,
-                                            message : "An ID proof image is required.",
+                                            message : constants.responseMessage.attachement9
                                         });
                                     }
                                     else
@@ -1506,7 +1503,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                             ({
                                                 code: 200,
                                                 status: true,
-                                                message: ` Customer ${constants.responseMessage.insert}`,
+                                                message: constants.responseMessage.insert,
                                             });
                                         }
                                         else
@@ -1579,7 +1576,7 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                     ({
                         code: 200,
                         status: true,
-                        message: `${constants.responseMessage.insert}`,
+                        message: constants.responseMessage.insert,
                     });
                 }
                 else
@@ -1601,14 +1598,13 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                 let result12 = await commonoperation.queryAsync(selQuery2);
                 if(result12.length != 0)
                 {
-                    console.log('here2');
                     const upQuery2 = `  UPDATE ${constants.tableName.customers} c
                                         SET c.deleted_at = NULL,
                                         c.name = '${req.body.name}',
                                         c.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
                                         c.password = SHA2('${process.env.PASSWORD}', 256),
                                         c.id_proof_image = 'NULL',
-                                        c.id_proof_no - 'NULL',
+                                        c.id_proof_no = 'NULL',
                                         c.status = '${constants.status.active}',
                                         c.phone_verified = 'TRUE',
                                         c.email_verified = 'TRUE',
@@ -1620,14 +1616,13 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                                         c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                         WHERE c.id = ${result12[0].id}  `;
                     const result22 = await commonoperation.queryAsync(upQuery2);
-                    console.log('21: ', result21);
                     if (result22.affectedRows > 0)
                     {
                         return res.status(200).send
                         ({
                             code: 200,
                             status: true,
-                            message: `${constants.responseMessage.insert}`,
+                            message: constants.responseMessage.insert,
                         });
                     }
                     else
@@ -1649,14 +1644,13 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                     let result13 = await commonoperation.queryAsync(selQuery3);
                     if(result13.length != 0)
                     {
-                        console.log('here3');
                         const upQuery3 = `  UPDATE ${constants.tableName.customers} c
                                             SET c.deleted_at = NULL,
                                             c.name = '${req.body.name}',
                                             c.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
                                             c.password = SHA2('${process.env.PASSWORD}', 256),
                                             c.id_proof_image = 'NULL',
-                                            c.id_proof_no - 'NULL',
+                                            c.id_proof_no = 'NULL',
                                             c.status = '${constants.status.active}',
                                             c.phone_verified = 'TRUE',
                                             c.email_verified = 'TRUE',
@@ -1668,14 +1662,13 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                                             c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                             WHERE c.id = ${result13[0].id}  `;
                         const result23 = await commonoperation.queryAsync(upQuery3);
-                        console.log('21: ', result21);
                         if (result23.affectedRows > 0)
                         {
                             return res.status(200).send
                             ({
                                 code: 200,
                                 status: true,
-                                message: `${constants.responseMessage.insert}`,
+                                message: constants.responseMessage.insert,
                             });
                         }
                         else
@@ -1697,14 +1690,13 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                         let result14 = await commonoperation.queryAsync(selQuery4);
                         if(result14.length != 0)
                         {
-                            console.log('here4');
                             let upQuery4 = `UPDATE ${constants.tableName.customers} c
                                             SET c.deleted_at = NULL,
                                             c.name = '${req.body.name}',
                                             c.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
                                             c.password = SHA2('${process.env.PASSWORD}', 256),
                                             c.id_proof_image = 'NULL',
-                                            c.id_proof_no - 'NULL',
+                                            c.id_proof_no = 'NULL',
                                             c.status = '${constants.status.active}',
                                             c.phone_verified = 'TRUE',
                                             c.email_verified = 'TRUE',
@@ -1716,14 +1708,13 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                                             c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                             WHERE c.id = ${result14[0].id} `;
                             const result24 = await commonoperation.queryAsync(upQuery4);
-                            console.log('21: ', result21);                
                             if (result24.affectedRows > 0)
                             {
                                 return res.status(200).send
                                 ({
                                     code: 200,
                                     status: true,
-                                    message: `${constants.responseMessage.insert}`,
+                                    message: constants.responseMessage.insert,
                                 });
                             }
                             else
@@ -1755,14 +1746,13 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                                                     c.id_proof_image = '${uploadIdproofImage}',
                                                     WHERE c.id = ${result15[0].id}`;
                                 const result25 = await commonoperation.queryAsync(upQuery);
-                                console.log('25: ', result21);                                
                                 if (result25.affectedRows > 0)
                                 {
                                     return res.status(200).send
                                     ({
                                         code: 200,
                                         status: true,
-                                        message: `${constants.responseMessage.insert}`,
+                                        message: constants.responseMessage.insert,
                                     });
                                 }
                                 else
@@ -1804,7 +1794,7 @@ exports.passwordandconfirmpasswordsimilarity = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `Password and confirm password are not similar`
+            message : constants.responseMessage.validatorError23
         });
     }
     else
@@ -1812,3 +1802,521 @@ exports.passwordandconfirmpasswordsimilarity = async (req, res, next) =>
       next();
     }
 }
+
+exports.CheckRole = async (req, res, next) =>
+{
+    return new Promise((resolve, reject) =>
+    {
+        try
+        {
+            const roleNameQuery = `SELECT sp.id, r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${req.params.id} AND sp.role_Id = r.id`;
+            con.query(roleNameQuery, async (err, result) =>
+            {
+                if (err)
+                {
+                    return res.status(200).send
+                    ({
+                        //`Error while fetching the rolename from the params`,
+                        // code: 400,
+                        code : 500,
+                        status: false,
+                        message : constants.responseMessage.universalError
+                    });
+                }
+                else 
+                {
+                    if (result[0].role_id === constants.Roles.service_provider) 
+                    {
+                        const selQuery = `SELECT * FROM ${constants.tableName.drivers} d WHERE d.name = '${req.body.name}' AND d.email = '${req.body.email}' AND d.contact_no = '${req.body.contact_no}' AND d.emergency_contact_no = '${req.body.emergency_contact_no}' AND d.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}' AND d.description = '${req.body.description}' AND d.licence_no = '${req.body.licence_no}' AND d.deleted_at IS NOT NULL`; // Your query here
+                        const result22 = await commonoperation.queryAsync(selQuery);
+                        if (result22.length != 0)
+                        {
+                            uploadlicence_img = await commonoperation.fileUploadTwo(req.files.licence_img, constants.attachmentLocation.driver.upload.licence);                        
+                            uploadprofile_image = await commonoperation.fileUploadTwo(req.files.profile_image, constants.attachmentLocation.driver.upload.profilephoto);  
+                            if(uploadlicence_img === 'INVALIDFORMAT')
+                            {
+                                return res.status(200).send
+                                ({
+                                    code : 400,
+                                    status : false,
+                                    message : constants.responseMessage.attachement5
+                                });
+                            }
+                            else if(uploadlicence_img === 'NOATTACHEMENT')
+                            {
+                                return res.status(200).send
+                                ({
+                                    code : 400,
+                                    status : false,
+                                    message : constants.responseMessage.attachement2,
+                                });
+                            }
+                            else if(uploadprofile_image === 'INVALIDFORMAT')
+                            {
+                                return res.status(200).send
+                                ({
+                                    code : 400,
+                                    status : false,
+                                    
+                                    message : constants.responseMessage.attachement4
+                                });
+                            }
+                            else if(uploadprofile_image === 'NOATTACHEMENT')
+                            {
+                                return res.status(200).send
+                                ({
+                                    code : 400,
+                                    status : false,
+                                    message : constants.responseMessage.attachement3,
+                                });
+                            }
+                            else
+                            {                            
+                                uploadprofile_image = await commonoperation.fileUploadTwo(req.files.profile_image, constants.attachmentLocation.driver.upload.profilephoto);                                                
+                                if(uploadprofile_image === 'INVALIDFORMAT')
+                                {
+                                    return res.status(200).send
+                                    ({
+                                        code : 400,
+                                        status : false,
+                                        message : constants.responseMessage.attachement4
+                                    });
+                                }
+                                else if(uploadprofile_image === 'NOATTACHEMENT')
+                                {
+                                    return res.status(200).send
+                                    ({
+                                        code : 400,
+                                        status : false,
+                                        message : constants.responseMessage.attachement,
+                                    });
+                                }
+                                else
+                                {
+                                    const upQuery = `   UPDATE ${constants.tableName.drivers} d 
+                                                        SET d.deleted_at = NULL,
+                                                        d.licence_img = '${uploadlicence_img}',
+                                                        d.profile_image = '${uploadprofile_image}',
+                                                        d.status = '${constants.status.active}'
+                                                        WHERE d.id = ${result22[0].id}`;
+                                    const result23 = await commonoperation.queryAsync(upQuery);
+                                    if (result23.affectedRows > 0)
+                                    {
+                                        const assign = await assignserviceprovider(result22[0].id, req.params.id);
+                                        if (assign === 'datainserted')
+                                        {
+                                            return res.status(200).send
+                                            ({
+                                                code: 200,
+                                                status: true,
+                                                message: constants.responseMessage.insert,
+                                            });
+                                        }
+                                        else
+                                        {
+                                            return res.status(200).send
+                                            ({
+                                                code : 500,
+                                                status : false,
+                                                message : constants.responseMessage.universalError
+                                            })
+                                        }
+                                    }
+                                    else
+                                    {
+                                        return res.status(200).send
+                                        ({
+                                            code : 500,
+                                            status : false,
+                                            message : constants.responseMessage.universalError
+                                        })
+                                    }
+                                }
+                            }
+                        }
+                        else 
+                        {
+                            const selQuery2 = `SELECT * FROM ${constants.tableName.drivers} d WHERE d.name = '${req.body.name}' AND d.email = '${req.body.email}' AND d.contact_no = '${req.body.contact_no}' AND d.emergency_contact_no = '${req.body.emergency_contact_no}' AND d.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}' AND d.description = '${req.body.description}' AND d.licence_no = '${req.body.licence_no}' AND d.deleted_at IS NOT NULL`;
+                            const result23 = await commonoperation.queryAsync(selQuery2);
+                            if (result23.length != 0)
+                            {
+                                let selQuery3 = `SELECT * FROM assign_drivers ad WHERE ad.driver_id = ${result23[0].id} AND ad.service_provider_id = ${req.params.id} AND ad.deleted_at IS NOT NULL`
+                                const result24 = await commonoperation.queryAsync(selQuery3);
+                                if(result24.length == 0)
+                                {
+                                    const assign = await assignserviceprovider(result23[0].id, req.params.id);
+                                    if (assign === 'datainserted')
+                                    {
+                                        return res.status(200).send
+                                        ({
+                                            code: 200,
+                                            status: true,
+                                            message: constants.responseMessage.insert,
+                                        });
+                                    }
+                                    else
+                                    {
+                                        return res.status(200).send
+                                        ({
+                                            code : 500,
+                                            status : false,
+                                            message : constants.responseMessage.universalError
+                                        })
+                                    }
+                                }
+                            }
+                            else
+                            {
+                                const selQuery4 = `SELECT * FROM ${constants.tableName.drivers} d WHERE d.email = '${req.body.email}' AND d.contact_no = '${req.body.contact_no}' AND d.licence_no = '${req.body.licence_no}' AND d.deleted_at IS NOT NULL`;   
+                                uploadlicence_img = await commonoperation.fileUploadTwo(req.files.licence_img, constants.attachmentLocation.driver.upload.licence);
+                                uploadprofile_image = await commonoperation.fileUploadTwo(req.files.profile_image, constants.attachmentLocation.driver.upload.profilephoto); 
+                                if(uploadlicence_img === 'INVALIDFORMAT')
+                                {
+                                    return res.status(200).send
+                                    ({
+                                        code : 400,
+                                        status : false,
+                                        message : constants.responseMessage.attachement5
+                                    });
+                                }
+                                else if(uploadlicence_img === 'NOATTACHEMENT')
+                                {
+                                    return res.status(200).send
+                                    ({
+                                        code : 400,
+                                        status : false,
+                                        message : constants.responseMessage.attachement2,
+                                    });
+                                }
+                                else if(uploadprofile_image === 'INVALIDFORMAT')
+                                {
+                                    return res.status(200).send
+                                    ({
+                                        code : 400,
+                                        status : false,
+                                        message : constants.responseMessage.attachement4
+                                    });
+                                }
+                                else if(uploadprofile_image === 'NOATTACHEMENT')
+                                {
+                                    return res.status(200).send
+                                    ({
+                                        code : 400,
+                                        status : false,
+                                        message : constants.responseMessage.attachement1
+                                    });
+                                }
+                                else
+                                {
+                                    const result4 = await commonoperation.queryAsync(selQuery4);                            
+                                    if(result4.length != 0)
+                                    {
+                                        let upQuery = `UPDATE ${constants.tableName.drivers} d 
+                                        SET d.name ='${req.body.name}',
+                                        d.emergency_contact_no = '${req.body.emergency_contact_no}',
+                                        d.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
+                                        d.profile_image = '${uploadprofile_image}',
+                                        d.licence_img = '${uploadlicence_img}',
+                                        d.description = '${req.body.description}',
+                                        d.status = '${constants.status.active}',
+                                        d.deleted_at = NULL
+                                        WHERE d.id = ${result4[0].id}`;
+                                        const upResult4 = await commonoperation.queryAsync(upQuery);
+                                        if(upResult4.affectedRows > 0)
+                                        {
+                                            const assign = await assignserviceprovider(result4[0].id, req.params.id);
+                                            if (assign === 'datainserted')
+                                            {
+                                                return res.status(200).send
+                                                ({
+                                                    code: 200,
+                                                    status: true,
+                                                    message: constants.responseMessage.insert,
+                                                });
+                                            }  
+                                        }
+                                    }
+                                    else
+                                    {
+                                        const selQuery5 = `SELECT * FROM ${constants.tableName.drivers} d WHERE d.contact_no = '${req.body.contact_no}' AND d.licence_no = '${req.body.licence_no}' AND d.deleted_at IS NOT NULL`;
+                                        const result5 = await commonoperation.queryAsync(selQuery5);
+                                        if(result5.length != 0)
+                                        {
+                                            let uploadlicence_img = await commonoperation.fileUploadTwo(req.files.licence_img, constants.attachmentLocation.driver.upload.licence);
+                                            let uploadprofile_image = await commonoperation.fileUploadTwo(req.files.profile_image, constants.attachmentLocation.driver.upload.profilephoto); 
+                                            if(uploadlicence_img === 'INVALIDFORMAT')
+                                            {
+                                                return res.status(200).send
+                                                ({
+                                                    code : 400,
+                                                    status : false,
+                                                    message : constants.responseMessage.attachement5
+                                                });
+                                            }
+                                            else if(uploadlicence_img === 'NOATTACHEMENT')
+                                            {
+                                                return res.status(200).send
+                                                ({
+                                                    code : 400,
+                                                    status : false,
+                                                    message : constants.responseMessage.attachement2,
+                                                });
+                                            }
+                                            else if(uploadprofile_image === 'INVALIDFORMAT')
+                                            {
+                                                return res.status(200).send
+                                                ({
+                                                    code : 400,
+                                                    status : false,
+                                                    message : constants.responseMessage.attachement4
+                                                });
+                                            }
+                                            else if(uploadprofile_image === 'NOATTACHEMENT')
+                                            {
+                                                return res.status(200).send
+                                                ({
+                                                    code : 400,
+                                                    status : false,
+                                                    message : constants.responseMessage.attachement1,
+                                                });
+                                            }
+                                            else
+                                            {
+                                                let upQuery = `UPDATE ${constants.tableName.drivers} d 
+                                                SET d.name ='${req.body.name}',
+                                                d.email = '${req.body.email}',
+                                                d.emergency_contact_no = '${req.body.emergency_contact_no}',
+                                                d.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
+                                                d.profile_image = '${uploadprofile_image}',
+                                                d.licence_img = '${uploadlicence_img}',
+                                                d.description = '${req.body.description}',
+                                                d.status = '${constants.status.active}',
+                                                d.deleted_at = NULL
+                                                WHERE d.id = ${result5[0].id}`;
+                                                const upResult5 = await commonoperation.queryAsync(upQuery);
+                                                if(upResult5.affectedRows > 0)
+                                                {
+                                                    const assign = await assignserviceprovider(result5[0].id, req.params.id);
+                                                    if (assign === 'datainserted')
+                                                    {
+                                                        return res.status(200).send
+                                                        ({
+                                                            code: 200,
+                                                            status: true,
+                                                            message: constants.responseMessage.insert,
+                                                        });
+                                                    }
+                                                }
+                                            }
+                                        }
+                                        else
+                                        {
+                                            const selQuery6 = `SELECT * FROM ${constants.tableName.drivers} d WHERE d.email = '${req.body.email}' AND d.licence_no = '${req.body.licence_no}' AND d.deleted_at IS NOT NULL`;
+                                            const result6 = await commonoperation.queryAsync(selQuery6);
+                                            if(result6.length != 0)
+                                            {
+                                                let uploadlicence_img = await commonoperation.fileUploadTwo(req.files.licence_img, constants.attachmentLocation.driver.upload.licence);
+                                                let uploadprofile_image = await commonoperation.fileUploadTwo(req.files.profile_image, constants.attachmentLocation.driver.upload.profilephoto);
+                                                if(uploadlicence_img === 'INVALIDFORMAT')
+                                                {
+                                                    return res.status(200).send
+                                                    ({
+                                                        code : 400,
+                                                        status : false,
+                                                        message : constants.responseMessage.attachement5
+                                                    });
+                                                }
+                                                else if(uploadlicence_img === 'NOATTACHEMENT')
+                                                {
+                                                    return res.status(200).send
+                                                    ({
+                                                        code : 400,
+                                                        status : false,
+                                                        message : constants.responseMessage.attachement2,
+                                                    });
+                                                }
+                                                else if(uploadprofile_image === 'INVALIDFORMAT')
+                                                {
+                                                    return res.status(200).send
+                                                    ({
+                                                        code : 400,
+                                                        status : false,
+                                                        message : constants.responseMessage.attachement4
+                                                    });
+                                                }
+                                                else if(uploadprofile_image === 'NOATTACHEMENT')
+                                                {
+                                                    return res.status(200).send
+                                                    ({
+                                                        code : 400,
+                                                        status : false,
+                                                        message : constants.responseMessage.attachement1,
+                                                    });
+                                                }
+                                                else
+                                                {
+                                                    let upQuery = `     UPDATE ${constants.tableName.drivers} d 
+                                                                        SET d.name ='${req.body.name}',
+                                                                        d.contact_no = '${req.body.contact_no}',
+                                                                        d.emergency_contact_no = '${req.body.emergency_contact_no}',
+                                                                        d.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
+                                                                        d.profile_image = '${uploadprofile_image}',
+                                                                        d.licence_img = '${uploadlicence_img}',
+                                                                        d.description = '${req.body.description}',
+                                                                        d.status = '${constants.status.active}',
+                                                                        d.deleted_at = NULL
+                                                                        WHERE d.id = ${result6[0].id}`;
+                                            
+                                                    const upResult6 = await commonoperation.queryAsync(upQuery);
+                                                    if(upResult6.affectedRows > 0)
+                                                    {
+                                                        const assign = await assignserviceprovider(result6[0].id, req.params.id);
+                                                        if (assign === 'datainserted')
+                                                        {
+                                                            return res.status(200).send
+                                                            ({
+                                                                code: 200,
+                                                                status: true,
+                                                                message: constants.responseMessage.insert,
+                                                            });
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                            else
+                                            {
+                                                const selQuery7 = `SELECT * FROM ${constants.tableName.drivers} d WHERE d.email = '${req.body.email}' AND  d.contact_no = '${req.body.contact_no}' AND d.deleted_at IS NOT NULL`;
+                                                const result7 = await commonoperation.queryAsync(selQuery7);
+                                                if(result7.length != 0)
+                                                {
+                                                    let uploadlicence_img = await commonoperation.fileUploadTwo(req.files.licence_img, constants.attachmentLocation.driver.upload.licence);
+                                                    let uploadprofile_image = await commonoperation.fileUploadTwo(req.files.profile_image, constants.attachmentLocation.driver.upload.profilephoto);
+                                                    if(uploadlicence_img === 'INVALIDFORMAT')
+                                                    {
+                                                        return res.status(200).send
+                                                        ({
+                                                            code : 400,
+                                                            status : false,
+                                                            message : constants.responseMessage.attachement5
+                                                        });
+                                                    }
+                                                    else if(uploadlicence_img === 'NOATTACHEMENT')
+                                                    {
+                                                        return res.status(200).send
+                                                        ({
+                                                            code : 400,
+                                                            status : false,
+                                                            message : constants.responseMessage.attachement2,
+                                                        });
+                                                    }
+                                                    else if(uploadprofile_image === 'INVALIDFORMAT')
+                                                    {
+                                                        return res.status(200).send
+                                                        ({
+                                                            code : 400,
+                                                            status : false,
+                                                            message : constants.responseMessage.attachement4
+                                                        });
+                                                    }
+                                                    else if(uploadprofile_image === 'NOATTACHEMENT')
+                                                    {
+                                                        return res.status(200).send
+                                                        ({
+                                                            code : 400,
+                                                            status : false,
+                                                            message : constants.responseMessage.attachement1,
+                                                        });
+                                                    }
+                                                    else
+                                                    {
+                                                        let upQuery = ` UPDATE ${constants.tableName.drivers} d 
+                                                                        SET d.name ='${req.body.name}',
+                                                                        d.licence_no = '${req.body.licence_no}',
+                                                                        d.emergency_contact_no = '${req.body.emergency_contact_no}',
+                                                                        d.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}',
+                                                                        d.profile_image = '${uploadprofile_image}',
+                                                                        d.licence_img = '${uploadlicence_img}',
+                                                                        d.description = '${req.body.description}',
+                                                                        d.status = '${constants.status.active}',
+                                                                        d.deleted_at = NULL
+                                                                        WHERE d.id = ${result7[0].id}`;
+                                                        const upResult7 = await commonoperation.queryAsync(upQuery);
+                                                        if(upResult7.affectedRows > 0)
+                                                        {
+                                                            const assign = await assignserviceprovider(result7[0].id, req.params.id);
+                                                            if (assign === 'datainserted')
+                                                            {
+                                                                return res.status(200).send
+                                                                ({
+                                                                    code: 200,
+                                                                    status: true,
+                                                                    message: constants.responseMessage.insert,
+                                                                });
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                                else    
+                                                {
+                                                    next();
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
+                        }
+                    }
+                    else if (result[0].name === constants.roles.admin)
+                    {
+                        next();
+                    }
+                    else
+                    {
+                        return res.status(200).send
+                        ({
+                            code : 500,
+                            status : false,
+                            message : constants.responseMessage.universalError
+                        });
+                    }
+                }
+            });
+        }
+        catch (error)
+        {
+            console.log('Error in CheckRole function:', error);
+            return res.status(500).send
+            ({
+                code: 500,
+                status: false,
+                message: constants.responseMessage.universalError,
+            });
+        }
+    });
+};
+
+exports.driverRequestAddBody = async (req, res, next) => 
+{
+    try
+    {
+        await checkValueEntered(req.body.name, 'Name')(req, res, next);
+        await checkValueEntered(req.body.email, 'Email')(req, res, next);
+        await checkValueEntered(req.body.emergency_contact_no, 'Emergency contact number')(req, res, next);
+        await checkValueEntered(req.body.licence_no, 'Licence number')(req, res, next);
+        await checkValueEntered(req.body.contact_no, 'Contact number')(req, res, next);
+        await checkValueEntered(req.body.date_of_birth, 'Date of birth')(req, res, next);
+        await checkValueEntered(req.body.description, 'description')(req, res, next);
+        next();
+    }
+    catch (error)
+    { 
+        // Handle any errors that might occur during the checks
+        res.status(500).send
+        ({
+            code: 500,
+            status: false,
+            message: constants.responseMessage.universalError
+        });
+    }
+}; 

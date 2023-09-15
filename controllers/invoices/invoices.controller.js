@@ -9,9 +9,8 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-const constant = require('../../utils/constants'); // Constant elements are stored in this file
+const constants = require('../../utils/constants'); // Constant elements are stored in this file
 const invoice = require('../../models/invoices/invoice.model');  // The model from where the logic is intantiate are written in invoice model
-
 /**
  * The below function is for getting all the invoices details. Those invoices who deleted at feild are having
  * 'NULL' only those details will be shown or fetched.
@@ -28,7 +27,7 @@ exports.getAll = async (req, res) =>
         ({
             code : 500,
             status : false,
-            message : constant.responseMessage.universalError,
+            message : constants.responseMessage.universalError,
         });
     }
     // If there are no invoices in the database. Then these lines of code will be executed
@@ -39,7 +38,7 @@ exports.getAll = async (req, res) =>
         ({
             code : 200,
             status : false,
-            message : constant.responseMessage.getNoData,
+            message : constants.responseMessage.getNoData,
             data : invoices
         });
     }
@@ -50,31 +49,31 @@ exports.getAll = async (req, res) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.getAll,
+            message : constants.responseMessage.getAll,
             data : invoices
         });
     } 
 };
 
 /**
- * The below function is for getting all the details of a  invoices. Only single invoice
+ * The below function is for getting all the details of a particular invoices. Only single invoice
  * details we get through the below function.
  * 
- * For get the details of a  invoice. We need to give the invoice Id in the params.
- * On the basis of that, All the details of a  invoices will be fetched.
+ * For get the details of a particular invoice. We need to give the invoice Id in the params.
+ * On the basis of that, All the details of a particular invoices will be fetched.
  */
 exports.getOne = async (req, res) =>
 {
-    // The below line is for calling the model. Which is having the code for fetching the  invoices.
+    // The below line is for calling the model. Which is having the code for fetching the particular invoices.
     const invoices = await invoice.getone(req.params.id);
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(invoices === 'err')
     {
         return res.status(200).json
         ({
-            code: 400,
+            code: 500,
             status: false,
-            message: `Unable to fetch invoice data.`,
+            message: constants.responseMessage.universalError,
         });
     }
     // If we are not having the invoice data on the basis of the id then this else if block code will be executed. This block will not be executed because we are already checking the params id in the middleware still we have added this for safety. 
@@ -84,7 +83,7 @@ exports.getOne = async (req, res) =>
         ({
             code : 400,
             status : false,
-            message : constant.responseMessage.getNoData,
+            message : constants.responseMessage.getNoData,
             data : [] // No invoice data
         });
     }
@@ -95,7 +94,7 @@ exports.getOne = async (req, res) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.getOne,
+            message : constants.responseMessage.getAll,
             data : invoices
         });
     }
@@ -103,12 +102,13 @@ exports.getOne = async (req, res) =>
 
 /**
  * Since the customer can pay the money in multiples times. When the customer pay money we will put that
- * payment here. Which will go on store in the database for future reference. 
+ * amount here. Which will go on store in the database for future reference. 
  */
 exports.enterAmountForParticularInvoice = async (req, res, next) =>
 {
-    // The below line is for calling the model. Which is having the code for enter payment button the  invoices.
+    // The below line is for calling the model. Which is having the code for enter amount button the particular invoices.
     const invoices = await invoice.enteramountforparticularinvoice(req.params.id, req.body.totalRecievedAmount)
+    
     // If we are not having the invoice data, then this if block of code will be executed. This function will not be executed because we have written the middleware which will check whether the available invoice id is entered.
     if(invoices === 'nodata')
     {
@@ -116,7 +116,7 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: constant.responseMessage.errorInsert,
+            message: constants.responseMessage.errorInsert,
         });
     }
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
@@ -126,17 +126,17 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
         ({
             code: 500,
             status: false,
-            message: constant.responseMessage.universalError,
+            message: constants.responseMessage.universalError,
         });
     }
-    // If the enter payment is less than zero then this if block of code will be executed
+    // If the enter amount is less than zero then this if block of code will be executed
     if(invoices === 'lessThanZero')
     {
         return res.status(200).json
         ({
             code: 400,
             status: false,
-            message: 'The value is negative. It is not permitted.',
+            message: constants.responseMessage.payment1,
         });
     }    
     // If all the things are done accordingly and data is stored in the database.
@@ -146,37 +146,37 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
         ({
             code: 200,
             status: true,
-            message: "Data inserted successfully.",
+            message: constants.responseMessage.insert,
         });
     }
-    // If the remaining payment is 0 then this if block will be executed
+    // If the remaining amount is 0 then this if block will be executed
     if(invoices === 'fullypaid')
     {
         return res.status(200).json
         ({
             code: 200,
             status: true,
-            message: "The payment has already been made in full.",
+            message: constants.responseMessage.payment2,
         });
     }
-    // If we are entering the payment more than the remaining payment, then this if block of code will be executed
+    // If we are entering the amount more than the remaining amount, then this if block of code will be executed
     if(invoices === 'moreThanActualAmount')
     {
         return res.status(200).json
         ({
             code: 400,
             status: false,
-            message: "Payment which is being inserted is more than the remaining payment. Please enter again",
+            message: constants.responseMessage.payment3,
         });
     }
 };
 
 /**
- * The below function is getting the payment histroy of a  invoice id. 
+ * The below function is getting the payment histroy of a particular invoice id. 
  */
 exports.getPaymentHistroyOfParticularInvoice = async (req, res) =>
 {
-    // The below line is for calling the model. Which is having the code for fetching the payment histroy of a  invoices.
+    // The below line is for calling the model. Which is having the code for fetching the payment histroy of a particular invoices.
     const invoices = await invoice.getpaymenthistroyofparticularinvoice(req.params.id);
     // When the invoice doesn't have any payment records, then this if block will be executed
     if(invoices === 'nodata')
@@ -185,7 +185,7 @@ exports.getPaymentHistroyOfParticularInvoice = async (req, res) =>
         ({
             code: 400,
             status: false,
-            message: constant.responseMessage.getAllErr,
+            message: constants.responseMessage.getAllErr,
         });
     }
     // If the invoice have the data of payments. At that time the if block of code will be executed 
@@ -195,7 +195,7 @@ exports.getPaymentHistroyOfParticularInvoice = async (req, res) =>
         ({
             code: 200,
             status: true,
-            message: constant.responseMessage.getAll,
+            message: constants.responseMessage.getAll,
             data : invoices
         });
     }
@@ -214,7 +214,7 @@ exports.getLatestPaymentHistroy = async (req, res) =>
         ({
             code: 500,
             status: false,
-            message: constant.responseMessage.universalError,
+            message: constants.responseMessage.universalError,
         });
     }
     // If function executed and data present, then this if block of code will be executed.
@@ -224,7 +224,7 @@ exports.getLatestPaymentHistroy = async (req, res) =>
         ({
             code: 200,
             status: true,
-            message: 'Data Fetched Succesfully.',
+            message: constants.responseMessage.getAll,
             data : { invoice: invoices }
         });
     }
@@ -235,7 +235,7 @@ exports.getLatestPaymentHistroy = async (req, res) =>
         ({
             code: 200,
             status: true,
-            message: 'Data Fetched Succesfully.',
+            message: constants.responseMessage.getAll,
             data : { invoice: invoices }
         });
     }
@@ -254,7 +254,7 @@ exports.sendEmailAtInvoice = async(req, res) =>
         ({
             code: 400,
             status: false,
-            message: 'Unable to send invoice on email.',
+            message: constants.responseMessage.email1,
         });
     }
     // If invoice is send on email. Then this if block of code will be executed.
@@ -264,7 +264,7 @@ exports.sendEmailAtInvoice = async(req, res) =>
         ({
             code: 200,
             status: true,
-            message: 'Invoice sent successfully on email.',
+            message: constants.responseMessage.email2,
         });
     }
 };
@@ -274,14 +274,13 @@ exports.getSendEmailButtonData = async(req, res) =>
 {
     // The below line will take us to model. Which is designed to fetch the data. That need to be displayed on the send email pop-up
     const invoices = await invoice.getsendemailbuttondata(req.params.id);
-
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(invoices === 'err')
     {
         ({
             code: 500,
             status: false,
-            message: constant.responseMessage.universalError,
+            message: constants.responseMessage.universalError,
         });
     }   
     // If the function execute and data is present, Then this else block of code will be executed
@@ -291,7 +290,7 @@ exports.getSendEmailButtonData = async(req, res) =>
         ({
             code: 200,
             status: true,
-            message: 'Data Fetched Succesfully.',
+            message: constants.responseMessage.getAll,
             data : invoices
         });
     }
@@ -302,7 +301,7 @@ exports.getSendEmailButtonData = async(req, res) =>
         ({
             code: 200,
             status: true,
-            message: constant.responseMessage.getNoData,
+            message: constants.responseMessage.getNoData,
             data : invoices
         });
     }
@@ -321,7 +320,7 @@ exports.bookingStarted = async (req, res) =>
         ({
             code: 500,
             status: false,
-            message: constant.responseMessage.universalError,
+            message: constants.responseMessage.universalError,
         });
     }
     // If the function is executed and data is entered into the booking table and status of invoice data is also updated, Then this else if block of code is executed.
@@ -331,29 +330,29 @@ exports.bookingStarted = async (req, res) =>
         ({
             code: 200,
             status: true,
-            message: `Trip started.`,
+            message: constants.responseMessage.trip,
         });
     }
     // If any error happend while updating in the invoice table and inserting into the booking table, Then this if block of code will be executed    
     if(invoices === 'NotEntered')
     {
+        // `Booking button controller successfully working. But data not entered`,
         return res.status(200).json
         ({
             code: 200,
             status: true,
-            message : constant.responseMessage.universalError,
-            // message: `Booking button controller successfully working. But data not entered`,
+            message : constants.responseMessage.universalError,
         });
     }
     // Since the trip will be starts on once. So the entry of invoice data will be done once. This will be check in the below if block code.   
     if(invoices === 'duplicate')
     {
+        // `Booking button controller successfully working. Invoice id is duplicate`,
         return res.status(200).json
         ({
             code: 404,
             status: false,
-            message : constant.responseMessage.universalError,
-            // message: `Booking button controller successfully working. Invoice id is duplicate`,
+            message : constants.responseMessage.universalError,
             data : []
         });
     }
@@ -370,7 +369,7 @@ exports.BookingCancel = async (req, res) =>
         ({
             code: 500,
             status: false,
-            message: constant.responseMessage.universalError,
+            message: constants.responseMessage.universalError,
         });
     }
     // If the function is executed and data is entered into the booking table and status of invoice data is also updated, Then this else if block of code is executed.
@@ -380,29 +379,29 @@ exports.BookingCancel = async (req, res) =>
         ({
             code: 200,
             status: true,
-            message: `Trip canceled.`
+            message: constants.responseMessage.cancel
         });
     }
     // If any error happend while updating in the invoice table and inserting into the booking table, Then this if block of code will be executed    
     if(invoices === 'NotEntered')
     {
+        // `Cancel button from the invoice page is successfully working. But data not entered`,
         return res.status(200).json
         ({
             code: 400,
             status: false,
-            message: constant.responseMessage.universalError,
-            // message: `Cancel button from the invoice page is successfully working. But data not entered`,
+            message: constants.responseMessage.universalError,
         });
     }
     // Since the trip will be starts on once. So the entry of invoice data will be done once. This will be check in the below if block code.   
     if(invoices === 'duplicate')
     {
+        // `Cancel button successfully working. Invoice id is duplicate is already available in the bookings table`,
         return res.status(200).json
         ({
             code: 404,
             status: false,
-            message: constant.responseMessage.universalError,
-            // message: `Cancel button successfully working. Invoice id is duplicate is already available in the bookings table`,
+            message: constants.responseMessage.universalError,
             data : []
         });
     }

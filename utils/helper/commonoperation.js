@@ -10,7 +10,7 @@
 
 const con = require("../../configs/db.configs");  // importing the database details 
 const timeCalculate = require('./date'); // This variable will have the date file data. It is used to add days to current date for expiration of token
-const constant = require('../constants'); // Importing the constant details
+const constants = require('../constants'); // Importing the constants details
 const commonfetching = require('./commonfetching');
 
 
@@ -125,9 +125,9 @@ exports.updateUserStatus = (tablename, Id) =>
             {
                 if (result.length > 0)
                 {
-                    if(result[0].status === constant.status.active)
+                    if(result[0].status === constants.status.active)
                     {
-                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.inactive}', t.updated_at = '${timeCalculate.getFormattedUTCTime(constant.timeOffSet.UAE)}'  WHERE t.id = '${Id}' AND t.deleted_at IS NULL`;
+                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constants.status.inactive}', t.updated_at = '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'  WHERE t.id = '${Id}' AND t.deleted_at IS NULL`;
                         con.query(UpdateQuery, (err, result) => // executing the above query 
                         {
                             if(result.length != 0) // if ticket updated then if block
@@ -142,7 +142,7 @@ exports.updateUserStatus = (tablename, Id) =>
                     }
                     else
                     {
-                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.active}'WHERE t.id = '${Id}' AND t.deleted_at IS NULL `;
+                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constants.status.active}'WHERE t.id = '${Id}' AND t.deleted_at IS NULL `;
                         con.query(UpdateQuery, (err, result) => // executing the above query 
                         {
                             if(result.length != 0) // if ticket updated then if block
@@ -180,9 +180,9 @@ exports.removeUser = (tablename, Id) =>
             {
                 if (result.length > 0)
                 {
-                    if(result[0].status === constant.status.active)
+                    if(result[0].status === constants.status.active)
                     {
-                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constant.status.inactive}', t.deleted_at = '${timeCalculate.getFormattedUTCTime(constant.timeOffSet.UAE)}' WHERE t.id = '${Id}' `;
+                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constants.status.inactive}', t.deleted_at = '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE t.id = '${Id}' `;
                         con.query(UpdateQuery, (err, result) => // executing the above query 
                         {
                             if(result.length != 0) // if ticket updated then if block
@@ -192,9 +192,9 @@ exports.removeUser = (tablename, Id) =>
                         }); 
                     }
                     
-                    if(result[0].status === constant.status.inactive)
+                    if(result[0].status === constants.status.inactive)
                     {
-                        let UpdateQuery = `UPDATE ${tablename} t SET t.deleted_at = '${timeCalculate.getFormattedUTCTime(constant.timeOffSet.UAE)}' WHERE t.id = '${Id}' `;
+                        let UpdateQuery = `UPDATE ${tablename} t SET t.deleted_at = '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE t.id = '${Id}' `;
                         con.query(UpdateQuery, (err, result) => // executing the above query 
                         {
                             if(result.length != 0) // if ticket updated then if block
@@ -351,7 +351,7 @@ exports.createCustomizeEmailToken = async (email) =>
         emailTokenSidePart2.push(emailPart2[i] + firstDigit); 
     }
     const currentTimestamp = Math.floor(Date.now() / 1000);
-    const expirationTimestamp = currentTimestamp + constant.password.token_expiry;
+    const expirationTimestamp = currentTimestamp + constants.password.token_expiry;
     const customizepasswordToken = `${emailTokenSidePart1.join('')}A${emailTokenSidePart2.join('')}T${expirationTimestamp}`;
     return customizepasswordToken; // Returning the customize password from where it is called
 };
@@ -413,7 +413,7 @@ exports.tokenAndIdVerification = async(userId,token) =>
             // Combine the email characters from both parts
             const email = (emailChars.join('') + emailChars2.join('')).replace(/y+$/, '');
             
-            let verifyId =  await commonfetching.dataOnCondition(constant.tableName.service_providers,userId,'id')
+            let verifyId =  await commonfetching.dataOnCondition(constants.tableName.service_providers,userId,'id')
             if(verifyId.length != 0)
             {
                 if(verifyId[0].email === email)
@@ -469,7 +469,7 @@ exports.tokenGeneration = async(email) =>
             }
             const currentTimestamp = Math.floor(Date.now() / 1000);
             const expirationTimestamp = currentTimestamp + 3600; 
-            // constant.password.token_expiry;
+            // constants.password.token_expiry;
             const customizepasswordToken = `${emailTokenSidePart1.join('')}A${emailTokenSidePart2.join('')}T${expirationTimestamp}`;
             resolve({token : customizepasswordToken});
         });      

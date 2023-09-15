@@ -11,7 +11,7 @@
 
 
 const dashboardData = require(`../../models/dashboard/dashboard.model`); // The model from where the logic is intantiate are written in dashboard model
-const constant = require('../../utils/constants');
+const constants = require('../../utils/constants');
 
 // The below will fetching the total counts for admin and service providers
 /**
@@ -33,7 +33,7 @@ exports.getDashboardDataForParticularProvider = async (req, res, next) =>
         ({
             code : 500,
             status : false,
-            message: constant.responseMessage.universalError
+            message: constants.responseMessage.universalError
         });
     }
     else
@@ -42,7 +42,7 @@ exports.getDashboardDataForParticularProvider = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.getAll,
+            message : constants.responseMessage.getAll,
             data : data
         });
     }
@@ -58,7 +58,7 @@ exports.getMontlySalesReport = async (req, res, next) =>
         ({
             code : 500,
             status : false,
-            message: constant.responseMessage.universalError
+            message: constants.responseMessage.universalError
         });
     }
     else
@@ -67,7 +67,7 @@ exports.getMontlySalesReport = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.getAll,
+            message : constants.responseMessage.getAll,
             data : data
         });
     }
@@ -83,7 +83,7 @@ exports.getDashboardQuotationStatus = async (req, res, next) =>
         ({
             code : 500,
             status : false,
-            message: constant.responseMessage.universalError
+            message: constants.responseMessage.universalError
         });
     }
     else
@@ -92,7 +92,7 @@ exports.getDashboardQuotationStatus = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.getAll,
+            message : constants.responseMessage.getAll,
             data : data
         });
     }
@@ -108,7 +108,7 @@ exports.getLatestEnquiries = async (req, res) =>
         ({
             code : 500,
             status : false,
-            message: constant.responseMessage.universalError
+            message: constants.responseMessage.universalError
         });
     }
     else
@@ -117,7 +117,7 @@ exports.getLatestEnquiries = async (req, res) =>
         ({
             code : 200,
             status : true,
-            message: constant.responseMessage.getAll,
+            message: constants.responseMessage.get,
             data : data
         });
     }

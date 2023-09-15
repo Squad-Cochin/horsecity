@@ -12,7 +12,7 @@ exports.usernamevalidation = (req, res, next) => {
             ({
                 code: 400,
                 success: false,
-                message: "Username is required ."
+                message: constants.responseMessage.validatorError4
             });
     } else {
         if (hasOnlyNonSpaces(user_name) === true) {
@@ -20,7 +20,7 @@ exports.usernamevalidation = (req, res, next) => {
                 ({
                     code: 400,
                     status: false,
-                    message: "Username contain space. It is not allowed."
+                    message: constants.responseMessage.validatorError5
                 });
         } else {
          
@@ -35,7 +35,7 @@ exports.usernamevalidation = (req, res, next) => {
                             ({
                                 code: 400,
                                 success: false,
-                                message: "Username allredy exist ."
+                                message: constants.responseMessage.validatorError38
                             });
                     }
                     else {
@@ -61,7 +61,7 @@ exports.usernamevalidation = (req, res, next) => {
                                         ({
                                             code: 400,
                                             success: false,
-                                            message: "Username allredy exist ."
+                                            message: constants.responseMessage.validatorError38
                                         });
                                 }
                                 else {
@@ -90,7 +90,7 @@ exports.emailValidation = async (req, res, next) => {
             ({
                 code: 200,
                 status: false,
-                message: "Email is required ."
+                message: constants.responseMessage.validatorError1
             });
     }
 
@@ -99,7 +99,7 @@ exports.emailValidation = async (req, res, next) => {
             ({
                 code: 200,
                 status: "failure",
-                message: "Email contain space. It is not allowed."
+               message: constants.responseMessage.validatorError2
 
             });
     }
@@ -132,7 +132,7 @@ exports.emailValidation = async (req, res, next) => {
                         return res.status(200).send({
                             code: 400,
                             status: false,
-                            message: "This Email already exists "
+                            message: constants.responseMessage.validatorError51
                         });
                     }
                     else {
@@ -157,7 +157,7 @@ exports.emailValidation = async (req, res, next) => {
                                         ({
                                             code: 400,
                                             success: false,
-                                            message: "Email allredy  exist ."
+                                            message: constants.responseMessage.validatorError51
                                         });
                                 }
                                 else {
@@ -183,7 +183,7 @@ exports.emailValidation = async (req, res, next) => {
                     return res.status(200).send({
                         code: 400,
                         status: false,
-                        message: "This Email is not exists !"
+                        message: constants.responseMessage.email3
                     });
                 }
             });
@@ -199,7 +199,7 @@ exports.emailValidation = async (req, res, next) => {
                 ({  
                     code : 400 ,
                     success : false,
-                    message: "Invalid email .",   // Or error message
+                    message: constants.responseMessage.email4
                 });
         }
 
@@ -224,7 +224,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                             ({
                                 code: 400,
                                 status: false,
-                                message: "Licence Number is required ."
+                                message: constants.responseMessage.validatorError10
                             });
                     }
                     if (hasOnlyNonSpaces(licence_no)) {
@@ -232,7 +232,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                             ({
                                 code: 400,
                                 status: false,
-                                message: "Licence Number contain space. It is not allowed ."
+                                message: constants.responseMessage.validatorError52
                 
                             });
                     }
@@ -244,7 +244,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                                     return res.status(200).send({
                                         code: 400,
                                         status: false,
-                                        message: "This Licence Number already exists ."
+                                        message: constants.responseMessage.validatorError53
                                     });
                                 }
                                 else {
@@ -269,7 +269,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                                         ({
                                             code: 400,
                                             success: false,
-                                            message: "This Licence Number already exists ."
+                                            message: constants.responseMessage.validatorError53
                                         });
                                 }
                                 else {
@@ -290,14 +290,14 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                 ({
                     code: 400,
                     status: false,
-                    message: "Licence number is required"
+                    message: constants.responseMessage.validatorError10
                 });
             }else if(hasOnlyNonSpaces(licence_number)) {
                 return res.status(200).send
                     ({
                         code: 400,
                         status: false,
-                        message: "Licence Number contain space. It is not allowed."
+                        message: constants.responseMessage.validatorError52
         
                     });
             }
@@ -327,7 +327,7 @@ exports.verifyLanguageBody = async(req,res,next) =>
         ({
             code: 400,
             success: false,
-            message: "Name is required ."
+            message: constants.responseMessage.validatorError50
         });
     }else if(!abbreviation){
         return res.status(200).send
@@ -348,7 +348,7 @@ exports.verifyLanguageBody = async(req,res,next) =>
                             ({
                                 code: 400,
                                 success: false,
-                                message: "Name allredy available ."
+                                  message: constants.responseMessage.validatorError54
                             });
                     }
                     else {         
@@ -360,7 +360,7 @@ exports.verifyLanguageBody = async(req,res,next) =>
                                     ({
                                         code: 400,
                                         success: false,
-                                        message: "Abbreviation allredy available ."
+                                        message: constants.responseMessage.validatorError55
                                     });
                             }
                             else {         
@@ -406,7 +406,7 @@ exports.verifyLanguageBody = async(req,res,next) =>
                                             ({
                                                 code: 400,
                                                 success: false,
-                                                message: "Abbreviation allredy available ."
+                                                message: constants.responseMessage.validatorError55
                                             });
                                     }
                             
@@ -426,7 +426,7 @@ exports.verifyLanguageBody = async(req,res,next) =>
                                 ({
                                     code: 400,
                                     success: false,
-                                    message: "Name allredy available ."
+                                    message: constants.responseMessage.validatorError54
                                 });
                         }
                     
@@ -485,7 +485,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                                 ({
                                     code: 400,
                                     status: false,
-                                    message: "Phone Number is required ."
+                                    message: constants.responseMessage.validatorError7
                                 });
                         }
                         if (!emergency_contact_no) {
@@ -493,7 +493,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                                 ({
                                     code: 400,
                                     status: false,
-                                    message: "Emergency contact number  is required ."
+                                    message: constants.responseMessage.validatorError13
                                 });
                         }
                         if (hasOnlyNonSpaces(emergency_contact_no)) {
@@ -501,7 +501,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                                 ({
                                     code: 400,
                                     status: false,
-                                    message: "Emergency Contact  Number contain space. It is not allowed."
+                                    message: constants.responseMessage.validatorError14
                     
                                 });
                         }
@@ -510,7 +510,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                                 ({
                                     code: 400,
                                     status: false,
-                                    message: "Contact Number contain space. It is not allowed."
+                                    message: constants.responseMessage.validatorError8
                     
                                 });
                         } else {
@@ -522,7 +522,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                             return res.status(200).send({
                                 code: 400,
                                 status: false,
-                                message: "This Phone  Number already exists ."
+                                message: constants.responseMessage.validatorError56
                             });
                         }
                         else {
@@ -546,7 +546,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                                             ({
                                                 code: 400,
                                                 success: false,
-                                                message: "This Phone  Number already exists ."
+                                                message: constants.responseMessage.validatorError56
                                             });
                                     }
                                     else {
@@ -649,7 +649,7 @@ exports.passwordValidation = async (req, res, next) => {
                 ({
                     code: 400,
                     status: false,
-                    message: "Password contain space. It is not allowed ."
+                    message: constants.responseMessage.validatorError27
                 });
         }
         else {
@@ -673,7 +673,7 @@ exports.passwordValidation = async (req, res, next) => {
                             ({
                                 success: false,
                                 code: 400,
-                                message: "Failed! Not a valid password. Password must be 8 to 16 characters containing at least one lowercase letter, one uppercase letter, one numeric digit, and one special character .",
+                                message: constants.responseMessage.passworderror
                             });
                     }
                 }
@@ -720,7 +720,7 @@ exports.nameAvailable = async (req,res,next) =>
                             ({
                                 code: 400,
                                 success: false,
-                                message: "Name allredy  available ."
+                                message: constants.responseMessage.validatorError54
                             });
                     }
                     else {         
@@ -753,7 +753,7 @@ exports.nameAvailable = async (req,res,next) =>
                                     ({
                                         code: 400,
                                         success: false,
-                                        message: "Name allredy availabl ."
+                                        message: constants.responseMessage.validatorError54
                                     });
                             }
                             else {
@@ -839,7 +839,7 @@ exports.verifyTaxationBody = async(req,res,next) =>
                         ({
                             code: 400,
                             success: false,
-                            message: "Name allredy exist ."
+                            message: constants.responseMessage.validatorError54
                         });
                 }
                 else {         
@@ -872,7 +872,7 @@ exports.verifyTaxationBody = async(req,res,next) =>
                                 ({
                                     code: 400,
                                     success: false,
-                                    message: "Name allredy exist ."
+                                    message: constants.responseMessage.validatorError54
                                 });
                         }
                         else {
@@ -925,7 +925,7 @@ exports.verifyDiscountBody = async(req,res,next) =>
                         ({
                             code: 400,
                             success: false,
-                            message: "Name allredy exist ."
+                            message: constants.responseMessage.validatorError54
                         });
                 }
                 else {             
@@ -956,7 +956,7 @@ exports.verifyDiscountBody = async(req,res,next) =>
                                 ({
                                     code: 400,
                                     success: false,
-                                    message: "Name allredy exist ."
+                                    message: constants.responseMessage.validatorError54
                                 });
                         }
                         else {

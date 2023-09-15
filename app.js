@@ -22,7 +22,7 @@ const db = require("./configs/db.configs"); // Comment: Imports the configuratio
 //Importing the details of the init file. This file is having code for adding the data into the database at the server starting time. If the data is not present in the database
 const init = require('./init');
 
-init(); // Calling the init file. In this file we are having the first user details
+// init(); // Calling the init file. In this file we are having the first user details
 
 
 // Comment: Adds middleware to parse incoming request bodies with JSON payloads.

@@ -9,7 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 
-const constant = require('../../utils/constants'); // Constant elements are stored in this file
+const constants = require('../../utils/constants'); // Constant elements are stored in this file
 const vehicleImage = require('../../models/vehicles/vehicleImages.model');  // The model from where the logic is intantiate are written in vehicleImage model
 
 /**
@@ -31,7 +31,7 @@ exports.addImages = async (req, res, next) =>
         ({
             code : 500,
             status : false,
-            message : constant.responseMessage.particularVehicleImageError,
+            message : constants.responseMessage.universalError,
         });
     }
     else if(vehicleImages === 'INVALIDATTACHMENT')
@@ -40,7 +40,7 @@ exports.addImages = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : `We're sorry, but the image format you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g., JPG, PNG).`
+            message : constants.responseMessage.attachement7
         });
     }
     else if(vehicleImages === 'NOATTACHEMENT')
@@ -49,7 +49,7 @@ exports.addImages = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : 'An image of the vehicle is required.',
+            message : constants.responseMessage.vehicle18
         });
     }
     // If input feild are in correct format and not present in the database, then this else block of code will be executed.
@@ -59,7 +59,7 @@ exports.addImages = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.particularVehicleImageSuccess,
+            message : constants.responseMessage.insert,
         });
     }
 };
@@ -79,7 +79,7 @@ exports.allImages = async (req, res, next) =>
         ({
             code : 500,
             status : false,
-            message : constant.responseMessage.getAllErr,
+            message : constants.responseMessage.getAllErr,
         });
     }
     // Every things went well but vehicle has no image data available of the vehicle id which is submitted in the params then this else if block of code will executed.    
@@ -89,7 +89,7 @@ exports.allImages = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.getNoData,
+            message : constants.responseMessage.getNoData,
         });
     }
     // Every things went well and vehicle image data is available of the vehicle id which is submitted in the params then this else block of code will executed.
@@ -99,7 +99,7 @@ exports.allImages = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.getAll,
+            message : constants.responseMessage.getAll,
             data : vehicleImages
         });
     }
@@ -119,7 +119,7 @@ exports.updateStatus = async (req, res, next) =>
         ({
             code : 500,
             status : false,
-            message : constant.responseMessage.universalError
+            message : constants.responseMessage.universalError
         });
     }
     // If status is updated then this else block of code will be executed
@@ -129,7 +129,7 @@ exports.updateStatus = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.statusChanged
+            message : constants.responseMessage.statusChanged
         });
     }
 };
@@ -149,7 +149,7 @@ exports.removeImage = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constant.responseMessage.removeerror
+            message : constants.responseMessage.removeerror
         });
     }
     // If vehicleImage remove is done successfully
@@ -159,7 +159,7 @@ exports.removeImage = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constant.responseMessage.removesuccess
+            message : constants.responseMessage.removesuccess
         });
     }
 };
