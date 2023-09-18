@@ -33,7 +33,7 @@ const SignUpForm = () => {
     const phone = formData.get('phone');
     if( password !== confirmPassword ){
       setSuccess("")
-      setErrors("Password and confirm password must be same.")
+      setErrors("The entered password and confirm password do not match.")
     } else {
       let registrationData = {
         "name" : name,

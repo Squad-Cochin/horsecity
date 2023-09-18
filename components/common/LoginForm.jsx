@@ -27,11 +27,15 @@ const LoginForm = () => {
       "password" : password
     }
     let res = await loginApi(loginData);
-    if(res.code === 200){
+    if(res?.code === 200){
       Router.push("/package/listing")
       localStorage.setItem('loginData', JSON.stringify(res.data));
+      localStorage.setItem('userId', JSON.stringify(res.data));
       setSuccess(res.message)
       setErrors("");
+    }else if(res?.code === 400) {
+      localStorage.setItem('userId', JSON.stringify(res.data));
+      Router.push(`/dashboard/db-settings?${res.message}`)
     }else{
       setErrors(res.message);
       setSuccess("")

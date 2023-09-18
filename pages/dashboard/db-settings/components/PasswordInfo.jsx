@@ -4,9 +4,10 @@
 //                                                                                                   //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
-import {  useState } from "react";
+import {  useState, useEffect } from "react";
 import changePassword from "../../../api/changePassword";
 import { Alert } from 'reactstrap'
+import Router from "next/router";
 
 // Function for change password in settings
 const PasswordInfo = () => {
@@ -17,6 +18,16 @@ const PasswordInfo = () => {
     newpassword: '',
     confirmnewpassword: '',
   });
+
+  useEffect(() => {
+    const currentUrl = window.location.href;
+    const parts = currentUrl.split('?');
+    if (parts.length > 1) {
+      const contentAfterQuestionMark = parts[1];
+      const decodedContent = decodeURIComponent(contentAfterQuestionMark.replace(/\+/g, ' '));
+      setErrors(decodedContent);
+    }
+  }, []);
 
   // Function for onchange while change in input password
   const handleInputChange = (e) => {
@@ -39,14 +50,17 @@ const PasswordInfo = () => {
   // Function for submit with new password
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const loginData = await JSON.parse(localStorage.getItem('loginData'));
-    if (Object.keys(loginData).length !== 0) {
-        let changePwd  = await changePassword(formData,loginData.id)
-        if(changePwd.code === 200){
+    const userId = await JSON.parse(localStorage.getItem('userId'));
+    if (Object.keys(userId).length !== 0) {
+        let changePwd  = await changePassword(formData,userId.id)
+        if(changePwd?.code === 200){
           setSuccess(changePwd.message)
           setErrors("");
+          localStorage.setItem('userId', JSON.stringify({}));
+          localStorage.setItem('loginData', JSON.stringify({}));
+          Router.push("/others-pages/login")
         }else{
-          setErrors(changePwd.message);
+          setErrors(changePwd ? changePwd.message : "Internal server error.");
           setSuccess("")
         }
     }

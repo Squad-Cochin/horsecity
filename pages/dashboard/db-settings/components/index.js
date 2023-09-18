@@ -13,13 +13,14 @@ import PersonalInfo from "./PersonalInfo";
 const Index = () => {
   const tabs = [
     {
-      label: "Personal Information",
-      content: <PersonalInfo />,
-    },
-    {
       label: "Change Password",
       content: <PasswordInfo />,
     },
+    {
+      label: "Personal Information",
+      content: <PersonalInfo />,
+    },
+    
   ];
 
   const [tabIndex, setTabIndex] = useState(0);
