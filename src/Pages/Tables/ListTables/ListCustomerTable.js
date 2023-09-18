@@ -257,7 +257,6 @@ const ListCustomerTable = () => {
                                                                     >
                                                                         {item.status}
                                                                     </button>
-
                                                                 }
                                                             </td>
                                                             <td>
@@ -347,8 +346,7 @@ const ListCustomerTable = () => {
                             />
                         </div>
                         {/** Customer email */}
-                        {add_list ?
-                            <div className="mb-3">
+                        <div className="mb-3">
                                 <label htmlFor="email-field" className="form-label">Email</label>
                                 <input
                                     type="email"
@@ -361,7 +359,6 @@ const ListCustomerTable = () => {
                                     required
                                 />
                             </div>
-                            : null}
                         {/** Customer username */}
                         <div className="mb-3">
                             <label htmlFor="username-field" className="form-label">Username</label>
@@ -447,7 +444,6 @@ const ListCustomerTable = () => {
                                         <img name="id_proof_image" src={idProofPreview} alt="Id Proof Preview" style={{ maxWidth: '100px' }} />
                                     </div>
                                 )}
-
                                 <input
                                     className="form-control"
                                     name="id_proof_image"
@@ -455,7 +451,6 @@ const ListCustomerTable = () => {
                                     placeholder="Certificate Image"
                                     onChange={handleIdProofImageChange}
                                 />
-
                             </div>
                         </div>
                     </ModalBody>
@@ -468,7 +463,6 @@ const ListCustomerTable = () => {
                     </ModalFooter>
                 </form>
             </Modal>
-
             {/***************** View Modal *************/}
             <Modal className="extra-width" isOpen={view_modal} toggle={() => { setView_modal(false);}}>
                 <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setView_modal(false); }}>View Customer</ModalHeader>
@@ -547,7 +541,6 @@ const ListCustomerTable = () => {
                                 readOnly
                             />
                         </div>
-
                         {/* certificate image */}
                         <div className="mb-3">
                             <label htmlFor="id_proof_image-field" className="form-label">Id Proof Image</label>
