@@ -1,8 +1,14 @@
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                    //
+// This the mailer.js file. Which is being used for sending the mail to the user. Currently we are    //
+// sending the email three times. So the logic or code for sending the email is written in this file  //
+//                                                                                                    //
+////////////////////////////////////////////////////////////////////////////////////////////////////////
+
 const nodemailer = require('nodemailer');
 const commonfetching = require('../utils/helper/commonfetching');
-const constants = require('./constants');
+const constants = require('./constants'); // Constant elements are stored in this file
 require('dotenv').config();
-
 
 exports.SendEmail = async (id, to, subject, tableName) =>
 {

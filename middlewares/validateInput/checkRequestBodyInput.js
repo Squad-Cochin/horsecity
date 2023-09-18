@@ -206,17 +206,17 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
         }
         else
         {
-            // if(isValidUsername(req.body.userName))
-            // {
-            //     return res.status(200).send
-            //     ({
-            //         code : 400,
-            //         status : false,
-            //         message : constants.responseMessage.validatorError6
-            //     });                                
-            // }
-            // else
-            // {
+            if(req.body.userName.length < 4)
+            {
+                return res.status(200).send
+                ({
+                    code : 400,
+                    status : false,
+                    message : constants.responseMessage.validatorError6
+                });                                
+            }
+            else
+            {
                 if(req.method === `POST` && req.url === url.UPDATE_SERVICE_PROVIDER_PASSWORD)
                 {
                     next();
@@ -246,7 +246,7 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
                         message : constants.responseMessage.universalError 
                     });
                 }
-            // }
+            }
         }
     }
 }
@@ -477,15 +477,20 @@ exports.dateOfBirthValidation = (req, res, next) =>
     }
 }
 
-exports.nameValidation = (req, res, next) => {
+exports.nameValidation = (req, res, next) =>
+{
     const name = req.body.name;
-    if (!name || !/^[a-zA-Z\s]+$/.test(name)) {
-        return res.status(200).send({
+    if (!name || !/^[a-zA-Z\s]+$/.test(name))
+    {
+        return res.status(200).send
+        ({
             code: 400,
             status: false,
             message: constants.responseMessage.validatorError50,
         });
-    } else {
+    }
+    else
+    {
         next();
     }    
 };
@@ -916,8 +921,10 @@ exports.checkValueEntered = (fieldName, messageField) => (req, res, next) =>
     });
 };
 
-exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) => {  
-    try {
+exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) =>
+{  
+    try
+    {
         // Add await to each checkValueEntered call and handle errors explicitly
         await this.checkValueEntered(req.body.customer_id, 'Customer id') (req, res, next);
         await this.checkValueEntered(req.body.enquiry_id, 'Enquiry id') (req, res, next);
@@ -943,7 +950,9 @@ exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) => {
         await this.checkValueEntered(req.body.discount_amount, 'Discount payment') (req, res, next);
         await this.checkValueEntered(req.body.final_amount, 'Final payment') (req, res, next);
         next();
-    } catch (error) { 
+    }
+    catch (error)
+    { 
         // Handle any errors that might occur during the checks
         res.status(500).send
         ({

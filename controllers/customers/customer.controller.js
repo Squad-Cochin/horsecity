@@ -12,7 +12,6 @@
 const constants = require('../../utils/constants'); // Constant elements are stored in this file
 const customer = require('../../models/customers/customer.model'); // The model from where the logic is intantiate are written in customer model
 const time = require('../../utils/helper/date'); // All the time relateed formating are written in this file.
-const con = require('../../configs/db.configs');
 
 /**
  * The below function is for getting all the customer details. Those customer who deleted at feild are having
@@ -175,6 +174,7 @@ exports.addCustomer = async (req, res, next) =>
 
 exports.editCustomer = async (req, res, next) =>
 {
+    console.log(req.body);
     // The below line is for going to the model function to implement the code for editing or updating the existing customer.
     const customers = await customer.editcustomer
     (

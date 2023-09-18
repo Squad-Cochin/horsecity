@@ -567,13 +567,13 @@ module.exports = class customers
     /**
     * The below model function is for the customer frontend side page. This function is for fetching the data. Which we are showing on the dashboard of the customer
     */
-    static async getcustomerdashboard(Id)
+    static async getparticularcustomerdashboard(Id)
     {
         try
         {
             return await new Promise (async (resolve, reject)=>
             {
-                let countQuery = `SELECT
+                let countQuery = `  SELECT
                 COALESCE((SELECT COUNT(b.id) FROM ${constants.tableName.bookings} b WHERE b.customer_id = ${Id}), 0) AS total_booking,
                 COALESCE((SELECT COUNT(b.id) FROM ${constants.tableName.bookings} b WHERE b.customer_id = ${Id} AND b.booking_status = 'COMPLETED'), 0) AS total_completed_booking,
                 COALESCE((SELECT COUNT(b.id) FROM ${constants.tableName.bookings} b WHERE b.customer_id = ${Id} AND b.booking_status = 'CONFIRM'), 0) AS total_confirm_booking,
@@ -654,7 +654,7 @@ module.exports = class customers
     * The below model function is for the customer frontend side page. This function is for fetching all the booking of a  customer
     * whose status is completed
     */
-    static async getbookindetailscompleted(Id)
+    static async getparticularbookindetailscompleted(Id)
     {
         try
         {
@@ -710,7 +710,7 @@ module.exports = class customers
     * The below model function is for the customer frontend side page. This function is for fetching all the booking of a  customer
     * whose status is CONFIRM
     */
-    static async getbookindetailsconfirm(Id)
+    static async getparticularbookindetailsconfirm(Id)
     {
         try
         {
@@ -766,7 +766,7 @@ module.exports = class customers
     * The below model function is for the customer frontend side page. This function is for fetching all the booking of a  customer
     * whose status is CANCELLED
     */
-    static async getbookindetailscancelled(Id)
+    static async getparticularbookindetailscancelled(Id)
     {
         try
         {
@@ -825,7 +825,7 @@ module.exports = class customers
     * The below model function is for the customer frontend side page. This function is for fetching all the enquiries of a  customer
     * We will get only five recent enquiries because of the limit.  
     */
-    static async getbookindetailsrecent(Id)
+    static async getparticularbookindetailsrecent(Id)
     {
         try
         {
@@ -866,7 +866,7 @@ module.exports = class customers
     * The below model function is for the customer frontend side page. This function is for fetching all the bookings of a  customer
     * The data will be fetched from the bookings table
     */
-    static async getcustomerallbookings(Id)
+    static async getparticularcustomerallbookings(Id)
     {
         try
         {
@@ -919,7 +919,7 @@ module.exports = class customers
      * From here we will send the data to the controller. The response of the route will be taken from the 
      * controller. Whatever data  is there in the response it is coming from this model.
      */
-    static async getcustomerallenquiry(Id)
+    static async getparticularcustomerallenquiry(Id)
     {
         try
         {
@@ -961,7 +961,7 @@ module.exports = class customers
      * From here we will send the data to the controller. The response of the route will be taken from the 
      * controller. Whatever data  is there in the response it is coming from this model.
      */
-    static async getcustomerallbookingsdatafrominvoice(Id)
+    static async getparticularcustomerallbookingsdatafrominvoice(Id)
     {
         try
         {
@@ -1020,7 +1020,7 @@ module.exports = class customers
      * From here we will send the data to the controller. The response of the route will be taken from the 
      * controller. Whatever data  is there in the response it is coming from this model.
      */
-    static async getcustomeractivebookingsdatafrominvoice(Id)
+    static async getparticularcustomeractivebookingsdatafrominvoice(Id)
     {
         try
         {
@@ -1080,7 +1080,7 @@ module.exports = class customers
      * From here we will send the data to the controller. The response of the route will be taken from the 
      * controller. Whatever data is there in the json response it is coming from this model. 
      */
-    static async getcustomerinactivebookingsdatafrominvoice(Id)
+    static async getparticularcustomerinactivebookingsdatafrominvoice(Id)
     {
         try
         {
@@ -1140,7 +1140,7 @@ module.exports = class customers
      * From here we will send the data to the controller. The response of the route will be taken from the 
      * controller. Whatever data is there in the json response it is coming from this model. 
      */
-    static async getcustomerongoingbookingsdatafrominvoice(Id)
+    static async getparticularcustomerongoingbookingsdatafrominvoice(Id)
     {
         try
         {
