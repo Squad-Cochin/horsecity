@@ -17,7 +17,7 @@ export default async function DetailsDataApi(id) {
           "Authorization": `Bearer ${apiTocken}`, 
         },
     });
-    return response.data.data
+    return response?.data?.data
   }
   catch{
           
@@ -35,7 +35,7 @@ export  async function addbooking(body,cuid) {
               "Authorization": `Bearer ${apiToken}`, 
             },
         });
-        return response.data  
+        return response?.data  
     }
     catch{
            

@@ -32,70 +32,6 @@ const LocationSearch = (props) => {
     initialLoad();
   },[no_of_horse,props.noOfHorse])
 
-  // Options for selecting number of horses
-  const noOfHorses = [
-    {
-      id: 1,
-      no: "1",
-    },
-    {
-      id: 2,
-      no: "2"
-    },
-    {
-      id: 3,
-      no: "3"
-    },
-    {
-      id: 4,
-      no: "4"
-    },
-    {
-      id: 5,
-      no: "5"
-    },
-    {
-      id: 6,
-      no: "6"
-    },
-    {
-      id: 7,
-      no: "7"
-    },
-    {
-      id: 8,
-      no: "8"
-    },
-    {
-      id: 9,
-      no: "9"
-    },
-    {
-      id: 10,
-      no: "10"
-    },
-    {
-      id: 11,
-      no: "11"
-    },
-    {
-      id: 12,
-      no: "12"
-    },
-    {
-      id: 13,
-      no: "13"
-    },
-    {
-      id: 14,
-      no: "14"
-    },
-    {
-      id: 15,
-      no: "15"
-    }
-  ];
-
   // Function for work at the begining of the page loading
   async function initialLoad(){
     const bookings = await JSON.parse(localStorage.getItem('searchObject'));
@@ -112,7 +48,6 @@ const LocationSearch = (props) => {
     for(let i = 1 ;i<=parseInt(noOfHorse);i++){
       array.push(i)
     }
-    console.log(array);
    const filterData = array.filter((value) => parseInt(value, 10) <= props.noOfHorse)
   
    setFilteredNoOfHorse(filterData);
@@ -156,14 +91,21 @@ const LocationSearch = (props) => {
   // Funtion for getting data form and for making new enquery
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setTripType("");
+    setPickupLocation("");
+    setPickupCountry("");
+    setDropLocation("");
+    setDropCountry("");
+    setNoOfHorse("");
+    setDescription("");
+    setPickupDate("");
     if (!isLogin) {
       router.push('/others-pages/login');
       return; 
     }
     const formData = {
       vehicle_id : vehicle_id,
-      service_provider_id : serviceprovider_id,
+      service_provider_id : `${serviceprovider_id}`,
       pickup_country : pickupCountry,
       pickup_location : pickupLocation,
       drop_country : dropCountry,

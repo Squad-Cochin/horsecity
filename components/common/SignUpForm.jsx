@@ -49,11 +49,11 @@ const SignUpForm = () => {
       // Perform any actions with the form data
       let res = await registrationApi(registrationData);
       if(res?.code !== 200){
-        setErrors(res.message);
+        setErrors(res?.message);
         setSuccess("")
       }else{
         Router.push("/others-pages/login")
-        setSuccess(res.message)
+        setSuccess(res?.message)
         setErrors("");
       }
     }

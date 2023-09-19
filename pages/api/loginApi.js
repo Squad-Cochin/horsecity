@@ -17,7 +17,7 @@ export default async function loginApi(data) {
           "Authorization": `Bearer ${apiTocken}`,
         },
     });
-    return response.data
+    return response?.data
   }
   catch{
           

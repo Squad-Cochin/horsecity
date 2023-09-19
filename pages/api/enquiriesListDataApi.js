@@ -17,7 +17,7 @@ export default async function enquiriesListDataApi(id) {
           "Authorization": `Bearer ${apiTocken}`,
         },
     });
-    return response.data.data.enquiries
+    return response?.data?.data?.enquiries
   }
   catch{
           

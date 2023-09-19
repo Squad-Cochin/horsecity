@@ -17,7 +17,7 @@ export default async function startedBookingListApi(id) {
           "Authorization": `Bearer ${apiTocken}`,
         },
     });
-    return response.data.data
+    return response?.data?.data
   }
   catch{
           

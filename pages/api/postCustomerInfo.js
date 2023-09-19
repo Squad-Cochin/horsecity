@@ -22,7 +22,7 @@ export default async function postCustomerInfo(data,id) {
               "Authorization": `Bearer ${apiToken}`, 
             },
         });
-        return response.data
+        return response?.data
     }
     catch{
            

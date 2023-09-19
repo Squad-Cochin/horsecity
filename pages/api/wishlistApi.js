@@ -17,7 +17,7 @@ export default async function isWishlist(body) {
           "Authorization": `Bearer ${apiToken}`, 
         },
     });
-    return response.data
+    return response?.data
   }
   catch{
           

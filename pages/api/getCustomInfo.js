@@ -17,7 +17,7 @@ export default async function getCustomerInfo(id) {
               "Authorization": `Bearer ${apiToken}`, 
             },
         });
-        return response.data.data
+        return response?.data?.data
     }
     catch{
            

@@ -17,7 +17,7 @@ export default async function serviceProvidersApi() {
           "Authorization": `Bearer ${apiTocken}`,
         },
     });
-    return response.data.data.serviceProviders
+    return response?.data?.data?.serviceProviders
   }
   catch{
           

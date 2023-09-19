@@ -18,7 +18,7 @@ export default async function registrationApi(data) {
           "Authorization": `Bearer ${apiTocken}`,
         },
     });
-    return response.data
+    return response?.data
   }
   catch{
           

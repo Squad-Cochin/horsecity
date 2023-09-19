@@ -17,7 +17,7 @@ export default async function logoutApi(id) {
           "Authorization": `Bearer ${apiTocken}`,
         },
     });
-    return response.data
+    return response?.data
   }
   catch{
           

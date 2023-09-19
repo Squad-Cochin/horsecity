@@ -18,7 +18,7 @@ export default async function dashboardDataApi(id) {
           "Authorization": `Bearer ${apiTocken}`,
         },
     });
-    return response.data.data
+    return response?.data?.data
   }
   catch{
           
