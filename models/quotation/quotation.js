@@ -310,9 +310,66 @@ static async updateQuotation(requestBody, pickup_date, drop_date, quotId)  {
                             time.changeDateToSQLFormat(pickup_date)
                             time.changeDateToSQLFormat(drop_date)
                             /**inserting new quotation same quotation id  */
-                            let insQuery = `INSERT INTO quotations (customer_id,quotation_id, enquiry_id, driver_id, vehicle_id, serviceprovider_id, taxation_id, discount_type_id, trip_type, pickup_location, pickup_country, pickup_date,pickup_time, drop_location, drop_country, drop_date,drop_time, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage,driver_amount,vehicle_amount,sub_total, tax_amount, discount_amount, final_amount,created_at)
-                                   VALUES ('${customer_id}', '${quotId}', '${enquiry_id}', '${driver_id}', '${vehicle_id}', '${service_provider_id}', '${tax_id}', '${discount_type_id}', '${trip_type}', '${pickup_location}', '${pickup_country}','${pickup_date}','${pickup_time}', '${drop_location}','${drop_country}', '${drop_date}','${drop_time}','${no_of_horse}','${special_requirement}', '${additional_service}','${transportation_insurance_coverage}','${driver_amount}','${vehicle_amount}','${current_amount}', '${tax_amount}','${discount_amount}','${final_amount}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-
+                            let insQuery = `INSERT INTO quotations (
+                                customer_id,
+                                quotation_id,
+                                enquiry_id,
+                                driver_id,
+                                vehicle_id,
+                                serviceprovider_id,
+                                taxation_id,
+                                discount_type_id,
+                                trip_type,
+                                pickup_location,
+                                pickup_country,
+                                pickup_date,
+                                pickup_time,
+                                drop_location,
+                                drop_country,
+                                drop_date,
+                                drop_time,
+                                no_of_horse,
+                                special_requirement,
+                                additional_service,
+                                transportation_insurance_coverage,
+                                driver_amount,
+                                vehicle_amount,
+                                sub_total,
+                                tax_amount,
+                                discount_amount,
+                                final_amount,
+                                created_at
+                            ) VALUES (
+                                '${customer_id}',
+                                '${quotId}',
+                                '${enquiry_id}',
+                                '${driver_id}',
+                                '${vehicle_id}',
+                                '${service_provider_id}',
+                                ${tax_amount != 0 ? `'${tax_id}',` : 'NULL,'}
+                                '${discount_type_id}',
+                                '${trip_type}',
+                                '${pickup_location}',
+                                '${pickup_country}',
+                                '${pickup_date}',
+                                '${pickup_time}',
+                                '${drop_location}',
+                                '${drop_country}',
+                                '${drop_date}',
+                                '${drop_time}',
+                                '${no_of_horse}',
+                                '${special_requirement}',
+                                '${additional_service}',
+                                '${transportation_insurance_coverage}',
+                                '${driver_amount}',
+                                '${vehicle_amount}',
+                                '${current_amount}',
+                                '${tax_amount}',
+                                '${discount_amount}',
+                                '${final_amount}',
+                                '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                            )`;
+                            
                             con.query(insQuery, async (err, result) => {
                                 if (!err) {
 
