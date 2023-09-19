@@ -688,7 +688,7 @@ exports.licenceImageAvailable = async (req, res, next) =>{
 
     if (!req.files?.licence_image) {
         return res.status(200).send({
-            code: 200,
+            code: 400,
             success: false,
             message: "License image is required ."
         });
@@ -700,6 +700,7 @@ exports.licenceImageAvailable = async (req, res, next) =>{
 
 exports.nameAvailable = async (req,res,next) =>
 {
+
     const { name } = req.body;
     const method = req.method;
     if (!name) {
