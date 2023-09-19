@@ -64,7 +64,7 @@ const ListVehiclesTable = () => {
         breadth: !add_list ? vehicle[0]?.breadth : '',
         height: !add_list ? vehicle[0]?.height : '',
         price: !add_list ? vehicle[0]?.price : '',
-        no_of_horse: !add_list ? vehicle[0]?.no_of_horse : '',
+        no_of_horse: !add_list ? vehicle[0]?.no_of_horse : 1,
         air_conditioner: !add_list ? vehicle[0]?.air_conditioner : '',
         temperature_manageable: !add_list ? vehicle[0]?.temperature_manageable : '',
         vehicle_images: !add_list ? vehicle[0]?.images : [],
@@ -105,11 +105,17 @@ const ListVehiclesTable = () => {
 
     // The Below function is used when we are adding the vehicle
     async function tog_list(param, productId) {
-        setErrors("")
+        setErrors("");
+        setVehicleType("");
+        setInsuranceCover("");
+        setGccTravelAllowed("");
+        setTemperatureManageable("");
+        setAirConditioner("");
         if (param === 'ADD') {
             setCertificatePreview(null)
             setAdd_list(!add_list);
         } else {
+            setVehicle([]);
             let data = await getSingleVechileData(productId)
             setVehicle([data]);
             setAirConditioner(data?.air_conditioner)
@@ -216,6 +222,7 @@ const ListVehiclesTable = () => {
     /**Add new vehicle */
     async function addVechile(values) {
         let addedVechile = await addNewVehicle(values, userId);
+
         if (addedVechile.code === 200) {
             setErrors("")
             setAdd_list(false);
@@ -500,7 +507,7 @@ const ListVehiclesTable = () => {
                                 id="no_of_horses-field"
                                 className="form-control"
                                 name="no_of_horse"
-                                value={validation.values.no_of_horse || ""}
+                                value={validation.values.no_of_horse || 1}
                                 onChange={validation.handleChange}
                                 required
                             >
@@ -589,6 +596,7 @@ const ListVehiclesTable = () => {
                                 className="form-control"
                                 placeholder="Upload Safety Certificate Image"
                                 onChange={handleIdProofImageChange}
+                                required
                             />
                         </div>
                         {/* The below element is for adding the registration number of the vehicle. */}
@@ -791,7 +799,9 @@ const ListVehiclesTable = () => {
                             {/* Close Button */}
                             <button type="button" className="btn btn-light" onClick={() => { setmodal_list(false); setAdd_list(false); }}>Close</button>
                             {/* Add Driver or Update Driver button */}
-                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ? 'Add Vehicle' : 'Update vehicle'}</button>
+                            <button type="submit" className="btn btn-success" id="add-btn"  onClick={() => {
+                                    window.location.href = '#exampleModalLabel'; // Change the URL here
+                            }}>{add_list ? 'Add Vehicle' : 'Update vehicle'}</button>
                         </div>
                     </ModalFooter>
                 </form>

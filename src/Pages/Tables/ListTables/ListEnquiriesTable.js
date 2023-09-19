@@ -160,6 +160,7 @@ const ListEnquiriesTable = () => {
     }
     /**CONFIRM ENQUIRY */
     const tog_confirm = async (id) => {
+        setErrors("")
         let singleEnqData = await getSingleEnquiryData(id)
         let serviceProviderData = await getSPUserName()
         const sPVechilesData = await getSPVehiclesData(singleEnqData.enquiry[0]?.service_provider_id)
@@ -533,6 +534,7 @@ const ListEnquiriesTable = () => {
                                 className="form-control"
                                 value={validation.values.customer_name || ""}
                                 onChange={validation.handleChange}
+                                required
                             />
                         </div>
 
@@ -567,6 +569,7 @@ const ListEnquiriesTable = () => {
                                 // onSelect={enquiry_details(validation.values.service_provider_id)}
                                 onChange={validation.handleChange}
                                 onBlur={validation.handleBlur}
+                                required
                             // required
                             >
                                 <option value="">Select Any Vehicle Number</option>
@@ -690,6 +693,7 @@ const ListEnquiriesTable = () => {
                                 value={validation.values.discount_type_id || ""}
                                 onChange={(e) => { validation.handleChange(e); calcDiscount(e.target.value); }}
                                 onBlur={validation.handleBlur}
+                       
                             // required
                             >
                                 <option value="">Select Discount</option>
@@ -706,7 +710,8 @@ const ListEnquiriesTable = () => {
                                 name='pickup_date'
                                 options={{
                                     dateFormat: "d-m-Y",
-                                    minDate: new Date()
+                                    minDate: new Date(),
+                                    required: true, 
                                 }}
                                 value={validation.values.pickup_date || ""}
                                 onChange={(dates) => validation.setFieldValue('pickup_date', dates[0])}
@@ -734,7 +739,8 @@ const ListEnquiriesTable = () => {
                                 className="form-control"
                                 name='drop_date'
                                 options={{
-                                    dateFormat: "d-m-Y"
+                                    dateFormat: "d-m-Y",
+                                    required: true, 
                                 }}
                                 value=""
                                 onChange={(dates) => validation.setFieldValue('drop_date', dates[0])}
@@ -940,7 +946,9 @@ const ListEnquiriesTable = () => {
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
                             <button type="button" className="btn btn-light" onClick={() => { modalClose() }}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">Confirm Enquery</button>
+                            <button type="submit" className="btn btn-success" id="add-btn"  onClick={() => {
+                                    window.location.href = '#exampleModalLabel'; // Change the URL here
+                            }}>Confirm Enquery</button>
                         </div>
                     </ModalFooter>
                 </form>

@@ -129,6 +129,7 @@ const ListCustomerTable = () => {
             setIdProofPreview(null);
             setAdd_list(!add_list);
         } else {
+            setCustomer([]);
             let singleCustomer = await getSingleCustomerData(productId)
             setCustomer(singleCustomer);
             setIdProofPreview(singleCustomer[0]?.id_proof_image)
@@ -324,7 +325,7 @@ const ListCustomerTable = () => {
                 </Container>
             </div>
 
-            {/********* Add Modal*************** */}
+            {/********* Add  & Edit Modal*************** */}
             <Modal className="extra-width" isOpen={modal_list} toggle={() => { setmodal_list(false); setAdd_list(false); setIdProofPreview(null) }} centered >
                 <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); setAdd_list(false); setIdProofPreview(null); setUpdateImage("") }}>{add_list ? 'Add Customer' : 'Edit Customer'} </ModalHeader>
                 <form className="tablelist-form"
@@ -457,7 +458,9 @@ const ListCustomerTable = () => {
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
                             <button type="button" className="btn btn-light" onClick={() => { setUpdateImage(""); setmodal_list(false); setAdd_list(false); setIdProofPreview(null) }}>Close</button>
-                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ? 'Add Customer' : 'Update Customer'}
+                            <button type="submit" className="btn btn-success" id="add-btn" onClick={() => {
+                                    window.location.href = '#exampleModalLabel'; // Change the URL here
+                            }}>{add_list ? 'Add Customer' : 'Update Customer'}
                             </button>
                         </div>
                     </ModalFooter>

@@ -89,7 +89,6 @@ const Sidebar = (props) => {
           }
         }
       }
-      console.log("item",item);
       scrollElement(item);
       return false;
     }

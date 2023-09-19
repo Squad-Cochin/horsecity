@@ -141,6 +141,7 @@ const ListTables = () =>
             setLicenceImagePreview(null);
             setAdd_list(!add_list);
         }else{
+            setDriver([]);
             // Find the driver data with matching 'productId' in the 'drivers' array
             let driverData = await getSingleDriverData(productId)
             // Set the 'driver' state to the found driver data
@@ -287,7 +288,7 @@ const ListTables = () =>
                             <Card>
                                 <CardHeader>
                                     {/* Header of the Particular Card */}
-                                    <h4 className="card-title mb-0">Add, Edit & Remove</h4>
+                                    <h4 className="card-title mb-0">{role_id.service_provider === roleId ?  'Add & Edit ' : 'Add Edit & Remove'} </h4>
                                 </CardHeader>
                                 <CardBody>
                                     <div id="customerList">
@@ -570,7 +571,9 @@ const ListTables = () =>
                             {/* Closed Button */}
                             <button type="button" className="btn btn-light" onClick={() => { setmodal_list(false); setAdd_list(false); }} >Close</button>
                             {/* Add Driver or Update Driver button */}
-                            <button type="submit" className="btn btn-success" id="add-btn">{add_list ? 'Add Driver' : 'Update Driver'}</button>
+                            <button type="submit" className="btn btn-success" id="add-btn"  onClick={() => {
+                                    window.location.href = '#exampleModalLabel'; // Change the URL here
+                            }}>{add_list ? 'Add Driver' : 'Update Driver'}</button>
                         </div>
                     </ModalFooter>
                 </form>

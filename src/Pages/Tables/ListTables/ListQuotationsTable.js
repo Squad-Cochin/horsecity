@@ -90,11 +90,11 @@ const ListQuotationsTable = () => {
 
   /**INITIAL VALUES */
   const initialValues = {
-    quotation_id : quotations ? quotations[0]?.quotation_id : "",
-    enquiry_id : quotations ? quotations[0]?.enquiry_id : "",
-    customer_name : quotations ? quotations[0]?.customer_name : "",
-    customer_email : quotations ? quotations[0]?.customer_email : "",
-    status : quotations ? quotations[0]?.status : "",
+    quotation_id : quotation ? quotation[0]?.quotation_id : "",
+    enquiry_id : quotation ? quotation[0]?.enquiry_id : "",
+    customer_name : quotation ? quotation[0]?.customer_name : "",
+    customer_email : quotation ? quotation[0]?.customer_email : "",
+    status : quotation ? quotation[0]?.status : "",
 
     customer_id : quotation ? quotation[0]?.customer_id : "",
     customer_user_name : quotation ? quotation[0]?.customer_user_name : "",
@@ -142,7 +142,6 @@ const ListQuotationsTable = () => {
         sendEmail(values);
       } else {
         //update previes one
-        console.log("values",values)
         editQuotation(values);
       }
     },
@@ -210,6 +209,7 @@ const ListQuotationsTable = () => {
   }
   /*IT WILL OPEN EDIT QUOTATION POP UP*/
   async function tog_list(id) {
+
     setQutId(id)
     let singleQut = await getConfirmQut(id)
     let serviceProviderData = await getSPUserName()
@@ -220,6 +220,7 @@ const ListQuotationsTable = () => {
     const discountsData = await getDiscounts()
     setDiscounts(discountsData)
     setServiceProviders(serviceProviderData.serviceProviders)
+    console.log("single quot",singleQut.quotation);
     setQuotation(singleQut.quotation);
     setTaxation(singleQut.tax);
     setFinalAmount(Number(singleQut.quotation[0]?.final_amount))
@@ -499,7 +500,7 @@ const ListQuotationsTable = () => {
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Add, Edit & Remove</h4>
+                  <h4 className="card-title mb-0">Edit & Remove</h4>
                 </CardHeader>
                 <CardBody>
                   <div id="customerList">
@@ -1052,10 +1053,16 @@ const ListQuotationsTable = () => {
                                                 
             </ModalBody>
             <ModalFooter>
-                <div className="hstack gap-2 justify-content-end">
+            {quotation?.map((item, index) => (
+                <div key={index} className="hstack gap-2 justify-content-end">
                     <button type="button" className="btn btn-light" onClick={() => { modalClose() }}>Close</button>
-                    <button type="submit" className="btn btn-success" id="add-btn">Edit Quotation</button>
+                  
+                    <button type="submit" className="btn btn-success" id="add-btn" disabled = {item.status==config.status.confirmed}  onClick={() => {
+                                    window.location.href = '#exampleModalLabel'; // Change the URL here
+                            }}>Edit Quotation</button>
+                        
                 </div>
+                    ))}
             </ModalFooter>
         </form>
       </Modal>

@@ -17,7 +17,7 @@ const SidebarData = [
     },
     {
         id : 3,
-        label: "Service providers",       
+        label: "Service Providers",       
         icon: "mdi mdi-account-hard-hat",
         isHasArrow: true,
         url: "/service-providers",
@@ -65,7 +65,7 @@ const SidebarData = [
     },
     {
         id :9,
-        label: "Trip details",
+        label: "Trip Details",
         icon: "mdi mdi-chevron-triple-right",
         isHasArrow: true,
         url: "/trip-deatails",
@@ -82,20 +82,20 @@ const SidebarData = [
         label: "Reports",
         icon: "mdi mdi-finance",
         subItem: [
-            { id : 1, sublabel: "Service providers", link: "/serviceprovider-reports" },
+            { id : 1, sublabel: "Service Providers", link: "/serviceprovider-reports" },
             { id : 2, sublabel: "Customers", link: "/customer-reports" },
             { id : 3, sublabel: "vehicles", link: "/vehicle-reports" },
             { id : 4, sublabel: "Drivers", link: "/driver-reports" },
             { id : 5, sublabel: "Enquiries", link: "/enquiry-reports" },
             { id : 6, sublabel: "Quotations", link: "/quotation-reports" },
-            { id : 7, sublabel: "Trip details", link: "/tripDetail-reports" },
+            { id : 7, sublabel: "Trip Details", link: "/tripDetail-reports" },
             { id : 8, sublabel: "Accounts", link: "/account-reports" },
             { id : 9, sublabel: "Invoice", link: "/invoice-reports" },
         ],
     },
     {
         id : 13,
-        label: "Application Setting",
+        label: "Application Settings",
         icon: "mdi mdi-cogs",
         subItem: [
             { id : 1,sublabel: "Language", link: "/languages" },

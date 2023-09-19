@@ -15,6 +15,7 @@ import * as Yup from "yup";
 /**IMPORTED */
 import { useFormik } from "formik";
 import { userForgetPassword } from "../../store/actions";
+import { clearForgotResponseMessages } from "../../store/actions";
 import logo from "../../assets/images/logo.png";
 import withRouter from "../../components/Common/withRouter";
 import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes';
@@ -26,6 +27,7 @@ const ForgetPasswordPage = props => {
   const [app_name, setAppName] = useState('');
   /**THIS HOOK WILL RENDER INITIAL TIME */
   useEffect(() => {
+    dispatch(clearForgotResponseMessages());
     getAllData()
   }, [])
   async function getAllData() {
@@ -94,7 +96,7 @@ const ForgetPasswordPage = props => {
                       <div className="avatar-md profile-user-wid mb-4">
                         <span className="avatar-title rounded-circle bg-light">
                           <img
-                            src={loginpage_logo}
+                            src={loginpage_logo || logo}
                             alt=""
                             className="rounded-circle"
                             height="34"

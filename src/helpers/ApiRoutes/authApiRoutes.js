@@ -60,9 +60,8 @@ const fakeBackend = () => {
           setTimeout(() => {
        
             if (data.code === 200) {
-              resolve([200, data.data]);
+              resolve([200, data.message]);
             } else {
-         
               reject([
                 data.message
               ]);       

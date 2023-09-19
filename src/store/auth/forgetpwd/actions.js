@@ -4,7 +4,8 @@ import {
   FORGET_PASSWORD_ERROR,
   RESET_PASSWORD,
   RESET_PASSWORD_SUCCESS,
-  RESET_PASSWORD_ERROR
+  RESET_PASSWORD_ERROR,
+  CLEAR_RESPONSE_MESSAGE
 } from "./actionTypes"
 
 export const userForgetPassword = (user, history) => {
@@ -13,6 +14,13 @@ export const userForgetPassword = (user, history) => {
     payload: { user, history },
   }
 }
+
+export const clearForgotResponseMessages = () => {
+  return {
+    type: CLEAR_RESPONSE_MESSAGE
+  }
+}
+
 
 export const userForgetPasswordSuccess = message => {
   return {

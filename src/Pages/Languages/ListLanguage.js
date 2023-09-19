@@ -154,9 +154,6 @@ const LanguageDeatails = () => {
                     <Row>
                         <Col lg={12}>
                             <Card>
-                                <CardHeader>
-                                    <h4 className="card-title mb-0">Add, Edit & Remove</h4>
-                                </CardHeader>
                                 <CardBody>
                                     <div id="List">
                                         <Row className="g-4 mb-3">

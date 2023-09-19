@@ -59,7 +59,7 @@ const ProfileMenu = props => {
           </DropdownItem> */}
           <DropdownItem tag="a" href="/change-password">
             <i className="ri-wallet-2-line align-middle me-2" />
-            {props.t("Change password")}
+            {props.t("Change Password")}
           </DropdownItem>
           {/* <DropdownItem tag="a" href="#">
             <span className="badge bg-success float-end mt-1">11</span>

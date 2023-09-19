@@ -105,7 +105,7 @@ const TripDeatails = () => {
   /**ADDING BREAKDOWN */
   async function updateTrip(values){
   let updateTrip = await   updateTripStatus(values);
-      if(updateTrip.code == 200){
+      if(updateTrip.code === 200){
         getAllData(1);
         setmodal_list(false);
       }else{
@@ -119,7 +119,7 @@ const TripDeatails = () => {
   async function breakdown_list(productId) {
     setTrip_list_data([]);
     let breakOut = await getLIstBreakDownVehicles(productId);
-    if(breakOut.vehicles_breakouts.length != 0){
+    if(breakOut.vehicles_breakouts.length !== 0){
       setTrip_list_data(breakOut.vehicles_breakouts);
       setListOrView(true)
     }else{
@@ -131,6 +131,7 @@ const TripDeatails = () => {
   }
   /** THIS FUNCTION WILL OPEN THE EDIT POPUP  */
   async function tog_list(bkId ,invId) {
+   
     setTrip_list_data([]);
     setBooking_id(bkId);
     setInvoice_id(invId);
@@ -169,7 +170,7 @@ const TripDeatails = () => {
     <React.Fragment>
       <div className="page-content">
         <Container fluid>
-          <Breadcrumbs title="Tables" breadcrumbItem="Trip details" />
+          <Breadcrumbs title="Tables" breadcrumbItem="Trip Details" />
           <Row>
             <Col lg={12}>
               <Card>

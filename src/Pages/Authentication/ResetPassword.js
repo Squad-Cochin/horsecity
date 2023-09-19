@@ -23,6 +23,7 @@ import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes';
 const ResetPasswordPage = props => {
   const [backgroundImage, setBackgroundImage] = useState('../../assets/images/bg.jpg');
   const [app_name, setAppName] = useState('');
+  const [loginpage_logo, setLoginPageLogo] = useState('')
   const dispatch = useDispatch();
   const { id,token } = useParams();
   const navigate = useNavigate();
@@ -45,6 +46,7 @@ const ResetPasswordPage = props => {
   async function getAllData() {
     let settingsData = await getSettingsPageData();
     setBackgroundImage(settingsData?.settingsPageData[0]?.loginpage_bg_image);
+    setLoginPageLogo(settingsData?.settingsPageData[0]?.loginpage_logo);
     setAppName(settingsData?.settingsPageData[0]?.application_title)
   }
   async function initialLoad(){
@@ -54,8 +56,6 @@ const ResetPasswordPage = props => {
       }
       const verifyUrl = await  verifyResetPasswordUrl(id,token,reqObj);  
       if(verifyUrl.code === 200){
-        document.body.style.backgroundImage = "none";
-        document.body.className = "";
         navigate(`/reset-password/${verifyUrl.data?.id}/${verifyUrl.data?.token}`)
       }else{
         navigate(`/pages-404`)
@@ -111,7 +111,7 @@ return (
                       <div className="avatar-md profile-user-wid mb-4">
                         <span className="avatar-title rounded-circle bg-light">
                           <img
-                            src={logo}
+                            src={loginpage_logo || logo}
                             alt=""
                             className="rounded-circle"
                             height="34"
@@ -129,9 +129,9 @@ return (
                     {resetSuccessMsg ? (
                       <Alert color="success" style={{ marginTop: "13px" }}>
                             {resetSuccessMsg} 
-                            {/* <Link to="/login" style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
+                              <Link to="/login" style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
                                 Go Back To Login  ?
-                              </Link> */}
+                              </Link>
                       </Alert>
                     ) : null}
                     <Form

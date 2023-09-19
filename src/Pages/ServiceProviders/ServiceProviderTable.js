@@ -33,10 +33,9 @@ const ListTables = () => {
     const [module, setModule] = useState({});
     const [errors, setErrors] = useState("");
     const [roleList, setRoleList] = useState([]);
-    const [errActive,setErrActive] = useState(false);
     const [pageTitle, setPageTitle] = useState('KailPlus');
-    // const [active, setActive] = useState(false)
     const pageLimit = config.pageLimit;
+    const Roles = config.Role;
     // const [modalVisible, setModalVisible] = useState(false);
 
 
@@ -77,7 +76,6 @@ const ListTables = () => {
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
-            console.log("GSDFGDS");
             values.licence_image = updateImage;
             if (add_list) {
 
@@ -91,41 +89,37 @@ const ListTables = () => {
 
     // ADD SERVICE PROVIDER
     async function addProvider(val) {
-        setErrActive(false);
+
         let addSP = await addNewProvider(val);
         if (addSP.code === 200) {
-            setErrors("")
+            setErrors("");
             setAdd_list(false);
             setmodal_list(false);
             getAllData(pageNumber)
         } else {
             setErrors("")
             setErrors(addSP.message)
-            setErrActive(true);
+
 
         }
     }
 
     // UPDATE SERVICE PROVIDER
     async function editProvider(data) {
-        setErrActive(false);
+     
         let updateSP = await updateSProvider(sprovider[0]?.id, data);
-        console.log("uuu",updateSP);
         if (updateSP.code === 200) {
-            setErrors("")
+            setErrors("");
             setAdd_list(false);
             setmodal_list(false);
-            getAllData(pageNumber)
+            getAllData(pageNumber);
         } else {
-           setErrActive(true);
+      
             setErrors("")
             setErrors(updateSP.message);
-            console.log("herrrr");
-     
-
         }
     }
-console.log(errActive);
+
     /**
      *  selects a file for the license image */
     const handleLicensceImageChange = (event) => {
@@ -167,13 +161,14 @@ console.log(errActive);
                 setErrors("");
                 setLicenscePreview(null);
                 setAdd_list(!add_list);
+                
             } else {
           
                 setErrors("");
+                setSprovider([]);
                 let serviceProvider = await getSPSingleData(productId)
                 setSprovider(serviceProvider.serviceProvider)
                 setLicenscePreview(serviceProvider.serviceProvider[0]?.licence_image);
-                // setErrActive(true)
             }
             setmodal_list(!modal_list);
         }else{
@@ -213,12 +208,12 @@ console.log(errActive);
         <React.Fragment>
             <div className="page-content">
                 <Container fluid>
-                    <Breadcrumbs title="Tables" breadcrumbItem="Service providers" />
+                    <Breadcrumbs title="Tables" breadcrumbItem="Service Providers" />
                     <Row>
                         <Col lg={12}>
                             <Card>
                                 <CardHeader>
-                                    <h4 className="card-title mb-0">Add, Edit & Remove</h4>
+                                    <h4 className="card-title mb-0">{Roles.service_provider === role ?  'Edit ' : 'Add Edit & Remove'} </h4>
                                 </CardHeader>
 
                                 <CardBody>
@@ -355,8 +350,8 @@ console.log(errActive);
             </div>
 
             {/****************************** Add Modal *************/}
-            <Modal className="extra-width" isOpen={modal_list} toggle={() => { setmodal_list(false); setAdd_list(false); setLicenscePreview(null); setErrActive(false) }} centered   >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); setAdd_list(false); setLicenscePreview(null) ;setErrActive(false)}}>{add_list ? 'Add service provider' : 'Edit service provider'}</ModalHeader>
+            <Modal className="extra-width" isOpen={modal_list} toggle={() => { setmodal_list(false); setAdd_list(false); setLicenscePreview(null);}} centered   >
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setmodal_list(false); setAdd_list(false); setLicenscePreview(null)}}>{add_list ? 'Add Service Provider' : 'Edit Service Provider'}</ModalHeader>
                 <form className="tablelist-form"
                     onSubmit={validation.handleSubmit}>
                     <ModalBody >
@@ -431,6 +426,7 @@ console.log(errActive);
                                     value={validation.values.role_id || ""}
                                     onChange={validation.handleChange}
                                     onBlur={validation.handleBlur}
+                                    required
                                 >
                                     {!add_list ? (
                                         <>
@@ -535,6 +531,7 @@ console.log(errActive);
                                     type="file"
                                     placeholder="Licence Image"
                                     onChange={handleLicensceImageChange}
+                                    required
                                 />
                             </div>
                         </div>
@@ -543,8 +540,12 @@ console.log(errActive);
                     </ModalBody>
                     <ModalFooter>
                         <div className="hstack gap-2 justify-content-end">
-                            <button type="button" className="btn btn-light" onClick={() => { setmodal_list(false); setAdd_list(false); setLicenscePreview(null) ;setErrActive(false)}}>Close</button>
-                            <button type="submit"  className="btn btn-success" id="add-btn"> <a style={{ color: '#fff',    backgroundColor: "#0ac074",padding: "10px",borderRadius:"0.25rem"}} href={errActive?'#exampleModalLabel' : null}>{add_list ? 'Add service provider' : 'Update service provider'}</a></button>
+                            <button type="button" className="btn btn-light" onClick={() => { setmodal_list(false); setAdd_list(false); setLicenscePreview(null);}}>Close</button>
+                            <button type="submit"  className="btn btn-success" id="add-btn"   onClick={() => {
+                                    window.location.href = '#exampleModalLabel'; // Change the URL here
+                            }}>
+                                 {add_list ? 'Add Service Provider' : 'Update Service Provider'}
+                            </button>
                         </div>
                     </ModalFooter>
                 </form>
@@ -552,7 +553,7 @@ console.log(errActive);
 
             {/****************************  View Modal*************** */}
             <Modal className="extra-width" isOpen={view_modal} toggle={() => { setView_modal(false); }} centered >
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_view('view'); setView_modal(false); }}>View service provider</ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { tog_view('view'); setView_modal(false); }}>View Service Provider</ModalHeader>
                 <form className="tablelist-form">
                     <ModalBody>
                         {sprovider?.map((item, index) => (

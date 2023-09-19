@@ -23,7 +23,7 @@ function* forgetUser({ payload: { user, history } }) {
       if (response) {
         yield put(
           userForgetPasswordSuccess(
-            "Reset link are sended to your mailbox, check there first"
+           response
           )
         )
       }
@@ -39,10 +39,9 @@ function* resetPasswordUser({ payload: { data, history } }) {
 
       const response = yield call(postFakeResetPwd,data)
       if (response) {
-        console.log("res",response);
         yield put(
           userResetPasswordSuccess(
-            "Password updated successfully ,"
+            "Password updated successfully ."
           )
         )
       }
