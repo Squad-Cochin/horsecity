@@ -15,7 +15,7 @@ exports.checkVehicleBodyEntered = async (req, res, next) =>
         await this.checkNumericalValues(req.body.height, 'Vehicle height')(req, res, next);
         await this.checkNumericalValues(req.body.no_of_horse, 'Vehicle maximum horse carrying capicity')(req, res, next);
         await checkInput.checkValueEntered(req.body.insurance_date, 'Vehicle insurance date')(req, res, next);
-        await checkInput.checkValueEntered(req.body.vehicle_exipration_date, 'Vehicle insurance expiration date')(req, res, next);
+        await checkInput.checkValueEntered(req.body.insurance_expiry_date, 'Vehicle insurance expiration date')(req, res, next);
         await checkInput.checkValueEntered(req.body.vehicle_registration_date, 'Vehicle registration date')(req, res, next);
         await checkInput.checkValueEntered(req.body.vehicle_exipration_date, 'Vehicle expiration date')(req, res, next);
         next();
@@ -45,7 +45,7 @@ exports.checkNumericalValues = (value, feildName) => (req, res, next) =>
             return res.status(200).send
             ({
                 code: 400,
-                status: "failure",
+                status: false,
                 message: `${feildName} must be a numeric value`,
             });
         }
@@ -54,7 +54,7 @@ exports.checkNumericalValues = (value, feildName) => (req, res, next) =>
             return res.status(200).send
             ({
                 code: 400,
-                status: "failure",
+                status: false,
                 message: `${feildName} must be greater than zero.`,
             });
         } 
@@ -74,7 +74,7 @@ exports.isMaximumHorseCarryingCapicityEntered = (req,res,next) =>
         ({
             code: 400,
             status: false,
-            message: constants.responseMessage.vehicle1
+            message: constants.responseMessage.noofhorserequired
         });        
     }
     else if (typeof numericLength !== "number" || isNaN(numericLength) || !isFinite(numericLength)) 
@@ -82,8 +82,8 @@ exports.isMaximumHorseCarryingCapicityEntered = (req,res,next) =>
         return res.status(200).send
         ({
             code: 400,
-            status: "failure",
-            message: constants.responseMessage.vehicle2,
+            status: false,
+            message: constants.responseMessage.noofhorsenotanumber,
         });
     }
     else if (req.body.no_of_horse <= 0)
@@ -91,8 +91,8 @@ exports.isMaximumHorseCarryingCapicityEntered = (req,res,next) =>
         return res.status(200).send
         ({
             code: 400,
-            status: "failure",
-            message: constants.responseMessage.vehicle3
+            status: false,
+            message: constants.responseMessage.noofhorselessthanzero
         });
     }
     else
@@ -109,7 +109,7 @@ exports.isAirConditionerValueEntered = (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: constants.responseMessage.vehicle4
+            message: constants.responseMessage.acnotpresent
         });        
     }
     else if(req.body.air_conditioner === 'YES')
@@ -125,8 +125,8 @@ exports.isAirConditionerValueEntered = (req, res, next) =>
         return res.status(200).send
         ({
             code: 400,
-            status: "failure",
-            message: constants.responseMessage.vehicle5
+            status: false,
+            message: constants.responseMessage.acInvalidInput
         });        
     }
 }
@@ -139,7 +139,7 @@ exports.isTemperaturControlValueEntered = (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: constants.responseMessage.vehicle6
+            message: constants.responseMessage.tempcontrolnotpresent
         });        
     }
     else if(req.body.temperature_manageable === 'YES')
@@ -155,8 +155,8 @@ exports.isTemperaturControlValueEntered = (req, res, next) =>
         return res.status(200).send
         ({
             code: 400,
-            status: "failure",
-            message: constants.responseMessage.vehicle7
+            status: false,
+            message: constants.responseMessage.tempcontrolInvalidInput
         });        
     }
 }
@@ -169,7 +169,7 @@ exports.isGCCTravelValueEntered = (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: constants.responseMessage.vehicle8
+            message: constants.responseMessage.vehicleGCCvalueNotPresent
         });        
     }
     else if(req.body.gcc_travel_allowed === 'YES')
@@ -185,8 +185,8 @@ exports.isGCCTravelValueEntered = (req, res, next) =>
         return res.status(200).send
         ({
             code: 400,
-            status: "failure",
-            message: constants.responseMessage.vehicle9
+            status: false,
+            message: constants.responseMessage.vehicleGCCvalueInvalid
         });        
     }
 }
@@ -199,7 +199,7 @@ exports.isInsuranceCoverValueEntered = (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: constants.responseMessage.vehicle10
+            message: constants.responseMessage.vehicleinsurancecoverenotpresnet
         });        
     }
     else if(req.body.insurance_cover === 'YES')
@@ -215,8 +215,8 @@ exports.isInsuranceCoverValueEntered = (req, res, next) =>
         return res.status(200).send
         ({
             code: 400,
-            status: "failure",
-            message: constants.responseMessage.vehicle11
+            status: false,
+            message: constants.responseMessage.vehicleinsurancecovereinvalidinput
         });        
     }
 }
@@ -229,7 +229,7 @@ exports.isVehicleRegistrationNumberEntered = async (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: constants.responseMessage.vehicle12
+            message: constants.responseMessage.vehicleRegistrationNoNotPresnet
         });        
     }
     else
@@ -262,7 +262,7 @@ exports.isInsurancePolicyNumberEntered = async (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: constants.responseMessage.vehicle13
+            message: constants.responseMessage.vehicleinsurancenoNotPresent
         });        
     }
     else
@@ -295,7 +295,7 @@ exports.isValidVehicleTypeEntered = (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: constants.responseMessage.vehicle14
+            message: constants.responseMessage.vehicleTypeNotPresent
         });
     }
     else if(req.body.vehicle_type === 'PRIVATE')
@@ -315,8 +315,8 @@ exports.isValidVehicleTypeEntered = (req, res, next) =>
         return res.status(200).send
         ({
             code: 400,
-            status: "failure",
-            message: constants.responseMessage.vehicle15,
+            status: false,
+            message: constants.responseMessage.vehicleTypeInvalid,
         }); 
     }
 }
@@ -330,7 +330,7 @@ exports.isValidVehicleNumberEntered =  async (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: constants.responseMessage.vehicle16
+            message: constants.responseMessage.vehicleNoNotPresnet
         });
     }
     else
@@ -363,7 +363,7 @@ exports.isSafetyCertificateAdded = (req, res, next) =>
         ({
             code : 400,
             success: false,
-            message : constants.responseMessage.validatorError39
+            message : constants.responseMessage.vehiclescertificateimagenotpresent
         });
     } 
     else
@@ -391,7 +391,7 @@ exports.isVehicleImageUploaded = (req, res, next) =>
         ({
             code : 400,
             success: false,
-            message : constants.responseMessage.validatorError40
+            message : constants.responseMessage.vehicleimagenotpresent
         });
     } 
     else
@@ -408,7 +408,7 @@ exports.isVehicleImageTitleAdded = (req, res, next) =>
         ({
             code : 400,
             success: false,
-            message : constants.responseMessage.validatorError41
+            message : constants.responseMessage.vehicleimagetitlenotentered
         });
     } 
     else

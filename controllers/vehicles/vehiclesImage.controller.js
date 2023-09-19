@@ -40,7 +40,7 @@ exports.addImages = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement7
+            message : constants.responseMessage.vehiclesImageInvalid
         });
     }
     else if(vehicleImages === 'NOATTACHEMENT')
@@ -49,7 +49,7 @@ exports.addImages = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.vehicle18
+            message : constants.responseMessage.vehiclescertificateimagenotpresent
         });
     }
     // If input feild are in correct format and not present in the database, then this else block of code will be executed.

@@ -132,7 +132,7 @@ exports.addCustomer = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement8
+            message : constants.responseMessage.invalididproofimageformat
         });
     }
     // If the id proof image is not uploaded then this else if block of code will be executed.
@@ -142,7 +142,7 @@ exports.addCustomer = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement9,
+            message : constants.responseMessage.idproofimagenotuploaded,
         });
     }
     else if(customers.length === 0)
@@ -207,7 +207,7 @@ exports.editCustomer = async (req, res, next) =>
         ({
             code : 400,
             status : true,
-            message : constants.responseMessage.attachement8
+            message : constants.responseMessage.invalididproofimageformat
         });
     }
     else if(customers === 'NOATTACHEMENT')
@@ -216,7 +216,7 @@ exports.editCustomer = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement9
+            message : constants.responseMessage.idproofimagenotuploaded
         });
     }
     // If input feild are in correct format and not already present in the database, then this else block of code will be executed.
@@ -296,9 +296,9 @@ exports.customerLogin = async (req, res) =>
     {
         return res.status(200).send
         ({
-            status : "failure",
+            status : false,
             code : 400,
-            message : constants.responseMessage.validatorError42,
+            message : constants.responseMessage.usernameincorrect,
         });
     }
     // If any unspecified or unencountered error came. Which is not as per our code thinking, then this else if block
@@ -306,26 +306,38 @@ exports.customerLogin = async (req, res) =>
     {
         return res.status(200).send
         ({
-            status : "failure",
+            status : false,
             code : 500,
             message : constants.responseMessage.universalError,
         });
     }
+    // If customer password is expired then this will be printed
+    else if(customers.message === 'passwordexpired')
+    {
+     
+        return res.status(200).send
+        ({
+            status : false,
+            code : 404,
+            message : constants.responseMessage.passwordexpired,
+            data : customers.data
+        });
+    } 
     // If wrong password is entered then, this below response will be displayed
     else if(customers === 'passwordnotmatched')
     {
         return res.status(200).send
         ({
-            status : "failure",
+            status : false,
             code : 400,
-            message : constants.responseMessage.validatorError43,
+            message : constants.responseMessage.passwordincorrect,
         });
     }
     else
     {
         return res.status(200).send
         ({
-            status : "success",
+            status : true,
             code : 200,
             message : constants.responseMessage.logsuccess,
             data : customers
@@ -344,7 +356,7 @@ exports.customerLogout = async (req, res) =>
     {
         res.status(200).send
         ({
-            status : "success",
+            status : true,
             code : 200,
             message : constants.responseMessage.logoutsuccess
         });
@@ -353,9 +365,9 @@ exports.customerLogout = async (req, res) =>
     {
         res.status(200).send
         ({
-            status : "false",
+            status : false,
             code : 400,
-            message : constants.responseMessage.validatorError49
+            message : constants.responseMessage.restacc
         });
     }
 };
@@ -372,7 +384,7 @@ exports.customerChangePassword = async (req, res, next) =>
     {
         return res.status(200).send
         ({
-            status : "failure",
+            status : false,
             code : 400,
             message : constants.responseMessage.validatorError46
         });
@@ -382,7 +394,7 @@ exports.customerChangePassword = async (req, res, next) =>
     {
         return res.status(200).send
         ({
-            status : "failure",
+            status : false,
             code : 500,
             message : constants.responseMessage.universalError,
         });
@@ -391,16 +403,16 @@ exports.customerChangePassword = async (req, res, next) =>
     {
         return res.status(200).send
         ({
-            status : "failure",
+            status : false,
             code : 400,
-            message : constants.responseMessage.validatorError47,
+            message : constants.responseMessage.passwordincorrect,
         });
     }
     else
     {
         return res.status(200).send
         ({
-            status : "success",
+            status : true,
             code : 200,
             message : constants.responseMessage.passwordupdate,
         });
@@ -444,7 +456,7 @@ exports.signup = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement8
+            message : constants.responseMessage.invalididproofimageformat
         });
     }
     // If the id proof image is not uploaded then this else if block of code will be executed.
@@ -454,7 +466,7 @@ exports.signup = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement9
+            message : constants.responseMessage.idproofimagenotuploaded
         });
     }
     else (customers === 'registered')
@@ -657,7 +669,7 @@ exports.getParticularBookinDetailsRecent = async (req, res, next) =>
 
 
  /**
- * The below controller is for fetching the details of all the bookings of a  customer.
+ * The below controller is for fetching the details of all the bookings of a customer.
  * This function is for the nextjs
  */
 exports.getParticularCustomerAllBookings = async (req, res, next) =>
@@ -884,7 +896,7 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement8
+            message : constants.responseMessage.invalididproofimageformat
         });
     }
     // If the id proof image is not uploaded then this else if block of code will be executed.
@@ -894,7 +906,7 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement9,
+            message : constants.responseMessage.idproofimagenotuploaded,
         });
     }
 

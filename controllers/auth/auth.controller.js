@@ -28,7 +28,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 400,
-            message : constants.responseMessage.validatorError42,
+            message : constants.responseMessage.usernameincorrect,
         });
     }
     // If any unspecified or unencountered error came. Which is not as per our code thinking, then this else if block
@@ -50,7 +50,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 400,
-            message : constants.responseMessage.validatorError43
+            message : constants.responseMessage.passwordincorrect
         });
     }
     // If service provider user is inactive then, this below response will be displayed
@@ -61,7 +61,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 400,
-            message : constants.responseMessage.validatorError44,
+            message : constants.responseMessage.servieproviderinactive,
         });
     } 
     // If password of the service provider user is expired then, this below response will be displayed
@@ -72,11 +72,10 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "expired",
             code : 400,
-            message : constants.responseMessage.validatorError45
+            message : constants.responseMessage.passwordexpired
         });
     }
     // If every thing run smoothly then, this below response will be displayed
-    // else(loginauth === 'true')
     else
     {
         return res.status(200).send
@@ -128,14 +127,14 @@ exports.serviceProviderChangePassword = async(req, res, next)=>
         ({
             success : false,
             code : 400,
-            message : constants.responseMessage.validatorError47,
+            message : constants.responseMessage.passwordincorrect,
         });
     }
     else
     {        
         return res.status(200).send
         ({
-            success : "true",
+            success : true,
             code : 200,
             message : constants.responseMessage.passwordupdate
         }); 
@@ -156,7 +155,7 @@ exports.serviceProviderLogout = async(req, res)=>
         
         res.status(200).send
         ({
-            status : "success",
+            status : true,
             code : 200,
             message : constants.responseMessage.logoutsuccess
         });
@@ -167,9 +166,9 @@ exports.serviceProviderLogout = async(req, res)=>
         
         res.status(200).send
         ({
-            status : "success",
+            status : true,
             code : 400,
-            message : constants.responseMessage.validatorError43
+            message : constants.responseMessage.passwordincorrect
         });
     }
     if(loginauth === 'noserviceprovider')
@@ -177,9 +176,9 @@ exports.serviceProviderLogout = async(req, res)=>
         
         res.status(200).send
         ({
-            status : "success",
+            status : true,
             code : 400,
-            message : constants.responseMessage.validatorError48
+            message : constants.responseMessage.usernameincorrect
         });
     }    
     
@@ -202,7 +201,7 @@ exports.sendEmailForgotPassword = async(req, res)=>
     }
     else
     { 
-        res.status(500).send
+        res.status(200).send
         ({
             status : false,
             code : 500,
@@ -338,7 +337,6 @@ exports.Verifiy = async (req, res) =>
             
             // Combine the email characters from both parts
             const email = (emailChars.join('') + emailChars2.join('')).replace(/y+$/, '');
-            console.log(email);
             
         });      
     }

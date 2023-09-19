@@ -6,7 +6,6 @@ const time = require(`../../utils/helper/date`); // All the time related formati
 const commonoperation = require('../../utils/helper/commonoperation');
 
 
-
 // Below is function which wille eliminate the space from the string
 function hasOnlyNonSpaces(str) 
 {
@@ -125,7 +124,7 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError1
+            message : constants.responseMessage.emailNotPresent
         });
     }
     else
@@ -136,7 +135,7 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : constants.responseMessage.validatorError2
+                message : constants.responseMessage.emailHaveSpace
             });
         }
         else
@@ -147,7 +146,7 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
                 ({
                     code : 400,
                     status : false,
-                    message : constants.responseMessage.validatorError3
+                    message : constants.responseMessage.emailIncorrectFormat
                 });                                
             }
             else
@@ -190,7 +189,7 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError4
+            message : constants.responseMessage.usernameNotPresent
         });
     }
     else
@@ -201,7 +200,7 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : constants.responseMessage.validatorError5
+                message : constants.responseMessage.usernameHaveSpace
             });
         }
         else
@@ -212,12 +211,16 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
                 ({
                     code : 400,
                     status : false,
-                    message : constants.responseMessage.validatorError6
-                });                                
+                    message : constants.responseMessage.unsernameinvalid
+                });
             }
             else
             {
                 if(req.method === `POST` && req.url === url.UPDATE_SERVICE_PROVIDER_PASSWORD)
+                {
+                    next();
+                }
+                else if(req.method === `POST` && req.url === url.CUSTOMER_LOGIN_URL)
                 {
                     next();
                 }
@@ -259,7 +262,7 @@ exports.contactNumberValidation = (tableName) => async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError7
+            message : constants.responseMessage.contactnumbernotpresent
         });
     }
     else
@@ -270,7 +273,7 @@ exports.contactNumberValidation = (tableName) => async (req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : constants.responseMessage.validatorError8
+                message : constants.responseMessage.contactnumberhavespaces
             });
         }
         else
@@ -281,7 +284,7 @@ exports.contactNumberValidation = (tableName) => async (req, res, next) =>
             //     ({
             //         code : 400,
             //         status : false,
-            //         message : constants.responseMessage.validatorError9
+            //         message : constants.responseMessage.contactnumberinvalid
             //     });                                
             // }
             // else
@@ -324,7 +327,7 @@ exports.isValidLicenceNumber = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError10
+            message : constants.responseMessage.licensenonotpresent
         });
     }
     else
@@ -357,7 +360,7 @@ exports.idProofNumberValidation = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError11
+            message : constants.responseMessage.idproofnonotexists
         });
     }
     else
@@ -394,7 +397,7 @@ exports.isValidEmergencyContactNumber =  (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError13
+            message : constants.responseMessage.emgcontactnumbernotpresent
         });
     }
     else
@@ -405,7 +408,7 @@ exports.isValidEmergencyContactNumber =  (req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : constants.responseMessage.validatorError14
+                message : constants.responseMessage.emgcontactnumberhavespaces
             });
         }
         else if (req.body.contact_no === req.body.emergency_contact_no)
@@ -414,7 +417,7 @@ exports.isValidEmergencyContactNumber =  (req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : constants.responseMessage.validatorError15
+                message : constants.responseMessage.emgandcontactnumbersimilar
             });
         }
         else
@@ -425,7 +428,7 @@ exports.isValidEmergencyContactNumber =  (req, res, next) =>
             //     ({
             //         code : 400,
             //         status : false,
-                    // message : constants.responseMessage.validatorError16
+                    // message : constants.responseMessage.emgcontactnumberinvalid
             //     });                                
             // }
             // else
@@ -444,7 +447,7 @@ exports.dateOfBirthValidation = (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError17
+            message : constants.responseMessage.dobnotpresent
         });
     }
     else
@@ -455,7 +458,7 @@ exports.dateOfBirthValidation = (req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : constants.responseMessage.validatorError18
+                message : constants.responseMessage.dobhavespaces
             });
         }
         else
@@ -466,7 +469,7 @@ exports.dateOfBirthValidation = (req, res, next) =>
                 ({
                     code : 400,
                     status : false,
-                    message : constants.responseMessage.validatorError19
+                    message : constants.responseMessage.dobinvalid
                 });                                
             }
             else
@@ -486,7 +489,7 @@ exports.nameValidation = (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: constants.responseMessage.validatorError50,
+            message: constants.responseMessage.invalidName,
         });
     }
     else
@@ -503,7 +506,7 @@ exports.idProofValidationWhileUpdate = async(req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError20
+            message : constants.responseMessage.idproofnonotexists
         });
     }
     else
@@ -525,7 +528,7 @@ exports.idProofValidationWhileUpdate = async(req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : constants.responseMessage.validatorError21
+                message : constants.responseMessage.idproofnoalreadypresent
             });
         }
         if(checkIdProofNumber === `valuenotchanged`)
@@ -548,7 +551,7 @@ exports.isValidDescription = (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError22
+            message : constants.responseMessage.driverdescription
         });
     }
     else
@@ -565,7 +568,7 @@ exports.passwordsimilarity = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError23
+            message : constants.responseMessage.passwordssimilarerror
         });
     }
     else
@@ -576,7 +579,7 @@ exports.passwordsimilarity = async (req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : constants.responseMessage.validatorError24
+                message : constants.responseMessage.newpasswordsameoldpassword
             });
         }
         else if (req.body.confirmnewpassword === req.body.password)
@@ -585,7 +588,7 @@ exports.passwordsimilarity = async (req, res, next) =>
             ({
                 code : 400,
                 status : false,
-                message : constants.responseMessage.validatorError25
+                message : constants.responseMessage.confirmpasswordsameoldpassword
             });
         }
         else
@@ -604,7 +607,7 @@ exports.passwordValidation = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError26
+            message : constants.responseMessage.passwordnotpresent
         });
     }
     else if(hasOnlyNonSpaces(password) === true)
@@ -613,7 +616,7 @@ exports.passwordValidation = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError27
+            message : constants.responseMessage.passwordhavespaces
         });
     }
     else
@@ -639,7 +642,7 @@ exports.passwordValidation = async (req, res, next) =>
                     ({
                         success: false,
                         code: 400,
-                        message: constants.responseMessage.passworderror
+                        message: constants.responseMessage.passwordinvalid
                     });
                 }
             }    
@@ -656,7 +659,7 @@ exports.newpassword = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError28
+            message : constants.responseMessage.newpasswordnotpresent
         });
     }
     else if(hasOnlyNonSpaces(password) === true)
@@ -665,7 +668,7 @@ exports.newpassword = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError29
+            message : constants.responseMessage.newpasswordhavespaces
         });
     }
     else
@@ -691,7 +694,7 @@ exports.newpassword = async (req, res, next) =>
                     ({
                         success: false,
                         code: 400,
-                        message : constants.responseMessage.newpassworderror
+                        message : constants.responseMessage.newpasswordinvalid
                     });
                 }
             }    
@@ -708,7 +711,7 @@ exports.confirmnewpassword = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError30
+            message : constants.responseMessage.confirmpasswordnotpresent
         });
     }
     else if(hasOnlyNonSpaces(password) === true)
@@ -717,7 +720,7 @@ exports.confirmnewpassword = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError31
+            message : constants.responseMessage.confirmpasswordhavespaces
         });
     }
     else
@@ -743,7 +746,7 @@ exports.confirmnewpassword = async (req, res, next) =>
                     ({
                         success: false,
                         code: 400,
-                        message : constants.responseMessage.confirmpassworderror
+                        message : constants.responseMessage.confirmpasswordinvalid
                     });
                 }
             }    
@@ -794,7 +797,7 @@ exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
         ({
             code : 400,
             success: false,
-            message : constants.responseMessage.validatorError32
+            message : constants.responseMessage.idproofimagenotuploaded
         });     
     }
     else
@@ -830,7 +833,7 @@ exports.isDriverProfileImageSubmitted = (req, res, next) =>
         ({
             code : 400,
             success: false,
-            message : constants.responseMessage.validatorError33
+            message : constants.responseMessage.driverprofileimagenotpresent
         });     
     }
     else
@@ -858,7 +861,7 @@ exports.isDriverLicenceImageSubmitted = (req, res, next) =>
         ({
             code : 400,
             success: false,
-            message : constants.responseMessage.validatorError36
+            message : constants.responseMessage.driverlicenseimagenotpresent
         });     
     }
     else
@@ -886,7 +889,7 @@ exports.idProofImageWhileUpdate = (req, res, next) =>
         ({
             code : 400,
             success: false,
-            message : constants.responseMessage.validatorError37
+            message : constants.responseMessage.idproofimagenotuploaded
         });
     }
     else
@@ -905,9 +908,9 @@ exports.checkValueEntered = (fieldName, messageField) => (req, res, next) =>
 {
     return new Promise((resolve, reject) =>
     {
-        if (!fieldName)
+        if (!fieldName || fieldName.length === 0 || fieldName.trim() === "")
         {
-           return res.status(400).send
+            return res.status(200).send
             ({
                 code: 400,
                 status: false,
@@ -925,13 +928,14 @@ exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) =>
 {  
     try
     {
+    
         // Add await to each checkValueEntered call and handle errors explicitly
         await this.checkValueEntered(req.body.customer_id, 'Customer id') (req, res, next);
         await this.checkValueEntered(req.body.enquiry_id, 'Enquiry id') (req, res, next);
         await this.checkValueEntered(req.body.driver_id, 'Driver id') (req, res, next);
         await this.checkValueEntered(req.body.vehicle_id, 'Vehicle id') (req, res, next);
         await this.checkValueEntered(req.body.service_provider_id, 'Service provider id') (req, res, next);
-        await this.checkValueEntered(req.body.discount_type_id, 'Discount type Id') (req, res, next);
+        // await this.checkValueEntered(req.body.discount_type_id, 'Discount type Id') (req, res, next);
         await this.checkValueEntered(req.body.pickup_location, 'Pickup location') (req, res, next);
         await this.checkValueEntered(req.body.pickup_country, 'Pick up country') (req, res, next);
         await this.checkValueEntered(req.body.pickup_date, 'Pick up date')(req, res, next) ;
@@ -990,7 +994,7 @@ exports.checkCustomerEnquiryBody = async (req, res, next) =>
         await this.checkValueEntered(req.body.vehicle_type, 'Vehicle type')(req, res, next);
         await this.checkValueEntered(req.body.pickup_country, 'Pick up country')(req, res, next);
         await this.checkValueEntered(req.body.drop_country, 'Drop country')(req, res, next);
-        await this.checkValueEntered(req.body.no_of_horse, 'Number of horse, Which are about to transport')(req, res, next);
+        await this.checkValueEntered(req.body.no_of_horse, 'Number of horse, Which are about to be transported')(req, res, next);
         await this.checkValueEntered(req.body.description, 'Description about the enquiry')(req, res, next);
         await this.checkValueEntered(req.body.pickup_date, 'Pickup date')(req, res, next);
         next();
@@ -1020,8 +1024,8 @@ exports.isIdEntered = (feildName, tableName, MessageFeild) => async (req, res, n
             return res.status(500).json
             ({
                 code: 400,
-                status : "failed",
-                error: constants.responseMessage.universalError
+                status : false,
+                message: constants.responseMessage.universalError
             });
         }
         else if(data.length > 0)
@@ -1063,7 +1067,7 @@ exports.checkingDuplicateEnquiry = async (req, res, next) =>
                             ({
                                 code : 400,
                                 status : false,
-                                message : constants.responseMessage.validatorError34
+                                message : constants.responseMessage.enquiryalreadypresent
                             });
                         }
                         if(result[0].description !== req.body.description)
@@ -1072,7 +1076,7 @@ exports.checkingDuplicateEnquiry = async (req, res, next) =>
                             ({
                                 code : 400,
                                 status : false,
-                                message : constants.responseMessage.validatorError35
+                                message : constants.responseMessage.duplicateenquiry
                             });
                         }
                     }
@@ -1151,7 +1155,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                     ({
                         code : 400,
                         status : false,
-                        message : constants.responseMessage.attachement8,
+                        message : constants.responseMessage.invalididproofimageformat,
                     });
                 }
                 else if(uploadIdproofImage === 'NOATTACHEMENT')
@@ -1160,7 +1164,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                     ({
                         code : 400,
                         status : false,
-                        message : constants.responseMessage.attachement9
+                        message : constants.responseMessage.idproofimagenotuploaded
                     });
                 }
                 else
@@ -1208,7 +1212,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                         ({
                             code : 400,
                             status : false,
-                            message : constants.responseMessage.attachement8
+                            message : constants.responseMessage.invalididproofimageformat
                         });
                     }
                     else if(uploadIdproofImage === 'NOATTACHEMENT')
@@ -1217,7 +1221,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                         ({
                             code : 400,
                             status : false,
-                            message : constants.responseMessage.attachement9
+                            message : constants.responseMessage.idproofimagenotuploaded
                         });
                     }
                     else
@@ -1273,7 +1277,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                             ({
                                 code : 400,
                                 status : false,
-                                message : constants.responseMessage.attachement8
+                                message : constants.responseMessage.invalididproofimageformat
                             });
                         }
                         else if(uploadIdproofImage === 'NOATTACHEMENT')
@@ -1282,7 +1286,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                             ({
                                 code : 400,
                                 status : false,
-                                message : constants.responseMessage.attachement9
+                                message : constants.responseMessage.idproofimagenotuploaded
                             });
                         }
                         else
@@ -1340,7 +1344,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                 ({
                                     code : 400,
                                     status : false,
-                                    message : constants.responseMessage.attachement8
+                                    message : constants.responseMessage.invalididproofimageformat
                                 });
                             }
                             else if(uploadIdproofImage === 'NOATTACHEMENT')
@@ -1349,7 +1353,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                 ({
                                     code : 400,
                                     status : false,
-                                    message : constants.responseMessage.attachement9
+                                    message : constants.responseMessage.idproofimagenotuploaded
                                 });
                             }
                             else
@@ -1407,7 +1411,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                     ({
                                         code : 400,
                                         status : false,
-                                        message : constants.responseMessage.attachement8
+                                        message : constants.responseMessage.invalididproofimageformat
                                     });
                                 }
                                 else if(uploadIdproofImage === 'NOATTACHEMENT')
@@ -1416,7 +1420,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                     ({
                                         code : 400,
                                         status : false,
-                                        message : constants.responseMessage.attachement9
+                                        message : constants.responseMessage.idproofimagenotuploaded
                                     });
                                 }
                                 else
@@ -1474,7 +1478,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                         ({
                                             code : 400,
                                             status : false,
-                                            message : constants.responseMessage.attachement8
+                                            message : constants.responseMessage.invalididproofimageformat
                                         });
                                     }
                                     // If the id proof image is not uploaded then this else if block of code will be executed.
@@ -1484,7 +1488,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                         ({
                                             code : 400,
                                             status : false,
-                                            message : constants.responseMessage.attachement9
+                                            message : constants.responseMessage.idproofimagenotuploaded
                                         });
                                     }
                                     else
@@ -1803,7 +1807,7 @@ exports.passwordandconfirmpasswordsimilarity = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.validatorError23
+            message : constants.responseMessage.passwordssimilarerror
         });
     }
     else
@@ -1848,7 +1852,7 @@ exports.CheckRole = async (req, res, next) =>
                                 ({
                                     code : 400,
                                     status : false,
-                                    message : constants.responseMessage.attachement5
+                                    message : constants.responseMessage.driverlicenceimageinvalid
                                 });
                             }
                             else if(uploadlicence_img === 'NOATTACHEMENT')
@@ -1857,7 +1861,7 @@ exports.CheckRole = async (req, res, next) =>
                                 ({
                                     code : 400,
                                     status : false,
-                                    message : constants.responseMessage.attachement2,
+                                    message : constants.responseMessage.driverlicenseimagenotpresent,
                                 });
                             }
                             else if(uploadprofile_image === 'INVALIDFORMAT')
@@ -1867,7 +1871,7 @@ exports.CheckRole = async (req, res, next) =>
                                     code : 400,
                                     status : false,
                                     
-                                    message : constants.responseMessage.attachement4
+                                    message : constants.responseMessage.driverprofileimageinvalid
                                 });
                             }
                             else if(uploadprofile_image === 'NOATTACHEMENT')
@@ -1876,7 +1880,7 @@ exports.CheckRole = async (req, res, next) =>
                                 ({
                                     code : 400,
                                     status : false,
-                                    message : constants.responseMessage.attachement3,
+                                    message : constants.responseMessage.driverprofileimagenotpresent,
                                 });
                             }
                             else
@@ -1888,7 +1892,7 @@ exports.CheckRole = async (req, res, next) =>
                                     ({
                                         code : 400,
                                         status : false,
-                                        message : constants.responseMessage.attachement4
+                                        message : constants.responseMessage.driverprofileimageinvalid
                                     });
                                 }
                                 else if(uploadprofile_image === 'NOATTACHEMENT')
@@ -1985,7 +1989,7 @@ exports.CheckRole = async (req, res, next) =>
                                     ({
                                         code : 400,
                                         status : false,
-                                        message : constants.responseMessage.attachement5
+                                        message : constants.responseMessage.driverlicenceimageinvalid
                                     });
                                 }
                                 else if(uploadlicence_img === 'NOATTACHEMENT')
@@ -1994,7 +1998,7 @@ exports.CheckRole = async (req, res, next) =>
                                     ({
                                         code : 400,
                                         status : false,
-                                        message : constants.responseMessage.attachement2,
+                                        message : constants.responseMessage.driverlicenseimagenotpresent,
                                     });
                                 }
                                 else if(uploadprofile_image === 'INVALIDFORMAT')
@@ -2003,7 +2007,7 @@ exports.CheckRole = async (req, res, next) =>
                                     ({
                                         code : 400,
                                         status : false,
-                                        message : constants.responseMessage.attachement4
+                                        message : constants.responseMessage.driverprofileimageinvalid
                                     });
                                 }
                                 else if(uploadprofile_image === 'NOATTACHEMENT')
@@ -2012,7 +2016,7 @@ exports.CheckRole = async (req, res, next) =>
                                     ({
                                         code : 400,
                                         status : false,
-                                        message : constants.responseMessage.attachement1
+                                        message : constants.responseMessage.driverprofileimagenotpresent
                                     });
                                 }
                                 else
@@ -2059,7 +2063,7 @@ exports.CheckRole = async (req, res, next) =>
                                                 ({
                                                     code : 400,
                                                     status : false,
-                                                    message : constants.responseMessage.attachement5
+                                                    message : constants.responseMessage.driverlicenceimageinvalid
                                                 });
                                             }
                                             else if(uploadlicence_img === 'NOATTACHEMENT')
@@ -2068,7 +2072,7 @@ exports.CheckRole = async (req, res, next) =>
                                                 ({
                                                     code : 400,
                                                     status : false,
-                                                    message : constants.responseMessage.attachement2,
+                                                    message : constants.responseMessage.driverlicenseimagenotpresent,
                                                 });
                                             }
                                             else if(uploadprofile_image === 'INVALIDFORMAT')
@@ -2077,7 +2081,7 @@ exports.CheckRole = async (req, res, next) =>
                                                 ({
                                                     code : 400,
                                                     status : false,
-                                                    message : constants.responseMessage.attachement4
+                                                    message : constants.responseMessage.driverprofileimageinvalid
                                                 });
                                             }
                                             else if(uploadprofile_image === 'NOATTACHEMENT')
@@ -2086,7 +2090,7 @@ exports.CheckRole = async (req, res, next) =>
                                                 ({
                                                     code : 400,
                                                     status : false,
-                                                    message : constants.responseMessage.attachement1,
+                                                    message : constants.responseMessage.driverprofileimagenotpresent,
                                                 });
                                             }
                                             else
@@ -2132,7 +2136,7 @@ exports.CheckRole = async (req, res, next) =>
                                                     ({
                                                         code : 400,
                                                         status : false,
-                                                        message : constants.responseMessage.attachement5
+                                                        message : constants.responseMessage.driverlicenceimageinvalid
                                                     });
                                                 }
                                                 else if(uploadlicence_img === 'NOATTACHEMENT')
@@ -2141,7 +2145,7 @@ exports.CheckRole = async (req, res, next) =>
                                                     ({
                                                         code : 400,
                                                         status : false,
-                                                        message : constants.responseMessage.attachement2,
+                                                        message : constants.responseMessage.driverlicenseimagenotpresent,
                                                     });
                                                 }
                                                 else if(uploadprofile_image === 'INVALIDFORMAT')
@@ -2150,7 +2154,7 @@ exports.CheckRole = async (req, res, next) =>
                                                     ({
                                                         code : 400,
                                                         status : false,
-                                                        message : constants.responseMessage.attachement4
+                                                        message : constants.responseMessage.driverprofileimageinvalid
                                                     });
                                                 }
                                                 else if(uploadprofile_image === 'NOATTACHEMENT')
@@ -2159,7 +2163,7 @@ exports.CheckRole = async (req, res, next) =>
                                                     ({
                                                         code : 400,
                                                         status : false,
-                                                        message : constants.responseMessage.attachement1,
+                                                        message : constants.responseMessage.driverprofileimagenotpresent,
                                                     });
                                                 }
                                                 else
@@ -2206,7 +2210,7 @@ exports.CheckRole = async (req, res, next) =>
                                                         ({
                                                             code : 400,
                                                             status : false,
-                                                            message : constants.responseMessage.attachement5
+                                                            message : constants.responseMessage.driverlicenceimageinvalid
                                                         });
                                                     }
                                                     else if(uploadlicence_img === 'NOATTACHEMENT')
@@ -2215,7 +2219,7 @@ exports.CheckRole = async (req, res, next) =>
                                                         ({
                                                             code : 400,
                                                             status : false,
-                                                            message : constants.responseMessage.attachement2,
+                                                            message : constants.responseMessage.driverlicenseimagenotpresent,
                                                         });
                                                     }
                                                     else if(uploadprofile_image === 'INVALIDFORMAT')
@@ -2224,7 +2228,7 @@ exports.CheckRole = async (req, res, next) =>
                                                         ({
                                                             code : 400,
                                                             status : false,
-                                                            message : constants.responseMessage.attachement4
+                                                            message : constants.responseMessage.driverprofileimageinvalid
                                                         });
                                                     }
                                                     else if(uploadprofile_image === 'NOATTACHEMENT')
@@ -2233,7 +2237,7 @@ exports.CheckRole = async (req, res, next) =>
                                                         ({
                                                             code : 400,
                                                             status : false,
-                                                            message : constants.responseMessage.attachement1,
+                                                            message : constants.responseMessage.driverprofileimagenotpresent,
                                                         });
                                                     }
                                                     else
@@ -2309,13 +2313,13 @@ exports.driverRequestAddBody = async (req, res, next) =>
 {
     try
     {
-        await checkValueEntered(req.body.name, 'Name')(req, res, next);
-        await checkValueEntered(req.body.email, 'Email')(req, res, next);
-        await checkValueEntered(req.body.emergency_contact_no, 'Emergency contact number')(req, res, next);
-        await checkValueEntered(req.body.licence_no, 'Licence number')(req, res, next);
-        await checkValueEntered(req.body.contact_no, 'Contact number')(req, res, next);
-        await checkValueEntered(req.body.date_of_birth, 'Date of birth')(req, res, next);
-        await checkValueEntered(req.body.description, 'description')(req, res, next);
+        await this.checkValueEntered(req.body.name, 'Name')(req, res, next);
+        await this.checkValueEntered(req.body.email, 'Email')(req, res, next);
+        await this.checkValueEntered(req.body.emergency_contact_no, 'Emergency contact number')(req, res, next);
+        await this.checkValueEntered(req.body.licence_no, 'Licence number')(req, res, next);
+        await this.checkValueEntered(req.body.contact_no, 'Contact number')(req, res, next);
+        await this.checkValueEntered(req.body.date_of_birth, 'Date of birth')(req, res, next);
+        await this.checkValueEntered(req.body.description, 'description')(req, res, next);
         next();
     }
     catch (error)

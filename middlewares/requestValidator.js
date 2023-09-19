@@ -12,7 +12,7 @@ exports.usernamevalidation = (req, res, next) => {
             ({
                 code: 400,
                 success: false,
-                message: constants.responseMessage.validatorError4
+                message: constants.responseMessage.usernameNotPresent
             });
     } else {
         if (hasOnlyNonSpaces(user_name) === true) {
@@ -20,7 +20,7 @@ exports.usernamevalidation = (req, res, next) => {
                 ({
                     code: 400,
                     status: false,
-                    message: constants.responseMessage.validatorError5
+                    message: constants.responseMessage.usernameHaveSpace
                 });
         } else {
          
@@ -35,7 +35,7 @@ exports.usernamevalidation = (req, res, next) => {
                             ({
                                 code: 400,
                                 success: false,
-                                message: constants.responseMessage.validatorError38
+                                message: constants.responseMessage.usernameAlreadyExist
                             });
                     }
                     else {
@@ -61,7 +61,7 @@ exports.usernamevalidation = (req, res, next) => {
                                         ({
                                             code: 400,
                                             success: false,
-                                            message: constants.responseMessage.validatorError38
+                                            message: constants.responseMessage.usernameAlreadyExist
                                         });
                                 }
                                 else {
@@ -90,7 +90,7 @@ exports.emailValidation = async (req, res, next) => {
             ({
                 code: 200,
                 status: false,
-                message: constants.responseMessage.validatorError1
+                message: constants.responseMessage.emailNotPresent
             });
     }
 
@@ -99,7 +99,7 @@ exports.emailValidation = async (req, res, next) => {
             ({
                 code: 200,
                 status: "failure",
-               message: constants.responseMessage.validatorError2
+               message: constants.responseMessage.emailHaveSpace
 
             });
     }
@@ -132,7 +132,7 @@ exports.emailValidation = async (req, res, next) => {
                         return res.status(200).send({
                             code: 400,
                             status: false,
-                            message: constants.responseMessage.validatorError51
+                            message: constants.responseMessage.emailAlreadyExist
                         });
                     }
                     else {
@@ -157,7 +157,7 @@ exports.emailValidation = async (req, res, next) => {
                                         ({
                                             code: 400,
                                             success: false,
-                                            message: constants.responseMessage.validatorError51
+                                            message: constants.responseMessage.emailAlreadyExist
                                         });
                                 }
                                 else {
@@ -183,7 +183,7 @@ exports.emailValidation = async (req, res, next) => {
                     return res.status(200).send({
                         code: 400,
                         status: false,
-                        message: constants.responseMessage.email3
+                        message: constants.responseMessage.emailnotexist
                     });
                 }
             });
@@ -199,7 +199,7 @@ exports.emailValidation = async (req, res, next) => {
                 ({  
                     code : 400 ,
                     success : false,
-                    message: constants.responseMessage.email4
+                    message: constants.responseMessage.emailIncorrectFormat
                 });
         }
 
@@ -224,7 +224,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                             ({
                                 code: 400,
                                 status: false,
-                                message: constants.responseMessage.validatorError10
+                                message: constants.responseMessage.licensenonotpresent
                             });
                     }
                     if (hasOnlyNonSpaces(licence_no)) {
@@ -232,7 +232,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                             ({
                                 code: 400,
                                 status: false,
-                                message: constants.responseMessage.validatorError52
+                                message: constants.responseMessage.licensenohavespaces
                 
                             });
                     }
@@ -244,7 +244,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                                     return res.status(200).send({
                                         code: 400,
                                         status: false,
-                                        message: constants.responseMessage.validatorError53
+                                        message: constants.responseMessage.licensenoalreadyexist
                                     });
                                 }
                                 else {
@@ -269,7 +269,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                                         ({
                                             code: 400,
                                             success: false,
-                                            message: constants.responseMessage.validatorError53
+                                            message: constants.responseMessage.licensenoalreadyexist
                                         });
                                 }
                                 else {
@@ -290,14 +290,14 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                 ({
                     code: 400,
                     status: false,
-                    message: constants.responseMessage.validatorError10
+                    message: constants.responseMessage.licensenonotpresent
                 });
             }else if(hasOnlyNonSpaces(licence_number)) {
                 return res.status(200).send
                     ({
                         code: 400,
                         status: false,
-                        message: constants.responseMessage.validatorError52
+                        message: constants.responseMessage.licensenohavespaces
         
                     });
             }
@@ -327,7 +327,7 @@ exports.verifyLanguageBody = async(req,res,next) =>
         ({
             code: 400,
             success: false,
-            message: constants.responseMessage.validatorError50
+            message: constants.responseMessage.invalidName
         });
     }else if(!abbreviation){
         return res.status(200).send
@@ -348,7 +348,7 @@ exports.verifyLanguageBody = async(req,res,next) =>
                             ({
                                 code: 400,
                                 success: false,
-                                  message: constants.responseMessage.validatorError54
+                                  message: constants.responseMessage.namealreadyexists
                             });
                     }
                     else {         
@@ -426,7 +426,7 @@ exports.verifyLanguageBody = async(req,res,next) =>
                                 ({
                                     code: 400,
                                     success: false,
-                                    message: constants.responseMessage.validatorError54
+                                    message: constants.responseMessage.namealreadyexists
                                 });
                         }
                     
@@ -485,7 +485,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                                 ({
                                     code: 400,
                                     status: false,
-                                    message: constants.responseMessage.validatorError7
+                                    message: constants.responseMessage.contactnumbernotpresent
                                 });
                         }
                         if (!emergency_contact_no) {
@@ -493,7 +493,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                                 ({
                                     code: 400,
                                     status: false,
-                                    message: constants.responseMessage.validatorError13
+                                    message: constants.responseMessage.emgcontactnumbernotpresent
                                 });
                         }
                         if (hasOnlyNonSpaces(emergency_contact_no)) {
@@ -501,7 +501,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                                 ({
                                     code: 400,
                                     status: false,
-                                    message: constants.responseMessage.validatorError14
+                                    message: constants.responseMessage.emgcontactnumberhavespaces
                     
                                 });
                         }
@@ -510,7 +510,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                                 ({
                                     code: 400,
                                     status: false,
-                                    message: constants.responseMessage.validatorError8
+                                    message: constants.responseMessage.contactnumberhavespaces
                     
                                 });
                         } else {
@@ -522,7 +522,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                             return res.status(200).send({
                                 code: 400,
                                 status: false,
-                                message: constants.responseMessage.validatorError56
+                                message: constants.responseMessage.contactnumberAlreadyExist
                             });
                         }
                         else {
@@ -546,7 +546,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                                             ({
                                                 code: 400,
                                                 success: false,
-                                                message: constants.responseMessage.validatorError56
+                                                message: constants.responseMessage.contactnumberAlreadyExist
                                             });
                                     }
                                     else {
@@ -649,7 +649,7 @@ exports.passwordValidation = async (req, res, next) => {
                 ({
                     code: 400,
                     status: false,
-                    message: constants.responseMessage.validatorError27
+                    message: constants.responseMessage.passwordhavespaces
                 });
         }
         else {
@@ -673,7 +673,7 @@ exports.passwordValidation = async (req, res, next) => {
                             ({
                                 success: false,
                                 code: 400,
-                                message: constants.responseMessage.passworderror
+                                message: constants.responseMessage.passwordinvalid
                             });
                     }
                 }
@@ -720,7 +720,7 @@ exports.nameAvailable = async (req,res,next) =>
                             ({
                                 code: 400,
                                 success: false,
-                                message: constants.responseMessage.validatorError54
+                                message: constants.responseMessage.namealreadyexists
                             });
                     }
                     else {         
@@ -753,7 +753,7 @@ exports.nameAvailable = async (req,res,next) =>
                                     ({
                                         code: 400,
                                         success: false,
-                                        message: constants.responseMessage.validatorError54
+                                        message: constants.responseMessage.namealreadyexists
                                     });
                             }
                             else {
@@ -839,7 +839,7 @@ exports.verifyTaxationBody = async(req,res,next) =>
                         ({
                             code: 400,
                             success: false,
-                            message: constants.responseMessage.validatorError54
+                            message: constants.responseMessage.namealreadyexists
                         });
                 }
                 else {         
@@ -872,7 +872,7 @@ exports.verifyTaxationBody = async(req,res,next) =>
                                 ({
                                     code: 400,
                                     success: false,
-                                    message: constants.responseMessage.validatorError54
+                                    message: constants.responseMessage.namealreadyexists
                                 });
                         }
                         else {
@@ -925,7 +925,7 @@ exports.verifyDiscountBody = async(req,res,next) =>
                         ({
                             code: 400,
                             success: false,
-                            message: constants.responseMessage.validatorError54
+                            message: constants.responseMessage.namealreadyexists
                         });
                 }
                 else {             
@@ -956,7 +956,7 @@ exports.verifyDiscountBody = async(req,res,next) =>
                                 ({
                                     code: 400,
                                     success: false,
-                                    message: constants.responseMessage.validatorError54
+                                    message: constants.responseMessage.namealreadyexists
                                 });
                         }
                         else {

@@ -28,7 +28,7 @@ module.exports = (app) =>
     checkInput.isGCCTravelValueEntered,
     checkInput.isInsuranceCoverValueEntered,
     checkInput.isValidVehicleTypeEntered,
-    checkInput.isSafetyCertificateAdded,            
+    checkInput.isSafetyCertificateAdded,        
     vehicleController.addNew);
     
     // The below route is for getting all the vehicles data.

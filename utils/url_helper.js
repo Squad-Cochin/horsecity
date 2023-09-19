@@ -13,7 +13,7 @@ const UPDATE_SETTINGS_PAGE_URL = token + `/update/settings`
 const ADD_CUSTOMER_PAGE_URL = token + `/add/customer`
 const UPDATE_CUSTOMER_PAGE_URL = token + `/edit/customer/` 
 const UPDATE_CUSTOMER_SIDE_URL = `/customer/edit/details/` // This link is for the customer side frontend (Next.js)
-
+const CUSTOMER_LOGIN_URL = `/customer/login`
 
 const ADD_DRIVER_PAGE_URL = token + `/add/driver`
 const UPDATE_DRIVER_PAGE_URL = token + `/edit/driver/`
@@ -39,7 +39,8 @@ module.exports =
     
     ADD_CUSTOMER_PAGE_URL, // Add customer link (React js)
     UPDATE_CUSTOMER_PAGE_URL, // update customer link (React js)
-    UPDATE_CUSTOMER_SIDE_URL, // This link is for the customer side frontend (Next.js)
+    UPDATE_CUSTOMER_SIDE_URL, // This link is for the customer side frontend (Next.js),
+    CUSTOMER_LOGIN_URL,     // Customer login URL
 
     ADD_DRIVER_PAGE_URL, // Add driver link
     UPDATE_DRIVER_PAGE_URL,  // update driver link

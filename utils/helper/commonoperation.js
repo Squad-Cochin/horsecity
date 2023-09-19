@@ -468,7 +468,7 @@ exports.tokenGeneration = async(email) =>
                 emailTokenSidePart2.push(emailPart2[i] + firstDigit);
             }
             const currentTimestamp = Math.floor(Date.now() / 1000);
-            const expirationTimestamp = currentTimestamp + 3600; 
+            const expirationTimestamp = currentTimestamp + constants.password.token_expiry; 
             // constants.password.token_expiry;
             const customizepasswordToken = `${emailTokenSidePart1.join('')}A${emailTokenSidePart2.join('')}T${expirationTimestamp}`;
             resolve({token : customizepasswordToken});

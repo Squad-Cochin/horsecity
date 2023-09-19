@@ -308,10 +308,12 @@ static async updateQuotation(requestBody, pickup_date, drop_date, quotId)  {
                     /**** Taking last added quotation id  */
                     let selQuery = `SELECT id FROM ${constants.tableName.quotations}  WHERE quotation_id = '${quotId}' ORDER BY id DESC LIMIT 1`
                     con.query(selQuery, async (err, id) => {
-                        if (id.length != 0) {
+                        if (id.length != 0) { 
                             let idd = id[0].id;
                             time.changeDateToSQLFormat(pickup_date)
                             time.changeDateToSQLFormat(drop_date)
+                            console.log("discount_type_id",typeof discount_type_id);
+                            console.log("discount_type_id",discount_type_id);
                             /**inserting new quotation same quotation id  */
                             let insQuery = `INSERT INTO quotations (
                                 customer_id,
@@ -350,7 +352,7 @@ static async updateQuotation(requestBody, pickup_date, drop_date, quotId)  {
                                 '${vehicle_id}',
                                 '${service_provider_id}',
                                 ${tax_amount != 0 ? `'${tax_id}',` : 'NULL,'}
-                                '${discount_type_id}',
+                                ${discount_type_id == 0 || discount_type_id == 'null' ? 'NULL,' : `'${discount_type_id}',`}
                                 '${trip_type}',
                                 '${pickup_location}',
                                 '${pickup_country}',
@@ -359,7 +361,7 @@ static async updateQuotation(requestBody, pickup_date, drop_date, quotId)  {
                                 '${drop_location}',
                                 '${drop_country}',
                                 '${drop_date}',
-                                '${drop_time}',
+                                '${drop_time}', 
                                 '${no_of_horse}',
                                 '${special_requirement}',
                                 '${additional_service}',

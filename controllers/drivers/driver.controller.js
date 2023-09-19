@@ -119,7 +119,7 @@ exports.addDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement4
+            message : constants.responseMessage.driverprofileimageinvalid
         });
     }
     else if(drivers === 'NOATTACHP')
@@ -128,7 +128,7 @@ exports.addDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement1,
+            message : constants.responseMessage.driverprofileimagenotpresent,
         });
     }
     else if(drivers === 'INVALIDATTACHMENTL')
@@ -137,7 +137,7 @@ exports.addDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement5
+            message : constants.responseMessage.driverlicenceimageinvalid
         });
     }
     else if(drivers === 'NOATTACHL')
@@ -146,7 +146,7 @@ exports.addDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement2,
+            message : constants.responseMessage.driverlicenseimagenotpresent,
         });
     }
     // If input feild are in correct format and not already presnet in the database, then this else block of code will be executed.
@@ -251,7 +251,7 @@ exports.editDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement4
+            message : constants.responseMessage.driverprofileimageinvalid
         });
     }
     else if(drivers === 'NOATTACHP')
@@ -260,7 +260,7 @@ exports.editDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement1,
+            message : constants.responseMessage.driverprofileimagenotpresent,
         });
     }
     else if(drivers === 'INVALIDATTACHMENTL')
@@ -269,7 +269,7 @@ exports.editDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement5
+            message : constants.responseMessage.driverlicenceimageinvalid
         });
     }
     else if(drivers === 'NOATTACHL')
@@ -278,7 +278,7 @@ exports.editDriver = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement2,
+            message : constants.responseMessage.driverlicenseimagenotpresent,
         });
     }
     // If input feild are in correct format and not already present in the database, then this else block of code will be executed.

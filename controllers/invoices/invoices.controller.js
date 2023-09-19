@@ -136,7 +136,7 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: constants.responseMessage.payment1,
+            message: constants.responseMessage.negativepayment,
         });
     }    
     // If all the things are done accordingly and data is stored in the database.
@@ -156,7 +156,7 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
         ({
             code: 200,
             status: true,
-            message: constants.responseMessage.payment2,
+            message: constants.responseMessage.paymentmadefully,
         });
     }
     // If we are entering the amount more than the remaining amount, then this if block of code will be executed
@@ -166,7 +166,7 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
         ({
             code: 400,
             status: false,
-            message: constants.responseMessage.payment3,
+            message: constants.responseMessage.paymentValueInvalid,
         });
     }
 };
@@ -254,7 +254,7 @@ exports.sendEmailAtInvoice = async(req, res) =>
         ({
             code: 400,
             status: false,
-            message: constants.responseMessage.email1,
+            message: constants.responseMessage.emailInvoice,
         });
     }
     // If invoice is send on email. Then this if block of code will be executed.
@@ -264,7 +264,7 @@ exports.sendEmailAtInvoice = async(req, res) =>
         ({
             code: 200,
             status: true,
-            message: constants.responseMessage.email2,
+            message: constants.responseMessage.emailInvoiceNotSend,
         });
     }
 };

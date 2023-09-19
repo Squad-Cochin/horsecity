@@ -90,7 +90,7 @@ module.exports = class invoices
                                         WHERE i.deleted_at IS NULL 
                                         AND i.service_provider_id = ${Id}
                                         LIMIT ${pageSize} OFFSET ${offset}`;
-                        const count = await commonoperation.totalCountServiceProvider(constants.tableName.invoices, Id);
+                        const count = await commonoperation.totalCountParticularServiceProvider(constants.tableName.invoices, Id);
                         con.query(selQuery, async (err, result2) =>
                         {
                             if(err)
@@ -191,18 +191,36 @@ module.exports = class invoices
                             else
                             {
                                 let ra = paymentRecordData[0].total_amount - payment
-                                let upQuery = `UPDATE ${constants.tableName.payment_records} pr SET pr.invoice_prefix_id = '${paymentRecordData[0].invoice_prefix_id}', pr.received_amount = ${payment}, pr.received_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', pr.remaining_amount = ${ra}, pr.status = '${constants.status.partPaid}', pr.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE pr.invoice_id = ${Id}`;
-                                con.query(upQuery, (err, result) =>
-                                {                            
-                                    if(result.affectedRows > 0)
-                                    {
-                                        resolve('affectedRows')
-                                    }
-                                    else
-                                    {
-                                        resolve('err');
-                                    }
-                                });
+                                if(ra === 0)
+                                {
+                                    let upQuery = `UPDATE ${constants.tableName.payment_records} pr SET pr.invoice_prefix_id = '${paymentRecordData[0].invoice_prefix_id}', pr.received_amount = ${payment}, pr.received_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', pr.remaining_amount = ${ra}, pr.status = '${constants.status.paid}', pr.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE pr.invoice_id = ${Id}`;
+                                    con.query(upQuery, (err, result) =>
+                                    {                            
+                                        if(result.affectedRows > 0)
+                                        {
+                                            resolve('affectedRows')
+                                        }
+                                        else
+                                        {
+                                            resolve('err');
+                                        }
+                                    });
+                                }
+                                else
+                                {
+                                    let upQuery = `UPDATE ${constants.tableName.payment_records} pr SET pr.invoice_prefix_id = '${paymentRecordData[0].invoice_prefix_id}', pr.received_amount = ${payment}, pr.received_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', pr.remaining_amount = ${ra}, pr.status = '${constants.status.partPaid}', pr.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE pr.invoice_id = ${Id}`;
+                                    con.query(upQuery, (err, result) =>
+                                    {                            
+                                        if(result.affectedRows > 0)
+                                        {
+                                            resolve('affectedRows')
+                                        }
+                                        else
+                                        {
+                                            resolve('err');
+                                        }
+                                    });
+                                }
                             }
                         }
                         else

@@ -61,7 +61,6 @@ exports.getOneInvoiceResponse = (data, data2) =>
     vehicles: [],
     payment: [],
   };
-
   if (data.length !== 0) 
   {
     invoiceResponse.invoice.push({
@@ -280,7 +279,7 @@ exports.customizeQuotationStatusReportForReactFrontEnd = (data) =>
             id: 1,
             title: "Confirmed",
             icon: "ri-checkbox-circle-line",
-            color: "success",
+            color: true,
             width: data[0].total_confirmed,
         },
         {

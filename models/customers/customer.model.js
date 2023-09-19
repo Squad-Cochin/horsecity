@@ -332,7 +332,7 @@ module.exports = class customers
         {
             try
             {
-                let selQuery = `SELECT c.id, c.name, c.email, c.password, c.user_name, c.contact_no, c.id_proof_no, c.id_proof_image, c.status  FROM ${constants.tableName.customers} c WHERE c.user_name = '${username}' `;
+                let selQuery = `SELECT c.id, c.name, c.email, c.password, c.user_name, c.contact_no, c.id_proof_no, c.id_proof_image, c.expiry_at, c.status  FROM ${constants.tableName.customers} c WHERE c.user_name = '${username}' `;
                 con.query(selQuery, async(err, customerData) =>
                 {
                     if(customerData.length === 0)
@@ -341,28 +341,40 @@ module.exports = class customers
                     }
                     else
                     {
-                        const passwordHashed = await commonoperation.changePasswordToSQLHashing(password);
-                        if(customerData[0].password === passwordHashed)
+                        var data = { id : customerData[0].id }
+                        const givenDate = new Date().getTime();
+                        const expiryDate = new Date(customerData[0].expiry_at).getTime();
+                        if(givenDate > expiryDate)
                         {
-                            let insQuery = `INSERT INTO ${constants.tableName.customer_logs}(customer_id, ip_address, device_information, location, login_time) VALUES(${customerData[0].id}, '192.168.200.130', 'Test purpose currently', 'Kerela', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                            con.query(insQuery, (err, result1) =>
-                            {
-                                const data = {
-                                    id : customerData[0].id
-                                }
-                                if(result1.affectedRows > 0)
+                            resolve(
                                 {
-                                    resolve(data);
-                                }
-                                else
-                                {
-                                    resolve(`err`);
-                                }
-                            });
+                                    message: 'passwordexpired',
+                                    data
+                                })
                         }
                         else
                         {
-                            resolve('passwordnotmatched')
+                            const passwordHashed = await commonoperation.changePasswordToSQLHashing(password);
+                            if(customerData[0].password === passwordHashed)
+                            {
+                                let insQuery = `INSERT INTO ${constants.tableName.customer_logs}(customer_id, ip_address, device_information, location, login_time) VALUES(${customerData[0].id}, '192.168.200.130', 'Test purpose currently', 'Kerela', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                                con.query(insQuery, (err, result1) =>
+                                {
+                                    
+                                    if(result1.affectedRows > 0)
+                                    {
+                                        resolve(data);
+                                    }  
+                                    else
+                                    {
+                                        resolve(`err`);
+                                    }
+                                });
+                            }
+                            else
+                            {
+                                resolve('passwordnotmatched')
+                            }
                         }
                     }
                 });
@@ -460,7 +472,11 @@ module.exports = class customers
                     else
                     {
                         const newpasswordHashed = await commonoperation.changePasswordToSQLHashing(newpassword);
-                        let updatePasswordQuery = `UPDATE ${constants.tableName.customers} SET password = '${newpasswordHashed}', updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE id = ${id} `;
+                        let updatePasswordQuery = `     UPDATE ${constants.tableName.customers} 
+                                                        SET password = '${newpasswordHashed}',
+                                                        updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}',
+                                                        expiry_at = '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}'
+                                                        WHERE id = ${id} `
                         con.query(updatePasswordQuery, (err, result) =>
                         {
                             if(result.affectedRows > 0)
@@ -520,7 +536,7 @@ module.exports = class customers
     /**
     * The below model function is for the customer frontend side page. This function is for fetching the logs of a  customer
     */
-    static async getcustomerlogs(Id)
+    static async getparticularcustomerlogs(Id)
     {
         try
         {

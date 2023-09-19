@@ -75,7 +75,7 @@ exports.addNew = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement6
+            message : constants.responseMessage.vehiclescertificateimageInvalid
         });
     }
     else if(vehicles === 'NOATTACHEMENT')
@@ -84,7 +84,7 @@ exports.addNew = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.vehicle18
+            message : constants.responseMessage.vehiclescertificateimagenotpresent
         });
     }
     // If input feild are in correct format and not present in the database, then this else block of code will be executed.
@@ -301,7 +301,7 @@ exports.updateData = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.attachement6
+            message : constants.responseMessage.vehiclescertificateimageInvalid
         });
     }
     else if(vehicles === 'NOATTACHEMENT')
@@ -310,7 +310,7 @@ exports.updateData = async (req, res, next) =>
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.vehicle18
+            message : constants.responseMessage.vehiclescertificateimagenotpresent
         });
     }
     // If input feild are in correct format and not already present in the database, then this else block of code will be executed

@@ -66,6 +66,7 @@ module.exports = (app) =>
     // Below route is for the login of the customer. This is for NEXTJS front end.
     app.post(`/customer/login`,
     validateHeaders.verifyToken,
+    checkInput.usernameValidation(constants.tableName.customers),
     checkInput.passwordValidation,
     customerController.customerLogin);
 
