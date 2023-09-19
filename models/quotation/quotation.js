@@ -300,8 +300,11 @@ static async updateQuotation(requestBody, pickup_date, drop_date, quotId)  {
             con.query(selQuery, async (err, tax) => {
                 if (tax.length != 0) {
                     let tax_id = tax[0].tax_id
-
-                    const { customer_id, enquiry_id, driver_id, vehicle_id, service_provider_id, discount_type_id, trip_type, pickup_location, pickup_country,pickup_time, drop_location, drop_country,drop_time, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage, driver_amount, vehicle_amount, current_amount, tax_amount, discount_amount, final_amount } = requestBody;
+      
+                    const { customer_id, enquiry_id, driver_id, vehicle_id, service_provider_id, discount_type_id, trip_type, pickup_location, pickup_country,pickup_time, drop_location, drop_country,drop_time, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage, driver_amount, vehicle_amount, tax_amount, discount_amount, final_amount } = requestBody;
+                    let vehicle_amount_num = parseFloat(vehicle_amount);
+                    let driver_amount_num = parseFloat(driver_amount);
+                    let current_amount = vehicle_amount_num + driver_amount_num
                     /**** Taking last added quotation id  */
                     let selQuery = `SELECT id FROM ${constants.tableName.quotations}  WHERE quotation_id = '${quotId}' ORDER BY id DESC LIMIT 1`
                     con.query(selQuery, async (err, id) => {
@@ -562,7 +565,7 @@ static async updateStatusQuotation  (quotId)  {
         
                             let pickup_date = await changeFormat(time.changeDateToSQLFormat(qutationsData[0].pickup_date))
                             let drop_date = await changeFormat(time.changeDateToSQLFormat(qutationsData[0].drop_date))
-
+           
                             const {
                                 id,
                                 quotation_id,
@@ -618,7 +621,7 @@ static async updateStatusQuotation  (quotId)  {
                                                     let inv_id = (invoice_no[0].latest_id == null) ? 1 : ID + 1;
                                                     let invoice = result[0]?.invoice_prefix
                                                     let sum_invId = invoice.concat(inv_id);
-                                            
+                          
                                                             /**********Inserting invoices datas*********** */
                                                             let insQuery = `INSERT INTO ${constants.tableName.invoices} (
                                                                                                     invoice_no,
