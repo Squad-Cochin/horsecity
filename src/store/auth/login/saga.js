@@ -57,7 +57,6 @@ function* recoverNewPassword({ payload: { user } }) {
 function* updateNewPassword({ payload: { user } }) {
   try{
    const response =   yield call(changePassword, user);
-   console.log("RES",response);
       yield put(updatePWDSuccess(response.message));
 }catch (error) {
   yield put(apiError(error));

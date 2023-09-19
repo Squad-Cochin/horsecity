@@ -134,6 +134,8 @@ const ListTables = () =>
 
     // function for open add and edit modal
     async function tog_list(param, productId){
+        setUpdateLiscenceImage("")
+        setUpdateProfileImage("")
         // Toggle 'add_list' state if 'param' is 'ADD'
         if (param === 'ADD'){
             // Reset profile and license image previews
@@ -288,7 +290,7 @@ const ListTables = () =>
                             <Card>
                                 <CardHeader>
                                     {/* Header of the Particular Card */}
-                                    <h4 className="card-title mb-0">{role_id.service_provider === roleId ?  'Add & Edit ' : 'Add Edit & Remove'} </h4>
+                                    <h4 className="card-title mb-0">Add, Edit & Remove</h4>
                                 </CardHeader>
                                 <CardBody>
                                     <div id="customerList">
@@ -302,7 +304,7 @@ const ListTables = () =>
                                         </Row>
 
                                         <div className="table-responsive table-card mt-3 mb-1">
-                                                                                        <table className="table align-middle table-nowrap" id="customerTable">
+                                                <table className="table align-middle table-nowrap" id="customerTable">
                                                 <thead className="table-light">
                                                     <tr>
                                                     {/* These are the columns and column heading in the driver page */}

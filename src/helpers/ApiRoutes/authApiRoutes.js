@@ -38,9 +38,7 @@ const fakeBackend = () => {
       const data = await axios.post(`${url.CHANGE_PASSWORD_URL}`, user);
       return new Promise((resolve, reject) => {
         setTimeout(() => {
-    
           if (data.code === 200) {
-            console.log("data",data);
             resolve([200, data]);
           } else {
          

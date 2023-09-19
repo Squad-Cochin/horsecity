@@ -16,11 +16,8 @@ const MonthlySalesReport = () =>
     useEffect(() =>
     {
         let user_Id = data[0]?.user[0]?.id
-        // console.log('User id from the dashboard page: ', user_Id);
         let role_Name = data[0]?.user[0]?.role_name
-        // console.log('Role name from the dashboard page: ', role_Name);
         let rId = data[0]?.user[0]?.role_Id
-        // console.log('Role Id from the dashboard page: ', rId);
         setUserId(user_Id);
         setRoleId(rId);
         setRoleName(role_Name);
@@ -29,9 +26,7 @@ const MonthlySalesReport = () =>
 
     async function monthlySalesGraphdata()
     {
-        // console.log(`Came inside the monthly sales graph data`);
         let sgData = await getMonthlySalesData(data[0]?.user[0]?.id);
-        // console.log(`Result from the monthly sales graph data: `, sgData);
         setSalesGraphData(sgData.revenue.options);
     }
 

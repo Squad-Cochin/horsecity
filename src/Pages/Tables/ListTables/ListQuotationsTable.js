@@ -95,7 +95,6 @@ const ListQuotationsTable = () => {
     customer_name : quotation ? quotation[0]?.customer_name : "",
     customer_email : quotation ? quotation[0]?.customer_email : "",
     status : quotation ? quotation[0]?.status : "",
-
     customer_id : quotation ? quotation[0]?.customer_id : "",
     customer_user_name : quotation ? quotation[0]?.customer_user_name : "",
     vehicle_id : quotation ? quotation[0]?.vehicle_id : "",
@@ -135,7 +134,6 @@ const ListQuotationsTable = () => {
       initialValues.current_amount = tAmount
       values.tax_amount = taxAmount
       values.final_amount = finalAmount
-      console.log(finalAmount,"finalAmount")
       if (modalEmail) {
         //SEND MAIL 
 
@@ -220,7 +218,6 @@ const ListQuotationsTable = () => {
     const discountsData = await getDiscounts()
     setDiscounts(discountsData)
     setServiceProviders(serviceProviderData.serviceProviders)
-    console.log("single quot",singleQut.quotation);
     setQuotation(singleQut.quotation);
     setTaxation(singleQut.tax);
     setFinalAmount(Number(singleQut.quotation[0]?.final_amount))
@@ -230,7 +227,6 @@ const ListQuotationsTable = () => {
     setDriverAmount(Number(singleQut.quotation[0]?.driver_amount))
     setSelectedDiscount(singleQut.quotation[0]?.discount_type_id);
     setTAmount(Number(singleQut.quotation[0]?.vehicle_amount) + Number(singleQut.quotation[0]?.driver_amount))
-    console.log("qq",singleQut.quotation[0]?.transportation_insurance_coverage)
     setTransportationInsuranceCoverage(singleQut.quotation[0]?.transportation_insurance_coverage)
     if(Number(singleQut.quotation[0]?.tax_amount) > 0){
       setTaxApplayed("YES")

@@ -49,6 +49,7 @@ const ListVehicleImages = () => {
     // The below function is showing the data. 
     function tog_list() {
         setmodal_list(!modal_list);
+        setImageView();
     }
 
     // The below function is for going to the previous page
@@ -89,7 +90,6 @@ const ListVehicleImages = () => {
 
     // The below function is the Status button
     function toggleStatus(button, vehiclesId) {
-        console.log("vid", vehiclesId)
         var currentStatus = button.innerText.trim();
         const vehicle = vhImages.find((v) => v.id === vehiclesId);
         updateVechileImageStatus(vehicle.id)

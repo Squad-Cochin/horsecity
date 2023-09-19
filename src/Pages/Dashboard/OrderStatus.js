@@ -22,14 +22,9 @@ const OrderStatus = () => {
     var data = JSON.parse(localStorage.getItem("authUser"));
     useEffect(() =>
     {
-        // const data = JSON.parse(localStorage.getItem("authUser"));
-        // console.log('Data from the dashboard page', data);
         let user_Id = data[0]?.user[0]?.id
-        // console.log('User id from the dashboard page: ', user_Id);
         let role_Name = data[0]?.user[0]?.role_name
-        // console.log('Role name from the dashboard page: ', role_Name);
         let rId = data[0]?.user[0]?.role_Id
-        // console.log('Role Id from the dashboard page: ', rId);
         setUserId(user_Id);
         setRoleId(rId);
         setRoleName(role_Name);
@@ -38,9 +33,7 @@ const OrderStatus = () => {
 
     async function enquiriesDataLatest()
     {
-        // console.log(`Came inside the monthly sales graph data`);
         let sgData = await getQuotationReportForDashboard(data[0]?.user[0]?.id);
-        // console.log(`Result from the  Quotation status data: `, sgData);
         setdashboardQuotationData(sgData);
     }
     return (

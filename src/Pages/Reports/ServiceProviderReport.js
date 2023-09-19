@@ -30,7 +30,6 @@ const ServiceProviderReport = () => {
         const settings = JSON.parse(localStorage.getItem("settingsData"));
         setPageTitle(settings.application_title);
         const today = new Date();
-        console.log();
         const sixtyDaysAgo = new Date(today);
         sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
         let value = {
@@ -55,7 +54,6 @@ const ServiceProviderReport = () => {
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
-            console.log("values",values);
             getData(1, values);
         }
     });
@@ -66,7 +64,6 @@ const ServiceProviderReport = () => {
         setToDate(val.to_date)
         if (userId) {
             let getAllData = await getSeviceProviderReport(page || 1, val, userId)
-            console.log("getall data",getAllData);
             setServiceProviderReport(getAllData?.serviceProviders);
             setPageNumber(page);
             setNumberOfData(getAllData?.totalCount);

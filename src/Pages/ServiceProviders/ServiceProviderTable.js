@@ -372,7 +372,6 @@ const ListTables = () => {
                             />
                         </div>
                         {/* Email */}
-                        {add_list ?
                             <div className="mb-3">
                                 <label htmlFor="email-field" className="form-label">Email</label>
                                 <input
@@ -385,7 +384,7 @@ const ListTables = () => {
                                     placeholder="Enter Email"
                                     required
                                 />
-                            </div> : null}
+                            </div>
                         {/* User Name */}
                         <div className="mb-3">
                             <label htmlFor="userName-field" className="form-label">User Name</label>
@@ -531,7 +530,6 @@ const ListTables = () => {
                                     type="file"
                                     placeholder="Licence Image"
                                     onChange={handleLicensceImageChange}
-                                    required
                                 />
                             </div>
                         </div>

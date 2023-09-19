@@ -100,13 +100,9 @@ const LineColumnArea = () =>
 
   async function monthlySalesData()
   {
-    // console.log(`Came inside the monthlly sales data`);
     let msReport = await getMonthlySalesData(data[0]?.user[0]?.id);
-    // console.log(`Result from the monthlySalesData function: `, msReport);
     setSalesReportData(msReport.revenue);
   }
-
-
 
   return(
     <React.Fragment>

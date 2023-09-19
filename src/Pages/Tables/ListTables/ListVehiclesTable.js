@@ -29,7 +29,7 @@ const ListVehiclesTable = () => {
     const [vehicle, setVehicle] = useState([]); // State variable to store a single vehicle
     const [modal_delete, setmodal_delete] = useState(false); // State variable to control delete modal visibility
     const [view_modal, setView_modal] = useState(false); // State variable to control view modal visibility
-    const [certificatePreview, setCertificatePreview] = useState(null);
+    const [certificatePreview, setCertificatePreview] = useState("");
     const [certificateImage, setCertificateImage] = useState("");
     const [sproviders, setSproviders] = useState([]);
     const [pageNumber, setPageNumber] = useState(1);
@@ -119,7 +119,6 @@ const ListVehiclesTable = () => {
             let data = await getSingleVechileData(productId)
             setVehicle([data]);
             setAirConditioner(data?.air_conditioner)
-            console.log("vv",[data])
             setCertificatePreview(data.safety_certicate)
             setTemperatureManageable(data.temperature_manageable)
             setGccTravelAllowed(data.gcc_travel_allowed)
@@ -596,7 +595,6 @@ const ListVehiclesTable = () => {
                                 className="form-control"
                                 placeholder="Upload Safety Certificate Image"
                                 onChange={handleIdProofImageChange}
-                                required
                             />
                         </div>
                         {/* The below element is for adding the registration number of the vehicle. */}

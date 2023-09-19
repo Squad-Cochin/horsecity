@@ -80,7 +80,6 @@ const ResetPasswordPage = props => {
       confirmnewpassword: Yup.string().required("Please Enter Your Confirm Password"),
     }),
     onSubmit: (values) => {
-      // console.log("values",values);
       values.user_id = id
       values.token = token
       dispatch(userResetPassword(values, props.router.navigate));
