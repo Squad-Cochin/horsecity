@@ -47,7 +47,7 @@ static async addNewQuotaion  (requestBody, pickup_date, drop_date) {
                                     let tax_id = data[0].tax_id
 
                                     const { customer_id, enquiry_id, driver_id, vehicle_id, service_provider_id, discount_type_id, trip_type, pickup_location, pickup_country, drop_location, drop_country, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage,pickup_time,drop_time, driver_amount, vehicle_amount, current_amount, tax_amount, discount_amount, final_amount } = requestBody;
-
+            
 
                                     let insQuery = `INSERT INTO quotations (
                                         customer_id,
@@ -85,7 +85,7 @@ static async addNewQuotaion  (requestBody, pickup_date, drop_date) {
                                         '${driver_id}',
                                         '${vehicle_id}',
                                         '${service_provider_id}',
-                                        '${tax_id}',
+                                        ${tax_amount != 0 ? `'${tax_id}',` : 'NULL,'}
                                         ${discount_type_id ? `'${discount_type_id}',` : ''}
                                         '${trip_type}',
                                         '${pickup_location}',
