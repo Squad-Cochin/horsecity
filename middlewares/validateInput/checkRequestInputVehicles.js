@@ -357,7 +357,7 @@ exports.isValidVehicleNumberEntered =  async (req, res, next) =>
 
 exports.isSafetyCertificateAdded = (req, res, next) =>
 {
-    if(!req.files?.safety_certicate && req.url === url.ADD_VEHICLE_PAGE_URL && req.method === 'POST')
+    if(!req.files?.safety_certicate && req.url === `${url.ADD_VEHICLE_PAGE_URL}/${req.params.id}` && req.method === 'POST')
     {
         return res.status(200).json
         ({

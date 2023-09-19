@@ -117,7 +117,7 @@ exports.getLatestEnquiries = async (req, res) =>
         ({
             code : 200,
             status : true,
-            message: constants.responseMessage.get,
+            message: constants.responseMessage.getAll,
             data : data
         });
     }

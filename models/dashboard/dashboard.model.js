@@ -239,11 +239,13 @@ module.exports = class dashboard
                     {
                         if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
                         {
-                            let Query = `   SELECT
-                                            COUNT(*) AS total_quotations,
-                                            COALESCE(SUM(CASE WHEN status = '${constants.quotation_status.confirmed}' THEN 1 ELSE 0 END), 0) AS total_confirmed,
-                                            COALESCE(SUM(CASE WHEN status = '${constants.quotation_status.notconfirmed}' THEN 1 ELSE 0 END), 0) AS total_not_confirmed
-                                            FROM ${constants.tableName.quotations}`;
+                            let Query = `   
+                            SELECT
+                            COUNT(*) AS total_quotations,
+                            COALESCE(SUM(CASE WHEN status = '${constants.quotation_status.confirmed}' AND deleted_at IS NULL THEN 1 ELSE 0 END), 0) AS total_confirmed,
+                            COALESCE(SUM(CASE WHEN status = '${constants.quotation_status.notconfirmed}' AND deleted_at IS NULL THEN 1 ELSE 0 END), 0) AS total_not_confirmed
+                            FROM ${constants.tableName.quotations} 
+                            WHERE deleted_at IS NULL`;
                             con.query(Query, async(err, result) =>
                             {
                                 if(err)
