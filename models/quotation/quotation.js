@@ -21,6 +21,7 @@ module.exports = class quotation
 static async addNewQuotaion  (requestBody, pickup_date, drop_date) {
     return new Promise(async (resolve, reject) => {
         try {
+    
             /**For taking letest id in the quotation */
             let selQuery = `SELECT MAX(id) AS latest_id FROM ${constants.tableName.quotations}`
             con.query(selQuery, async (err, quotId) => {
@@ -48,9 +49,66 @@ static async addNewQuotaion  (requestBody, pickup_date, drop_date) {
                                     const { customer_id, enquiry_id, driver_id, vehicle_id, service_provider_id, discount_type_id, trip_type, pickup_location, pickup_country, drop_location, drop_country, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage,pickup_time,drop_time, driver_amount, vehicle_amount, current_amount, tax_amount, discount_amount, final_amount } = requestBody;
 
 
-                                    let insQuery = `INSERT INTO quotations (customer_id,quotation_id, enquiry_id, driver_id, vehicle_id, serviceprovider_id, taxation_id, discount_type_id, trip_type, pickup_location, pickup_country, pickup_date,pickup_time, drop_location, drop_country, drop_date,drop_time, no_of_horse, special_requirement, additional_service, transportation_insurance_coverage,driver_amount,vehicle_amount,sub_total, tax_amount, discount_amount, final_amount,created_at)
-                                                    VALUES ('${customer_id}', '${sum_quotId}', '${enquiry_id}', '${driver_id}', '${vehicle_id}', '${service_provider_id}', '${tax_id}', '${discount_type_id}', '${trip_type}', '${pickup_location}', '${pickup_country}','${pickup_date}','${pickup_time}', '${drop_location}','${drop_country}', '${drop_date}','${drop_time}','${no_of_horse}','${special_requirement}', '${additional_service}','${transportation_insurance_coverage}','${driver_amount}','${vehicle_amount}','${current_amount}', '${tax_amount}','${discount_amount}','${final_amount}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-
+                                    let insQuery = `INSERT INTO quotations (
+                                        customer_id,
+                                        quotation_id,
+                                        enquiry_id,
+                                        driver_id,
+                                        vehicle_id,
+                                        serviceprovider_id,
+                                        taxation_id,
+                                        ${discount_type_id ? 'discount_type_id,' : ''}
+                                        trip_type,
+                                        pickup_location,
+                                        pickup_country,
+                                        pickup_date,
+                                        pickup_time,
+                                        drop_location,
+                                        drop_country,
+                                        drop_date,
+                                        drop_time,
+                                        no_of_horse,
+                                        special_requirement,
+                                        additional_service,
+                                        transportation_insurance_coverage,
+                                        driver_amount,
+                                        vehicle_amount,
+                                        sub_total,
+                                        tax_amount,
+                                        discount_amount,
+                                        final_amount,
+                                        created_at
+                                    ) VALUES (
+                                        '${customer_id}',
+                                        '${sum_quotId}',
+                                        '${enquiry_id}',
+                                        '${driver_id}',
+                                        '${vehicle_id}',
+                                        '${service_provider_id}',
+                                        '${tax_id}',
+                                        ${discount_type_id ? `'${discount_type_id}',` : ''}
+                                        '${trip_type}',
+                                        '${pickup_location}',
+                                        '${pickup_country}',
+                                        '${pickup_date}',
+                                        '${pickup_time}',
+                                        '${drop_location}',
+                                        '${drop_country}',
+                                        '${drop_date}',
+                                        '${drop_time}',
+                                        '${no_of_horse}',
+                                        '${special_requirement}',
+                                        '${additional_service}',
+                                        '${transportation_insurance_coverage}',
+                                        '${driver_amount}',
+                                        '${vehicle_amount}',
+                                        '${current_amount}',
+                                        '${tax_amount}',
+                                        '${discount_amount}',
+                                        '${final_amount}',
+                                        '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                    )`;
+                                    
                                     con.query(insQuery, async (err, data) => {
                                         if (!err) {
 
@@ -414,7 +472,6 @@ static async updateStatusQuotation  (quotId)  {
                         quo.quotation_id,
                         quo.customer_id,
                         quo.serviceprovider_id, 
-                        quo.discount_type_id,
                         quo.taxation_id,
                         quo.vehicle_id,
                         quo.driver_id,
@@ -454,7 +511,6 @@ static async updateStatusQuotation  (quotId)  {
                                 quotation_id,
                                 customer_id,
                                 serviceprovider_id,
-                                discount_type_id,
                                 taxation_id,
                                 vehicle_id,
                                 driver_id,
