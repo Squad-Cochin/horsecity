@@ -845,15 +845,15 @@ exports.contactPersonAvailable = async (req,res,next) =>
 exports.verifyTaxationBody = async(req,res,next) =>
 {
     const method = req.method;
-    console.log("herr11");
+
     const {type,value,name} = req.body;
-    if (!name || !/^[a-zA-Z\s]+$/.test(name))
+    if (req.body.name.length < 4)
     {
         return res.status(200).send
         ({
             code: 400,
             status: false,
-            message: constants.responseMessage.invalidName,
+            message: `The name must be at least 4 characters long.`,
         });
     }else if(!name){
         return res.status(200).send
@@ -940,13 +940,13 @@ exports.verifyDiscountBody = async(req,res,next) =>
 {
     const method = req.method;
     const {type,rate,name} = req.body;
-    if (!name || !/^[a-zA-Z\s]+$/.test(name))
+    if (req.body.name.length < 4)
     {
         return res.status(200).send
         ({
             code: 400,
             status: false,
-            message: constants.responseMessage.invalidName,
+            message: `The name must be at least 4 characters long.`,
         });
     }else if(!name){
         return res.status(200).send
