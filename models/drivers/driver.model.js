@@ -33,7 +33,7 @@ module.exports = class drivers
                     {
                        resolve('err') 
                     }
-                    if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
+                    if(result[0].role_id === constants.Roles.admin)
                     {
                         const offset = (pageNumber - 1) * pageSize;
                         let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, cd.status FROM ${constants.tableName.drivers} cd WHERE cd.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;                        

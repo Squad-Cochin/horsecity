@@ -16,9 +16,8 @@ module.exports = function (app)
     // The below route is for fetching all the invoices on the basis of the id of a service provider. This will be used in the reactjs front
     app.post(
         `/${process.env.apiToken}/getAll/invoices/:id`,
-        checkInput.isPageNumberEntered,
-        checkInput.isPageSizeEntered,
         isValidIdInTheParams(constants.tableName.service_providers),
+        checkInput.getAllDataBody,
         invoiceController.getAll
         ); 
 

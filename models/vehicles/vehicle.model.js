@@ -48,12 +48,12 @@ module.exports = class vehicles
                         }
                         else
                         {
-                            if(resultRole[0].role_id === constants.Roles.admin)
+                            if(resultRole[0]?.role_id === constants?.Roles?.admin)
                             {
                                 let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, price,no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${serviceProviderId}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${price}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
                                 con.query(insQuery, (err, result) =>
                                 {
-                                    if(result.affectedRows > 0) 
+                                    if(result?.affectedRows > 0) 
                                     {
                                         resolve(result);
                                     }
@@ -68,7 +68,7 @@ module.exports = class vehicles
                                 let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, price, no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${Id}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${price}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
                                 con.query(insQuery, (err, result) =>
                                 {
-                                    if(result.affectedRows > 0) 
+                                    if(result?.affectedRows > 0) 
                                     {
                                         resolve(result);
                                     }
@@ -114,7 +114,7 @@ module.exports = class vehicles
                     {
                        resolve('err') 
                     }
-                    if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
+                    if(result[0].role_id === constants.Roles.admin)
                     {
                         const offset = (pageNumber - 1) * pageSize;
                         let selQuery = `SELECT v.id, sp.name AS service_provider, v.vehicle_number, v.make, v.no_of_horse, v.status FROM  ${constants.tableName.service_providers} sp, ${constants.tableName.vehicles} v WHERE sp.id = v.service_provider_id AND v.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
@@ -485,11 +485,7 @@ module.exports = class vehicles
                                 v.insurance_provider,
                                 vi.id AS vehicle_image_id,
                                 vi.image,
-                                vi.title,
-                                r.id AS review_id,
-                                r.vehicle_rating,
-                                r.vehicle_description,
-                                r.created_at
+                                vi.title
                                 FROM ${constants.tableName.vehicles} v
                                 INNER JOIN ${constants.tableName.service_providers} s 
                                 ON v.service_provider_id = s.id
@@ -502,10 +498,8 @@ module.exports = class vehicles
                                 LEFT JOIN ${constants.tableName.vehicles_images} vi 
                                 ON v.id = vi.vehicle_id 
                                 AND vi.status = "${constants.status.active}"
-                                LEFT JOIN ${constants.tableName.reviews} r 
-                                ON v.id = r.vehicle_id
-                                WHERE v.id = ${Id} 
-                                AND v.status = "${constants.status.active}"  `;
+                                WHERE v.id = ${Id}
+                                `;
                 con.query(selQuery, (err, result) =>
                 {
                     if(err)
@@ -518,11 +512,10 @@ module.exports = class vehicles
                         {
                             "vehicle": [],
                             "images" : [],
-                            "reviews": []
+                            // "reviews": []
                         };
                         if(result.length != 0)
                         {
-                            const uniqueReviewIds = new Set();
                             const uniqueImagesIds = new Set();
                             for (let row of result)
                             {
@@ -531,6 +524,7 @@ module.exports = class vehicles
                                     // If result has data, populate the vehicleResponse data
                                     vehicleResponse.vehicle.push
                                     ({
+                                        "id" : result[0].id,
                                         "service_provider_id" : result[0].service_provider_id,
                                         "service_provider_name" : result[0].service_provider_name,
                                         "vehicle_number" : result[0].vehicle_number,
@@ -563,17 +557,17 @@ module.exports = class vehicles
                                     });
                                     uniqueImagesIds.add(row.vehicle_image_id);
                                 }
-                                if (row.review_id !== null && !uniqueReviewIds.has(row.review_id)) 
-                                {
-                                    vehicleResponse.reviews.push
-                                    ({
-                                        "id": row.review_id,
-                                        "rating" : row.vehicle_rating,
-                                        "description" : row.vehicle_description,
-                                        "created_at" : time.formatDateToDDMMYYYY(row.created_at)
-                                    });
-                                    uniqueReviewIds.add(row.review_id);
-                                }
+                                // if (row.review_id !== null && !uniqueReviewIds.has(row.review_id)) 
+                                // {
+                                //     vehicleResponse.reviews.push
+                                //     ({
+                                //         "id": row.review_id,
+                                //         "rating" : row.vehicle_rating,
+                                //         "description" : row.vehicle_description,
+                                //         "created_at" : time.formatDateToDDMMYYYY(row.created_at)
+                                //     });
+                                //     uniqueReviewIds.add(row.review_id);
+                                // }
                             }
                             resolve(vehicleResponse);
                         }
@@ -588,4 +582,3 @@ module.exports = class vehicles
     };
 
 };
-

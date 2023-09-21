@@ -20,16 +20,15 @@ const time = require('../../utils/helper/date'); // All the time relateed format
 exports.getAll = async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for get all customer logic.
-    const customers = await customer.getall(req.body.page, req.body.limit, req.params.id);
-    if(customers.length === 0)
+    const customers = await customer.getall(req.body.page, req.body.limit, req.params.id); 
+    if(customers === 'err')
     {
         // If there are no customer in the database. Then these lines of code will be executed
         return res.status(200).send
         ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getAll,
-            data : customers
+            code : 500,
+            status : false,
+            message : constants.responseMessage.universalError,
         });
     }
     else

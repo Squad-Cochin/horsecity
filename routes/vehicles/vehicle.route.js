@@ -34,8 +34,7 @@ module.exports = (app) =>
     // The below route is for getting all the vehicles data.
     app.post(`/${process.env.apiToken}/getAll/vehicles/:id`, 
     isValidIdInTheParams(constants.tableName.service_providers),
-    checkInputGetAll.isPageNumberEntered,
-    checkInputGetAll.isPageSizeEntered,
+    checkInputGetAll.getAllDataBody,
     vehicleController.getAll);
     
     // the below route is for updating the status of the vehicle data.

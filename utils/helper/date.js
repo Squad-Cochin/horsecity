@@ -166,7 +166,7 @@ const formattedToDate = async (toDate) =>
     }
     catch (error)
     {
-        console.log(`Error from the commonfetching.js file from the helper folder,at the time of format toDate. `, error);                
+        console.log(`Error from the date.js file from the helper folder, at the time of format to Date. `, error);                
     }
 };
 

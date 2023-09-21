@@ -33,7 +33,7 @@ module.exports = class customers
                     {
                        resolve('err') 
                     }
-                    if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
+                    if(result[0].role_id === constants.Roles.admin)
                     {
                         const offset = (pageNumber - 1) * pageSize;
                         let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, cd.status FROM ${constants.tableName.customers} cd WHERE cd.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;                        
@@ -676,35 +676,51 @@ module.exports = class customers
         {
             return await new Promise(async (resolve, reject) =>
             {
-                let query = ` SELECT
+                let query = 
+                `
+                    SELECT
                     b.id,
-                    s.name,
-                    b.pickup_location,
-                    b.drop_location,
-                    b.booking_status,
-                    b.final_amount,
+                    s.name AS service_provider_name,
+                    b.pickup_location AS pickup_point,
+                    b.drop_location AS drop_point,
+                    b.booking_status AS invoice_status,
+                    b.status AS payment_status,
+                    b.final_amount AS invoice_amount,
+                    v.vehicle_number,
+                    q.no_of_horse,
+                    q.trip_type,
+                    (i.final_amount - COALESCE(p.remaining_amount, 0)) AS paid_amount,
+                    DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date,
                     CASE
-                        WHEN pr_check.status = 'PAID' THEN 0
-                        ELSE latest_payment.remaining_amount
-                    END AS remaining_amount
+                        WHEN pr_check.status = '${constants.status.paid}' THEN 0
+                        ELSE COALESCE(latest_payment.remaining_amount, 0)
+                    END AS remaining_payment
                     FROM ${constants.tableName.service_providers} s
                     INNER JOIN ${constants.tableName.bookings} b ON b.service_provider_id = s.id
+                    INNER JOIN ${constants.tableName.invoices} i ON i.id = b.inv_id
+                    INNER JOIN ${constants.tableName.vehicles} v ON v.id = b.vehicle_id
+                    INNER JOIN ${constants.tableName.quotations} q ON q.serviceprovider_id = b.service_provider_id
                     LEFT JOIN (
-                        SELECT
-                            pr.invoice_id,
-                            pr.remaining_amount
-                        FROM ${constants.tableName.payment_records} pr
-                    WHERE pr.id IN (
-                        SELECT MAX(pr_inner.id)
-                        FROM ${constants.tableName.payment_records} pr_inner
-                        WHERE pr_inner.status <> 'PAID'
-                        GROUP BY pr_inner.invoice_id
-                        )
-                    )
-                    AS latest_payment ON latest_payment.invoice_id = b.inv_id
-                    LEFT JOIN ${constants.tableName.payment_records} pr_check ON pr_check.invoice_id = b.inv_id AND pr_check.status = 'PAID'
+                                SELECT
+                                pr.invoice_id,
+                                MAX(pr.id) AS max_id,
+                                pr.remaining_amount
+                                FROM ${constants.tableName.payment_records} pr
+                                WHERE pr.status <> '${constants.status.paid}'
+                                GROUP BY pr.invoice_id
+                    ) AS latest_payment 
+                    ON latest_payment.invoice_id = i.id
+                    LEFT JOIN ${constants.tableName.payment_records} pr_check 
+                    ON pr_check.invoice_id = i.id 
+                    AND pr_check.status = '${constants.status.paid}'
+                    LEFT JOIN ${constants.tableName.payment_records} p 
+                    ON p.id = latest_payment.max_id
                     WHERE b.customer_id = ${Id}
-                    AND b.booking_status = 'COMPLETED' `;                    
+                    AND b.booking_status = '${constants.booking_status.completed}'
+                    AND q.deleted_at IS NULL
+                    AND q.status = '${constants.quotation_status.confirmed}'
+                    AND q.id = i.quot_id
+                `;                              
                 let result = await commonoperation.queryAsync(query)
                 if(result == 'err')
                 {

@@ -17,8 +17,7 @@ module.exports = (app) =>
     // Below route is for getting data of all the customers
     app.post(`/${process.env.apiToken}/getAll/customers/:id`, 
     isValidIdInTheParams(constants.tableName.service_providers),
-    checkInput.isPageNumberEntered,
-    checkInput.isPageSizeEntered,
+    checkInput.getAllDataBody,
     customerController.getAll);
 
     // Below route is for getting data of any  customer

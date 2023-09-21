@@ -27,10 +27,9 @@ module.exports = function (app)
     frontEnquiriesController.createNewEnquiry);
 
     // The below route is for fetching all the enquiries of a  customer on the basis of customer id in the params. This will be used in the NEXTJS FRONT END
-    app.get(`/${process.env.apiToken}/get/all/enquiry/customer/:id`,
+    app.post(`/${process.env.apiToken}/get/all/enquiry/customer/:id`,
     validateParamsId.isValidIdInTheParams(constants.tableName.customers),
-    checkInput.isPageNumberEntered,
-    checkInput.isPageSizeEntered,
+    checkInput.getAllDataBody,
     frontEnquiriesController.getParticularCustomerAllEnquiries
     );
 };

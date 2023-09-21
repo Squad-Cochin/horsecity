@@ -754,38 +754,24 @@ exports.confirmnewpassword = async (req, res, next) =>
     };
 }
 
-exports.isPageNumberEntered = (req, res, next) =>
+exports.getAllDataBody = async (req, res, next) =>
 {
-    if(!req.body.page)
+    try
     {
-        return res.status(200).json
-        ({
-            code : 500,
-            success: false,
-            message : constants.responseMessage.universalError
-        });     
-    }
-    else
-    {
+        await this.checkValueEntered(req.body.page !== undefined ? String(req.body.page) : undefined, 'Page number')(req, res, next);
+        await this.checkValueEntered(req.body.limit !== undefined ? String(req.body.limit) : undefined, 'Page limit')(req, res, next);        
         next();
     }
-}
-
-exports.isPageSizeEntered = (req, res, next) =>
-{
-    if(!req.body.limit)
-    {
-        return res.status(200).json
+    catch (error)
+    { 
+        // Handle any errors that might occur during the checks
+        res.status(500).send
         ({
-            code : 500,
-            success: false,
-            message : constants.responseMessage.universalError
-        });     
-    }
-    else
-    {
-        next();
-    }
+            code: 500,
+            status: false,
+            message: constants.responseMessage.universalError
+        });
+    }    
 }
 
 exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
@@ -906,6 +892,7 @@ exports.checkAmountEntered = async(req, res, next) =>
 
 exports.checkValueEntered = (fieldName, messageField) => (req, res, next) =>
 {
+    // console.log(messageField, ':', fieldName);
     return new Promise((resolve, reject) =>
     {
         if (!fieldName || fieldName.length === 0 || fieldName.trim() === "")
@@ -1829,8 +1816,6 @@ exports.CheckRole = async (req, res, next) =>
                 {
                     return res.status(200).send
                     ({
-                        //`Error while fetching the rolename from the params`,
-                        // code: 400,
                         code : 500,
                         status: false,
                         message : constants.responseMessage.universalError

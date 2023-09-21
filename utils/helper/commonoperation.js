@@ -219,7 +219,11 @@ exports.totalCount = async (tablename) =>
     {
         return new Promise((resolve, reject) => 
         {
-            let selQuery = `SELECT count(t.id) FROM ${tablename} t WHERE t.deleted_at IS NULL`;
+            let selQuery = `    
+                                SELECT count(t.id) 
+                                FROM ${tablename} t 
+                                WHERE t.deleted_at IS NULL
+                            `;
             con.query(selQuery, (err, result) =>
             {
                 if (err)
@@ -249,7 +253,12 @@ exports.totalCountParticularServiceProvider = async (tablename, Id) =>
     {
         return new Promise((resolve, reject) => 
         {
-            let selQuery = `SELECT count(t.id) FROM ${tablename} t WHERE t.deleted_at IS NULL AND t.service_provider_id = ${Id}`;
+            let selQuery = `
+                            SELECT count(t.id) 
+                            FROM ${tablename} t 
+                            WHERE t.deleted_at IS NULL 
+                            AND t.service_provider_id = ${Id}
+                        `;
             con.query(selQuery, (err, result) =>
             {
                 if (err)
@@ -478,4 +487,36 @@ exports.tokenGeneration = async(email) =>
     {
         console.log(`Error from the commonfetching.js file from the helper folder,at the time of token generation. `, error);                
     }
+};
+
+exports.checkRole = async (Id) =>
+{
+    try
+    {
+        return await  new Promise(async (resolve, reject) =>
+        {
+            let query = ` 
+                        SELECT sp.id,
+                        r.id AS role_id,
+                        r.name 
+                        FROM ${constants.tableName.service_providers} sp,
+                        ${constants.tableName.roles} r 
+                        WHERE sp.id = ${Id} 
+                        AND sp.role_Id = r.id`
+            let result = await this.queryAsync(query)
+            if(result.length != 0)
+            {
+                resolve(result)
+            }
+            else
+            {
+                resolve([]);
+            }
+        });
+    }
+    catch(error)
+    {
+        console.log(`Error from the 'commonopeartion.js' file. The function is checkRole`);
+    }
+
 };

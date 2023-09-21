@@ -19,26 +19,33 @@ module.exports = class enquiries
         {
             return await new Promise(async (resolve, reject) =>
             {
-                let insQuery = `INSERT INTO ${constants.tableName.enquiries}(customer_id, vehicle_id, serviceprovider_id, pickup_location, drop_location, trip_type, pickup_country, drop_country, no_of_horse,pickup_date, description, status, created_at) VALUES(
-                ${Id}, ${vehicle_Id}, ${service_provider_Id}, '${pickup_Location}', '${drop_Location}', '${trip_Type}', '${pickup_Country}', '${drop_Country}', '${horse}','${pickup_date}', '${description}', '${constants.enquiry_status.notconfirmed}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' )`;
-                con.query(insQuery, (err, result) =>
+                if (new Date(pickup_date) < new Date())
                 {
-                    if(err)
+                    resolve(`err`);
+                }
+                else
+                {
+                    let insQuery = `INSERT INTO ${constants.tableName.enquiries}(customer_id, vehicle_id, serviceprovider_id, pickup_location, drop_location, trip_type, pickup_country, drop_country, no_of_horse,pickup_date, description, status, created_at) VALUES(
+                    ${Id}, ${vehicle_Id}, ${service_provider_Id}, '${pickup_Location}', '${drop_Location}', '${trip_Type}', '${pickup_Country}', '${drop_Country}', '${horse}','${pickup_date}', '${description}', '${constants.enquiry_status.notconfirmed}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' )`;
+                    con.query(insQuery, (err, result) =>
                     {
-                        resolve(`err`);
-                    }
-                    else
-                    {
-                        if(result.affectedRows > 0)
+                        if(err)
                         {
-                            resolve('inserted');
+                            resolve(`err`);
                         }
                         else
                         {
-                            resolve('err')
+                            if(result.affectedRows > 0)
+                            {
+                                resolve('inserted');
+                            }
+                            else
+                            {
+                                resolve('err')
+                            }
                         }
-                    }
-                });
+                    });
+                }
             });
         }
         catch (error)

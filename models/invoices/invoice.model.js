@@ -36,7 +36,7 @@ module.exports = class invoices
                     {
                        resolve('err') 
                     }
-                    if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.superAdmin)
+                    if(result[0].role_id === constants.Roles.admin)
                     {
 
                         const offset = (pageNumber - 1) * pageSize;
@@ -190,15 +190,43 @@ module.exports = class invoices
                             }
                             else
                             {
-                                let ra = paymentRecordData[0].total_amount - payment
-                                if(ra === 0)
+                                let remaining_amount = paymentRecordData[0].total_amount - payment
+                                if(remaining_amount === 0)
                                 {
-                                    let upQuery = `UPDATE ${constants.tableName.payment_records} pr SET pr.invoice_prefix_id = '${paymentRecordData[0].invoice_prefix_id}', pr.received_amount = ${payment}, pr.received_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', pr.remaining_amount = ${ra}, pr.status = '${constants.status.paid}', pr.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE pr.invoice_id = ${Id}`;
-                                    con.query(upQuery, (err, result) =>
+                                    let upQuery = ` UPDATE ${constants.tableName.payment_records} pr 
+                                                    SET pr.invoice_prefix_id = '${paymentRecordData[0].invoice_prefix_id}',
+                                                    pr.received_amount = ${payment},
+                                                    pr.received_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}',
+                                                    pr.remaining_amount = ${remaining_amount},
+                                                    pr.status = '${constants.status.paid}',
+                                                    pr.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                                    WHERE pr.invoice_id = ${Id}`;
+                                    con.query(upQuery, async (err, result) =>
                                     {                            
                                         if(result.affectedRows > 0)
                                         {
-                                            resolve('affectedRows')
+                                            let checkDataPresentInBookings = await commonfetching.dataOnCondition(constants.tableName.bookings, Id, 'inv_id')
+                                            if(checkDataPresentInBookings.length === 0)
+                                            {
+                                                resolve('affectedRows');
+                                            }
+                                            else
+                                            {
+                                                let upQueryInBookingsTable =    `  UPDATE ${constants.tableName.bookings} b
+                                                                                   SET b.status = '${constants.status.paid}',
+                                                                                   b.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                                                                   WHERE b.inv_id = ${Id}
+                                                                                `
+                                                let upQueryInBookingsTableResult = await commonoperation.queryAsync(upQueryInBookingsTable)
+                                                if(upQueryInBookingsTableResult.affectedRows > 0)
+                                                {
+                                                    resolve('affectedRows');
+                                                }
+                                                else
+                                                {
+                                                    resolve('err'); 
+                                                }
+                                            }
                                         }
                                         else
                                         {
@@ -208,7 +236,14 @@ module.exports = class invoices
                                 }
                                 else
                                 {
-                                    let upQuery = `UPDATE ${constants.tableName.payment_records} pr SET pr.invoice_prefix_id = '${paymentRecordData[0].invoice_prefix_id}', pr.received_amount = ${payment}, pr.received_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', pr.remaining_amount = ${ra}, pr.status = '${constants.status.partPaid}', pr.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE pr.invoice_id = ${Id}`;
+                                    let upQuery = ` UPDATE ${constants.tableName.payment_records} pr 
+                                                    SET pr.invoice_prefix_id = '${paymentRecordData[0].invoice_prefix_id}',
+                                                    pr.received_amount = ${payment},
+                                                    pr.received_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}',
+                                                    pr.remaining_amount = ${remaining_amount},
+                                                    pr.status = '${constants.status.partPaid}',
+                                                    pr.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                                    WHERE pr.invoice_id = ${Id}`;
                                     con.query(upQuery, (err, result) =>
                                     {                            
                                         if(result.affectedRows > 0)
@@ -225,13 +260,15 @@ module.exports = class invoices
                         }
                         else
                         {
-                            let latestData = `SELECT * FROM ${constants.tableName.payment_records} WHERE invoice_id = '${Id}' ORDER BY remaining_amount ASC LIMIT 1`;
+                            let latestData = `  SELECT * FROM ${constants.tableName.payment_records} 
+                                                WHERE invoice_id = '${Id}' 
+                                                ORDER BY remaining_amount ASC LIMIT 1`;
                             con.query(latestData, (err, result) =>
                             {
-                                let ra = result[0].remaining_amount - payment
-                                if(ra > 0)
+                                let remaining_amount = result[0].remaining_amount - payment
+                                if(remaining_amount > 0)
                                 {
-                                    let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, invoice_prefix_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, '${result[0].invoice_prefix_id}', ${result[0].total_amount}, ${payment}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${ra}, '${constants.status.partPaid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                                    let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, invoice_prefix_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, '${result[0].invoice_prefix_id}', ${result[0].total_amount}, ${payment}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${remaining_amount}, '${constants.status.partPaid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                                     con.query(insQuery, (err, result) =>
                                     {
                                         if(result.affectedRows > 0)
@@ -244,9 +281,9 @@ module.exports = class invoices
                                         }
                                     });
                                 }
-                                if(ra == 0)
+                                if(remaining_amount == 0)
                                 {
-                                    let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, invoice_prefix_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, '${result[0].invoice_prefix_id}', ${result[0].total_amount}, ${payment}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${ra}, '${constants.status.paid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                                    let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, invoice_prefix_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, '${result[0].invoice_prefix_id}', ${result[0].total_amount}, ${payment}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${remaining_amount}, '${constants.status.paid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                                     con.query(insQuery, (err, insResult) =>
                                     {
                                         if(insResult.affectedRows > 0)
@@ -257,13 +294,12 @@ module.exports = class invoices
                                                                         WHERE b.inv_id = ${Id}
                                                                         AND b.invoice_prefix_id = '${result[0].invoice_prefix_id}' 
                                                                         AND (b.booking_status <> '${constants.vehicles_breakouts_status.break_out}'
-                                                                        OR b.booking_status <> '${constants.booking_status.completed}') 
-                                                                        AND b.status = '${constants.status.pending}' `
+                                                                        OR b.booking_status <> '${constants.booking_status.completed}') `
                                             con.query(updateBookingTable, (err, upBoResult) =>
                                             {
                                                 if(upBoResult.affectedRows > 0)
                                                 {
-                                                    resolve('fullypaid');
+                                                    resolve('affectedRows');
                                                 }
                                                 else
                                                 {
@@ -277,7 +313,7 @@ module.exports = class invoices
                                         }
                                     });
                                 }
-                                if(ra < 0)
+                                if(remaining_amount < 0)
                                 {
                                     resolve('moreThanActualAmount');
                                 }

@@ -20,15 +20,14 @@ exports.getAll = async (req, res) =>
 {
     // The below line is for going to the model function to implement the code for get all drivers logic.
     const drivers = await driver.getall(req.body.page, req.body.limit, req.params.id);
-    if(drivers.length == 0)
+    if(drivers === 'err')
     {
         // If there are no drivers in the database. Then these lines of code will be executed
         return res.status(200).send
         ({
-            code : 400,
+            code : 500,
             status : false,
-            message : constants.responseMessage.getNoData,
-            data : drivers
+            message : constants.responseMessage.universalError
         });
     }
     else

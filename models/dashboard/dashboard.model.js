@@ -36,25 +36,57 @@ module.exports = class dashboard
                     {
                         resolve('err') 
                     }
-                    if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
+                    if(result[0].role_id === constants.Roles.admin)
                     {
-                        // let query = `   SELECT
-                        //                 COALESCE((SELECT COUNT(sp.id) FROM ${constants.tableName.service_providers} sp, ${constants.tableName.roles} r WHERE sp.role_Id = r.id AND r.name = 'SERVICE PROVIDER' ), 0) AS total_providers,
-                        //                 COALESCE((SELECT COUNT(id) FROM ${constants.tableName.customers}), 0) AS total_customers,
-                        //                 COALESCE((SELECT COUNT(id) FROM ${constants.tableName.vehicles}), 0) AS total_vehicles,
-                        //                 COALESCE((SELECT COUNT(id) FROM ${constants.tableName.drivers}), 0) AS total_drivers,
-                        //                 COALESCE((SELECT COUNT(id) FROM ${constants.tableName.enquiries}), 0) AS total_enquiries,
-                        //                 COALESCE((SELECT COUNT(id) FROM ${constants.tableName.quotations}), 0) AS total_quotations,
-                        //                 COALESCE((SELECT SUM(final_amount) FROM ${constants.tableName.invoices}), 0) AS total_revenue`;
-                        let query = `   SELECT
-                                        COALESCE((SELECT COUNT(sp.id) FROM ${constants.tableName.service_providers} sp, roles r WHERE sp.role_Id = r.id AND r.name = 'SERVICE PROVIDER' ), 0) AS total_providers,
-                                        COALESCE((SELECT COUNT(c.id) FROM ${constants.tableName.customers} c where c.deleted_at IS NULL), 0) AS total_customers,
-                                        COALESCE((SELECT COUNT(v.id) FROM ${constants.tableName.vehicles} v where v.deleted_at IS NULL), 0) AS total_vehicles,
-                                        COALESCE((SELECT COUNT(d.id) FROM ${constants.tableName.drivers} d where d.deleted_at IS NULL), 0) AS total_drivers,
-                                        COALESCE((SELECT COUNT(e.id) FROM ${constants.tableName.enquiries} e), 0) AS total_enquiries,
-                                        COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q where q.deleted_at IS NULL), 0) AS total_quotations,
-                                        COALESCE((SELECT SUM(i.final_amount) FROM ${constants.tableName.invoices} i WHERE i.deleted_at IS NULL AND i.status <> "INACTIVE"), 0) AS total_revenue
-                                    `;
+                        let query = 
+                        `   
+                            SELECT
+                            COALESCE
+                            ((
+                                SELECT COUNT(sp.id)
+                                FROM ${constants.tableName.service_providers} sp
+                                JOIN  ${constants.tableName.roles} r 
+                                ON sp.role_id = r.id
+                                WHERE r.id = ${Id}
+                                AND sp.deleted_at IS NULL
+                            ), 0) AS total_providers,
+                            COALESCE
+                            ((
+                                SELECT COUNT(c.id)
+                                FROM  ${constants.tableName.customers} c
+                                WHERE c.deleted_at IS NULL
+                            ), 0) AS total_customers,
+                            COALESCE
+                            ((
+                                SELECT COUNT(v.id)
+                                FROM  ${constants.tableName.vehicles} v
+                                WHERE v.deleted_at IS NULL
+                            ), 0) AS total_vehicles,
+                            COALESCE
+                            ((
+                                SELECT COUNT(d.id)
+                                FROM  ${constants.tableName.drivers} d
+                                WHERE d.deleted_at IS NULL
+                            ), 0) AS total_drivers,
+                            COALESCE
+                            ((
+                                SELECT COUNT(e.id)
+                                FROM  ${constants.tableName.enquiries} e
+                            ), 0) AS total_enquiries,
+                            COALESCE
+                            ((
+                                SELECT COUNT(q.id)
+                                FROM  ${constants.tableName.quotations} q
+                                WHERE q.deleted_at IS NULL
+                            ), 0) AS total_quotations,
+                            COALESCE
+                            ((
+                                SELECT SUM(i.final_amount)
+                                FROM  ${constants.tableName.invoices} i
+                                WHERE i.deleted_at IS NULL
+                                AND i.status <> '${constants.status.inactive}'
+                            ), 0) AS total_revenue
+                        `;
                         con.query(query, (err, result) =>
                         {
                             if(err)
@@ -76,20 +108,37 @@ module.exports = class dashboard
                     }
                     else if(result[0].role_id === constants.Roles.service_provider)
                     {
-                        // let Query = ` SELECT
-                        //               COALESCE((SELECT COUNT(v.id) FROM ${constants.tableName.vehicles} v WHERE v.service_provider_id = ${Id}), 0) AS total_vehicles,
-                        //               COALESCE((SELECT COUNT(ad.id) FROM ${constants.tableName.assign_drivers} ad WHERE ad.service_provider_id = ${Id} AND ad.deleted_at IS NULL), 0) AS total_drivers,
-                        //               COALESCE((SELECT COUNT(e.id) FROM ${constants.tableName.enquiries} e WHERE e.serviceprovider_id = ${Id}), 0) AS total_enquiries,
-                        //               COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q WHERE q.serviceprovider_id = ${Id}), 0) AS total_quotations,
-                        //               COALESCE((SELECT SUM(i.final_amount) FROM ${constants.tableName.invoices} i WHERE i.service_provider_id = ${Id}), 0) AS total_revenue
-                        //            `;
-
                     let Query = `   SELECT
-                                    COALESCE((SELECT COUNT(v.id) FROM ${constants.tableName.vehicles} v WHERE v.service_provider_id = ${Id} AND v.deleted_at IS NULL), 0) AS total_vehicles,
-                                    COALESCE((SELECT COUNT(ad.id) FROM ${constants.tableName.assign_drivers} ad WHERE ad.service_provider_id = ${Id} AND ad.deleted_at IS NULL), 0) AS total_drivers,
-                                    COALESCE((SELECT COUNT(e.id) FROM ${constants.tableName.enquiries} e WHERE e.serviceprovider_id = ${Id}), 0) AS total_enquiries,
-                                    COALESCE((SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q WHERE q.serviceprovider_id = ${Id} AND q.deleted_at IS NULL), 0) AS total_quotations,
-                                    COALESCE((SELECT SUM(i.final_amount) FROM ${constants.tableName.invoices} i WHERE i.service_provider_id = ${Id} AND i.deleted_at IS NULL AND i.status <> "${constants.status.inactive}"), 0) AS total_revenue
+                                    COALESCE
+                                    ((
+                                        SELECT COUNT(v.id) FROM ${constants.tableName.vehicles} v 
+                                        WHERE v.service_provider_id = ${Id} 
+                                        AND v.deleted_at IS NULL
+                                    ), 0) AS total_vehicles,
+                                    COALESCE
+                                    ((
+                                        SELECT COUNT(ad.id) FROM ${constants.tableName.assign_drivers} ad 
+                                        WHERE ad.service_provider_id = ${Id} 
+                                        AND ad.deleted_at IS NULL
+                                    ), 0) AS total_drivers,
+                                    COALESCE
+                                    ((
+                                        SELECT COUNT(e.id) FROM ${constants.tableName.enquiries} e 
+                                        WHERE e.serviceprovider_id = ${Id}
+                                    ), 0) AS total_enquiries,
+                                    COALESCE
+                                    ((
+                                        SELECT COUNT(q.id) FROM ${constants.tableName.quotations} q 
+                                        WHERE q.serviceprovider_id = ${Id}
+                                        AND q.deleted_at IS NULL
+                                    ), 0) AS total_quotations,
+                                    COALESCE
+                                    ((
+                                        SELECT SUM(i.final_amount) FROM ${constants.tableName.invoices} i 
+                                        WHERE i.service_provider_id = ${Id} 
+                                        AND i.deleted_at IS NULL 
+                                        AND i.status <> "${constants.status.inactive}"
+                                    ), 0) AS total_revenue
                                 `;
                         con.query(Query, (err, result) =>
                         {
@@ -141,7 +190,7 @@ module.exports = class dashboard
                     }
                     else
                     {
-                        if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
+                        if(result[0].role_id === constants.Roles.admin)
                         {
                             let query = `   SELECT
                                             YEAR(created_at) AS year, 
@@ -237,7 +286,7 @@ module.exports = class dashboard
                     }
                     else
                     {
-                        if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
+                        if(result[0].role_id === constants.Roles.admin)
                         {
                             let Query = `   
                             SELECT
@@ -270,10 +319,11 @@ module.exports = class dashboard
                         {
                             let Query = `SELECT
                             COUNT(*) AS total_quotations,
-                            COALESCE(SUM(CASE WHEN status = '${constants.quotation_status.confirmed}' THEN 1 ELSE 0 END), 0) AS total_confirmed,
-                            COALESCE(SUM(CASE WHEN status = '${constants.quotation_status.notconfirmed}' THEN 1 ELSE 0 END), 0) AS total_not_confirmed
+                            COALESCE(SUM(CASE WHEN status = '${constants.quotation_status.confirmed}' AND deleted_at IS NULL THEN 1 ELSE 0 END), 0) AS total_confirmed,
+                            COALESCE(SUM(CASE WHEN status = '${constants.quotation_status.notconfirmed}' AND deleted_at IS NULL THEN 1 ELSE 0 END), 0) AS total_not_confirmed
                             FROM ${constants.tableName.quotations} q 
-                            WHERE q.serviceprovider_id = ${Id}`;
+                            WHERE q.serviceprovider_id = ${Id}
+                            AND deleted_at IS NULL`;
                             con.query(Query, async (err, result) =>
                             {
                                 if(err)
@@ -317,7 +367,14 @@ module.exports = class dashboard
         {
             return await new Promise(async (resolve, reject)=>
             {
-                let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
+                let checkRole = `
+                                    SELECT sp.id,
+                                    r.id AS role_id,
+                                    r.name 
+                                    FROM ${constants.tableName.service_providers} sp,
+                                    ${constants.tableName.roles} r 
+                                    WHERE sp.id = ${Id} 
+                                    AND sp.role_Id = r.id`;
                 con.query(checkRole, async (err, result) =>
                 {
                     if(err)
@@ -326,13 +383,24 @@ module.exports = class dashboard
                     }
                     else
                     {
-                        if(result[0].role_id === constants.Roles.admin || result[0].role_id === constants.Roles.super_admin)
+                        if(result[0].role_id === constants.Roles.admin)
                         {
-                            let query = `SELECT e.id, c.user_name, c.name, DATE_FORMAT(e.created_at, '%d %b, %Y') AS date, e.pickup_location, e.no_of_horse, e.drop_location, e.status
-                                        FROM enquiries e, customers c
-                                        WHERE e.customer_id = c.id
-                                        ORDER BY e.created_at DESC
-                                        LIMIT 5`;
+                            let query = `   SELECT 
+                                            e.id,
+                                            c.user_name,
+                                            c.name,
+                                            DATE_FORMAT(e.created_at, '%d %b, %Y') AS date,
+                                            e.pickup_location,
+                                            e.no_of_horse,
+                                            e.drop_location,
+                                            e.status
+                                            FROM 
+                                            ${constants.tableName.enquiries} e,
+                                            ${constants.tableName.customers} c
+                                            WHERE e.customer_id = c.id
+                                            ORDER BY e.created_at DESC
+                                            LIMIT 5
+                                        `;
                                         con.query(query, async(err, result) =>
                                         {
                                             if(err)
@@ -348,8 +416,6 @@ module.exports = class dashboard
                                                 else
                                                 {
                                                     resolve(result)
-                                                    // let quoatationData = customizeQuotationStatusReport(result);
-                                                    // resolve(quoatationData)
                                                 }                                         
                                             }
                                         });
@@ -357,7 +423,21 @@ module.exports = class dashboard
                         }
                         else if(result[0].role_id === constants.Roles.service_provider)
                         {
-                            let query = `SELECT e.id, c.user_name, c.name, DATE_FORMAT(e.created_at, '%d %b, %Y') AS date, e.pickup_location, e.no_of_horse, e.drop_location, e.status FROM enquiries e, customers c WHERE e.serviceprovider_id = ${Id} AND e.customer_id = c.id ORDER BY e.created_at DESC LIMIT 5`;
+                            let query = `
+                                            SELECT 
+                                                e.id,
+                                                c.user_name,
+                                                c.name,
+                                                DATE_FORMAT(e.created_at, '%d %b, %Y') AS date,
+                                                e.pickup_location,
+                                                e.no_of_horse,
+                                                e.drop_location,
+                                                e.status 
+                                                FROM ${constants.tableName.enquiries} e,
+                                                ${constants.tableName.customers} c 
+                                                WHERE e.serviceprovider_id = ${Id}
+                                                AND e.customer_id = c.id 
+                                                ORDER BY e.created_at DESC LIMIT 5`;
                             con.query(query, async(err, result) =>
                             {
                                 if(err)

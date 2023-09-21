@@ -149,16 +149,6 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
             message: constants.responseMessage.insert,
         });
     }
-    // If the remaining amount is 0 then this if block will be executed
-    if(invoices === 'fullypaid')
-    {
-        return res.status(200).json
-        ({
-            code: 200,
-            status: true,
-            message: constants.responseMessage.paymentmadefully,
-        });
-    }
     // If we are entering the amount more than the remaining amount, then this if block of code will be executed
     if(invoices === 'moreThanActualAmount')
     {
