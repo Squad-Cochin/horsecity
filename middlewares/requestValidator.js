@@ -15,7 +15,15 @@ exports.usernamevalidation = (req, res, next) => {
                 message: constants.responseMessage.usernameNotPresent
             });
     } else {
-        if (hasOnlyNonSpaces(user_name) === true) {
+        if(req.body.user_name.length < 4)
+        {
+            return res.status(200).send
+            ({
+                code : 400,
+                status : false,
+                message : constants.responseMessage.unsernameinvalid
+            });
+        }else if (hasOnlyNonSpaces(user_name) === true) {
             return res.status(200).send
                 ({
                     code: 400,
@@ -79,6 +87,24 @@ exports.usernamevalidation = (req, res, next) => {
 
 
 }
+
+exports.nameValidation = (req, res, next) =>
+{
+    const {customer_name }= req.body;
+    if (!customer_name || !/^[a-zA-Z\s]+$/.test(customer_name))
+    {
+        return res.status(200).send
+        ({
+            code: 400,
+            status: false,
+            message: constants.responseMessage.invalidName,
+        });
+    }
+    else
+    {
+        next();
+    }    
+};
 /**This middle ware for email validation */
 exports.emailValidation = async (req, res, next) => {
     const { email } = req.body;
@@ -104,22 +130,28 @@ exports.emailValidation = async (req, res, next) => {
             });
     }
     else {
-        const isvalidEmail = (email) => {
-            const regex = (/^[a-zA-Z0-9]+@[a-zA-Z0-9]+\.[a-zA-Z0-9]{2,}(\.[a-zA-Z0-9]{2,})?$/);
-            if (regex.test(email)) {
-                const domain = email.split('@')[1]; // get domain name after '@' symbol
-                const domainParts = domain.split('.'); // split domain name by '.' separator
-                if (domainParts[1] === domainParts[2]) {
+        const isvalidEmail = (email) => 
+        {
+            const regex = (/^[a-zA-Z0-9.]+@[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*(\.[a-zA-Z0-9]{2,})+$/);
+            if (regex.test(email))
+            {
+                const domain = email.split(`@`)[1]; // get domain name after `@` symbol
+                const domainParts = domain.split(`.`); // split domain name by `.` separator
+                if (domainParts[1] === domainParts[2])
+                {
                     return false
                 }
-                else {
+                else
+                {
                     return true;
                 }
             }
-            else {
+            else
+            {
                 return false
             }
         };
+        
         //checking
         if (isvalidEmail(email)) // Here the checking of the email value is done
         {
@@ -470,11 +502,20 @@ exports.verifyToken = async (req,res,next ) =>
         });
     }
 }
+
  
 exports.validateUAEMobileNumber = async (req, res, next) => {
     const { contact_no, emergency_contact_no } = req.body;
     const requestMethod = req.method;
     const URL = req.url
+    if(contact_no === emergency_contact_no){
+        return res.status(200).send
+        ({
+            code: 400,
+            status: false,
+            message: 'The contact number and emergency contact number both are the same, which is not allowed .'
+        });
+    }
     
 
                 try {
@@ -804,8 +845,17 @@ exports.contactPersonAvailable = async (req,res,next) =>
 exports.verifyTaxationBody = async(req,res,next) =>
 {
     const method = req.method;
+    console.log("herr11");
     const {type,value,name} = req.body;
-    if(!name){
+    if (!name || !/^[a-zA-Z\s]+$/.test(name))
+    {
+        return res.status(200).send
+        ({
+            code: 400,
+            status: false,
+            message: constants.responseMessage.invalidName,
+        });
+    }else if(!name){
         return res.status(200).send
         ({
             code: 400,
@@ -890,7 +940,15 @@ exports.verifyDiscountBody = async(req,res,next) =>
 {
     const method = req.method;
     const {type,rate,name} = req.body;
-    if(!name){
+    if (!name || !/^[a-zA-Z\s]+$/.test(name))
+    {
+        return res.status(200).send
+        ({
+            code: 400,
+            status: false,
+            message: constants.responseMessage.invalidName,
+        });
+    }else if(!name){
         return res.status(200).send
         ({
             code: 400,

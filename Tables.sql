@@ -278,6 +278,7 @@ CREATE TABLE enquiries
     trip_type ENUM('PRIVATE','SHARING','GCC'),
     pickup_country VARCHAR(30) NOT NULL ,
     drop_country VARCHAR(30) NOT NULL,
+    pickup_date DATE NOT NULL,
     no_of_horse INT(3) NOT NULL,
     description VARCHAR(255) NOT NULL,
     status ENUM ('CONFIRMED', 'NOTCONFIRMED') DEFAULT 'NOTCONFIRMED',
@@ -413,21 +414,12 @@ CREATE TABLE vehicles_breakouts
 
 CREATE TABLE reviews
 (
-    id INT(11)  PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    id INT(11) PRIMARY KEY NOT NULL AUTO_INCREMENT,
     booking_id INT(11) DEFAULT NULL,
     FOREIGN KEY (booking_id) REFERENCES bookings(id),
-    vehicle_id INT(11) DEFAULT NULL,
-    FOREIGN KEY (vehicle_id) REFERENCES vehicles(id),
-    vehicle_rating INT(2) DEFAULT NULL,
-    vehicle_description VARCHAR(255) DEFAULT NULL,
-    driver_id INT(11) DEFAULT NULL,
-    FOREIGN KEY (driver_id) REFERENCES drivers(id),
-    driver_rating INT(2) DEFAULT NULL,
-    driver_description VARCHAR(255) DEFAULT NULL,
-    service_provider_id INT(11) DEFAULT NULL,
-    FOREIGN KEY (service_provider_id) REFERENCES service_providers(id),
-    service_provider_rating INT(2) DEFAULT NULL,
-    service_provider_description VARCHAR(255) DEFAULT NULL,
+    rating INT(2) DEFAULT NULL,
+    review VARCHAR(255) DEFAULT NULL,
+    status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
     created_at DATETIME DEFAULT NULL,
     updated_at DATETIME DEFAULT NULL
 );
@@ -457,7 +449,6 @@ CREATE TABLE wishlist
     deleted_at DATETIME DEFAULT NULL
 );
 
-ALTER TABLE enquiries ADD pickup_date DATE NOT NULL;
 ALTER TABLE `payment_records` CHANGE `status` `status` ENUM('PAID','PARTIALLY PAID','PENDING','CANCELLED') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
 ALTER TABLE `payment_records` ADD `deleted_at` DATETIME NULL AFTER `updated_at`;
 ALTER TABLE `bookings` CHANGE `status` `status` ENUM('PAID','PENDING','REFUND', 'CANCELLED') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;

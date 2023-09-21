@@ -264,20 +264,41 @@ static async addBreakDowns (requestBody){
                 })
             } else if (trip_status === constants.vehicles_breakouts_status.compleated) {
 
-                let updateQuery = `UPDATE ${constants.tableName.bookings} SET
-                                   booking_status = '${constants.vehicles_breakouts_status.compleated}'
+                let selQuery = `SELECT pr.id,pr.status
+                                FROM ${constants.tableName.bookings} AS bk
+                                JOIN ${constants.tableName.payment_records} AS pr ON bk.inv_id = pr.invoice_id
+                                WHERE bk.id = '${booking_id}' 
+                                ORDER BY pr.id DESC
+                                LIMIT 1`;
+
+                                con.query(selQuery, async (err, result) => {
+                           
+                                    if (result?.length != 0) { 
+                                      let payment_status =  result[0].status ;
+                                   let updateQuery = `UPDATE ${constants.tableName.bookings} SET
+                                   booking_status = '${constants.vehicles_breakouts_status.compleated}' , status = '${payment_status}'
                                    WHERE id = '${booking_id}'`;
-                con.query(updateQuery, async (err, data) => {
+                                con.query(updateQuery, async (err, data) => {
 
-                    if (data?.length != 0) {
+                                    if (data?.length != 0) {
 
-                        resolve(true)
+                                        resolve(true)
 
-                    } else {
-                        resolve(false)
-                    }
-                })
+                                    } else {
+                                        resolve(false)
+                                    }
+                                })
 
+
+                 
+                
+                                    } else {
+                                        resolve(false)
+                                    }
+                                })
+
+
+               
             }
 
 
