@@ -463,7 +463,7 @@ const ListTables = () => {
                         <div className="mb-3">
                             <label htmlFor="phone-field" className="form-label">Contact Number</label>
                             <input
-                                type="text"
+                                type="number"
                                 id="phone-field"
                                 className="form-control"
                                 name="contact_no"
@@ -477,7 +477,7 @@ const ListTables = () => {
                         <div className="mb-3">
                             <label htmlFor="emergencyPhone-field" className="form-label">Emergency Contact Number</label>
                             <input
-                                type="text"
+                                type="number"
                                 id="emergencyPhone-field"
                                 name="emergency_contact_no"
                                 className="form-control"

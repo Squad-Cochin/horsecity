@@ -23,6 +23,7 @@ import { addAmount, sendEmail } from '../../helpers/ApiRoutes/addApiRoutes';
 
 const ListInvoiceDetails = () => {
   const [ledg, setLedg] = useState([]);
+  const [ isActiveTwo, setActiveTwo ] = useState(false);
   const [vehicles, setVehicles] = useState([]);
   const [paymentHistroy, setPaymentHistroy] = useState([]);
   const [sendEmailButtonData, setsendEmailButtonData] = useState([]);
@@ -86,17 +87,26 @@ const ListInvoiceDetails = () => {
       enableReinitialize: true,
       initialValues,
       onSubmit: async (values) => {
-        if (modal) {
+        if (modal)
+
+        {
+
+          setActiveTwo(true);
+
           let addedData = await addAmount(values.invoiceId, values.totalRecievedAmount);
-          if (addedData.code === 200) {
+          if (addedData.code === 200)
+          {
             setErrors("");
             getAllData(pageNumber)
             setModal(!modal);
+            setActiveTwo(false);
             modalClose(values.invoiceId);
             values.totalRecievedAmount = ""
           }
-          else {
-            setErrors("")
+          else
+          {
+            setErrors("");
+            setActiveTwo(false);
             setErrors(addedData.message)
           }
         }
@@ -447,7 +457,7 @@ const ListInvoiceDetails = () => {
 
             <ModalFooter>
 
-              <Button color="primary" type='submit'> Save </Button>
+              <Button color="primary" type='submit' disabled={isActiveTwo}> Save </Button>
 
               <Button color="secondary" onClick={toggleModal}>Cancel</Button>
 

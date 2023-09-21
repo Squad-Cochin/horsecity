@@ -141,10 +141,11 @@ const Login = props => {
                               <FormFeedback type="invalid"><div> {validation.errors.userName} </div></FormFeedback>
                             ) : null}
                           </div>
-
+            
                           <div className="mb-4">
+                        
                             <Label className="form-label">Password</Label>
-                            <div className="input-group">
+                            <div className={!validation.errors.password ? 'd-flex': ''}>
                               <Input
                                 name="password"
                                 value={validation.values.password || ""}
@@ -157,14 +158,18 @@ const Login = props => {
                                   validation.touched.password && validation.errors.password ? true : false
                                 }
                               />
-                              <button className="btn btn-outline-secondary" type="button" onClick={togglePasswordVisibility}>
-                                {showPassword ? <i className="ri-eye-off-fill" style={{ fontSize: '15px' }}></i> : <i className="ri-eye-fill" style={{ fontSize: '15px' }}></i>}
-                              </button>
-                            </div>
-                            {validation.touched.password && validation.errors.password ? (
+                              {validation.touched.password && validation.errors.password ? (
                               <FormFeedback type="invalid"><div> {validation.errors.password} </div></FormFeedback>
                             ) : null}
-                          </div>
+                              {!validation.errors.password ? (
+                               <button className="btn btn-outline-secondary" type="button" onClick={togglePasswordVisibility}>
+                               {showPassword ? <i className="ri-eye-off-fill" style={{ fontSize: '15px' }}></i> : <i className="ri-eye-fill" style={{ fontSize: '15px' }}></i>}
+                             </button>
+                            ) : null}
+                             
+                             </div>
+                             </div>
+              
                           <div className="d-grid mt-4">
                             <span className="text-muted">
                               <Link to="/forgot-password" style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>

@@ -206,7 +206,7 @@ const SettingPage = () =>
                     <Row className="mb-3">
                       <label htmlFor="example-tel-input" className="col-md-2 col-form-label" > Phone Number <span style={{ color: 'red' }}>*</span> </label>
                       <div className="col-md-10">
-                        <input className="form-control" type="tel" placeholder="Enter the Company Phone Number" name='phone'
+                        <input className="form-control" type="number" placeholder="Enter the Company Phone Number" name='phone'
                             value={validation.values.phone     || ""}
                             onChange={validation.handleChange}  required />
                       </div>

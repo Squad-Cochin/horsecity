@@ -63,6 +63,7 @@ const DiscountsDeatails = () => {
 
     /**IT WILL OPEN FOR POPUP */
     async function tog_list(param, productId) {
+        setErrors("")
         if (param === 'ADD') {
             setErrors("")
             setAdd_list(!add_list);
@@ -294,7 +295,7 @@ const DiscountsDeatails = () => {
 
                         <div className="mb-3">
                             <label htmlFor="rate-field" className="form-label">Rate </label>
-                            <input type="text" id="rate-field" name='rate' className="form-control" placeholder="Enter Rate" value={validation.values.rate || ""}
+                            <input type="number" id="rate-field" name='rate' className="form-control" placeholder="Enter Rate" value={validation.values.rate || ""}
                                 onChange={validation.handleChange} required />
                         </div>
                     </ModalBody>

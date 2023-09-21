@@ -146,6 +146,7 @@ const ListQuotationsTable = () => {
   });
 
   function modalClose(){
+    getAllData(pageNumber)
     setQuotation(null);
     setTAmount(0);
     setDriverAmount(0);
@@ -178,7 +179,9 @@ const ListQuotationsTable = () => {
 
   // UPDATE QUATATION DATA
   async function editQuotation(data){
+  
     let updateQut = await updatQuotation(qutId, data);
+
     if(updateQut.code === 200){
         setErrors("")
         setModal(false)
@@ -207,7 +210,6 @@ const ListQuotationsTable = () => {
   }
   /*IT WILL OPEN EDIT QUOTATION POP UP*/
   async function tog_list(id) {
-
     setQutId(id)
     let singleQut = await getConfirmQut(id)
     let serviceProviderData = await getSPUserName()
@@ -231,6 +233,7 @@ const ListQuotationsTable = () => {
     if(Number(singleQut.quotation[0]?.tax_amount) > 0){
       setTaxApplayed("YES")
     }
+    getAllData(pageNumber)
     setModal(!modal);
   }
 
@@ -652,6 +655,7 @@ const ListQuotationsTable = () => {
                     className="form-control"
                     value={validation.values.customer_name || ""}
                     onChange={validation.handleChange}
+                    readOnly
                     />
                 </div>
 

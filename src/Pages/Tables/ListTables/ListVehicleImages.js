@@ -79,8 +79,7 @@ const ListVehicleImages = () => {
         if (addImg.code === 200) {
             setErrors("")
             setmodal_list(false);
-            initialValues.title = ''; // Reset the 'image_title' field in initial values
-            initialValues.image = ''; // Reset the 'file' field in initial values
+            validation.values.title = ''; // Reset the 'image_title' field in initial values
             getAllData()
         } else {
             setErrors("")

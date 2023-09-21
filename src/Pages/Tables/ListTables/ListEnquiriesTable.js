@@ -534,7 +534,7 @@ const ListEnquiriesTable = () => {
                                 className="form-control"
                                 value={validation.values.customer_name || ""}
                                 onChange={validation.handleChange}
-                                required
+                                readOnly
                             />
                         </div>
 

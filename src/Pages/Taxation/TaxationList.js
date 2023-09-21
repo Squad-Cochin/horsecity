@@ -46,6 +46,7 @@ const TaxationDeatails = () => {
     
     /**IT WILL OPEN ADD & EDIT POPUP */
     async function tog_list(param,productId) {
+        setErrors('')
         if(param === 'ADD'){
             setAdd_list(!add_list);
         } else {
@@ -118,7 +119,7 @@ const TaxationDeatails = () => {
 
     // Update service provider
     async function editTxations(data){
-        let updateTax = await updateTaxation(taxations[0]?.id, data);
+        let updateTax = await updateTaxation(taxation[0]?.id, data);
         if(updateTax.code === 200){
             setErrors("")
             setAdd_list(false);
@@ -299,7 +300,7 @@ const TaxationDeatails = () => {
                     <div className="mb-3">
                         <label htmlFor="value-field" className="form-label">Value</label>
                         <input
-                        type="text"
+                        type="number"
                         id="value-field"
                         className="form-control"
                         name="value"
