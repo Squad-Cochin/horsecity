@@ -66,6 +66,12 @@ const QuotationReport = () => {
     async function getData(page, val) {
         setFromDate(val.from_date)
         setToDate(val.to_date)
+        const startDate = new Date(val.from_date);
+        startDate.setHours(0, 0, 0)
+        const endDate = new Date(val.to_date);
+        endDate.setHours(23, 59, 59);
+        val.from_date = startDate
+        val.to_date = endDate
         if (userId) {
             let getAllData = await getQuotationReport(page || 1, val, userId)
             setQuotationReport(getAllData?.quotations);

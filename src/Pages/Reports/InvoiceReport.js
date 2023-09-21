@@ -69,11 +69,17 @@ const InvoiceReport  = () => {
     async function getData(page, val){
         setFromDate(val.from_date)
         setToDate(val.to_date)
+        const startDate = new Date(val.from_date);
+        startDate.setHours(0, 0, 0)
+        const endDate = new Date(val.to_date);
+        endDate.setHours(23, 59, 59);
+        val.from_date = startDate
+        val.to_date = endDate
         if (userId) {
-        let getAllData = await getInvoiceReport(page || 1,val ,userId)
-        setInvoiceReport(getAllData?.invoices);
-        setPageNumber(page);
-        setNumberOfData(getAllData?.totalCount);
+            let getAllData = await getInvoiceReport(page || 1,val ,userId)
+            setInvoiceReport(getAllData?.invoices);
+            setPageNumber(page);
+            setNumberOfData(getAllData?.totalCount);
         }
     }
     document.title = `Report | ${pageTitle} `;

@@ -66,11 +66,18 @@ const AccountsReport  = () => {
     async function getData(page, val){
         setFromDate(val.from_date)
         setToDate(val.to_date)
+        const startDate = new Date(val.from_date);
+        startDate.setHours(0, 0, 0)
+        const endDate = new Date(val.to_date);
+        endDate.setHours(23, 59, 59);
+        val.from_date = startDate
+        val.to_date = endDate
         if (userId) {
-        let getAllData = await getAccountsReport(page || 1, val,userId)
-        setAccountsReport(getAllData?.accounts);
-        setPageNumber(page);
-        setNumberOfData(getAllData?.totalCount);
+            let getAllData = await getAccountsReport(page || 1, val,userId)
+            console.log(getAllData)
+            setAccountsReport(getAllData?.accounts);
+            setPageNumber(page);
+            setNumberOfData(getAllData?.totalCount);
         }
     }
     document.title = `Report | ${pageTitle} `;
@@ -144,6 +151,7 @@ const AccountsReport  = () => {
                                                         <th className="sort" data-sort="number">Quotation Id</th>
                                                         <th className="sort" data-sort="number">Total Payment</th>
                                                         <th className="sort" data-sort="number">Pending Payment</th>
+                                                        <th className="sort" data-sort="number">Paid At</th>
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
@@ -158,6 +166,7 @@ const AccountsReport  = () => {
                                                         <td className="phone">{item.quotation_id}</td>
                                                         <td className="date">{item.final_amount}</td>
                                                         <td className="date">{item.remaining_amount}</td>
+                                                        <td className="date">{item.created_at}</td>
                                                     </tr>
                                                  ))}
                                                 

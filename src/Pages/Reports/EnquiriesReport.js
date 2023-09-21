@@ -41,7 +41,7 @@ const EnquiryReport = () => {
             to_date: today,
         }
         const data = JSON.parse(localStorage.getItem("authUser"));
-        let userID = data[0]?.user[0]?.id;
+        let userId = data[0]?.user[0]?.id;
         const user_role = data[0]?.user[0]?.role_Id
         setRole(user_role)
         setUserId(userId);
@@ -68,11 +68,17 @@ const EnquiryReport = () => {
     async function getData(page, val) {
         setFromDate(val.from_date)
         setToDate(val.to_date)
+        const startDate = new Date(val.from_date);
+        startDate.setHours(0, 0, 0)
+        const endDate = new Date(val.to_date);
+        endDate.setHours(23, 59, 59);
+        val.from_date = startDate
+        val.to_date = endDate
         if (userId) {
-        let getAllData = await getEnquiryReport(page || 1, val, userId)
-        setEnquiryReport(getAllData?.enquiries);
-        setPageNumber(page);
-        setNumberOfData(getAllData?.totalCount);
+            let getAllData = await getEnquiryReport(page || 1, val, userId)
+            setEnquiryReport(getAllData?.enquiries);
+            setPageNumber(page);
+            setNumberOfData(getAllData?.totalCount);
         }
     }
     document.title = `Report | ${pageTitle} `;
