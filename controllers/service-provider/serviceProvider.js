@@ -27,7 +27,7 @@ exports.addNewServiceProvider = async(req,res)=>
         return res.status(200).send({
             code: 400,
             success: false,
-            message: constants.responseMessage.imageFormat
+            message: "We're sorry, but the image format of service provider licence image you submitted is invalid. Please make sure to upload an image in one of the supported formats (e.g JPG, PNG)."
         });
         
     }else{
