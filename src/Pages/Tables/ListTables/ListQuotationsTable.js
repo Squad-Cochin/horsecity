@@ -74,7 +74,7 @@ const ListQuotationsTable = () => {
       const data = JSON.parse(localStorage.getItem("authUser"));
       let userIdd = data[0]?.user[0]?.id
       setUserId(userIdd);
-      getAllData(1)
+      getAllData(pageNumber)
       }, [userId, transportationInsuranceCoverage, taxApplayed])
  
   // function for getting data all quotation
