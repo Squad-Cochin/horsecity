@@ -508,14 +508,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
     const { contact_no, emergency_contact_no } = req.body;
     const requestMethod = req.method;
     const URL = req.url
-    if(contact_no === emergency_contact_no){
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: 'The contact number and emergency contact number both are the same, which is not allowed .'
-        });
-    }
+
     
 
                 try {
@@ -536,6 +529,14 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                                     status: false,
                                     message: constants.responseMessage.emgcontactnumbernotpresent
                                 });
+                        }
+                        if(contact_no === emergency_contact_no){
+                            return res.status(200).send
+                            ({
+                                code: 400,
+                                status: false,
+                                message: 'The contact number and emergency contact number both are the same, which is not allowed .'
+                            });
                         }
                         if (hasOnlyNonSpaces(emergency_contact_no)) {
                             return res.status(200).send

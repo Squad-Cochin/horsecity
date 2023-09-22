@@ -63,7 +63,7 @@ static async listingPageData  (body)
         
         /**Filtering suppliers */
         let suppliersFilter = ''; 
-
+        console.log(suppliers?.length>0,suppliers.join(','));
         if (suppliers?.length>0) {
             suppliersFilter = `AND vh.service_provider_id IN (${suppliers.join(',')})`;
         }
@@ -126,8 +126,7 @@ static async listingPageData  (body)
                 ${tripTypeFilter}
                 ${numberOfHorsesFilter}
                 ${priceFilter}
-                ${suppliersFilter} AND vh.deleted_at IS NULL AND vh.status = '${constants.status.active}' 
-                         `
+                ${suppliersFilter} AND vh.deleted_at IS NULL AND vh.status = '${constants.status.active}' `
                 con.query(totalCountQuery,(err,result)=>{
   
                     if(!err){
@@ -135,10 +134,13 @@ static async listingPageData  (body)
                         resolve({totalCount: count,listing_data : data})
                 }
             })
-          }})
+          }else{
+            resolve(false);
+          }
+        })
         } catch (err) {
-            resolve(false)
-            console.log('Error while adding quotation', err);
+            resolve(false);
+            console.log('Error while fetching listing data', err);
         }
     })
 }

@@ -15,15 +15,23 @@ exports.listingPageData = async(req,res)=>
 {
 
     let listing = await modal.listingPageData(req.body)
+    if(!listing){
+        return res.status(200).send
+        ({
+            code: 500,
+            success: false,
+            message: constants.responseMessage.getAllErr,
 
-   if(listing){
-    return res.status(200).send
-    ({
-        code: 200,
-        success: true,
-        message: constants.responseMessage.getAll,
-        data : listing
-    });
+        });
+
+    }else{
+        return res.status(200).send
+        ({
+            code: 200,
+            success: true,
+            message: constants.responseMessage.getAll,
+            data : listing
+        });
    } 
 }
  

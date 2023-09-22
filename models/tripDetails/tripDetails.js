@@ -276,7 +276,7 @@ static async addBreakDowns (requestBody){
                                     if (result?.length != 0) { 
                                       let payment_status =  result[0].status ;
                                    let updateQuery = `UPDATE ${constants.tableName.bookings} SET
-                                   booking_status = '${constants.vehicles_breakouts_status.compleated}' , status = '${payment_status}'
+                                   booking_status = '${constants.vehicles_breakouts_status.compleated}' , status = '${payment_status}',drop_date = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                    WHERE id = '${booking_id}'`;
                                 con.query(updateQuery, async (err, data) => {
 
