@@ -63,7 +63,7 @@ static async listingPageData  (body)
         
         /**Filtering suppliers */
         let suppliersFilter = ''; 
-        console.log(suppliers?.length>0,suppliers.join(','));
+       
         if (suppliers?.length>0) {
             suppliersFilter = `AND vh.service_provider_id IN (${suppliers.join(',')})`;
         }
@@ -99,7 +99,7 @@ static async listingPageData  (body)
         LIMIT ${+limit} OFFSET ${+offset};
             `;
         con.query(selQuery,(err,data)=>{
-            if(!err){   
+            if(!err){    
                 for(let i = 0;i < data.length ;  i++){
            
                      if(data[i].images){
