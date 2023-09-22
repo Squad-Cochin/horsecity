@@ -741,6 +741,7 @@ const ListEnquiriesTable = () => {
                                 options={{
                                     dateFormat: "d-m-Y",
                                     required: true, 
+                                    minDate:validation.values.pickup_date
                                 }}
                                 value=""
                                 onChange={(dates) => validation.setFieldValue('drop_date', dates[0])}

@@ -165,7 +165,7 @@ const ListQuotationsTable = () => {
     setView_modal(false);
     setQutId("");
     setModalEmail(false);
-    setErrors("")
+    setErrors("");
   }
 
   /**IT WILL OPEN CONFIRM POPUP */
@@ -827,7 +827,8 @@ const ListQuotationsTable = () => {
                         className="form-control"
                         name='pickup_date'
                         options={{
-                            dateFormat: "d-m-Y"
+                            dateFormat: "d-m-Y",
+                            minDate :new Date(),
                         }}
                         value= ""
                         onChange={(dates) =>validation.setFieldValue('pickup_date', dates[0])}
@@ -854,7 +855,8 @@ const ListQuotationsTable = () => {
                         className="form-control"
                         name='drop_date'
                         options={{
-                            dateFormat: "d-m-Y"
+                            dateFormat: "d-m-Y",
+                            minDate :validation.values.pickup_date,
                         }}
                         value= ""
                         onChange={(dates) =>validation.setFieldValue('drop_date', dates[0])}

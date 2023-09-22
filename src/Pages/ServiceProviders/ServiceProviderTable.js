@@ -213,7 +213,7 @@ const ListTables = () => {
                         <Col lg={12}>
                             <Card>
                                 <CardHeader>
-                                    <h4 className="card-title mb-0">{Roles.service_provider === role ?  'Edit ' : 'Add Edit & Remove'} </h4>
+                                    <h4 className="card-title mb-0">{Roles.service_provider === role ?  'Edit ' : 'Add, Edit & Remove'} </h4>
                                 </CardHeader>
 
                                 <CardBody>
