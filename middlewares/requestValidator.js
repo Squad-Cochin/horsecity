@@ -15,21 +15,23 @@ exports.usernamevalidation = (req, res, next) => {
                 message: constants.responseMessage.usernameNotPresent
             });
     } else {
-        if(req.body.user_name.length < 4)
+        if(hasOnlyNonSpaces(user_name) === true)
         {
+            return res.status(200).send
+            ({
+                code: 400,
+                status: false,
+                message: constants.responseMessage.usernameHaveSpace
+            });
+    
+        }else if (req.body.user_name.length < 4) {
             return res.status(200).send
             ({
                 code : 400,
                 status : false,
                 message : constants.responseMessage.unsernameinvalid
             });
-        }else if (hasOnlyNonSpaces(user_name) === true) {
-            return res.status(200).send
-                ({
-                    code: 400,
-                    status: false,
-                    message: constants.responseMessage.usernameHaveSpace
-                });
+     
         } else {
          
                 if(requestMethod == 'POST' && URL ==  url.ADD_SERVICEPROVIDER__URL){
