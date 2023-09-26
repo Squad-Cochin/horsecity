@@ -31,9 +31,9 @@ const TourSingleV1Dynamic = () => {
   const router = useRouter();
   const [vehicle, setVehicle] = useState([]);
   const [ vehicleImages, setVehicleImages ] = useState([]);
-  const [ reviews ,setReviews ] = useState([]);
   const [url,setUrl] =useState(false);
-  const [noOfHorse ,setNoOfHorse ] = useState('')
+  const [noOfHorse ,setNoOfHorse ] = useState('');
+  const [ reviewDetails, setReviewDetails ] = useState({});
   const id = router.query.id;
   const dispatch = useDispatch();
 
@@ -42,7 +42,6 @@ const TourSingleV1Dynamic = () => {
 
     else  getProductDetails();
   },[id])
-
 
   // Function for getting product details through api
   async function getProductDetails(){
@@ -54,9 +53,9 @@ const TourSingleV1Dynamic = () => {
       setUrl(false);
     }
     let packageDetails = await DetailsDataApi(id);
+    setReviewDetails("reviews" in packageDetails? packageDetails?.reviews : {})
     setVehicle(packageDetails?.vehicle[0])
     setVehicleImages(packageDetails?.images);
-    setReviews(packageDetails?.reviews)
     setNoOfHorse(packageDetails?.vehicle[0]?.no_of_horses)
     if (Object.keys(loginData).length !== 0) {
     dispatch(booking_data({
@@ -114,17 +113,7 @@ const TourSingleV1Dynamic = () => {
                     </div>
                     {/* End .col-auto */}
 
-                    <div className="col-auto">
-                      <div className="d-flex items-center">
-                        <div className="text-14 text-right mr-10">
-                          <div className="lh-15 fw-500">Exceptional</div>
-                          <div className="lh-15 text-light-1">
-                            {vehicle?.numberOfReviews} reviews
-                          </div>
-                        </div>
-                        {/* End div */}
-                      </div>
-                    </div>
+                    
                     {/* End .col-auto */}
                   </div>
                   {/* End .row */}
@@ -172,7 +161,7 @@ const TourSingleV1Dynamic = () => {
             <div className="col-lg-4">
               <h2 className="text-22 fw-500">
                 FAQs about
-                <br /> The New Car Model
+                <br /> Best Package Model
               </h2>
             </div>
             {/* End .row */}
@@ -193,18 +182,24 @@ const TourSingleV1Dynamic = () => {
       </section>
       {/* End Faq about sections */}
 
-      <section className="mt-40 border-top-light pt-40">
+      <section className="mt-40 border-top-light pt-40 layout-pb-lg">
         <div className="container">
           <div className="row y-gap-40 justify-between">
             <div className="col-xl-3">
               <h3 className="text-22 fw-500">Guest reviews</h3>
-              <ReviewProgress2 reviews={ reviews }/>
+              <ReviewProgress2 
+                reviewDetails={ reviewDetails }
+              />
               {/* End review with progress */}
             </div>
             {/* End col-xl-3 */}
 
             <div className="col-xl-8">
-              <DetailsReview2 />
+              <DetailsReview2 
+                textReviews = { "reviews_list" in reviewDetails? reviewDetails?.reviews_list : [] }
+                textReviewCount = { "total_text_reviews" in reviewDetails? reviewDetails?.total_text_reviews : 0 }
+                vehicleId = {id}
+              />
             </div>
             {/* End col-xl-8 */}
           </div>
@@ -215,7 +210,7 @@ const TourSingleV1Dynamic = () => {
       </section>
       {/* End Review section */}
 
-      <section className="mt-40 border-top-light pt-40 layout-pb-lg">
+      {/* <section className="mt-40 border-top-light pt-40 layout-pb-lg">
         <div className="container">
           <div className="row y-gap-30 justify-between">
             <div className="col-xl-3">
@@ -226,23 +221,23 @@ const TourSingleV1Dynamic = () => {
                     Your email address will not be published.
                   </p>
                 </div>
-              </div>
+              </div> */}
               {/* End .row */}
 
-              <ReplyFormReview2 />
+              {/* <ReplyFormReview2 /> */}
               {/* End ReplyFormReview */}
-            </div>
+            {/* </div> */}
             {/* End .col-xl-3 */}
 
-            <div className="col-xl-8">
+            {/* <div className="col-xl-8">
               <ReplyForm />
-            </div>
+            </div> */}
             {/* End .col-xl-8 */}
-          </div>
+          {/* </div> */}
           {/* End .row */}
-        </div>
+        {/* </div> */}
         {/* End .container */}
-      </section>
+      {/* </section> */}
       {/* End Reply Comment box section */}
 
       <CallToActions />

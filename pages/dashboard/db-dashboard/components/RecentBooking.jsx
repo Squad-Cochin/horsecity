@@ -7,7 +7,7 @@
 // Function for showing the recent 5 enquiries
 const RecentBooking = (props) => {
   return (
-    <div className="overflow-scroll scroll-bar-1 pt-30">
+    <div className="overflow-scroll scroll-bar-2 pt-30">
       <table className="table-2 col-12">
         <thead>
           <tr>

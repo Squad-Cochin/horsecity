@@ -23,7 +23,7 @@ const Copyright = () => {
               >
                 Kailplus
               </a>
-              All rights reserved.
+              all rights reserved.
             </div>
           </div>
           {/* End .col */}

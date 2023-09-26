@@ -84,11 +84,40 @@ p {
   color: var(--color-light-1);
 }
 .user-name{
-  background-color: #8d8686;
+  background-color: #3554d1;
+  color: white;
   width: 40px;
   height: 40px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
+}
+
+.customer-review-modal{
+    border: 1px solid #ccc;
+    padding: 18px;
+    border-radius: 8px;
+  h2{
+    font-size: 20px;
+  }
+  .star-filled svg, .star-unfilled svg {
+    margin-right: 2px;
+    cursor: pointer;
+  }
+  .star-filled {
+    color: gold; /* Change the color for filled stars */
+  } 
+  .star-unfilled {
+    color: #ccc; /* Change the color for unfilled stars */
+  }
+  .rating{
+    margin-right: 10px;
+    margin-top: 2px;
+  }
+  .star_rate{
+    display: flex;
+  }
+
+  
 }

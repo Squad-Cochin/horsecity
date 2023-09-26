@@ -7,13 +7,27 @@
 import Link from "next/link";
 import loginApi from "../../pages/api/loginApi";
 import { Alert } from 'reactstrap'
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Router from "next/router";
 
 // Function for login form
 const LoginForm = () => {
   const [ errors, setErrors ] = useState("");
   const [ success, setSuccess ] = useState("");
+  const [url,setUrl] =useState(false);
+
+  useEffect(()=>{
+    initialLoad();
+  })
+
+  async function initialLoad(){
+    const searchData = await JSON.parse(localStorage.getItem('searchObject'));
+    if (searchData.number_of_horses !='' && searchData.trip_type.length != 0) {
+      setUrl(true);
+    }else{
+      setUrl(false);
+    }
+  }
 
   // Function for form submit
   const handleSubmit = async (event) => {
@@ -28,7 +42,7 @@ const LoginForm = () => {
     }
     let res = await loginApi(loginData);
     if(res?.code === 200){
-      Router.push("/package/listing")
+      {url ? Router.push("/package/listing") : Router.push("/") }
       localStorage.setItem('loginData', JSON.stringify(res?.data));
       localStorage.setItem('userId', JSON.stringify(res?.data));
       setSuccess(res?.message)

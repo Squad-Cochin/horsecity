@@ -25,6 +25,7 @@ const LocationSearch = (props) => {
   const [description, setDescription] = useState("");
   const [pickupDate, setPickupDate] = useState("");
   const [isLogin, setLogin] = useState(false);
+  const [hourseCountSelected, setHourseCountSelected] = useState(false);
 
   const { customer_id, vehicle_id, serviceprovider_id, no_of_horse } = useSelector((state) => state.bookingData) || {};
   const router = useRouter();
@@ -91,32 +92,29 @@ const LocationSearch = (props) => {
   // Funtion for getting data form and for making new enquery
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setTripType("");
-    setPickupLocation("");
-    setPickupCountry("");
-    setDropLocation("");
-    setDropCountry("");
-    setNoOfHorse("");
-    setDescription("");
-    setPickupDate("");
     if (!isLogin) {
       router.push('/others-pages/login');
       return; 
     }
+    if(Number(noOfHorse) > filteredNoOfHorse){
+      setNoOfHorse("")
+    }
     const formData = {
-      vehicle_id : vehicle_id,
+      vehicle_id : `${vehicle_id}`,
       service_provider_id : `${serviceprovider_id}`,
-      pickup_country : pickupCountry,
-      pickup_location : pickupLocation,
-      drop_country : dropCountry,
-      drop_location : dropLocation,
-      vehicle_type : tripType,
-      no_of_horse : noOfHorse,
-      pickup_date : pickupDate,
-      description : description,
+      pickup_country : `${pickupCountry}`,
+      pickup_location : `${pickupLocation}`,
+      drop_country : `${dropCountry}`,
+      drop_location : `${dropLocation}`,
+      vehicle_type : `${tripType}`,
+      no_of_horse : `${parseInt(noOfHorse) > parseInt(filteredNoOfHorse) && !hourseCountSelected ? "" : noOfHorse}`,
+      pickup_date : `${pickupDate}`,
+      description : `${description}`,
     };
       if(customer_id){
+        console.log("formData",formData)
         let packageDetails = await addbooking(formData,customer_id);
+        console.log("ress",packageDetails)
         if(packageDetails?.code == 200){
           toast.success(packageDetails?.message, {
             position: 'top-right', // Position of the toast on the screen
@@ -124,6 +122,12 @@ const LocationSearch = (props) => {
           setPickupCountry("");
           setDropCountry("");
           setDescription("");
+          setTripType("");
+          setPickupLocation("");
+          setDropLocation("");
+          setNoOfHorse("");
+          setPickupDate("");
+          setHourseCountSelected(false);
         }else{
           toast.error(packageDetails?.message, {
             position: 'top-right',
@@ -142,7 +146,6 @@ const LocationSearch = (props) => {
             className="js-search js-dd-focus"
             value={pickupCountry}
             onChange={(e) => setPickupCountry(e.target.value)}
-            required
           >
             <option value="">Select Country</option>
             {locationSearchContent.map((item) => (
@@ -164,7 +167,6 @@ const LocationSearch = (props) => {
             className="js-search js-dd-focus"
             value={pickupLocation}
             onChange={(e) => setPickupLocation(e.target.value)}
-            required
           />
         </div>
       </div>
@@ -176,7 +178,6 @@ const LocationSearch = (props) => {
             className="js-search js-dd-focus"
             value={dropCountry}
             onChange={(e) => setDropCountry(e.target.value)}
-            required
           >
             <option value="">Select Country</option>
             {locationSearchContent.map((item) => (
@@ -198,7 +199,6 @@ const LocationSearch = (props) => {
             className="js-search js-dd-focus"
             value={dropLocation}
             onChange={(e) => setDropLocation(e.target.value)}
-            required
           />
         </div>
       </div>
@@ -210,7 +210,7 @@ const LocationSearch = (props) => {
             className="js-search js-dd-focus"
             value={tripType}
             onChange={(e) => setTripType(e.target.value)}
-            required>
+          >
            <option value=''>Select Trip Type</option>
             {tripTypes.map((item) => (
               <option value={item.name} key={item.id}>
@@ -227,8 +227,8 @@ const LocationSearch = (props) => {
           <select
             className="js-search js-dd-focus"
             value={noOfHorse}
-            onChange={(e) => setNoOfHorse(e.target.value)}
-            required>
+            onChange={(e) => {setNoOfHorse(e.target.value); setHourseCountSelected(true)}}
+          >
             <option value=''>Select No OF Horse</option>
             {filteredNoOfHorse.map((item,index) => (
               <option value={item} key={index}>
@@ -256,7 +256,7 @@ const LocationSearch = (props) => {
             className="js-search js-dd-focus"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            required
+          
           />
         </div>
       </div>  

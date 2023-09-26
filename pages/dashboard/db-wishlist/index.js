@@ -39,7 +39,7 @@ const Index = () => {
       <Header />
       {/* End dashboard-header */}
       <div className="dashboard">
-        <div className="dashboard__sidebar bg-white scroll-bar-1">
+        <div className="dashboard__sidebar bg-white scroll-bar-2">
           <Sidebar />
           {/* End sidebar */}
         </div>

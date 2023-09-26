@@ -56,7 +56,7 @@ const DateSearch = (props) => {
           props.setFormData(newFormdata);
           }}
           maxDate={maxdate}
-          dateFormat="dd MMM"
+          dateFormat="dd MMM yyyy"
           required
       />
     )  : (

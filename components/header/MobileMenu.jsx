@@ -76,9 +76,9 @@ const MobileMenu = () => {
             <MenuItem
               component={
                 <Link
-                  href="/"
+                  href="/others-pages/about"
                   className={
-                    router.pathname === "/"
+                    router.pathname === "/others-pages/about"
                       ? "menu-active-link"
                       : ""
                   }
@@ -112,7 +112,7 @@ const MobileMenu = () => {
             <MenuItem
               component={
                 <Link
-                  href="/"
+                  href="/blog/blog-list-v1"
                   className={
                     router.pathname === "/blog/blog-list-v1"
                       ? "menu-active-link"
@@ -140,9 +140,9 @@ const MobileMenu = () => {
             <MenuItem
               component={
                 <Link
-                  href="/"
+                  href="/others-pages/help-center"
                   className={
-                    router.pathname === "/"
+                    router.pathname === "/others-pages/help-center"
                       ? "menu-active-link"
                       : ""
                   }
