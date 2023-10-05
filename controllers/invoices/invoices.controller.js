@@ -85,11 +85,9 @@ exports.getOne = async (req, res) =>
 
 exports.enterAmountForParticularInvoice = async (req, res, next) =>
 {
-    console.log('Came to the controller');
     const invoices = await invoice.enteramountforparticularinvoice(req.params.id, req.body.totalRecievedAmount)
     if(invoices === 'nodata')
     {
-        console.log('Error while inserting the data into enter amount ');
         return res.status(200).json
         ({
             code: 400,
@@ -100,7 +98,6 @@ exports.enterAmountForParticularInvoice = async (req, res, next) =>
     
     if(invoices === 'err')
     {
-        console.log('Internal server error from the enter amount for particular invoice');
         return res.status(200).json
         ({
             code: 500,
