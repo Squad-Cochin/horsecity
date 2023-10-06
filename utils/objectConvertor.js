@@ -5,6 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const time = require(`./helper/date`);
+const constants = require(`./constants`);
 
 exports.pastWorkHistroyResponse = (data) =>
 {
@@ -299,3 +300,132 @@ exports.customizeQuotationStatusReportForReactFrontEnd = (data) =>
     ]
     return OrderStatusData;
 }
+
+exports.customizeResponseObjectForVehicleDetailInCustomerSide = (result, data, data2) =>
+{
+  var vehicleResponse =
+  {
+    "vehicle": [],
+    "images" : [],
+    "reviews":
+    {
+      "total_vehicle_reviews": '',
+      "total_company_reviews": '',
+      "total_text_reviews": '',
+      "overall_company_rating": '',
+      "overall_vehicle_rating": '',
+      "reviews_list" : [],
+      "star_rating":
+      {
+        "rating_one": '',
+        "rating_two": '',
+        "rating_three": '',
+        "rating_four": '',
+        "rating_five": ''
+      }
+    }
+  };
+  
+  if(result.length != 0)
+  {
+    const uniqueImagesIds = new Set();
+    for (let row of result)
+    {
+      if (vehicleResponse.vehicle.length === 0)
+      {
+        // If result has data, populate the vehicleResponse data
+        vehicleResponse.vehicle.push
+        ({
+            "id" : result[0].id,
+            "service_provider_id" : result[0].service_provider_id,
+            "service_provider_name" : result[0].service_provider_name,
+            "vehicle_number" : result[0].vehicle_number,
+            "price" : result[0].price,
+            "no_of_horses" : result[0].no_of_horse,
+            "length" : result[0].length,
+            "breadth" : result[0].breadth,
+            "height" : result[0].height,
+            "make" : result[0].make,
+            "model" : result[0].model,
+            "air_condition" : result[0].air_conditioner,
+            "temperature_manageable" : result[0].temperature_manageable,
+            "gcc_travel_allowed" : result[0].gcc_travel_allowed,
+            "insurance_cover" : result[0].insurance_cover,
+            "insurance_provider" : result[0].insurance_provider,
+            "vehicle_type" : result[0].vehicle_type,
+            "abbreviation" : result[0].abbreviation,
+            "vehicle_registration_date" : time.formatDateToDDMMYYYY(result[0].vehicle_registration_date),
+            "vehicle_expiration_date" : time.formatDateToDDMMYYYY(result[0].vehicle_exipration_date),
+            "insurance_date" : time.formatDateToDDMMYYYY(result[0].insurance_date),
+            "insurance_expiration_date" : time.formatDateToDDMMYYYY(result[0].insurance_expiration_date)
+        });
+      }
+      
+      if(row?.vehicle_image_id !== null && !uniqueImagesIds.has(row?.vehicle_image_id))
+      {
+        vehicleResponse.images.push
+        ({
+          "id": row.vehicle_image_id,
+          "url" : `${process.env.PORT_SP}${constants?.attachmentLocation?.vehicle?.view?.image}${row?.image}`
+        });
+        uniqueImagesIds.add(row.vehicle_image_id);
+      }     
+       
+      if (Array.isArray(data2) && data2.length > 0)
+      {
+        vehicleResponse.reviews.reviews_list = data2.map(item => 
+        ({
+          "id": item.review_id,
+          "customer_name": item.customer_name,
+          "review": item.review,
+          "created_at": time.formatDateToDDMMYYYY(item.created_at)
+        }));
+      }
+      else
+      {
+        // Handle the case when data2 is undefined or empty
+        vehicleResponse.reviews.reviews_list = [];
+      }
+      
+      vehicleResponse.reviews.total_vehicle_reviews = data.particular_vehicle_review_count !== 0 ? data.particular_vehicle_review_count : '--',
+      vehicleResponse.reviews.total_company_reviews = data.particular_service_provider_count !== 0 ? data.particular_service_provider_count  : '--',
+      vehicleResponse.reviews.overall_company_rating = data.total_service_provider_rating !== 0 ? data.total_service_provider_rating : '--',
+      vehicleResponse.reviews.overall_vehicle_rating = data.total_vehicle_rating !== 0 ? data.total_vehicle_rating : '--',
+      vehicleResponse.reviews.total_text_reviews = data.particular_text_review_count !== 0 ? data.particular_text_review_count : '--'     
+      
+      vehicleResponse.reviews.star_rating = 
+      {
+        "rating_one": data.one_star_percentage ? `${data.one_star_percentage}%` : '--',
+        "rating_two": data.two_star_percentage ? `${data.two_star_percentage}%` : '--',
+        "rating_three": data.three_star_percentage ? `${data.three_star_percentage}%` : '--',
+        "rating_four": data.four_star_percentage ? `${data.four_star_percentage}%` : '--',
+        "rating_five": data.five_star_percentage ? `${data.five_star_percentage}%` : '--'        
+      }      
+    }
+  }
+  return vehicleResponse;
+}
+
+exports.customizeResponseObjectOfVehicleAllReviewsForCustomerSide = (result) => {
+  var vehicleResponse = {
+      "reviews": []
+  };
+
+  if (result.length !== 0) {
+      const uniqueReviewIds = new Set();
+
+      for (let row of result) {
+          if (row.review_id !== null && !uniqueReviewIds.has(row.review_id)) {
+              vehicleResponse.reviews.push({
+                  "id": row.review_id,
+                  "customer_name": row.customer_name,
+                  "review": row.review,
+                  "created_at": time.formatDateToDDMMYYYY(row.created_at)
+              });
+              uniqueReviewIds.add(row.review_id);
+          }
+      }
+  }
+
+  return vehicleResponse;
+};

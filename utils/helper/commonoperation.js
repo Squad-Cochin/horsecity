@@ -114,7 +114,8 @@ exports.updateUserStatus = (tablename, Id) =>
 {
     return new Promise((resolve, reject) => 
     {
-        let selQuery = `SELECT * FROM ${tablename} WHERE ${tablename}.id = '${Id}' `;
+        let selQuery = `    SELECT * FROM ${tablename} 
+                            WHERE ${tablename}.id = '${Id}' `;
         con.query(selQuery, (err, result) =>
         {
             if (err)
@@ -127,7 +128,11 @@ exports.updateUserStatus = (tablename, Id) =>
                 {
                     if(result[0].status === constants.status.active)
                     {
-                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constants.status.inactive}', t.updated_at = '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'  WHERE t.id = '${Id}' AND t.deleted_at IS NULL`;
+                        let UpdateQuery = ` UPDATE ${tablename} t 
+                                            SET t.status ='${constants.status.inactive}',
+                                            t.updated_at = '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'  
+                                            WHERE t.id = '${Id}' 
+                                            AND t.deleted_at IS NULL`;
                         con.query(UpdateQuery, (err, result) => // executing the above query 
                         {
                             if(result.length != 0) // if ticket updated then if block
@@ -142,7 +147,10 @@ exports.updateUserStatus = (tablename, Id) =>
                     }
                     else
                     {
-                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constants.status.active}'WHERE t.id = '${Id}' AND t.deleted_at IS NULL `;
+                        let UpdateQuery = ` UPDATE ${tablename} t 
+                                            SET t.status ='${constants.status.active}'
+                                            WHERE t.id = '${Id}' 
+                                            AND t.deleted_at IS NULL `;
                         con.query(UpdateQuery, (err, result) => // executing the above query 
                         {
                             if(result.length != 0) // if ticket updated then if block
@@ -325,7 +333,7 @@ exports.queryAsync = (query) =>
         {
             if (err)
             {
-                reject(err);
+                resolve('err');
             }
             else
             {
@@ -520,3 +528,172 @@ exports.checkRole = async (Id) =>
     }
 
 };
+
+exports.reviewscounts = async (Id) =>
+{
+    var booking_Ids = [];
+    var booking_Ids2 = [];
+    
+    var particular_vehicle_review_count = 0;
+    var particular_service_provider_count = 0;
+    var particular_text_review_count = 0;
+   
+    var particular_service_provider_rating = 0;
+    var total_service_provider_rating_sum = 0; // Initialize the sum
+    var total_vehicle_rating_sum = 0;
+    var total_vehicle_rating = 0;
+   
+    var total_service_provider_rating_one = 0;
+    var total_vehicle_rating_one = 0
+
+
+
+    var particular_vehicle_rating = 0;
+    var total_service_provider_rating = 0;    
+    
+    var one_star_count = 0;
+    var two_star_count = 0;
+    var three_star_count = 0;
+    var four_star_count = 0;
+    var five_star_count = 0;
+
+    var vehicle_data = await commonfetching.dataOnCondition(constants?.tableName?.vehicles, Id, 'id');
+    var booking_data = await commonfetching.dataOnCondition(constants?.tableName?.bookings, Id, 'vehicle_id');
+    var service_provider_occurance = await commonfetching.dataOnCondition(constants.tableName.bookings, vehicle_data[0]?.service_provider_id, 'service_provider_id');
+    
+    // Use map to extract 'id' values from 'booking_data' array
+    booking_Ids = booking_data.map(item => item?.id);
+    booking_Ids2 = service_provider_occurance.map(item => item?.id)
+    customer_Id = booking_data.map(item => item?.customer_id);
+
+    for (let i = 0; i < booking_Ids?.length; i++)
+    {
+        let datapresenet = await commonfetching.dataOnCondition(constants.tableName.reviews, booking_Ids[i], 'booking_id');
+        if(datapresenet != 0)
+        {
+            particular_vehicle_review_count = particular_vehicle_review_count + datapresenet?.length;
+        }
+    }
+
+    for (let i = 0; i < booking_Ids2?.length; i++)
+    {
+        let datapresenet = await commonfetching.dataOnCondition(constants.tableName.reviews, booking_Ids2[i], 'booking_id');
+        if(datapresenet != 0)
+        {
+            particular_service_provider_count = particular_service_provider_count + datapresenet?.length; 
+        }
+    }
+
+    for (let i = 0; i < booking_Ids?.length; i++)
+    {
+        let datapresenet2 = await commonfetching.dataOnCondition(constants.tableName.reviews, booking_Ids[i], 'booking_id');
+        if(datapresenet2 != 0)
+        {
+            for (let j = 0; j < datapresenet2?.length; j++ )
+            {
+                if(datapresenet2[j].review != null)
+                {
+                    particular_text_review_count ++;
+                }
+                else
+                {
+                    continue
+                }
+            }      
+        }
+    }
+
+    for(let i = 0; i < booking_Ids?.length; i++)
+    {
+        let datapresent3 = await commonfetching.dataOnCondition(constants.tableName.reviews, booking_Ids[i], 'booking_id');
+        if(datapresent3?.length !== 0)
+        {
+            let particular_vehicle_rating_sum = 0;
+            for (let j = 0; j < datapresent3?.length; j++ )
+            {
+                particular_vehicle_rating_sum += datapresent3[j]?.rating
+            }
+            particular_vehicle_rating = (((particular_vehicle_rating_sum / (5 * datapresent3?.length)) * 5 )).toFixed(1);
+            total_vehicle_rating_sum += parseFloat(particular_vehicle_rating);
+        }
+    }
+
+
+    for (let i = 0; i < booking_Ids2?.length; i++)
+    {
+        let datapresenet = await commonfetching.dataOnCondition(constants.tableName.reviews, booking_Ids2[i], 'booking_id');
+        if (datapresenet?.length !== 0)
+        {
+            let particular_service_provider_rating_sum = 0; // Initialize for each booking
+            for (let j = 0; j < datapresenet?.length; j++)
+            {
+                particular_service_provider_rating_sum += datapresenet[j]?.rating;
+            }
+                
+            particular_service_provider_rating = (((particular_service_provider_rating_sum / (5 * datapresenet?.length)) * 5 )).toFixed(1);
+            total_service_provider_rating_sum += parseFloat(particular_service_provider_rating); // Add the rating to the sum
+        }
+    }
+    
+    total_service_provider_rating_one = (booking_Ids2?.length !== 0 ? parseFloat((total_service_provider_rating_sum / booking_Ids2?.length).toFixed(1)) : '--');
+    total_vehicle_rating_one = (booking_Ids?.length !== 0 ? parseFloat((total_vehicle_rating_sum / booking_Ids?.length).toFixed(1)) : '--');
+
+
+
+    total_service_provider_rating = total_service_provider_rating_one !== 0 ? total_service_provider_rating_one : '--'
+    total_vehicle_rating = total_vehicle_rating_one !== 0 ? total_vehicle_rating_one : '--'
+
+
+    for (let i = 0; i < booking_Ids?.length; i++)
+    {
+        let datapresenet = await commonfetching.dataOnCondition(constants.tableName.reviews, booking_Ids[i], 'booking_id');
+        if(datapresenet != 0)
+        {
+            for (let j = 0; j < datapresenet?.length; j++ )
+            {
+                if(datapresenet[j].rating === 5)
+                {
+                    five_star_count ++;
+                }   
+                else if(datapresenet[j].rating === 4)
+                {
+                    four_star_count ++
+                }
+                else if(datapresenet[j].rating === 3)
+                {
+                    three_star_count++
+                }
+                else if(datapresenet[j].rating === 2)
+                {
+                    two_star_count ++
+                }
+                else if(datapresenet[j].rating === 1)
+                {
+                    one_star_count++
+                }
+            }
+        }
+    }
+
+    let total_count = five_star_count + four_star_count + three_star_count + two_star_count + one_star_count;
+    let five_star_percentage = total_count !== 0 ? ((five_star_count / total_count) * 100).toFixed(2) : 0;
+    let four_star_percentage = total_count !== 0 ? ((four_star_count / total_count) * 100).toFixed(2) : 0;
+    let three_star_percentage = total_count !== 0 ? ((three_star_count / total_count) * 100).toFixed(2) : 0;
+    let two_star_percentage = total_count !== 0 ? ((two_star_count / total_count) * 100).toFixed(2) : 0;
+    let one_star_percentage = total_count !== 0 ? ((one_star_count / total_count) * 100).toFixed(2) : 0;
+
+    let count = 
+    {
+        particular_vehicle_review_count,
+        particular_service_provider_count,
+        total_service_provider_rating,
+        total_vehicle_rating,
+        particular_text_review_count,
+        five_star_percentage,
+        four_star_percentage,
+        three_star_percentage,
+        two_star_percentage,
+        one_star_percentage
+    }
+    return count;
+}

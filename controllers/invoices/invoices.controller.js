@@ -218,17 +218,6 @@ exports.getLatestPaymentHistroy = async (req, res) =>
             data : { invoice: invoices }
         });
     }
-    // If function executed but no data present, then this if block of code will be executed.
-    if(invoices.length == 0)
-    {
-        return res.status(200).json
-        ({
-            code: 200,
-            status: true,
-            message: constants.responseMessage.getAll,
-            data : { invoice: invoices }
-        });
-    }
 };
 
 // The below function is for sending email on invoice

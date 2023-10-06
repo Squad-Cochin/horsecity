@@ -51,7 +51,6 @@ module.exports = class invoices
                         {
                             if(err)
                             {
-                                console.error(err);
                                 resolve('err');
                             }
                             let Query = `SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
@@ -67,15 +66,8 @@ module.exports = class invoices
                                 }
                                 else
                                 {
-                                    const data =  objectConvertor.getAllInvoice(result2)
-                                    if(result2.length === 0)
-                                    {
-                                        resolve ({totalCount : count[0]['count(t.id)'], invoices : data, module : moduleResult});
-                                    }
-                                    else
-                                    {
-                                        resolve ({totalCount : count[0]['count(t.id)'], invoices : data, module : moduleResult});
-                                    }
+                                    const data =  objectConvertor.getAllInvoice(result2);
+                                    result2.length === 0 ? resolve ({totalCount : count[0]['count(t.id)'], invoices : data, module : moduleResult}) : resolve ({totalCount : count[0]['count(t.id)'], invoices : data, module : moduleResult})
                                 }
                             });
                         });
@@ -111,14 +103,7 @@ module.exports = class invoices
                                 else
                                 {
                                     const data =  objectConvertor.getAllInvoice(result2)
-                                    if(result2.length === 0)
-                                    {
-                                        resolve ({totalCount : count[0]['count(t.id)'], invoices : data, module : moduleResult});
-                                    }
-                                    else
-                                    {
-                                        resolve ({totalCount : count[0]['count(t.id)'], invoices : data, module : moduleResult});
-                                    }
+                                    result2.length === 0 ? resolve ({totalCount : count[0]['count(t.id)'], invoices : data, module : moduleResult}) : resolve ({totalCount : count[0]['count(t.id)'], invoices : data, module : moduleResult});
                                 }
                             });
                         });
@@ -184,7 +169,7 @@ module.exports = class invoices
                         let paymentRecordData = await commonfetching.dataOnCondition(constants.tableName.payment_records, Id, 'invoice_id')
                         if(paymentRecordData[0].invoice_id == Id && paymentRecordData[0].updated_at === null)
                         {
-                            if(payment > paymentRecordData[0].total_amount)
+                            if (Math.round(payment * 100) > Math.round(paymentRecordData[0].total_amount * 100))
                             {
                                 resolve('moreThanActualAmount');
                             }
@@ -263,7 +248,7 @@ module.exports = class invoices
                             let latestData = `  SELECT * FROM ${constants.tableName.payment_records} 
                                                 WHERE invoice_id = '${Id}' 
                                                 ORDER BY remaining_amount ASC LIMIT 1`;
-                            con.query(latestData, (err, result) =>
+                            con.query(latestData, async (err, result) =>
                             {
                                 let remaining_amount = result[0].remaining_amount - payment
                                 if(remaining_amount > 0)
@@ -281,31 +266,39 @@ module.exports = class invoices
                                         }
                                     });
                                 }
-                                if(remaining_amount == 0)
+                                else if(remaining_amount == 0)
                                 {
                                     let insQuery = `INSERT INTO ${constants.tableName.payment_records}(invoice_id, invoice_prefix_id, total_amount, received_amount, received_date, remaining_amount, status, created_at, updated_at) VALUES(${Id}, '${result[0].invoice_prefix_id}', ${result[0].total_amount}, ${payment}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', ${remaining_amount}, '${constants.status.paid}','${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                                    con.query(insQuery, (err, insResult) =>
+                                    con.query(insQuery, async (err, insResult) =>
                                     {
                                         if(insResult.affectedRows > 0)
                                         {
-                                            let updateBookingTable = `  UPDATE ${constants.tableName.bookings} b 
-                                                                        SET b.status = '${constants.status.paid}',
-                                                                        b.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
-                                                                        WHERE b.inv_id = ${Id}
-                                                                        AND b.invoice_prefix_id = '${result[0].invoice_prefix_id}' 
-                                                                        AND (b.booking_status <> '${constants.vehicles_breakouts_status.break_out}'
-                                                                        OR b.booking_status <> '${constants.booking_status.completed}') `
-                                            con.query(updateBookingTable, (err, upBoResult) =>
+                                            let checkDataPresentInBookings = await commonfetching.dataOnCondition(constants.tableName.bookings, Id, 'inv_id')
+                                            if(checkDataPresentInBookings.length === 0)
                                             {
-                                                if(upBoResult.affectedRows > 0)
+                                                resolve('affectedRows');
+                                            }
+                                            else
+                                            {
+                                                let updateBookingTable = `  UPDATE ${constants.tableName.bookings} b 
+                                                                            SET b.status = '${constants.status.paid}',
+                                                                            b.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
+                                                                            WHERE b.inv_id = ${Id}
+                                                                            AND b.invoice_prefix_id = '${result[0].invoice_prefix_id}' 
+                                                                            AND (b.booking_status <> '${constants.vehicles_breakouts_status.break_out}'
+                                                                            OR b.booking_status <> '${constants.booking_status.completed}') `
+                                                con.query(updateBookingTable, (err, upBoResult) =>
                                                 {
-                                                    resolve('affectedRows');
-                                                }
-                                                else
-                                                {
-                                                    resolve('err');
-                                                }
-                                            });
+                                                    if(upBoResult.affectedRows > 0)
+                                                    {
+                                                        resolve('affectedRows');
+                                                    }
+                                                    else
+                                                    {
+                                                        resolve('err');
+                                                    }
+                                                }); 
+                                            }
                                         }
                                         else
                                         {
@@ -313,7 +306,8 @@ module.exports = class invoices
                                         }
                                     });
                                 }
-                                if(remaining_amount < 0)
+                                else 
+                                // if(remaining_amount < 0)
                                 {
                                     resolve('moreThanActualAmount');
                                 }
@@ -333,7 +327,7 @@ module.exports = class invoices
      * The below static function is for getting payment histroy for a  invoice.
      * We need the invoice id from the controller to execute this function
      */
-    static async getpaymenthistroyofinvoice(Id)
+    static async getpaymenthistroyofparticularinvoice(Id)
     {
         try 
         {
@@ -342,7 +336,7 @@ module.exports = class invoices
                 const data = await commonfetching.dataOnCondition(constants.tableName.payment_records, Id, 'invoice_id');
                 if(data.length === 0)
                 {
-                    return 'nodata';
+                    resolve('nodata');
                 }
                 else
                 {
@@ -371,24 +365,13 @@ module.exports = class invoices
                                 ORDER BY remaining_amount ASC LIMIT 1`
                 con.query(latdate, (err, result) =>
                 {
-                    if(result.length != 0)
-                    {
-                        resolve(result);
-                    }
-                    if(result.length == 0)
-                    {
-                        resolve(resolve);
-                    }
-                    else
-                    {
-                        resolve('err')
-                    }
+                    result.length != 0 ? resolve(result) : resolve('err')
                 });
             });
         }
         catch (error)
         {
-
+            console.log(`Error from the try catch block of the 'getlatestpaymenthistroy' function. File Name: invoice.model.js and Line Number : 389.`, err);
         }
     };
 

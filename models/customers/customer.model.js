@@ -26,7 +26,15 @@ module.exports = class customers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
+                let checkRole = `  
+                                    SELECT sp.id,
+                                    r.id AS role_id,
+                                    r.name 
+                                    FROM ${constants.tableName.service_providers} sp,
+                                    ${constants.tableName.roles} r 
+                                    WHERE 
+                                    sp.id = ${Id} 
+                                    AND sp.role_Id = r.id`;
                 con.query(checkRole, async (err, result) =>
                 {
                     if(err)
@@ -42,7 +50,6 @@ module.exports = class customers
                         {
                             if(err)
                             {
-                                console.error(err);
                                 resolve('err');
                             }
                             else
@@ -55,21 +62,7 @@ module.exports = class customers
                                `;
                                 con.query(Query, (err, moduleResult) =>
                                 {
-                                    if(err)
-                                    {
-                                        resolve('err') 
-                                    }
-                                    else
-                                    {                                     
-                                        if(result.length === 0)
-                                        {
-                                            resolve ({totalCount : count[0]['count(t.id)'], customer : result2, module : moduleResult});
-                                        }
-                                        else
-                                        {
-                                            resolve ({totalCount : count[0]['count(t.id)'], customer : result2, module : moduleResult});
-                                        }
-                                    }
+                                    err ? resolve('err') : result.length === 0 ? resolve ({totalCount : count[0]['count(t.id)'], customer : result2, module : moduleResult}) : resolve ({totalCount : count[0]['count(t.id)'], customer : result2, module : moduleResult});
                                 });
                             }                           
                         });
@@ -83,21 +76,7 @@ module.exports = class customers
                                 WHERE pm.role_id = '${result[0].role_id}' AND md.id = '${constants.modules.customers}'`;
                                 con.query(Query, (err, moduleResult) =>
                                 {
-                                    if(err)
-                                    {
-                                        resolve('err') 
-                                    }
-                                    else
-                                    {                                     
-                                        if(result.length === 0)
-                                        {
-                                            resolve ({totalCount : 0, customer : [], module : moduleResult});
-                                        }
-                                        else
-                                        {
-                                            resolve ({totalCount : 0, customer : [], module : moduleResult});
-                                        }
-                                    }
+                                    err ? resolve('err') : result.length === 0 ? resolve ({totalCount : 0, customer : [], module : moduleResult}) : resolve ({totalCount : 0, customer : [], module : moduleResult});  
                                 });
                     }
                     else
@@ -284,14 +263,7 @@ module.exports = class customers
         try
         {
             const data = await commonoperation.updateUserStatus(constants.tableName.customers, Id);
-            if(data.length === 0)
-            {
-                return data
-            }
-            else
-            {
-                return data;
-            }            
+            return data.length === 0 ? [] : data;           
         }
         catch (error)
         {
@@ -308,14 +280,7 @@ module.exports = class customers
         try
         {
             const data = await commonoperation.removeUser(constants.tableName.customers, Id);
-            if(data.length === 0)
-            {
-                return data
-            }
-            else
-            {
-                return data;
-            }            
+            return data.length === 0 ? [] : data;           
         }
         catch (error)
         {
@@ -360,15 +325,7 @@ module.exports = class customers
                                 let insQuery = `INSERT INTO ${constants.tableName.customer_logs}(customer_id, ip_address, device_information, location, login_time) VALUES(${customerData[0].id}, '192.168.200.130', 'Test purpose currently', 'Kerela', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                                 con.query(insQuery, (err, result1) =>
                                 {
-                                    
-                                    if(result1.affectedRows > 0)
-                                    {
-                                        resolve(data);
-                                    }  
-                                    else
-                                    {
-                                        resolve(`err`);
-                                    }
+                                    result1.affectedRows > 0 ?  resolve(data) : resolve(`err`);
                                 });
                             }
                             else
@@ -383,7 +340,6 @@ module.exports = class customers
             {
                 console.log('Error while customer login from the model', error);
                 resolve(`err`);
-                // throw error; // re-throw the error to be handled by the calling code
             }
         });  
     };
@@ -418,14 +374,7 @@ module.exports = class customers
                                 let upQuery = `UPDATE ${constants.tableName.customer_logs} c SET c.logout_time = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', c.duration = TIMEDIFF('${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.changeDateToSQLFormat(result3[0].login_time)}') WHERE c.customer_id = ${customerData[0].id} AND c.login_time IS NOT NULL AND c.logout_time IS NULL`;
                                 con.query(upQuery, (err, result1) =>
                                 {
-                                    if(result1.affectedRows > 0)
-                                    {
-                                        resolve(`logoutdone`)
-                                    }
-                                    else
-                                    {
-                                        resolve(`err`);
-                                    }
+                                    result1.affectedRows > 0 ? resolve(`logoutdone`) :  resolve(`err`);
                                 });
                             }
                             else if (result3.length == 0)
@@ -479,14 +428,7 @@ module.exports = class customers
                                                         WHERE id = ${id} `
                         con.query(updatePasswordQuery, (err, result) =>
                         {
-                            if(result.affectedRows > 0)
-                            {
-                                resolve(customerData);
-                            }
-                            else
-                            {
-                                resolve('err');   
-                            }
+                            result.affectedRows > 0 ? resolve(customerData) : resolve('err'); 
                         });                                
                     }   
                 }
@@ -495,7 +437,6 @@ module.exports = class customers
         catch (error)
         {
           console.log('Error while customer change password from the backend', error);
-          throw error; // re-throw the error to be handled by the calling code
         }
     };
 
@@ -514,22 +455,13 @@ module.exports = class customers
                                     VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                     con.query(insQuery, (err, result) =>
                     {
-                        if(result.affectedRows > 0)
-                        {
-                            resolve('registered');
-                        }
-                        else
-                        {
-                            resolve('err');
-                        }
+                        result.affectedRows > 0 ?  resolve('registered') :  resolve('err');
                     });
-                // }
             });
         }
         catch (error)
         {
             console.log('Error while register customer from the backend', error);
-            // resolve('err'); // re-throw the error to be handled by the calling code
         } 
     };
 
@@ -551,26 +483,12 @@ module.exports = class customers
                                 DATE_FORMAT(c.login_time, '%d-%m-%Y %h:%m:%s') AS login_time,
                                 DATE_FORMAT(c.logout_time, '%d-%m-%Y %h:%m:%s') AS logout_time,
                                 c.duration
-                                FROM customer_logs c
+                                FROM ${constants.tableName.customer_logs} c
                                 WHERE c.customer_id = ${Id}
                                 `;
-                con.query(selQuery, (err, result)=>
+                con.query(selQuery, (err, result)=> 
                 {
-                    if(err)
-                    {
-                        resolve(err);
-                    }
-                    else
-                    {
-                        if(result.length !== 0)
-                        {
-                            resolve(result);
-                        }
-                        else
-                        {
-                            resolve([]);
-                        }
-                    }
+                    err ? resolve(err) : result.length !== 0 ? resolve(result) : resolve([]);
                 });
             });
         }
@@ -722,7 +640,7 @@ module.exports = class customers
                     AND q.id = i.quot_id
                 `;                              
                 let result = await commonoperation.queryAsync(query)
-                if(result == 'err')
+                if(result === 'err')
                 {
                     resolve('err');
                 }
@@ -895,7 +813,7 @@ module.exports = class customers
     };
 
     /**
-    * The below model function is for the customer frontend side page. This function is for fetching all the bookings of a  customer
+    * The below model function is for the customer frontend side page. This function is for fetching all the bookings of a customer
     * The data will be fetched from the bookings table
     */
     static async getparticularcustomerallbookings(Id)

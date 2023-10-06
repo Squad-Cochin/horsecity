@@ -23,80 +23,13 @@ module.exports = class enquiries
                     ${Id}, ${vehicle_Id}, ${service_provider_Id}, '${pickup_Location}', '${drop_Location}', '${trip_Type}', '${pickup_Country}', '${drop_Country}', '${horse}','${pickup_date}', '${description}', '${constants.enquiry_status.notconfirmed}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' )`;
                     con.query(insQuery, (err, result) =>
                     {
-                        if(err)
-                        {
-                            resolve(`err`);
-                        }
-                        else
-                        {
-                            if(result.affectedRows > 0)
-                            {
-                                resolve('inserted');
-                            }
-                            else
-                            {
-                                resolve('err')
-                            }
-                        }
+                        err ? resolve(`err`) : result.affectedRows > 0 ? resolve('inserted') : resolve('err')
                     });
             });
         }
         catch (error)
         {
             console.log('Error while creating a new enquiry from the customer end.', error);           
-        }
-    };
-
-    // The below model function is used for fetching all the enquiries of a  customer on the basis of customer id in the params. This is for the frontend of the customer(NEXTJS)
-    static async getparticularcustomerallenquiries(pageNumber, pageSize,Id)
-    {
-        try
-        {
-            return await new Promise(async (resolve, reject) =>
-            {
-                const offset = (pageNumber - 1) * pageSize;
-                let selQuery = `SELECT * FROM ${constants.tableName.enquiries} e WHERE e.customer_id = ${Id} LIMIT ${pageSize} OFFSET ${offset}`;
-                con.query(selQuery, (err, result) =>
-                {
-                    if(err)
-                    {
-                        resolve(`err`);
-                    }
-                    else
-                    {
-                        if(result.length > 0)
-                        {
-                            let countQuery = `SELECT COUNT(e.id) FROM ${constants.tableName.enquiries} e WHERE e.customer_id = ${Id}`
-                            con.query(countQuery, (err, result2) =>
-                            {
-                                if(err)
-                                {
-                                    resolve(`err`);
-                                }
-                                else
-                                {
-                                    if(result2.length > 0)
-                                    {
-                                        resolve({totalCount : result2[0]['COUNT(e.id)'], enquiries : result});
-                                    }
-                                    else
-                                    {
-                                        resolve({totalCount : result2[0]['COUNT(e.id)'], enquiries : result});                                     
-                                    }
-                                }
-                            });
-                        }
-                        else
-                        {
-                            resolve({totalCount : 0, enquiries : []} );
-                        }
-                    }
-                });
-            });            
-        }
-        catch (error)
-        {
-            console.log('Error while fetching all enquiries of the customer from the customer end.', error);
         }
     };
 };

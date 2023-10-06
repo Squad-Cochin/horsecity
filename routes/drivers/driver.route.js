@@ -46,12 +46,12 @@ module.exports = function(app)
     driverController.addDriver
     );
 
-    // Below route is for updating the customer status
+    // Below route is for updating the driver status
     app.put(`/${process.env.apiToken}/update/driver/:id`,
     isValidIdInTheParams(constants.tableName.drivers), 
     driverController.updateStatus);
 
-    // Below route is for removing the customer
+    // Below route is for removing the driver
     app.put(`/${process.env.apiToken}/remove/driver/:id`, 
     isValidIdInTheParams(constants.tableName.drivers), 
     driverController.removeDriver);

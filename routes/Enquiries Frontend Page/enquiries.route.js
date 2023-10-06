@@ -25,12 +25,5 @@ module.exports = function (app)
     isValidVehicleTypeEntered,
     checkInput.checkingDuplicateEnquiry,
     frontEnquiriesController.createNewEnquiry);
-
-    // The below route is for fetching all the enquiries of a  customer on the basis of customer id in the params. This will be used in the NEXTJS FRONT END
-    app.post(`/${process.env.apiToken}/get/all/enquiry/customer/:id`,
-    validateParamsId.isValidIdInTheParams(constants.tableName.customers),
-    checkInput.getAllDataBody,
-    frontEnquiriesController.getParticularCustomerAllEnquiries
-    );
 };
 

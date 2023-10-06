@@ -13,14 +13,18 @@ module.exports = function (app)
     checkInput.getAllDataBody,
     reviewController.getAllReviews);
 
-    app.post(`/add/review/:id`,
+    app.post(`/add/review`,
     verifyToken,
-    isValidIdInTheParams(constants.tableName.customers),
     checkInput.isIdEntered('booking_id', constants.tableName.bookings, 'Booking'),
     reviewController.addNewReview);
     
     app.put(`/${process.env.apiToken}/update/status/reviews/:id`,
     isValidIdInTheParams(constants.tableName.reviews),
     reviewController.updateStatus);
+
+    app.get(`/customer/getOne/vehicle/more/details/:id`, 
+    verifyToken,
+    isValidIdInTheParams(constants.tableName.vehicles),
+    reviewController.getVehicleMoreRevewsForCustomerPage);
 
 };

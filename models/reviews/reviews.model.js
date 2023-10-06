@@ -1,10 +1,9 @@
 
 var constants = require(`../../utils/constants`);
 var time = require(`../../utils/helper/date`);
-var con = require(`../../configs/db.configs`);
 var commonfetching = require (`../../utils/helper/commonfetching`);
 var commonoperation = require(`../../utils/helper/commonoperation`);
-
+var objectConvertor = require(`../../utils/objectConvertor`);
 
 module.exports = class reviews
 {
@@ -41,7 +40,6 @@ module.exports = class reviews
                 if(count)
                 {
                     return({ totalCount: count[0]['count(t.id)'], reviews: result });
-            
                 }
                 else
                 {
@@ -113,15 +111,16 @@ module.exports = class reviews
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let selQuery = `INSERT INTO ${constants.tableName.reviews}(booking_id, rating, review, created_at) VALUES (${Id}, ${rating}, '${review}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                let result = await commonoperation.queryAsync(selQuery);
-                if(result.affectedRows > 0)
+                if(rating < 1 || rating > 5)
                 {
-                    resolve('inserted');
+                    resolve('invalid');
                 }
                 else
                 {
-                    resolve('err')
+                    let reviewValue = review ? `'${review}'` : 'NULL';
+                    let selQuery = `INSERT INTO ${constants.tableName.reviews}(booking_id, rating, review, created_at) VALUES (${Id}, ${rating}, ${reviewValue}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                    let result = await commonoperation.queryAsync(selQuery);
+                    result.affectedRows > 0 ? resolve('inserted') : resolve('err')
                 }
             });                                   
         }
@@ -145,14 +144,7 @@ module.exports = class reviews
                                         r.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                         WHERE r.id = '${Id}'`;
                     let result = await commonoperation.queryAsync(UpdateQuery);
-                    if(result.affectedRows > 0)
-                    {
-                        resolve('updated');
-                    }
-                    else
-                    {
-                        resolve('updatedfailed');
-                    }
+                    result.affectedRows > 0 ? resolve('updated') : resolve('updatedfailed');
                 }
                 else if(data[0].status === constants.status.inactive)
                 {
@@ -162,14 +154,7 @@ module.exports = class reviews
                                         WHERE r.id = '${Id}'
                                     `;
                     let result = await commonoperation.queryAsync(UpdateQuery);
-                    if(result.affectedRows > 0)
-                    {
-                        resolve('updated');
-                    }
-                    else
-                    {
-                        resolve('updatedfailed');
-                    }
+                    result.affectedRows > 0 ? resolve('updated') : resolve('updatedfailed');
                 }
                 else
                 {
@@ -181,5 +166,53 @@ module.exports = class reviews
         {
             console.log('Error from the driver.model.js file from the models > drivers folders. In the static function "updatestatus". Which is designed for changing the status of the driver.');            
         }
-    };    
+    }; 
+    
+    /**
+    * The below model function is for the Customer side page.
+    * The function is for showing the mored reviews for a particular vehicle on the front end of the customer [NEXTJS]
+    */
+    static async getvehiclemorereviewsforcustomerpage(Id)
+    {
+        try
+        {
+            return await new Promise(async(resolve, reject)=>
+            {
+                let selQuery = 
+                `
+                SELECT 
+                r.id AS review_id ,
+                c.name AS customer_name,
+                r.created_at,
+                r.review
+                FROM ${constants.tableName.customers} c
+                LEFT JOIN ${constants.tableName.bookings} b 
+                    ON b.customer_id = c.id
+                LEFT JOIN ${constants.tableName.vehicles} v 
+                    ON v.id = b.vehicle_id
+                LEFT JOIN ${constants.tableName.reviews} r 
+                    ON r.booking_id = b.id
+                WHERE v.id = ${Id}
+                AND r.status = '${constants.status.active}'
+                AND r.review IS NOT NULL
+                ORDER BY r.created_at DESC`
+                let result = await commonoperation.queryAsync(selQuery)
+                {
+                    if(result === 'err')
+                    {
+                        resolve('err');
+                    }
+                    else
+                    {
+                        let vehicleResponse = objectConvertor.customizeResponseObjectOfVehicleAllReviewsForCustomerSide(result)
+                        resolve(vehicleResponse.reviews)
+                    }
+                }
+            });
+        }
+        catch (error)
+        {
+            return console.log(`Error from the vehicle.model.js file from the models > vehicles folder. In the static function "getvehicledetailforcustomerpage". Which is designed to fetch the details of a  vehicle for the details page in the customer side`);                        
+        }
+    };
 }

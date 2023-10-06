@@ -9,6 +9,8 @@ const commonfetching = require('../../utils/helper/commonfetching'); // helper f
 const commonoperation = require('../../utils/helper/commonoperation'); // helper file function. This file consist of functions Which is written universally for some common operations.
 const time = require('../../utils/helper/date'); // All the time relateed formating are written in this file.
 const con = require('../../configs/db.configs') // Calling the db file for making the database connection
+const objectConvertor = require(`../../utils/objectConvertor`);
+
 
 module.exports = class vehicles
 {
@@ -117,7 +119,19 @@ module.exports = class vehicles
                     if(result[0].role_id === constants.Roles.admin)
                     {
                         const offset = (pageNumber - 1) * pageSize;
-                        let selQuery = `SELECT v.id, sp.name AS service_provider, v.vehicle_number, v.make, v.no_of_horse, v.status FROM  ${constants.tableName.service_providers} sp, ${constants.tableName.vehicles} v WHERE sp.id = v.service_provider_id AND v.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
+                        let selQuery = `
+                                            SELECT v.id,
+                                            sp.name AS service_provider,
+                                            v.vehicle_number,
+                                            v.make,
+                                            v.no_of_horse,
+                                            v.status FROM  ${constants.tableName.service_providers} sp,
+                                            ${constants.tableName.vehicles} v 
+                                            WHERE 
+                                                sp.id = v.service_provider_id 
+                                                AND v.deleted_at IS NULL 
+                                            LIMIT ${pageSize} 
+                                            OFFSET ${offset}`;
                         const count = await commonoperation.totalCount(constants.tableName.vehicles)
                         con.query(selQuery, (err, result2) =>
                         {
@@ -127,12 +141,22 @@ module.exports = class vehicles
                             }
                             else
                             {
-                                let Query = `SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
-                                FROM ${constants.tableName.permissions} AS pm
-                                JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
-                                JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                                WHERE pm.role_id = '${result[0].role_id}' AND md.id = '${constants.modules.vehicles}'
-                               `;
+                                let Query = `   
+                                                SELECT 
+                                                    md.name AS module_name,
+                                                    md.id AS module_id,
+                                                    pm.create,
+                                                    pm.update,
+                                                    pm.read,
+                                                    pm.delete
+                                                FROM ${constants.tableName.permissions} AS pm
+                                                JOIN ${constants.tableName.modules} md 
+                                                    ON pm.module_id  = md.id
+                                                JOIN ${constants.tableName.roles} rl 
+                                                    ON pm.role_id = rl.id
+                                                WHERE pm.role_id = '${result[0].role_id}' 
+                                                AND md.id = '${constants.modules.vehicles}'
+                                            `;
                                 con.query(Query, (err, moduleResult) =>
                                 {
                                     if(err)
@@ -141,7 +165,11 @@ module.exports = class vehicles
                                     }
                                     else
                                     {
-                                        resolve ({totalCount : count[0]['count(t.id)'], vehicles : result2, module : moduleResult});
+                                        resolve ({
+                                                    totalCount : count[0]['count(t.id)'],
+                                                    vehicles : result2,
+                                                    module : moduleResult
+                                                });
                                     }
                                 });
                             }
@@ -150,7 +178,20 @@ module.exports = class vehicles
                     else if(result[0].role_id === constants.Roles.service_provider)
                     {
                         const offset = (pageNumber - 1) * pageSize;
-                        let selQuery = `SELECT v.id, v.vehicle_number, v.make, v.no_of_horse, v.status FROM  ${constants.tableName.service_providers} sp, ${constants.tableName.vehicles} v WHERE sp.id = v.service_provider_id AND v.service_provider_id = ${Id} AND v.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;
+                        let selQuery = `   
+                                            SELECT v.id,
+                                            v.vehicle_number,
+                                            v.make,
+                                            v.no_of_horse,
+                                            v.status 
+                                            FROM  ${constants.tableName.service_providers} sp,
+                                            ${constants.tableName.vehicles} v 
+                                            WHERE 
+                                                sp.id = v.service_provider_id 
+                                                AND v.service_provider_id = ${Id} 
+                                                AND v.deleted_at IS NULL 
+                                            LIMIT ${pageSize} 
+                                            OFFSET ${offset}`;
                         const count = await commonoperation.totalCountParticularServiceProvider(constants.tableName.vehicles, Id)
                         con.query(selQuery, (err, result2) =>
                         {
@@ -160,11 +201,22 @@ module.exports = class vehicles
                             }
                             else
                             {
-                                let Query = `SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
-                                FROM ${constants.tableName.permissions} AS pm
-                                JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
-                                JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                                WHERE pm.role_id = '${result[0].role_id}' AND md.name = 'VEHICLES'
+                                let Query = `   
+                                            SELECT 
+                                                md.name AS module_name,
+                                                md.id AS module_id,
+                                                pm.create,
+                                                pm.update,
+                                                pm.read,
+                                                pm.delete
+                                            FROM ${constants.tableName.permissions} AS pm
+                                            JOIN ${constants.tableName.modules} md 
+                                            ON pm.module_id  = md.id
+                                            JOIN ${constants.tableName.roles} rl 
+                                            ON pm.role_id = rl.id
+                                            WHERE 
+                                                pm.role_id = '${result[0].role_id}' 
+                                                AND md.name = 'VEHICLES'
                                `;
                                 con.query(Query, (err, moduleResult) =>
                                 {
@@ -174,7 +226,11 @@ module.exports = class vehicles
                                     }
                                     else
                                     {
-                                        resolve ({totalCount : count[0]['count(t.id)'], vehicles : result2, module : moduleResult});
+                                        resolve ({
+                                                    totalCount : count[0]['count(t.id)'],
+                                                    vehicles : result2, 
+                                                    module : moduleResult
+                                                });
                                     }
                                 });
                             }
@@ -216,7 +272,10 @@ module.exports = class vehicles
                 {
                     if(vehicleData[0].status === constants.status.active)
                     {
-                        let UpdateQuery = `UPDATE ${constants.tableName.vehicles} v SET v.status ='${constants.status.inactive}', v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE v.id = '${id}' `;
+                        let UpdateQuery = ` UPDATE ${constants.tableName.vehicles} v 
+                                            SET v.status ='${constants.status.inactive}', 
+                                            v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
+                                            WHERE v.id = '${id}' `;
                         con.query(UpdateQuery, (err, result) => // executing the above query 
                         {
                             if(result.length != 0) // if ticket updated then if block
@@ -231,7 +290,10 @@ module.exports = class vehicles
                     }
                     else
                     {
-                        let UpdateQuery = `UPDATE ${constants.tableName.vehicles} v SET v.status ='${constants.status.active}', v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE v.id = '${id}' `;
+                        let UpdateQuery = ` UPDATE ${constants.tableName.vehicles} v 
+                                            SET v.status ='${constants.status.active}', 
+                                            v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
+                                            WHERE v.id = '${id}' `;
                         con.query(UpdateQuery, (err, result) => // executing the above query 
                         {
                             if(result.length != 0) // if ticket updated then if block
@@ -326,7 +388,31 @@ module.exports = class vehicles
         {
             if(safety_certicate === null || safety_certicate === undefined)
             {
-                let upQuery = `UPDATE ${constants.tableName.vehicles} v SET v.service_provider_id = '${serviceProviderId}', v.vehicle_number = '${vehicle_number}', v.make = '${make}', v.model = '${model}', v.color = '${color}', v.length = '${length}', v.breadth = '${breadth}', v.height = '${height}', v.price = '${price}', v.no_of_horse = '${max_no_of_horse}', v.air_conditioner = '${air_conditioner}', v.temperature_manageable ='${temp_manageable}', v.registration_no ='${registration_no}', v.gcc_travel_allowed = '${gcc_travel_allowed}', v.insurance_cover = '${insurance_cover}', v.insurance_date = '${insurance_date}', v.insurance_policy_no = '${insurance_policy_no}', v.insurance_provider = '${insurance_provider}', v.insurance_expiration_date = '${insurance_expiration_date}', v.vehicle_type = '${vehicle_type}', v.vehicle_registration_date = '${vehicle_registration_date}', v.vehicle_exipration_date = '${vehicle_exipration_date}', v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE id = '${id}' `;
+                let upQuery = ` UPDATE ${constants.tableName.vehicles} v 
+                                SET v.service_provider_id = '${serviceProviderId}', 
+                                v.vehicle_number = '${vehicle_number}', 
+                                v.make = '${make}', 
+                                v.model = '${model}', 
+                                v.color = '${color}', 
+                                v.length = '${length}', 
+                                v.breadth = '${breadth}', 
+                                v.height = '${height}', 
+                                v.price = '${price}', 
+                                v.no_of_horse = '${max_no_of_horse}', 
+                                v.air_conditioner = '${air_conditioner}', 
+                                v.temperature_manageable ='${temp_manageable}', 
+                                v.registration_no ='${registration_no}', 
+                                v.gcc_travel_allowed = '${gcc_travel_allowed}', 
+                                v.insurance_cover = '${insurance_cover}', 
+                                v.insurance_date = '${insurance_date}', 
+                                v.insurance_policy_no = '${insurance_policy_no}', 
+                                v.insurance_provider = '${insurance_provider}',
+                                v.insurance_expiration_date = '${insurance_expiration_date}', 
+                                v.vehicle_type = '${vehicle_type}', 
+                                v.vehicle_registration_date = '${vehicle_registration_date}', 
+                                v.vehicle_exipration_date = '${vehicle_exipration_date}', 
+                                v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
+                                WHERE id = '${id}' `;
                 con.query(upQuery, (err, result) =>
                 {
                     if(result.affectedRows > 0)
@@ -352,7 +438,33 @@ module.exports = class vehicles
                 }
                 else
                 {
-                    let upQuery = `UPDATE ${constants.tableName.vehicles} v SET v.service_provider_id = '${serviceProviderId}', v.vehicle_number = '${vehicle_number}', v.make = '${make}', v.model = '${model}', v.color = '${color}', v.length = '${length}', v.breadth = '${breadth}', v.height = '${height}', v.price = '${price}', v.no_of_horse = '${max_no_of_horse}', v.air_conditioner = '${air_conditioner}', v.temperature_manageable ='${temp_manageable}', v.registration_no ='${registration_no}', v.gcc_travel_allowed = '${gcc_travel_allowed}', v.insurance_cover = '${insurance_cover}', v.insurance_date = '${insurance_date}', v.insurance_policy_no = '${insurance_policy_no}', v.insurance_provider = '${insurance_provider}', v.insurance_expiration_date = '${insurance_expiration_date}', v.vehicle_type = '${vehicle_type}', v.vehicle_registration_date = '${vehicle_registration_date}', v.vehicle_exipration_date = '${vehicle_exipration_date}', v.safety_certicate ='${uploadSafetyCertificate}', v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE id = '${id}' `;
+                    let upQuery = ` 
+                                    UPDATE ${constants.tableName.vehicles} v 
+                                    SET v.service_provider_id = '${serviceProviderId}', 
+                                    v.vehicle_number = '${vehicle_number}', 
+                                    v.make = '${make}', 
+                                    v.model = '${model}', 
+                                    v.color = '${color}', 
+                                    v.length = '${length}', 
+                                    v.breadth = '${breadth}', 
+                                    v.height = '${height}', 
+                                    v.price = '${price}', 
+                                    v.no_of_horse = '${max_no_of_horse}', 
+                                    v.air_conditioner = '${air_conditioner}', 
+                                    v.temperature_manageable ='${temp_manageable}', 
+                                    v.registration_no ='${registration_no}', 
+                                    v.gcc_travel_allowed = '${gcc_travel_allowed}', 
+                                    v.insurance_cover = '${insurance_cover}', 
+                                    v.insurance_date = '${insurance_date}', 
+                                    v.insurance_policy_no = '${insurance_policy_no}', 
+                                    v.insurance_provider = '${insurance_provider}', 
+                                    v.insurance_expiration_date = '${insurance_expiration_date}', 
+                                    v.vehicle_type = '${vehicle_type}', 
+                                    v.vehicle_registration_date = '${vehicle_registration_date}', 
+                                    v.vehicle_exipration_date = '${vehicle_exipration_date}', 
+                                    v.safety_certicate ='${uploadSafetyCertificate}', 
+                                    v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
+                                    WHERE id = '${id}' `;
                     con.query(upQuery, (err, result) =>
                     {
                         if(result.affectedRows > 0)
@@ -383,9 +495,16 @@ module.exports = class vehicles
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let selQuery = `SELECT vi.id, vi.title, vi.vehicle_id, vi.image, vi.uploaded_at, vi.status 
+                let selQuery = `SELECT 
+                                vi.id,
+                                vi.title, 
+                                vi.vehicle_id,
+                                vi.image,
+                                vi.uploaded_at,
+                                vi.status 
                                 FROM ${constants.tableName.vehicles_images} vi 
-                                JOIN ${constants.tableName.vehicles} v ON vi.vehicle_id = v.id 
+                                JOIN ${constants.tableName.vehicles} v 
+                                    ON vi.vehicle_id = v.id 
                                 WHERE vi.vehicle_id = ${id} 
                                 AND vi.deleted_at IS NULL`;
                 con.query(selQuery, (err, result) =>
@@ -451,8 +570,8 @@ module.exports = class vehicles
     };
 
     /**
-    * The below model function is for the Admin side page.
-    * The function is for showing the  vehicle on the front end of the customer [NEXTJS]
+    * The below model function is for the Customer side page.
+    * The function is for showing the vehicle detail on the front end of the customer [NEXTJS]
     */
     static async getvehicledetailforcustomerpage(Id)
     {
@@ -460,119 +579,94 @@ module.exports = class vehicles
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let selQuery = `SELECT
-                                v.id,
-                                v.service_provider_id,
-                                s.name AS service_provider_name,
-                                v.vehicle_number,
-                                v.price,
-                                v.no_of_horse,
-                                v.length,
-                                v.height,
-                                v.breadth,
-                                v.make,
-                                v.model,
-                                v.air_conditioner,
-                                v.temperature_manageable,
-                                v.gcc_travel_allowed,
-                                v.insurance_cover,
-                                v.vehicle_type,
-                                v.vehicle_registration_date, 
-                                v.vehicle_exipration_date,
-                                v.insurance_date,
-                                cr.abbreviation,
-                                v.insurance_expiration_date,
-                                v.insurance_provider,
-                                vi.id AS vehicle_image_id,
-                                vi.image,
-                                vi.title
-                                FROM ${constants.tableName.vehicles} v
-                                INNER JOIN ${constants.tableName.service_providers} s 
-                                ON v.service_provider_id = s.id
-                                LEFT JOIN ${constants.tableName.currencies} cr 
-                                ON cr.id = ( 
-                                    SELECT currency_id 
-                                    FROM ${constants.tableName.application_settings} 
-                                    WHERE application_settings.currency_id = cr.id 
-                                    )
-                                LEFT JOIN ${constants.tableName.vehicles_images} vi 
-                                ON v.id = vi.vehicle_id 
-                                AND vi.status = "${constants.status.active}"
-                                WHERE v.id = ${Id}
-                                `;
-                con.query(selQuery, (err, result) =>
+                let selQuery = 
+                `
+                    SELECT
+                        v.id,
+                        v.service_provider_id,
+                        s.name AS service_provider_name,
+                        v.vehicle_number,
+                        v.price,
+                        v.no_of_horse,
+                        v.length,
+                        v.height,
+                        v.breadth,
+                        v.make,
+                        v.model,
+                        v.air_conditioner,
+                        v.temperature_manageable,
+                        v.gcc_travel_allowed,
+                        v.insurance_cover,
+                        v.vehicle_type,
+                        v.vehicle_registration_date,
+                        v.vehicle_exipration_date,
+                        v.insurance_date,
+                        cr.abbreviation,
+                        v.insurance_expiration_date,
+                        v.insurance_provider,
+                        vi.id AS vehicle_image_id,
+                        vi.image,
+                        vi.title
+                    FROM
+                        ${constants.tableName.vehicles} v
+                    INNER JOIN
+                        ${constants.tableName.service_providers} s 
+                        ON v.service_provider_id = s.id
+                    LEFT JOIN
+                        ${constants.tableName.currencies} cr ON cr.id = (
+                            SELECT currency_id
+                            FROM ${constants.tableName.application_settings}
+                            WHERE application_settings.currency_id = cr.id
+                        )
+                    LEFT JOIN
+                        ${constants.tableName.vehicles_images} vi 
+                        ON v.id = vi.vehicle_id 
+                        AND vi.status = '${constants.status.active}'
+                    LEFT JOIN
+                        ${constants.tableName.bookings} b 
+                        ON v.id = b.vehicle_id
+                    LEFT JOIN
+                        ${constants.tableName.customers} c 
+                        ON c.id = b.customer_id
+                    WHERE
+                        v.id = ${Id}
+                `
+                let result = await commonoperation.queryAsync(selQuery)
                 {
-                    if(err)
+                    if(result === 'err')
                     {
                         resolve('err');
                     }
                     else
                     {
-                        var vehicleResponse =
+                        let data = await commonoperation.reviewscounts(Id);
+                        let selQuery3 = `   SELECT 
+                                            r.id AS review_id ,
+                                            c.name AS customer_name,
+                                            r.created_at,
+                                            r.review
+                                            FROM ${constants.tableName.customers} c
+                                            LEFT JOIN ${constants.tableName.bookings} b ON b.customer_id = c.id
+                                            LEFT JOIN ${constants.tableName.vehicles} v ON v.id = b.vehicle_id
+                                            LEFT JOIN ${constants.tableName.reviews} r ON r.booking_id = b.id
+                                            WHERE v.id = ${Id}
+                                            AND r.status = '${constants.status.active}'
+                                            AND r.review IS NOT NULL
+                                            ORDER BY r.created_at DESC
+                                            LIMIT 3`
+                        let reviews_List = await commonoperation.queryAsync(selQuery3);
+                        if(reviews_List?.length !== 0)
                         {
-                            "vehicle": [],
-                            "images" : [],
-                            // "reviews": []
-                        };
-                        if(result.length != 0)
-                        {
-                            const uniqueImagesIds = new Set();
-                            for (let row of result)
-                            {
-                                if (vehicleResponse.vehicle.length === 0)
-                                {
-                                    // If result has data, populate the vehicleResponse data
-                                    vehicleResponse.vehicle.push
-                                    ({
-                                        "id" : result[0].id,
-                                        "service_provider_id" : result[0].service_provider_id,
-                                        "service_provider_name" : result[0].service_provider_name,
-                                        "vehicle_number" : result[0].vehicle_number,
-                                        "price" : result[0].price,
-                                        "no_of_horses" : result[0].no_of_horse,
-                                        "length" : result[0].length,
-                                        "breadth" : result[0].breadth,
-                                        "height" : result[0].height,
-                                        "make" : result[0].make,
-                                        "model" : result[0].model,
-                                        "air_condition" : result[0].air_conditioner,
-                                        "temperature_manageable" : result[0].temperature_manageable,
-                                        "gcc_travel_allowed" : result[0].gcc_travel_allowed,
-                                        "insurance_cover" : result[0].insurance_cover,
-                                        "insurance_provider" : result[0].insurance_provider,
-                                        "vehicle_type" : result[0].vehicle_type,
-                                        "abbreviation" : result[0].abbreviation,
-                                        "vehicle_registration_date" : time.formatDateToDDMMYYYY(result[0].vehicle_registration_date),
-                                        "vehicle_expiration_date" : time.formatDateToDDMMYYYY(result[0].vehicle_exipration_date),
-                                        "insurance_date" : time.formatDateToDDMMYYYY(result[0].insurance_date),
-                                        "insurance_expiration_date" : time.formatDateToDDMMYYYY(result[0].insurance_expiration_date)
-                                    });
-                                }
-                                if(row.vehicle_image_id !== null && !uniqueImagesIds.has(row.vehicle_image_id))
-                                {
-                                    vehicleResponse.images.push
-                                    ({
-                                        "id": row.vehicle_image_id,
-                                        "url" : `${process.env.PORT_SP}${constants.attachmentLocation.vehicle.view.image}${row.image}`
-                                    });
-                                    uniqueImagesIds.add(row.vehicle_image_id);
-                                }
-                                // if (row.review_id !== null && !uniqueReviewIds.has(row.review_id)) 
-                                // {
-                                //     vehicleResponse.reviews.push
-                                //     ({
-                                //         "id": row.review_id,
-                                //         "rating" : row.vehicle_rating,
-                                //         "description" : row.vehicle_description,
-                                //         "created_at" : time.formatDateToDDMMYYYY(row.created_at)
-                                //     });
-                                //     uniqueReviewIds.add(row.review_id);
-                                // }
-                            }
+                            let vehicleResponse = objectConvertor.customizeResponseObjectForVehicleDetailInCustomerSide(result, data, reviews_List)
                             resolve(vehicleResponse);
-                        }
+                        }   
+                        else
+                        {
+                            let vehicleResponse = objectConvertor.customizeResponseObjectForVehicleDetailInCustomerSide(result, data, 0)
+                            resolve(vehicleResponse);
+                        }                        
                     }
-                });
+                }
             });
         }
         catch (error)
@@ -580,5 +674,7 @@ module.exports = class vehicles
             return console.log(`Error from the vehicle.model.js file from the models > vehicles folder. In the static function "getvehicledetailforcustomerpage". Which is designed to fetch the details of a  vehicle for the details page in the customer side`);                        
         }
     };
-
 };
+
+
+

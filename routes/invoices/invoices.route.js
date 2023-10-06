@@ -36,7 +36,7 @@ module.exports = function (app)
         invoiceController.enterAmountForParticularInvoice
         );
 
-    // The below route is for fetching a  invoices overall payment histroy on the basis of the id of a invoice in the params. This will be used in the reactjs front
+    // The below route is for fetching a invoices overall payment histroy on the basis of the id of a invoice in the params. This will be used in the reactjs front
     app.get(
         `/${process.env.apiToken}/payment/histroy/:id`, 
         isValidIdInTheParams(constants.tableName.invoices),

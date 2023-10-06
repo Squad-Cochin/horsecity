@@ -148,13 +148,13 @@ module.exports = (app) =>
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.getParticularCustomerAllEnquiry);
 
-    // The below route is fetching all the booking details of a  customer. The data will be taken from the quotations, invoices, payment_records
+    // The below route is fetching all the booking details of a customer. The data will be taken from the quotations, invoices, payment_records
     app.get(`/customer/all/booking/data/invoice/table/:id`,
     validateHeaders.verifyToken,   
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.getParticularCustomerAllBookingsDataFromInvoice);
 
-    // The below route is fetching all the ACTIVE bookings details of a  customer. The data will come from the quotations, invoices, payment_records tables.
+    // The below route is fetching all the ACTIVE bookings details of a customer. The data will come from the quotations, invoices, payment_records tables.
     app.get(`/customer/active/booking/data/invoice/table/:id`,
     validateHeaders.verifyToken,   
     isValidIdInTheParams(constants.tableName.customers), 

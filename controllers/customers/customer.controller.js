@@ -243,7 +243,7 @@ exports.updateStatus= async (req, res) =>
         return res.status(200).send
         ({
             code : 400,
-            status : true,
+            status : false,
             message : constants.responseMessage.statuserror
         });
     }

@@ -55,21 +55,7 @@ module.exports = class drivers
                                `;
                                 con.query(Query, (err, moduleResult) =>
                                 {
-                                    if(err)
-                                    {
-                                        resolve('err') 
-                                    }
-                                    else
-                                    {                                     
-                                        if(result.length === 0)
-                                        {
-                                            resolve ({totalCount : count[0]['count(t.id)'], drivers : result2, module : moduleResult});
-                                        }
-                                        else
-                                        {
-                                            resolve ({totalCount : count[0]['count(t.id)'], drivers : result2, module : moduleResult});
-                                        }
-                                    }
+                                    err ? resolve('err') :  result.length === 0 ? resolve ({totalCount : count[0]['count(t.id)'], drivers : result2, module : moduleResult}) : resolve ({totalCount : count[0]['count(t.id)'], drivers : result2, module : moduleResult}); 
                                 });
                             }                           
                         });
@@ -100,21 +86,7 @@ module.exports = class drivers
                                     WHERE pm.role_id = '${result[0].role_id}' AND md.id = '${constants.modules.drivers}' `;
                                     con.query(Query, (err, moduleResult) =>
                                     {
-                                        if(err)
-                                        {
-                                            resolve('err') 
-                                        }
-                                        else
-                                        { 
-                                            if(resultSel.length === 0)
-                                            {
-                                                resolve ({totalCount : resultcount[0]['count(t.id)'], drivers : resultSel, module : moduleResult});
-                                            }
-                                            else
-                                            {
-                                                resolve ({totalCount : resultcount[0]['count(t.id)'], drivers : resultSel, module : moduleResult});
-                                            }
-                                        }
+                                        err ? resolve('err') : resultSel.length === 0 ? resolve ({totalCount : resultcount[0]['count(t.id)'], drivers : resultSel, module : moduleResult}) : resolve ({totalCount : resultcount[0]['count(t.id)'], drivers : resultSel, module : moduleResult});
                                     });
                                 });
                             }                            
@@ -206,16 +178,8 @@ module.exports = class drivers
                                 let insQuery = `INSERT INTO ${constants.tableName.drivers}(name, email, contact_no, emergency_contact_no, date_of_birth, profile_image, licence_no , licence_img , description, created_at) VALUES('${name}', '${email}', '${contact_no}', '${emergency_contact_no}', '${date_of_birth}', '${uploadprofile_image}', '${licence_no}', '${uploadlicence_img}', '${description}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                                 con.query(insQuery, (err, result) =>
                                 {
-                                    if(result.affectedRows > 0)
-                                    {
-                                        resolve(result);
-                                    }
-                                    else
-                                    {
-                                        resolve('err')
-                                    }
+                                    result.affectedRows > 0 ? resolve(result) : resolve('err')
                                 });
-
                             }
                             else if(resultRole[0].role_id === constants.Roles.service_provider)
                             {
@@ -228,21 +192,14 @@ module.exports = class drivers
                                         if(recentAddedDriverData.length > 0)
                                         {
                                             let assignDriverWhileAdd = await this.assignserviceprovider(recentAddedDriverData[0].id, Id)
-                                            if(assignDriverWhileAdd === 'datainserted')
-                                            {
-                                                resolve(result);
-                                            }   
-                                            else
-                                            {
-                                                resolve('err')
-                                            }
+                                            assignDriverWhileAdd === 'datainserted' ? resolve(result) : resolve('err') 
                                         }
                                         else
                                         {
                                             resolve('err');
                                         }
                                     }
-                                    if(err)
+                                    else
                                     {
                                         resolve('err');
                                     }
@@ -271,14 +228,7 @@ module.exports = class drivers
         try
         {
             const data = await commonoperation.updateUserStatus(constants.tableName.drivers, Id);
-            if(data.length === 0)
-            {
-                return data
-            }
-            else
-            {
-                return data;
-            }            
+            return data.length === 0 ? [] : data             
         }
         catch (error)
         {
@@ -303,30 +253,28 @@ module.exports = class drivers
                 }
                 else
                 {
-                    let selQueryAssign = `SELECT * FROM assign_drivers ad WHERE ad.driver_id = ${Id} AND ad.deleted_at IS NULL`
+                    let selQueryAssign = `  SELECT * 
+                                            FROM ${constants.tableName.assign_drivers} ad 
+                                            WHERE 
+                                            ad.driver_id = ${Id} 
+                                            AND ad.deleted_at IS NULL
+                                        `
                     con.query(selQueryAssign, async (err, result2) =>
                     {
                         if(result2.length != 0) 
                         {
-                            let upQuery = `UPDATE assign_drivers ad
-                            SET ad.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
-                            WHERE ad.driver_id = ${Id}
-                            AND ad.deleted_at IS NULL`;
+                            let upQuery = ` UPDATE ${constants.tableName.assign_drivers} ad
+                                            SET ad.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
+                                            WHERE ad.driver_id = ${Id}
+                                            AND ad.deleted_at IS NULL`;
                             con.query(upQuery, async (err, result) =>
                             {
-                                if(result.affectedRows > 0)
-                                {                               
-                                    resolve(data)
-                                }
-                                else
-                                {                        
-                                    resolve(data)
-                                }
+                                result.affectedRows > 0 ? resolve(data) : resolve(data)
                             });
                         }
-                        if(result2.length == 0)
+                        else
                         {                            
-                            resolve(data)
+                            resolve(data);
                         }
                     });
                 }            
@@ -346,7 +294,6 @@ module.exports = class drivers
         try 
         {
             let uploadprofile_image, uploadlicence_img;
-
             if (profile_image !== null && profile_image !== undefined)
             {
                 uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.upload.profilephoto);
@@ -391,19 +338,7 @@ module.exports = class drivers
             {
                 con.query(upQuery, (err, result) =>
                 {
-                    if (err)
-                    {
-                        console.error(err);
-                        resolve('err');
-                    }
-                    else if (result.affectedRows > 0)
-                    {
-                        resolve(result);
-                    }
-                    else
-                    {
-                        resolve('err');
-                    }
+                    result.affectedRows > 0 ? resolve(result) : resolve('err') 
                 });
             });
         }
@@ -437,7 +372,12 @@ module.exports = class drivers
                     }
                     else
                     {
-                        let selQuery = `SELECT * FROM assign_drivers t WHERE t.service_provider_id = ${sId} AND t.driver_id = ${dId} AND t.deleted_at IS NULL`;
+                        let selQuery = `SELECT * 
+                                        FROM ${constants.tableName.assign_drivers} t 
+                                        WHERE 
+                                        t.service_provider_id = ${sId} 
+                                        AND t.driver_id = ${dId} 
+                                        AND t.deleted_at IS NULL`;
                         con.query(selQuery, (error, result) =>
                         {
                             if(error)
@@ -448,18 +388,10 @@ module.exports = class drivers
                             {
                                 if(result.length === 0)
                                 {
-                                    let insQuery = `INSERT INTO assign_drivers(service_provider_id, driver_id, created_at) VALUES(${sId}, ${dId}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                                    let insQuery = `INSERT INTO ${constants.tableName.assign_drivers}(service_provider_id, driver_id, created_at) VALUES(${sId}, ${dId}, '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                                     con.query(insQuery, (err, result2) =>
                                     {
-                                        if(result2.affectedRows > 0)
-                                        {
-                                            resolve('datainserted');
-                                        }
-                                        else
-                                        {
-                                            console.log('Error while inserting the data into the assign driver table');
-                                            resolve('err')
-                                        }
+                                        result2.affectedRows > 0 ? resolve('datainserted') : resolve('err') 
                                     });
                                 }
                                 else
@@ -554,21 +486,7 @@ module.exports = class drivers
                 AND t.deleted_at IS NULL `;
                 con.query(upQuery, (err, result) =>
                 {
-                    if(result.affectedRows > 0)
-                    {
-                        resolve('unassigned');
-                    }
-                    else
-                    {
-                        if(result.affectedRows === 0)
-                        {
-                            resolve('alreadyunassigned');
-                        }
-                        else
-                        {
-                            resolve('err');
-                        }
-                    }
+                    result.affectedRows > 0 ? resolve('unassigned') : result.affectedRows === 0 ? resolve('alreadyunassigned') : resolve('err')  
                 });
             });      
         }
@@ -589,28 +507,14 @@ module.exports = class drivers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let upQuery = `UPDATE ${constants.tableName.assign_drivers} t 
-                SET t.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
-                WHERE t.service_provider_id = ${sId} 
-                AND t.driver_id = '${dId}' 
-                AND t.deleted_at IS NULL `;
+                let upQuery = ` UPDATE ${constants.tableName.assign_drivers} t 
+                                SET t.deleted_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
+                                WHERE t.service_provider_id = ${sId} 
+                                AND t.driver_id = '${dId}' 
+                                AND t.deleted_at IS NULL `;
                 con.query(upQuery, (err, result) =>
                 {
-                    if(result.affectedRows > 0)
-                    {
-                        resolve('unassigned');
-                    }
-                    else
-                    {
-                        if(result.affectedRows === 0)
-                        {
-                            resolve('alreadyunassigned');
-                        }                        
-                        if(err)
-                        {
-                            resolve('err');
-                        }
-                    }
+                    result.affectedRows > 0 ? resolve('unassigned') : result.affectedRows === 0 ? resolve('alreadyunassigned') : resolve('err');
                 });
             });      
         }

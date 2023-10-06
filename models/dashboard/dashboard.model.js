@@ -89,21 +89,7 @@ module.exports = class dashboard
                         `;
                         con.query(query, (err, result) =>
                         {
-                            if(err)
-                            {
-                                resolve('err') 
-                            }
-                            else
-                            {
-                                if(result.length === 0)
-                                {
-                                    resolve({counts: result});
-                                }
-                                else
-                                {
-                                    resolve({counts: result})
-                                }                                         
-                            }
+                            err ? resolve('err') : result.length === 0 ? resolve({counts: result}) : resolve({counts: result})
                         });
                     }
                     else if(result[0].role_id === constants.Roles.service_provider)
@@ -142,21 +128,7 @@ module.exports = class dashboard
                                 `;
                         con.query(Query, (err, result) =>
                         {
-                            if(err)
-                            {
-                                resolve('err') 
-                            }
-                            else
-                            {
-                                if(result.length === 0)
-                                {
-                                    resolve({counts: result});
-                                }
-                                else
-                                {
-                                    resolve({counts: result})
-                                }
-                            }
+                            err ? resolve('err') : result.length === 0 ? resolve ({counts: result}) :  resolve({counts: result})
                         });
                     }
                     else
@@ -403,23 +375,8 @@ module.exports = class dashboard
                                         `;
                                         con.query(query, async(err, result) =>
                                         {
-                                            if(err)
-                                            {
-                                                resolve('err') 
-                                            }
-                                            else
-                                            {
-                                                if(result.length === 0)
-                                                {
-                                                    resolve(result);
-                                                }
-                                                else
-                                                {
-                                                    resolve(result)
-                                                }                                         
-                                            }
-                                        });
-                                    
+                                            err ? resolve('err') : result.length === 0 ? resolve(result) : resolve(result)
+                                        });                                    
                         }
                         else if(result[0].role_id === constants.Roles.service_provider)
                         {
@@ -440,21 +397,7 @@ module.exports = class dashboard
                                                 ORDER BY e.created_at DESC LIMIT 5`;
                             con.query(query, async(err, result) =>
                             {
-                                if(err)
-                                {
-                                    resolve('err') 
-                                }
-                                else
-                                {
-                                    if(result.length === 0)
-                                    {
-                                        resolve(result);
-                                    }
-                                    else
-                                    {
-                                        resolve(result);
-                                    }                                         
-                                }
+                                err ? resolve('err') : result.length === 0 ? resolve(result) : resolve(result)
                             });
                         }
                         else

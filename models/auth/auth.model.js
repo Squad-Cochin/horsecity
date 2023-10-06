@@ -64,14 +64,7 @@ module.exports = class authentication
                                             role_name : userData[0].role_name,
                                             user_name : userData[0].user_name
                                         }]
-                                        if (data.length != 0)
-                                        {
-                                            resolve ([{user : resObj},{modules : data}])
-                                        }
-                                        else
-                                        {  
-                                            resolve(false)
-                                        }
+                                        data.length != 0 ? resolve ([{user : resObj},{modules : data}]) :  resolve(false)
                                     });
                                 }
                             }
@@ -86,7 +79,6 @@ module.exports = class authentication
             catch (error)
             {
                 console.log('Error while user login from the backend', error);
-                throw error; // re-throw the error to be handled by the calling code
             }
         });   
     };
@@ -110,8 +102,6 @@ module.exports = class authentication
                 }
                 else
                 {
-                    const givenDate = new Date().getTime();
-                    const expiryDate = new Date(userData[0].expiry_at).getTime();  
                     const newpasswordHashed = await commonoperation.changePasswordToSQLHashing(newpassword);
                     let updatePasswordQuery = `UPDATE ${constants.tableName.service_providers} SET
                                                password = '${newpasswordHashed}',
@@ -120,14 +110,7 @@ module.exports = class authentication
                                                WHERE user_name = '${username}' `;
                     con.query(updatePasswordQuery, (err, result) =>
                     {
-                        if(result.affectedRows > 0)
-                        {
-                            return userData;
-                        }
-                        else
-                        {
-                            return 'err';   
-                        }
+                        return result.affectedRows > 0 ? userData : 'err'
                     });                 
                 }   
             }           
@@ -135,7 +118,6 @@ module.exports = class authentication
         catch (error)
         {
           console.log('Error while service provider change password from the backend', error);
-          throw error; // re-throw the error to be handled by the calling code
         }
     };
     
@@ -147,15 +129,7 @@ module.exports = class authentication
             try
             {
                 const userData = await commonfetching.dataOnCondition(constants.tableName.service_providers, Id, 'id');
-                if (userData.length === 0) 
-                {
-                    resolve('noserviceprovider');
-                }
-                else
-                {
-                    resolve('logoutdone');            
-                       
-                } 
+                userData.length === 0 ?  resolve('noserviceprovider') :  resolve('logoutdone')
             }
             catch (error)
             {
