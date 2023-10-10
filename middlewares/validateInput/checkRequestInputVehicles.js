@@ -1,6 +1,15 @@
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                  //
+// This file has the code to check the vehcile body or vehicle related data. All the functions      //
+// which will be used for validaing the vehicle incoming data are coded in this file.               //
+//                                                                                                  //
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 const constants = require("../../utils/constants");
 const checkInput = require(`./checkRequestBodyInput`);
 const url = require(`../../utils/url_helper`);
+
 
 exports.checkVehicleBodyEntered = async (req, res, next) =>
 {
@@ -14,6 +23,10 @@ exports.checkVehicleBodyEntered = async (req, res, next) =>
         await this.checkNumericalValues(req.body.breadth, 'Vehicle breadth')(req, res, next);
         await this.checkNumericalValues(req.body.height, 'Vehicle height')(req, res, next);
         await this.checkNumericalValues(req.body.no_of_horse, 'Vehicle maximum horse carrying capicity')(req, res, next);
+        await this.checkRadioButtonYESAndNOINPUT(req.body.air_conditioner, constants.responseMessage.acnotpresent, constants.responseMessage.acInvalidInput, res);
+        await this.checkRadioButtonYESAndNOINPUT(req.body.temperature_manageable, constants.responseMessage.tempcontrolnotpresent, constants.responseMessage.tempcontrolInvalidInput, res);
+        await this.checkRadioButtonYESAndNOINPUT(req.body.gcc_travel_allowed, constants.responseMessage.vehicleGCCvalueNotPresent, constants.responseMessage.vehicleGCCvalueInvalid, res);
+        await this.checkRadioButtonYESAndNOINPUT(req.body.insurance_cover, constants.responseMessage.vehicleinsurancecoverenotpresnet, constants.responseMessage.vehicleinsurancecovereinvalidinput, res);
         await checkInput.checkValueEntered(req.body.insurance_date, 'Vehicle insurance date')(req, res, next);
         await checkInput.checkValueEntered(req.body.insurance_expiry_date, 'Vehicle insurance expiration date')(req, res, next);
         await checkInput.checkValueEntered(req.body.vehicle_registration_date, 'Vehicle registration date')(req, res, next);
@@ -26,6 +39,7 @@ exports.checkVehicleBodyEntered = async (req, res, next) =>
     }
 };
  
+
 exports.checkNumericalValues = (value, feildName) => (req, res, next) =>
 {
     return new Promise((resolve, reject) =>
@@ -65,159 +79,44 @@ exports.checkNumericalValues = (value, feildName) => (req, res, next) =>
     });
 };
 
-exports.isMaximumHorseCarryingCapicityEntered = (req,res,next) =>
+
+exports.checkRadioButtonYESAndNOINPUT = (value, message, message2, res) =>
 {
-    const numericLength = parseFloat(req.body.no_of_horse);
-    if(!req.body.no_of_horse)
+    try 
     {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: constants.responseMessage.noofhorserequired
-        });        
-    }
-    else if (typeof numericLength !== "number" || isNaN(numericLength) || !isFinite(numericLength)) 
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: constants.responseMessage.noofhorsenotanumber,
+        return new Promise((resolve, reject) =>
+        {
+            if(!value)
+            {
+                return res.status(200).send
+                ({
+                    code: 400,
+                    status: false,
+                    message: message
+                });        
+            }
+            else if(value === 'YES')
+            {
+                resolve();
+            }
+            else if(value === 'NO')
+            {
+                resolve();
+            }
+            else
+            {
+                return res.status(200).send
+                ({
+                    code: 400,
+                    status: false,
+                    message: message2
+                });        
+            }
         });
     }
-    else if (req.body.no_of_horse <= 0)
+    catch (error)
     {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: constants.responseMessage.noofhorselessthanzero
-        });
-    }
-    else
-    {
-        next();
-    }    
-}
-
-exports.isAirConditionerValueEntered = (req, res, next) =>
-{
-    if(!req.body.air_conditioner)
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: constants.responseMessage.acnotpresent
-        });        
-    }
-    else if(req.body.air_conditioner === 'YES')
-    {
-        next();
-    }
-    else if(req.body.air_conditioner === 'NO')
-    {
-        next();
-    }
-    else
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: constants.responseMessage.acInvalidInput
-        });        
-    }
-}
-
-exports.isTemperaturControlValueEntered = (req, res, next) =>
-{
-    if(!req.body.temperature_manageable)
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: constants.responseMessage.tempcontrolnotpresent
-        });        
-    }
-    else if(req.body.temperature_manageable === 'YES')
-    {
-        next();
-    }
-    else if(req.body.temperature_manageable === 'NO')
-    {
-        next();
-    }
-    else
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: constants.responseMessage.tempcontrolInvalidInput
-        });        
-    }
-}
-
-exports.isGCCTravelValueEntered = (req, res, next) =>
-{
-    if(!req.body.gcc_travel_allowed)
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: constants.responseMessage.vehicleGCCvalueNotPresent
-        });        
-    }
-    else if(req.body.gcc_travel_allowed === 'YES')
-    {
-        next();
-    }
-    else if(req.body.gcc_travel_allowed === 'NO')
-    {
-        next();
-    }
-    else
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: constants.responseMessage.vehicleGCCvalueInvalid
-        });        
-    }
-}
-
-exports.isInsuranceCoverValueEntered = (req, res, next) =>
-{
-    if(!req.body.insurance_cover)
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: constants.responseMessage.vehicleinsurancecoverenotpresnet
-        });        
-    }
-    else if(req.body.insurance_cover === 'YES')
-    {
-        next();
-    }
-    else if(req.body.insurance_cover === 'NO')
-    {
-        next();
-    }
-    else
-    {
-        return res.status(200).send
-        ({
-            code: 400,
-            status: false,
-            message: constants.responseMessage.vehicleinsurancecovereinvalidinput
-        });        
+        console.log(`Error from the 'checkRadioButtonYESAndNOINPUT' function`, error);
     }
 }
 
@@ -238,7 +137,7 @@ exports.isVehicleRegistrationNumberEntered = async (req, res, next) =>
         {
             checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `registration_no`, req.body.vehicle_registration_number, req.params.id, 'Vehicle registration number')(req, res, next);                        
         }
-        else if(req.method === `PUT` && req.url === `${url.UPDATE_VEHICLE_PAGE_URL}${req.params.id}`)
+        else if(req.method === `PUT` && req.url === `${url.vehicles.PUT_EDIT_VEHICLE}${req.params.id}`)
         {
             checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `registration_no`, req.body.vehicle_registration_number, req.params.id, 'Vehicle registration number')(req, res, next);
         }
@@ -271,7 +170,7 @@ exports.isInsurancePolicyNumberEntered = async (req, res, next) =>
         {
             checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `insurance_policy_no`, req.body.insurance_policy_no, req.params.id, 'Vehicle insurance policy number')(req, res, next);                        
         }
-        else if(req.method === `PUT` && req.url === `${url.UPDATE_VEHICLE_PAGE_URL}${req.params.id}`)
+        else if(req.method === `PUT` && req.url === `${url.vehicles.PUT_EDIT_VEHICLE}${req.params.id}`)
         {
             checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `insurance_policy_no`, req.body.insurance_policy_no, req.params.id, 'Vehicle insurance policy number')(req, res, next);
         }
@@ -339,7 +238,7 @@ exports.isValidVehicleNumberEntered =  async (req, res, next) =>
         {
             checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params.id, 'Vehicle number')(req, res, next);                        
         }
-        else if(req.method === `PUT` && req.url === `${url.UPDATE_VEHICLE_PAGE_URL}${req.params.id}`)
+        else if(req.method === `PUT` && req.url === `${url.vehicles.PUT_EDIT_VEHICLE}${req.params.id}`)
         {
             checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params.id, 'Vehicle number')(req, res, next);
         }
@@ -357,7 +256,7 @@ exports.isValidVehicleNumberEntered =  async (req, res, next) =>
 
 exports.isSafetyCertificateAdded = (req, res, next) =>
 {
-    if(!req.files?.safety_certicate && req.url === `${url.ADD_VEHICLE_PAGE_URL}/${req.params.id}` && req.method === 'POST')
+    if(!req.files?.safety_certicate && req.url === `${url.vehicles.POST_ADD_NEW_VEHICLE}${req.params.id}` && req.method === 'POST')
     {
         return res.status(200).json
         ({
@@ -368,11 +267,11 @@ exports.isSafetyCertificateAdded = (req, res, next) =>
     } 
     else
     {
-        if(req.method === 'PUT' && req.url === `${url.UPDATE_VEHICLE_PAGE_URL}${req.params?.id}` && !req.files?.licence_img)
+        if(req.method === 'PUT' && req.url === `${url.vehicles.PUT_EDIT_VEHICLE}${req.params?.id}` && !req.files?.licence_img)
         {
             next();
         }
-        if(req.method === 'PUT' && req.url === `${url.UPDATE_VEHICLE_PAGE_URL}${req.params?.id}` && req.files?.licence_img)
+        if(req.method === 'PUT' && req.url === `${url.vehicles.PUT_EDIT_VEHICLE}${req.params?.id}` && req.files?.licence_img)
         {
             next();
         }

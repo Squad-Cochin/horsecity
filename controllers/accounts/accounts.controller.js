@@ -1,4 +1,4 @@
-const modalAccounts = require('../../models/accounts/accounts')
+const modalAccounts = require('../../models/accounts/accounts.model')
 const constants = require('../../utils/constants');
 
 

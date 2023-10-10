@@ -173,7 +173,6 @@ exports.addCustomer = async (req, res, next) =>
 
 exports.editCustomer = async (req, res, next) =>
 {
-    console.log(req.body);
     // The below line is for going to the model function to implement the code for editing or updating the existing customer.
     const customers = await customer.editcustomer
     (
@@ -929,19 +928,7 @@ exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
 exports.getOneDetailsOnCustomerPage = async(req, res, next) =>
 {
     let customers = await customer.getonedetailsoncustomerpage(req.params?.id);
-    // If any wrong id or some thing wrong entered, If that Id has no data then this if block of code will be executed
-    if(customers === 'nodata')
-    {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.getOneErr,
-            data : []
-        });
-    }
-    // If any unwanted, unencounter, or unconventionaal error came then this else if block of code will be executed.
-    else if(customers === 'err')
+    if(customers === 'err')
     {
         return res.status(200).send
         ({

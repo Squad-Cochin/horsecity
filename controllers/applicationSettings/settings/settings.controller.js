@@ -1,5 +1,5 @@
 
-const settings = require('../../../models/applicationSettings/settings/settings')
+const settings = require('../../../models/applicationSettings/settings/settings.model')
 const constants = require('../../../utils/constants');
 const commonoperation = require('../../../utils/helper/commonoperation');
 
@@ -8,17 +8,18 @@ const commonoperation = require('../../../utils/helper/commonoperation');
 /**For updating settings page */
 exports.updateSettings = async(req,res)=>
 {
-
     let settingsPage = await settings.updateSettings(req.body,req.files);
-
-    if(settingsPage.status == 'INVALIDFORMAT'){
-        return res.status(200).send({
+    if(settingsPage.status == 'INVALIDFORMAT')
+    {
+        return res.status(200).send
+        ({
             code: 400,
             success: false,
             message: constants.responseMessage.imageFormat
         });
-        
-    }else if(settingsPage.status == 'FAILD'){
+    }
+    else if(settingsPage.status == 'FAILD')
+    {
         return res.status(200).send
         ({
             code: 400,

@@ -407,25 +407,44 @@ exports.customizeResponseObjectForVehicleDetailInCustomerSide = (result, data, d
 }
 
 exports.customizeResponseObjectOfVehicleAllReviewsForCustomerSide = (result) => {
-  var vehicleResponse = {
+  var vehicleResponse = 
+  {
       "reviews": []
   };
 
-  if (result.length !== 0) {
-      const uniqueReviewIds = new Set();
-
-      for (let row of result) {
-          if (row.review_id !== null && !uniqueReviewIds.has(row.review_id)) {
-              vehicleResponse.reviews.push({
-                  "id": row.review_id,
-                  "customer_name": row.customer_name,
-                  "review": row.review,
-                  "created_at": time.formatDateToDDMMYYYY(row.created_at)
-              });
-              uniqueReviewIds.add(row.review_id);
-          }
+  if (result.length !== 0) 
+  {
+    const uniqueReviewIds = new Set();
+    for (let row of result) 
+    {
+      if (row.review_id !== null && !uniqueReviewIds.has(row.review_id))
+      {
+        vehicleResponse.reviews.push
+        ({
+          "id": row.review_id,
+          "customer_name": row.customer_name,
+          "review": row.review,
+          "created_at": time.formatDateToDDMMYYYY(row.created_at)
+        });
+        uniqueReviewIds.add(row.review_id);
       }
+    }
   }
 
   return vehicleResponse;
 };
+
+exports.customerSideDetialsPage = (data) =>
+{
+  let responseObj = 
+  {
+      name : data[0].name,
+      userName : data[0].user_name, 
+      email : data[0].email,               
+      contact_no : data[0].contact_no, 
+      birthday : time.formatDateToMMDDYYYY(data[0].date_of_birth),                
+      id_proof_no : data[0].id_proof_no === 'undefined' ? '' : data[0].id_proof_no, 
+      id_proof_image : `${process.env.PORT_SP}${constants.attachmentLocation.customer.view.idProof}${data[0].id_proof_image}`
+  }
+  return responseObj;
+}

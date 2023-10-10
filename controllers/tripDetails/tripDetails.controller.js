@@ -6,7 +6,7 @@
 //                                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const tripDetails = require('../../models/tripDetails/tripDetails')
+const tripDetails = require('../../models/tripDetails/tripDetails.model')
 const constants = require('../../utils/constants');
 
 /**For gitting all trip details  */

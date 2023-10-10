@@ -7,9 +7,9 @@
 //                                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const con = require('../../configs/db.configs');
 const auth = require('../../models/auth/auth.model'); // Impoting the auth models details
 const constants = require('../../utils/constants');
+
 /**
  * The below function is for the login of the service provider user
  *      We need to two things from the users
@@ -28,7 +28,7 @@ exports.serviceProviderLogin = async(req, res)=>
         ({
             status : "failure",
             code : 400,
-            message : constants.responseMessage.usernameincorrect,
+            message : `This username appears to be incorrect, or no service provider is registered with this username.`,
         });
     }
     // If any unspecified or unencountered error came. Which is not as per our code thinking, then this else if block
@@ -254,8 +254,6 @@ exports.verifyUrlForResetPassword = async(req, res)=>
 
 }
 
-
-
 /**This controller for update forgot password  */
 exports.resetPasswordForForgotPassword = async(req, res)=>
 {
@@ -279,7 +277,6 @@ exports.resetPasswordForForgotPassword = async(req, res)=>
     }
 
 }
-
 
 exports.Verifiy = async (req, res) =>
 {

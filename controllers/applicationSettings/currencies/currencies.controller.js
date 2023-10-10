@@ -1,5 +1,5 @@
 
-const currencies = require('../../../models/applicationSettings/currencies/currencies')
+const currencies = require('../../../models/applicationSettings/currencies/currencies.model')
 const constants = require('../../../utils/constants');
 const commonoperation = require('../../../utils/helper/commonoperation');
 

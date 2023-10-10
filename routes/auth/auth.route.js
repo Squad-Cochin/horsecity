@@ -12,20 +12,22 @@
 
 const authcontroller = require(`../../controllers/auth/auth.controller`);   // importing the auth controller details and assigning it to the authcontroller variable
 const checkInput = require(`../../middlewares/validateInput/checkRequestBodyInput`); // Importing the body Middleware
-const { isValidIdInTheParams } = require("../../middlewares/validateInput/checkRequestparams"); // Importing the params middleware
 const constants = require("../../utils/constants"); // Constant elements are stored in this file
 const validator = require(`../../middlewares/requestValidator`);  // Importing the requestValidator file data 
+const url = require(`../../utils/url_helper`);
+const { isValidIdInTheParams } = require("../../middlewares/validateInput/checkRequestparams"); // Importing the params middleware
 
 
 module.exports = function(app)
 {
     // The below route is for login of service provider user.
-    app.post(`/${process.env.apiToken}/login`,
-
+    app.post(`${url.auth.POST_SERVICE_PROVIDER_LOGIN}`,
+    validator.verifyToken,
     authcontroller.serviceProviderLogin);
     
     // The below route is for changing the password of the service provider user.
-    app.post(`/${process.env.apiToken}/changePassword`, 
+    app.post(`${url.auth.POST_SERVICE_PROVIDER_CHANGE_PASSWORD}`,
+    validator.verifyToken, 
     checkInput.usernameValidation(constants.tableName.service_providers),
     checkInput.passwordValidation,
     checkInput.newpassword,
@@ -35,25 +37,36 @@ module.exports = function(app)
     
     // The below route is for logout of the service provider user. 
     // But Nobody is using this as per now. May be in the future it will be used full //
-    app.post(`/${process.env.apiToken}/logout/:id`,
+    app.post(`${url.auth.POST_SERVICE_PROVIDER_LOGOUT}`,
+    validator.verifyToken,
     isValidIdInTheParams(constants.tableName.service_providers),
     authcontroller.serviceProviderLogout); 
 
 
     /**The below url for  sending email for forgot password  */
-    app.post(`/${process.env.apiToken}/forgotPassword`,validator.emailValidation,authcontroller.sendEmailForgotPassword);  
+    app.post(`${url.auth.POST_FORGOT_PASSWORD_SEND_EMAIL}`,
+    validator.verifyToken,
+    validator.emailValidation,
+    authcontroller.sendEmailForgotPassword);  
     
     /**The below url for verification  id & token   */
-    app.get(`/reset-password/:id/:token`,authcontroller.verifyAndRedirectingToPage);   
+    app.get(`${url.auth.GET_SERVICE_PROVIDER_VERIFY_TOKEN}`,
+    validator.verifyToken,
+    authcontroller.verifyAndRedirectingToPage);   
     
-    app.post(`/${process.env.apiToken}/verify/reset-password/:id/:token`,authcontroller.verifyUrlForResetPassword);   
+    app.post(`${url.auth.POST_SERVICE_PROVIDER_PASSWORD_CHANGE_REDIRECT_PAGE_LINK}`,
+    validator.verifyToken,
+    authcontroller.verifyUrlForResetPassword);   
     
     /**The below url for updating password   */
-    app.post(`/${process.env.apiToken}/update-password/:id/:token`, 
+    app.post(`${url.auth.POST_REDIRECT_PAGE_UPDATE_PASSWORD}`,
+    validator.verifyToken, 
     checkInput.newpassword,
     checkInput.confirmnewpassword,
     checkInput.passwordandconfirmpasswordsimilarity,
     authcontroller.resetPasswordForForgotPassword);    
 
-    app.post(`/verify`,authcontroller.Verifiy);   
+    app.post(`${url.auth.POST_VERIFY_TOKEN}`,
+    validator.verifyToken,
+    authcontroller.Verifiy);   
 }

@@ -6,7 +6,7 @@
 //                                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const quotation = require('../../models/quotation/quotation')
+const quotation = require('../../models/quotation/quotation.model')
 const constants = require('../../utils/constants');
 const time = require('../../utils/helper/date');
 

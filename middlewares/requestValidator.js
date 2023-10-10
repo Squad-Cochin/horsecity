@@ -4,6 +4,10 @@ const url = require("../utils/url_helper")
 const commonfetching = require('../utils/helper/commonfetching');
 const defaultjs = require('../utils/default')
 const date = require(`../utils/helper/date`);
+const commonoperation = require(`../utils/helper/commonoperation`);
+
+
+
 /***Username validation */
 exports.usernamevalidation = (req, res, next) => {
     const { user_name } = req.body;
@@ -36,7 +40,7 @@ exports.usernamevalidation = (req, res, next) => {
      
         } else {
          
-                if(requestMethod == 'POST' && URL ==  url.ADD_SERVICEPROVIDER__URL){
+                if(requestMethod == 'POST' && URL ==  url.service_provider.POST_ADD_SERVICE_PROVIDER){
 
                     try {
                 let selQuery = `SELECT * FROM service_providers WHERE user_name = '${user_name}' AND deleted_at IS NULL`;
@@ -56,7 +60,7 @@ exports.usernamevalidation = (req, res, next) => {
                 });
             } catch (err) {
             }
-            }else if(requestMethod == 'PUT'  && URL == url.UPDATE_SERVICE_PROVIDER_URL  + req.params?.id){
+            }else if(requestMethod == 'PUT'  && URL == url.service_provider.PUT_EDIT_SERVICE_PROVIDER  + req.params?.id){
                 let id = req.params.id
                 let selQuery = `SELECT user_name FROM service_providers WHERE id = '${id}';`;
                 con.query(selQuery, (err, result) => {      
@@ -161,7 +165,7 @@ exports.emailValidation = async (req, res, next) => {
         {
             try {
 
-             if(requestMethod == 'POST' && URL ==  url.ADD_SERVICEPROVIDER__URL){
+             if(requestMethod == 'POST' && URL ==  url.service_provider.POST_ADD_SERVICE_PROVIDER){
                 let selQuery = `SELECT * FROM service_providers WHERE email = '${email}' AND deleted_at IS NULL`;
                 con.query(selQuery, (err, result) => {
                     if (result.length != 0) {
@@ -176,7 +180,7 @@ exports.emailValidation = async (req, res, next) => {
                         next();
                     }
                 });
-             }else if(requestMethod == 'PUT' && URL == url.UPDATE_SERVICE_PROVIDER_URL  + req.params?.id){
+             }else if(requestMethod == 'PUT' && URL == url.service_provider.PUT_EDIT_SERVICE_PROVIDER  + req.params?.id){
                 let id = req.params.id
                 let selQuery = `SELECT email FROM service_providers WHERE id = '${id}';`;
                 con.query(selQuery, (err, result) => {      
@@ -203,10 +207,10 @@ exports.emailValidation = async (req, res, next) => {
                         } 
              
                 });
-             }else if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL){
+             }else if(requestMethod == 'PUT' && URL == url.application_settings.settings.PUT_UPDATE_SETTINGS_DATA){
   
                     next()
-             }else if(requestMethod == 'POST' && URL == url.FORGOT_PASSWORD__URL){
+             }else if(requestMethod == 'POST' && URL == url.application_settings.settings.POST_FORGOT_PASSWORD_SEND_EMAIL){
             
             let selQuery = `SELECT * FROM service_providers WHERE email = '${email}' AND deleted_at IS NULL`;
             con.query(selQuery, (err, result) => {
@@ -253,7 +257,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
     
             try {
           
-                if(requestMethod == 'POST' || requestMethod == 'PUT' && URL == url.UPDATE_SERVICE_PROVIDER_URL  + req.params?.id){
+                if(requestMethod == 'POST' || requestMethod == 'PUT' && URL == url.service_provider.PUT_EDIT_SERVICE_PROVIDER  + req.params?.id){
                     const { licence_no } = req.body;
                     if (!licence_no) {
                         return res.status(200).send
@@ -287,7 +291,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                                     next();
                                 }
                             });
-            }else if(requestMethod == 'PUT' && URL == url.UPDATE_SERVICE_PROVIDER_URL  + req.params?.id){
+            }else if(requestMethod == 'PUT' && URL == url.service_provider.PUT_EDIT_SERVICE_PROVIDER  + req.params?.id){
                 let id = req.params.id
         
                 let selQuery = `SELECT licence_no FROM service_providers WHERE id = '${id}';`;
@@ -317,7 +321,7 @@ exports.validateUAELicenseNumber = async (req, res, next) => {
                 });
          }
 
-    }else if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL ){
+    }else if(requestMethod == 'PUT' && URL == url.application_settings.settings.PUT_UPDATE_SETTINGS_DATA ){
          const { licence_number} = req.body;
     
         
@@ -476,14 +480,11 @@ exports.verifyLanguageBody = async(req,res,next) =>
 
 }
 
-exports.verifyToken = async (req,res,next ) =>
+exports.verifyToken = async (req, res, next ) =>
 {
-    const bearerToken = req.headers.authorization;
-    
-    
+    const bearerToken = req.headers.authorization;    
     if(!bearerToken)
-    {
-    
+    {   
         return res.status(200).send
         ({
             code: 400,
@@ -492,9 +493,37 @@ exports.verifyToken = async (req,res,next ) =>
         });
     }
     const token = bearerToken.split(' ')[1];
-    if(process.env.clientApiToken === token)
+    let query = `SELECT * 
+                 FROM application_token ap
+                 WHERE ap.token = ${token};
+                `
+    let checkToken = await commonoperation.queryAsync(query)
+    if(checkToken.length != 0)
     {
-        next()
+        const givenDate = new Date().getTime();
+        const expiryDate = new Date(checkToken[0].expiry_at).getTime();
+        if(givenDate > expiryDate)
+        {
+            return res.status(200).send
+            ({
+                code: 400,
+                success: false,
+                message: "Token is expired."
+            }); 
+        }
+        else if(checkToken[0].status === constants.status.inactive)
+        {
+            return res.status(200).send
+            ({
+                code: 400,
+                success: false,
+                message: "Inactive token."
+            }); 
+        }
+        else
+        {
+            next();
+        }
     }
     else
     {
@@ -506,7 +535,6 @@ exports.verifyToken = async (req,res,next ) =>
         });
     }
 }
-
  
 exports.validateUAEMobileNumber = async (req, res, next) => {
     const { contact_no, emergency_contact_no } = req.body;
@@ -516,7 +544,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
     
 
                 try {
-                    if(requestMethod == 'POST' ||requestMethod == 'PUT' && URL == url.UPDATE_SERVICE_PROVIDER_URL  + req.params?.id){
+                    if(requestMethod == 'POST' ||requestMethod == 'PUT' && URL == url.service_provider.PUT_EDIT_SERVICE_PROVIDER  + req.params?.id){
 
                         if (!contact_no  ) {
                             return res.status(200).send
@@ -575,7 +603,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                                     next();
                                 }
                             });
-                   }else if(requestMethod == 'PUT' && URL == url.UPDATE_SERVICE_PROVIDER_URL  + req.params?.id){
+                   }else if(requestMethod == 'PUT' && URL == url.service_provider.PUT_EDIT_SERVICE_PROVIDER  + req.params?.id){
                             let id = req.params.id
                             let selQuery = `SELECT contact_no FROM service_providers WHERE id = '${id}';`;
                             con.query(selQuery, (err, result) => {      
@@ -605,7 +633,7 @@ exports.validateUAEMobileNumber = async (req, res, next) => {
                     }
             }}
              
-             if(requestMethod == 'PUT' && URL == url.UPDATE_SETTINGS_PAGE_URL  ){
+             if(requestMethod == 'PUT' && URL == url.application_settings.settings.PUT_UPDATE_SETTINGS_DATA){
                
                 const { language_id,currency_id,tax_id,phone, country_code,invoice_prefix,quotation_prefix} = req.body;
                     if(!country_code){
@@ -1172,7 +1200,7 @@ exports.verifyQuotationFields = async (req,res,next) =>
                 });
         
     }else if(!vehicle_id){
-        // if(reqUrl === url.UPDATE_STATUS_QUOTATION){
+        // if(reqUrl === url.quotation.POST_CHANGING_QUOTATION_STATUS){
         //         return res.status(200).send
         //         ({ 
         //             code: 400,
@@ -1188,7 +1216,7 @@ exports.verifyQuotationFields = async (req,res,next) =>
             });
         //  }
     }else if(!driver_id){
-        // if(reqUrl === url.UPDATE_STATUS_QUOTATION){
+        // if(reqUrl === url.quotation.POST_CHANGING_QUOTATION_STATUS){
         //         return res.status(200).send
         //         ({ 
         //             code: 400,
@@ -1353,7 +1381,7 @@ exports.verifyDropDate = async (req, res, next) =>
 
     let verfyDropdate = await date.verifyTodayDateAnd_dd_mm_yyyy(req.body.drop_date)
     if(verfyDropdate){
-        if(reqUrl === url.UPDATE_STATUS_QUOTATION){
+        if(reqUrl === url.quotation.POST_CHANGING_QUOTATION_STATUS){
             return res.status(200).send
             ({ 
                 code: 400,
@@ -1380,7 +1408,7 @@ exports.verifyPickupDate = async (req, res, next) =>
    let verfyPickupdate = await date.verifyTodayDateAnd_dd_mm_yyyy(req.body.pickup_date)
 
     if(verfyPickupdate){
-        if(reqUrl === url.UPDATE_STATUS_QUOTATION){
+        if(reqUrl === url.quotation.POST_CHANGING_QUOTATION_STATUS){
             return res.status(200).send
             ({ 
                 code: 400,

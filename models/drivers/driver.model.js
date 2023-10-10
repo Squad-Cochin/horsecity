@@ -26,33 +26,41 @@ module.exports = class drivers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
-                con.query(checkRole, async (err, result) =>
+                let result = await commonfetching.getRoleDetails(Id);
+                if(result === `err` || result.length == 0)
                 {
-                    if(err)
-                    {
-                       resolve('err') 
-                    }
-                    if(result[0].role_id === constants.Roles.admin)
-                    {
-                        const offset = (pageNumber - 1) * pageSize;
-                        let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, cd.status FROM ${constants.tableName.drivers} cd WHERE cd.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;                        
+                    resolve('err');
+                }
+                else if(result[0].role_id === constants.Roles.admin)
+                {
+                    const offset = (pageNumber - 1) * pageSize;
+                    let selQuery = `    SELECT cd.id,  
+                                        cd.name, 
+                                        cd.email, 
+                                        cd.contact_no, 
+                                        DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, 
+                                        cd.status 
+                                        FROM ${constants.tableName.drivers} cd 
+                                        WHERE cd.deleted_at IS NULL 
+                                        LIMIT ${pageSize} OFFSET ${offset}`;                        
                         const count = await commonoperation.totalCount(constants.tableName.drivers);
                         con.query(selQuery, async (err, result2) =>
                         {
                             if(err)
                             {
-                                console.error(err);
                                 resolve('err');
                             }
                             else
                             {
-                                let Query = `SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
-                                FROM ${constants.tableName.permissions} AS pm
-                                JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
-                                JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                                WHERE pm.role_id = '${result[0].role_id}' AND md.id = '${constants.modules.drivers}'
-                               `;
+                                let Query = `   SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
+                                                FROM ${constants.tableName.permissions} AS pm
+                                                JOIN ${constants.tableName.modules} md 
+                                                    ON pm.module_id  = md.id
+                                                JOIN ${constants.tableName.roles} rl 
+                                                    ON pm.role_id = rl.id
+                                                WHERE pm.role_id = '${result[0].role_id}' 
+                                                    AND md.id = '${constants.modules.drivers}'
+                                            `;
                                 con.query(Query, (err, moduleResult) =>
                                 {
                                     err ? resolve('err') :  result.length === 0 ? resolve ({totalCount : count[0]['count(t.id)'], drivers : result2, module : moduleResult}) : resolve ({totalCount : count[0]['count(t.id)'], drivers : result2, module : moduleResult}); 
@@ -96,8 +104,7 @@ module.exports = class drivers
                     {
                         resolve('err') 
                     }                    
-                });
-            });                              
+                });                              
         }
         catch(error)
         {

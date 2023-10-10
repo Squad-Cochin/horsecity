@@ -26,64 +26,64 @@ module.exports = class customers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let checkRole = `  
-                                    SELECT sp.id,
-                                    r.id AS role_id,
-                                    r.name 
-                                    FROM ${constants.tableName.service_providers} sp,
-                                    ${constants.tableName.roles} r 
-                                    WHERE 
-                                    sp.id = ${Id} 
-                                    AND sp.role_Id = r.id`;
-                con.query(checkRole, async (err, result) =>
+                let result = await commonfetching.getRoleDetails(Id);
+                if(result === `err` || result.length == 0)
                 {
-                    if(err)
+                    resolve('err');
+                }
+                else if(result[0].role_id === constants.Roles.admin)
+                {
+                    const offset = (pageNumber - 1) * pageSize;
+                    let selQuery = `    SELECT 
+                                        cd.id, 
+                                        cd.name, 
+                                        cd.email, 
+                                        cd.contact_no, 
+                                        DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, 
+                                        cd.status 
+                                        FROM ${constants.tableName.customers} cd 
+                                        WHERE cd.deleted_at IS NULL 
+                                        LIMIT ${pageSize} 
+                                        OFFSET ${offset}`;                        
+                    const count = await commonoperation.totalCount(constants.tableName.customers);
+                    con.query(selQuery, async (err, result2) =>
                     {
-                       resolve('err') 
-                    }
-                    if(result[0].role_id === constants.Roles.admin)
-                    {
-                        const offset = (pageNumber - 1) * pageSize;
-                        let selQuery = `SELECT cd.id, cd.name, cd.email, cd.contact_no, DATE_FORMAT(cd.created_at, '%d-%m-%Y') AS created_at, cd.status FROM ${constants.tableName.customers} cd WHERE cd.deleted_at IS NULL LIMIT ${pageSize} OFFSET ${offset}`;                        
-                        const count = await commonoperation.totalCount(constants.tableName.customers);
-                        con.query(selQuery, async (err, result2) =>
+                        if(err)
                         {
-                            if(err)
+                            resolve('err');
+                        }
+                        else
+                        {
+                            let Query = `   SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
+                                            FROM ${constants.tableName.permissions} AS pm
+                                            JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+                                            JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
+                                            WHERE pm.role_id = '${result[0].role_id}' AND md.id = '${constants.modules.customers}'
+                                        `;
+                            con.query(Query, (err, moduleResult) =>
                             {
-                                resolve('err');
-                            }
-                            else
-                            {
-                                let Query = `SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
+                                err ? resolve('err') : result.length === 0 ? resolve ({totalCount : count[0]['count(t.id)'], customer : result2, module : moduleResult}) : resolve ({totalCount : count[0]['count(t.id)'], customer : result2, module : moduleResult});
+                            });
+                        }                           
+                    });
+                }
+                else if(result[0].role_id === constants.Roles.service_provider)
+                {
+                    let Query = `SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
                                 FROM ${constants.tableName.permissions} AS pm
                                 JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
                                 JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                                WHERE pm.role_id = '${result[0].role_id}' AND md.id = '${constants.modules.customers}'
-                               `;
-                                con.query(Query, (err, moduleResult) =>
-                                {
-                                    err ? resolve('err') : result.length === 0 ? resolve ({totalCount : count[0]['count(t.id)'], customer : result2, module : moduleResult}) : resolve ({totalCount : count[0]['count(t.id)'], customer : result2, module : moduleResult});
-                                });
-                            }                           
-                        });
-                    }
-                    else if(result[0].role_id === constants.Roles.service_provider)
+                                WHERE pm.role_id = '${result[0].role_id}' 
+                                AND md.id = '${constants.modules.customers}'`;
+                    con.query(Query, (err, moduleResult) =>
                     {
-                        let Query = `SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
-                                FROM ${constants.tableName.permissions} AS pm
-                                JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
-                                JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                                WHERE pm.role_id = '${result[0].role_id}' AND md.id = '${constants.modules.customers}'`;
-                                con.query(Query, (err, moduleResult) =>
-                                {
-                                    err ? resolve('err') : result.length === 0 ? resolve ({totalCount : 0, customer : [], module : moduleResult}) : resolve ({totalCount : 0, customer : [], module : moduleResult});  
-                                });
-                    }
-                    else
-                    {
-                        resolve('err') 
-                    }                    
-                });
+                        err ? resolve('err') : result.length === 0 ? resolve ({totalCount : 0, customer : [], module : moduleResult}) : resolve ({totalCount : 0, customer : [], module : moduleResult});  
+                    });
+                }
+                else
+                {
+                    resolve('err') 
+                }                    
             });              
         }
         catch(error)
@@ -91,6 +91,7 @@ module.exports = class customers
             console.log('Error from the customer.model.js file from the models > customers folders. In the static function "getall". Which is designed to fetch all the data of customers.');                    
         }
     };
+
 
     /**
     * The below model function is for the Admin side page. 
@@ -148,7 +149,13 @@ module.exports = class customers
                 }
                 else
                 {
-                    let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
+                    let checkRole = `
+                                    SELECT sp.id , 
+                                    r.id AS role_id, 
+                                    r.name FROM service_providers sp, 
+                                    ${constants.tableName.roles} r 
+                                    WHERE sp.id = ${Id} 
+                                    AND sp.role_Id = r.id`;
                     con.query(checkRole, async (err, resultRole) =>
                     {
                         if(err)
@@ -160,17 +167,8 @@ module.exports = class customers
                             if(resultRole[0].role_id === constants.Roles.admin)
                             {
                                 let insQuery = `INSERT INTO customers(name, email, user_name, password, contact_no, date_of_birth, id_proof_no, id_proof_image, phone_verified, email_verified, expiry_at, created_at) VALUES('${name}', '${email}', '${user_name}', '${await commonoperation.changePasswordToSQLHashing(password)}', '${contact_no}', '${date_of_birth}', '${id_proof_no}', '${uploadAttachment}', 'TRUE', 'TRUE', '${time.addingSpecifiedDaysToCurrentDate(constants.password.expiry_after)}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                                con.query(insQuery, (err, result) =>
-                                {
-                                    if(result.affectedRows > 0)
-                                    {
-                                        resolve(result);
-                                    }
-                                    else
-                                    {
-                                        resolve('err')
-                                    }
-                                });
+                                let result = await commonoperation.queryAsync(insQuery)
+                                result.affectedRows > 0 ? resolve(result) : resolve('err')
                             }
                             else if(resultRole[0].role_id === constants.Roles.service_provider)
                             {
@@ -204,50 +202,32 @@ module.exports = class customers
                 if(id_proof_image === null || id_proof_image === undefined)
                 {
                     let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
-                    con.query(upQuery, (err, result) =>
-                    {
-                        if(result.affectedRows > 0)
-                        {
-                            resolve(result);
-                        }
-                        else
-                        {
-                            resolve('err')
-                        }
-                    });
+                    let result = await commonoperation.queryAsync(upQuery)
+                    result.affectedRows > 0 ? resolve(result) : resolve('err')
                 }
                 else
                 {
-                let uploadAttachment = await commonoperation.fileUploadTwo(id_proof_image, constants.attachmentLocation.customer.upload.idProof);
-                if(uploadAttachment === 'INVALIDFORMAT')
-                {
-                    resolve('INVALIDFORMAT');
-                }
-                else if(uploadAttachment === 'ERR')
-                {
-                    resolve('err');
-                }
-                else if(uploadAttachment === 'NOATTACHEMENT')
-                {
-                    resolve('NOATTACHEMENT');
-                }
-                else
-                {
-                    let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.id_proof_image = '${uploadAttachment}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
-                    con.query(upQuery, (err, result) =>
+                    let uploadAttachment = await commonoperation.fileUploadTwo(id_proof_image, constants.attachmentLocation.customer.upload.idProof);
+                    if(uploadAttachment === 'INVALIDFORMAT')
                     {
-                        if(result.affectedRows > 0)
-                        {
-                            resolve(result);
-                        }
-                        else
-                        {
-                            resolve('err')
-                        }
-                    });
-                }
-            }                
-        });            
+                        resolve('INVALIDFORMAT');
+                    }
+                    else if(uploadAttachment === 'ERR')
+                    {
+                        resolve('err');
+                    }
+                    else if(uploadAttachment === 'NOATTACHEMENT')
+                    {
+                        resolve('NOATTACHEMENT');
+                    }
+                    else
+                    {
+                        let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.id_proof_image = '${uploadAttachment}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
+                        let result = await commonoperation.queryAsync(upQuery)
+                        result.affectedRows > 0 ? resolve(result) : resolve('err')
+                    }
+                }                
+            });            
         }
         catch (error)
         {
@@ -297,7 +277,18 @@ module.exports = class customers
         {
             try
             {
-                let selQuery = `SELECT c.id, c.name, c.email, c.password, c.user_name, c.contact_no, c.id_proof_no, c.id_proof_image, c.expiry_at, c.status  FROM ${constants.tableName.customers} c WHERE c.user_name = '${username}' `;
+                let selQuery = ` SELECT c.id,
+                                 c.name,
+                                 c.email,
+                                 c.password, 
+                                 c.user_name, 
+                                 c.contact_no, 
+                                 c.id_proof_no, 
+                                 c.id_proof_image, 
+                                 c.expiry_at, 
+                                 c.status  
+                                 FROM ${constants.tableName.customers} c 
+                                 WHERE c.user_name = '${username}' `;
                 con.query(selQuery, async(err, customerData) =>
                 {
                     if(customerData.length === 0)
@@ -311,11 +302,7 @@ module.exports = class customers
                         const expiryDate = new Date(customerData[0].expiry_at).getTime();
                         if(givenDate > expiryDate)
                         {
-                            resolve(
-                                {
-                                    message: 'passwordexpired',
-                                    data
-                                })
+                            resolve({ message: 'passwordexpired', data})
                         }
                         else
                         {
@@ -371,7 +358,13 @@ module.exports = class customers
                         {
                             if(result3.length != 0)
                             {
-                                let upQuery = `UPDATE ${constants.tableName.customer_logs} c SET c.logout_time = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', c.duration = TIMEDIFF('${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.changeDateToSQLFormat(result3[0].login_time)}') WHERE c.customer_id = ${customerData[0].id} AND c.login_time IS NOT NULL AND c.logout_time IS NULL`;
+                                let upQuery = ` UPDATE ${constants.tableName.customer_logs} c 
+                                                SET c.logout_time = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', 
+                                                c.duration = TIMEDIFF('${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', '${time.changeDateToSQLFormat(result3[0].login_time)}') 
+                                                WHERE 
+                                                c.customer_id = ${customerData[0].id} 
+                                                AND c.login_time IS NOT NULL 
+                                                AND c.logout_time IS NULL`;
                                 con.query(upQuery, (err, result1) =>
                                 {
                                     result1.affectedRows > 0 ? resolve(`logoutdone`) :  resolve(`err`);
@@ -639,15 +632,8 @@ module.exports = class customers
                     AND q.status = '${constants.quotation_status.confirmed}'
                     AND q.id = i.quot_id
                 `;                              
-                let result = await commonoperation.queryAsync(query)
-                if(result === 'err')
-                {
-                    resolve('err');
-                }
-                else
-                {
-                    resolve(result);
-                }
+                let result = await commonoperation.queryAsync(query);
+                result === 'err' ? resolve('err') : resolve(result) 
             });
         }
         catch (error)
@@ -695,15 +681,8 @@ module.exports = class customers
                 WHERE b.customer_id = ${Id}
                     AND b.booking_status = 'CONFIRM' `;
                     
-                let result = await commonoperation.queryAsync(query)
-                if(result == 'err')
-                {
-                    resolve('err');
-                }
-                else
-                {
-                    resolve(result);
-                }
+                let result = await commonoperation.queryAsync(query);
+                result == 'err' ? resolve('err') : resolve(result);
             });
         }
         catch (error)
@@ -754,15 +733,8 @@ module.exports = class customers
                                 AND pr_check.status = '${constants.status.paid}'
                                 WHERE b.customer_id = ${Id}
                                 AND b.booking_status = '${constants.booking_status.cancelled}' `;
-                let result = await commonoperation.queryAsync(query)
-                if(result == 'err')
-                {
-                    resolve('err');
-                }
-                else
-                {
-                    resolve(result);
-                }
+                let result = await commonoperation.queryAsync(query);
+                result === 'err' ? resolve('err') : resolve(result);
             });
         }
         catch (error)
@@ -1167,17 +1139,8 @@ module.exports = class customers
                                     c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
                                     WHERE c.id = '${Id}'
                                   `;
-                    con.query(upQuery, (err, result) =>
-                    {
-                        if(result.affectedRows > 0)
-                        {
-                            resolve(result);
-                        }
-                        else
-                        {
-                            resolve('err')
-                        }
-                    });
+                    let result = await commonoperation.queryAsync(upQuery);
+                    result.affectedRows > 0 ? resolve(result) : resolve('err');
                 }
                 else
                 {
@@ -1218,17 +1181,8 @@ module.exports = class customers
                                             c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                             WHERE c.id = '${Id}'
                                         `;
-                        con.query(upQuery, (err, result) =>
-                        {
-                            if(result.affectedRows > 0)
-                            {
-                                resolve(result);
-                            }
-                            else
-                            {
-                                resolve('err')
-                            }
-                        });
+                        let result = await commonoperation.queryAsync(upQuery);
+                        result.affectedRows > 0 ? resolve(result) : resolve('err');
                     }
                 }                   
             });
@@ -1247,28 +1201,7 @@ module.exports = class customers
         try
         {
             const data = await commonfetching.dataOnCondition(constants.tableName.customers, Id, 'id');
-            if(data.length === 0)
-            {                
-                return ('nodata');
-            }
-            else if(data === 'err')
-            {
-                return ('err');
-            }
-            else
-            {
-                let responseObj = 
-                {
-                    name : data[0].name,
-                    userName : data[0].user_name, 
-                    email : data[0].email,               
-                    contact_no : data[0].contact_no, 
-                    birthday : time.formatDateToMMDDYYYY(data[0].date_of_birth),                
-                    id_proof_no : data[0].id_proof_no, 
-                    id_proof_image : `${process.env.PORT_SP}${constants.attachmentLocation.customer.view.idProof}${data[0].id_proof_image}`
-                }
-                return responseObj;
-            }     
+            return data === 'err' ? 'err' : objectConvertor.customerSideDetialsPage(data);    
         }
         catch (error)
         {

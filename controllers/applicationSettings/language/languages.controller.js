@@ -1,5 +1,5 @@
 
-const lngModal = require('../../../models/applicationSettings/language/languages')
+const lngModal = require('../../../models/applicationSettings/language/languages.model')
 const constants = require('../../../utils/constants');
 const commonoperation = require('../../../utils/helper/commonoperation');
 

@@ -1,5 +1,5 @@
 
-const tax = require('../../../models/applicationSettings/taxation/taxation')
+const tax = require('../../../models/applicationSettings/taxation/taxation.model')
 const constants = require('../../../utils/constants');
 const commonoperation = require('../../../utils/helper/commonoperation');
 

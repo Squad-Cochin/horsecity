@@ -6,29 +6,32 @@
 //                                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
+const url = require(`../../utils/url_helper`);
 const driverController = require(`../../controllers/drivers/driver.controller`); // For fetching the controller export functions reference. We will instantiate to the variable
 const checkInput = require(`../../middlewares/validateInput/checkRequestBodyInput`);  // This is the middleware for validating the inputs
+const constants = require(`../../utils/constants`); // Constant elements are stored in this file
+const { verifyToken } = require("../../middlewares/requestValidator");
 const { isValidIdInTheParams } = require("../../middlewares/validateInput/checkRequestparams");
 
-const constants = require(`../../utils/constants`); // Constant elements are stored in this file
 
 module.exports = function(app)
 {
     // Below route is for getting data of all the drivers
-    app.post(
-        `/${process.env.apiToken}/getAll/drivers/:id`,
-        isValidIdInTheParams(constants.tableName.service_providers),
-        checkInput.getAllDataBody,
-        driverController.getAll);
+    app.post(`${url.driver.POST_ALL_DRIVER}`,
+    verifyToken,
+    isValidIdInTheParams(constants.tableName.service_providers),
+    checkInput.getAllDataBody,
+    driverController.getAll);
 
     // Below route is for getting data of any  driver
-    app.get(`/${process.env.apiToken}/getOne/driver/:id`, 
+    app.get(`${url.driver.GET_ONE_DRIVER}`,
+    verifyToken, 
     isValidIdInTheParams(constants.tableName.drivers), 
     driverController.getOne);
 
     // Below route is for adding the driver data
-    app.post(`/${process.env.apiToken}/add/driver/:id`,
+    app.post(`${url.driver.POST_ADD_DRIVER}:id`,
+    verifyToken,
     isValidIdInTheParams(constants.tableName.service_providers),
     checkInput.driverRequestAddBody,
     checkInput.isDriverLicenceImageSubmitted,
@@ -47,17 +50,20 @@ module.exports = function(app)
     );
 
     // Below route is for updating the driver status
-    app.put(`/${process.env.apiToken}/update/driver/:id`,
+    app.put(`${url.driver.PUT_UPDATE_DRIVER_STATUS}`,
+    verifyToken,
     isValidIdInTheParams(constants.tableName.drivers), 
     driverController.updateStatus);
 
     // Below route is for removing the driver
-    app.put(`/${process.env.apiToken}/remove/driver/:id`, 
+    app.put(`${url.driver.PUT_REMOVE_DRIVER}`,
+    verifyToken, 
     isValidIdInTheParams(constants.tableName.drivers), 
     driverController.removeDriver);
 
     // Below route is for editing the driver data    
-    app.put(`/${process.env.apiToken}/edit/driver/:id`, 
+    app.put(`${url.driver.PUT_EDIT_DRIVER}:id`,
+    verifyToken, 
     isValidIdInTheParams(constants.tableName.drivers), 
     checkInput.nameValidation,
     checkInput.emailValidation(constants.tableName.drivers),
@@ -72,23 +78,27 @@ module.exports = function(app)
     );
 
     // The below route is for assigning a driver to a  service provider.
-    app.post(`/${process.env.apiToken}/assign/driver`,
+    app.post(`${url.driver.POST_ASSIGN_DRIVER}`,
+    verifyToken,
     checkInput.isIdEntered('driver_id', constants.tableName.drivers, 'Driver'),
     checkInput.isIdEntered('serviceProvider_id', constants.tableName.service_providers, 'Service provider'),
     driverController.AssignServiceProvider);
     
     // The below route is for fetching a details past service provider. Where the driver last worked
-    app.get(`/${process.env.apiToken}/past/service/provider/driver/:id`,
+    app.get(`${url.driver.GET_DRIVER_WORK_HISTROY}`,
+    verifyToken,
     isValidIdInTheParams(constants.tableName.drivers),
     driverController.getWorkPastServiceProvider);
 
     // The below route is for removing or unassigning a driver from the service provider
-    app.put(`/${process.env.apiToken}/unassign/driver/:id`,
+    app.put(`${url.driver.PUT_UNASSIGN_DRIVER}`,
+    verifyToken,
     isValidIdInTheParams(constants.tableName.assign_drivers), 
     driverController.UnAssignServiceProvider);
 
     // The below route is for assigning a driver to the service provider
-    app.put(`/${process.env.apiToken}/un/assign/serviceProvider`,
+    app.put(`${url.driver.PUT_REMOVE_SERVICE_PROVIDER_PAGE}`,
+    verifyToken,
     checkInput.isIdEntered('driver_id', constants.tableName.drivers, 'Driver'),
     checkInput.isIdEntered('serviceProvider_id', constants.tableName.service_providers, 'Service provider'),
     driverController.UnAssignServiceProviderAndDriverBoth);    

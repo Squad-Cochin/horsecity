@@ -331,14 +331,7 @@ exports.queryAsync = (query) =>
     {
         con.query(query, (err, result) =>
         {
-            if (err)
-            {
-                resolve('err');
-            }
-            else
-            {
-                resolve(result);
-            }
+            err ? resolve('err') : resolve(result) 
         });
     });
 }

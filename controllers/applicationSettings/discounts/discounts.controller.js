@@ -1,5 +1,5 @@
 
-const discounts = require('../../../models/applicationSettings/discounts/discounts')
+const discounts = require('../../../models/applicationSettings/discounts/discounts.model')
 const constants = require('../../../utils/constants');
 const commonoperation = require('../../../utils/helper/commonoperation');
 

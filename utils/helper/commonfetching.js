@@ -28,14 +28,7 @@ exports.dataOnCondition = async (tableName, Value, feildName) =>
             console.log(`Universal Query At Normal Condition: `, selQuery);
             con.query(selQuery, (err, result) =>
             {
-                if(err)
-                {
-                    resolve(`err`);
-                }
-                else
-                {
-                    result.length > 0 ? resolve(result) : resolve([])
-                }                
+                err ? resolve(`err`) : result.length > 0 ? resolve(result) : resolve([])              
             });          
         });        
     }
@@ -45,13 +38,39 @@ exports.dataOnCondition = async (tableName, Value, feildName) =>
     }
 };
 
+exports.getRoleDetails = async (Id) =>
+{
+    try
+    {
+        return await new Promise(async (resolve, reject) => 
+        {
+            let query = `   SELECT sp.id , 
+                            r.id AS role_id, 
+                            r.name 
+                            FROM ${constants.tableName.service_providers} sp, 
+                            ${constants.tableName.roles} r 
+                            WHERE sp.id = ${Id} 
+                            AND sp.role_Id = r.id`
+            let result = await commonoperation.queryAsync(query);
+            result === `err` ? resolve('err') : resolve(result);
+        });
+    }
+    catch (error)
+    {
+        console.log(`Error from the getRoleDetails function.`, error);        
+    }
+};
+
 exports.dataOnConditionUpdate = async(tableName, feildName, Value, id, messageFeild) =>
 {
     try
     {
         return await  new Promise(async (resolve, reject) =>
         {
-            let selQuery = `SELECT * FROM ${tableName} t WHERE t.id = '${id}' AND t.${feildName} = '${Value}'`;
+            let selQuery = `SELECT * 
+                            FROM ${tableName} t 
+                            WHERE t.id = '${id}' 
+                            AND t.${feildName} = '${Value}'`;
             con.query(selQuery, async (err, result) =>
             {
                 if(err)
@@ -66,14 +85,7 @@ exports.dataOnConditionUpdate = async(tableName, feildName, Value, id, messageFe
                 else
                 {
                     let checkwithOthers = await this.dataOnCondition(tableName, Value, feildName);
-                    if(checkwithOthers.length > 0)
-                    {
-                        resolve(`valuenotavailable`);
-                    }
-                    else
-                    {
-                        resolve(`true`);
-                    }
+                    checkwithOthers.length > 0 ? resolve(`valuenotavailable`) : resolve(`true`); 
                 }
             });
         });      
@@ -87,63 +99,129 @@ exports.dataOnConditionUpdate = async(tableName, feildName, Value, id, messageFe
 exports.getOneInvoice = async (Id) =>
 {
     try
+    {
+        return await new Promise(async(resolve, reject) =>
         {
-            return await new Promise(async(resolve, reject) =>
+            const data1 = await this.dataOnCondition(constants.tableName.bookings, Id, 'inv_id');      
+            if(data1?.length === 0)
             {
-                const data1 = await this.dataOnCondition(constants.tableName.bookings, Id, 'inv_id');      
-                if(data1?.length === 0)
-                {
-                    const selQuery = `  
-                    SELECT
-                    i.id,
-                    v.id AS VehicleId,
-                    i.invoice_no AS iId,
-                    DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
-                    v.vehicle_number AS vehicle_no,
-                    dr.name AS dName,
-                    c.name AS customer_name,
-                    q.pickup_time AS Ptime,
-                    q.drop_time AS Dtime,
-                    sp.name AS companyName,
-                    q.pickup_location AS customerAddress,
-                    sp.contact_address AS companyAddress,
-                    q.pickup_country AS cusCountry,
-                    q.drop_country AS comCountry,
-                    c.email AS customer_email,
-                    sp.email AS com_email,
-                    i.sub_total AS iSubTotal,
-                    COALESCE(t.value, 0) AS iTaxRate,
-                    COALESCE(d.rate, 0) AS iDiscountRate,
-                    i.tax_amount AS iTaxAmount,
-                    i.discount_amount AS iDiscountAmount,
-                    i.final_amount AS iFinalAmount,
-                    sp.name AS service_provider_name,
-                    i.quot_id AS quotation_id,
-                    q.pickup_location,
-                    q.drop_location,
-                    DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date,
-                    DATE_FORMAT(q.drop_date, '%d-%m-%Y') AS drop_date,
-                    pr.id AS paymentId,
-                    q.special_requirement,
-                    e.no_of_horse,
-                    pr.total_amount,
-                    COALESCE(pr.received_amount, 0) AS received_amount,
-                    DATE_FORMAT(pr.received_date, '%d-%m-%Y') AS received_date,
-                    COALESCE(pr.remaining_amount, 0) AS remaining_amount 
-                    FROM ${constants.tableName.invoices} i
-                    JOIN ${constants.tableName.quotations} q ON i.quot_id = q.id
-                    JOIN ${constants.tableName.customers} c ON c.id = q.customer_id
-                    JOIN ${constants.tableName.service_providers} sp ON q.serviceprovider_id = sp.id
-                    JOIN ${constants.tableName.enquiries} e ON e.id = q.enquiry_id
-                    JOIN ${constants.tableName.payment_records} pr ON pr.invoice_id = i.id
-                    JOIN ${constants.tableName.vehicles} v ON v.id = i.vehicle_id
-                    LEFT JOIN ${constants.tableName.discount_types} d ON d.id = q.discount_type_id
-                    LEFT JOIN ${constants.tableName.taxations} t ON t.id = q.taxation_id
-                    JOIN ${constants.tableName.drivers} dr ON dr.id = i.driver_id
-                    WHERE i.id = ${Id} ORDER BY remaining_amount DESC`;                    
-                    const result = await commonoperation.queryAsync(selQuery);
-                    const selQuery2 = ` SELECT 
-                                        i.id,
+                const selQuery = `
+                SELECT
+                i.id,
+                v.id AS VehicleId,
+                i.invoice_no AS iId,
+                DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
+                v.vehicle_number AS vehicle_no,
+                dr.name AS dName,
+                c.name AS customer_name,
+                q.pickup_time AS Ptime,
+                q.drop_time AS Dtime,
+                sp.name AS companyName,
+                q.pickup_location AS customerAddress,
+                sp.contact_address AS companyAddress,
+                q.pickup_country AS cusCountry,
+                q.drop_country AS comCountry,
+                c.email AS customer_email,
+                sp.email AS com_email,
+                i.sub_total AS iSubTotal,
+                COALESCE(t.value, 0) AS iTaxRate,
+                COALESCE(d.rate, 0) AS iDiscountRate,
+                i.tax_amount AS iTaxAmount,
+                i.discount_amount AS iDiscountAmount,
+                i.final_amount AS iFinalAmount,
+                sp.name AS service_provider_name,
+                i.quot_id AS quotation_id,
+                q.pickup_location,
+                q.drop_location,
+                DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date,
+                DATE_FORMAT(q.drop_date, '%d-%m-%Y') AS drop_date,
+                pr.id AS paymentId,
+                q.special_requirement,
+                e.no_of_horse,
+                pr.total_amount,
+                COALESCE(pr.received_amount, 0) AS received_amount,
+                DATE_FORMAT(pr.received_date, '%d-%m-%Y') AS received_date,
+                COALESCE(pr.remaining_amount, 0) AS remaining_amount 
+                FROM ${constants.tableName.invoices} i
+                JOIN ${constants.tableName.quotations} q ON i.quot_id = q.id
+                JOIN ${constants.tableName.customers} c ON c.id = q.customer_id
+                JOIN ${constants.tableName.service_providers} sp ON q.serviceprovider_id = sp.id
+                JOIN ${constants.tableName.enquiries} e ON e.id = q.enquiry_id
+                JOIN ${constants.tableName.payment_records} pr ON pr.invoice_id = i.id
+                JOIN ${constants.tableName.vehicles} v ON v.id = i.vehicle_id
+                LEFT JOIN ${constants.tableName.discount_types} d ON d.id = q.discount_type_id
+                LEFT JOIN ${constants.tableName.taxations} t ON t.id = q.taxation_id
+                JOIN ${constants.tableName.drivers} dr ON dr.id = i.driver_id
+                WHERE i.id = ${Id} ORDER BY remaining_amount DESC`;                    
+                const result = await commonoperation.queryAsync(selQuery);
+                const selQuery2 = ` SELECT 
+                                    i.id,
+                                    v.vehicle_number AS vehicle_no,
+                                    i.driver_id,
+                                    d.name AS dName,
+                                    i.pickup_point AS pickup_point,
+                                    i.drop_point AS drop_point
+                                    FROM ${constants.tableName.drivers} d,
+                                    ${constants.tableName.vehicles} v,
+                                    ${constants.tableName.invoices} i
+                                    WHERE i.id = ${Id} 
+                                    AND i.driver_id = d.id
+                                    AND i.vehicle_id = v.id`;
+                const result2 = await commonoperation.queryAsync(selQuery2);
+                const invoiceResponse = objectConvertor.getOneInvoiceResponse(result, result2);
+                resolve(invoiceResponse);
+            }
+            else if (data1[0].booking_status === 'CONFIRM')
+            {
+                const selQuery = `  SELECT
+                                    i.id,
+                                    v.id AS VehicleId,
+                                    i.invoice_no AS iId,
+                                    DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
+                                    v.vehicle_number AS vehicle_no,
+                                    dr.name AS dName,
+                                    c.name AS customer_name,
+                                    q.pickup_time AS Ptime,
+                                    q.drop_time AS Dtime,
+                                    sp.name AS companyName,
+                                    q.pickup_location AS customerAddress,
+                                    sp.contact_address AS companyAddress,
+                                    q.pickup_country AS cusCountry,
+                                    q.drop_country AS comCountry,
+                                    COALESCE(t.value, 0) AS iTaxRate,
+                                    COALESCE(d.rate, 0) AS iDiscountRate,
+                                    c.email AS customer_email,
+                                    sp.email AS com_email,
+                                    i.sub_total AS iSubTotal,
+                                    i.tax_amount AS iTaxAmount,
+                                    i.discount_amount AS iDiscountAmount,
+                                    i.final_amount AS iFinalAmount,
+                                    sp.name AS service_provider_name,
+                                    i.quot_id AS quotation_id,
+                                    q.pickup_location,
+                                    q.drop_location,
+                                    DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date,
+                                    DATE_FORMAT(q.drop_date, '%d-%m-%Y') AS drop_date,
+                                    pr.id AS paymentId,
+                                    q.special_requirement,
+                                    e.no_of_horse,
+                                    pr.total_amount,
+                                    COALESCE(pr.received_amount, 0) AS received_amount,
+                                    DATE_FORMAT(pr.received_date, '%d-%m-%Y') AS received_date,
+                                    COALESCE(pr.remaining_amount, 0) AS remaining_amount 
+                                    FROM ${constants.tableName.invoices} i
+                                    JOIN ${constants.tableName.quotations} q ON i.quot_id = q.id
+                                    JOIN ${constants.tableName.customers} c ON c.id = q.customer_id
+                                    JOIN ${constants.tableName.service_providers} sp ON q.serviceprovider_id = sp.id
+                                    JOIN ${constants.tableName.enquiries} e ON e.id = q.enquiry_id
+                                    JOIN ${constants.tableName.payment_records} pr ON pr.invoice_id = i.id
+                                    JOIN ${constants.tableName.vehicles} v ON v.id = i.vehicle_id
+                                    JOIN ${constants.tableName.drivers} dr ON dr.id = i.driver_id
+                                    LEFT JOIN ${constants.tableName.discount_types} d ON d.id = q.discount_type_id
+                                    LEFT JOIN ${constants.tableName.taxations} t ON t.id = q.taxation_id
+                                    WHERE i.id = ${Id} ORDER BY remaining_amount DESC`;      
+                const result = await commonoperation.queryAsync(selQuery);
+                const selQuery2 =   `   SELECT i.id,
                                         v.vehicle_number AS vehicle_no,
                                         i.driver_id,
                                         d.name AS dName,
@@ -152,86 +230,19 @@ exports.getOneInvoice = async (Id) =>
                                         FROM ${constants.tableName.drivers} d,
                                         ${constants.tableName.vehicles} v,
                                         ${constants.tableName.invoices} i
-                                        WHERE i.id = ${Id} 
+                                        WHERE i.id = ${Id}
                                         AND i.driver_id = d.id
-                                        AND i.vehicle_id = v.id`;
-                    const result2 = await commonoperation.queryAsync(selQuery2);
-                    const invoiceResponse = objectConvertor.getOneInvoiceResponse(result, result2);
-                    resolve(invoiceResponse);
-                }
-                else if (data1[0].booking_status === 'CONFIRM')
-                {
-                    const selQuery = `  SELECT
-                                        i.id,
-                                        v.id AS VehicleId,
-                                        i.invoice_no AS iId,
-                                        DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
-                                        v.vehicle_number AS vehicle_no,
-                                        dr.name AS dName,
-                                        c.name AS customer_name,
-                                        q.pickup_time AS Ptime,
-                                        q.drop_time AS Dtime,
-                                        sp.name AS companyName,
-                                        q.pickup_location AS customerAddress,
-                                        sp.contact_address AS companyAddress,
-                                        q.pickup_country AS cusCountry,
-                                        q.drop_country AS comCountry,
-                                        COALESCE(t.value, 0) AS iTaxRate,
-                                        COALESCE(d.rate, 0) AS iDiscountRate,
-                                        c.email AS customer_email,
-                                        sp.email AS com_email,
-                                        i.sub_total AS iSubTotal,
-                                        i.tax_amount AS iTaxAmount,
-                                        i.discount_amount AS iDiscountAmount,
-                                        i.final_amount AS iFinalAmount,
-                                        sp.name AS service_provider_name,
-                                        i.quot_id AS quotation_id,
-                                        q.pickup_location,
-                                        q.drop_location,
-                                        DATE_FORMAT(q.pickup_date, '%d-%m-%Y') AS pickup_date,
-                                        DATE_FORMAT(q.drop_date, '%d-%m-%Y') AS drop_date,
-                                        pr.id AS paymentId,
-                                        q.special_requirement,
-                                        e.no_of_horse,
-                                        pr.total_amount,
-                                        COALESCE(pr.received_amount, 0) AS received_amount,
-                                        DATE_FORMAT(pr.received_date, '%d-%m-%Y') AS received_date,
-                                        COALESCE(pr.remaining_amount, 0) AS remaining_amount 
-                                        FROM ${constants.tableName.invoices} i
-                                        JOIN ${constants.tableName.quotations} q ON i.quot_id = q.id
-                                        JOIN ${constants.tableName.customers} c ON c.id = q.customer_id
-                                        JOIN ${constants.tableName.service_providers} sp ON q.serviceprovider_id = sp.id
-                                        JOIN ${constants.tableName.enquiries} e ON e.id = q.enquiry_id
-                                        JOIN ${constants.tableName.payment_records} pr ON pr.invoice_id = i.id
-                                        JOIN ${constants.tableName.vehicles} v ON v.id = i.vehicle_id
-                                        JOIN ${constants.tableName.drivers} dr ON dr.id = i.driver_id
-                                        LEFT JOIN ${constants.tableName.discount_types} d ON d.id = q.discount_type_id
-                                        LEFT JOIN ${constants.tableName.taxations} t ON t.id = q.taxation_id
-                                        WHERE i.id = ${Id} ORDER BY remaining_amount DESC`;      
-                    const result = await commonoperation.queryAsync(selQuery);
-                    const selQuery2 =   `
-                                            SELECT i.id,
-                                            v.vehicle_number AS vehicle_no,
-                                            i.driver_id,
-                                            d.name AS dName,
-                                            i.pickup_point AS pickup_point,
-                                            i.drop_point AS drop_point
-                                            FROM ${constants.tableName.drivers} d,
-                                            ${constants.tableName.vehicles} v,
-                                            ${constants.tableName.invoices} i
-                                            WHERE i.id = ${Id}
-                                            AND i.driver_id = d.id
-                                            AND i.vehicle_id = v.id
-                                        `;
-                    const result2 = await commonoperation.queryAsync(selQuery2);
-                    const invoiceResponse = objectConvertor.getOneInvoiceResponse(result, result2);
-                    resolve(invoiceResponse);
-                }
-                else if (data1[0].booking_status === 'BREAKOUT')
-                {
-                    const selQuery = `  SELECT
-                                        i.id,
-                                        i.invoice_no AS iId,
+                                        AND i.vehicle_id = v.id
+                                    `;
+                const result2 = await commonoperation.queryAsync(selQuery2);
+                const invoiceResponse = objectConvertor.getOneInvoiceResponse(result, result2);
+                resolve(invoiceResponse);
+            }
+            else if (data1[0].booking_status === 'BREAKOUT')
+            {
+                const selQuery = `  SELECT
+                                    i.id,
+                                    i.invoice_no AS iId,
                                         DATE_FORMAT(i.created_at, '%d-%m-%Y') AS iDate,
                                         v.vehicle_number AS vehicle_no,
                                         dr.name AS dName,

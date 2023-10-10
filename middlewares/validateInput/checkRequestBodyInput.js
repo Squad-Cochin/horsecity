@@ -155,15 +155,15 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
                 {
                     this.validateCommonInputAtStartingTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
                 }
-                else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params.id}`)
+                else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER}${req.params.id}`)
                 {
                     this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
                 }
-                else if(req.method === `PUT` && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params.id}`)
+                else if(req.method === `PUT` && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params.id}`)
                 {
                     this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
                 }
-                else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params?.id}`)
+                else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER_NEXTJS}${req.params?.id}`)
                 {
                     this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
                 }
@@ -216,23 +216,23 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
             }
             else
             {
-                if(req.method === `POST` && req.url === url.UPDATE_SERVICE_PROVIDER_PASSWORD)
+                if(req.method === `POST` && req.url === url.auth.POST_SERVICE_PROVIDER_CHANGE_PASSWORD)
                 {
                     next();
                 }
-                else if(req.method === `POST` && req.url === url.CUSTOMER_LOGIN_URL)
+                else if(req.method === `POST` && req.url === url.customer.POST_CUSTOMER_LOGIN_URL)
                 {
                     next();
                 }
-                else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params?.id}`)
+                else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER}${req.params?.id}`)
                 {
                     this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params.id, 'username' )(req, res, next);
                 }
-                else if(req.method === `PUT` && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params?.id}`)
+                else if(req.method === `PUT` && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params?.id}`)
                 {
                     this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params.id, 'username')(req, res, next);
                 }
-                else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params?.id}`)
+                else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER_NEXTJS}${req.params?.id}`)
                 {
                     this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params?.id, 'username')(req, res, next);
                 }
@@ -293,15 +293,15 @@ exports.contactNumberValidation = (tableName) => async (req, res, next) =>
                     {
                         this.validateCommonInputAtStartingTime(tableName, `contact_no`, req.body.contact_no, req.params.id, 'contact number')(req, res, next);                        
                     }
-                    else if(req.method === `PUT` && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params?.id}` && tableName === constants.tableName.drivers)
+                    else if(req.method === `PUT` && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params?.id}` && tableName === constants.tableName.drivers)
                     {
                         this.validateCommonInputAtUpdateTime(tableName, `contact_no`, req.body.contact_no, req.params.id, 'contact number')(req, res, next);
                     }
-                    else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params?.id}` && tableName === constants.tableName.customers)
+                    else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER}${req.params?.id}` && tableName === constants.tableName.customers)
                     {
                         this.validateCommonInputAtUpdateTime(tableName, `contact_no`, req.body.contact_no, req.params.id, 'contact number')(req, res, next);
                     }
-                    else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params?.id}`)
+                    else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER_NEXTJS}${req.params?.id}`)
                     {
                         this.validateCommonInputAtUpdateTime(tableName, `contact_no`, req.body.contact_no, req.params.id, 'contact number')(req, res, next);
                     }
@@ -336,7 +336,7 @@ exports.isValidLicenceNumber = async (req, res, next) =>
         {
             this.validateCommonInputAtStartingTime(constants.tableName.drivers, `licence_no`, req.body.licence_no, req.params.id, 'Licence number')(req, res, next);                        
         }
-        else if(req.method === `PUT` && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params.id}`)
+        else if(req.method === `PUT` && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params.id}`)
         {
             this.validateCommonInputAtUpdateTime(constants.tableName.drivers, `licence_no`, req.body.licence_no, req.params.id, 'Licence number')(req, res, next);
         }
@@ -369,11 +369,11 @@ exports.idProofNumberValidation = async (req, res, next) =>
         {
             this.validateCommonInputAtStartingTime(constants.tableName.customers, `id_proof_no`, req.body.id_proof_no, req.params.id, 'Id proof number')(req, res, next);                        
         }
-        else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params?.id}`)
+        else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER}${req.params?.id}`)
         {
             this.validateCommonInputAtUpdateTime(constants.tableName.customers, `id_proof_no`, req.body.id_proof_no, req.params.id, 'Id proof number')(req, res, next);
         }
-        else if(req.method === `PUT` && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params?.id}`)
+        else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER_NEXTJS}${req.params?.id}`)
         {
             this.validateCommonInputAtUpdateTime(constants.tableName.customers, `id_proof_no`, req.body.id_proof_no, req.params.id, 'Id proof number')(req, res, next);
         }
@@ -776,8 +776,7 @@ exports.getAllDataBody = async (req, res, next) =>
 
 exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
 {
-    if(!req.files?.id_proof_image && req.method === 'POST' && req.url === `${url.ADD_CUSTOMER_PAGE_URL}/${req.params?.id}`)
-    // if (!req.files?.id_proof_image && req.method === 'POST' && req.url === url.ADD_CUSTOMER_PAGE_URL + req.params.id)
+    if(!req.files?.id_proof_image && req.method === 'POST' && req.url === `${url.customer.POST_ADD_CUSTOMER}${req.params?.id}`)
     {
         return res.status(200).json
         ({
@@ -788,19 +787,19 @@ exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
     }
     else
     {
-        if(req.method === 'PUT' && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params.id}` && !req.files?.id_proof_image)
+        if(req.method === 'PUT' && req.url === `${url.customer.PUT_EDIT_CUSTOMER}${req.params.id}` && !req.files?.id_proof_image)
         {
             next();
         }
-        if(req.method === 'PUT' && req.url === `${url.UPDATE_CUSTOMER_PAGE_URL}${req.params.id}` && req.files?.id_proof_image)
+        if(req.method === 'PUT' && req.url === `${url.customer.PUT_EDIT_CUSTOMER}${req.params.id}` && req.files?.id_proof_image)
         {
             next();
         }   
-        if(req.method === 'PUT' && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params.id}` && req.files?.id_proof_image)
+        if(req.method === 'PUT' && req.url === `${url.customer.PUT_EDIT_CUSTOMER_NEXTJS}${req.params.id}` && req.files?.id_proof_image)
         {
             next();
         }
-        if(req.method === 'PUT' && req.url === `${url.UPDATE_CUSTOMER_SIDE_URL}${req.params.id}` && !req.files?.id_proof_image)
+        if(req.method === 'PUT' && req.url === `${url.customer.PUT_EDIT_CUSTOMER_NEXTJS}${req.params.id}` && !req.files?.id_proof_image)
         {
             next();
         }
@@ -813,7 +812,7 @@ exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
 
 exports.isDriverProfileImageSubmitted = (req, res, next) =>
 {
-    if(!req.files?.profile_image && req.method === 'POST' && req.url === `${url.ADD_DRIVER_PAGE_URL}/${req.params.id}`)
+    if(!req.files?.profile_image && req.method === 'POST' && req.url === `${url.driver.POST_ADD_DRIVER}${req.params.id}`)
     {
         return res.status(200).json
         ({
@@ -824,11 +823,11 @@ exports.isDriverProfileImageSubmitted = (req, res, next) =>
     }
     else
     {
-        if(req.method === 'PUT' && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params?.id}` && !req.files?.profile_image)
+        if(req.method === 'PUT' && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params?.id}` && !req.files?.profile_image)
         {
             next();
         }
-        if(req.method === 'PUT' && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params?.id}` && req.files?.profile_image)
+        if(req.method === 'PUT' && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params?.id}` && req.files?.profile_image)
         {
             next();
         }
@@ -841,7 +840,7 @@ exports.isDriverProfileImageSubmitted = (req, res, next) =>
 
 exports.isDriverLicenceImageSubmitted = (req, res, next) =>
 {
-    if(!req.files?.licence_img && req.method === 'POST' && req.url === `${url.ADD_DRIVER_PAGE_URL}/${req.params.id}`)
+    if(!req.files?.licence_img && req.method === 'POST' && req.url === `${url.driver.POST_ADD_DRIVER}${req.params.id}`)
     {
         return res.status(200).json
         ({
@@ -852,11 +851,11 @@ exports.isDriverLicenceImageSubmitted = (req, res, next) =>
     }
     else
     {
-        if(req.method === 'PUT' && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params.id}` && !req.files?.licence_img)
+        if(req.method === 'PUT' && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params.id}` && !req.files?.licence_img)
         {
             next();
         }
-        if(req.method === 'PUT' && req.url === `${url.UPDATE_DRIVER_PAGE_URL}${req.params.id}` && req.files?.licence_img)
+        if(req.method === 'PUT' && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params.id}` && req.files?.licence_img)
         {
             next();
         }

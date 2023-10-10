@@ -1,18 +1,23 @@
-const spcontroller = require(`../../controllers/service-provider/serviceProvider`);   // importing the auth controller details and assigning it to the authcontroller variable
+const spcontroller = require(`../../controllers/service-provider/serviceProvider.controller`);   // importing the auth controller details and assigning it to the authcontroller variable
 const verifyBody = require(`../../middlewares/requestValidator`); // Importing the requestValidator file data 
-
+const url = require(`../../utils/url_helper`)
 
 module.exports = function(app)
 {
 
     /**The below route for geting all service provider basis of page & limit   */
-    app.post(`/${process.env.apiToken}/getAll/serviceproviders/:id`,spcontroller.getAllServiceProviders); 
+    app.post(`${url.service_provider.POST_ALL_SERVICE_PROIVDERS_WITH_LIMIT}`,
+    verifyBody.verifyToken,
+    spcontroller.getAllServiceProviders); 
 
     /**The below route for geting all service provider name  */
-    app.get(`/${process.env.apiToken}/getAll/serviceprovidersName`,spcontroller.getNameServiceProviders); 
+    app.get(`${url.service_provider.GET_SERVICE_PROVIDER_NAMES}`,
+    verifyBody.verifyToken,
+    spcontroller.getNameServiceProviders); 
 
     /**The below route for adding new service provider  */
-    app.post(`/${process.env.apiToken}/add/serviceprovider`,
+    app.post(`${url.service_provider.POST_ADD_SERVICE_PROVIDER}`,
+    verifyBody.verifyToken,
     verifyBody.VerifyRoleId, 
     verifyBody.nameAvailable,
     verifyBody.emailValidation,
@@ -26,25 +31,45 @@ module.exports = function(app)
     spcontroller.addNewServiceProvider);
 
     /**The below route for updating  service provider  */ 
-    app.put(`/${process.env.apiToken}/update/serviceprovider/:id`,verifyBody.VerifyRoleId,verifyBody.nameAvailable,verifyBody.emailValidation,verifyBody.usernamevalidation,verifyBody.contactPersonAvailable,verifyBody.validateUAEMobileNumber,verifyBody.contactAddressAvailable,verifyBody.validateUAELicenseNumber,spcontroller.updateServiceProvider);
+    app.put(`${url.service_provider.PUT_EDIT_SERVICE_PROVIDER}:id`,
+    verifyBody.verifyToken,
+    verifyBody.VerifyRoleId,
+    verifyBody.nameAvailable,
+    verifyBody.emailValidation,
+    verifyBody.usernamevalidation,
+    verifyBody.contactPersonAvailable,
+    verifyBody.validateUAEMobileNumber,
+    verifyBody.contactAddressAvailable,
+    verifyBody.validateUAELicenseNumber,
+    spcontroller.updateServiceProvider);
 
     /**The below route for changing status service provider  */ 
-    app.put(`/${process.env.apiToken}/update-status/serviceprovider/:id`, spcontroller.updateStatus);
+    app.put(`${url.service_provider.PUT_UPDATE_SERVICE_PROVIDER_STATUS}`,
+    verifyBody.verifyToken, 
+    spcontroller.updateStatus);
 
     /**The below route for removing service provider  */
-    app.put(`/${process.env.apiToken}/remove/serviceprovider/:id`, spcontroller.removeServiceProvider);
+    app.put(`${url.service_provider.PUT_REMOVE_SERVICE_PROVIDER}`,
+    verifyBody.verifyToken, 
+    spcontroller.removeServiceProvider);
 
     // Below route is for getting data of any particular service provider
-    app.get(`/${process.env.apiToken}/getOne/serviceprovider/:id`, spcontroller.getOneServiceProvider);
+    app.get(`${url.service_provider.GET_PARTICULAR_SERVICE_PROVIDER_DETAILS}`,
+    verifyBody.verifyToken, 
+    spcontroller.getOneServiceProvider);
 
     /**The below route for getting particlar service provider vehicle */
-    app.get(`/${process.env.apiToken}/serviceprovider/vehicle/:id`, spcontroller.getSpVehicles);
+    app.get(`${url.service_provider.GET_PARTICULAR_SERVICE_PROVIDER_VEHICLES}`,
+    verifyBody.verifyToken, 
+    spcontroller.getSpVehicles);
 
     /**The below route for getting particlar service provider driver */
-    app.get(`/${process.env.apiToken}/serviceprovider/driver/:id`, spcontroller.getSpDrivers);
+    app.get(`${url.service_provider.GET_PARTICULAR_SERVICE_PROVIDER_DRIVERS}`,
+    verifyBody.verifyToken, 
+    spcontroller.getSpDrivers);
 
     /**The below route for getting role list */
-    app.get(`/${process.env.apiToken}/role/list`, spcontroller.getRoleList);
-
-
+    app.get(`${url.service_provider.GET_ROLES_LIST}`,
+    verifyBody.verifyToken, 
+    spcontroller.getRoleList);
 }
