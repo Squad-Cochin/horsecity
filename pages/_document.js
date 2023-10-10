@@ -30,7 +30,7 @@ export default function Document() {
           name="keywords"
           content="	booking, car rental, cruise, destination, experiences, flight, holiday, hotel, real estate, resort, tour, travel, travel agency, trip, vacation"
         />
-
+       <link rel="manifest" href="/manifest.json" />
         <link rel="icon" href="/favicon.png" />
       </Head>
       <body>
