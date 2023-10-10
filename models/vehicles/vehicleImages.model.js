@@ -37,14 +37,7 @@ module.exports = class vehicleImages
                     let insQuery = `INSERT INTO vehicles_images(vehicle_id, image, title, uploaded_at) VALUES(${id}, '${uploadVehicleImage}', '${title}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
                     con.query(insQuery, (err, result) =>
                     {
-                        if(result.length != 0)
-                        {
-                            resolve(result);
-                        }
-                        else
-                        {
-                            resolve('err');
-                        }
+                        result.length != 0 ? resolve(result) : resolve('err');
                     });
                 }
             });
@@ -111,14 +104,7 @@ module.exports = class vehicleImages
         try 
         {
             const data = await commonoperation.updateUserStatus(constants.tableName.vehicles_images, Id);
-            if(data.length === 0)
-            {
-                return data
-            }
-            else
-            {
-                return data;
-            }            
+            return data.length === 0 ? data : data           
         }
         catch (error)
         {
@@ -137,20 +123,11 @@ module.exports = class vehicleImages
         try 
         {
             const data = await commonoperation.removeUser(constants.tableName.vehicles_images, Id);
-            if(data.length === 0)
-            {
-                return data
-            }
-            else
-            {
-                return data;
-            }  
-            
+            return data.length === 0 ? data : data;
         }
         catch (error)
         {
             console.log('Error while add the vehicle images. In the vehicleImage.model.js');  
         }
-
     }
 };

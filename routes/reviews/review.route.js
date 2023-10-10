@@ -1,4 +1,4 @@
-var reviewController = require(`../../controllers//reviews/reviews.controller`);
+var reviewController = require(`../../controllers/reviews/reviews.controller`);
 var checkInput = require(`../../middlewares/validateInput/checkRequestBodyInput`);
 const constants = require("../../utils/constants");
 const url = require(`../../utils/url_helper`);

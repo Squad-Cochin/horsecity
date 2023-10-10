@@ -52,14 +52,18 @@ module.exports = class drivers
                             }
                             else
                             {
-                                let Query = `   SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
+                                let Query = `   SELECT 
+                                                    md.name AS module_name,
+                                                    md.id AS module_id, 
+                                                    pm.create, 
+                                                    pm.update, 
+                                                    pm.read, 
+                                                    pm.delete
                                                 FROM ${constants.tableName.permissions} AS pm
-                                                JOIN ${constants.tableName.modules} md 
-                                                    ON pm.module_id  = md.id
-                                                JOIN ${constants.tableName.roles} rl 
-                                                    ON pm.role_id = rl.id
+                                                JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+                                                JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
                                                 WHERE pm.role_id = '${result[0].role_id}' 
-                                                    AND md.id = '${constants.modules.drivers}'
+                                                AND md.id = '${constants.modules.drivers}'
                                             `;
                                 con.query(Query, (err, moduleResult) =>
                                 {
@@ -87,11 +91,18 @@ module.exports = class drivers
                                     {
                                         resolve('err');
                                     }
-                                    let Query = `SELECT md.name AS module_name ,md.id AS module_id, pm.create, pm.update, pm.read, pm.delete
-                                    FROM ${constants.tableName.permissions} AS pm
-                                    JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
-                                    JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                                    WHERE pm.role_id = '${result[0].role_id}' AND md.id = '${constants.modules.drivers}' `;
+                                    let Query = `   SELECT 
+                                                        md.name AS module_name,
+                                                        md.id AS module_id, 
+                                                        pm.create, 
+                                                        pm.update, 
+                                                        pm.read, 
+                                                        pm.delete
+                                                    FROM ${constants.tableName.permissions} AS pm
+                                                    JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+                                                    JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
+                                                    WHERE pm.role_id = '${result[0].role_id}' 
+                                                    AND md.id = '${constants.modules.drivers}' `;
                                     con.query(Query, (err, moduleResult) =>
                                     {
                                         err ? resolve('err') : resultSel.length === 0 ? resolve ({totalCount : resultcount[0]['count(t.id)'], drivers : resultSel, module : moduleResult}) : resolve ({totalCount : resultcount[0]['count(t.id)'], drivers : resultSel, module : moduleResult});
@@ -123,7 +134,7 @@ module.exports = class drivers
             const data = await commonfetching.dataOnCondition(constants.tableName.drivers, Id, 'id');
             if(data.length === 0)
             {
-                return data
+                return data;
             }
             else
             {
@@ -151,74 +162,71 @@ module.exports = class drivers
         {
             return await new Promise(async(resolve, reject)=>
             {
-                let checkRole = `SELECT sp.id , r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${Id} AND sp.role_Id = r.id`;
-                con.query(checkRole, async (err, resultRole) =>
+                let resultRole = await commonfetching.getRoleDetails(Id);
+                if(resultRole === `err` || resultRole.length == 0)
                 {
-                    if(err)
+                    resolve('err');
+                }
+                else
+                {
+                    var uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.upload.profilephoto);
+                    var uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.upload.licence);
+                    if(uploadprofile_image === 'INVALIDFORMAT')
                     {
-                        resolve('err') 
+                        resolve('INVALIDATTACHMENTP')
+                    }
+                    else if(uploadprofile_image === 'NOATTACHEMENT')
+                    {
+                        resolve('NOATTACHP')
+                    }
+                    else if(uploadlicence_img === 'INVALIDFORMAT')
+                    {
+                        resolve('INVALIDATTACHMENTL')
+                    }
+                    else if(uploadlicence_img === 'NOATTACHEMENT')
+                    {
+                        resolve('NOATTACHL')
                     }
                     else
                     {
-                        var uploadprofile_image = await commonoperation.fileUploadTwo(profile_image, constants.attachmentLocation.driver.upload.profilephoto);
-                        var uploadlicence_img = await commonoperation.fileUploadTwo(licence_img, constants.attachmentLocation.driver.upload.licence);
-                        if(uploadprofile_image === 'INVALIDFORMAT')
+                        if(resultRole[0].role_id === constants.Roles.admin)
                         {
-                            resolve('INVALIDATTACHMENTP')
-                        }
-                        else if(uploadprofile_image === 'NOATTACHEMENT')
-                        {
-                            resolve('NOATTACHP')
-                        }
-                        else if(uploadlicence_img === 'INVALIDFORMAT')
-                        {
-                            resolve('INVALIDATTACHMENTL')
-                        }
-                        else if(uploadlicence_img === 'NOATTACHEMENT')
-                        {
-                            resolve('NOATTACHL')
-                        }
-                        else
-                        {                        
-                            if(resultRole[0].role_id === constants.Roles.admin)
+                            let insQuery = `INSERT INTO ${constants.tableName.drivers}(name, email, contact_no, emergency_contact_no, date_of_birth, profile_image, licence_no , licence_img , description, created_at) VALUES('${name}', '${email}', '${contact_no}', '${emergency_contact_no}', '${date_of_birth}', '${uploadprofile_image}', '${licence_no}', '${uploadlicence_img}', '${description}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                            con.query(insQuery, (err, result) =>
                             {
-                                let insQuery = `INSERT INTO ${constants.tableName.drivers}(name, email, contact_no, emergency_contact_no, date_of_birth, profile_image, licence_no , licence_img , description, created_at) VALUES('${name}', '${email}', '${contact_no}', '${emergency_contact_no}', '${date_of_birth}', '${uploadprofile_image}', '${licence_no}', '${uploadlicence_img}', '${description}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                                con.query(insQuery, (err, result) =>
-                                {
-                                    result.affectedRows > 0 ? resolve(result) : resolve('err')
-                                });
-                            }
-                            else if(resultRole[0].role_id === constants.Roles.service_provider)
+                                result.affectedRows > 0 ? resolve(result) : resolve('err')
+                            });
+                        }
+                        else if(resultRole[0].role_id === constants.Roles.service_provider)
+                        {
+                            let insQuery = `INSERT INTO ${constants.tableName.drivers}(name, email, contact_no, emergency_contact_no, date_of_birth, profile_image, licence_no , licence_img , description, created_at) VALUES('${name}', '${email}', '${contact_no}', '${emergency_contact_no}', '${date_of_birth}', '${uploadprofile_image}', '${licence_no}', '${uploadlicence_img}', '${description}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                            con.query(insQuery, async (err, result) =>
                             {
-                                let insQuery = `INSERT INTO ${constants.tableName.drivers}(name, email, contact_no, emergency_contact_no, date_of_birth, profile_image, licence_no , licence_img , description, created_at) VALUES('${name}', '${email}', '${contact_no}', '${emergency_contact_no}', '${date_of_birth}', '${uploadprofile_image}', '${licence_no}', '${uploadlicence_img}', '${description}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                                con.query(insQuery, async (err, result) =>
+                                if(result.affectedRows > 0)
                                 {
-                                    if(result.affectedRows > 0)
+                                    let recentAddedDriverData = await commonfetching.dataOnCondition(constants.tableName.drivers, email, 'email');
+                                    if(recentAddedDriverData.length > 0)
                                     {
-                                        let recentAddedDriverData = await commonfetching.dataOnCondition(constants.tableName.drivers, email, 'email');
-                                        if(recentAddedDriverData.length > 0)
-                                        {
-                                            let assignDriverWhileAdd = await this.assignserviceprovider(recentAddedDriverData[0].id, Id)
-                                            assignDriverWhileAdd === 'datainserted' ? resolve(result) : resolve('err') 
-                                        }
-                                        else
-                                        {
-                                            resolve('err');
-                                        }
+                                        let assignDriverWhileAdd = await this.assignserviceprovider(recentAddedDriverData[0].id, Id)
+                                        assignDriverWhileAdd === 'datainserted' ? resolve(result) : resolve('err') 
                                     }
                                     else
                                     {
                                         resolve('err');
                                     }
-                                });                            
-                            }
-                            else
-                            {
-                                resolve('err');
-                            }
+                                }
+                                else
+                                {
+                                    resolve('err');
+                                }
+                            });                            
+                        }
+                        else
+                        {
+                            resolve('err');
                         }
                     }
-                });                
+                }               
             });            
         }
         catch (error)

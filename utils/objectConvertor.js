@@ -448,3 +448,38 @@ exports.customerSideDetialsPage = (data) =>
   }
   return responseObj;
 }
+
+exports.vehicleGetOneResponseObject = (data, name) =>
+{
+  return {
+    "id": data[0].id,
+                    "service_provider_id": data[0].service_provider_id,
+                    "service_provider" : name,
+                    "vehicle_number": data[0].vehicle_number,
+                    "make": data[0].make,
+                    "model": data[0].model,
+                    "color": data[0].color,
+                    "length": data[0].length,
+                    "breadth": data[0].breadth,
+                    "height": data[0].height,
+                    "price" : data[0].price,
+                    "no_of_horse": data[0].no_of_horse,
+                    "air_conditioner": data[0].air_conditioner,
+                    "temperature_manageable": data[0].temperature_manageable,
+                    "registration_no": data[0].registration_no,
+                    "gcc_travel_allowed": data[0].gcc_travel_allowed,
+                    "insurance_cover": data[0].insurance_cover,
+                    "insurance_date": time.formatDateToDDMMYYYY(data[0].insurance_date),
+                    "insurance_policy_no": data[0].insurance_policy_no,
+                    "insurance_provider": data[0].insurance_provider,
+                    "insurance_expiration_date": time.formatDateToDDMMYYYY(data[0].insurance_expiration_date),
+                    "safety_certicate": `${process.env.PORT_SP}${constants.attachmentLocation.vehicle.view.scertificate}${data[0].safety_certicate}`,
+                    "vehicle_type": data[0].vehicle_type,
+                    "vehicle_registration_date": time.formatDateToDDMMYYYY(data[0].vehicle_registration_date),
+                    "vehicle_exipration_date": time.formatDateToDDMMYYYY(data[0].vehicle_exipration_date),
+                    "status": data[0].status,
+                    "created_at": time.formatDateToDDMMYYYY(data[0].created_at),
+                    "updated_at": time.formatDateToDDMMYYYY(data[0].updated_at),
+                    "deleted_at": time.formatDateToDDMMYYYY(data[0].deleted_at)
+  }
+}

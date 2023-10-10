@@ -234,19 +234,7 @@ exports.totalCount = async (tablename) =>
                             `;
             con.query(selQuery, (err, result) =>
             {
-                if (err)
-                {
-                    reject(err);
-                }
-                if (result.length > 0)
-                {
-                    resolve(result);
-                }
-                else
-                {
-                    resolve([]);
-                } 
-        
+                err ? resolve(`err`) : result.length > 0 ? resolve(result) : resolve([])
             });
         });      
     }
@@ -269,24 +257,13 @@ exports.totalCountParticularServiceProvider = async (tablename, Id) =>
                         `;
             con.query(selQuery, (err, result) =>
             {
-                if (err)
-                {
-                    reject(err);
-                }
-                if (result.length > 0)
-                {
-                    resolve(result);
-                }
-                else
-                {
-                    resolve([]);
-                } 
-        
+                err ? resolve(`err`) : result.length > 0 ? resolve(result) : resolve([]);        
             });
         });      
     }
     catch (error)
-    {        
+    {
+
     }
 }
 
@@ -307,14 +284,7 @@ exports.fileUploadTwo = async (attachments, path) =>
                 let filename = `${randomNumber}_${attachments.name}`; // use current date, random number and original file name to create a unique file name
                 attachments.mv(path +filename, (err) => 
                 {
-                    if(err)
-                    {
-                        resolve('ERR')
-                    }
-                    else
-                    {
-                        resolve(filename);
-                    }
+                    err ? resolve('ERR') : resolve(filename);
                 });                
             }
             else

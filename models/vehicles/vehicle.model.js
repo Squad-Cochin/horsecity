@@ -26,68 +26,43 @@ module.exports = class vehicles
         { 
             return await new Promise(async(resolve, reject)=>
             {
-                let checkRole = `   SELECT sp.id , r.id AS role_id, r.name 
-                                    FROM ${constants.tableName.service_providers} sp, 
-                                    ${constants.tableName.service_providers} r 
-                                    WHERE sp.id = ${Id} 
-                                    AND sp.role_Id = r.id`;
-                con.query(checkRole, async (err, resultRole) =>
+                let resultRole = await commonfetching.getRoleDetails(Id)
+                if(resultRole === `err` || resultRole.length == 0)
                 {
-                    if(err)
+                    resolve('err');
+                }
+                else
+                {
+                    let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);
+                    if(uploadSafetyCertificate === 'INVALIDFORMAT')
                     {
-                        resolve('err') 
+                        resolve('INVALIDATTACHMENT')
+                    }
+                    else if(uploadSafetyCertificate === 'NOATTACHEMENT')
+                    {
+                        resolve('NOATTACHEMENT')
                     }
                     else
                     {
-                        let uploadSafetyCertificate = await commonoperation.fileUploadTwo(safety_certicate, constants.attachmentLocation.vehicle.upload.scertificate);
-                        if(uploadSafetyCertificate === 'INVALIDFORMAT')
+                        if(resultRole[0]?.role_id === constants?.Roles?.admin)
                         {
-                            resolve('INVALIDATTACHMENT')
+                            let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, price,no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${serviceProviderId}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${price}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
+                            let result = await commonoperation.queryAsync(insQuery);
+                            result?.affectedRows > 0 ? resolve(result) : resolve('err')  
                         }
-                        else if(uploadSafetyCertificate === 'NOATTACHEMENT')
+                        else if(resultRole[0].role_id === constants.Roles.service_provider)
                         {
-                            resolve('NOATTACHEMENT')
+                            let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, price, no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${Id}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${price}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
+                            let result = await commonoperation.queryAsync(insQuery);
+                            result?.affectedRows > 0 ? resolve(result) : resolve('err');
                         }
                         else
                         {
-                            if(resultRole[0]?.role_id === constants?.Roles?.admin)
-                            {
-                                let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, price,no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${serviceProviderId}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${price}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
-                                con.query(insQuery, (err, result) =>
-                                {
-                                    if(result?.affectedRows > 0) 
-                                    {
-                                        resolve(result);
-                                    }
-                                    else
-                                    {
-                                        resolve('err');
-                                    }
-                                });
-                            }
-                            else if(resultRole[0].role_id === constants.Roles.service_provider)
-                            {
-                                let insQuery =  `INSERT INTO ${constants.tableName.vehicles}(service_provider_id, vehicle_number, make, model, color, length, breadth, height, price, no_of_horse, air_conditioner, temperature_manageable, registration_no, gcc_travel_allowed, insurance_cover, insurance_date, insurance_policy_no, insurance_provider, insurance_expiration_date, safety_certicate, vehicle_type, vehicle_registration_date, vehicle_exipration_date, created_at) VALUES ('${Id}', '${vehicle_number}', '${make}', '${model}', '${color}', '${length}', '${breadth}', '${height}', '${price}', '${max_no_of_horse}', '${air_conditioner}', '${temp_manageable}', '${registration_no}', '${gcc_travel_allowed}', '${insurance_cover}', '${insurance_date}', '${insurance_policy_no}', '${insurance_provider}', '${insurance_expiration_date}', '${uploadSafetyCertificate}', '${vehicle_type}', '${vehicle_registration_date}', '${vehicle_exipration_date}', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`; 
-                                con.query(insQuery, (err, result) =>
-                                {
-                                    if(result?.affectedRows > 0) 
-                                    {
-                                        resolve(result);
-                                    }
-                                    else
-                                    {
-                                        resolve('err');
-                                    }
-                                });
-                            }
-                            else
-                            {
-                                resolve('err');
-                            }
-                        }              
-                    }
-                });
-            });        
+                            resolve('err');
+                        }
+                    }              
+                }
+            });       
         }
         catch(error)
         {
@@ -159,18 +134,7 @@ module.exports = class vehicles
                                             `;
                                 con.query(Query, (err, moduleResult) =>
                                 {
-                                    if(err)
-                                    {
-                                        resolve('err') 
-                                    }
-                                    else
-                                    {
-                                        resolve ({
-                                                    totalCount : count[0]['count(t.id)'],
-                                                    vehicles : result2,
-                                                    module : moduleResult
-                                                });
-                                    }
+                                    err ? resolve('err') : resolve ({ totalCount : count[0]['count(t.id)'], vehicles : result2, module : moduleResult }); 
                                 });
                             }
                         });
@@ -220,18 +184,7 @@ module.exports = class vehicles
                                `;
                                 con.query(Query, (err, moduleResult) =>
                                 {
-                                    if(err)
-                                    {
-                                        resolve('err') 
-                                    }
-                                    else
-                                    {
-                                        resolve ({
-                                                    totalCount : count[0]['count(t.id)'],
-                                                    vehicles : result2, 
-                                                    module : moduleResult
-                                                });
-                                    }
+                                    err ? resolve('err') : resolve ({ totalCount : count[0]['count(t.id)'], vehicles : result2, module : moduleResult }); 
                                 });
                             }
                         });
@@ -276,17 +229,8 @@ module.exports = class vehicles
                                             SET v.status ='${constants.status.inactive}', 
                                             v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
                                             WHERE v.id = '${id}' `;
-                        con.query(UpdateQuery, (err, result) => // executing the above query 
-                        {
-                            if(result.length != 0) // if ticket updated then if block
-                            {
-                                resolve(result);
-                            }
-                            else
-                            {
-                                resolve('err');
-                            }
-                        }); 
+                        let result = await commonoperation.queryAsync(UpdateQuery);                     
+                        result.length != 0 ? resolve(result) : resolve('err')
                     }
                     else
                     {
@@ -294,20 +238,10 @@ module.exports = class vehicles
                                             SET v.status ='${constants.status.active}', 
                                             v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
                                             WHERE v.id = '${id}' `;
-                        con.query(UpdateQuery, (err, result) => // executing the above query 
-                        {
-                            if(result.length != 0) // if ticket updated then if block
-                            {
-                                resolve(result);
-                            }
-                            else
-                            {
-                                resolve('err');
-                            }
-                        });
+                        let result = await commonoperation.queryAsync(UpdateQuery);
+                        result.length != 0 ? resolve(result) : resolve('err')
                     }
-                }
-            
+                }            
             });            
         }
         catch(error)
@@ -326,51 +260,8 @@ module.exports = class vehicles
         {
             const data = await commonfetching.dataOnCondition(constants.tableName.vehicles, Id, 'id');
             let getserviceProviderName = await commonfetching.dataOnCondition(constants.tableName.service_providers,  data[0].service_provider_id, 'id')
-            let returnObj =
-                {
-                    "id": data[0].id,
-                    "service_provider_id": data[0].service_provider_id,
-                    "service_provider" : getserviceProviderName[0].name,
-                    "vehicle_number": data[0].vehicle_number,
-                    "make": data[0].make,
-                    "model": data[0].model,
-                    "color": data[0].color,
-                    "length": data[0].length,
-                    "breadth": data[0].breadth,
-                    "height": data[0].height,
-                    "price" : data[0].price,
-                    "no_of_horse": data[0].no_of_horse,
-                    "air_conditioner": data[0].air_conditioner,
-                    "temperature_manageable": data[0].temperature_manageable,
-                    "registration_no": data[0].registration_no,
-                    "gcc_travel_allowed": data[0].gcc_travel_allowed,
-                    "insurance_cover": data[0].insurance_cover,
-                    "insurance_date": time.formatDateToDDMMYYYY(data[0].insurance_date),
-                    "insurance_policy_no": data[0].insurance_policy_no,
-                    "insurance_provider": data[0].insurance_provider,
-                    "insurance_expiration_date": time.formatDateToDDMMYYYY(data[0].insurance_expiration_date),
-                    "safety_certicate": `${process.env.PORT_SP}${constants.attachmentLocation.vehicle.view.scertificate}${data[0].safety_certicate}`,
-                    "vehicle_type": data[0].vehicle_type,
-                    "vehicle_registration_date": time.formatDateToDDMMYYYY(data[0].vehicle_registration_date),
-                    "vehicle_exipration_date": time.formatDateToDDMMYYYY(data[0].vehicle_exipration_date),
-                    "status": data[0].status,
-                    "created_at": time.formatDateToDDMMYYYY(data[0].created_at),
-                    "updated_at": time.formatDateToDDMMYYYY(data[0].updated_at),
-                    "deleted_at": time.formatDateToDDMMYYYY(data[0].deleted_at)
-                }
-            if(data.length === 0)
-            {                
-                return ('nodata');
-            }
-            else if(data === 'err')
-            {
-                return ('err');
-            }
-            else
-            {
-                return returnObj;
-            }     
-            
+            let returnObj = objectConvertor.vehicleGetOneResponseObject(data, getserviceProviderName[0].name)
+            return data === 'err' ? 'err' : returnObj;           
         }
         catch(error)
         {
@@ -415,14 +306,7 @@ module.exports = class vehicles
                                 WHERE id = '${id}' `;
                 con.query(upQuery, (err, result) =>
                 {
-                    if(result.affectedRows > 0)
-                    {
-                        return result;
-                    }
-                    else
-                    {
-                        return('err')
-                    }
+                    return result.affectedRows > 0 ? result : 'err';
                 });
             }
             else
@@ -467,14 +351,7 @@ module.exports = class vehicles
                                     WHERE id = '${id}' `;
                     con.query(upQuery, (err, result) =>
                     {
-                        if(result.affectedRows > 0)
-                        {
-                            return result;
-                        }
-                        else
-                        {
-                            return('err')
-                        }
+                        return result.affectedRows > 0 ? result : 'err';
                     });
                 }
             }
@@ -553,15 +430,7 @@ module.exports = class vehicles
         try
         {
             const data = await commonoperation.removeUser(constants.tableName.vehicles, Id);
-            if(data.length === 0)
-            {
-                return data
-            }
-            else
-            {
-                return data;
-            }    
-            
+            return data.length === 0 ? data : data;            
         }
         catch(error)
         {
