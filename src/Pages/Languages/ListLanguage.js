@@ -127,6 +127,7 @@ const LanguageDeatails = () => {
     // GET LANGUAGE DATA
     async function getAllData(page) {
         let getLanguages = await getLanguagesPageData(page || 1);
+        
         setLanguges(getLanguages.languages);
         setPageNumber(page);
         setNumberOfData(getLanguages.totalCount);

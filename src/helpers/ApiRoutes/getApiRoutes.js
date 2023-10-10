@@ -680,11 +680,13 @@ export async function getLanguagesPageData(pageNumber){
             "page" : pageNumber,
             "limit" : pageLimit
         }
+        console.log("body",reqObj);
         const { data } = await axios.post(`${url.POST_LANGUAGES_ALL_DATA_URL}`,reqObj,{
             headers: {
                 "Authorization": `Bearer ${process.env.REACT_APP_ADMIN_API_TOKEN}`,
               },
         });
+        console.log("language",data);
         return(data)
     } catch (error) {
         let errorObj =  {

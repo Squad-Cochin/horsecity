@@ -311,7 +311,7 @@ const SettingPage = () =>
                               <select id="country-code-select" className="form-select" name='language_id'   value={validation.values.language_id || ""}
                               onChange={validation.handleChange} >
                                  <option > Select Language </option>
-                                {languages.map((item) => ( <option key={item?.id} value={item?.id}> {`${item?.name}`} </option> ))}
+                                {languages?.map((item) => ( <option key={item?.id} value={item?.id}> {`${item?.name}`} </option> ))}
                               </select>
                           </div>
                         </div>

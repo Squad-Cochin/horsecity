@@ -71,17 +71,17 @@ const ListTables = () =>
     // We are usign the add module for editing the driver. That is why if we are having data of a particular then
     // We will store this in the initialValues object
     const initialValues = {
-        name: !add_list ? driver[0]?.name : '',
+        name: !add_list && driver ? driver[0]?.name : '',
         service_providers_id : '',
-        email: !add_list ? driver[0]?.email : '',
-        contact_no: !add_list ? driver[0]?.contact_no : '',
-        emergency_contact_no: !add_list ? driver[0]?.emergency_contact_no : '',
-        date_of_birth: !add_list ? driver[0]?.date_of_birth : '',
-        licence_no: !add_list ? driver[0]?.licence_no : '',
-        profile_image: !add_list ? driver[0]?.profile_image : '',
-        licence_img: !add_list ? driver[0]?.licence_img : '',
-        description: !add_list ? driver[0]?.description : '',
-        updated_at: !add_list ? driver[0]?.updated_at : ''
+        email: !add_list && driver ? driver[0]?.email : '',
+        contact_no: !add_list && driver ? driver[0]?.contact_no : '',
+        emergency_contact_no: !add_list && driver ? driver[0]?.emergency_contact_no : '',
+        date_of_birth: !add_list && driver ?  driver[0]?.date_of_birth : '',
+        licence_no:  !add_list && driver ? driver[0]?.licence_no : '',
+        profile_image:  !add_list && driver ? driver[0]?.profile_image : '',
+        licence_img: !add_list && driver ? driver[0]?.licence_img : '',
+        description:  !add_list && driver ? driver[0]?.description : '',
+        updated_at: !add_list && driver ? driver[0]?.updated_at : ''
     };
 
     // The below unction will be used for the CRUD functionalites of he validation data.
@@ -148,9 +148,11 @@ const ListTables = () =>
             let driverData = await getSingleDriverData(productId)
             // Set the 'driver' state to the found driver data
             setDriver(driverData);
-            // Set profile and license image previews to driver's profile_image and licence_img
-            setProfileImagePreview(driverData[0].profile_image);
-            setLicenceImagePreview(driverData[0].licence_img);
+            if (driverData && driverData.length > 0) {
+                    // Set profile and license image previews to driver's profile_image and licence_img
+                    setProfileImagePreview(driverData[0]?.profile_image);
+                    setLicenceImagePreview(driverData[0]?.licence_img);
+            }
         }
         // Toggle 'modal_list' state
         setmodal_list(!modal_list);
@@ -202,10 +204,10 @@ const ListTables = () =>
         if(userId)
         {
             let getDrivers = await getDriversData(page || 1, userId);
-            setDrivers(getDrivers.drivers);
-            setModule(getDrivers.module[0]);
+            setDrivers(getDrivers?.drivers);
+            setModule(getDrivers?.module[0]);
             setPageNumber(page);
-            setNumberOfData(getDrivers.totalCount);
+            setNumberOfData(getDrivers?.totalCount);
         }        
     }
 
@@ -233,7 +235,7 @@ const ListTables = () =>
             getAllData(pageNumber);
         }else{
             setErrors("")
-            setErrors(updatedDriver.message)
+            setErrors(updatedDriver?.message)
         }
     }  
     

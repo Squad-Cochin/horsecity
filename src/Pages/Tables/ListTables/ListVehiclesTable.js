@@ -119,11 +119,11 @@ const ListVehiclesTable = () => {
             let data = await getSingleVechileData(productId)
             setVehicle([data]);
             setAirConditioner(data?.air_conditioner)
-            setCertificatePreview(data.safety_certicate)
-            setTemperatureManageable(data.temperature_manageable)
-            setGccTravelAllowed(data.gcc_travel_allowed)
-            setInsuranceCover(data.insurance_cover)
-            setVehicleType(data.vehicle_type)
+            setCertificatePreview(data?.safety_certicate)
+            setTemperatureManageable(data?.temperature_manageable)
+            setGccTravelAllowed(data?.gcc_travel_allowed)
+            setInsuranceCover(data?.insurance_cover)
+            setVehicleType(data?.vehicle_type)
         }
         setmodal_list(!modal_list);
     }
@@ -353,7 +353,7 @@ const ListVehiclesTable = () => {
             {/* Add new vehicle modal */}
             <Modal className="extra-width" isOpen={modal_list} toggle={() => {setmodal_list(false);setCertificateImage(""); tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
                 {/* The below line is for the heading of pop up of edit exixing vehicle or adding new vehicle. */}
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setCertificateImage(""); setmodal_list(false); tog_list(add_list ? 'ADD' : 'EDIT'); }}> {add_list ? 'Add Vehicle' : 'Edit Vehicle'} </ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setCertificateImage(null);console.log('add_list:', add_list); setmodal_list(false); tog_list(add_list ? 'ADD' : 'EDIT'); }}> {add_list ? 'Add Vehicle' : 'Edit Vehicle'} </ModalHeader>
                 <form className="tablelist-form" onSubmit={validation.handleSubmit}>
                     <ModalBody>
                         {/* The below element is adding the name of the service provider. Whose vehicle is being added */}
