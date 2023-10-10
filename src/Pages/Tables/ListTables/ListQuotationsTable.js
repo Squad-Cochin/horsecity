@@ -264,6 +264,7 @@ const ListQuotationsTable = () => {
   }
  /*IT WILL LIST QUOTATION POP UP DATAS*/
   async function quat_list(productId) {
+
     let qutData = await getSingleQuotationData(productId)
     setQuotationListDetails(qutData.quotation.details);
     setQuotationList(qutData.quotation.quotations)
@@ -273,6 +274,8 @@ const ListQuotationsTable = () => {
   // IT WILL OPEN SEND MAIL POP UP
   async function tog_sendMail(qId, cEmail) {
     setQutId(qId)
+    let singleQut = await getConfirmQut(qId);
+    setQuotation(singleQut?.quotation)
     let temp_data = await getTemplateQuotationData()
     setTemplateData(temp_data.templates_quotation[0])
     setModalEmail(!modalEmail);

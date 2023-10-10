@@ -978,7 +978,7 @@ const ListEnquiriesTable = () => {
 
 
             {/* View Modal function code*/}
-            <Modal className="extra-width" isOpen={view_modal} centered >
+            <Modal className="extra-width" isOpen={view_modal} toggle={() => { modalClose() }} centered >
                 <ModalHeader toggle={() => { modalClose() }}>View Enquiry</ModalHeader>
                 <form className="tablelist-form">
                     <ModalBody>
