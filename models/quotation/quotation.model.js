@@ -188,14 +188,14 @@ static async ListQuotation  (requestBody,spId) {
                             AND sp.id = '${spId}'
                         )
                     )
-                    ORDER BY quo.id
+                    ORDER BY quo.enquiry_id  ASC
                     LIMIT ${+limit} OFFSET ${+offset}
                    `;
 
 
 
             con.query(selQuery, async (err, quo) => {
-   
+    
                 if (quo.length != 0) {
          
                     /**Total count */
