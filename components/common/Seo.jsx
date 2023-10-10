@@ -1,0 +1,21 @@
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                   //
+//                          File using for give page title for all page                              //
+//                                                                                                   //
+///////////////////////////////////////////////////////////////////////////////////////////////////////
+
+import Head from "next/head";
+
+const Seo = ({ pageTitle }) => (
+  <>
+    <Head>
+      <title>
+        {pageTitle &&
+          `${pageTitle} || Kailplus`}
+      </title>
+      <meta name="viewport" content="width=device-width, initial-scale=1" />
+    </Head>
+  </>
+);
+
+export default Seo;
