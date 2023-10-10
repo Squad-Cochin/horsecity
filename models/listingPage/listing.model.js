@@ -57,7 +57,7 @@ static async listingPageData  (body)
         
         /**filtering  price  */
         let priceFilter = '';
-        if (price_from && price_to) {
+        if (price_from != null && price_to != null) { 
             priceFilter = `AND vh.price BETWEEN ${price_from} AND ${price_to}`;
         }
         

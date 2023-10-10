@@ -448,6 +448,18 @@ CREATE TABLE wishlist
     created_at DATETIME,
     deleted_at DATETIME DEFAULT NULL
 );
+CREATE TABLE application_token (
+    id INT(2) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    application_username VARCHAR(20) NOT NULL,
+    application_password VARCHAR(20) NOT NULL,
+    token VARCHAR(55) NOT NULL,
+    authorization ENUM('CUSTOMER', 'ADMIN') NOT NULL,
+    status ENUM('ACTIVE', 'INACTIVE') NOT NULL,
+    created_at DATETIME NOT NULL,
+    expiry_at DATETIME NOT NULL,
+    updated_at DATETIME DEFAULT NULL,
+    deleted_at DATETIME DEFAULT NULL
+);
 
 ALTER TABLE `payment_records` CHANGE `status` `status` ENUM('PAID','PARTIALLY PAID','PENDING','CANCELLED') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
 ALTER TABLE `payment_records` ADD `deleted_at` DATETIME NULL AFTER `updated_at`;
