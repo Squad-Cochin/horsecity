@@ -58,9 +58,34 @@ static async listingPageData  (body)
         /**filtering  price  */
         let priceFilter = '';
         if (price_from != null && price_to != null) { 
-            priceFilter = `AND vh.price BETWEEN ${price_from} AND ${price_to}`;
+          
+            if(price_to > 2000){ 
+                try {
+                     let selQuery = `SELECT MAX(vh.price) AS max_price
+                                     FROM ${constants.tableName.vehicles} AS vh
+                                     WHERE vh.deleted_at IS NULL AND vh.status = '${constants.status.active}'`;
+                                const maxPrice = await new Promise((resolve,reject)=>{
+                                    con.query(selQuery,async (err,maxPrice)=>{
+                                        if(!err){
+                                            resolve(maxPrice[0]?.max_price)
+                                        }else{
+                                            resolve(false);
+                                        }
+                                    })   
+                                })                
+                    priceFilter = `AND vh.price BETWEEN ${price_from} AND ${maxPrice}`;
+                } catch (error) {
+                    // Handle error
+                    console.error("Error fetching max price:", error);
+                    resolve(false);
+                  }
+               
+            }else{
+                priceFilter = `AND vh.price BETWEEN ${price_from} AND ${price_to}`;
+            }
+     
         }
-        
+      
         /**Filtering suppliers */
         let suppliersFilter = ''; 
        
@@ -94,8 +119,7 @@ static async listingPageData  (body)
         ${numberOfHorsesFilter}
         ${priceFilter}
         ${suppliersFilter} AND vh.deleted_at IS NULL AND vh.status = '${constants.status.active}'
-        GROUP BY vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse
-        ${sorted}
+        GROUP BY vh.id
         LIMIT ${+limit} OFFSET ${+offset};
             `;
         con.query(selQuery,(err,data)=>{
@@ -120,20 +144,25 @@ static async listingPageData  (body)
                      }
                 } 
  
-                const totalCountQuery = `SELECT count(*) FROM ${constants.tableName.vehicles} vh
-                WHERE 1=1
-                ${gccType}
-                ${tripTypeFilter}
-                ${numberOfHorsesFilter}
-                ${priceFilter}
-                ${suppliersFilter} AND vh.deleted_at IS NULL AND vh.status = '${constants.status.active}' `
-                con.query(totalCountQuery,(err,result)=>{
+                // const totalCountQuery = `SELECT count(*) AS total_count
+                // FROM ${constants.tableName.vehicles} vh
+                // WHERE 1=1
+                // ${gccType}
+                // ${tripTypeFilter}
+                // ${numberOfHorsesFilter}
+                // ${priceFilter}
+                // ${suppliersFilter} 
+                // AND vh.deleted_at IS NULL 
+                // AND vh.status = '${constants.status.active}' 
+                // LIMIT ${+limit} OFFSET ${+offset}`;
+                // con.query(totalCountQuery,(err,result)=>{
   
-                    if(!err){
-                        const count = result[0]['count(*)'];
-                        resolve({totalCount: count,listing_data : data})
-                }
-            })
+                //     if(!err){
+                //         const count = result[0]
+           
+                        resolve({totalCount: data?.length,listing_data : data}) 
+            //     }
+            // })
           }else{
             resolve(false);
           }
