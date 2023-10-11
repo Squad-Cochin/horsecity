@@ -23,8 +23,8 @@ const Index = () => {
 
   // Function for getting search object in the initial load of a page for setting back to the page route
   async function initialLoad(){
-    const searchData = await JSON.parse(localStorage.getItem('searchObject'));
-    if (searchData.number_of_horses !='' && searchData.trip_type.length != 0) {
+    const searchData = await JSON.parse((localStorage.getItem('searchObject')) ?? "{}");
+    if (searchData?.number_of_horses !='' && searchData?.trip_type?.length != 0) {
       setUrl(true);
     }else{
       setUrl(false);

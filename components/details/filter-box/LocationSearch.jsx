@@ -36,7 +36,7 @@ const LocationSearch = (props) => {
   // Function for work at the begining of the page loading
   async function initialLoad(){
     const bookings = await JSON.parse(localStorage.getItem('searchObject'));
-    const loginData = await JSON.parse(localStorage.getItem('loginData'));
+    const loginData = (await JSON.parse(localStorage.getItem('loginData'))) ?? {};
     if (Object.keys(loginData).length !== 0) {
       setLogin(true);
     }

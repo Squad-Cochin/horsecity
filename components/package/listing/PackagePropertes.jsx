@@ -32,7 +32,7 @@ const PackagePropertes = () => {
   // Function for doing the functions at the first load of a page
   async function initialLoad(){
     const search = await JSON.parse(localStorage.getItem('searchObject'));
-    const loginData = await JSON.parse(localStorage.getItem('loginData'));
+    const loginData = (await JSON.parse(localStorage.getItem('loginData'))) ?? {};
     if (Object.keys(loginData).length !== 0) {
       setCustomerId(loginData.id);
       setLogin(true);
@@ -48,8 +48,8 @@ const PackagePropertes = () => {
   // Function for getting packages through api and storing in redux
   async function listingData(search, cId){
     let reqObj = {
-      "trip_type": search.trip_type,
-      "number_of_horses": search.number_of_horses,
+      "trip_type": search?.trip_type,
+      "number_of_horses": search?.number_of_horses,
       "price_from": price_from,
       "price_to" : price_to,
       "suppliers" : suppliers,

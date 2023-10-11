@@ -23,7 +23,7 @@ const CategorieFilters = () => {
   // Function for the initial load of the page
   async function initialLoad(){
     let search = await JSON.parse(localStorage.getItem('searchObject'));
-    setTrip_type(search.trip_type)
+    setTrip_type(search?.trip_type)
     setSearchData(search)
   }
 

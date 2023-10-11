@@ -45,9 +45,9 @@ const TourSingleV1Dynamic = () => {
 
   // Function for getting product details through api
   async function getProductDetails(){
-    const loginData = await JSON.parse(localStorage.getItem('loginData'));
+    const loginData = (await JSON.parse(localStorage.getItem('loginData')))?? {};
     const searchData = await JSON.parse(localStorage.getItem('searchObject'));
-    if(searchData.number_of_horses !=''){
+    if(searchData?.number_of_horses !=''){
       setUrl(true);
     }else{
       setUrl(false);

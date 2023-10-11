@@ -21,8 +21,8 @@ const LoginForm = () => {
   })
 
   async function initialLoad(){
-    const searchData = await JSON.parse(localStorage.getItem('searchObject'));
-    if (searchData.number_of_horses !='' && searchData.trip_type.length != 0) {
+    const searchData = await JSON.parse((localStorage.getItem('searchObject')) ?? '{}');
+    if (searchData?.number_of_horses !='' && searchData?.trip_type?.length != 0) {
       setUrl(true);
     }else{
       setUrl(false);
