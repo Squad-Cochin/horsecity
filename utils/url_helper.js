@@ -87,7 +87,7 @@ const customer =
     GET_COMPLETED_BOOKINGS_OF_CUSTOMER_NEXTJS : `/customer/booking/completed/:id`,
     GET_CONFIRM_BOOKINGS_OF_CUSTOMER_NEXTJS : `/customer/booking/confirm/:id`,
     GET_CANCEL_BOOKINGS_OF_CUSTOMER_NEXTJS: `/customer/booking/cancelled/:id`,
-    GET_RECENT_5_ENQUIRIES_NEXTJS : `/customer/booking/recent/:id`,
+    GET_RECENT_FIVE_ENQUIRIES_NEXTJS : `/customer/booking/recent/:id`,
     GET_ALL_BOOKING_CUSTOMER_NEXTJS : `/customer/booking/data/:id`,
     GET_ALL_ENQUIRIES_CUSTOMER_NEXTJS : `/customer/all/enquiries/:id`,
     GET_CUSTOMER_ALL_BOOKING_FROM_INVOICE_TABEL_NEXTJS : `/customer/all/booking/data/invoice/table/:id`,
@@ -104,7 +104,7 @@ const dashboard =
     GET_ADMIN_DASHBOARD_COUNT : `/dashboard/:id`,
     GET_ADMIN_SALES_REPORT : `/dashboard/sales/report/:id`,
     GET_ADMIN_QUOTAION_REPORT : `/dashboard/quotation/data/:id`,
-    GET_LATEST_5_ENQUIRIES : `/dashboard/latest/enquiries/:id`
+    GET_LATEST_FIVE_ENQUIRIES : `/dashboard/latest/enquiries/:id`
 }
 
 const driver =
@@ -208,15 +208,14 @@ const vehicles =
     PUT_UPDATE_VEHICLE_STATUS : `/updateStatus/vehicle/:id`,
     GET_PARTICULAR_VEHICLE : `/getOne/vehicle/:id`,
     PUT_EDIT_VEHICLE : `/edit/vehicle/`,
-    GET_IMAGES_PARTICULAR_VEHICLE : `/getAllImages/vehicle/:id`,
+    POST_IMAGES_PARTICULAR_VEHICLE : `/getAllImages/vehicle/:id`,
     PUT_REMOVE_VEHICLE : `/removeVehicle/:id`,
     GET_OVERALL_VEHICLE_REPORT_NEXTJS: `/customer/getOne/vehicle/:id`
 }
 
 const vehicle_images =
 {
-    POST_ADD_IMAGE_PARTICULAR_VEHICLE : `/addImage/vehicle/:id`,
-    GET_ALL_IMAGES_VEHICLE  : `/allImages/vehicle/:id`,
+    POST_ADD_IMAGE_PARTICULAR_VEHICLE : `/addImage/vehicle/`,
     PUT_UPDATE_PARTICULAR_IMAGE_STATUS  : `/updateStatus/vehicle/image/:id`,
     PUT_REMOVE_PARTICULAR_IMAGE  : `/removeImage/vehicle/image/:id`
 }

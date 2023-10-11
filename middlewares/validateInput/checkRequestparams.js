@@ -10,7 +10,7 @@ const commonfetching = require(`../../utils/helper/commonfetching`); // helper f
 // the below function will be validating the params data.
 exports.isValidIdInTheParams = (tableName) => async (req, res, next) =>
 {
-    if (!req.params.id) 
+    if (!req.params?.id) 
     {
         return res.status(200).send
         ({
@@ -21,7 +21,7 @@ exports.isValidIdInTheParams = (tableName) => async (req, res, next) =>
     }
     else
     {
-        const data = await commonfetching.dataOnCondition(tableName, req.params.id, 'id');
+        const data = await commonfetching.dataOnCondition(tableName, req.params?.id, 'id');
         if(data === 'err' || ! data)
         {
             return res.status(200).send

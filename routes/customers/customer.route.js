@@ -6,16 +6,12 @@
 //                                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const customerController = require('../../controllers/customers/customer.controller');  // importing the auth controller details and assigning it to the authcontroller variable
-const checkInput = require(`../../middlewares/validateInput/checkRequestBodyInput`); // Importing the body Middleware
-const constants = require('../../utils/constants');  // Constant elements are stored in this file
-const validateHeaders = require(`../../middlewares/requestValidator`); // Importing the headers middleware
-const url = require(`../../utils/url_helper`);
-const { isValidIdInTheParams } = require('../../middlewares/validateInput/checkRequestparams'); // Importing the params middleware
-
-
-
-
+var url = require(`../../utils/url_helper`);
+var constants = require('../../utils/constants');  // Constant elements are stored in this file
+var checkInput = require(`../../middlewares/validateInput/checkRequestBodyInput`); // Importing the body Middleware
+var validateHeaders = require(`../../middlewares/requestValidator`); // Importing the headers middleware
+var customerController = require('../../controllers/customers/customer.controller');  // importing the auth controller details and assigning it to the authcontroller variable
+var { isValidIdInTheParams } = require('../../middlewares/validateInput/checkRequestparams'); // Importing the params middleware
 
 module.exports = (app) =>
 {
@@ -39,7 +35,7 @@ module.exports = (app) =>
     checkInput.contactNumberValidation(constants.tableName.customers),
     // checkInput.dateOfBirthValidation,
     checkInput.idProofNumberValidation,
-    checkInput.isCustomerIdProofImageSubmitted,
+    checkInput.isAttachmentUploaded(`id_proof_image`, constants.responseMessage.idproofimagenotuploaded),
     customerController.addCustomer);
 
     // Below route is for removing the customer
@@ -64,7 +60,7 @@ module.exports = (app) =>
             checkInput.contactNumberValidation(constants.tableName.customers),
             // checkInput.dateOfBirthValidation,
             checkInput.idProofNumberValidation,
-            checkInput.isCustomerIdProofImageSubmitted,
+            checkInput.isAttachmentUploaded(`id_proof_image`, constants.responseMessage.idproofimagenotuploaded),
             customerController.editCustomer);
     
     // Below route is for the login of the customer. This is for NEXTJS front end.
@@ -100,9 +96,6 @@ module.exports = (app) =>
     checkInput.usernameValidation(constants.tableName.customers),
     checkInput.contactNumberValidation(constants.tableName.customers),
     checkInput.passwordValidation,
-    // checkInput.dateOfBirthValidation,
-    // checkInput.idProofNumberValidation,
-    // checkInput.isCustomerIdProofImageSubmitted,
     customerController.signup);
 
     // Below route is for fetching the logs (LOGIN, LOGOUT, Duration time) of the customer. This is for NEXTJS front end.
@@ -136,7 +129,7 @@ module.exports = (app) =>
     customerController.getParticularBookinDetailsCancelled);
 
     // The below route is for fetching the recent five enquiried made by the  customer. This route is used in the NEXTJS
-    app.get(`${url.customer.GET_RECENT_5_ENQUIRIES_NEXTJS}`,
+    app.get(`${url.customer.GET_RECENT_FIVE_ENQUIRIES_NEXTJS}`,
     validateHeaders.verifyToken,   
     isValidIdInTheParams(constants.tableName.customers), 
     customerController.getParticularBookinDetailsRecent);
@@ -187,8 +180,8 @@ module.exports = (app) =>
     checkInput.contactNumberValidation(constants.tableName.customers),
     // checkInput.dateOfBirthValidation,
     checkInput.idProofNumberValidation,
-    checkInput.isCustomerIdProofImageSubmitted,
-    customerController.editCustomerDetailsFromCustomerSide);
+    checkInput.isAttachmentUploaded(`id_proof_image`, constants.responseMessage.idproofimagenotuploaded),
+    customerController.editCustomer);
 
     // The below route is for display the present details of the customer. This route will be used in the NEXTJS
     app.get(`${url.customer.GET_PARTICULAR_CUSTOMER_DETAIL_NEXTJS}`,

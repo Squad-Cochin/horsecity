@@ -11,6 +11,7 @@
 
 const constants = require('../../utils/constants'); // Constant elements are stored in this file
 const invoice = require('../../models/invoices/invoice.model');  // The model from where the logic is intantiate are written in invoice model
+
 /**
  * The below function is for getting all the invoices details. Those invoices who deleted at feild are having
  * 'NULL' only those details will be shown or fetched.

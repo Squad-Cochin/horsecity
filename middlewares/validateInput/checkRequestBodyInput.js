@@ -43,14 +43,15 @@ const isvalidEmail = (email) =>
     {
         const domain = email.split(`@`)[1]; // get domain name after `@` symbol
         const domainParts = domain.split(`.`); // split domain name by `.` separator
-        if (domainParts[1] === domainParts[2])
-        {
-            return false
-        }
-        else
-        {
-            return true;
-        }
+        return domainParts[1] === domainParts[2] ? false : true
+        // if (domainParts[1] === domainParts[2])
+        // {
+        //     return false
+        // }
+        // else
+        // {
+        //     return true;
+        // }
     }
     else
     {
@@ -70,7 +71,7 @@ exports.validateCommonInputAtStartingTime = (tableName, feildName, Value, id, me
             message : constants.responseMessage.universalError 
         });
     }
-    else if(checkEntry.length > 0)
+    else if(checkEntry?.length > 0)
     {
         return res.status(200).send
         ({
@@ -153,19 +154,19 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
             {
                 if(req.method === `POST`)
                 {
-                    this.validateCommonInputAtStartingTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
+                    this.validateCommonInputAtStartingTime(tableName, `email`, req.body.email, req.params?.id, 'email')(req, res, next);
                 }
-                else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER}${req.params.id}`)
+                else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER}${req.params?.id}`)
                 {
-                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
+                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params?.id, 'email')(req, res, next);
                 }
-                else if(req.method === `PUT` && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params.id}`)
+                else if(req.method === `PUT` && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params?.id}`)
                 {
-                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
+                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params?.id, 'email')(req, res, next);
                 }
                 else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER_NEXTJS}${req.params?.id}`)
                 {
-                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params.id, 'email')(req, res, next);
+                    this.validateCommonInputAtUpdateTime(tableName, `email`, req.body.email, req.params?.id, 'email')(req, res, next);
                 }
                 else
                 {
@@ -205,7 +206,7 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
         }
         else
         {
-            if(req.body.userName.length < 4)
+            if(req.body.userName?.length < 4)
             {
                 return res.status(200).send
                 ({
@@ -226,11 +227,11 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
                 }
                 else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER}${req.params?.id}`)
                 {
-                    this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params.id, 'username' )(req, res, next);
+                    this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params?.id, 'username' )(req, res, next);
                 }
                 else if(req.method === `PUT` && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params?.id}`)
                 {
-                    this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params.id, 'username')(req, res, next);
+                    this.validateCommonInputAtUpdateTime(tableName, `user_name`, req.body.userName, req.params?.id, 'username')(req, res, next);
                 }
                 else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER_NEXTJS}${req.params?.id}`)
                 {
@@ -238,7 +239,7 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
                 }
                 else if(req.method === `POST`)
                 {
-                    this.validateCommonInputAtStartingTime(tableName, `user_name`, req.body.userName, req.params.id, 'username')(req, res, next);
+                    this.validateCommonInputAtStartingTime(tableName, `user_name`, req.body.userName, req.params?.id, 'username')(req, res, next);
                 }
                 else 
                 {
@@ -291,19 +292,19 @@ exports.contactNumberValidation = (tableName) => async (req, res, next) =>
             // {
                     if(req.method === 'POST')
                     {
-                        this.validateCommonInputAtStartingTime(tableName, `contact_no`, req.body.contact_no, req.params.id, 'contact number')(req, res, next);                        
+                        this.validateCommonInputAtStartingTime(tableName, `contact_no`, req.body.contact_no, req.params?.id, 'contact number')(req, res, next);                        
                     }
                     else if(req.method === `PUT` && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params?.id}` && tableName === constants.tableName.drivers)
                     {
-                        this.validateCommonInputAtUpdateTime(tableName, `contact_no`, req.body.contact_no, req.params.id, 'contact number')(req, res, next);
+                        this.validateCommonInputAtUpdateTime(tableName, `contact_no`, req.body.contact_no, req.params?.id, 'contact number')(req, res, next);
                     }
                     else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER}${req.params?.id}` && tableName === constants.tableName.customers)
                     {
-                        this.validateCommonInputAtUpdateTime(tableName, `contact_no`, req.body.contact_no, req.params.id, 'contact number')(req, res, next);
+                        this.validateCommonInputAtUpdateTime(tableName, `contact_no`, req.body.contact_no, req.params?.id, 'contact number')(req, res, next);
                     }
                     else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER_NEXTJS}${req.params?.id}`)
                     {
-                        this.validateCommonInputAtUpdateTime(tableName, `contact_no`, req.body.contact_no, req.params.id, 'contact number')(req, res, next);
+                        this.validateCommonInputAtUpdateTime(tableName, `contact_no`, req.body.contact_no, req.params?.id, 'contact number')(req, res, next);
                     }
                     else
                     {
@@ -334,11 +335,11 @@ exports.isValidLicenceNumber = async (req, res, next) =>
     {
         if(req.method === 'POST')
         {
-            this.validateCommonInputAtStartingTime(constants.tableName.drivers, `licence_no`, req.body.licence_no, req.params.id, 'Licence number')(req, res, next);                        
+            this.validateCommonInputAtStartingTime(constants.tableName.drivers, `licence_no`, req.body.licence_no, req.params?.id, 'Licence number')(req, res, next);                        
         }
-        else if(req.method === `PUT` && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params.id}`)
+        else if(req.method === `PUT` && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params?.id}`)
         {
-            this.validateCommonInputAtUpdateTime(constants.tableName.drivers, `licence_no`, req.body.licence_no, req.params.id, 'Licence number')(req, res, next);
+            this.validateCommonInputAtUpdateTime(constants.tableName.drivers, `licence_no`, req.body.licence_no, req.params?.id, 'Licence number')(req, res, next);
         }
         else
         {
@@ -367,15 +368,15 @@ exports.idProofNumberValidation = async (req, res, next) =>
     {
         if(req.method === 'POST')
         {
-            this.validateCommonInputAtStartingTime(constants.tableName.customers, `id_proof_no`, req.body.id_proof_no, req.params.id, 'Id proof number')(req, res, next);                        
+            this.validateCommonInputAtStartingTime(constants.tableName.customers, `id_proof_no`, req.body.id_proof_no, req.params?.id, 'Id proof number')(req, res, next);                        
         }
         else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER}${req.params?.id}`)
         {
-            this.validateCommonInputAtUpdateTime(constants.tableName.customers, `id_proof_no`, req.body.id_proof_no, req.params.id, 'Id proof number')(req, res, next);
+            this.validateCommonInputAtUpdateTime(constants.tableName.customers, `id_proof_no`, req.body.id_proof_no, req.params?.id, 'Id proof number')(req, res, next);
         }
         else if(req.method === `PUT` && req.url === `${url.customer.PUT_EDIT_CUSTOMER_NEXTJS}${req.params?.id}`)
         {
-            this.validateCommonInputAtUpdateTime(constants.tableName.customers, `id_proof_no`, req.body.id_proof_no, req.params.id, 'Id proof number')(req, res, next);
+            this.validateCommonInputAtUpdateTime(constants.tableName.customers, `id_proof_no`, req.body.id_proof_no, req.params?.id, 'Id proof number')(req, res, next);
         }
         else
         {
@@ -511,7 +512,7 @@ exports.idProofValidationWhileUpdate = async(req, res, next) =>
     }
     else
     {
-        let checkIdProofNumber = await commonfetching.dataOnConditionUpdate(constants.tableName.customers, `id_proof_no`, req.body.id_proof_no, req.params.id);
+        let checkIdProofNumber = await commonfetching.dataOnConditionUpdate(constants.tableName.customers, `id_proof_no`, req.body.id_proof_no, req.params?.id);
         if(checkIdProofNumber === `internalError`)
         {
             return res.status(200).json
@@ -774,115 +775,6 @@ exports.getAllDataBody = async (req, res, next) =>
     }    
 }
 
-exports.isCustomerIdProofImageSubmitted = (req, res, next) =>
-{
-    if(!req.files?.id_proof_image && req.method === 'POST' && req.url === `${url.customer.POST_ADD_CUSTOMER}${req.params?.id}`)
-    {
-        return res.status(200).json
-        ({
-            code : 400,
-            success: false,
-            message : constants.responseMessage.idproofimagenotuploaded
-        });     
-    }
-    else
-    {
-        if(req.method === 'PUT' && req.url === `${url.customer.PUT_EDIT_CUSTOMER}${req.params.id}` && !req.files?.id_proof_image)
-        {
-            next();
-        }
-        if(req.method === 'PUT' && req.url === `${url.customer.PUT_EDIT_CUSTOMER}${req.params.id}` && req.files?.id_proof_image)
-        {
-            next();
-        }   
-        if(req.method === 'PUT' && req.url === `${url.customer.PUT_EDIT_CUSTOMER_NEXTJS}${req.params.id}` && req.files?.id_proof_image)
-        {
-            next();
-        }
-        if(req.method === 'PUT' && req.url === `${url.customer.PUT_EDIT_CUSTOMER_NEXTJS}${req.params.id}` && !req.files?.id_proof_image)
-        {
-            next();
-        }
-        if(req.method === 'POST')
-        {
-            next();
-        }
-    }
-}
-
-exports.isDriverProfileImageSubmitted = (req, res, next) =>
-{
-    if(!req.files?.profile_image && req.method === 'POST' && req.url === `${url.driver.POST_ADD_DRIVER}${req.params.id}`)
-    {
-        return res.status(200).json
-        ({
-            code : 400,
-            success: false,
-            message : constants.responseMessage.driverprofileimagenotpresent
-        });     
-    }
-    else
-    {
-        if(req.method === 'PUT' && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params?.id}` && !req.files?.profile_image)
-        {
-            next();
-        }
-        if(req.method === 'PUT' && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params?.id}` && req.files?.profile_image)
-        {
-            next();
-        }
-        if(req.method === 'POST')
-        {
-            next();
-        }
-    }
-}
-
-exports.isDriverLicenceImageSubmitted = (req, res, next) =>
-{
-    if(!req.files?.licence_img && req.method === 'POST' && req.url === `${url.driver.POST_ADD_DRIVER}${req.params.id}`)
-    {
-        return res.status(200).json
-        ({
-            code : 400,
-            success: false,
-            message : constants.responseMessage.driverlicenseimagenotpresent
-        });     
-    }
-    else
-    {
-        if(req.method === 'PUT' && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params.id}` && !req.files?.licence_img)
-        {
-            next();
-        }
-        if(req.method === 'PUT' && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params.id}` && req.files?.licence_img)
-        {
-            next();
-        }
-        if(req.method === 'POST')
-        {
-            next();
-        }
-    }
-}
-
-exports.idProofImageWhileUpdate = (req, res, next) =>
-{
-    if(!req.files?.id_proof_image)
-    {
-        return res.status(200).json
-        ({
-            code : 400,
-            success: false,
-            message : constants.responseMessage.idproofimagenotuploaded
-        });
-    }
-    else
-    {
-        next();
-    }
-} 
-
 exports.checkAmountEntered = async(req, res, next) =>
 {
     this.checkValueEntered(req.body.totalRecievedAmount, 'Received payment')(req, res, next);
@@ -894,7 +786,7 @@ exports.checkValueEntered = (fieldName, messageField) => (req, res, next) =>
     // console.log(messageField, ':', fieldName);
     return new Promise((resolve, reject) =>
     {
-        if (!fieldName || fieldName.length === 0 || fieldName.trim() === "")
+        if (!fieldName || fieldName?.length === 0 || fieldName.trim() === "")
         {
             return res.status(200).send
             ({
@@ -968,31 +860,23 @@ exports.checkEmailBody = async (req, res, next) =>
 
 exports.checkCustomerEnquiryBody = async (req, res, next) =>
 {
-    // try
-    // {
-        // console.log(req.body);
-        // await this.checkValueEntered(req.body.customer_id, 'Customer id')(req, res, next);
-        await this.checkValueEntered(req.body.vehicle_id, 'Vehicle id')(req, res, next);
-        await this.checkValueEntered(req.body.service_provider_id, 'Service provider id')(req, res, next);
-        await this.checkValueEntered(req.body.pickup_location, 'Pick up location')(req, res, next);
-        await this.checkValueEntered(req.body.drop_location, 'Drop location')(req, res, next);
-        await this.checkValueEntered(req.body.vehicle_type, 'Vehicle type')(req, res, next);
-        await this.checkValueEntered(req.body.pickup_country, 'Pick up country')(req, res, next);
-        await this.checkValueEntered(req.body.drop_country, 'Drop country')(req, res, next);
-        await this.checkValueEntered(req.body.no_of_horse, 'Number of horse, Which are about to be transported')(req, res, next);
-        await this.checkValueEntered(req.body.description, 'Description about the enquiry')(req, res, next);
-        await this.checkValueEntered(req.body.pickup_date, 'Pickup date')(req, res, next);
-        next();
-    // }
-    // catch (error)
-    // {
-    //     console.log(`Error from the 'checkCustomerEnquiryBody' function. It is in validator folder. Which is inside the middlewares. While checking the enquiries body. This middleware is basically designed to make the enquiries from the customer`, error); 
-    // }
+    await this.checkValueEntered(req.body.vehicle_id, 'Vehicle id')(req, res, next);
+    await this.checkValueEntered(req.body.service_provider_id, 'Service provider id')(req, res, next);
+    await this.checkValueEntered(req.body.pickup_location, 'Pick up location')(req, res, next);
+    await this.checkValueEntered(req.body.drop_location, 'Drop location')(req, res, next);
+    await this.checkValueEntered(req.body.vehicle_type, 'Vehicle type')(req, res, next);
+    await this.checkValueEntered(req.body.pickup_country, 'Pick up country')(req, res, next);
+    await this.checkValueEntered(req.body.drop_country, 'Drop country')(req, res, next);
+    await this.checkValueEntered(req.body.no_of_horse, 'Number of horse, Which are about to be transported')(req, res, next);
+    await this.checkValueEntered(req.body.description, 'Description about the enquiry')(req, res, next);
+    await this.checkValueEntered(req.body.pickup_date, 'Pickup date')(req, res, next);
+    next();
 };
 
 exports.isIdEntered = (feildName, tableName, MessageFeild) => async (req, res, next) =>
 {
-    if (!req.body[feildName]) 
+    console.log(req.body?.[feildName]);
+    if (!req.body?.[feildName]) 
     {
         return res.status(200).send
         ({
@@ -1003,7 +887,7 @@ exports.isIdEntered = (feildName, tableName, MessageFeild) => async (req, res, n
     }
     else
     {
-        const data = await commonfetching.dataOnCondition(tableName, req.body[feildName], 'id');
+        const data = await commonfetching.dataOnCondition(tableName, req.body?.[feildName], 'id');
         if(data === 'err' || !data)
         {
             return res.status(500).json
@@ -1013,7 +897,7 @@ exports.isIdEntered = (feildName, tableName, MessageFeild) => async (req, res, n
                 message: constants.responseMessage.universalError
             });
         }
-        else if(data.length > 0)
+        else if(data?.length > 0)
         {
             next()          
         }
@@ -1036,7 +920,7 @@ exports.checkingDuplicateEnquiry = async (req, res, next) =>
         return new Promise((resolve, reject) =>
         {
             const selQuery = `  SELECT * FROM ${constants.tableName.enquiries} e 
-                                WHERE e.customer_id = ${req.params.id} 
+                                WHERE e.customer_id = ${req.params?.id} 
                                 AND e.vehicle_id = ${req.body.vehicle_id} 
                                 AND e.serviceprovider_id = ${req.body.service_provider_id} 
                                 AND e.pickup_location = '${req.body.pickup_location}' 
@@ -1048,7 +932,7 @@ exports.checkingDuplicateEnquiry = async (req, res, next) =>
                                 AND e.status = '${constants.enquiry_status.notconfirmed}'`;
             con.query(selQuery, (err, result) =>
             {
-                if(result.length != 0)
+                if(result?.length != 0)
                 {
                     if(result[0].status === constants.enquiry_status.confirmed)
                     {
@@ -1108,8 +992,6 @@ exports.CustomerAddRequestBody = async (req, res, next)  =>
         await this.checkValueEntered(req.body.password, 'Password')(req, res, next);
         await this.checkValueEntered(req.body.contact_no, 'Contact number')(req, res, next);
         await this.checkValueEntered(req.body.date_of_birth, 'Date of birth')(req, res, next);
-        // await this.checkValueEntered(req.body.id_proof_no, 'Id proof number')(req, res, next);
-        // await this.checkValueEntered(req.files.id_proof_image, 'Id proof image is not uploaded')(req, res, next);
         next();
     }
     catch(error)
@@ -1141,7 +1023,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                 AND c.id_proof_no = '${req.body.id_proof_no}' 
                                 AND c.deleted_at IS NOT NULL`;
             const result1 = await commonoperation.queryAsync(selQuery);
-            if(result1.length != 0)
+            if(result1?.length != 0)
             {
                 uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
                 if(uploadIdproofImage === 'INVALIDFORMAT')
@@ -1169,7 +1051,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                         c.id_proof_image = '${uploadIdproofImage}',
                                         WHERE c.id = ${result1[0].id}`;
                     const result2 = await commonoperation.queryAsync(upQuery);
-                    if (result2.affectedRows > 0)
+                    if (result2?.affectedRows > 0)
                     {
                         return res.status(200).send
                         ({
@@ -1198,7 +1080,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                         AND c.user_name = '${req.body.userName}'
                                         AND c.deleted_at IS NOT NULL`;
                 const result12 = await commonoperation.queryAsync(selQuery2);
-                if(result12.length != 0)
+                if(result12?.length != 0)
                 {
                     uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
                     if(uploadIdproofImage === 'INVALIDFORMAT')
@@ -1236,7 +1118,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                             WHERE c.id = ${result12[0].id} 
                                             `;
                         const result22 = await commonoperation.queryAsync(upQuery2);
-                        if (result22.affectedRows > 0)
+                        if (result22?.affectedRows > 0)
                         {
                             return res.status(200).send
                             ({
@@ -1263,7 +1145,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                         AND c.deleted_at IS NOT NULL
                                     `;
                     const result13 = await commonoperation.queryAsync(selQuery3);
-                    if(result13.length != 0)
+                    if(result13?.length != 0)
                     {
                         uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
                         if(uploadIdproofImage === 'INVALIDFORMAT')
@@ -1303,7 +1185,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                                 c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                                 WHERE c.id = ${result13[0].id}  `;
                             const result23 = await commonoperation.queryAsync(upQuery3);
-                            if (result23.affectedRows > 0)
+                            if (result23?.affectedRows > 0)
                             {
                                 return res.status(200).send
                                 ({
@@ -1330,7 +1212,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                             AND c.deleted_at IS NOT NULL
                                         `;
                         const result14 = await commonoperation.queryAsync(selQuery4);
-                        if(result14.length != 0)
+                        if(result14?.length != 0)
                         {
                             uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
                             if(uploadIdproofImage === 'INVALIDFORMAT')
@@ -1370,7 +1252,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                                     c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                                     WHERE c.id = ${result14[0].id}  `;
                                 const result24 = await commonoperation.queryAsync(upQuery4);
-                                if (result24.affectedRows > 0)
+                                if (result24?.affectedRows > 0)
                                 {
                                     return res.status(200).send
                                     ({
@@ -1397,7 +1279,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                                 AND c.deleted_at IS NOT NULL
                                             `;
                             const result15 = await commonoperation.queryAsync(selQuery5);
-                            if(result15.length != 0)
+                            if(result15?.length != 0)
                             {
                                 uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
                                 if(uploadIdproofImage === 'INVALIDFORMAT')
@@ -1437,7 +1319,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                                         c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                                         WHERE c.id = ${result15[0].id}  `;
                                     const result25 = await commonoperation.queryAsync(upQuery5);
-                                    if (result25.affectedRows > 0)
+                                    if (result25?.affectedRows > 0)
                                     {
                                         return res.status(200).send
                                         ({
@@ -1464,7 +1346,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                                     AND c.deleted_at IS NOT NULL
                                                 `;
                                 const result16 = await commonoperation.queryAsync(selQuery6);
-                                if(result16.length != 0)
+                                if(result16?.length != 0)
                                 {
                                     uploadIdproofImage = await commonoperation.fileUploadTwo(req.files.id_proof_image, constants.attachmentLocation.customer.upload.idProof);
                                     if (customers === 'INVALIDFORMAT')
@@ -1505,7 +1387,7 @@ exports.CheckDataPresentWithDeletedAt = async (req, res, next) =>
                                                         c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                                         WHERE c.id = ${result16[0].id} `;
                                         const result26 = await commonoperation.queryAsync(upQuery6);
-                                        if (result26.affectedRows > 0)
+                                        if (result26?.affectedRows > 0)
                                         {
                                             return res.status(200).send
                                             ({
@@ -1558,7 +1440,7 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                             WHERE c.email = '${req.body.email}'
                             AND c.deleted_at IS NOT NULL`;
             let result11 = await commonoperation.queryAsync(selQuery);
-            if(result11.length != 0)
+            if(result11?.length != 0)
             {
                 const upQuery1 = `  UPDATE ${constants.tableName.customers} c
                                     SET c.deleted_at = NULL,
@@ -1578,7 +1460,7 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                                     c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                     WHERE c.id = ${result11[0].id}  `;
                 const result21 = await commonoperation.queryAsync(upQuery1);
-                if (result21.affectedRows > 0)
+                if (result21?.affectedRows > 0)
                 {
                     return res.status(200).send
                     ({
@@ -1604,7 +1486,7 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                                     AND c.deleted_at IS NOT NULL
                                 `;
                 let result12 = await commonoperation.queryAsync(selQuery2);
-                if(result12.length != 0)
+                if(result12?.length != 0)
                 {
                     const upQuery2 = `  UPDATE ${constants.tableName.customers} c
                                         SET c.deleted_at = NULL,
@@ -1624,7 +1506,7 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                                         c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                         WHERE c.id = ${result12[0].id}  `;
                     const result22 = await commonoperation.queryAsync(upQuery2);
-                    if (result22.affectedRows > 0)
+                    if (result22?.affectedRows > 0)
                     {
                         return res.status(200).send
                         ({
@@ -1650,7 +1532,7 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                                         AND c.deleted_at IS NOT NULL
                                     `;
                     let result13 = await commonoperation.queryAsync(selQuery3);
-                    if(result13.length != 0)
+                    if(result13?.length != 0)
                     {
                         const upQuery3 = `  UPDATE ${constants.tableName.customers} c
                                             SET c.deleted_at = NULL,
@@ -1670,7 +1552,7 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                                             c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                             WHERE c.id = ${result13[0].id}  `;
                         const result23 = await commonoperation.queryAsync(upQuery3);
-                        if (result23.affectedRows > 0)
+                        if (result23?.affectedRows > 0)
                         {
                             return res.status(200).send
                             ({
@@ -1696,7 +1578,7 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                                             AND c.deleted_at IS NOT NULL
                                         `;
                         let result14 = await commonoperation.queryAsync(selQuery4);
-                        if(result14.length != 0)
+                        if(result14?.length != 0)
                         {
                             let upQuery4 = `UPDATE ${constants.tableName.customers} c
                                             SET c.deleted_at = NULL,
@@ -1716,7 +1598,7 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                                             c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
                                             WHERE c.id = ${result14[0].id} `;
                             const result24 = await commonoperation.queryAsync(upQuery4);
-                            if (result24.affectedRows > 0)
+                            if (result24?.affectedRows > 0)
                             {
                                 return res.status(200).send
                                 ({
@@ -1747,14 +1629,14 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
                                                 AND c.id_proof_no = '${req.body.id_proof_no}' 
                                                 AND c.deleted_at IS NOT NULL`;
                             const result15 = await commonoperation.queryAsync(selQuery5);
-                            if(result15.length != 0)
+                            if(result15?.length != 0)
                             {
                                 const upQuery = `   UPDATE ${constants.tableName.customers} c 
                                                     SET c.deleted_at = NULL,
                                                     c.id_proof_image = '${uploadIdproofImage}',
                                                     WHERE c.id = ${result15[0].id}`;
                                 const result25 = await commonoperation.queryAsync(upQuery);
-                                if (result25.affectedRows > 0)
+                                if (result25?.affectedRows > 0)
                                 {
                                     return res.status(200).send
                                     ({
@@ -1794,30 +1676,13 @@ exports.CheckDataPresentWithDeletedAtDuringCustomerRegistration = async (req, re
     });
 };
 
-exports.passwordandconfirmpasswordsimilarity = async (req, res, next) =>
-{
-    if (req.body.confirmnewpassword !== req.body.newpassword)
-    {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.passwordssimilarerror
-        });
-    }
-    else
-    {
-      next();
-    }
-}
-
 exports.CheckRole = async (req, res, next) =>
 {
     return new Promise((resolve, reject) =>
     {
         try
         {
-            const roleNameQuery = `SELECT sp.id, r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${req.params.id} AND sp.role_Id = r.id`;
+            const roleNameQuery = `SELECT sp.id, r.id AS role_id, r.name FROM service_providers sp, roles r WHERE sp.id = ${req.params?.id} AND sp.role_Id = r.id`;
             con.query(roleNameQuery, async (err, result) =>
             {
                 if (err)
@@ -1835,7 +1700,7 @@ exports.CheckRole = async (req, res, next) =>
                     {
                         const selQuery = `SELECT * FROM ${constants.tableName.drivers} d WHERE d.name = '${req.body.name}' AND d.email = '${req.body.email}' AND d.contact_no = '${req.body.contact_no}' AND d.emergency_contact_no = '${req.body.emergency_contact_no}' AND d.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}' AND d.description = '${req.body.description}' AND d.licence_no = '${req.body.licence_no}' AND d.deleted_at IS NOT NULL`; // Your query here
                         const result22 = await commonoperation.queryAsync(selQuery);
-                        if (result22.length != 0)
+                        if (result22?.length != 0)
                         {
                             uploadlicence_img = await commonoperation.fileUploadTwo(req.files.licence_img, constants.attachmentLocation.driver.upload.licence);                        
                             uploadprofile_image = await commonoperation.fileUploadTwo(req.files.profile_image, constants.attachmentLocation.driver.upload.profilephoto);  
@@ -1906,9 +1771,9 @@ exports.CheckRole = async (req, res, next) =>
                                                         d.status = '${constants.status.active}'
                                                         WHERE d.id = ${result22[0].id}`;
                                     const result23 = await commonoperation.queryAsync(upQuery);
-                                    if (result23.affectedRows > 0)
+                                    if (result23?.affectedRows > 0)
                                     {
-                                        const assign = await assignserviceprovider(result22[0].id, req.params.id);
+                                        const assign = await assignserviceprovider(result22[0].id, req.params?.id);
                                         if (assign === 'datainserted')
                                         {
                                             return res.status(200).send
@@ -1944,13 +1809,13 @@ exports.CheckRole = async (req, res, next) =>
                         {
                             const selQuery2 = `SELECT * FROM ${constants.tableName.drivers} d WHERE d.name = '${req.body.name}' AND d.email = '${req.body.email}' AND d.contact_no = '${req.body.contact_no}' AND d.emergency_contact_no = '${req.body.emergency_contact_no}' AND d.date_of_birth = '${time.changeDateToSQLFormat(req.body.date_of_birth)}' AND d.description = '${req.body.description}' AND d.licence_no = '${req.body.licence_no}' AND d.deleted_at IS NOT NULL`;
                             const result23 = await commonoperation.queryAsync(selQuery2);
-                            if (result23.length != 0)
+                            if (result23?.length != 0)
                             {
-                                let selQuery3 = `SELECT * FROM assign_drivers ad WHERE ad.driver_id = ${result23[0].id} AND ad.service_provider_id = ${req.params.id} AND ad.deleted_at IS NOT NULL`
+                                let selQuery3 = `SELECT * FROM assign_drivers ad WHERE ad.driver_id = ${result23[0].id} AND ad.service_provider_id = ${req.params?.id} AND ad.deleted_at IS NOT NULL`
                                 const result24 = await commonoperation.queryAsync(selQuery3);
-                                if(result24.length == 0)
+                                if(result24?.length == 0)
                                 {
-                                    const assign = await assignserviceprovider(result23[0].id, req.params.id);
+                                    const assign = await assignserviceprovider(result23[0].id, req.params?.id);
                                     if (assign === 'datainserted')
                                     {
                                         return res.status(200).send
@@ -2015,7 +1880,7 @@ exports.CheckRole = async (req, res, next) =>
                                 else
                                 {
                                     const result4 = await commonoperation.queryAsync(selQuery4);                            
-                                    if(result4.length != 0)
+                                    if(result4?.length != 0)
                                     {
                                         let upQuery = `UPDATE ${constants.tableName.drivers} d 
                                         SET d.name ='${req.body.name}',
@@ -2028,9 +1893,9 @@ exports.CheckRole = async (req, res, next) =>
                                         d.deleted_at = NULL
                                         WHERE d.id = ${result4[0].id}`;
                                         const upResult4 = await commonoperation.queryAsync(upQuery);
-                                        if(upResult4.affectedRows > 0)
+                                        if(upResult4?.affectedRows > 0)
                                         {
-                                            const assign = await assignserviceprovider(result4[0].id, req.params.id);
+                                            const assign = await assignserviceprovider(result4[0].id, req.params?.id);
                                             if (assign === 'datainserted')
                                             {
                                                 return res.status(200).send
@@ -2046,7 +1911,7 @@ exports.CheckRole = async (req, res, next) =>
                                     {
                                         const selQuery5 = `SELECT * FROM ${constants.tableName.drivers} d WHERE d.contact_no = '${req.body.contact_no}' AND d.licence_no = '${req.body.licence_no}' AND d.deleted_at IS NOT NULL`;
                                         const result5 = await commonoperation.queryAsync(selQuery5);
-                                        if(result5.length != 0)
+                                        if(result5?.length != 0)
                                         {
                                             let uploadlicence_img = await commonoperation.fileUploadTwo(req.files.licence_img, constants.attachmentLocation.driver.upload.licence);
                                             let uploadprofile_image = await commonoperation.fileUploadTwo(req.files.profile_image, constants.attachmentLocation.driver.upload.profilephoto); 
@@ -2100,9 +1965,9 @@ exports.CheckRole = async (req, res, next) =>
                                                 d.deleted_at = NULL
                                                 WHERE d.id = ${result5[0].id}`;
                                                 const upResult5 = await commonoperation.queryAsync(upQuery);
-                                                if(upResult5.affectedRows > 0)
+                                                if(upResult5?.affectedRows > 0)
                                                 {
-                                                    const assign = await assignserviceprovider(result5[0].id, req.params.id);
+                                                    const assign = await assignserviceprovider(result5[0].id, req.params?.id);
                                                     if (assign === 'datainserted')
                                                     {
                                                         return res.status(200).send
@@ -2119,7 +1984,7 @@ exports.CheckRole = async (req, res, next) =>
                                         {
                                             const selQuery6 = `SELECT * FROM ${constants.tableName.drivers} d WHERE d.email = '${req.body.email}' AND d.licence_no = '${req.body.licence_no}' AND d.deleted_at IS NOT NULL`;
                                             const result6 = await commonoperation.queryAsync(selQuery6);
-                                            if(result6.length != 0)
+                                            if(result6?.length != 0)
                                             {
                                                 let uploadlicence_img = await commonoperation.fileUploadTwo(req.files.licence_img, constants.attachmentLocation.driver.upload.licence);
                                                 let uploadprofile_image = await commonoperation.fileUploadTwo(req.files.profile_image, constants.attachmentLocation.driver.upload.profilephoto);
@@ -2174,9 +2039,9 @@ exports.CheckRole = async (req, res, next) =>
                                                                         WHERE d.id = ${result6[0].id}`;
                                             
                                                     const upResult6 = await commonoperation.queryAsync(upQuery);
-                                                    if(upResult6.affectedRows > 0)
+                                                    if(upResult6?.affectedRows > 0)
                                                     {
-                                                        const assign = await assignserviceprovider(result6[0].id, req.params.id);
+                                                        const assign = await assignserviceprovider(result6[0].id, req.params?.id);
                                                         if (assign === 'datainserted')
                                                         {
                                                             return res.status(200).send
@@ -2193,7 +2058,7 @@ exports.CheckRole = async (req, res, next) =>
                                             {
                                                 const selQuery7 = `SELECT * FROM ${constants.tableName.drivers} d WHERE d.email = '${req.body.email}' AND  d.contact_no = '${req.body.contact_no}' AND d.deleted_at IS NOT NULL`;
                                                 const result7 = await commonoperation.queryAsync(selQuery7);
-                                                if(result7.length != 0)
+                                                if(result7?.length != 0)
                                                 {
                                                     let uploadlicence_img = await commonoperation.fileUploadTwo(req.files.licence_img, constants.attachmentLocation.driver.upload.licence);
                                                     let uploadprofile_image = await commonoperation.fileUploadTwo(req.files.profile_image, constants.attachmentLocation.driver.upload.profilephoto);
@@ -2247,9 +2112,9 @@ exports.CheckRole = async (req, res, next) =>
                                                                         d.deleted_at = NULL
                                                                         WHERE d.id = ${result7[0].id}`;
                                                         const upResult7 = await commonoperation.queryAsync(upQuery);
-                                                        if(upResult7.affectedRows > 0)
+                                                        if(upResult7?.affectedRows > 0)
                                                         {
-                                                            const assign = await assignserviceprovider(result7[0].id, req.params.id);
+                                                            const assign = await assignserviceprovider(result7[0].id, req.params?.id);
                                                             if (assign === 'datainserted')
                                                             {
                                                                 return res.status(200).send
@@ -2326,3 +2191,90 @@ exports.driverRequestAddBody = async (req, res, next) =>
         });
     }
 }; 
+
+exports.isAttachmentUploaded = (feildName, message) => async (req, res, next) =>
+{
+    if(!req.files?.[feildName] && req.method === 'POST')
+    {
+        return res.status(200).json
+        ({
+            code : 400,
+            success: false,
+            message : message
+        });
+    }
+    else if(req.method === 'PUT' && !req.files?.[feildName] && req.url === `${url.customer.PUT_EDIT_CUSTOMER}${req.params?.id}`)
+    {
+        next();
+    }
+    else if(req.method === 'PUT' && req.files?.[feildName] && req.url === `${url.customer.PUT_EDIT_CUSTOMER}${req.params?.id}`)
+    {
+        next();
+    }   
+    else if(req.method === 'PUT' && req.files?.[feildName] && req.url === `${url.customer.PUT_EDIT_CUSTOMER_NEXTJS}${req.params?.id}`)
+    {
+        next();
+    }
+    else if(req.method === 'PUT' && !req.files?.[feildName] && req.url === `${url.customer.PUT_EDIT_CUSTOMER_NEXTJS}${req.params?.id}`)
+    {
+        next();
+    }
+    else if(req.method === 'PUT' && !req.files?.[feildName] && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params?.id}`)
+    {
+        next();
+    }
+    else if(req.method === 'PUT' && req.files?.[feildName] && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params?.id}`)
+    {
+        next();
+    }
+    else if(req.method === 'PUT' && !req.files?.[feildName] && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params?.id}`)
+    {
+        next();
+    }
+    else if(req.method === 'PUT' && req.files?.[feildName] && req.url === `${url.driver.PUT_EDIT_DRIVER}${req.params?.id}`)
+    {
+        next();
+    }
+    else if(req.method === 'PUT' && !req.files?.[feildName] && req.url === `${url.vehicles.PUT_EDIT_VEHICLE}${req.params?.id}`)
+    {
+        next();
+    }
+    else if(req.method === 'PUT' && req.files?.[feildName] && req.url === `${url.vehicles.PUT_EDIT_VEHICLE}${req.params?.id}`)
+    {
+        next();
+    }
+    else if(req.method === 'POST' && req.files?.[feildName] && req.url === `${url.vehicle_images.POST_ADD_IMAGE_PARTICULAR_VEHICLE}${req.params?.id}`)
+    {
+        next();
+    }
+    else if(req.method === 'POST')
+    {
+        next();
+    }
+    else
+    {
+        res.status(200).send
+        ({
+            code : 500,
+            status : false,
+            message : constants.responseMessage.universalError
+        });
+    }
+}
+
+exports.passwordandconfirmpasswordsimilarity = async (req, res, next) =>
+{
+    if (req.body.confirmnewpassword !== req.body.newpassword)
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : constants.responseMessage.passwordssimilarerror
+        });
+    }
+    else
+    {
+      next();
+    }
+}

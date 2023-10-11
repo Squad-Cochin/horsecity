@@ -6,30 +6,24 @@
 //                                                                                                              //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
+var url = require(`../../utils/url_helper`);
+var constants = require('../../utils/constants');
+var checkInput = require(`../../middlewares/validateInput/checkRequestInputVehicles`);
+var vehicleImageController = require('../../controllers/vehicles/vehiclesImage.controller'); // For fetching the controller export functions reference. We will instantiate to the variable
 
-const vehicleImageController = require('../../controllers/vehicles/vehiclesImage.controller'); // For fetching the controller export functions reference. We will instantiate to the variable
-const checkInput = require(`../../middlewares/validateInput/checkRequestInputVehicles`);
-const constants = require('../../utils/constants');
-const url = require(`../../utils/url_helper`);
-const { verifyToken } = require('../../middlewares/requestValidator');
-const { isValidIdInTheParams } = require('../../middlewares/validateInput/checkRequestparams');
-
+var { verifyToken } = require('../../middlewares/requestValidator');
+var { isValidIdInTheParams } = require('../../middlewares/validateInput/checkRequestparams');
+var { isAttachmentUploaded, getAllDataBody } = require('../../middlewares/validateInput/checkRequestBodyInput');
 
 module.exports = (app) =>
 {
     // Below route is for adding the image for a  vehicle
-    app.post(`${url.vehicle_images.POST_ADD_IMAGE_PARTICULAR_VEHICLE}`,
+    app.post(`${url.vehicle_images.POST_ADD_IMAGE_PARTICULAR_VEHICLE}:id`,
     verifyToken, 
     isValidIdInTheParams(constants.tableName.vehicles),
-    checkInput.isVehicleImageUploaded,
+    isAttachmentUploaded(`image`, constants.responseMessage.vehicleimagenotpresent),
     checkInput.isVehicleImageTitleAdded,
     vehicleImageController.addImages);
-
-    // the below route is for gettting all the images of a  vehicle
-    app.get(`${url.vehicle_images.GET_ALL_IMAGES_VEHICLE}`,
-    verifyToken, 
-    isValidIdInTheParams(constants.tableName.vehicles), 
-    vehicleImageController.allImages);
 
     // The below route is for updating the status of the  vehicle image.
     app.put(`${url.vehicle_images.PUT_UPDATE_PARTICULAR_IMAGE_STATUS}`,

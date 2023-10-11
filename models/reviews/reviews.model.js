@@ -11,7 +11,7 @@ module.exports = class reviews
     static async getallreviews(pageNumber, pageSize, Id)
     {
         const offset = (pageNumber - 1) * pageSize;
-        let role = await commonoperation.checkRole(Id);
+        let role = await commonfetching.getRoleDetails(Id);
         if(role[0].role_id === constants.Roles.admin)
         {            
             let selQuery = `
@@ -80,7 +80,8 @@ module.exports = class reviews
                 let totalCount =   `
                                         SELECT count(t.id) 
                                         FROM ${constants.tableName.reviews} t
-                                        INNER JOIN ${constants.tableName.bookings} b ON b.id = t.booking_id
+                                        INNER JOIN ${constants.tableName.bookings} b 
+                                        ON b.id = t.booking_id
                                         WHERE b.service_provider_id = ${Id}
                                     `;
                 let count = await commonoperation.queryAsync(totalCount);

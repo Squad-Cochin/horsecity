@@ -11,9 +11,9 @@
 const con = require("../../configs/db.configs");  // importing the database details 
 const timeCalculate = require('./date'); // This variable will have the date file data. It is used to add days to current date for expiration of token
 const constants = require('../constants'); // Importing the constants details
-const commonfetching = require('./commonfetching');
+const commonfetching = require('./commonfetching'); // Importing the commonfetching file
 
-
+// The below function is for changing the password string into hashed format.
 exports.changePasswordToSQLHashing = (password) => 
 {
     return new Promise((resolve, reject) => 
@@ -21,26 +21,12 @@ exports.changePasswordToSQLHashing = (password) =>
         let hashedPasswordQuery = `SELECT SHA2('${password}', 256) AS hashedPassword`;
         con.query(hashedPasswordQuery, (err, result) => 
         {
-            if (err)
-            {
-                reject(err);
-            }
-            else
-            {
-                if (result.length > 0) 
-                {
-                    const hashedPassword = result[0].hashedPassword;
-                    resolve(hashedPassword);
-                }
-                else
-                {
-                    reject(new Error('No hashed password found'));
-                }
-            }
+            err ? reject(err) : result?.length > 0 ? resolve(result[0].hashedPassword) : reject(new Error('No hashed password found'))
         });
     });
 };
 
+// The below function is for file upload
 exports.fileUpload = (attachments, path) =>
 { 
     return new Promise((resolve, reject) =>
@@ -79,6 +65,7 @@ exports.fileUpload = (attachments, path) =>
     });
 }
 
+// The below function is for file upload
 exports.fileNameUpload = (attachments) =>
 { 
     return new Promise((resolve, reject) =>
@@ -110,117 +97,64 @@ exports.fileNameUpload = (attachments) =>
     });
 }
 
-exports.updateUserStatus = (tablename, Id) =>
+// THE BELOW FUNCTION IS FOR CHNAGING THE STATUS FROM INACTIVE TO ACTIVER OR ACTIVE TO INACTIVE
+exports.updateUserStatus = async (tablename, Id) =>
 {
-    return new Promise((resolve, reject) => 
+    return await new Promise(async (resolve, reject) => 
     {
-        let selQuery = `    SELECT * FROM ${tablename} 
-                            WHERE ${tablename}.id = '${Id}' `;
-        con.query(selQuery, (err, result) =>
+        let result = await commonfetching.dataOnCondition(tablename, Id, 'id');
+        if (result?.length > 0 && result[0].status === constants.status.active && !result[0].deleted_at)
         {
-            if (err)
-            {
-                reject(err);
-            }
-            else
-            {
-                if (result.length > 0)
-                {
-                    if(result[0].status === constants.status.active)
-                    {
-                        let UpdateQuery = ` UPDATE ${tablename} t 
-                                            SET t.status ='${constants.status.inactive}',
-                                            t.updated_at = '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'  
-                                            WHERE t.id = '${Id}' 
-                                            AND t.deleted_at IS NULL`;
-                        con.query(UpdateQuery, (err, result) => // executing the above query 
-                        {
-                            if(result.length != 0) // if ticket updated then if block
-                            {
-                                resolve(result);
-                            }
-                            else
-                            {
-                                resolve('removed');
-                            }
-                        }); 
-                    }
-                    else
-                    {
-                        let UpdateQuery = ` UPDATE ${tablename} t 
-                                            SET t.status ='${constants.status.active}'
-                                            WHERE t.id = '${Id}' 
-                                            AND t.deleted_at IS NULL `;
-                        con.query(UpdateQuery, (err, result) => // executing the above query 
-                        {
-                            if(result.length != 0) // if ticket updated then if block
-                            {
-                                resolve(result);
-                            }
-                            else
-                            {
-                                resolve('removed');
-                            }
-                        });
-                    }
-                }
-                else
-                {
-                    resolve([]);
-                }       
-            }
-        });
+            let UpdateQuery = ` UPDATE ${tablename} t 
+                                SET t.status ='${constants.status.inactive}',
+                                t.updated_at = '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}'  
+                                WHERE t.id = '${Id}' 
+                                AND t.deleted_at IS NULL`;
+            let result1 = await this.queryAsync(UpdateQuery);
+            result1 === 'err' ? resolve([]) : resolve(result1)
+        }
+        else if (result?.length > 0 && result[0].status === constants.status.inactive && !result[0].deleted_at)
+        {
+            let UpdateQuery = ` UPDATE ${tablename} t 
+                                SET t.status ='${constants.status.active}'
+                                WHERE t.id = '${Id}' 
+                                AND t.deleted_at IS NULL `;
+            let result2 = await this.queryAsync(UpdateQuery);
+            result2 === 'err' ? resolve([]) : resolve(result2)
+        }
+        else
+        {
+            resolve([]);
+        }
     });
 }
 
-exports.removeUser = (tablename, Id) =>
+// The belew function is for the remove button.
+exports.removeUser = async (tablename, Id) =>
 {
-    return new Promise((resolve, reject) => 
+    return await new Promise(async (resolve, reject) => 
     {
-        let selQuery = `SELECT * FROM ${tablename} WHERE ${tablename}.id = '${Id}' `;
-        con.query(selQuery, (err, result) =>
+        let result = await commonfetching.dataOnCondition(tablename, Id, 'id')
+        if (result?.length > 0 && result[0].status === constants.status.active && !result[0].deleted_at)
         {
-            if (err)
-            {
-                reject(err);
-            }
-            else
-            {
-                if (result.length > 0)
-                {
-                    if(result[0].status === constants.status.active)
-                    {
-                        let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constants.status.inactive}', t.deleted_at = '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE t.id = '${Id}' `;
-                        con.query(UpdateQuery, (err, result) => // executing the above query 
-                        {
-                            if(result.length != 0) // if ticket updated then if block
-                            {
-                                resolve(result);
-                            }
-                        }); 
-                    }
-                    
-                    if(result[0].status === constants.status.inactive)
-                    {
-                        let UpdateQuery = `UPDATE ${tablename} t SET t.deleted_at = '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE t.id = '${Id}' `;
-                        con.query(UpdateQuery, (err, result) => // executing the above query 
-                        {
-                            if(result.length != 0) // if ticket updated then if block
-                            {
-                                resolve(result);
-                            }
-                        });
-                    }
-                }
-                else
-                {
-                    resolve([]);
-                }       
-            }
-        });
+            let UpdateQuery = `UPDATE ${tablename} t SET t.status ='${constants.status.inactive}', t.deleted_at = '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE t.id = '${Id}' `;
+            let result = await this.queryAsync(UpdateQuery);
+            result?.affectedRows == 0 ? resolve([]) : resolve(result);
+        }
+        else if(result?.length > 0 && result[0].status === constants.status.inactive && !result[0].deleted_at)
+        {
+            let UpdateQuery = `UPDATE ${tablename} t SET t.deleted_at = '${timeCalculate.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE t.id = '${Id}' `;
+            let result = await this.queryAsync(UpdateQuery);
+            result?.affectedRows == 0 ? resolve([]) : resolve(result);  
+        }                
+        else
+        {
+            resolve([]);
+        }  
     });
 }
 
+// The below function is for counting the total number of data. According to the table name given
 exports.totalCount = async (tablename) =>
 {
     try 
@@ -234,15 +168,17 @@ exports.totalCount = async (tablename) =>
                             `;
             con.query(selQuery, (err, result) =>
             {
-                err ? resolve(`err`) : result.length > 0 ? resolve(result) : resolve([])
+                err ? resolve(`err`) : result?.length > 0 ? resolve(result) : resolve([])
             });
         });      
     }
     catch (error)
-    {        
+    {   
+        return console.log(`Error from the 'totalCount' function in the commonoperation.js`);     
     }
 }
 
+// The below function is for counting the total number of data. According to the table name given for a particular service provider on the basis of its id
 exports.totalCountParticularServiceProvider = async (tablename, Id) =>
 {
     try 
@@ -257,16 +193,17 @@ exports.totalCountParticularServiceProvider = async (tablename, Id) =>
                         `;
             con.query(selQuery, (err, result) =>
             {
-                err ? resolve(`err`) : result.length > 0 ? resolve(result) : resolve([]);        
+                err ? resolve(`err`) : result?.length > 0 ? resolve(result) : resolve([]);        
             });
         });      
     }
     catch (error)
     {
-
+        return console.log(`Error from the 'totalCountParticularServiceProvider' function in the commonoperation.js`);     
     }
 }
 
+// the below function is for uploading the file
 exports.fileUploadTwo = async (attachments, path) => 
 { 
     return new Promise((resolve, reject) =>
@@ -295,6 +232,7 @@ exports.fileUploadTwo = async (attachments, path) =>
     });
 }
 
+//The below funtion is universal arrow function. Which will be used for executing the query.
 exports.queryAsync = (query) =>
 {
     return new Promise((resolve, reject) =>
@@ -306,6 +244,7 @@ exports.queryAsync = (query) =>
     });
 }
 
+// the below function is for creating the token for the url.
 exports.createCustomizeEmailToken = async (email) => 
 {
     var email_length = email.length;
@@ -460,38 +399,7 @@ exports.tokenGeneration = async(email) =>
     }
 };
 
-exports.checkRole = async (Id) =>
-{
-    try
-    {
-        return await  new Promise(async (resolve, reject) =>
-        {
-            let query = ` 
-                        SELECT sp.id,
-                        r.id AS role_id,
-                        r.name 
-                        FROM ${constants.tableName.service_providers} sp,
-                        ${constants.tableName.roles} r 
-                        WHERE sp.id = ${Id} 
-                        AND sp.role_Id = r.id`
-            let result = await this.queryAsync(query)
-            if(result.length != 0)
-            {
-                resolve(result)
-            }
-            else
-            {
-                resolve([]);
-            }
-        });
-    }
-    catch(error)
-    {
-        console.log(`Error from the 'commonopeartion.js' file. The function is checkRole`);
-    }
-
-};
-
+// The belwo function is for the count of all review related calculation
 exports.reviewscounts = async (Id) =>
 {
     var booking_Ids = [];

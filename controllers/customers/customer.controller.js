@@ -268,8 +268,8 @@ exports.removeCustomer = async (req, res) =>
         return res.status(200).send
         ({
             code : 400,
-            status : true,
-            message : constants.responseMessage.removeerror
+            status : false,
+            message : `${constants.responseMessage.removeerror} Data may be already deleted.`
         });
     }
     else
@@ -855,70 +855,6 @@ exports.getParticularCustomerOngoingBookingsDataFromInvoice = async (req, res, n
             data : customers
         });
     }
-};
-
-/**
- * The below controller is for editing the present customer details.
- * The function will be used when the data is inserted from the front end of customer
- * The is for the frontend of the customer. [ Nextjs ]
- */
-exports.editCustomerDetailsFromCustomerSide = async (req, res, next) =>
-{
-    let customers = await customer.editcustomerdetailsfromcustomerside(
-        req.params.id, // Customer id in the params. The customer which is set to be updated.
-        req.body.name, // Name of the customer,
-        req.body.userName, // username of the customer 
-        req.body.email, // Email of the customer
-        req.body.contact_no, // contact number of the customer
-        // Date of birth of the customer. Since the format from the front end is coming 
-        // in this way "Fri Jul 14 2023 00:00:00 GMT+0530 (India Standard Time)". So a function
-        // is written to convert them into SQL DATETIME format. FORMAT is YYYY-MM-DD HH-MM-SS
-        time.changeCustomerPageDateToSQLFormat(req.body.birthday), 
-        req.body.id_proof_no, // Identity proof number of the customer
-        req.files && req.files.id_proof_image !== undefined ? req.files.id_proof_image : null // Perform the null check here // Image of the identity proof
-    );
-    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
-    if(customers === 'err')
-    {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : true,
-            message : constants.responseMessage.erroredit,
-        });
-    }
-    // If the id proof image is in invalid format then this else if block of code will be executed.
-    else if (customers === 'INVALIDFORMAT')
-    {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.invalididproofimageformat
-        });
-    }
-    // If the id proof image is not uploaded then this else if block of code will be executed.
-    else if(customers === 'NOATTACHEMENT')
-    {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.idproofimagenotuploaded,
-        });
-    }
-
-    // If input feild are in correct format and not already present in the database, then this else block of code will be executed.
-    else
-    {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.edit,
-        });
-    }
-    
 };
 
 /**

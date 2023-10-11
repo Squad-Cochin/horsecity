@@ -6,13 +6,14 @@
 //                                                                                                              //
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const vehicleController = require('../../controllers/vehicles/vehicles.controller');  // For fetching the controller export functions reference. We will instantiate to the variable
-const checkInput = require(`../../middlewares/validateInput/checkRequestInputVehicles`); // Importing the body Middleware
-const checkInputGetAll = require(`../../middlewares/validateInput/checkRequestBodyInput`); // Importing the body Middleware
-const constants = require('../../utils/constants'); // Constant elements are stored in this file
-const verifyBody = require(`../../middlewares/requestValidator`); // Importing the headers middleware
-const url = require(`../../utils/url_helper`);
-const { isValidIdInTheParams } = require('../../middlewares/validateInput/checkRequestparams');  // Importing the params middleware
+var url = require(`../../utils/url_helper`);
+var constants = require('../../utils/constants'); // Constant elements are stored in this file
+var verifyBody = require(`../../middlewares/requestValidator`); // Importing the headers middleware
+var checkInput = require(`../../middlewares/validateInput/checkRequestInputVehicles`); // Importing the body Middleware
+var checkInputGetAll = require(`../../middlewares/validateInput/checkRequestBodyInput`); // Importing the body Middleware
+var vehicleController = require('../../controllers/vehicles/vehicles.controller');  // For fetching the controller export functions reference. We will instantiate to the variable
+
+var { isValidIdInTheParams } = require('../../middlewares/validateInput/checkRequestparams');  // Importing the params middleware
 
 
 
@@ -28,7 +29,7 @@ module.exports = (app) =>
     checkInput.isVehicleRegistrationNumberEntered,
     checkInput.checkVehicleBodyEntered,
     checkInput.isValidVehicleTypeEntered,
-    checkInput.isSafetyCertificateAdded,        
+    checkInputGetAll.isAttachmentUploaded(`safety_certicate`, constants.responseMessage.vehiclescertificateimagenotpresent),
     vehicleController.addNew);
     
     // The below route is for getting all the vehicles data.
@@ -60,13 +61,14 @@ module.exports = (app) =>
     checkInput.isInsurancePolicyNumberEntered,
     checkInput.checkVehicleBodyEntered,
     checkInput.isValidVehicleTypeEntered,
-    checkInput.isSafetyCertificateAdded,
+    checkInputGetAll.isAttachmentUploaded(`safety_certicate`, constants.responseMessage.vehiclescertificateimagenotpresent),
     vehicleController.updateData);
 
     // The below route is for getting all the images of a  vehicle data.
-    app.get(`${url.vehicles.GET_IMAGES_PARTICULAR_VEHICLE}`,
+    app.post(`${url.vehicles.POST_IMAGES_PARTICULAR_VEHICLE}`,
     verifyBody.verifyToken, 
-    isValidIdInTheParams(constants.tableName.vehicles),  
+    isValidIdInTheParams(constants.tableName.vehicles), 
+    checkInputGetAll.getAllDataBody,
     vehicleController.getAllImages);
 
     // The below route is for removing or deleting the  vehicle data.

@@ -49,53 +49,6 @@ module.exports = class vehicleImages
     }
 
     /**
-    * The below model function is for the Admin side page. 
-    * This function is for fetching the list of all the images of a  vehicles on the basis of the vehicle id.
-    */
-    static async allimages (id, pageNumber, pageSize)
-    {
-        try 
-        {
-            return await new Promise(async(resolve, reject)=>
-            {
-                const offset = (pageNumber - 1) * pageSize;
-                let selQuery = `SELECT vi.id, vi.vehicle_id, vi.image, vi.uploaded_at, vi.status FROM vehicles_images vi JOIN vehicles v ON vi.vehicle_id = v.id WHERE vi.vehicle_id = ${id} AND vi.deleted_at IS NULL`;
-                con.query(selQuery, (err, result) =>
-                {
-                    if (result.length !== 0)
-                    {
-                        // Create an array to store the return objects
-                        let returnArray = [];                      
-                        for (let i = 0; i < result.length; i++)
-                        {
-                            let returnObj =
-                            {
-                                id: result[i].id,
-                                url: `${process.env.PORT_SP}${constants.attachmentLocation.vehicle.view.image}${result[i].image}`,
-                                uploaded_at: time.formatDateToDDMMYYYY(result[i].uploaded_at),
-                                status: result[i].status,
-                            };                      
-                            // Add the current object to the returnArray
-                            returnArray.push(returnObj);
-                        }
-                        // Resolve with the array of objects
-                        resolve(returnArray);
-                    }
-                    else
-                    {
-                        // Resolve with an empty array to indicate no data found
-                        resolve([]);
-                    }
-                }); 
-            });            
-        }
-        catch (error)
-        {
-            console.log('Error while fetching all the vehicle images. In the vehicleImage.model.js');  
-        }
-    }
-
-    /**
     * The below model function is for the Admin side page.
     * The function is updating the status of a  images of a vehicle on the basis of vehicle_image id in the params.
     */

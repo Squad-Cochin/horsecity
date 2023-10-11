@@ -44,9 +44,9 @@ module.exports = class dashboard
                                     ((
                                         SELECT COUNT(sp.id)
                                         FROM ${constants.tableName.service_providers} sp
-                                        JOIN  ${constants.tableName.roles} r 
+                                        JOIN ${constants.tableName.roles} r 
                                         ON sp.role_id = r.id
-                                        WHERE r.id = ${Id}
+                                        WHERE r.id = ${constants.Roles.service_provider}
                                         AND sp.deleted_at IS NULL
                                     ), 0) AS total_providers,
                                     COALESCE

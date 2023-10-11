@@ -65,47 +65,6 @@ exports.addImages = async (req, res, next) =>
 };
 
 /**
- * The below function is fetching all the images of a  vehicle
- */
-exports.allImages = async (req, res, next) =>
-{
-    // The below line is for going to the model function to implement the code for getting or fetching all the images of a  vehicle.
-    const vehicleImages = await vehicleImage.allimages(req.params.id, req.body.page, req.body.limit)
-
-    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
-    if(vehicleImages === 'err')
-    {
-        return res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message : constants.responseMessage.getAllErr,
-        });
-    }
-    // Every things went well but vehicle has no image data available of the vehicle id which is submitted in the params then this else if block of code will executed.    
-    else if(vehicleImages.length == 0)
-    {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getNoData,
-        });
-    }
-    // Every things went well and vehicle image data is available of the vehicle id which is submitted in the params then this else block of code will executed.
-    else
-    {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getAll,
-            data : vehicleImages
-        });
-    }
-};
-
-/**
  * The below function is for updating the status of the  images of the vehicle. We need to give the vehicle image id in the params.
  */
 exports.updateStatus = async (req, res, next) =>

@@ -190,52 +190,6 @@ module.exports = class customers
     };
 
     /**
-    * The below model function is for the Admin side page. The function is updating or edititng the details of the present customer on the basis of customer id in the params.
-    */
-    static async editcustomer(id, name, email, userName, contact_no, date_of_birth, id_proof_no, id_proof_image)
-    // static async editcustomer(id,requestBody, file)
-    {
-        try
-        {
-            return await new Promise(async(resolve, reject)=>
-            {
-                if(id_proof_image === null || id_proof_image === undefined)
-                {
-                    let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
-                    let result = await commonoperation.queryAsync(upQuery)
-                    result.affectedRows > 0 ? resolve(result) : resolve('err')
-                }
-                else
-                {
-                    let uploadAttachment = await commonoperation.fileUploadTwo(id_proof_image, constants.attachmentLocation.customer.upload.idProof);
-                    if(uploadAttachment === 'INVALIDFORMAT')
-                    {
-                        resolve('INVALIDFORMAT');
-                    }
-                    else if(uploadAttachment === 'ERR')
-                    {
-                        resolve('err');
-                    }
-                    else if(uploadAttachment === 'NOATTACHEMENT')
-                    {
-                        resolve('NOATTACHEMENT');
-                    }
-                    else
-                    {
-                        let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.id_proof_image = '${uploadAttachment}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
-                        let result = await commonoperation.queryAsync(upQuery)
-                        result.affectedRows > 0 ? resolve(result) : resolve('err')
-                    }
-                }                
-            });            
-        }
-        catch (error)
-        {
-            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "editcustomer". Which is designed to edit  data of the customer.');            
-        }
-    };
-
-    /**
     * The below model function is for the Admin side page. The function is updating the status of a  customer on the basis of customer id in the params.
     */
     static async updatestatus(Id)
@@ -347,7 +301,11 @@ module.exports = class customers
                 }
                 else
                 {
-                    let selQuery = `SELECT * FROM ${constants.tableName.customer_logs} c WHERE c.customer_id = ${customerData[0].id} AND c.login_time IS NOT NULL AND c.logout_time IS NULL`;
+                    let selQuery = `SELECT * 
+                                    FROM ${constants.tableName.customer_logs} c 
+                                    WHERE c.customer_id = ${customerData[0].id} 
+                                    AND c.login_time IS NOT NULL 
+                                    AND c.logout_time IS NULL`;
                     con.query(selQuery, (err, result3) =>
                     {
                         if(err)
@@ -356,7 +314,7 @@ module.exports = class customers
                         }
                         else
                         {
-                            if(result3.length != 0)
+                            if(result3?.length != 0)
                             {
                                 let upQuery = ` UPDATE ${constants.tableName.customer_logs} c 
                                                 SET c.logout_time = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}', 
@@ -933,6 +891,7 @@ module.exports = class customers
         }
         catch (error)
         {
+            return console.log(`Error from the try catch block of the 'getparticularcustomerallbookingsdatafrominvoice' model file function`);
         }
     }
 
@@ -992,6 +951,7 @@ module.exports = class customers
         }
         catch (error)
         {
+            return console.log(`Error from the try catch block of the 'getparticularcustomeractivebookingsdatafrominvoice' model file function`);
         }
     };
 
@@ -1051,6 +1011,7 @@ module.exports = class customers
         }
         catch (error)
         {
+            return console.log(`Error from the try catch block of the 'getparticularcustomerinactivebookingsdatafrominvoice' model file function`);
         }
     };
 
@@ -1113,48 +1074,28 @@ module.exports = class customers
         }
         catch (error)
         {
+            return console.log(`Error from the try catch block of the 'getparticularcustomerongoingbookingsdatafrominvoice' model file function`);     
         }
     };
-
+    
     /**
-     * The model function is for editing the customer details.
-     * The function will be used when the data is inserted from the front end of customer (NEXT JS)
-     */
-    static async editcustomerdetailsfromcustomerside(Id, name, userName, email, contact_no, date_of_birth, id_proof_no, id_proof_image)
+    * The below model function is for the Admin side page. The function is updating or edititng the details of the present customer on the basis of customer id in the params.
+    */
+    static async editcustomer(id, name, email, userName, contact_no, date_of_birth, id_proof_no, id_proof_image)
+    // static async editcustomer(id,requestBody, file)
     {
         try
         {
-            return await new Promise(async (resolve, reject) =>
+            return await new Promise(async(resolve, reject)=>
             {
-                // The below if contion is when the id proof image we are not updating or changing.
                 if(id_proof_image === null || id_proof_image === undefined)
                 {
-                    let upQuery = ` UPDATE ${constants.tableName.customers} c 
-                                    SET c.name = '${name}',
-                                    c.email = '${email}',
-                                    c.user_name = '${userName}',
-                                    c.contact_no = '${contact_no}',
-                                    c.date_of_birth = '${date_of_birth}',
-                                    c.id_proof_no = '${id_proof_no}',
-                                    c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
-                                    WHERE c.id = '${Id}'
-                                  `;
-                    let result = await commonoperation.queryAsync(upQuery);
-                    result.affectedRows > 0 ? resolve(result) : resolve('err');
+                    let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
+                    let result = await commonoperation.queryAsync(upQuery)
+                    result.affectedRows > 0 ? resolve(result) : resolve('err')
                 }
                 else
                 {
-                    /**
-                     * This else case will be executed. When we are updating or changing the id proof image
-                     * 
-                     * The below line will take us to the function which is used for uploading the image.
-                     * This function is in the utils folder. Inside the commonoperations.js
-                     * 
-                     * We need to send to things for the execution of the 'fileUploadTwo' function
-                     * 1. Image
-                     * 2. Path where we need to store the image 
-                     */
-
                     let uploadAttachment = await commonoperation.fileUploadTwo(id_proof_image, constants.attachmentLocation.customer.upload.idProof);
                     if(uploadAttachment === 'INVALIDFORMAT')
                     {
@@ -1170,25 +1111,16 @@ module.exports = class customers
                     }
                     else
                     {
-                        let upQuery = `     UPDATE ${constants.tableName.customers} c 
-                                            SET c.name = '${name}',
-                                            c.email = '${email}',
-                                            c.user_name = '${userName}',
-                                            c.contact_no = '${contact_no}',
-                                            c.date_of_birth = '${date_of_birth}', 
-                                            c.id_proof_no = '${id_proof_no}',
-                                            c.id_proof_image = '${uploadAttachment}',
-                                            c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}'
-                                            WHERE c.id = '${Id}'
-                                        `;
-                        let result = await commonoperation.queryAsync(upQuery);
-                        result.affectedRows > 0 ? resolve(result) : resolve('err');
+                        let upQuery = `UPDATE ${constants.tableName.customers} c SET c.name = '${name}', c.email = '${email}', c.user_name = '${userName}', c.contact_no = '${contact_no}', c.date_of_birth = '${date_of_birth}', c.id_proof_no = '${id_proof_no}', c.id_proof_image = '${uploadAttachment}', c.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' WHERE c.id = '${id}'`;
+                        let result = await commonoperation.queryAsync(upQuery)
+                        result.affectedRows > 0 ? resolve(result) : resolve('err')
                     }
-                }                   
-            });
+                }                
+            });            
         }
         catch (error)
         {
+            console.log('Error from the customer.model.js file from the models > customers folders. In the static function "editcustomer". Which is designed to edit  data of the customer.');            
         }
     };
     

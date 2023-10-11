@@ -156,28 +156,15 @@ exports.updateStatus = async (req, res, next) =>
     // The below line is for going to the model function to implement the code for updating the status of the existing vehicle.
     const vehicles = await vehicle.updatestatus(req.params.id);
     // If no data on the id is there then this if block will work
-    if(vehicles === 'nodata')
+    if(vehicles.length === 0)
     {
         return res.status(200).send
         ({
             code : 400,
             status : false,
-            message : constants.responseMessage.getOneErr,
-            data : []
+            message : constants.responseMessage.tatuserror,
         });
-    }
-    // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
-    else if(vehicles === 'err')
-    {
-        return res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message : constants.responseMessage.universalError,
-            data : []
-        });
-    }
-    
+    }   
     // If there are vehiles in the database. Then these lines of code will be executed
     else
     {
@@ -333,7 +320,7 @@ exports.getAllImages = async (req, res, next) =>
 {
     // We need to add the vehicle id in the params
     // The below line is for going to the model function to implement the code for get all vehcile image logic.
-    const vehicles = await vehicle.getallimages(req.params.id);
+    const vehicles = await vehicle.getallimages(req.params.id, req.body.page, req.body.limit);
     
     // If any unwanted, unencounter, or unconventionaal error came then this else if block of code will be executed.
     if(vehicles === 'err')

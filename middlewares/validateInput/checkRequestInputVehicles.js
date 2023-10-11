@@ -37,8 +37,7 @@ exports.checkVehicleBodyEntered = async (req, res, next) =>
     {
         console.log(`Error from the 'checkVehicleBodyEntered' function. It is in validator folder. Which is inside the middlewares. While checking the vehicle body.`, error); 
     }
-};
- 
+}; 
 
 exports.checkNumericalValues = (value, feildName) => (req, res, next) =>
 {
@@ -78,7 +77,6 @@ exports.checkNumericalValues = (value, feildName) => (req, res, next) =>
         }
     });
 };
-
 
 exports.checkRadioButtonYESAndNOINPUT = (value, message, message2, res) =>
 {
@@ -135,11 +133,11 @@ exports.isVehicleRegistrationNumberEntered = async (req, res, next) =>
     {
         if(req.method === 'POST')
         {
-            checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `registration_no`, req.body.vehicle_registration_number, req.params.id, 'Vehicle registration number')(req, res, next);                        
+            checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `registration_no`, req.body.vehicle_registration_number, req.params?.id, 'Vehicle registration number')(req, res, next);                        
         }
-        else if(req.method === `PUT` && req.url === `${url.vehicles.PUT_EDIT_VEHICLE}${req.params.id}`)
+        else if(req.method === `PUT` && req.url === `${url.vehicles.PUT_EDIT_VEHICLE}${req.params?.id}`)
         {
-            checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `registration_no`, req.body.vehicle_registration_number, req.params.id, 'Vehicle registration number')(req, res, next);
+            checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `registration_no`, req.body.vehicle_registration_number, req.params?.id, 'Vehicle registration number')(req, res, next);
         }
         else
         {
@@ -168,11 +166,11 @@ exports.isInsurancePolicyNumberEntered = async (req, res, next) =>
     {
         if(req.method === 'POST')
         {
-            checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `insurance_policy_no`, req.body.insurance_policy_no, req.params.id, 'Vehicle insurance policy number')(req, res, next);                        
+            checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `insurance_policy_no`, req.body.insurance_policy_no, req.params?.id, 'Vehicle insurance policy number')(req, res, next);                        
         }
-        else if(req.method === `PUT` && req.url === `${url.vehicles.PUT_EDIT_VEHICLE}${req.params.id}`)
+        else if(req.method === `PUT` && req.url === `${url.vehicles.PUT_EDIT_VEHICLE}${req.params?.id}`)
         {
-            checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `insurance_policy_no`, req.body.insurance_policy_no, req.params.id, 'Vehicle insurance policy number')(req, res, next);
+            checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `insurance_policy_no`, req.body.insurance_policy_no, req.params?.id, 'Vehicle insurance policy number')(req, res, next);
         }
         else
         {
@@ -222,7 +220,6 @@ exports.isValidVehicleTypeEntered = (req, res, next) =>
 
 exports.isValidVehicleNumberEntered =  async (req, res, next) =>
 {
-    let vehicleNumber = await req.body.vehicle_number
     if (!req.body.vehicle_number) 
     {
         return res.status(200).send
@@ -236,11 +233,11 @@ exports.isValidVehicleNumberEntered =  async (req, res, next) =>
     {   
         if(req.method === 'POST')
         {
-            checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params.id, 'Vehicle number')(req, res, next);                        
+            checkInput.validateCommonInputAtStartingTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params?.id, 'Vehicle number')(req, res, next);                        
         }
-        else if(req.method === `PUT` && req.url === `${url.vehicles.PUT_EDIT_VEHICLE}${req.params.id}`)
+        else if(req.method === `PUT` && req.url === `${url.vehicles.PUT_EDIT_VEHICLE}${req.params?.id}`)
         {
-            checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params.id, 'Vehicle number')(req, res, next);
+            checkInput.validateCommonInputAtUpdateTime(constants.tableName.vehicles, `vehicle_number`, req.body.vehicle_number, req.params?.id, 'Vehicle number')(req, res, next);
         }
         else
         {
@@ -256,7 +253,7 @@ exports.isValidVehicleNumberEntered =  async (req, res, next) =>
 
 exports.isSafetyCertificateAdded = (req, res, next) =>
 {
-    if(!req.files?.safety_certicate && req.url === `${url.vehicles.POST_ADD_NEW_VEHICLE}${req.params.id}` && req.method === 'POST')
+    if(!req.files?.safety_certicate && req.url === `${url.vehicles.POST_ADD_NEW_VEHICLE}${req.params?.id}` && req.method === 'POST')
     {
         return res.status(200).json
         ({
@@ -279,23 +276,6 @@ exports.isSafetyCertificateAdded = (req, res, next) =>
         {
             next();
         }
-    }
-}
-
-exports.isVehicleImageUploaded = (req, res, next) =>
-{
-    if(!req.files?.image)
-    {
-        return res.status(200).json
-        ({
-            code : 400,
-            success: false,
-            message : constants.responseMessage.vehicleimagenotpresent
-        });
-    } 
-    else
-    {
-        next();
     }
 }
 

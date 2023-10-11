@@ -6,12 +6,13 @@
 //                                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-const url = require(`../../utils/url_helper`);
-const driverController = require(`../../controllers/drivers/driver.controller`); // For fetching the controller export functions reference. We will instantiate to the variable
-const checkInput = require(`../../middlewares/validateInput/checkRequestBodyInput`);  // This is the middleware for validating the inputs
-const constants = require(`../../utils/constants`); // Constant elements are stored in this file
-const { verifyToken } = require("../../middlewares/requestValidator");
-const { isValidIdInTheParams } = require("../../middlewares/validateInput/checkRequestparams");
+var url = require(`../../utils/url_helper`);
+var constants = require(`../../utils/constants`); // Constant elements are stored in this file
+var checkInput = require(`../../middlewares/validateInput/checkRequestBodyInput`);  // This is the middleware for validating the inputs
+var driverController = require(`../../controllers/drivers/driver.controller`); // For fetching the controller export functions reference. We will instantiate to the variable
+
+var { verifyToken } = require("../../middlewares/requestValidator");
+var { isValidIdInTheParams } = require("../../middlewares/validateInput/checkRequestparams");
 
 
 module.exports = function(app)
@@ -34,8 +35,8 @@ module.exports = function(app)
     verifyToken,
     isValidIdInTheParams(constants.tableName.service_providers),
     checkInput.driverRequestAddBody,
-    checkInput.isDriverLicenceImageSubmitted,
-    checkInput.isDriverProfileImageSubmitted,
+    checkInput.isAttachmentUploaded(`licence_img`, constants.responseMessage.driverlicenseimagenotpresent),
+    checkInput.isAttachmentUploaded(`profile_image`, constants.responseMessage.driverprofileimagenotpresent),
     checkInput.CheckRole,
     checkInput.nameValidation,
     checkInput.emailValidation(constants.tableName.drivers),
@@ -43,9 +44,9 @@ module.exports = function(app)
     // checkInput.dateOfBirthValidation,
     checkInput.isValidDescription,
     checkInput.isValidLicenceNumber,
-    checkInput.isValidEmergencyContactNumber, 
-    checkInput.isDriverLicenceImageSubmitted,
-    checkInput.isDriverProfileImageSubmitted,
+    checkInput.isValidEmergencyContactNumber,
+    checkInput.isAttachmentUploaded(`licence_img`, constants.responseMessage.driverlicenseimagenotpresent),
+    checkInput.isAttachmentUploaded(`profile_image`, constants.responseMessage.driverprofileimagenotpresent),
     driverController.addDriver
     );
 
@@ -72,8 +73,8 @@ module.exports = function(app)
     // checkInput.dateOfBirthValidation,
     checkInput.isValidLicenceNumber,
     checkInput.isValidDescription,
-    checkInput.isDriverLicenceImageSubmitted,
-    checkInput.isDriverProfileImageSubmitted,
+    checkInput.isAttachmentUploaded(`licence_img`, constants.responseMessage.driverlicenseimagenotpresent),
+    checkInput.isAttachmentUploaded(`profile_image`, constants.responseMessage.driverprofileimagenotpresent),
     driverController.editDriver
     );
 

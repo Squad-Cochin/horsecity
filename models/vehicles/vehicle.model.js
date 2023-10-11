@@ -4,13 +4,12 @@
 //                                                                                         //
 /////////////////////////////////////////////////////////////////////////////////////////////
 
-const constants = require('../../utils/constants'); // Constant elements are stored in this file
-const commonfetching = require('../../utils/helper/commonfetching'); // helper file function. This file consist of functions Which is written universally for fetching the data from the database
-const commonoperation = require('../../utils/helper/commonoperation'); // helper file function. This file consist of functions Which is written universally for some common operations.
-const time = require('../../utils/helper/date'); // All the time relateed formating are written in this file.
-const con = require('../../configs/db.configs') // Calling the db file for making the database connection
-const objectConvertor = require(`../../utils/objectConvertor`);
-
+var con = require('../../configs/db.configs') // Calling the db file for making the database connection
+var time = require('../../utils/helper/date'); // All the time relateed formating are written in this file.
+var constants = require('../../utils/constants'); // Constant elements are stored in this file
+var commonfetching = require('../../utils/helper/commonfetching'); // helper file function. This file consist of functions Which is written universally for fetching the data from the database
+var commonoperation = require('../../utils/helper/commonoperation'); // helper file function. This file consist of functions Which is written universally for some common operations.
+var objectConvertor = require(`../../utils/objectConvertor`);
 
 module.exports = class vehicles
 {
@@ -210,39 +209,8 @@ module.exports = class vehicles
     {
         try
         {
-            return await new Promise(async(resolve, reject)=>
-            {
-                const vehicleData = await commonfetching.dataOnCondition(constants.tableName.vehicles, id, 'id');
-                if(vehicleData.length === 0)
-                {
-                    resolve('nodata');
-                }
-                else if(vehicleData.length === 'err')
-                {
-                    resolve('err');
-                }
-                else
-                {
-                    if(vehicleData[0].status === constants.status.active)
-                    {
-                        let UpdateQuery = ` UPDATE ${constants.tableName.vehicles} v 
-                                            SET v.status ='${constants.status.inactive}', 
-                                            v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
-                                            WHERE v.id = '${id}' `;
-                        let result = await commonoperation.queryAsync(UpdateQuery);                     
-                        result.length != 0 ? resolve(result) : resolve('err')
-                    }
-                    else
-                    {
-                        let UpdateQuery = ` UPDATE ${constants.tableName.vehicles} v 
-                                            SET v.status ='${constants.status.active}', 
-                                            v.updated_at = '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}' 
-                                            WHERE v.id = '${id}' `;
-                        let result = await commonoperation.queryAsync(UpdateQuery);
-                        result.length != 0 ? resolve(result) : resolve('err')
-                    }
-                }            
-            });            
+            const data = await commonoperation.updateUserStatus(constants.tableName.vehicles, id);
+            return data.length === 0 ? [] : data;                         
         }
         catch(error)
         {
@@ -366,12 +334,13 @@ module.exports = class vehicles
     * The below model function is for the Admin side page. 
     * This function is for fetching the list of all the images of a  vehicles on the basis of the vehicle id.
     */
-    static async getallimages(id)
+    static async getallimages(id, pageNumber, pageSize)
     {
         try
         {
             return await new Promise(async(resolve, reject)=>
             {
+                const offset = (pageNumber - 1) * pageSize;
                 let selQuery = `SELECT 
                                 vi.id,
                                 vi.title, 
@@ -381,10 +350,12 @@ module.exports = class vehicles
                                 vi.status 
                                 FROM ${constants.tableName.vehicles_images} vi 
                                 JOIN ${constants.tableName.vehicles} v 
-                                    ON vi.vehicle_id = v.id 
+                                ON vi.vehicle_id = v.id 
                                 WHERE vi.vehicle_id = ${id} 
-                                AND vi.deleted_at IS NULL`;
-                con.query(selQuery, (err, result) =>
+                                AND vi.deleted_at IS NULL
+                                LIMIT ${pageSize} 
+                                OFFSET ${offset}`;
+                con.query(selQuery, async(err, result) =>
                 {
                     if (result.length !== 0)
                     {
@@ -403,8 +374,12 @@ module.exports = class vehicles
                             // Add the current object to the returnArray
                             returnArray.push(returnObj);
                         }
-                        // Resolve with the array of objects
-                        resolve(returnArray);
+                        let secondQuery = ` SELECT count(t.id) 
+                                            FROM ${constants.tableName.vehicles_images} t 
+                                            WHERE t.deleted_at IS NULL
+                                            AND t.vehicle_id = ${id}`
+                        let countresult = await commonoperation.queryAsync(secondQuery);
+                        resolve({totalCount: countresult[0]['count(t.id)'], images: returnArray});
                     }
                     else
                     {

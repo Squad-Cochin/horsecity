@@ -1,10 +1,9 @@
+
+var url = require(`../../utils/url_helper`);
+var constants = require(`../../utils/constants`); // This is for the constants terms
 var dashboardController = require(`../../controllers/dashboard/dashboard.controller`); // For fetching the controller export function reference 
-const { verifyToken } = require("../../middlewares/requestValidator");
-const { isValidIdInTheParams } = require("../../middlewares/validateInput/checkRequestparams"); // This function is for checking the params id
-const constants = require(`../../utils/constants`); // This is for the constants terms
-const url = require(`../../utils/url_helper`);
-
-
+var { verifyToken } = require("../../middlewares/requestValidator");
+var { isValidIdInTheParams } = require("../../middlewares/validateInput/checkRequestparams"); // This function is for checking the params id
 
 module.exports = (app) =>
 {
@@ -27,7 +26,7 @@ module.exports = (app) =>
     dashboardController.getDashboardQuotationStatus);
 
     // The below route is for fetching latest five enquires that we are showing on the front end of thew ADMIN or SERVICE PROVIDER page. 
-    app.get(`${url.dashboard.GET_LATEST_5_ENQUIRIES}`,
+    app.get(`${url.dashboard.GET_LATEST_FIVE_ENQUIRIES}`,
     verifyToken,
     isValidIdInTheParams(constants.tableName.service_providers),
     dashboardController.getLatestEnquiries)
