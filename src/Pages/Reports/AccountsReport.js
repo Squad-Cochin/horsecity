@@ -155,7 +155,7 @@ const AccountsReport  = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {accountsReport.map((item, index)=>(
+                                                    {accountsReport?.map((item, index)=>(
                                                     <tr key={index}> 
                                                         <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                         <td className="customer_name">{item.customer_name}</td>

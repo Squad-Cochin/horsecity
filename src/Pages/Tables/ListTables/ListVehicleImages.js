@@ -9,27 +9,31 @@ import React, { useState, useEffect } from 'react';
 import { Alert, Button, Col, Container, Modal, ModalBody, ModalFooter, Row, ModalHeader } from 'reactstrap';
 import { useFormik } from "formik";
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 //IMPORTED FILES
 import { getVehicleImageData } from '../../../helpers/ApiRoutes/getApiRoutes'
 import { removeVehicleImage } from '../../../helpers/ApiRoutes/removeApiRoutes';
 import { addNewImage } from '../../../helpers/ApiRoutes/addApiRoutes';
 import { updateVechileImageStatus } from '../../../helpers/ApiRoutes/editApiRoutes';
-
+import config from '../../../config';
 const ListVehicleImages = () => {
     const [vhImages, setVhImages] = useState([]); // State variable to store vehicle images
-    const [image_view, setImageView] = useState(); // State variable to store the image view
+    const [image_view, setImageView] = useState(''); // State variable to store the image view
     const [modal_list, setmodal_list] = useState(false); // State variable to control list modal visibility
     const [updateImage, setUpdateImage] = useState(""); // State variable to store the updated image
     const [errors, setErrors] = useState("")
     const { id } = useParams(); // Retrieve the 'id' parameter from the URL using the 'useParams' hook
     const [pageTitle, setPageTitle] = useState('KailPlus');
+    const [pageNumber, setPageNumber] = useState(1);
+    const [numberOfData, setNumberOfData] = useState(0);
+    const pageLimit = config?.pageLimit;
     /**This hook will render initial time */
     useEffect(() => {
         const settings = JSON.parse(localStorage.getItem("settingsData"));
         setPageTitle(settings.application_title);
         if (id) {
-            getAllData()
+            getAllData(1)
         }
     }, []);
 
@@ -41,15 +45,20 @@ const ListVehicleImages = () => {
     };
 
     // function for get data all Vechile data
-    async function getAllData() {
-        let getvehicleImages = await getVehicleImageData(id);
-        setVhImages(getvehicleImages)
+    async function getAllData(page) {
+        let getvehicleImages = await getVehicleImageData(page || 1,id);
+        setVhImages(getvehicleImages?.images)
+        setPageNumber(page);
+        setNumberOfData(getvehicleImages?.totalCount);
     }
 
     // The below function is showing the data. 
     function tog_list() {
-        setmodal_list(!modal_list);
-        setImageView();
+        setErrors("");
+        setUpdateImage("");
+        validation.values.title = '';
+        setmodal_list(!modal_list);     
+        setImageView('');
     }
 
     // The below function is for going to the previous page
@@ -80,7 +89,7 @@ const ListVehicleImages = () => {
             setErrors("")
             setmodal_list(false);
             validation.values.title = ''; // Reset the 'image_title' field in initial values
-            getAllData()
+            getAllData(pageNumber)
         } else {
             setErrors("")
             setErrors(addImg.message)
@@ -113,7 +122,7 @@ const ListVehicleImages = () => {
     /**This function is used to remove a service provider*/
     async function remove_data(id) {
         await removeVehicleImage(id)
-        getAllData()
+        getAllData(pageNumber)
     }
     document.title = `Vehicle images | ${pageTitle} `;
     return (
@@ -139,68 +148,84 @@ const ListVehicleImages = () => {
 
                             <div className="table-responsive table-card mt-3 mb-1">
                             <table className="table align-middle table-nowrap" id="customerTable">
-  <thead className="table-light">
-    <tr>
-      {/* These are the columns and column headings in the vehicle page */}
-      <th className="index" data-sort="index">#</th>
-      <th className="sort" data-sort="vehicleimage">Image</th>
-      <th className="sort" data-sort="vehicletitle">Title</th>
-      <th className="sort" data-sort="created_at">Created At</th>
-      <th className="sort" data-sort="status">Status</th>
-      <th className="sort" data-sort="action">Actions</th>
-    </tr>
-  </thead>
-  <tbody className="list form-check-all">
-    {vhImages.map((imageItem, index) => (
-      <tr key={index}>
-        <th scope="row">{index + 1}</th>
-        <td className="vehicleimage">
-          <img src={imageItem?.url} alt={`Static Image ${index + 1}`} className="image-size" />
-        </td>
-        <td className="vehicletitle">{imageItem?.title}</td>
-        <td className="created_at">{imageItem?.uploaded_at}</td>
-        <td>
-          {imageItem.status === "ACTIVE" ? (
-            <button
-              className="btn btn-sm btn-success status-item-btn"
-              data-bs-toggle="modal"
-              data-bs-target="#showModal"
-              onClick={(event) => toggleStatus(event.target, imageItem.id)}
-            >
-              {imageItem.status}
-            </button>
-          ) : (
-            <button
-              className="btn btn-sm btn-danger status-item-btn"
-              data-bs-toggle="modal"
-              data-bs-target="#showModal"
-              onClick={(event) => toggleStatus(event.target, imageItem.id)}
-            >
-              {imageItem.status}
-            </button>
-          )}
-        </td>
-        {/* This is the place from where we are calling the Remove button and function */}
-        <td>
-          <div className="d-flex gap-2">
-            <button
-              className="btn btn-sm btn-danger remove-item-btn"
-              data-bs-toggle="modal"
-              data-bs-target="#deleteRecordModal"
-              onClick={() => remove_data(imageItem?.id)}
-            >
-              Remove
-            </button>
-          </div>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-
-
-
+                                <thead className="table-light">
+                                    <tr>
+                                    {/* These are the columns and column headings in the vehicle page */}
+                                    <th className="index" data-sort="index">#</th>
+                                    <th className="sort" data-sort="vehicleimage">Image</th>
+                                    <th className="sort" data-sort="vehicletitle">Title</th>
+                                    <th className="sort" data-sort="created_at">Created At</th>
+                                    <th className="sort" data-sort="status">Status</th>
+                                    <th className="sort" data-sort="action">Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody className="list form-check-all">
+                                    {vhImages?.map((imageItem, index) => (
+                                    <tr key={index}>
+                                         <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
+                                        <td className="vehicleimage">
+                                        <img src={imageItem?.url} alt={`Static Image ${index + 1}`} className="image-size" />
+                                        </td>
+                                        <td className="vehicletitle">{imageItem?.title}</td>
+                                        <td className="created_at">{imageItem?.uploaded_at}</td>
+                                        <td>
+                                        {imageItem.status === "ACTIVE" ? (
+                                            <button
+                                            className="btn btn-sm btn-success status-item-btn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#showModal"
+                                            onClick={(event) => toggleStatus(event.target, imageItem.id)}
+                                            >
+                                            {imageItem.status}
+                                            </button>
+                                        ) : (
+                                            <button
+                                            className="btn btn-sm btn-danger status-item-btn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#showModal"
+                                            onClick={(event) => toggleStatus(event.target, imageItem.id)}
+                                            >
+                                            {imageItem.status}
+                                            </button>
+                                        )}
+                                        </td>
+                                        {/* This is the place from where we are calling the Remove button and function */}
+                                        <td>
+                                        <div className="d-flex gap-2">
+                                            <button
+                                            className="btn btn-sm btn-danger remove-item-btn"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#deleteRecordModal"
+                                            onClick={() => remove_data(imageItem?.id)}
+                                            >
+                                            Remove
+                                            </button>
+                                        </div>
+                                        </td>
+                                    </tr>
+                                    ))}
+                                </tbody>
+                                </table>
                             </div>
+
+                            <div className="d-flex justify-content-end">
+                                            <div className="pagination-wrap hstack gap-2">
+                                                {pageNumber > 1 ?
+                                                    <Link
+                                                        className="page-item pagination-prev disabled"
+                                                        onClick={() => getAllData(pageNumber - 1)}
+                                                    >
+                                                        Previous
+                                                    </Link>
+                                                    : null}
+                                                <ul className="pagination listjs-pagination mb-0"></ul>
+                                                {numberOfData > pageLimit * pageNumber ?
+                                                    <Link className="page-item pagination-next" onClick={() => getAllData(pageNumber + 1)}>
+                                                        Next
+                                                    </Link>
+                                                    : null}
+                                            </div>
+                                        </div>
                         </div>
                     </Container>
                 </div>

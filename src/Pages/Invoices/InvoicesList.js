@@ -204,9 +204,9 @@ const ListInvoiceDetails = () => {
   async function getAllData(page) {
     if (userId) {
       let getInvoices = await getInvoicesData(page || 1, userId);
-      setInvoices(getInvoices.invoices);
+      setInvoices(getInvoices?.invoices);
       setPageNumber(page);
-      setNumberOfData(getInvoices.totalCount);
+      setNumberOfData(getInvoices?.totalCount);
     }
   }
 
@@ -260,7 +260,7 @@ const ListInvoiceDetails = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {invoices.map((item, index) => (
+                          {invoices?.map((item, index) => (
                             <tr key={index}>
                               <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                               <td className="invoice_number">{item.iId}</td>

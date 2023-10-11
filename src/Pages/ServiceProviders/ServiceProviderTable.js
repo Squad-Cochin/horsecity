@@ -56,18 +56,18 @@ const ListTables = () => {
     /**INITIAL VALUES */
     const initialValues = {
         service_provider_id: userId,
-        name: !add_list ? sprovider[0]?.name : '',
-        email: !add_list ? sprovider[0]?.email : '',
-        user_name: !add_list ? sprovider[0]?.user_name : '',
-        password: !add_list ? sprovider[0]?.password : '',
-        role_id: !add_list ? sprovider[0]?.role_id : '',
-        role_name: !add_list ? sprovider[0]?.role_name : '',
-        contact_person: !add_list ? sprovider[0]?.contact_person : '',
-        contact_no: !add_list ? sprovider[0]?.contact_no : '',
-        emergency_contact_no: !add_list ? sprovider[0]?.emergency_contact_no : '',
-        contact_address: !add_list ? sprovider[0]?.contact_address : '',
-        licence_no: !add_list ? sprovider[0]?.licence_no : '',
-        licence_image: !add_list ? sprovider[0]?.licence_image : '',
+        name: !add_list && sprovider ?  sprovider[0]?.name : '',
+        email: !add_list && sprovider ? sprovider[0]?.email : '',
+        user_name: !add_list && sprovider ? sprovider[0]?.user_name : '',
+        password: !add_list && sprovider ? sprovider[0]?.password : '',
+        role_id: !add_list && sprovider ? sprovider[0]?.role_id : '',
+        role_name: !add_list && sprovider ? sprovider[0]?.role_name : '',
+        contact_person: !add_list && sprovider ? sprovider[0]?.contact_person : '',
+        contact_no: !add_list && sprovider ? sprovider[0]?.contact_no : '',
+        emergency_contact_no: !add_list && sprovider ? sprovider[0]?.emergency_contact_no : '',
+        contact_address: !add_list && sprovider ? sprovider[0]?.contact_address : '',
+        licence_no: !add_list && sprovider ? sprovider[0]?.licence_no : '',
+        licence_image: !add_list && sprovider ? sprovider[0]?.licence_image : '',
     };
 
     /**VALIDATION */
@@ -182,7 +182,7 @@ const ListTables = () => {
      *  of a service provider */
     async function tog_view(productId) {
         let serviceProvider = await getSPSingleData(productId)
-        setSprovider(serviceProvider.serviceProvider)
+        setSprovider(serviceProvider?.serviceProvider)
         setView_modal(!view_modal);
     }
 
@@ -196,10 +196,10 @@ const ListTables = () => {
     async function getAllData(page) {
         if (userId) {
             let getSPdataNext = await getSPAllData(page || 1, userId);
-            setSproviders(getSPdataNext.serviceProviders);
-            setModule(getSPdataNext.module[0])
+            setSproviders(getSPdataNext?.serviceProviders);
+            setModule(getSPdataNext?.module[0])
             setPageNumber(page);
-            setNumberOfData(getSPdataNext.totalCount);
+            setNumberOfData(getSPdataNext?.totalCount);
         }
     }
 
@@ -249,13 +249,13 @@ const ListTables = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {sproviders.map((value, index) => (
+                                                    {sproviders?.map((value, index) => (
                                                         <tr key={value?.id}>
                                                             <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
-                                                            <td className="name">{value.name}</td>
-                                                            <td className="email">{value.email}</td>
-                                                            <td className="contact_person">{value.contact_person}</td>
-                                                            <td className="phone">{value.contact_no}</td>
+                                                            <td className="name">{value?.name}</td>
+                                                            <td className="email">{value?.email}</td>
+                                                            <td className="contact_person">{value?.contact_person}</td>
+                                                            <td className="phone">{value?.contact_no}</td>
                                                             {!(config.Role.service_provider === role) ? (
                                                                 <td className="status">
                                                                     {value.status === "ACTIVE" ?
@@ -437,7 +437,7 @@ const ListTables = () => {
                                     ) : (
                                         <>
                                             <option value="">Select Role</option>
-                                            {roleList.map((item) => (
+                                            {roleList?.map((item) => (
                                                 <option key={item.id} value={item.id}> {item.name} </option>
                                             ))}
                                         </>

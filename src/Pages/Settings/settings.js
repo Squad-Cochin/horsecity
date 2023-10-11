@@ -60,7 +60,7 @@ const SettingPage = () =>
         let currencies = await getCurrenciesNames();
         let taxations = await getTaxationsNames();
 
-        setSetting_data(settingsData.settingsPageData);
+        setSetting_data(settingsData?.settingsPageData);
         setLanguages(languages?.languages);
         setCurrencies(currencies?.currencies);
         setTaxations(taxations?.taxations)

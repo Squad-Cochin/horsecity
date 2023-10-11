@@ -31,14 +31,14 @@ const DashboardPanel = () =>
   {
 
     let dData = await getDashboardData(data[0]?.user[0]?.id);
-    setDashboardData(dData.counts);
+    setDashboardData(dData?.counts);
   }
   
 
   
   return (
     <React.Fragment>
-    {dashboarddata.map((item, index) =>
+    {dashboarddata?.map((item, index) =>
       <div key = {index}>    
       <Row>
 
@@ -58,7 +58,7 @@ const DashboardPanel = () =>
 
                 <div className="flex-grow-1 overflow-hidden">
                   <p className="mb-1">Total Service Provider</p>
-                  <h5 className="mb-3">{item.total_providers}</h5>
+                  <h5 className="mb-3">{item?.total_providers}</h5>
                 </div>
               </div>
             </CardBody>
@@ -81,7 +81,7 @@ const DashboardPanel = () =>
 
                 <div className="flex-grow-1 overflow-hidden">
                   <p className="mb-1">Total Customers</p>
-                  <h5 className="mb-3">{item.total_customers}</h5>
+                  <h5 className="mb-3">{item?.total_customers}</h5>
                 </div>
               </div>
             </CardBody>
@@ -103,7 +103,7 @@ const DashboardPanel = () =>
 
                 <div className="flex-grow-1 overflow-hidden">
                   <p className="mb-1">Total Vehicles</p>
-                  <h5 className="mb-3">{item.total_vehicles}</h5>
+                  <h5 className="mb-3">{item?.total_vehicles}</h5>
     
                 </div>
               </div>
@@ -124,7 +124,7 @@ const DashboardPanel = () =>
                 </div>
                 <div className="flex-grow-1 overflow-hidden">
                   <p className="mb-1">Total Drivers</p>
-                  <h5 className="mb-3">{item.total_drivers}</h5>
+                  <h5 className="mb-3">{item?.total_drivers}</h5>
                 </div>
               </div>
             </CardBody>
@@ -143,7 +143,7 @@ const DashboardPanel = () =>
                 </div>
                 <div className="flex-grow-1 overflow-hidden">
                   <p className="mb-1">Total Enquiries</p>
-                  <h5 className="mb-3">{item.total_enquiries}</h5>
+                  <h5 className="mb-3">{item?.total_enquiries}</h5>
                 </div>
               </div>
             </CardBody>
@@ -163,7 +163,7 @@ const DashboardPanel = () =>
                 </div>
                 <div className="flex-grow-1 overflow-hidden">
                   <p className="mb-1">Total Quotations</p>
-                  <h5 className="mb-3">{item.total_quotations}</h5>
+                  <h5 className="mb-3">{item?.total_quotations}</h5>
                 </div>
               </div>
             </CardBody>
@@ -183,7 +183,7 @@ const DashboardPanel = () =>
                 </div>
                 <div className="flex-grow-1 overflow-hidden">
                   <p className="mb-1"> Total Revenue</p>
-                  <h5 className="mb-3">{item.total_revenue}</h5>
+                  <h5 className="mb-3">{item?.total_revenue}</h5>
                 </div>
               </div>
             </CardBody>

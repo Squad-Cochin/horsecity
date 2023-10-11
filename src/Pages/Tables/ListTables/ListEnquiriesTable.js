@@ -148,10 +148,10 @@ const ListEnquiriesTable = () => {
     async function getAllData(page) {
         if (userId) {
             let getEnqData = await getEnquiriesData(page || 1, userId);
-            setEnquiries(getEnqData.enquiries);
-            setModule(getEnqData.module[0])
+            setEnquiries(getEnqData?.enquiries);
+            setModule(getEnqData?.module[0])
             setPageNumber(page);
-            setNumberOfData(getEnqData.totalCount);
+            setNumberOfData(getEnqData?.totalCount);
         }
     }
 
@@ -453,7 +453,7 @@ const ListEnquiriesTable = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {enquiries.map((item, index) => (
+                                                    {enquiries?.map((item, index) => (
                                                         <tr key={item.id}>
                                                             <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                             <td className="enquiryId">{item?.id}</td>

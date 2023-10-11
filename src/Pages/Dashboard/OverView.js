@@ -27,7 +27,7 @@ const MonthlySalesReport = () =>
     async function monthlySalesGraphdata()
     {
         let sgData = await getMonthlySalesData(data[0]?.user[0]?.id);
-        setSalesGraphData(sgData.revenue.options);
+        setSalesGraphData(sgData?.revenue?.options);
     }
 
     

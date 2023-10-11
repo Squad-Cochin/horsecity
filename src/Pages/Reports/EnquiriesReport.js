@@ -32,7 +32,7 @@ const EnquiryReport = () => {
     /**THIS HOOK WILL RENDER INITIAL TIME SETTING THE FROMDATE BEFORE 60 DAYS TODATE CURRENT DATE */
     useEffect(() => {
         const settings = JSON.parse(localStorage.getItem("settingsData"));
-        setPageTitle(settings.application_title);
+        setPageTitle(settings?.application_title);
         const today = new Date();
         const sixtyDaysAgo = new Date(today);
         sixtyDaysAgo.setDate(sixtyDaysAgo.getDate() - 60);
@@ -154,7 +154,7 @@ const EnquiryReport = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {enquiryReport.map((item, index) => (
+                                                    {enquiryReport?.map((item, index) => (
                                                         <tr key={index}>
                                                             <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                             <td className="customer_name">{item.customer_name}</td>

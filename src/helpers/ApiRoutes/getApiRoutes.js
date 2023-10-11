@@ -715,9 +715,14 @@ export async function getSingleLanguageData(tId){
     }
 }
 
-export async function getVehicleImageData(id){
+export async function getVehicleImageData(pageNumber,id){
     try {
-        const { data } = await axios.get(`${url.GET_VEHICLES_IMAGES_DATA_URL}/${id}`,{
+        let pageLimit = config.pageLimit;
+        let reqObj = {
+            "page" : pageNumber,
+            "limit" : pageLimit
+        }
+        const { data } = await axios.post(`${url.GET_VEHICLES_IMAGES_DATA_URL}/${id}`,reqObj,{
             headers: {
                 "Authorization": `Bearer ${process.env.REACT_APP_ADMIN_API_TOKEN}`,
               },

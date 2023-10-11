@@ -155,7 +155,7 @@ const VehicleReport = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {vehicleReport.map((item, index) => (
+                                                    {vehicleReport?.map((item, index) => (
                                                         <tr key={index}>
                                                             <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                             {!(config.Role.service_provider === role) ? (

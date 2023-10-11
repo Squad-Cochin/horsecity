@@ -45,10 +45,10 @@ const Accounts = () => {
     async function getAllData(page) {
         if (userId) {
             let getAccountsdata = await getAccountsData(page || 1, userId);
-            setAccounts(getAccountsdata.accounts);
+            setAccounts(getAccountsdata?.accounts);
             setModule(getAccountsdata?.module[0])
             setPageNumber(page);
-            setNumberOfData(getAccountsdata.totalCount);
+            setNumberOfData(getAccountsdata?.totalCount);
         }
     }
     /**GET SINGLE ACCOUNTS */
@@ -85,7 +85,7 @@ const Accounts = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {accounts.map((item, index) => (
+                                                    {accounts?.map((item, index) => (
                                                         <tr key={index}>
                                                             <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                             <td className="customer_name">{item.customer_name}</td>

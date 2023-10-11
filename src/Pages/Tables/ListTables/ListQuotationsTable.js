@@ -85,10 +85,10 @@ const ListQuotationsTable = () => {
   async function getAllData(page) {
     if(userId){ 
     let quotationData = await getQuotationData(page || 1,userId);
-    setQuotations(quotationData.quotations);
-    setModule(quotationData.module[0])
+    setQuotations(quotationData?.quotations);
+    setModule(quotationData?.module[0])
     setPageNumber(page);
-    setNumberOfData(quotationData.totalCount);
+    setNumberOfData(quotationData?.totalCount);
   }
   }
 

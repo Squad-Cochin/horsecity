@@ -196,9 +196,12 @@ const ListVehiclesTable = () => {
         if (userId) {
             let getvehicles = await getVehiclesData(page || 1, userId);
             let getSP = await getSPUserName();
-            setSproviders(getSP.serviceProviders);
+      
+            setSproviders(getSP?.serviceProviders);
             setVehicles(getvehicles?.vehicles);
-            setModule(getvehicles.module[0]);
+            if(getvehicles?.module && getvehicles.module.length > 0){
+                setModule(getvehicles.module[0]);
+            }
             setPageNumber(page);
             setNumberOfData(getvehicles?.totalCount);
         }
@@ -353,7 +356,7 @@ const ListVehiclesTable = () => {
             {/* Add new vehicle modal */}
             <Modal className="extra-width" isOpen={modal_list} toggle={() => {setmodal_list(false);setCertificateImage(""); tog_list(add_list ? 'ADD' : 'EDIT'); }} centered >
                 {/* The below line is for the heading of pop up of edit exixing vehicle or adding new vehicle. */}
-                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setCertificateImage(null);console.log('add_list:', add_list); setmodal_list(false); tog_list(add_list ? 'ADD' : 'EDIT'); }}> {add_list ? 'Add Vehicle' : 'Edit Vehicle'} </ModalHeader>
+                <ModalHeader className="bg-light p-3" id="exampleModalLabel" toggle={() => { setCertificateImage(null); setmodal_list(false); tog_list(add_list ? 'ADD' : 'EDIT'); }}> {add_list ? 'Add Vehicle' : 'Edit Vehicle'} </ModalHeader>
                 <form className="tablelist-form" onSubmit={validation.handleSubmit}>
                     <ModalBody>
                         {/* The below element is adding the name of the service provider. Whose vehicle is being added */}
@@ -378,7 +381,7 @@ const ListVehiclesTable = () => {
                                     required
                                 >
                                     <option value="">Select Service Provider</option>
-                                    {sproviders.map((item, index) => (
+                                    {sproviders?.map((item, index) => (
                                         <option key={index} value={item.id}>
                                             {item.name}
                                         </option>
@@ -530,7 +533,7 @@ const ListVehiclesTable = () => {
                                     name="air_conditioner"
                                     className="form-check-input"
                                     value="YES"
-                                    checked={airConditioner === 'YES'}
+                                    defaultChecked={airConditioner === 'YES'}
                                     onClick={(e)=> { validation.handleChange(e); setAirConditioner("YES");}}
                                     onBlur={validation.handleBlur}
                                     required
@@ -544,7 +547,7 @@ const ListVehiclesTable = () => {
                                     name="air_conditioner"
                                     className="form-check-input"
                                     value="NO"
-                                    checked={airConditioner === 'NO'}
+                                    defaultChecked={airConditioner === 'NO'}
                                     onClick={(e)=> { validation.handleChange(e); setAirConditioner("NO");}}
                                     onBlur={validation.handleBlur}
                                     required
@@ -562,7 +565,7 @@ const ListVehiclesTable = () => {
                                     name="temperature_manageable"
                                     className="form-check-input"
                                     value={"YES"}
-                                    checked={temperatureManageable === 'YES'}
+                                    defaultChecked={temperatureManageable === 'YES'}
                                     onClick={(e)=> { validation.handleChange(e); setTemperatureManageable("YES");} }
                                     required
                                 />
@@ -575,7 +578,7 @@ const ListVehiclesTable = () => {
                                     name="temperature_manageable"
                                     className="form-check-input"
                                     value={"NO"}
-                                    checked={temperatureManageable === 'NO'}
+                                    defaultChecked={temperatureManageable === 'NO'}
                                     onClick={(e)=> { validation.handleChange(e); setTemperatureManageable("NO");} }
                                     required
                                 />
@@ -623,7 +626,7 @@ const ListVehiclesTable = () => {
                                     name="gcc_travel_allowed"
                                     className="form-check-input"
                                     value="YES"
-                                    checked={gccTravelAllowed === "YES"}
+                                    defaultChecked={gccTravelAllowed === "YES"}
                                     onClick={(e)=> { validation.handleChange(e); setGccTravelAllowed("YES");} }
                                     required
                                 />
@@ -636,7 +639,7 @@ const ListVehiclesTable = () => {
                                     name="gcc_travel_allowed"
                                     className="form-check-input"
                                     value="NO"
-                                    checked={gccTravelAllowed === "NO"}
+                                    defaultChecked={gccTravelAllowed === "NO"}
                                     onClick={(e)=> { validation.handleChange(e); setGccTravelAllowed("NO");} }
                                     required
                                 />
@@ -653,7 +656,7 @@ const ListVehiclesTable = () => {
                                     name="insurance_cover"
                                     className="form-check-input"
                                     value="YES"
-                                    checked={insuranceCover === "YES"}
+                                    defaultChecked={insuranceCover === "YES"}
                                     onClick={(e)=> { validation.handleChange(e); setInsuranceCover("YES");} }
                                     required
                                 />
@@ -665,7 +668,7 @@ const ListVehiclesTable = () => {
                                     id="insurance_covered-no"
                                     name="insurance_cover"
                                     value='NO'
-                                    checked={insuranceCover === "NO"}
+                                    defaultChecked={insuranceCover === "NO"}
                                     onClick={(e)=> { validation.handleChange(e); setInsuranceCover("NO");} }
                                     className="form-check-input"
                                     required
@@ -741,7 +744,7 @@ const ListVehiclesTable = () => {
                                     name="vehicle_type"
                                     className="form-check-input"
                                     value="PRIVATE"
-                                    checked={vehicleType === "PRIVATE"}
+                                    defaultChecked={vehicleType === "PRIVATE"}
                                     onClick={(e)=> { validation.handleChange(e); setVehicleType("PRIVATE");} }
                                     onBlur={validation.handleBlur}
                                     required
@@ -755,7 +758,7 @@ const ListVehiclesTable = () => {
                                     name="vehicle_type"
                                     className="form-check-input"
                                     value="SHARING"
-                                    checked={vehicleType === "SHARING"}
+                                    defaultChecked={vehicleType === "SHARING"}
                                     onClick={(e)=> { validation.handleChange(e); setVehicleType("SHARING");} }
                                     onBlur={validation.handleBlur}
                                     required
@@ -822,7 +825,7 @@ const ListVehiclesTable = () => {
                                 id="serviceprovider-field"
                                 className="form-control"
                                 name='service_provider'
-                                value={validation.values.service_provider || ""}
+                                defaultValue={validation.values.service_provider || ""}
                                 readOnly
                             />
                         </div>
@@ -834,7 +837,7 @@ const ListVehiclesTable = () => {
                                 id="vehicle_number-field"
                                 className="form-control"
                                 name='vehicle_number'
-                                value={validation.values.vehicle_number || ""}
+                                defaultValue={validation.values.vehicle_number || ""}
                                 readOnly
                             />
                         </div>
@@ -846,7 +849,7 @@ const ListVehiclesTable = () => {
                                 id="vehicle_company-field"
                                 name='make'
                                 className="form-control"
-                                value={validation.values.make || ""}
+                                defaultValue={validation.values.make || ""}
                                 readOnly
                             />
                         </div>
@@ -858,7 +861,7 @@ const ListVehiclesTable = () => {
                                 id="modal-field"
                                 name='model' // Updated the name attribute to 'models'
                                 className="form-control"
-                                value={validation.values.model || ""}
+                                defaultValue={validation.values.model || ""}
                                 readOnly
                             />
                         </div>
@@ -869,7 +872,7 @@ const ListVehiclesTable = () => {
                                 <input
                                     className="form-control form-control-color mw-100"
                                     type="color"
-                                    value={validation.values.color || ""}
+                                    defaultValue={validation.values.color || ""}
                                     id="example-color-input"
                                 />
                             </div>
@@ -882,7 +885,7 @@ const ListVehiclesTable = () => {
                                 id="vehicle_length-field"
                                 className="form-control"
                                 name='length'
-                                value={validation.values.length || ""}
+                                defaultValue={validation.values.length || ""}
                                 readOnly
                             />
                         </div>
@@ -894,7 +897,7 @@ const ListVehiclesTable = () => {
                                 id="vehicle_breadth-field"
                                 className="form-control"
                                 name='breadth'
-                                value={validation.values.breadth || ""}
+                                defaultValue={validation.values.breadth || ""}
                                 readOnly
                             />
                         </div>
@@ -906,7 +909,7 @@ const ListVehiclesTable = () => {
                                 id="vehicle_height-field"
                                 className="form-control"
                                 name='height'
-                                value={validation.values.height || ""}
+                                defaultValue={validation.values.height || ""}
                                 readOnly
                             />
                         </div>
@@ -918,7 +921,7 @@ const ListVehiclesTable = () => {
                                 id="vehicle_price-field"
                                 className="form-control"
                                 name='price'
-                                value={validation.values.price || ""}
+                                defaultValue={validation.values.price || ""}
                                 readOnly
                             />
                         </div>
@@ -930,7 +933,7 @@ const ListVehiclesTable = () => {
                                 id="no_horse-field"
                                 className="form-control"
                                 name='no_of_horse'
-                                value={validation.values.no_of_horse || ""}
+                                defaultValue={validation.values.no_of_horse || ""}
                                 readOnly
                             />
                         </div>
@@ -998,7 +1001,7 @@ const ListVehiclesTable = () => {
                                 id="vehicle_registration_number-field"
                                 className="form-control"
                                 name='vehicle_registration_number'
-                                value={validation.values.vehicle_registration_number || ""}
+                                defaultValue={validation.values.vehicle_registration_number || ""}
                                 readOnly
                             />
                         </div>
@@ -1066,7 +1069,7 @@ const ListVehiclesTable = () => {
                                 id="insurance_date-field"
                                 className="form-control"
                                 name='insurance_date'
-                                value={validation.values.insurance_date || ""}
+                                defaultValue={validation.values.insurance_date || ""}
                                 readOnly
                             />
                         </div>
@@ -1078,7 +1081,7 @@ const ListVehiclesTable = () => {
                                 id="insurance_policy_no-field"
                                 className="form-control"
                                 name='insurance_policy_no'
-                                value={validation.values.insurance_policy_no || ""}
+                                defaultValue={validation.values.insurance_policy_no || ""}
                                 readOnly
                             />
                         </div>
@@ -1090,7 +1093,7 @@ const ListVehiclesTable = () => {
                                 id="insurance_policy_provider-field"
                                 className="form-control"
                                 name='insurance_policy_provider'
-                                value={validation.values.insurance_policy_provider || ""}
+                                defaultValue={validation.values.insurance_policy_provider || ""}
                                 readOnly
                             />
                         </div>
@@ -1102,7 +1105,7 @@ const ListVehiclesTable = () => {
                                 id="insurance_expiry_date-field"
                                 className="form-control"
                                 name='insurance_expiry_date'
-                                value={validation.values.insurance_expiry_date || ""}
+                                defaultValue={validation.values.insurance_expiry_date || ""}
                                 readOnly
                             />
                         </div>
@@ -1142,7 +1145,7 @@ const ListVehiclesTable = () => {
                                 id="vehicle_registration_date-field"
                                 className="form-control"
                                 name='vehicle_registration_date'
-                                value={validation.values.vehicle_registration_date || ""}
+                                defaultValue={validation.values.vehicle_registration_date || ""}
                                 readOnly
                             />
                         </div>
@@ -1154,7 +1157,7 @@ const ListVehiclesTable = () => {
                                 id="vehicle_exipration_date-field"
                                 className="form-control"
                                 name='vehicle_exipration_date'
-                                value={validation.values.vehicle_exipration_date || ""}
+                                defaultValue={validation.values.vehicle_exipration_date || ""}
                                 readOnly
                             />
                         </div>

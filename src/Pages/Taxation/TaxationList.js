@@ -39,9 +39,9 @@ const TaxationDeatails = () => {
     // function for get data all service provider data
     async function getAllData(page) {
         let getTaxations = await getTaxationsData(page || 1);
-        setTaxations(getTaxations.taxations);
+        setTaxations(getTaxations?.taxations);
         setPageNumber(page);
-        setNumberOfData(getTaxations.totalCount);
+        setNumberOfData(getTaxations?.totalCount);
     }
     
     /**IT WILL OPEN ADD & EDIT POPUP */

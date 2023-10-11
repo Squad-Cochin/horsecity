@@ -101,7 +101,7 @@ const LineColumnArea = () =>
   async function monthlySalesData()
   {
     let msReport = await getMonthlySalesData(data[0]?.user[0]?.id);
-    setSalesReportData(msReport.revenue);
+    setSalesReportData(msReport?.revenue);
   }
 
   return(

@@ -70,7 +70,7 @@ const DiscountsDeatails = () => {
         } else {
             setErrors("")
             let discountData = await getSingleDiscountData(productId)
-            setDiscount(discountData.discount);
+            setDiscount(discountData?.discount);
         }
         setmodal_list(!modal_list);
     }
@@ -130,9 +130,9 @@ const DiscountsDeatails = () => {
     async function getAllData(page) {
 
         let getDiscounts = await getDiscountsPageData(page || 1);
-        setDiscounts(getDiscounts.discounts);
+        setDiscounts(getDiscounts?.discounts);
         setPageNumber(page);
-        setNumberOfData(getDiscounts.totalCount);
+        setNumberOfData(getDiscounts?.totalCount);
     }
 
     /**This function is used to REMOVE A DISCOUNT.*/
@@ -178,7 +178,7 @@ const DiscountsDeatails = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {discounts.map((item, index) => (
+                                                    {discounts?.map((item, index) => (
                                                         <tr key={item.id}>
                                                             <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                             <td className="name">{item.name}</td>

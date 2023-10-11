@@ -18,7 +18,20 @@
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
-
+  <script>
+    // In here we will check browser sapport service provider or not 
+    if('serviceWorker' in navigator){
+      window.addEventListener('load', ()=>{
+        navigator.serviceWorker.register('./serviceWorker.js').then((reg)=>{
+          console.log('Worker registered');
+        }).catch(error =>{    
+          console.log('Error service worker',error); 
+        })
+      })
+    }else{
+      console.log('Service worker not working')
+    }
+  </script>
 </body>
 
 </html>

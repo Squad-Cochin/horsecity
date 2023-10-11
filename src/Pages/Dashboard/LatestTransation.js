@@ -54,26 +54,26 @@ const LatestTransation = () => {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {latestEnquiriesData.map((item, key) => (<tr key={key}>
+                                        {latestEnquiriesData?.map((item, key) => (<tr key={key}>
                                             <td>
                                                 <div className="form-check">
-                                                    <label className="form-check-label" htmlFor={item.id}></label>
+                                                    <label className="form-check-label" htmlFor={item?.id}></label>
                                                 </div>
                                             </td>
                                             <th scope="row">{(key + 1)}</th>
                                             <td>
-                                                <p className="mb-0 font-size-15">{item.user_name}</p>
-                                                <h5 className="font-size-15 mb-0">{item.name}</h5>
+                                                <p className="mb-0 font-size-15">{item?.user_name}</p>
+                                                <h5 className="font-size-15 mb-0">{item?.name}</h5>
                                             </td>
-                                            <td>{item.date}</td>
-                                            <td>{item.pickup_location}</td>
-                                            <td>{item.drop_location}</td>
+                                            <td>{item?.date}</td>
+                                            <td>{item?.pickup_location}</td>
+                                            <td>{item?.drop_location}</td>
 
                                             <td>
-                                                {item.no_of_horse}
+                                                {item?.no_of_horse}
                                             </td>
                                             <td>
-                                                {item.status}
+                                                {item?.status}
                                             </td>
                                         </tr>))}
                                     </tbody>

@@ -179,7 +179,7 @@ const ListCustomerTable = () => {
         if (userId) {
             let getCustomers = await getCustomersData(page || 1, userId);
             setCustomers(getCustomers?.customer);
-            setModule(getCustomers.module[0]);
+            setModule(getCustomers?.module[0]);
             setPageNumber(page);
             setNumberOfData(getCustomers?.totalCount);
         }
@@ -233,7 +233,7 @@ const ListCustomerTable = () => {
                                                     </tr>
                                                 </thead>
                                                 <tbody className="list form-check-all">
-                                                    {customers.map((item, index) => (
+                                                    {customers?.map((item, index) => (
                                                         <tr key={item?.id}>
                                                             <th scope="row">{(index + 1) + ((pageNumber - 1) * pageLimit)}</th>
                                                             <td className="customer_name">{item.name}</td>
