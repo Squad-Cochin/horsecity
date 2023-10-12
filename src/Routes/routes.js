@@ -4,7 +4,6 @@
 //                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 import React from "react";
 import { Navigate } from "react-router-dom";
 
@@ -36,9 +35,9 @@ import Accounts from "../Pages/Accounts/AccountsList";
 //Languages
 import Language from "../Pages/Languages/ListLanguage";
 import SettingPage from "../Pages/Settings/settings";
-//Tax listing 
+//Tax listing
 import TaxListing from "../Pages/Taxation/TaxationList";
-//Discount listing 
+//Discount listing
 import DiscountListing from "../Pages/Discounts/DiscountsList";
 // Import Authentication pages
 import Login from "../Pages/Authentication/Login";
@@ -54,7 +53,7 @@ import InvoiceReport from "../Pages/Reports/InvoiceReport";
 import FormAdvanced from "../Pages/Forms/FormAdvanced";
 // Import Tables
 import ListJs from "../Pages/ServiceProviders/ServiceProviderTable";
-import ImageGallery from "..//Pages/Tables/ListTables/ListVehicleImages"
+import ImageGallery from "..//Pages/Tables/ListTables/ListVehicleImages";
 //Profile page
 // import Profile from "../Pages/ProfilePage";
 import InvoiceDetails from "../Pages/Invoices/InvoicesList";
@@ -65,7 +64,6 @@ import Error500 from "../Pages/Utility/Error500-Page";
 const authProtectedRoutes = [
   //dashboard
   { path: "/dashboard", component: <Dashboard /> },
-
 
   // **************************
   //ServiceProvider
@@ -88,7 +86,6 @@ const authProtectedRoutes = [
   { path: "/account-reports", component: <AccountsReport /> },
   { path: "/invoice-reports", component: <InvoiceReport /> },
 
-
   //Accounts
   { path: "/accounts", component: <Accounts /> },
   /**Image gallery */
@@ -99,7 +96,6 @@ const authProtectedRoutes = [
   { path: "/taxation-list", component: <TaxListing /> },
   { path: "/discount-list", component: <DiscountListing /> },
   { path: "/setting-page", component: <SettingPage /> },
-
 
   // Tables pages
   { path: "/service-providers", component: <ListJs /> },
@@ -122,7 +118,6 @@ const authProtectedRoutes = [
 ];
 
 const publicRoutes = [
-
   // Authentication Page
   { path: "/logout", component: <Logout /> },
   { path: "/login", component: <Login /> },
@@ -131,7 +126,6 @@ const publicRoutes = [
   { path: "/reset-password/:id/:token", component: <ResetPasswordPage /> },
   { path: "/pages-404", component: <Error404 /> },
   { path: "/pages-500", component: <Error500 /> },
-
 ];
 
 export { authProtectedRoutes, publicRoutes };

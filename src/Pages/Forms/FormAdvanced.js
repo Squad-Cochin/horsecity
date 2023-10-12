@@ -1,5 +1,17 @@
 import React, { useState } from "react";
-import { Button, Card, CardBody, Col, Container, Form, FormGroup, Input, InputGroup, Label, Row } from "reactstrap";
+import {
+  Button,
+  Card,
+  CardBody,
+  Col,
+  Container,
+  Form,
+  FormGroup,
+  Input,
+  InputGroup,
+  Label,
+  Row,
+} from "reactstrap";
 
 import { SketchPicker } from "react-color";
 import ColorPicker from "@vtaits/react-color-picker";
@@ -29,7 +41,7 @@ const Offsymbol = () => {
         height: "100%",
         fontSize: 12,
         color: "#fff",
-        paddingRight: 2
+        paddingRight: 2,
       }}
     >
       {" "}
@@ -48,7 +60,7 @@ const OnSymbol = () => {
         height: "100%",
         fontSize: 12,
         color: "#fff",
-        paddingRight: 2
+        paddingRight: 2,
       }}
     >
       {" "}
@@ -63,17 +75,17 @@ const optionGroup = [
     options: [
       { label: "Mustard", value: "Mustard" },
       { label: "Ketchup", value: "Ketchup" },
-      { label: "Relish", value: "Relish" }
-    ]
+      { label: "Relish", value: "Relish" },
+    ],
   },
   {
     label: "Camping",
     options: [
       { label: "Tent", value: "Tent" },
       { label: "Flashlight", value: "Flashlight" },
-      { label: "Toilet Paper", value: "Toilet Paper" }
-    ]
-  }
+      { label: "Toilet Paper", value: "Toilet Paper" },
+    ],
+  },
 ];
 
 const optionGroup1 = [
@@ -82,17 +94,17 @@ const optionGroup1 = [
     options: [
       { label: "Mustard", value: "Mustard" },
       { label: "Ketchup", value: "Ketchup" },
-      { label: "Relish", value: "Relish" }
-    ]
+      { label: "Relish", value: "Relish" },
+    ],
   },
   {
     label: "Camping",
     options: [
       { label: "Tent", value: "Tent" },
       { label: "Flashlight", value: "Flashlight" },
-      { label: "Toilet Paper", value: "Toilet Paper" }
-    ]
-  }
+      { label: "Toilet Paper", value: "Toilet Paper" },
+    ],
+  },
 ];
 
 const optionGroup2 = [
@@ -101,17 +113,17 @@ const optionGroup2 = [
     options: [
       { label: "Mustard", value: "Mustard" },
       { label: "Ketchup", value: "Ketchup" },
-      { label: "Relish", value: "Relish" }
-    ]
+      { label: "Relish", value: "Relish" },
+    ],
   },
   {
     label: "Camping",
     options: [
       { label: "Tent", value: "Tent" },
       { label: "Flashlight", value: "Flashlight" },
-      { label: "Toilet Paper", value: "Toilet Paper" }
-    ]
-  }
+      { label: "Toilet Paper", value: "Toilet Paper" },
+    ],
+  },
 ];
 
 const FormAdvanced = () => {
@@ -170,16 +182,16 @@ const FormAdvanced = () => {
   const [selectedMulti2, setselectedMulti2] = useState(null);
   const [selectedMulti3, setselectedMulti3] = useState(null);
 
-  const onDrag = c1 => {
+  const onDrag = (c1) => {
     setcolor(c1);
   };
-  const onDragRgb = c1 => {
+  const onDragRgb = (c1) => {
     setcolorRgb(c1);
   };
-  const onDragCust = c1 => {
+  const onDragCust = (c1) => {
     setcolorCust(c1);
   };
-  const handleHor = color => {
+  const handleHor = (color) => {
     setcolorHor(color.hex);
   };
 
@@ -187,7 +199,7 @@ const FormAdvanced = () => {
     setdisplay_RGBA(!display_RGBA);
   }
 
-  const onSwatchHover_RGBA = color => {
+  const onSwatchHover_RGBA = (color) => {
     const format =
       "rgba(" +
       color.rgb.r +
@@ -300,7 +312,7 @@ const FormAdvanced = () => {
       "September",
       "October",
       "November",
-      "December"
+      "December",
     ];
     const d = new Date();
     const current_month = months[d.getMonth()];
@@ -320,7 +332,7 @@ const FormAdvanced = () => {
       "Sep",
       "Oct",
       "Nov",
-      "Dec"
+      "Dec",
     ];
     const d = new Date();
     const current_month_short = months[d.getMonth()];
@@ -335,7 +347,7 @@ const FormAdvanced = () => {
       "Wednesday",
       "Thursday",
       "Friday",
-      "Saturday"
+      "Saturday",
     ];
     const d = new Date();
     const current_day = day[d.getDay()];
@@ -442,7 +454,7 @@ const FormAdvanced = () => {
                               style={{
                                 height: "16px",
                                 width: "16px",
-                                background: colorRgb
+                                background: colorRgb,
                               }}
                             />
                           </span>
@@ -510,7 +522,7 @@ const FormAdvanced = () => {
                           options={{
                             enableTime: true,
                             noCalendar: true,
-                            dateFormat: "H:i"
+                            dateFormat: "H:i",
                           }}
                         />
                         <div className="input-group-append">
@@ -531,7 +543,7 @@ const FormAdvanced = () => {
                             enableTime: true,
                             noCalendar: true,
                             dateFormat: "H:i",
-                            time_24hr: true
+                            time_24hr: true,
                           }}
                         />
                         <div className="input-group-append">
@@ -552,7 +564,7 @@ const FormAdvanced = () => {
                           options={{
                             enableTime: true,
                             noCalendar: true,
-                            dateFormat: "H:i"
+                            dateFormat: "H:i",
                           }}
                         />
                         <div className="input-group-append">
@@ -584,7 +596,7 @@ const FormAdvanced = () => {
                           options={{
                             altInput: true,
                             altFormat: "F j, Y",
-                            dateFormat: "Y-m-d"
+                            dateFormat: "Y-m-d",
                           }}
                         />
                       </InputGroup>
@@ -598,7 +610,7 @@ const FormAdvanced = () => {
                           options={{
                             altInput: true,
                             altFormat: "F j, Y",
-                            dateFormat: "Y-m-d"
+                            dateFormat: "Y-m-d",
                           }}
                         />
                       </InputGroup>
@@ -614,7 +626,7 @@ const FormAdvanced = () => {
                             altInput: true,
                             altFormat: "F j, Y",
                             mode: "multiple",
-                            dateFormat: "Y-m-d"
+                            dateFormat: "Y-m-d",
                           }}
                         />
                       </div>
@@ -628,7 +640,7 @@ const FormAdvanced = () => {
                           placeholder="dd M, yyyy"
                           options={{
                             mode: "range",
-                            dateFormat: "Y-m-d"
+                            dateFormat: "Y-m-d",
                           }}
                         />
                       </InputGroup>
@@ -643,7 +655,7 @@ const FormAdvanced = () => {
                           inline: true,
                           altInput: true,
                           altFormat: "F j, Y",
-                          dateFormat: "Y-m-d"
+                          dateFormat: "Y-m-d",
                         }}
                       />
                     </div>
@@ -760,7 +772,7 @@ const FormAdvanced = () => {
                     type="text"
                     maxLength="25"
                     name="defaultconfig"
-                    onChange={e => {
+                    onChange={(e) => {
                       threshholdDefault(e);
                     }}
                     id="defaultconfig"
@@ -780,7 +792,7 @@ const FormAdvanced = () => {
                     <Input
                       type="text"
                       maxLength={max_len}
-                      onChange={e => {
+                      onChange={(e) => {
                         threshholdchange(e);
                       }}
                       name="thresholdconfig"
@@ -802,7 +814,7 @@ const FormAdvanced = () => {
                     <Input
                       type="text"
                       maxLength="25"
-                      onChange={e => {
+                      onChange={(e) => {
                         optionchange(e);
                       }}
                       name="alloptions"
@@ -811,9 +823,7 @@ const FormAdvanced = () => {
                     {disbadge ? (
                       <span className="badgecount">
                         You Types{" "}
-                        <span className="badge bg-success">
-                          {optioncount}
-                        </span>{" "}
+                        <span className="badge bg-success">{optioncount}</span>{" "}
                         out of <span className="badge bg-success">25</span>{" "}
                         chars available
                       </span>
@@ -830,7 +840,7 @@ const FormAdvanced = () => {
                     <Input
                       type="text"
                       maxLength="25"
-                      onChange={e => {
+                      onChange={(e) => {
                         placementchange(e);
                       }}
                       name="placement"
@@ -855,7 +865,7 @@ const FormAdvanced = () => {
                     <Input
                       type="textarea"
                       id="textarea"
-                      onChange={e => {
+                      onChange={(e) => {
                         textareachange(e);
                       }}
                       maxLength="225"
@@ -1167,7 +1177,6 @@ const FormAdvanced = () => {
                         />
                       </div>
                     </Col>
-
                   </Row>
                 </CardBody>
               </Card>
@@ -1190,7 +1199,7 @@ const FormAdvanced = () => {
                               placeholder="Pick a date"
                               options={{
                                 altInput: true,
-                                dateFormat: "d-m-y"
+                                dateFormat: "d-m-y",
                               }}
                             />
                             <div className="input-group-append">

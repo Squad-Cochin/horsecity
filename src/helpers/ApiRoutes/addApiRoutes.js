@@ -249,7 +249,6 @@ import * as url from "../url_helper";
                 'Content-Type': 'multipart/form-data'
                 }
             });
-            console.log("response",response);
             return response
         } catch (error) {
             let errObj = {

@@ -6,7 +6,6 @@
 
 import React from "react";
 import { Navigate, Route } from "react-router-dom";
-
 import { useProfile } from "../Hooks/UserHooks";
 
 const AuthProtected = (props) => {
@@ -29,8 +28,13 @@ const AccessRoute = ({ component: Component, ...rest }) => {
   return (
     <Route
       {...rest}
-      render={props => {
-        return (<> <Component {...props} /> </>);
+      render={(props) => {
+        return (
+          <>
+            {" "}
+            <Component {...props} />{" "}
+          </>
+        );
       }}
     />
   );

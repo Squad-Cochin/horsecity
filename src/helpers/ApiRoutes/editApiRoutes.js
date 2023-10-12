@@ -17,7 +17,6 @@ export async function updateSProvider(id, data){
           "Authorization": `Bearer ${process.env.REACT_APP_ADMIN_API_TOKEN}`, 
           }
       });
-      console.log("response",response);
       return response
 
       // const { data } = await axios.put(`${url.POST_SP_EDIT_URL}/${id}`, updateData);
@@ -169,7 +168,6 @@ export async function updateSettings(data){
       for (const key in data) {
           formData.append(key, data[key]);
       }
-      console.log("here");
       // Send the form data as a POST request using Axios
       const response = await axios.put(`${url.PUT_SETTINGS_EDIT_URL}`, formData, {
           headers: {
@@ -177,7 +175,6 @@ export async function updateSettings(data){
           'Content-Type': 'multipart/form-data'
           }
       });
-      console.log("update",response);
       return response
   } catch (error) {
       return { error : "Faild !"}

@@ -6,47 +6,59 @@
 
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { Row, Col, CardBody, Card, Alert, Container, Form, Input, FormFeedback, Label } from "reactstrap";
+import {
+  Row,
+  Col,
+  CardBody,
+  Card,
+  Alert,
+  Container,
+  Form,
+  Input,
+  FormFeedback,
+  Label,
+} from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import { useFormik } from "formik";
 
 /**IMPORTED FILES */
-import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes';
+import { getSettingsPageData } from "../../helpers/ApiRoutes/getApiRoutes";
 import withRouter from "../../components/Common/withRouter";
 import logo from "../../assets/images/black-logo.png";
 import { loginUser } from "../../store/actions";
 import { clearResponseMessages } from "../../store/actions";
 
-const Login = props => {
-
+const Login = (props) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [loginpage_logo, setLoginPageLogo] = useState('')
-  const [backgroundImage, setBackgroundImage] = useState('../../assets/images/bg.jpg');
-  const [app_name, setAppName] = useState('');
+  const [loginpage_logo, setLoginPageLogo] = useState("");
+  const [backgroundImage, setBackgroundImage] = useState(
+    "../../assets/images/bg.jpg"
+  );
+  const [app_name, setAppName] = useState("");
+
   /**THIS HOOK WILL RENDER INITIAL TIME */
   useEffect(() => {
     dispatch(clearResponseMessages());
-    getAllData()
-  }, [])
-
+    getAllData();
+  }, []);
 
   /**
-   * SET SETTINGS BACKGROUND IMAGE & LOGIN PAGE IMAGE & APPLICATION NAME  
+   * SET SETTINGS BACKGROUND IMAGE & LOGIN PAGE IMAGE & APPLICATION NAME
    */
   async function getAllData() {
     let settingsData = await getSettingsPageData();
     setBackgroundImage(settingsData?.settingsPageData[0]?.loginpage_bg_image);
     setLoginPageLogo(settingsData?.settingsPageData[0]?.loginpage_logo);
-    setAppName(settingsData?.settingsPageData[0]?.application_title)
+    setAppName(settingsData?.settingsPageData[0]?.application_title);
   }
 
   const togglePasswordVisibility = () => {
     setShowPassword(!showPassword);
   };
 
-  // At the bigining unmounting 
+  // At the bigining unmounting
   useEffect(() => {
     document.body.className = "bg-pattern";
     document.body.style = `background-image: url('${backgroundImage}');`;
@@ -62,22 +74,22 @@ const Login = props => {
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      userName: "" || '',
-      password: "" || '',
+      userName: "" || "",
+      password: "" || "",
     },
     validationSchema: Yup.object({
       userName: Yup.string().required("Please Enter Your Username"),
       password: Yup.string().required("Please Enter Your Password"),
     }),
     onSubmit: (values) => {
-      localStorage.setItem('userName', values.userName);
+      localStorage.setItem("userName", values.userName);
       dispatch(loginUser(values, props.router.navigate));
-    }
+    },
   });
 
-  // Set error function 
-  const { error } = useSelector(state => ({
-    error: state.login.error
+  // Set error function
+  const { error } = useSelector((state) => ({
+    error: state.login.error,
   }));
 
   document.title = `Login | ${app_name} `;
@@ -121,7 +133,11 @@ const Login = props => {
                         return false;
                       }}
                     >
-                      {error ? <Alert color="danger"><div>{error}</div></Alert> : null}
+                      {error ? (
+                        <Alert color="danger">
+                          <div>{error}</div>
+                        </Alert>
+                      ) : null}
                       <Row>
                         <Col md={12}>
                           <div className="mb-4">
@@ -134,18 +150,27 @@ const Login = props => {
                               onChange={validation.handleChange}
                               onBlur={validation.handleBlur}
                               invalid={
-                                validation.touched.userName && validation.errors.userName ? true : false
+                                validation.touched.userName &&
+                                validation.errors.userName
+                                  ? true
+                                  : false
                               }
                             />
-                            {validation.touched.userName && validation.errors.userName ? (
-                              <FormFeedback type="invalid"><div> {validation.errors.userName} </div></FormFeedback>
+                            {validation.touched.userName &&
+                            validation.errors.userName ? (
+                              <FormFeedback type="invalid">
+                                <div> {validation.errors.userName} </div>
+                              </FormFeedback>
                             ) : null}
                           </div>
-            
+
                           <div className="mb-4">
-                        
                             <Label className="form-label">Password</Label>
-                            <div className={!validation.errors.password ? 'd-flex': ''}>
+                            <div
+                              className={
+                                !validation.errors.password ? "d-flex" : ""
+                              }
+                            >
                               <Input
                                 name="password"
                                 value={validation.values.password || ""}
@@ -155,25 +180,52 @@ const Login = props => {
                                 onChange={validation.handleChange}
                                 onBlur={validation.handleBlur}
                                 invalid={
-                                  validation.touched.password && validation.errors.password ? true : false
+                                  validation.touched.password &&
+                                  validation.errors.password
+                                    ? true
+                                    : false
                                 }
                               />
-                              {validation.touched.password && validation.errors.password ? (
-                              <FormFeedback type="invalid"><div> {validation.errors.password} </div></FormFeedback>
-                            ) : null}
+                              {validation.touched.password &&
+                              validation.errors.password ? (
+                                <FormFeedback type="invalid">
+                                  <div> {validation.errors.password} </div>
+                                </FormFeedback>
+                              ) : null}
                               {!validation.errors.password ? (
-                               <button className="btn btn-outline-secondary" type="button" onClick={togglePasswordVisibility}>
-                               {showPassword ? <i className="ri-eye-off-fill" style={{ fontSize: '15px' }}></i> : <i className="ri-eye-fill" style={{ fontSize: '15px' }}></i>}
-                             </button>
-                            ) : null}
-                             
-                             </div>
-                             </div>
-              
+                                <button
+                                  className="btn btn-outline-secondary"
+                                  type="button"
+                                  onClick={togglePasswordVisibility}
+                                >
+                                  {showPassword ? (
+                                    <i
+                                      className="ri-eye-off-fill"
+                                      style={{ fontSize: "15px" }}
+                                    ></i>
+                                  ) : (
+                                    <i
+                                      className="ri-eye-fill"
+                                      style={{ fontSize: "15px" }}
+                                    ></i>
+                                  )}
+                                </button>
+                              ) : null}
+                            </div>
+                          </div>
+
                           <div className="d-grid mt-4">
                             <span className="text-muted">
-                              <Link to="/forgot-password" style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
-                                <i className="mdi mdi-lock"></i> Forgot your password ?
+                              <Link
+                                to="/forgot-password"
+                                style={{
+                                  textDecoration: "none",
+                                  color: "inherit",
+                                  cursor: "pointer",
+                                }}
+                              >
+                                <i className="mdi mdi-lock"></i> Forgot your
+                                password ?
                               </Link>
                             </span>
                           </div>

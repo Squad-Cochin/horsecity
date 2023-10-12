@@ -2,11 +2,11 @@ import axios from "axios";
 import * as url from "../url_helper";
 // import axios from "axios";
 import MockAdapter from "axios-mock-adapter";
-import { APIClient } from "../api_helper";              
+// import { APIClient } from "../api_helper";              
 import { logDOM } from "@testing-library/react";
-const getDemoData = () => APIClient.get(url.LOGIN_URL);
+// const getDemoData = () => APIClient.get(url.LOGIN_URL);
                 
-export { getDemoData };
+// export { getDemoData };
 
 
 const fakeBackend = () => {

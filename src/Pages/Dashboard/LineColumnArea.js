@@ -1,10 +1,6 @@
-
-
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
-
-import { getMonthlySalesData } from '../../helpers/ApiRoutes/getApiRoutes';
-
+import { getMonthlySalesData } from "../../helpers/ApiRoutes/getApiRoutes";
 
 const LineColumnAreaData = {
   series: [
@@ -13,7 +9,6 @@ const LineColumnAreaData = {
       type: "column",
       data: [23, 11, 22, 27, 13, 22, 37, 21, 44, 22, 30, 18],
     },
-
   ],
   options: {
     chart: {
@@ -25,7 +20,7 @@ const LineColumnAreaData = {
     stroke: {
       width: [0, 0.5, 1],
       curve: "smooth",
-      dashArray: [0, 8, 5]
+      dashArray: [0, 8, 5],
     },
     plotOptions: {
       bar: {
@@ -46,76 +41,87 @@ const LineColumnAreaData = {
       },
     },
 
-    labels: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec" ],
-    
+    labels: [
+      "Jan",
+      "Feb",
+      "Mar",
+      "Apr",
+      "May",
+      "Jun",
+      "Jul",
+      "Aug",
+      "Sep",
+      "Oct",
+      "Nov",
+      "Dec",
+    ],
+
     markers: {
       size: 0,
     },
     legend: {
       offsetY: 11,
     },
-    xaxis:
-    {
-      title :{
-        text : "Months"
+    xaxis: {
+      title: {
+        text: "Months",
       },
       type: "month",
     },
-    
+
     yaxis: {
       title: {
         text: "Revenue",
       },
     },
-    
+
     tooltip: {
       shared: true,
       intersect: false,
       y: {
         formatter: function (y) {
           if (typeof y !== "undefined") {
-            return y.toFixed(0) + "points"
+            return y.toFixed(0) + "points";
           }
-          return y
+          return y;
         },
       },
     },
-    
+
     grid: {
       borderColor: "#f1f1f1",
     },
   },
-}
+};
 
-const LineColumnArea = () => 
-{
-
-  const[salesReportData, setSalesReportData] = useState({options : {}, series : []});
+const LineColumnArea = () => {
+  const [salesReportData, setSalesReportData] = useState({
+    options: {},
+    series: [],
+  });
 
   var data = JSON.parse(localStorage.getItem("authUser"));
-  useEffect(() =>
-  {
+  useEffect(() => {
     monthlySalesData();
   }, []);
 
-  async function monthlySalesData()
-  {
+  async function monthlySalesData() {
     let msReport = await getMonthlySalesData(data[0]?.user[0]?.id);
     setSalesReportData(msReport?.revenue);
   }
 
-  return(
+  return (
     <React.Fragment>
-        <ReactApexChart
-          options={salesReportData?.options}
-          series={salesReportData?.series}
-          type="line"
-          height="350"
-          stacked= "false"
-          className="apex-charts"
-        />
-      </React.Fragment>
-  )
-}
+      <ReactApexChart
+        options={salesReportData?.options}
+        series={salesReportData?.series}
+        type="line"
+        height="350"
+        stacked="false"
+        className="apex-charts"
+      />
+    </React.Fragment>
+  );
+};
 
 export default LineColumnArea;

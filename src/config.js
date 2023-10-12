@@ -1,11 +1,5 @@
 module.exports = {
-  pageLimit : 5,
-  roles :
-      {
-          admin : "ADMIN",
-          service_provider : "SERVICE PROVIDER"
-      },
-    
+  pageLimit : 5,    
      status : {
         TRUE : 'TRUE',
         FALSE : 'FALSE',
@@ -29,7 +23,8 @@ module.exports = {
         invoices : 10, 
         accounts :11,
         reports : 12,
-        applicationSettings : 13
+        applicationSettings : 13,
+        review : 14
     },
     Role : 
     {

@@ -99,14 +99,11 @@ const ListEnquiriesTable = () => {
         enableReinitialize: true,
         initialValues,
         onSubmit: (values) => {
-            // console.log("sp1".values.discount_amount);
-            // console.log("spname",values.service_provider_name);
             values.discount_amount = discountAmount;
             values.final_amount = finalAmount;
             values.tax_amount = taxAmount;
             values.current_amount = tAmount;
-            console.log("Add",values);
-            addQuatation(values)
+            addQuatation(values);
         }
     });
 
@@ -178,7 +175,6 @@ const ListEnquiriesTable = () => {
         setServiceProviders(serviceProviderData.serviceProviders)
         setEnquiry(singleEnqData.enquiry);
         setTaxation(singleEnqData.tax);
-
         const pickupDateParts = singleEnqData.enquiry[0]?.pickup_date.split('-')
         const year = parseInt(pickupDateParts[2]);
         const month = parseInt(pickupDateParts[1]) - 1; // Months are zero-based

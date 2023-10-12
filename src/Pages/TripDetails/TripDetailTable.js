@@ -13,7 +13,7 @@ import {
   Col,
   Container,
   Modal,
-  ModalBody, 
+  ModalBody,
   ModalFooter,
   Row,
   ModalHeader,
@@ -46,39 +46,37 @@ const TripDeatails = () => {
   const [sPVechiles, setSPVechiles] = useState([]);
   const [sPDrivers, setSPDrivers] = useState([]);
   const [trip_status, setTrip_status] = useState(false);
-  const [ store_trip_status,setStoreTripStatus] = useState("")
-  const [booking_id, setBooking_id ] = useState("");
-  const [invoice_id, setInvoice_id ] = useState("");
-  const [userId, setUserId ] = useState("");
-  const [module,setModule] = useState({});
-  const [list_or_view, setListOrView ] = useState(false);
-  const [ errors, setErrors ] = useState("");
-  const [pageTitle, setPageTitle] = useState('KailPlus');
+  const [store_trip_status, setStoreTripStatus] = useState("");
+  const [booking_id, setBooking_id] = useState("");
+  const [invoice_id, setInvoice_id] = useState("");
+  const [userId, setUserId] = useState("");
+  const [module, setModule] = useState({});
+  const [list_or_view, setListOrView] = useState(false);
+  const [errors, setErrors] = useState("");
+  const [pageTitle, setPageTitle] = useState("KailPlus");
   const pageLimit = config.pageLimit;
-
-
 
   /**Initial render wIll load this hook */
   useEffect(() => {
     const settings = JSON.parse(localStorage.getItem("settingsData"));
     setPageTitle(settings.application_title);
     const data = JSON.parse(localStorage.getItem("authUser"));
-    let userIdd = data[0]?.user[0]?.id
+    let userIdd = data[0]?.user[0]?.id;
     setUserId(userIdd);
     getAllData(1);
   }, [userId]);
 
   const initialValues = {
     invoice_id: invoice_id,
-    booking_id:  booking_id,
-    trip_status : store_trip_status,
+    booking_id: booking_id,
+    trip_status: store_trip_status,
     service_provider_id: trip_list_data[0]?.service_provider_id,
     service_provider: trip_list_data[0]?.service_provider || "",
-    driver_name:trip_list_data[0]?.driver_name || "",
-    driver_id:trip_list_data[0]?.driver_id ,
+    driver_name: trip_list_data[0]?.driver_name || "",
+    driver_id: trip_list_data[0]?.driver_id,
     vehicle_number: trip_list_data[0]?.vehicle_number || "",
-    vehicle_id: trip_list_data[0]?.vehicle_id ,
-    pickup_location:  "",
+    vehicle_id: trip_list_data[0]?.vehicle_id,
+    pickup_location: "",
   };
 
   const validation = useFormik({
@@ -86,60 +84,61 @@ const TripDeatails = () => {
     enableReinitialize: true,
     initialValues,
     onSubmit: (values) => {
-      updateTrip(values)
-
+      updateTrip(values);
     },
   });
 
   // function for get data all customer data
   async function getAllData(page) {
-    if(userId){ 
-    let Tripdetails = await getTripDeatails(page || 1,userId);
-    setTripDatas(Tripdetails?.tripDetails);
-    setModule(Tripdetails?.module[0])
-    setPageNumber(page);
-    setNumberOfData(Tripdetails?.totalCount);
+    if (userId) {
+      let Tripdetails = await getTripDeatails(page || 1, userId);
+      setTripDatas(Tripdetails?.tripDetails);
+      setModule(Tripdetails?.module[0]);
+      setPageNumber(page);
+      setNumberOfData(Tripdetails?.totalCount);
     }
   }
   /**ADDING BREAKDOWN */
-  async function updateTrip(values){
-  let updateTrip = await   updateTripStatus(values);
-      if(updateTrip.code === 200){
-        getAllData(pageNumber);
-        setmodal_list(false);
-      }else{
-        setErrors("")
-        setErrors(updateTrip.message)
+  async function updateTrip(values) {
+    let updateTrip = await updateTripStatus(values);
+    if (updateTrip.code === 200) {
+      getAllData(pageNumber);
+      setmodal_list(false);
+    } else {
+      setErrors("");
+      setErrors(updateTrip.message);
     }
-     
   }
 
   /** THIS FUNCTION WILL DISPLAY THE BREAKDOWN LIST */
   async function breakdown_list(productId) {
     setTrip_list_data([]);
     let breakOut = await getLIstBreakDownVehicles(productId);
-    if(breakOut.vehicles_breakouts.length !== 0){
+    if (breakOut.vehicles_breakouts.length !== 0) {
       setTrip_list_data(breakOut.vehicles_breakouts);
-      setListOrView(true)
-    }else{
-      let filterTrpDetailsData = tripDatas.filter((item)=> item.booking_id  == productId)
+      setListOrView(true);
+    } else {
+      let filterTrpDetailsData = tripDatas.filter(
+        (item) => item.booking_id == productId
+      );
       setTrip_list_data(filterTrpDetailsData);
-      setListOrView(false)
+      setListOrView(false);
     }
     setBreakdown_list_modal(!breakdown_list_modal);
   }
   /** THIS FUNCTION WILL OPEN THE EDIT POPUP  */
-  async function tog_list(bkId ,invId) {
-   
+  async function tog_list(bkId, invId) {
     setTrip_list_data([]);
     setBooking_id(bkId);
     setInvoice_id(invId);
     setTrip_status(false);
-    let filterTrpDetailsData = tripDatas.filter((item)=> item.booking_id  == bkId)
+    let filterTrpDetailsData = tripDatas.filter(
+      (item) => item.booking_id == bkId
+    );
     setTrip_list_data(filterTrpDetailsData);
     let serviceProviderData = await getSPUserName();
     setServiceProviders(serviceProviderData.serviceProviders);
-    
+
     setmodal_list(!modal_list);
   }
   /**SETTING DRIVER & VEHICLES BASIS OF SERVICE PROVIDER */
@@ -151,12 +150,12 @@ const TripDeatails = () => {
   }
 
   /**SETTING TRIP STATUS */
-   function tripStatusSelected(value) {
-    setStoreTripStatus(value)
-    if(value === tripStatus.breakout){
-        setTrip_status(true)
-    }else if(value === tripStatus.compleated){
-      setTrip_status(false)
+  function tripStatusSelected(value) {
+    setStoreTripStatus(value);
+    if (value === tripStatus.breakout) {
+      setTrip_status(true);
+    } else if (value === tripStatus.compleated) {
+      setTrip_status(false);
     }
   }
 
@@ -188,9 +187,11 @@ const TripDeatails = () => {
                             <th className="index" data-sort="index">
                               #
                             </th>
-                            <th className="sort" data-sort="number">Invoice Id</th>
+                            <th className="sort" data-sort="number">
+                              Invoice Id
+                            </th>
                             <th className="sort" data-sort="service-provider">
-                             Customer Name
+                              Customer Name
                             </th>
                             <th className="sort" data-sort="service-provider">
                               Service Provider
@@ -215,7 +216,9 @@ const TripDeatails = () => {
                               <th scope="row">
                                 {index + 1 + (pageNumber - 1) * pageLimit}
                               </th>
-                              <td className="phone">{item.invoice_prefix_id}</td>
+                              <td className="phone">
+                                {item.invoice_prefix_id}
+                              </td>
                               <td className="customer_name">
                                 {item?.customer_name}
                               </td>
@@ -231,35 +234,41 @@ const TripDeatails = () => {
                               <td className="amount">{item?.trip_status}</td>
                               <td>
                                 <div className="d-flex gap-2">
-                             
-                                {JSON.parse(module?.read ||  'true') ?(
-                                <div className="edit">
-                                <button
-                                  className="btn btn-sm btn-success edit-item-btn"
-                                  data-bs-toggle="modal"
-                                  data-bs-target="#showModal"
-                                  onClick={() => breakdown_list(item?.booking_id)}
-                                >
-                                  View
-                                </button>
-                              </div>
-                               ) : null }
-                         
-                               {tripDatas[index].trip_status != tripStatus.compleated? (
-                                  <div className="edit">
-                                          {JSON.parse(module?.read ||  'true') ?(
-                                    <button
-                                      className="btn btn-sm btn-success edit-item-btn"
-                                      data-bs-toggle="modal"
-                                      data-bs-target="#showModal"
-                                      onClick={() => tog_list(item.booking_id,item.invoice_id)}
-                                    >
-                                      Edit
-                                    </button>
-                                         ): null }
-                                  </div>
-                       
-                                  ) : null }
+                                  {JSON.parse(module?.read || "true") ? (
+                                    <div className="edit">
+                                      <button
+                                        className="btn btn-sm btn-success edit-item-btn"
+                                        data-bs-toggle="modal"
+                                        data-bs-target="#showModal"
+                                        onClick={() =>
+                                          breakdown_list(item?.booking_id)
+                                        }
+                                      >
+                                        View
+                                      </button>
+                                    </div>
+                                  ) : null}
+
+                                  {tripDatas[index].trip_status !=
+                                  tripStatus.compleated ? (
+                                    <div className="edit">
+                                      {JSON.parse(module?.read || "true") ? (
+                                        <button
+                                          className="btn btn-sm btn-success edit-item-btn"
+                                          data-bs-toggle="modal"
+                                          data-bs-target="#showModal"
+                                          onClick={() =>
+                                            tog_list(
+                                              item.booking_id,
+                                              item.invoice_id
+                                            )
+                                          }
+                                        >
+                                          Edit
+                                        </button>
+                                      ) : null}
+                                    </div>
+                                  ) : null}
                                 </div>
                               </td>
                             </tr>
@@ -311,11 +320,15 @@ const TripDeatails = () => {
             setBreakdown_list_modal(false);
           }}
         >
-        {list_or_view ? 'Break Down List' : 'Trip Details'}  
+          {list_or_view ? "Break Down List" : "Trip Details"}
         </ModalHeader>
         <form className="tablelist-form">
           <ModalBody>
-          {errors !== "" ? <Alert color="danger"><div>{errors}</div></Alert> : null}
+            {errors !== "" ? (
+              <Alert color="danger">
+                <div>{errors}</div>
+              </Alert>
+            ) : null}
             <div className="tm_container">
               <div className="tm_invoice_wrap">
                 <div className="tm_invoice tm_style1" id="tm_download_section">
@@ -330,7 +343,7 @@ const TripDeatails = () => {
                             <th className="index" data-sort="index">
                               #
                             </th>
-               
+
                             <th className="sort" data-sort="customer_name">
                               Service Provider
                             </th>
@@ -406,7 +419,7 @@ const TripDeatails = () => {
         className="extra-width"
         isOpen={modal_list}
         toggle={() => {
-          setmodal_list(false)
+          setmodal_list(false);
         }}
         centered
       >
@@ -414,7 +427,7 @@ const TripDeatails = () => {
           className="bg-light p-3"
           id="exampleModalLabel"
           toggle={() => {
-            setmodal_list(false)
+            setmodal_list(false);
           }}
         >
           {" "}
@@ -465,102 +478,108 @@ const TripDeatails = () => {
             </div>
 
             {trip_status ? (
-                <div>
-                  {/* Service Provider */}
-                  <div className="mb-3">
-                    <label htmlFor="service_provider_id-field" className="form-label">
-                      Service Provider Name
-                    </label>
-                    <select
-                      data-trigger
-                      name="service_provider_id"
-                      id="service_provider_id-field"
-                      className="form-control"
-                      value={validation.values.service_provider_id || ""}
-                      onChange={(e) => {
-                        validation.handleChange(e);
-                        serviceProviderSelected(e.target.value);
-                      }}
-                      onBlur={validation.handleBlur}
-                      required
-                    >
-                      <option value={validation.values.service_provider_id || ""}>{validation.values.service_provider}</option>
-                      {serviceProviders.map((item, index) => (
-                        <option key={index} value={item.id}>
-                          {item.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+              <div>
+                {/* Service Provider */}
+                <div className="mb-3">
+                  <label
+                    htmlFor="service_provider_id-field"
+                    className="form-label"
+                  >
+                    Service Provider Name
+                  </label>
+                  <select
+                    data-trigger
+                    name="service_provider_id"
+                    id="service_provider_id-field"
+                    className="form-control"
+                    value={validation.values.service_provider_id || ""}
+                    onChange={(e) => {
+                      validation.handleChange(e);
+                      serviceProviderSelected(e.target.value);
+                    }}
+                    onBlur={validation.handleBlur}
+                    required
+                  >
+                    <option value={validation.values.service_provider_id || ""}>
+                      {validation.values.service_provider}
+                    </option>
+                    {serviceProviders.map((item, index) => (
+                      <option key={index} value={item.id}>
+                        {item.name}
+                      </option>
+                    ))}
+                  </select>
+                </div>
 
-                  {/* Vehicle Number */}
-                  <div className="mb-3">
-                    <label htmlFor="vehicle_id-field" className="form-label">
-                      Vehicle Number
-                    </label>
-                    <select
-                      data-trigger
-                      name="vehicle_id"
-                      id="vehicle_id-field"
-                      className="form-control"
-                      value={validation.values.vehicle_id || ""}
-                      onChange={validation.handleChange}
-                      onBlur={validation.handleBlur}
-                      required
-                    >
-                      <option value={validation.values.vehicle_id || ""}>{validation.values.vehicle_number}</option>
-                      {sPVechiles.map((item, index) => (
-                        <option key={index} value={item.id}>
-                          {item.vehicle_number}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
+                {/* Vehicle Number */}
+                <div className="mb-3">
+                  <label htmlFor="vehicle_id-field" className="form-label">
+                    Vehicle Number
+                  </label>
+                  <select
+                    data-trigger
+                    name="vehicle_id"
+                    id="vehicle_id-field"
+                    className="form-control"
+                    value={validation.values.vehicle_id || ""}
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    required
+                  >
+                    <option value={validation.values.vehicle_id || ""}>
+                      {validation.values.vehicle_number}
+                    </option>
+                    {sPVechiles.map((item, index) => (
+                      <option key={index} value={item.id}>
+                        {item.vehicle_number}
+                      </option>
+                    ))}
+                  </select>
+                </div>
                 {/* Driver */}
                 <div className="mb-3">
-                    <label htmlFor="driver_id-field" className="form-label">
-                      Driver
-                    </label>
-                    <select
-                      data-trigger
-                      name="driver_id"
-                      id="driver_id-field"
-                      className="form-control"
-                      value={validation.values.driver_id || ""}
-                      onChange={validation.handleChange}
-                      onBlur={validation.handleBlur}
-                      required
-                    >
-                      <option    value={validation.values.driver_id || ""}>{validation.values.driver_name}</option>
-                      {sPDrivers?.map((item, index) => (
-                        <option key={index} value={item?.id}>
-                          {item?.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-
-                  {/* Start Location */}
-                  <div className="mb-3">
-                    <label htmlFor="startLocation-field" className="form-label">
-                      Start Location
-                    </label>
-                    <input
-                      type="text"
-                      name="pickup_location"
-                      id="startLocation-field"
-                      className="form-control"
-                      value={validation.values.pickup_location || ""}
-                      onChange={validation.handleChange}
-                      placeholder="Enter Start Location"
-                      required
-                    />
-                  </div>
-
+                  <label htmlFor="driver_id-field" className="form-label">
+                    Driver
+                  </label>
+                  <select
+                    data-trigger
+                    name="driver_id"
+                    id="driver_id-field"
+                    className="form-control"
+                    value={validation.values.driver_id || ""}
+                    onChange={validation.handleChange}
+                    onBlur={validation.handleBlur}
+                    required
+                  >
+                    <option value={validation.values.driver_id || ""}>
+                      {validation.values.driver_name}
+                    </option>
+                    {sPDrivers?.map((item, index) => (
+                      <option key={index} value={item?.id}>
+                        {item?.name}
+                      </option>
+                    ))}
+                  </select>
                 </div>
-              ) : null}
 
-        
+                {/* Start Location */}
+                <div className="mb-3">
+                  <label htmlFor="startLocation-field" className="form-label">
+                    Start Location
+                  </label>
+                  <input
+                    type="text"
+                    name="pickup_location"
+                    id="startLocation-field"
+                    className="form-control"
+                    value={validation.values.pickup_location || ""}
+                    onChange={validation.handleChange}
+                    placeholder="Enter Start Location"
+                    required
+                  />
+                </div>
+              </div>
+            ) : null}
           </ModalBody>
           <ModalFooter>
             <div className="hstack gap-2 justify-content-end">

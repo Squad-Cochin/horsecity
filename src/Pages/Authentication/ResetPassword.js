@@ -4,36 +4,50 @@
 //                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
-
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
-import { Row, Col, Alert, Card, CardBody, Container, FormFeedback, Input, Label, Form } from "reactstrap";
+import {
+  Row,
+  Col,
+  Alert,
+  Card,
+  CardBody,
+  Container,
+  FormFeedback,
+  Input,
+  Label,
+  Form,
+} from "reactstrap";
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
-import { useParams } from 'react-router-dom';
+import { useParams } from "react-router-dom";
+
 /**IMPORTED */
-import { verifyResetPasswordUrl } from '../../helpers/ApiRoutes/getApiRoutes';
+import { verifyResetPasswordUrl } from "../../helpers/ApiRoutes/getApiRoutes";
 import { useFormik } from "formik";
 import { userResetPassword } from "../../store/actions";
 import logo from "../../assets/images/logo.png";
 import withRouter from "../../components/Common/withRouter";
-import { useNavigate } from "react-router-dom"
-import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes';
-const ResetPasswordPage = props => {
-  const [backgroundImage, setBackgroundImage] = useState('../../assets/images/bg.jpg');
-  const [app_name, setAppName] = useState('');
-  const [loginpage_logo, setLoginPageLogo] = useState('')
+import { useNavigate } from "react-router-dom";
+import { getSettingsPageData } from "../../helpers/ApiRoutes/getApiRoutes";
+
+const ResetPasswordPage = (props) => {
+  const [backgroundImage, setBackgroundImage] = useState(
+    "../../assets/images/bg.jpg"
+  );
+  const [app_name, setAppName] = useState("");
+  const [loginpage_logo, setLoginPageLogo] = useState("");
   const dispatch = useDispatch();
-  const { id,token } = useParams();
+  const { id, token } = useParams();
   const navigate = useNavigate();
+
   /**THIS HOOK WILL RENDER INITIAL TIME */
   useEffect(() => {
+    initialLoad();
+    getAllData();
+  }, []);
 
-     initialLoad();
-     getAllData()
-  }, [])
-  
   useEffect(() => {
     document.body.className = "bg-pattern";
     document.body.style = `background-image: url('${backgroundImage}');`;
@@ -47,20 +61,22 @@ const ResetPasswordPage = props => {
     let settingsData = await getSettingsPageData();
     setBackgroundImage(settingsData?.settingsPageData[0]?.loginpage_bg_image);
     setLoginPageLogo(settingsData?.settingsPageData[0]?.loginpage_logo);
-    setAppName(settingsData?.settingsPageData[0]?.application_title)
+    setAppName(settingsData?.settingsPageData[0]?.application_title);
   }
-  async function initialLoad(){
-    if(id && token){
-      let reqObj = {
-        flag : true
-      }
-      const verifyUrl = await  verifyResetPasswordUrl(id,token,reqObj);  
-      if(verifyUrl.code === 200){
-        navigate(`/reset-password/${verifyUrl.data?.id}/${verifyUrl.data?.token}`)
-      }else{
-        navigate(`/pages-404`)
-      }
 
+  async function initialLoad() {
+    if (id && token) {
+      let reqObj = {
+        flag: true,
+      };
+      const verifyUrl = await verifyResetPasswordUrl(id, token, reqObj);
+      if (verifyUrl.code === 200) {
+        navigate(
+          `/reset-password/${verifyUrl.data?.id}/${verifyUrl.data?.token}`
+        );
+      } else {
+        navigate(`/pages-404`);
+      }
     }
   }
 
@@ -69,40 +85,41 @@ const ResetPasswordPage = props => {
     // enableReinitialize : use this flag when initial values needs to be changed
     enableReinitialize: true,
     initialValues: {
-      newpassword: '',
-      confirmnewpassword : '',
-      user_id : '',
-      token : ''
-
+      newpassword: "",
+      confirmnewpassword: "",
+      user_id: "",
+      token: "",
     },
     validationSchema: Yup.object({
       newpassword: Yup.string().required("Please Enter Your New Password"),
-      confirmnewpassword: Yup.string().required("Please Enter Your Confirm Password"),
+      confirmnewpassword: Yup.string().required(
+        "Please Enter Your Confirm Password"
+      ),
     }),
     onSubmit: (values) => {
-      values.user_id = id
-      values.token = token
+      values.user_id = id;
+      values.token = token;
       dispatch(userResetPassword(values, props.router.navigate));
-    }
+    },
   });
 
   /**FETCHING IN THE REDUX */
-  const { resetError, resetSuccessMsg } = useSelector(state => ({
+  const { resetError, resetSuccessMsg } = useSelector((state) => ({
     resetError: state.forgetPassword.resetError,
-    resetSuccessMsg: state.forgetPassword.resetSuccessMsg
+    resetSuccessMsg: state.forgetPassword.resetSuccessMsg,
   }));
+
   document.title = `Reset Password | ${app_name} `;
-return (
+  return (
     <React.Fragment>
-    <div className="bg-overlay"></div>
+      <div className="bg-overlay"></div>
       <div className="account-pages my-5 pt-sm-5">
         <Container>
           <Row className="justify-content-center">
             <Col md={8} lg={6} xl={5}>
               <Card className="overflow-hidden">
                 <div className="bg-primary bg-softbg-soft-primary">
-                  <Row>
-                  </Row>
+                  <Row></Row>
                 </div>
                 <CardBody className="pt-3">
                   <div>
@@ -127,10 +144,17 @@ return (
                     ) : null}
                     {resetSuccessMsg ? (
                       <Alert color="success" style={{ marginTop: "13px" }}>
-                            {resetSuccessMsg} 
-                              <Link to="/login" style={{ textDecoration: 'none', color: 'inherit', cursor: 'pointer' }}>
-                                Go Back To Login  ?
-                              </Link>
+                        {resetSuccessMsg}
+                        <Link
+                          to="/login"
+                          style={{
+                            textDecoration: "none",
+                            color: "inherit",
+                            cursor: "pointer",
+                          }}
+                        >
+                          Go Back To Login ?
+                        </Link>
                       </Alert>
                     ) : null}
                     <Form
@@ -152,11 +176,17 @@ return (
                           onBlur={validation.handleBlur}
                           value={validation.values.newpassword || ""}
                           invalid={
-                            validation.touched.newpassword && validation.errors.newpassword ? true : false
+                            validation.touched.newpassword &&
+                            validation.errors.newpassword
+                              ? true
+                              : false
                           }
                         />
-                        {validation.touched.newpassword && validation.errors.newpassword ? (
-                          <FormFeedback type="invalid"><div>{validation.errors.newpassword}</div></FormFeedback>
+                        {validation.touched.newpassword &&
+                        validation.errors.newpassword ? (
+                          <FormFeedback type="invalid">
+                            <div>{validation.errors.newpassword}</div>
+                          </FormFeedback>
                         ) : null}
                       </div>
                       <div className="mb-3">
@@ -170,11 +200,17 @@ return (
                           onBlur={validation.handleBlur}
                           value={validation.values.confirmnewpassword || ""}
                           invalid={
-                            validation.touched.confirmnewpassword && validation.errors.confirmnewpassword ? true : false
+                            validation.touched.confirmnewpassword &&
+                            validation.errors.confirmnewpassword
+                              ? true
+                              : false
                           }
                         />
-                        {validation.touched.confirmnewpassword && validation.errors.confirmnewpassword ? (
-                          <FormFeedback type="invalid"><div>{validation.errors.confirmnewpassword}</div></FormFeedback>
+                        {validation.touched.confirmnewpassword &&
+                        validation.errors.confirmnewpassword ? (
+                          <FormFeedback type="invalid">
+                            <div>{validation.errors.confirmnewpassword}</div>
+                          </FormFeedback>
                         ) : null}
                       </div>
                       <Row className="mb-3">
@@ -196,8 +232,8 @@ return (
         </Container>
       </div>
     </React.Fragment>
-) };
- 
+  );
+};
 
 ResetPasswordPage.propTypes = {
   history: PropTypes.object,
