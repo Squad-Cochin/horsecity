@@ -427,6 +427,7 @@ static async removedQuotations  (quotId)  {
                quo.quotation_id,
                cu.id AS customer_id,
                cu.email AS customer_email,
+               cu.name AS customer_name,
                cu.user_name AS customer_user_name,
                cu.contact_no AS customer_contact_no,
                cu.id_proof_no AS customer_id_proof_no,
