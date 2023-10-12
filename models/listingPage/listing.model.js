@@ -120,12 +120,15 @@ module.exports = class listing {
         LEFT JOIN wishlist AS wl ON w.max_id = wl.id ${
           customer_id ? `AND wl.customer_id = ${customer_id}` : ""
         }
+        JOIN ${constants.tableName.service_providers} AS sp  ON vh.service_provider_id =  sp.id 
         WHERE 1=1
         ${gccType}
         ${tripTypeFilter}
         ${numberOfHorsesFilter}
         ${priceFilter}
         ${suppliersFilter} AND vh.deleted_at IS NULL AND vh.status = '${
+          constants.status.active
+        }' AND sp.deleted_at IS NULL AND sp.status = '${
           constants.status.active
         }'
         GROUP BY vh.id
