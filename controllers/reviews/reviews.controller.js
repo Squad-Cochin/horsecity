@@ -54,10 +54,9 @@ exports.addNewReview = async (req, res, next) =>
         ({
             code : 200,
             status : true,
-            message : constants.responseMessage.insert,
+            message : `Review added.`,
         });
     }
-
 };
 
 exports.updateStatus= async (req, res) =>
