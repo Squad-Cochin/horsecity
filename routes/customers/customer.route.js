@@ -31,7 +31,7 @@ module.exports = (app) =>
     checkInput.nameValidation,
     checkInput.emailValidation(constants.tableName.customers),
     checkInput.usernameValidation(constants.tableName.customers),
-    checkInput.passwordValidation,
+    checkInput.passwordValidation(`password`, `passwordnotpresent`, `passwordhavespaces`, `passwordinvalid`),
     checkInput.contactNumberValidation(constants.tableName.customers),
     // checkInput.dateOfBirthValidation,
     checkInput.idProofNumberValidation,
@@ -67,7 +67,7 @@ module.exports = (app) =>
     app.post(`${url.customer.POST_CUSTOMER_LOGIN_URL}`,
     validateHeaders.verifyToken,
     checkInput.usernameValidation(constants.tableName.customers),
-    checkInput.passwordValidation,
+    checkInput.passwordValidation(`password`, `passwordnotpresent`, `passwordhavespaces`, `passwordinvalid`),
     customerController.customerLogin);
 
     // Below route is for the Logout of the customer. This is for NEXTJS front end.
@@ -80,9 +80,9 @@ module.exports = (app) =>
     app.post(`${url.customer.CUSTOMER_PASSWORD_UPDATE}`,
     validateHeaders.verifyToken,
     isValidIdInTheParams(constants.tableName.customers),
-    checkInput.passwordValidation,
-    checkInput.newpassword,
-    checkInput.confirmnewpassword,
+    checkInput.passwordValidation(`password`, `passwordnotpresent`, `passwordhavespaces`, `passwordinvalid`),
+    checkInput.passwordValidation(`newpassword`, `newpasswordnotpresent`, `newpasswordhavespaces`, `newpasswordinvalid`),
+    checkInput.passwordValidation(`confirmnewpassword`, `confirmpasswordnotpresent`, `confirmpasswordhavespaces`, `confirmpasswordinvalid`),
     checkInput.passwordsimilarity,
     customerController.customerChangePassword);
 
@@ -95,7 +95,7 @@ module.exports = (app) =>
     checkInput.emailValidation(constants.tableName.customers),
     checkInput.usernameValidation(constants.tableName.customers),
     checkInput.contactNumberValidation(constants.tableName.customers),
-    checkInput.passwordValidation,
+    checkInput.passwordValidation(`password`, `passwordnotpresent`, `passwordhavespaces`, `passwordinvalid`),
     customerController.signup);
 
     // Below route is for fetching the logs (LOGIN, LOGOUT, Duration time) of the customer. This is for NEXTJS front end.

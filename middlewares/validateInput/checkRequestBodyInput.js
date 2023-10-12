@@ -499,51 +499,6 @@ exports.nameValidation = (req, res, next) =>
     }    
 };
 
-exports.idProofValidationWhileUpdate = async(req, res, next) =>
-{
-    if (!req.body.id_proof_no) 
-    {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.idproofnonotexists
-        });
-    }
-    else
-    {
-        let checkIdProofNumber = await commonfetching.dataOnConditionUpdate(constants.tableName.customers, `id_proof_no`, req.body.id_proof_no, req.params?.id);
-        if(checkIdProofNumber === `internalError`)
-        {
-            return res.status(200).json
-            ({
-                code : 500,
-                status : false,
-                message : constants.responseMessage.universalError 
-            });
-        }
-        
-        if(checkIdProofNumber === `valuenotavailable`)
-        {
-            return res.status(200).send
-            ({
-                code : 400,
-                status : false,
-                message : constants.responseMessage.idproofnoalreadypresent
-            });
-        }
-        if(checkIdProofNumber === `valuenotchanged`)
-        {
-            next();
-        }
-
-        if(checkIdProofNumber === `true`)
-        {
-            next();
-        }        
-    }    
-};
-
 exports.isValidDescription = (req, res, next) =>
 {
     if (!req.body.description) 
@@ -560,200 +515,6 @@ exports.isValidDescription = (req, res, next) =>
         next();
     }    
 };
-
-exports.passwordsimilarity = async (req, res, next) =>
-{
-    if (req.body.confirmnewpassword !== req.body.newpassword)
-    {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.passwordssimilarerror
-        });
-    }
-    else
-    {
-        if (req.body.password === req.body.newpassword)
-        {
-            return res.status(200).send
-            ({
-                code : 400,
-                status : false,
-                message : constants.responseMessage.newpasswordsameoldpassword
-            });
-        }
-        else if (req.body.confirmnewpassword === req.body.password)
-        {
-            return res.status(200).send
-            ({
-                code : 400,
-                status : false,
-                message : constants.responseMessage.confirmpasswordsameoldpassword
-            });
-        }
-        else
-        {
-            next();
-        }
-    }
-}
-
-exports.passwordValidation = async (req, res, next) =>
-{
-    let password = await req.body.password
-    if (!password) 
-    {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.passwordnotpresent
-        });
-    }
-    else if(hasOnlyNonSpaces(password) === true)
-    {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.passwordhavespaces
-        });
-    }
-    else
-    {
-        let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
-        con.query(selQuery, (err, result) =>
-        {
-            if (result)
-            {
-                const isValidPassword = (password) =>
-                {
-                    const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
-                    const regex = new RegExp(regexPattern);
-                    return regex.test(password); // Use the test() method to check if the password matches the regex pattern
-                };
-                if (isValidPassword(password))
-                {
-                    next();
-                }
-                else
-                {
-                    return res.status(200).json
-                    ({
-                        success: false,
-                        code: 400,
-                        message: constants.responseMessage.passwordinvalid
-                    });
-                }
-            }    
-        });
-    };
-};
-
-exports.newpassword = async (req, res, next) => 
-{
-    const password = await req.body.newpassword
-    if (!password) 
-    {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.newpasswordnotpresent
-        });
-    }
-    else if(hasOnlyNonSpaces(password) === true)
-    {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.newpasswordhavespaces
-        });
-    }
-    else
-    {
-        let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
-        con.query(selQuery, (err, result) =>
-        {
-            if (result)
-            {
-                const isValidPassword = (password) =>
-                {
-                    const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
-                    const regex = new RegExp(regexPattern);
-                    return regex.test(password); // Use the test() method to check if the password matches the regex pattern
-                };
-                if (isValidPassword(password))
-                {
-                    next();
-                }
-                else
-                {
-                    return res.status(200).json
-                    ({
-                        success: false,
-                        code: 400,
-                        message : constants.responseMessage.newpasswordinvalid
-                    });
-                }
-            }    
-        });
-    };    
-}
-
-exports.confirmnewpassword = async (req, res, next) =>
-{
-    const password = await req.body.confirmnewpassword
-    if (!password) 
-    {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.confirmpasswordnotpresent
-        });
-    }
-    else if(hasOnlyNonSpaces(password) === true)
-    {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.confirmpasswordhavespaces
-        });
-    }
-    else
-    {
-        let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
-        con.query(selQuery, (err, result) =>
-        {
-            if (result)
-            {
-                const isValidPassword = (password) =>
-                {
-                    const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
-                    const regex = new RegExp(regexPattern);
-                    return regex.test(password); // Use the test() method to check if the password matches the regex pattern
-                };
-                if (isValidPassword(password))
-                {
-                    next();
-                }
-                else
-                {
-                    return res.status(200).json
-                    ({
-                        success: false,
-                        code: 400,
-                        message : constants.responseMessage.confirmpasswordinvalid
-                    });
-                }
-            }    
-        });
-    };
-}
 
 exports.getAllDataBody = async (req, res, next) =>
 {
@@ -875,7 +636,6 @@ exports.checkCustomerEnquiryBody = async (req, res, next) =>
 
 exports.isIdEntered = (feildName, tableName, MessageFeild) => async (req, res, next) =>
 {
-    console.log(req.body?.[feildName]);
     if (!req.body?.[feildName]) 
     {
         return res.status(200).send
@@ -2278,3 +2038,94 @@ exports.passwordandconfirmpasswordsimilarity = async (req, res, next) =>
       next();
     }
 }
+
+exports.passwordsimilarity = async (req, res, next) =>
+{
+    if (req.body.confirmnewpassword !== req.body.newpassword)
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : constants.responseMessage.passwordssimilarerror
+        });
+    }
+    else
+    {
+        if (req.body.password === req.body.newpassword)
+        {
+            return res.status(200).send
+            ({
+                code : 400,
+                status : false,
+                message : constants.responseMessage.newpasswordsameoldpassword
+            });
+        }
+        else if (req.body.confirmnewpassword === req.body.password)
+        {
+            return res.status(200).send
+            ({
+                code : 400,
+                status : false,
+                message : constants.responseMessage.confirmpasswordsameoldpassword
+            });
+        }
+        else
+        {
+            next();
+        }
+    }
+}
+
+exports.passwordValidation = (feildName, message1, message2, message3) => async (req, res, next) =>
+{
+    let password = await req.body[feildName]
+    if (!password) 
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : constants.responseMessage[message1]
+        });
+    }
+    else if(hasOnlyNonSpaces(password) === true)
+    {
+        return res.status(200).send
+        ({
+            code : 400,
+            status : false,
+            message : constants.responseMessage[message2]
+        });
+    }
+    else
+    {
+        let selQuery = `SELECT * FROM password_policies WHERE name = 'regex1' `;
+        con.query(selQuery, (err, result) =>
+        {
+            if (result)
+            {
+                const isValidPassword = (password) =>
+                {
+                    const regexPattern = result[0].value.replace(/^\/|\/$/g, ''); // Remove leading and trailing slashes
+                    const regex = new RegExp(regexPattern);
+                    return regex.test(password); // Use the test() method to check if the password matches the regex pattern
+                };
+                if (isValidPassword(password))
+                {
+                    next();
+                }
+                else
+                {
+                    return res.status(200).json
+                    ({
+                        success: false,
+                        code: 400,
+                        message: constants.responseMessage[message3]
+                    });
+                }
+            }    
+        });
+    };
+
+};

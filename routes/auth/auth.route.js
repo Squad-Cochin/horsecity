@@ -29,9 +29,9 @@ module.exports = function(app)
     app.post(`${url.auth.POST_SERVICE_PROVIDER_CHANGE_PASSWORD}`,
     validator.verifyToken, 
     checkInput.usernameValidation(constants.tableName.service_providers),
-    checkInput.passwordValidation,
-    checkInput.newpassword,
-    checkInput.confirmnewpassword,
+    checkInput.passwordValidation(`password`, `passwordnotpresent`, `passwordhavespaces`, `passwordinvalid`),
+    checkInput.passwordValidation(`newpassword`, `newpasswordnotpresent`, `newpasswordhavespaces`, `newpasswordinvalid`),
+    checkInput.passwordValidation(`confirmnewpassword`, `confirmpasswordnotpresent`, `confirmpasswordhavespaces`, `confirmpasswordinvalid`),
     checkInput.passwordsimilarity, 
     authcontroller.serviceProviderChangePassword); 
     
@@ -60,9 +60,9 @@ module.exports = function(app)
     
     /**The below url for updating password   */
     app.post(`${url.auth.POST_REDIRECT_PAGE_UPDATE_PASSWORD}`,
-    validator.verifyToken, 
-    checkInput.newpassword,
-    checkInput.confirmnewpassword,
+    validator.verifyToken,
+    checkInput.passwordValidation(`newpassword`, `newpasswordnotpresent`, `newpasswordhavespaces`, `newpasswordinvalid`),
+    checkInput.passwordValidation(`confirmnewpassword`, `confirmpasswordnotpresent`, `confirmpasswordhavespaces`, `confirmpasswordinvalid`),
     checkInput.passwordandconfirmpasswordsimilarity,
     authcontroller.resetPasswordForForgotPassword);    
 
