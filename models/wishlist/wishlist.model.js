@@ -93,7 +93,10 @@ module.exports = class wishlist
                     FROM wishlist w 
                     JOIN vehicles AS vh ON w.vehicle_id = vh.id
                     LEFT JOIN vehicles_images vimg ON w.vehicle_id = vimg.vehicle_id   AND vimg.status = "${constants.status.active}"
-                    WHERE w.customer_id = '${customer_id}' AND w.deleted_at IS NULL
+                    JOIN ${constants.tableName.service_providers} AS sp  ON vh.service_provider_id =  sp.id 
+                    WHERE w.customer_id = '${customer_id}' AND w.deleted_at IS NULL AND sp.deleted_at IS NULL AND sp.status = '${
+                        constants.status.active
+                      }'
                     GROUP BY vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse, vh.height
                     LIMIT ${+limit} OFFSET ${+offset};;        
                 `;
