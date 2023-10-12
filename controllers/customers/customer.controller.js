@@ -331,6 +331,16 @@ exports.customerLogin = async (req, res) =>
             message : constants.responseMessage.passwordincorrect,
         });
     }
+    // If wrong password is entered then, this below response will be displayed
+    else if(customers === 'customerinactive')
+    {
+        return res.status(200).send
+        ({
+            status : false,
+            code : 400,
+            message : `The customer is currently inactive.`,
+        });
+    }
     else
     {
         return res.status(200).send

@@ -263,11 +263,18 @@ module.exports = class customers
                             const passwordHashed = await commonoperation.changePasswordToSQLHashing(password);
                             if(customerData[0].password === passwordHashed)
                             {
-                                let insQuery = `INSERT INTO ${constants.tableName.customer_logs}(customer_id, ip_address, device_information, location, login_time) VALUES(${customerData[0].id}, '192.168.200.130', 'Test purpose currently', 'Kerela', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
-                                con.query(insQuery, (err, result1) =>
+                                if(customerData[0].status === constants.status.inactive)
                                 {
-                                    result1.affectedRows > 0 ?  resolve(data) : resolve(`err`);
-                                });
+                                    resolve('customerinactive')
+                                }
+                                else
+                                {
+                                    let insQuery = `INSERT INTO ${constants.tableName.customer_logs}(customer_id, ip_address, device_information, location, login_time) VALUES(${customerData[0].id}, '192.168.200.130', 'Test purpose currently', 'Kerela', '${time.getFormattedUTCTime(constants.timeOffSet.UAE)}')`;
+                                    con.query(insQuery, (err, result1) =>
+                                    {
+                                        result1.affectedRows > 0 ?  resolve(data) : resolve(`err`);
+                                    });
+                                }
                             }
                             else
                             {
