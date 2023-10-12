@@ -15,6 +15,7 @@ import { useRouter } from 'next/router';
 
 // Function for showing input boxes of booking details
 const LocationSearch = (props) => {
+
   const [filteredNoOfHorse, setFilteredNoOfHorse] = useState([]);
   const [pickupCountry, setPickupCountry] = useState("");
   const [pickupLocation, setPickupLocation] = useState("");
@@ -31,7 +32,7 @@ const LocationSearch = (props) => {
   const router = useRouter();
   useEffect(() => {
     initialLoad();
-  },[no_of_horse,props.noOfHorse])
+  },[props.noOfHorse])
 
   // Function for work at the begining of the page loading
   async function initialLoad(){
@@ -40,17 +41,18 @@ const LocationSearch = (props) => {
     if (Object.keys(loginData).length !== 0) {
       setLogin(true);
     }
+    console.log("noofhorse",bookings?.number_of_horses);
     setPickupLocation(bookings?.from_location);
     setDropLocation(bookings?.to_location);
     setTripType(bookings?.trip_type[0]); 
     setNoOfHorse(bookings?.number_of_horses);
     setPickupDate(bookings?.departDate);
     let array = [];
-    for(let i = 1 ;i<=parseInt(noOfHorse);i++){
-      array.push(i)
-    }
+
+      for(let i = 1 ;i<=parseInt(noOfHorse === '' ? props.noOfHorse : noOfHorse );i++){
+        array.push(i)
+      }
    const filterData = array.filter((value) => parseInt(value, 10) <= props.noOfHorse)
-  
    setFilteredNoOfHorse(filterData);
   }
 
@@ -112,9 +114,7 @@ const LocationSearch = (props) => {
       description : `${description}`,
     };
       if(customer_id){
-        console.log("formData",formData)
         let packageDetails = await addbooking(formData,customer_id);
-        console.log("ress",packageDetails)
         if(packageDetails?.code == 200){
           toast.success(packageDetails?.message, {
             position: 'top-right', // Position of the toast on the screen

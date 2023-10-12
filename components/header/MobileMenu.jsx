@@ -151,6 +151,23 @@ const MobileMenu = () => {
             >
               Help Center
             </MenuItem>
+            { Object.keys(login)?.length != 0 ? 
+              <MenuItem
+                component={
+                  <Link
+                    href="/dashboard/db-dashboard"
+                    className={
+                      router.pathname === "/dashboard/db-dashboard"
+                      ? "menu-active-link"
+                      : ""
+                    }
+                  />
+                }
+              >
+                Dashbord
+              </MenuItem>
+              :null 
+            }
             {/* End Contact  Menu */}
           </Menu>
         </Sidebar>
@@ -176,8 +193,10 @@ const MobileMenu = () => {
           </Link>
         </div>
         : null }
+        
       </div>
       {/* End pro-footer */}
+ 
     </>
   );
 };

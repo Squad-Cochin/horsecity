@@ -20,7 +20,7 @@ const MainMenu = ({ style = "" }) => {
   const router = useRouter();
   const [ login, setLogin ] = useState({});
   useEffect(() => {
-    let loginData = JSON.parse(localStorage.getItem("loginData"))
+    let loginData = JSON.parse((localStorage.getItem("loginData")) ?? "{}")
     if(loginData){
       setLogin(loginData);
     }
