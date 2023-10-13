@@ -112,12 +112,7 @@ module.exports = class listing {
         LEFT JOIN vehicles_images AS vimg ON vh.id = vimg.vehicle_id AND vimg.status = "${
           constants.status.active
         }"
-        LEFT JOIN (
-            SELECT MAX(id) AS max_id,vehicle_id,  created_at, deleted_at
-            FROM wishlist
-            GROUP BY vehicle_id 
-        ) AS w ON vh.id = w.vehicle_id 
-        LEFT JOIN wishlist AS wl ON w.max_id = wl.id ${
+        LEFT JOIN wishlist AS wl ON vh.id = wl.vehicle_id AND wl.deleted_at IS NULL ${
           customer_id ? `AND wl.customer_id = ${customer_id}` : ""
         }
         JOIN ${constants.tableName.service_providers} AS sp  ON vh.service_provider_id =  sp.id 
@@ -135,6 +130,7 @@ module.exports = class listing {
         LIMIT ${+limit} OFFSET ${+offset};
             `;
         con.query(selQuery, (err, data) => {
+          console.log(err);
           if (!err) {
             for (let i = 0; i < data.length; i++) {
               if (data[i].images) {
@@ -149,10 +145,8 @@ module.exports = class listing {
               } else {
                 data[i].images = [];
               }
-
               if (
-                (data[i].created_at && data[i].deleted_at) ||
-                (!data[i].created_at && !data[i].deleted_at)
+                data[i]?.created_at === null && data[i]?.deleted_at === null
               ) {
                 data[i].wishlist = false;
               } else if (data[i].created_at) {
