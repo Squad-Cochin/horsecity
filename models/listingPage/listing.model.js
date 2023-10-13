@@ -103,7 +103,7 @@ module.exports = class listing {
         } else if (sort === "high") {
           sorted = "ORDER BY vh.price DESC";
         }
-
+        
         // final SQL query
         let selQuery = `
                 SELECT vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse, vh.height,
@@ -127,10 +127,11 @@ module.exports = class listing {
           constants.status.active
         }'
         GROUP BY vh.id
+        ${sorted}
         LIMIT ${+limit} OFFSET ${+offset};
             `;
         con.query(selQuery, (err, data) => {
-          console.log(err);
+
           if (!err) {
             for (let i = 0; i < data.length; i++) {
               if (data[i].images) {

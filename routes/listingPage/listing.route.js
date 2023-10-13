@@ -5,7 +5,7 @@ const url = require(`../../utils/url_helper`);
 module.exports = function(app)
 {
     // /**For geting all service provider basis of from date to date */
-    app.post(`${url.listing.POST_GET_ALL_SERVICE_PROIVDERS}`,
+    app.post(`${url.listing.POST_LISTING_SEARCH}`,
     verifyBody.verifyToken,
     controller.listingPageData); 
 

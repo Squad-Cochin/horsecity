@@ -143,7 +143,7 @@ const invoices =
 
 const listing =
 {
-    POST_GET_ALL_SERVICE_PROIVDERS : `/listing/search`,
+    POST_LISTING_SEARCH : `/listing/search`,
     POST_GET_ALL_SERVICE_PROIVDERS_NAMES : `/getAll/serviceproviders`
 }
 
