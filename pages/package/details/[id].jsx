@@ -53,7 +53,8 @@ const TourSingleV1Dynamic = () => {
       setUrl(false);
     }
     let packageDetails = await DetailsDataApi(id);
-    setReviewDetails("reviews" in packageDetails? packageDetails?.reviews : {})
+
+    setReviewDetails( packageDetails ? ("reviews" in packageDetails? packageDetails?.reviews : {}) : {})
     setVehicle(packageDetails?.vehicle[0])
     setVehicleImages(packageDetails?.images);
     setNoOfHorse(packageDetails?.vehicle[0]?.no_of_horses)

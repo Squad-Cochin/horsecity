@@ -20,7 +20,7 @@ export default async function DetailsDataApi(id) {
     return response?.data?.data
   }
   catch{
-          
+    return {}     
   }
 }
 
