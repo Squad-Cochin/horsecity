@@ -39,7 +39,7 @@ const MainFilterSearchBox = () => {
       "number_of_horses" : number_of_horses
     }
       /**For controlling home page err filter  color */
-    if(trip == "" && trip_type?.length == 0 && number_of_horses === 0){
+    if(trip == "" || trip_type?.length == 0 || number_of_horses === 0){
         dispatch(without_filterData(true));
     }
     localStorage.setItem('searchObject', JSON.stringify(searchObject));
