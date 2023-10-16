@@ -14,7 +14,8 @@ const initialState = {
   suppliers : [],
   sort : "",
   page : 1,
-  limit : 3 
+  limit : 3 ,
+  errColorActive : false
 };
 
 // Create slice function
@@ -46,9 +47,12 @@ export const listingFilter = createSlice({
     filter_limit: (state, { payload }) => {
       state.limit = payload;
     },
+    without_filterData: (state, { payload }) => {
+      state.errColorActive = payload;
+    },
 
   },
 });
 
-export const { filter_tripType, filter_number_of_horses, filter_price_from, filter_price_to, filter_suppliers, filter_sort, filter_page, filter_limit } = listingFilter.actions;
+export const { filter_tripType, filter_number_of_horses, filter_price_from, filter_price_to, filter_suppliers, filter_sort, filter_page, filter_limit,without_filterData } = listingFilter.actions;
 export default listingFilter.reducer;

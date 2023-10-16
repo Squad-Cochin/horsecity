@@ -10,7 +10,7 @@ import DateSearch from "../DateSearch";
 import FlyingFromLocation from "./FlyingFromLocation";
 import FlyingToLocation from "./FlyingToLocation";
 import { useEffect } from "react";
-import { filter_tripType, filter_number_of_horses, filter_price_from, filter_price_to, filter_suppliers, filter_sort, filter_page } from "../../../features/listingFilter/listingFilter";
+import { filter_tripType, filter_number_of_horses, filter_price_from, filter_price_to, filter_suppliers, filter_sort, filter_page,without_filterData } from "../../../features/listingFilter/listingFilter";
 
 // Function for main filter searchbox
 const MainFilterSearchBox = () => {
@@ -38,8 +38,13 @@ const MainFilterSearchBox = () => {
       "trip_type" : trip_type,
       "number_of_horses" : number_of_horses
     }
+      /**For controlling home page err filter  color */
+    if(trip == "" && trip_type?.length == 0 && number_of_horses === 0){
+        dispatch(without_filterData(true));
+    }
     localStorage.setItem('searchObject', JSON.stringify(searchObject));
     if(number_of_horses && number_of_horses != "" && number_of_horses != 0 && trip_type && trip_type != [] && trip && trip != ""){
+      dispatch(without_filterData(false));
       Router.push("/package/listing")
     }
   }

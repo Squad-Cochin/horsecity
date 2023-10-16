@@ -5,15 +5,17 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { useEffect, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useSelector,useDispatch } from "react-redux";
 import { addTrip, addTripType, addNumberOfHorses } from "../../../features/search/initalSearch";
-
+import { without_filterData } from "../../../features/listingFilter/listingFilter";
 // Function for filter
 const FilterSelect = () => {
   const dispatch = useDispatch();
   const [ways, setWays] = useState("");
+  const [active, setActive] = useState(false);
   const [tripTypeValue, setTripTypeValue] = useState("");
   const [noOfHorsesValue, setNoOfHorsesValue] = useState("")
+  const { errColorActive } = useSelector((state) => state.listingFilter) || {};
   useEffect(() => {
     let searchObject = {
       "from_location" : "",
@@ -26,6 +28,8 @@ const FilterSelect = () => {
       "number_of_horses" : ""
     }
     localStorage.setItem('searchObject', JSON.stringify(searchObject));
+    // /**For controlling home page err filter  color */
+    // dispatch(without_filterData(false));
   })
 
   // Function for make change in number of trips
@@ -99,9 +103,9 @@ const FilterSelect = () => {
               data-bs-auto-close="true"
               data-bs-offset="0,0"
             >
-              {option.value == ""?
-                <span className="js-dropdown-title" style={{ color: 'Red' }}>{ option.value == "" ? option.title : option.value}</span>
-                : <span className="js-dropdown-title">{ option.value == "" ? option.title : option.value}</span>
+              {!active ?
+                <span className="js-dropdown-title" style={{ color: errColorActive ? 'red' : '' }}>{ option.value == "" ? option.title : option.value}</span>
+                : <span className="js-dropdown-title" style={{ color: option.value === "" ? 'red' : '' }}>{ option.value == "" ? option.title : option.value}</span>
               } 
 
               <i className="icon icon-chevron-sm-down text-7 ml-10" />
@@ -115,9 +119,9 @@ const FilterSelect = () => {
                       className={`${
                         item.label === option.value ? "text-blue-1 " : ""
                       }d-block js-dropdown-link`}
-                      onClick={() => {option.onChange(item.label); dispatch(option.reduxFunction(item.value)) }}
+                      onClick={() => {option.onChange(item.label); dispatch(option.reduxFunction(item.value)) ;setActive(true)}}
                     >
-                      {item.label}
+                      {item.label} 
                     </div>
                   </div>
                 ))}
