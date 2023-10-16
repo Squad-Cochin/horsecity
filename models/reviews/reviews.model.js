@@ -37,14 +37,7 @@ module.exports = class reviews
             {
                 let totalCount = `SELECT count(t.id) FROM ${constants.tableName.reviews} t`;
                 let count = await commonoperation.queryAsync(totalCount);
-                if(count)
-                {
-                    return({ totalCount: count[0]['count(t.id)'], reviews: result });
-                }
-                else
-                {
-                    return('err'); 
-                }
+                return count ? { totalCount: count[0]['count(t.id)'], reviews: result } :  'err'
             }
             else
             {
@@ -85,15 +78,7 @@ module.exports = class reviews
                                         WHERE b.service_provider_id = ${Id}
                                     `;
                 let count = await commonoperation.queryAsync(totalCount);
-                if(count)
-                {
-                    return({ totalCount: count[0]['count(t.id)'], reviews: result });
-            
-                }
-                else
-                {
-                    return('err'); 
-                }
+                return count ? { totalCount: count[0]['count(t.id)'], reviews: result } : 'err'
             }
             else
             {

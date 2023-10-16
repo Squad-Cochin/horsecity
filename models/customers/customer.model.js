@@ -617,34 +617,39 @@ module.exports = class customers
         {
             return await new Promise(async (resolve, reject) =>
             {
-                let query = ` SELECT
-                    b.id,
-                    s.name,
-                    b.pickup_location,
-                    b.drop_location,
-                    b.booking_status,
-                    b.final_amount,
-                    CASE
-                        WHEN pr_check.status = 'PAID' THEN 0
-                        ELSE latest_payment.remaining_amount
-                    END AS remaining_amount
-                FROM service_providers s
-                INNER JOIN bookings b ON b.service_provider_id = s.id
-                LEFT JOIN (
-                    SELECT
-                        pr.invoice_id,
-                        pr.remaining_amount
-                    FROM payment_records pr
-                    WHERE pr.id IN (
-                        SELECT MAX(pr_inner.id)
-                        FROM payment_records pr_inner
-                        WHERE pr_inner.status <> 'PAID'
-                        GROUP BY pr_inner.invoice_id
-                    )
-                ) AS latest_payment ON latest_payment.invoice_id = b.inv_id
-                LEFT JOIN payment_records pr_check ON pr_check.invoice_id = b.inv_id AND pr_check.status = 'PAID'
-                WHERE b.customer_id = ${Id}
-                    AND b.booking_status = 'CONFIRM' `;
+                let query = `   SELECT
+                                b.id,
+                                s.name,
+                                b.pickup_location,
+                                b.drop_location,
+                                b.booking_status,
+                                b.final_amount,
+                                CASE
+                                    WHEN pr_check.status = '${constants.amount_status.paid}' THEN 0
+                                    ELSE latest_payment.remaining_amount
+                                END AS remaining_amount
+                                FROM ${constants.tableName.service_providers} s
+                                INNER JOIN ${constants.tableName.bookings} b 
+                                ON b.service_provider_id = s.id
+                                LEFT JOIN (
+                                    SELECT
+                                        pr.invoice_id,
+                                        pr.remaining_amount
+                                    FROM ${constants.tableName.payment_records} pr
+                                    WHERE pr.id IN (
+                                        SELECT MAX(pr_inner.id)
+                                        FROM ${constants.tableName.payment_records} pr_inner
+                                        WHERE pr_inner.status <> '${constants.amount_status.paid}'
+                                        GROUP BY pr_inner.invoice_id
+                                    )
+                                ) AS latest_payment 
+                                ON latest_payment.invoice_id = b.inv_id
+                                LEFT JOIN ${constants.tableName.payment_records} pr_check 
+                                ON pr_check.invoice_id = b.inv_id 
+                                AND pr_check.status = '${constants.amount_status.paid}'
+                                WHERE b.customer_id = ${Id}
+                                AND b.booking_status = 'CONFIRM' 
+                            `;
                     
                 let result = await commonoperation.queryAsync(query);
                 result == 'err' ? resolve('err') : resolve(result);
