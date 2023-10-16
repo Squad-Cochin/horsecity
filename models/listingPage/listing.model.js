@@ -160,8 +160,16 @@ module.exports = class listing {
             const totalCountQuery = `SELECT count(*) AS total_count
             FROM ${constants.tableName.vehicles} vh
             JOIN ${constants.tableName.service_providers} AS sp ON vh.service_provider_id = sp.id
-            WHERE vh.deleted_at IS NULL AND vh.status = '${constants.status.active}' 
-            AND sp.deleted_at IS NULL AND sp.status = '${constants.status.active}'
+            WHERE 1=1
+            ${gccType}
+            ${tripTypeFilter}
+            ${numberOfHorsesFilter}
+            ${priceFilter}
+            ${suppliersFilter} AND vh.deleted_at IS NULL AND vh.status = '${
+              constants.status.active
+            }' AND sp.deleted_at IS NULL AND sp.status = '${
+              constants.status.active
+            }'
          `;
             con.query(totalCountQuery, (err, result) => {
               if (!err) {
