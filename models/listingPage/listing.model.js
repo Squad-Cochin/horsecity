@@ -103,7 +103,7 @@ module.exports = class listing {
         } else if (sort === "high") {
           sorted = "ORDER BY vh.price DESC";
         }
-        
+
         // final SQL query
         let selQuery = `
                 SELECT vh.id, vh.length, vh.breadth, vh.make, vh.model, vh.price, vh.no_of_horse, vh.height,
@@ -115,7 +115,9 @@ module.exports = class listing {
         LEFT JOIN wishlist AS wl ON vh.id = wl.vehicle_id AND wl.deleted_at IS NULL ${
           customer_id ? `AND wl.customer_id = ${customer_id}` : ""
         }
-        JOIN ${constants.tableName.service_providers} AS sp  ON vh.service_provider_id =  sp.id 
+        JOIN ${
+          constants.tableName.service_providers
+        } AS sp  ON vh.service_provider_id =  sp.id 
         WHERE 1=1
         ${gccType}
         ${tripTypeFilter}
@@ -131,7 +133,6 @@ module.exports = class listing {
         LIMIT ${+limit} OFFSET ${+offset};
             `;
         con.query(selQuery, (err, data) => {
-
           if (!err) {
             for (let i = 0; i < data.length; i++) {
               if (data[i].images) {
@@ -147,7 +148,8 @@ module.exports = class listing {
                 data[i].images = [];
               }
               if (
-                data[i]?.created_at === null && data[i]?.deleted_at === null
+                data[i]?.created_at === null &&
+                data[i]?.deleted_at === null
               ) {
                 data[i].wishlist = false;
               } else if (data[i].created_at) {
@@ -155,25 +157,19 @@ module.exports = class listing {
               }
             }
 
-            // const totalCountQuery = `SELECT count(*) AS total_count
-            // FROM ${constants.tableName.vehicles} vh
-            // WHERE 1=1
-            // ${gccType}
-            // ${tripTypeFilter}
-            // ${numberOfHorsesFilter}
-            // ${priceFilter}
-            // ${suppliersFilter}
-            // AND vh.deleted_at IS NULL
-            // AND vh.status = '${constants.status.active}'
-            // LIMIT ${+limit} OFFSET ${+offset}`;
-            // con.query(totalCountQuery,(err,result)=>{
+            const totalCountQuery = `SELECT count(*) AS total_count
+            FROM ${constants.tableName.vehicles} vh
+            JOIN ${constants.tableName.service_providers} AS sp ON vh.service_provider_id = sp.id
+            WHERE vh.deleted_at IS NULL AND vh.status = '${constants.status.active}' 
+            AND sp.deleted_at IS NULL AND sp.status = '${constants.status.active}'
+         `;
+            con.query(totalCountQuery, (err, result) => {
+              if (!err) {
+                const count = result[0]?.total_count;
 
-            //     if(!err){
-            //         const count = result[0]
-
-            resolve({ totalCount: data?.length, listing_data: data });
-            //     }
-            // })
+                resolve({ totalCount: count, listing_data: data });
+              }
+            });
           } else {
             resolve(false);
           }
