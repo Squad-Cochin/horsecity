@@ -23,7 +23,24 @@ module.exports = class authentication
         {
             try
             {
-                let selQuery = `SELECT s.id, s.name, s.email, s.role_Id, s.password, r.name AS role_name, s.user_name, s.contact_person, s.contact_no, s.contact_address, s.licence_no, s.licence_image, s.expiry_at, s.status  FROM service_providers s, roles r WHERE s.user_name = '${username}' AND s.role_Id = r.id`
+                let selQuery = `SELECT s.id, 
+                                s.name, 
+                                s.email, 
+                                s.role_Id, 
+                                s.password, 
+                                r.name AS role_name, 
+                                s.user_name, 
+                                s.contact_person, 
+                                s.contact_no, 
+                                s.contact_address, 
+                                s.licence_no, 
+                                s.licence_image, 
+                                s.expiry_at, 
+                                s.status  
+                                FROM ${constants.tableName.service_providers} s, 
+                                ${constants.tableName.roles} r 
+                                WHERE s.user_name = '${username}' 
+                                AND s.role_Id = r.id`
                 con.query(selQuery, async(err, userData) =>
                 {
                     if (userData.length === 0) 
@@ -49,11 +66,13 @@ module.exports = class authentication
                                 }
                                 else
                                 { 
-                                    let selQuery = `SELECT md.name AS module_name ,md.id AS module_id 
-                                    FROM ${constants.tableName.permissions} AS pm
-                                    JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
-                                    JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
-                                    WHERE pm.role_id = '${userData[0].role_Id}' `;
+                                    let selQuery = `SELECT 
+                                                    md.name AS module_name,
+                                                    md.id AS module_id 
+                                                    FROM ${constants.tableName.permissions} AS pm
+                                                    JOIN ${constants.tableName.modules} md ON pm.module_id  = md.id
+                                                    JOIN ${constants.tableName.roles} rl ON pm.role_id = rl.id
+                                                    WHERE pm.role_id = '${userData[0].role_Id}' `;
                                     con.query(selQuery, async (err, data) =>
                                     {
                                         const resObj = [{

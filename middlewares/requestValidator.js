@@ -685,54 +685,91 @@ exports.VerifyRoleId = async (req, res, next) => {
   }
 };
 
-exports.nameAvailable = async (req, res, next) => {
+exports.nameAvailable = async (req, res, next) =>
+{
   const { name } = req.body;
   const method = req.method;
-  if (!name) {
-    return res.status(200).send({
+  if (!name)
+  {
+    return res.status(200).send
+    ({
       code: 400,
       success: false,
       message: defaultjs.responseMessage.required_name,
     });
-  } else {
-    if (method == "POST") {
-      try {
-        let selQuery = `SELECT * FROM ${constants.tableName.service_providers} sp WHERE sp.name = '${name}' 
-                                AND sp.deleted_at IS NULL`;
-        con.query(selQuery, (err, result) => {
-          if (result.length != 0) {
-            return res.status(200).send({
+  }
+  else
+  {
+    if (method === "POST")
+    {
+      try 
+      {
+        let selQuery = `  SELECT * 
+                          FROM ${constants.tableName.service_providers} sp 
+                          WHERE sp.name = '${name}'
+                          AND sp.deleted_at IS NULL`;
+        con.query(selQuery, (err, result) => 
+        {
+          if (result.length != 0) 
+          {
+            return res.status(200).send
+            ({
               code: 400,
               success: false,
               message: constants.responseMessage.namealreadyexists,
             });
-          } else {
+          } 
+          else 
+          {
             next();
           }
         });
-      } catch (err) {
-        console.log(
-          "Error while checking service provider  name on the database"
-        );
+      } 
+      catch (err) 
+      {
+        console.log("Error while checking service provider  name on the database");
       }
-    } else if (method == "PUT") {
+    }
+    else if (method === "PUT") 
+    {
       let id = req.params.id;
-      let selQuery = `SELECT name FROM ${constants.tableName.service_providers} sp WHERE sp.id = '${id}'
-            AND sp.deleted_at IS NULL`;
-      con.query(selQuery, async (err, result) => {
-        if (result[0]?.name == name) {
+      let selQuery = `SELECT 
+                      sp.name 
+                      FROM ${constants.tableName.service_providers} sp 
+                      WHERE sp.id = '${id}'
+                      AND sp.deleted_at IS NULL`;
+      con.query(selQuery, async (err, result) => 
+      {
+        if (result[0]?.name === name) 
+        {
           next();
-        } else {
-          let selQuery = `SELECT * FROM ${constants.tableName.service_providers} sp  WHERE sp.name = '${name}'
-                        AND sp.deleted_at IS NULL`;
-          con.query(selQuery, async (err, result) => {
-            if (result.length != 0) {
-              return res.status(200).send({
-                code: 400,
-                success: false,
-                message: constants.responseMessage.namealreadyexists,
-              });
-            } else {
+        } 
+        else 
+        {
+          let selQuery = `SELECT * 
+                          FROM ${constants.tableName.service_providers} sp  
+                          WHERE sp.name = '${name}'
+                          AND sp.deleted_at IS NULL`;
+          con.query(selQuery, async (err, result1) => 
+          {
+            if (result1.length != 0) 
+            {
+              if(result1[0]?.name === name)
+              {
+                return res.status(200).send
+                ({
+                  code: 400,
+                  success: false,
+                  message: constants.responseMessage.namealreadyexists,
+                });
+              }
+              else
+              {
+                next(); 
+              }
+            } 
+            else 
+            {
               next();
             }
           });
@@ -820,7 +857,7 @@ exports.verifyTaxationBody = async (req, res, next) => {
     let selQuery = `SELECT name FROM ${constants.tableName.taxations} tx WHERE tx.id = '${id}'
         AND tx.deleted_at IS NULL`;
     con.query(selQuery, async (err, result) => {
-      if (result[0]?.name == name) {
+      if (result[0]?.name === name) {
         next();
       } else {
         let selQuery = `SELECT * FROM ${constants.tableName.taxations} tx  WHERE tx.name = '${name}'
@@ -1001,7 +1038,6 @@ exports.verifyQuotationFields = async (req, res, next) => {
       message: "Please select vehicle.",
     });
   } else if (!driver_id) {
-
     return res.status(200).send({
       code: 400,
       success: false,
