@@ -42,8 +42,11 @@ export const initialSearch = createSlice({
     addNumberOfHorses: (state, { payload }) => {
         state.number_of_horses = payload;
     },
+    clearHomePageFilter: (state)=>{
+      Object.assign(state, initialState);
+    }
   },
 });
 
-export const { addFromLocation, addToLocation, addDepart, addReturn, addTrip, addTripType, addNumberOfHorses } = initialSearch.actions;
+export const { addFromLocation, addToLocation, addDepart, addReturn, addTrip, addTripType, addNumberOfHorses ,clearHomePageFilter} = initialSearch.actions;
 export default initialSearch.reducer;

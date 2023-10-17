@@ -7,7 +7,7 @@
 import { useEffect, useState } from "react";
 import { useSelector,useDispatch } from "react-redux";
 import { addTrip, addTripType, addNumberOfHorses } from "../../../features/search/initalSearch";
-import { without_filterData } from "../../../features/listingFilter/listingFilter";
+import { clearHomePageFilter } from "../../../features/search/initalSearch";
 // Function for filter
 const FilterSelect = () => {
   const dispatch = useDispatch();
@@ -27,7 +27,8 @@ const FilterSelect = () => {
       "number_of_horses" : ""
     }
     localStorage.setItem('searchObject', JSON.stringify(searchObject));
-  })
+    dispatch(clearHomePageFilter());
+  },[])
 
   // Function for make change in number of trips
   const handleWaysChange = (value) => {
