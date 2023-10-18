@@ -50,14 +50,14 @@ const Pagination = () => {
   }
 
   // Function for style page numbers
-  const renderPage = (pageNumber, isActive = false) => {
+  const renderPage = (symbol, pageNumber, isActive = false) => {
     const className = `size-40 flex-center rounded-full cursor-pointer ${
       isActive ? "bg-dark-1 text-white" : ""
     }`;
     return (
-      <div key={pageNumber} className="col-auto">
-        <div className={className} onClick={() => handlePageClick(pageNumber)}>
-          {pageNumber}
+      <div key={symbol} className="col-auto">
+        <div className={className} onClick={() => handlePageClick(pageNumber)} >
+          {symbol}
         </div>
       </div>
     );
@@ -65,13 +65,66 @@ const Pagination = () => {
 
   // Function for loop page numbers
   const renderPages = () => {
-    const totalPages =  Math.ceil(list_data?.totalCount / limit); // Change this to the actual total number of pages
+    let totalPages =  Math.ceil(list_data?.totalCount / limit); // Change this to the actual total number of pages
     const pageNumbers = [];
+    pageNumbers.push("<<");
+    // totalPages = 7
     for (let i = 1; i <= totalPages; i++) {
-      pageNumbers.push(i);
+      if(totalPages > 9){
+        if(page < 6 && (i < 10 || i == totalPages - 1 || i == totalPages)){
+          if(i < 8 || i == totalPages - 1 || i == totalPages ){
+            if(i == 7){
+              pageNumbers.push("...");
+            }else {
+              pageNumbers.push(i);
+            }
+            
+          }else {
+            // change
+          }
+          
+        } else {
+          // change
+          // pageNumbers.push(i);
+        }
+      } else {
+        pageNumbers.push(i);
+      }
+
+      // if(page == i || page == i + 1 || page == i - 1){
+        // if(page == i + 1 || (page == i && page == 1)){
+          
+        //   pageNumbers.push(i);
+        // }else if(page == i - 1){
+        //   pageNumbers.push(i);
+          
+        // }else {
+        //   pageNumbers.push(i);
+        // }
+        
+      // }
     }
-    const pages = pageNumbers.map((pageNumber) =>
-      renderPage(pageNumber, pageNumber === page)
+    pageNumbers.push(">>");
+
+    
+    const pages = pageNumbers.map(
+      (pageNumber) =>{
+        let symbol = ""
+        if(pageNumber == "<<"){
+          symbol = "<<"
+          pageNumber = page - 1
+        } else if(pageNumber == ">>"){
+          symbol = ">>"
+          pageNumber = page + 1
+        } else if(pageNumber == "..."){
+          symbol = "..."
+          pageNumber = pageNumbers.length / 2
+        } else {
+          symbol = pageNumber
+        }
+        let response = renderPage(symbol, pageNumber, pageNumber === page)
+        return response
+      }
     );
     return pages;
   };
