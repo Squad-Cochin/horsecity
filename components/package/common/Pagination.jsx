@@ -23,7 +23,10 @@ const Pagination = () => {
 
   // Function for work only at the initial load of the page
   async function initialLoad(){
-    dispatch(filter_page(1))
+    if(page == "" || !page || page != null){
+      dispatch(filter_page(1))
+    }
+    
   }
 
   // Function for onclick in pagination numbers
