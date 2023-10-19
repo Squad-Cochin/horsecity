@@ -50,12 +50,13 @@ const Pagination = () => {
   }
 
   // Function for style page numbers
-  const renderPage = (symbol, pageNumber, isActive = false) => {
+  const renderPage = (symbol, pageNumber, isActive = false, index) => {
     const className = `size-40 flex-center rounded-full cursor-pointer ${
       isActive ? "bg-dark-1 text-white" : ""
     }`;
+
     return (
-      <div key={symbol} className="col-auto">
+      <div key={index} className="col-auto">
         <div className={className} onClick={() => handlePageClick(pageNumber)} >
           {symbol}
         </div>
@@ -65,50 +66,75 @@ const Pagination = () => {
 
   // Function for loop page numbers
   const renderPages = () => {
-    let totalPages =  Math.ceil(list_data?.totalCount / limit); // Change this to the actual total number of pages
-    const pageNumbers = [];
-    pageNumbers.push("<<");
-    // totalPages = 7
-    for (let i = 1; i <= totalPages; i++) {
-      if(totalPages > 9){
-        if(page < 6 && (i < 10 || i == totalPages - 1 || i == totalPages)){
-          if(i < 8 || i == totalPages - 1 || i == totalPages ){
-            if(i == 7){
-              pageNumbers.push("...");
-            }else {
-              pageNumbers.push(i);
-            }
-            
-          }else {
-            // change
-          }
-          
-        } else {
-          // change
-          // pageNumbers.push(i);
-        }
-      } else {
-        pageNumbers.push(i);
-      }
 
-      // if(page == i || page == i + 1 || page == i - 1){
-        // if(page == i + 1 || (page == i && page == 1)){
-          
-        //   pageNumbers.push(i);
-        // }else if(page == i - 1){
-        //   pageNumbers.push(i);
-          
-        // }else {
-        //   pageNumbers.push(i);
-        // }
-        
-      // }
+    let totalPages =  Math.ceil(list_data?.totalCount / limit); // Change this to the actual total number of pages
+    let pageNumbers = [];
+    pageNumbers.push("<<");
+    for (let i = 1; i <= totalPages; i++) {
+      if (page === 1) {
+        // If page is the first page, remove the first value
+        pageNumbers.splice(0, 1);
+      }
+      //CASE-1 totalPage <= 10
+     if(totalPages <= 10){
+          for(let j=1; j <= totalPages ;j++){
+            pageNumbers.push(j);
+          }
+          break;
+      }else{
+        //If the page no:  less than 6 
+        if(page<6){
+            for(let j=1; j <= 6 ;j++){
+                pageNumbers.push(j);
+            }
+            let lastV = totalPages
+            let lastBeforeV =totalPages-1
+            pageNumbers.push("...",lastBeforeV,lastV)
+            break;
+          }else if (page === totalPages || page === (totalPages -1) || page === (totalPages-4) || page === (totalPages-3) || page === (totalPages-2) ){
+            //If the page less than last 5 value
+                let lastIndex = totalPages -1;
+                let firstV = totalPages -lastIndex   
+                let secondV =  firstV + 1
+                pageNumbers.push(firstV,secondV,"...",(totalPages-5),(totalPages-4),(totalPages-3),(totalPages-2),(totalPages-1),(totalPages))
+                break;
+          }else{
+            // If they are selecting greater than 5 page
+            let array = [];
+              for (let i = 1; i <= totalPages; i++) {
+                array.push(i);
+              }
+              let firstV = array[0]  //1
+              let secondV = array[1] //2
+
+ 
+              let selectindex = array.indexOf(page); //selectedValue index
+              let selctValue = array[selectindex]
+              let before2SelectValue = array[selectindex-2]
+              let before1SelectValue = array[selectindex-1]
+
+              let after1SelectValue = array[selectindex+1]
+              let after2SelectValue = array[selectindex+2]
+
+              let lastIndex = array.length-1
+              let lastV = array[lastIndex] //lastValue
+              let lastBeforeV =array[lastIndex-1]; //lastValue-1
+
+              pageNumbers.push(firstV,secondV,"...",before2SelectValue,before1SelectValue,selctValue,after1SelectValue,after2SelectValue,"...",lastBeforeV,lastV);
+              break;
+          }
+      }
     }
+    
     pageNumbers.push(">>");
 
-    
+    // If page is the last page, remove the last value
+    if (page === totalPages) {
+      pageNumbers.pop();
+    }
+
     const pages = pageNumbers.map(
-      (pageNumber) =>{
+      (pageNumber,index) =>{
         let symbol = ""
         if(pageNumber == "<<"){
           symbol = "<<"
@@ -117,17 +143,23 @@ const Pagination = () => {
           symbol = ">>"
           pageNumber = page + 1
         } else if(pageNumber == "..."){
+         
+          let num1 = pageNumbers[index-1]
+          let num2 = pageNumbers[index+1]
+   
+          pageNumber = Math.round((num1+num2) / 2);
           symbol = "..."
-          pageNumber = pageNumbers.length / 2
+          
         } else {
           symbol = pageNumber
         }
-        let response = renderPage(symbol, pageNumber, pageNumber === page)
+        let response = renderPage(symbol, pageNumber, pageNumber === page, index)
         return response
       }
     );
     return pages;
   };
+  
 
   return (
     <div className="border-top-light mt-30 pt-30">
