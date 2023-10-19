@@ -23,7 +23,7 @@ const Pagination = () => {
 
   // Function for work only at the initial load of the page
   async function initialLoad(){
-    if(page == "" || !page || page != null){
+    if(page == ""){
       dispatch(filter_page(1))
     }
     
