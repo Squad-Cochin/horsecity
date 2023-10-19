@@ -1,12 +1,22 @@
-const commonfetching = require(`../../utils/helper/commonfetching`); // Importing the commonfetching. Where most of the common sql query or code is written
+
+
+
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                  //
+// This file has the code to check the body of the request body. All the functions which will be    // 
+// used for validaing the vehicle incoming data are coded in this file.                             //
+//                                                                                                  //
+//////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
 const con = require(`../../configs/db.configs`); // Calling database details
-const constants = require(`../../utils/constants`); // Constant elements are stored in this file
-const url = require(`../../utils/url_helper`);// Fetching the url details from the url helper file
+const url = require(`../../utils/url_helper`); // Fetching the url details from the url helper file
 const time = require(`../../utils/helper/date`); // All the time related formating are written in this file.
-const commonoperation = require('../../utils/helper/commonoperation');
+const constants = require(`../../utils/constants`); // Constant elements are stored in this file
+const commonfetching = require(`../../utils/helper/commonfetching`); // Importing the commonfetching. Where most of the common sql query or code is written
+const commonoperation = require('../../utils/helper/commonoperation'); // Importing the commonoperation. Where most of the common sql query or code is written
 
-
-// Below is function which wille eliminate the space from the string
+// Below is function which eliminate the space from the string.
 function hasOnlyNonSpaces(str) 
 {
     if (str.includes(` `))
@@ -19,23 +29,14 @@ function hasOnlyNonSpaces(str)
     }
 }
 
+// Below are the function for validating date of birth.
 const isValidDateOfBirth = (DOB) =>  
 {
     // This is regex or regular expression for verify the Date or birth validation
     return DOB.match(new RegExp(process.env.DOBREGEX)); // REGEX or regurlar expression
 }
 
-const isValidUAENumber = (phoneNumber) =>
-{
-    const phoneRegex = new RegExp(process.env.PHONENUMBERREGEX);
-    return phoneRegex.test(phoneNumber);
-}
-
-const isValidUsername = (username) => 
-{
-    return username.match(new RegExp(process.env.DOBREGEX));
-}
-
+// Below are the function for validating email.
 const isvalidEmail = (email) => 
 {
     const regex = (/^[a-zA-Z0-9.]+@[a-zA-Z0-9]+(\.[a-zA-Z0-9]+)*(\.[a-zA-Z0-9]{2,})+$/);
@@ -59,6 +60,7 @@ const isvalidEmail = (email) =>
     }
 };
 
+// Below are the function for validating the unique data at the starting time of first time of entering data not on the editing time.
 exports.validateCommonInputAtStartingTime = (tableName, feildName, Value, id, messageFeild) => async (req, res, next) =>
 {
     let checkEntry = await commonfetching.dataOnCondition(tableName, Value, feildName, id, messageFeild);
@@ -86,6 +88,7 @@ exports.validateCommonInputAtStartingTime = (tableName, feildName, Value, id, me
     }
 };
 
+// Below function for validating the unique data at the editing time of chanig data from the database not for the registration time.
 exports.validateCommonInputAtUpdateTime = (tableName, feildName, Value, id, messageFeild) => async (req, res, next) =>
 {
     let checkEmail = await commonfetching.dataOnConditionUpdate(tableName, feildName, Value, id, messageFeild);
@@ -117,6 +120,7 @@ exports.validateCommonInputAtUpdateTime = (tableName, feildName, Value, id, mess
     }
 };
 
+// The below function is the email validation. The REGEX check will be done from the above function
 exports.emailValidation = (tableName) => async (req, res, next) =>
 {
     if (!req.body.email) 
@@ -182,6 +186,7 @@ exports.emailValidation = (tableName) => async (req, res, next) =>
     }   
 };
 
+// The below function is the username validation.
 exports.usernameValidation = (tableName) => async (req, res, next) =>
 {
     if (!req.body.userName) 
@@ -255,6 +260,7 @@ exports.usernameValidation = (tableName) => async (req, res, next) =>
     }
 }
 
+// The below function is the contact number validation.
 exports.contactNumberValidation = (tableName) => async (req, res, next) =>
 {
     if (!req.body.contact_no) 
@@ -320,6 +326,7 @@ exports.contactNumberValidation = (tableName) => async (req, res, next) =>
     }
 }
 
+// The below function is the licence number validation.
 exports.isValidLicenceNumber = async (req, res, next) =>
 {
     if (!req.body.licence_no) 
@@ -353,6 +360,7 @@ exports.isValidLicenceNumber = async (req, res, next) =>
     }    
 };
 
+// The below function is the id proof number validation.
 exports.idProofNumberValidation = async (req, res, next) =>
 {
     if (!req.body.id_proof_no) 
@@ -390,6 +398,7 @@ exports.idProofNumberValidation = async (req, res, next) =>
     }    
 };
 
+// The below function is for the emergecny contact number number validation.
 exports.isValidEmergencyContactNumber =  (req, res, next) =>
 {
     if (!req.body.emergency_contact_no) 
@@ -440,6 +449,7 @@ exports.isValidEmergencyContactNumber =  (req, res, next) =>
     }
 }
 
+// The below function is for the date of birth validation.
 exports.dateOfBirthValidation = (req, res, next) =>
 {
     if (!req.body.date_of_birth) 
@@ -481,6 +491,7 @@ exports.dateOfBirthValidation = (req, res, next) =>
     }
 }
 
+// The below function is for the name validation.
 exports.nameValidation = (req, res, next) =>
 {
     const name = req.body.name;
@@ -499,6 +510,7 @@ exports.nameValidation = (req, res, next) =>
     }    
 };
 
+// The below function is for the driver description validation.
 exports.isValidDescription = (req, res, next) =>
 {
     if (!req.body.description) 
@@ -516,6 +528,7 @@ exports.isValidDescription = (req, res, next) =>
     }    
 };
 
+// The below function is for checking body present for all the route which are used for fetching fet all data
 exports.getAllDataBody = async (req, res, next) =>
 {
     try
@@ -536,12 +549,15 @@ exports.getAllDataBody = async (req, res, next) =>
     }    
 }
 
+// The below function is for checking body present for enter amount route.
 exports.checkAmountEntered = async(req, res, next) =>
 {
     this.checkValueEntered(req.body.totalRecievedAmount, 'Received payment')(req, res, next);
     next();
 };
 
+// The function is universal function. Which will check whether the value entered or not.
+// We can use this function any where in the whole code.
 exports.checkValueEntered = (fieldName, messageField) => (req, res, next) =>
 {
     // console.log(messageField, ':', fieldName);
@@ -563,6 +579,7 @@ exports.checkValueEntered = (fieldName, messageField) => (req, res, next) =>
     });
 };
 
+// The below function is for cheking the quotaion body present correct or not. We are using the `checkValueEntered` function for confirm the value present or not.
 exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) =>
 {  
     try
@@ -604,6 +621,7 @@ exports.checkValuesEnteredInTheQuotationBody = async (req, res, next) =>
     }
 };
 
+// The below function is for checking the email body present correct or not. We are using the `checkValueEntered` function for confirm the value present or not.
 exports.checkEmailBody = async (req, res, next) =>
 {
     try
@@ -619,6 +637,7 @@ exports.checkEmailBody = async (req, res, next) =>
     }
 };
 
+// The below function is for checking the add or create new enquiry body present correctly or not. We are using the `checkValueEntered` function for confirm the value present or not.
 exports.checkCustomerEnquiryBody = async (req, res, next) =>
 {
     await this.checkValueEntered(req.body.vehicle_id, 'Vehicle id')(req, res, next);
@@ -742,6 +761,7 @@ exports.checkingDuplicateEnquiry = async (req, res, next) =>
     }
 };
 
+// The below function is for checking the add or create new customer body present correctly or not. We are using the `checkValueEntered` function for confirm the value present or not.
 exports.CustomerAddRequestBody = async (req, res, next)  =>
 {
     try
@@ -1927,6 +1947,7 @@ exports.CheckRole = async (req, res, next) =>
     });
 };
 
+// The below function is for checking the add or create new driver body present correctly or not. We are using the `checkValueEntered` function for confirm the value present or not.
 exports.driverRequestAddBody = async (req, res, next) => 
 {
     try
@@ -1952,6 +1973,7 @@ exports.driverRequestAddBody = async (req, res, next) =>
     }
 }; 
 
+// This is the universal fucntion for the attachment or image upload.
 exports.isAttachmentUploaded = (feildName, message) => async (req, res, next) =>
 {
     if(!req.files?.[feildName] && req.method === 'POST')
@@ -2039,6 +2061,7 @@ exports.passwordandconfirmpasswordsimilarity = async (req, res, next) =>
     }
 }
 
+// The below function is for checking the similarity of all the 3 types of password [password, new password, confirm password].
 exports.passwordsimilarity = async (req, res, next) =>
 {
     if (req.body.confirmnewpassword !== req.body.newpassword)
@@ -2077,6 +2100,7 @@ exports.passwordsimilarity = async (req, res, next) =>
     }
 }
 
+// This is a universal function. Which is used for the validation of password, new password, confirm password.
 exports.passwordValidation = (feildName, message1, message2, message3) => async (req, res, next) =>
 {
     let password = await req.body[feildName]

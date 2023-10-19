@@ -1,13 +1,15 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////
+//                                                                                                  //
 // This file has the code to check the params data. Some time we will send some data in the         //
 // or data in the params required to check for further processing that is being done in this file   //
+//                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
 const constants = require("../../utils/constants"); // Constant elements are stored in this file
 const commonfetching = require(`../../utils/helper/commonfetching`); // helper file function. This file consist of functions Which is written universally for fetching the data from the database
 
 
-// the below function will be validating the params data.
+// The below function will be validating the params data.
 exports.isValidIdInTheParams = (tableName) => async (req, res, next) =>
 {
     if (!req.params?.id) 

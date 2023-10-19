@@ -24,7 +24,7 @@ module.exports = class dashboard
         "total_quotations": " ",
         "total_revenue": " ",
      */
-    static async getdashboarddataforparticularprovider(Id)
+    static async getdashboarddataforparticularprovider(Id)  
     {
         try
         {

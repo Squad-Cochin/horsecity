@@ -5,12 +5,11 @@
 //                                                                                                  //
 //////////////////////////////////////////////////////////////////////////////////////////////////////
 
+const url = require(`../../utils/url_helper`); // Fetching the url details from the url helper file
+const constants = require("../../utils/constants"); // Constant elements are stored in this file
+const checkInput = require(`./checkRequestBodyInput`); // Fetching the function from the checkRequestBodyInput.js file
 
-const constants = require("../../utils/constants");
-const checkInput = require(`./checkRequestBodyInput`);
-const url = require(`../../utils/url_helper`);
-
-
+// The below function is checking the vehicle add and edit body is present and correct.
 exports.checkVehicleBodyEntered = async (req, res, next) =>
 {
     try
@@ -39,6 +38,7 @@ exports.checkVehicleBodyEntered = async (req, res, next) =>
     }
 }; 
 
+// This a universal function. Which is used to check the value of length, breath, height, and price.
 exports.checkNumericalValues = (value, feildName) => (req, res, next) =>
 {
     return new Promise((resolve, reject) =>
@@ -78,6 +78,7 @@ exports.checkNumericalValues = (value, feildName) => (req, res, next) =>
     });
 };
 
+// This a universal function for checking the data from the radio button. Which is used to check the value of air_conditioner, temperature_manageable, gcc_travel_allowed, and insurance_cover.
 exports.checkRadioButtonYESAndNOINPUT = (value, message, message2, res) =>
 {
     try 
@@ -118,6 +119,7 @@ exports.checkRadioButtonYESAndNOINPUT = (value, message, message2, res) =>
     }
 }
 
+// the below function is for checking the registration number of the vehicle both from the add and edit time.
 exports.isVehicleRegistrationNumberEntered = async (req, res, next) =>
 {
     if(!req.body.vehicle_registration_number)
@@ -151,6 +153,7 @@ exports.isVehicleRegistrationNumberEntered = async (req, res, next) =>
     }
 }
 
+// the below function is for checking the insurance policy number of the vehicle both from the add and edit time.
 exports.isInsurancePolicyNumberEntered = async (req, res, next) =>
 {
     if(!req.body.insurance_policy_no)
@@ -184,6 +187,7 @@ exports.isInsurancePolicyNumberEntered = async (req, res, next) =>
     }
 }
 
+// the below function is for checking the checkbox value. Which is for the vehicle type.
 exports.isValidVehicleTypeEntered = (req, res, next) =>
 {
     if (!req.body.vehicle_type) 
@@ -218,6 +222,7 @@ exports.isValidVehicleTypeEntered = (req, res, next) =>
     }
 }
 
+// The below function is for checking the vehicle number at the time of add and edit time.
 exports.isValidVehicleNumberEntered =  async (req, res, next) =>
 {
     if (!req.body.vehicle_number) 
@@ -251,34 +256,7 @@ exports.isValidVehicleNumberEntered =  async (req, res, next) =>
     }
 }
 
-exports.isSafetyCertificateAdded = (req, res, next) =>
-{
-    if(!req.files?.safety_certicate && req.url === `${url.vehicles.POST_ADD_NEW_VEHICLE}${req.params?.id}` && req.method === 'POST')
-    {
-        return res.status(200).json
-        ({
-            code : 400,
-            success: false,
-            message : constants.responseMessage.vehiclescertificateimagenotpresent
-        });
-    } 
-    else
-    {
-        if(req.method === 'PUT' && req.url === `${url.vehicles.PUT_EDIT_VEHICLE}${req.params?.id}` && !req.files?.licence_img)
-        {
-            next();
-        }
-        if(req.method === 'PUT' && req.url === `${url.vehicles.PUT_EDIT_VEHICLE}${req.params?.id}` && req.files?.licence_img)
-        {
-            next();
-        }
-        if(req.method === 'POST')
-        {
-            next();
-        }
-    }
-}
-
+// The below function is for the vehicle image.
 exports.isVehicleImageTitleAdded = (req, res, next) =>
 {
     if(!req.body.title)
