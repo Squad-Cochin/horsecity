@@ -10,9 +10,9 @@ import { Navigate } from "react-router-dom";
 //Dashboard
 import Dashboard from "../Pages/Dashboard";
 //Customer
-import ListCustomerTable from "../Pages/Tables/ListTables/ListCustomerTable";
+import ListCustomerTable from "../Pages/Customers/ListCustomerTable";
 //Vehicle
-import ListVehiclesTable from "../Pages/Tables/ListTables/ListVehiclesTable";
+import ListVehiclesTable from "../Pages/Vehicles/ListVehiclesTable";
 // Import service providers
 import ServiceProviders from "../Pages/ServiceProviders/ServiceProviderTable";
 // Import drivers
@@ -21,6 +21,8 @@ import Drivers from "../Pages/Drivers/DriverTable";
 import TripDeatails from "../Pages/TripDetails/TripDetailTable";
 //Reviews
 import Reviews from "../Pages/Reviews/Reviews";
+//CMS
+import AboutUs from "../Pages/CMS/aboutUs";
 //Import monthly reports
 import ServiceProviderReport from "../Pages/Reports/ServiceProviderReport";
 import CustomerReport from "../Pages/Reports/CustomerReport";
@@ -45,15 +47,15 @@ import ChangePassword from "../Pages/Authentication/ChangePassword";
 import ForgetPasswordPage from "../Pages/Authentication/ForgetPassword";
 import Logout from "../Pages/Authentication/Logout";
 import ResetPasswordPage from "../Pages/Authentication/ResetPassword";
-import ListEnquiriesTable from "../Pages/Tables/ListTables/ListEnquiriesTable";
-import ListQuotationsTable from "../Pages/Tables/ListTables/ListQuotationsTable";
+import ListEnquiriesTable from "../Pages/Enquiry/ListEnquiriesTable";
+import ListQuotationsTable from "../Pages/Quotations/ListQuotationsTable";
 import InvoiceReport from "../Pages/Reports/InvoiceReport";
 // Import Forms
 //This required  for reports page
 import FormAdvanced from "../Pages/Forms/FormAdvanced";
 // Import Tables
 import ListJs from "../Pages/ServiceProviders/ServiceProviderTable";
-import ImageGallery from "..//Pages/Tables/ListTables/ListVehicleImages";
+import ImageGallery from "../Pages/Vehicles/ListVehicleImages";
 //Profile page
 // import Profile from "../Pages/ProfilePage";
 import InvoiceDetails from "../Pages/Invoices/InvoicesList";
@@ -106,7 +108,8 @@ const authProtectedRoutes = [
   { path: "/reviews", component: <Reviews /> },
   // Invoice Page
   { path: "/invoices", component: <InvoiceDetails /> },
-
+  //CMS
+  { path: "/about-us", component: <AboutUs /> },
   // this route should be at the end of all other routes
   // eslint-disable-next-line react/display-name
   {

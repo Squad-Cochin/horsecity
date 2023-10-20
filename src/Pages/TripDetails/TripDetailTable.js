@@ -54,6 +54,7 @@ const TripDeatails = () => {
   const [list_or_view, setListOrView] = useState(false);
   const [errors, setErrors] = useState("");
   const [pageTitle, setPageTitle] = useState("KailPlus");
+  const [searchInp, setSearchInp] = useState("");
   const pageLimit = config.pageLimit;
 
   /**Initial render wIll load this hook */
@@ -119,7 +120,7 @@ const TripDeatails = () => {
       setListOrView(true);
     } else {
       let filterTrpDetailsData = tripDatas.filter(
-        (item) => item.booking_id == productId
+        (item) => item.booking_id === productId
       );
       setTrip_list_data(filterTrpDetailsData);
       setListOrView(false);
@@ -133,7 +134,7 @@ const TripDeatails = () => {
     setInvoice_id(invId);
     setTrip_status(false);
     let filterTrpDetailsData = tripDatas.filter(
-      (item) => item.booking_id == bkId
+      (item) => item.booking_id === bkId
     );
     setTrip_list_data(filterTrpDetailsData);
     let serviceProviderData = await getSPUserName();
@@ -163,6 +164,16 @@ const TripDeatails = () => {
     breakout: "BREAKOUT",
     compleated: "COMPLETED",
   };
+
+    /**Filter data */
+    const filteredTripData = tripDatas?.filter(
+      (value) =>
+        (value?.invoice_prefix_id?.toString()?.toLowerCase()?.includes(searchInp.toLowerCase().trim())) ||
+        (value?.customer_name?.toLowerCase()?.includes(searchInp.toLowerCase().trim())) ||
+        (value?.service_provider?.toLowerCase()?.includes(searchInp.toLowerCase().trim())) ||
+        (value?.status?.toLowerCase()?.includes(searchInp.toLowerCase().trim()))
+    );
+    
   document.title = `Trip details | ${pageTitle} `;
   return (
     <React.Fragment>
@@ -173,7 +184,27 @@ const TripDeatails = () => {
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0"> Edit & View</h4>
+                <div className="row align-items-md-center">
+                  <h4 className="card-title mb-0 col-md-8  p-3"> Edit & View <br/>  <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span></h4>
+                  <form className="col-md-4">
+                      <div className="form-group m-0">
+                        <div className="input-group">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search ..."
+                            onChange={(e) => setSearchInp(e.target.value)}
+                            aria-label="Recipient's username"
+                          />
+                          <div className="input-group-append">
+                            <button className="btn btn-primary" type="button">
+                              <i className="ri-search-line" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
                 </CardHeader>
                 <CardBody>
                   <div id="break-down-list">
@@ -211,13 +242,13 @@ const TripDeatails = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {tripDatas?.map((item, index) => (
+                          {filteredTripData?.map((item, index) => (
                             <tr key={index}>
                               <th scope="row">
                                 {index + 1 + (pageNumber - 1) * pageLimit}
                               </th>
                               <td className="phone">
-                                {item.invoice_prefix_id}
+                                {item?.invoice_prefix_id}
                               </td>
                               <td className="customer_name">
                                 {item?.customer_name}
@@ -249,8 +280,8 @@ const TripDeatails = () => {
                                     </div>
                                   ) : null}
 
-                                  {tripDatas[index].trip_status !=
-                                  tripStatus.compleated ? (
+                                  {tripDatas[index].trip_status !==
+                                  tripStatus.compleated ? ( 
                                     <div className="edit">
                                       {JSON.parse(module?.read || "true") ? (
                                         <button
@@ -286,7 +317,7 @@ const TripDeatails = () => {
                             Previous
                           </Link>
                         ) : null}
-                        <ul className="pagination listjs-pagination mb-0"></ul>
+                        <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
                         {numberOfData > pageLimit * pageNumber ? (
                           <Link
                             className="page-item pagination-next"

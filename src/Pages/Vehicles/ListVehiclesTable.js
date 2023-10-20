@@ -28,19 +28,19 @@ import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 
 //IMPORTED FILES
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
-import { removeVehicle } from "../../../helpers/ApiRoutes/removeApiRoutes";
+import Breadcrumbs from "../../components/Common/Breadcrumb";
+import { removeVehicle } from "../../helpers/ApiRoutes/removeApiRoutes";
 import {
   getVehiclesData,
   getSPUserName,
   getSingleVechileData,
-} from "../../../helpers/ApiRoutes/getApiRoutes";
-import { addNewVehicle } from "../../../helpers/ApiRoutes/addApiRoutes";
+} from "../../helpers/ApiRoutes/getApiRoutes";
+import { addNewVehicle } from "../../helpers/ApiRoutes/addApiRoutes";
 import {
   updateVehicle,
   updateVechileStatus,
-} from "../../../helpers/ApiRoutes/editApiRoutes";
-import config from "../../../config";
+} from "../../helpers/ApiRoutes/editApiRoutes";
+import config from "../../config";
 
 const ListVehiclesTable = () => {
   const [vehicles, setVehicles] = useState([]); // State variable to store vehicles
@@ -56,7 +56,6 @@ const ListVehiclesTable = () => {
   const [userId, setUserId] = useState("");
   const [role, setRole] = useState(false);
   const [roleID, setRoleID] = useState("");
-  const [module, setModule] = useState({});
   const [user_name, setuser_name] = useState("");
   const [numberOfData, setNumberOfData] = useState(0);
   const [errors, setErrors] = useState("");
@@ -66,6 +65,7 @@ const ListVehiclesTable = () => {
   const [gccTravelAllowed, setGccTravelAllowed] = useState("");
   const [insuranceCover, setInsuranceCover] = useState("");
   const [vehicleType, setVehicleType] = useState("");
+  const [searchInp, setSearchInp] = useState("");
 
   const pageLimit = config.pageLimit;
   const role_Id = config.Role;
@@ -93,9 +93,7 @@ const ListVehiclesTable = () => {
     insurance_date: !add_list ? vehicle[0]?.insurance_date : "",
     insurance_policy_no: !add_list ? vehicle[0]?.insurance_policy_no : "",
     insurance_policy_provider: !add_list ? vehicle[0]?.insurance_provider : "",
-    insurance_expiry_date: !add_list
-      ? vehicle[0]?.insurance_expiration_date
-      : "",
+    insurance_expiry_date: !add_list? vehicle[0]?.insurance_expiration_date: "",
     vehicle_type: !add_list ? vehicle[0]?.vehicle_type : "",
     vehicle_registration_date: !add_list
       ? vehicle[0]?.vehicle_registration_date
@@ -123,11 +121,6 @@ const ListVehiclesTable = () => {
     role,
     user_name,
     roleID,
-    airConditioner,
-    temperatureManageable,
-    gccTravelAllowed,
-    insuranceCover,
-    vehicleType,
   ]);
 
   /**This function is an event handler that triggers when the user
@@ -229,9 +222,6 @@ const ListVehiclesTable = () => {
 
       setSproviders(getSP?.serviceProviders);
       setVehicles(getvehicles?.vehicles);
-      if (getvehicles?.module && getvehicles.module.length > 0) {
-        setModule(getvehicles.module[0]);
-      }
       setPageNumber(page);
       setNumberOfData(getvehicles?.totalCount);
     }
@@ -244,8 +234,8 @@ const ListVehiclesTable = () => {
       setErrors("");
       setAdd_list(false);
       setmodal_list(false);
-      getAllData(pageNumber);
       setCertificateImage("");
+      getAllData(pageNumber);
     } else {
       setErrors("");
       setErrors(updatedVehicle.message);
@@ -267,6 +257,13 @@ const ListVehiclesTable = () => {
       setErrors(addedVechile?.message);
     }
   }
+  /**Filter data */
+  const filteredVehicles = vehicles?.filter(value =>
+      value?.service_provider?.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
+      value?.make?.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
+      value?.vehicle_number?.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
+      value?.no_of_horse?.toString().toLowerCase().includes(searchInp.toLowerCase().trim())
+  );
 
   document.title = `Vehicles | ${pageTitle} `;
   return (
@@ -279,7 +276,30 @@ const ListVehiclesTable = () => {
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Add, Edit & Remove</h4>
+                  <div className="row align-items-md-center">
+                    <h4 className="card-title mb-0 col-md-8  p-3">
+                     Add, Edit & Remove  <br/> 
+                     <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span>
+                    </h4>
+                    <form className="col-md-4">
+                      <div className="form-group m-0">
+                        <div className="input-group">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search ..."
+                            onChange={(e) => setSearchInp(e.target.value)}
+                            aria-label="Recipient's username"
+                          />
+                          <div className="input-group-append">
+                            <button className="btn btn-primary" type="button">
+                              <i className="ri-search-line" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
                 </CardHeader>
                 <CardBody>
                   <div id="customerList">
@@ -290,7 +310,7 @@ const ListVehiclesTable = () => {
                             color="success"
                             className="add-btn"
                             onClick={() => tog_list("ADD")}
-                            id="create-btn"
+                            id="create-btn"                            
                           >
                             <i className="ri-add-line align-bottom me-1"></i>{" "}
                             Add
@@ -331,7 +351,7 @@ const ListVehiclesTable = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {vehicles.map((item, index) => (
+                          {filteredVehicles?.map((item, index) => (
                             <tr key={item.id}>
                               <th scope="row">
                                 {index + 1 + (pageNumber - 1) * pageLimit}
@@ -431,6 +451,7 @@ const ListVehiclesTable = () => {
                     {/* The below is having the code of the pagination of the page.
                                             The previous and next button are also in side this function */}
                     <div className="d-flex justify-content-end">
+
                       <div className="pagination-wrap hstack gap-2">
                         {pageNumber > 1 ? (
                           <Link
@@ -440,7 +461,7 @@ const ListVehiclesTable = () => {
                             Previous
                           </Link>
                         ) : null}
-                        <ul className="pagination listjs-pagination mb-0"></ul>
+                        <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
                         {numberOfData > pageLimit * pageNumber ? (
                           <Link
                             className="page-item pagination-next"
@@ -1097,10 +1118,13 @@ const ListVehiclesTable = () => {
 
       {/* View Modal */}
       {/* This is the view button model. We will get all the details of a particular vehcile. */}
-      <Modal className="extra-width" isOpen={view_modal}    
-       toggle={() => {
-            setView_modal(false);
-          }}>
+      <Modal
+        className="extra-width"
+        isOpen={view_modal}
+        toggle={() => {
+          setView_modal(false);
+        }}
+      >
         {/* The below line is for the heading of pop up of view particular vehicle detail . */}
         <ModalHeader
           className="bg-light p-3"

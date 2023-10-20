@@ -25,18 +25,18 @@ import { useFormik } from "formik";
 import Flatpickr from "react-flatpickr";
 
 /**IMPORTED FILES */
-import { removeCustomer } from "../../../helpers/ApiRoutes/removeApiRoutes"; //For removing customers
-import { addNewCustomer } from "../../../helpers/ApiRoutes/addApiRoutes"; //For adding new customer
+import { removeCustomer } from "../../helpers/ApiRoutes/removeApiRoutes"; //For removing customers
+import { addNewCustomer } from "../../helpers/ApiRoutes/addApiRoutes"; //For adding new customer
 import {
   updateCustomer,
   updateCustomerStatus,
-} from "../../../helpers/ApiRoutes/editApiRoutes"; //For updating  customer
+} from "../../helpers/ApiRoutes/editApiRoutes"; //For updating  customer
 import {
   getSingleCustomerData,
   getCustomersData,
-} from "../../../helpers/ApiRoutes/getApiRoutes";
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
-import config from "../../../config";
+} from "../../helpers/ApiRoutes/getApiRoutes";
+import Breadcrumbs from "../../components/Common/Breadcrumb";
+import config from "../../config";
 
 // Function for customer page
 const ListCustomerTable = () => {
@@ -52,6 +52,7 @@ const ListCustomerTable = () => {
   const [userId, setUserId] = useState("");
   const [roleId, setRoleId] = useState("");
   const [role, setRole] = useState(false);
+  const [searchInp, setSearchInp] = useState("");
   const [module, setModule] = useState({});
   const [errors, setErrors] = useState("");
   const [pageTitle, setPageTitle] = useState("KailPlus");
@@ -200,6 +201,13 @@ const ListCustomerTable = () => {
       setNumberOfData(getCustomers?.totalCount);
     }
   }
+    /**Filter data */
+    const filteredCustomers = customers?.filter(value => 
+      value?.name.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
+      value?.email.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
+      value?.contact_no.toLowerCase().includes(searchInp.toLowerCase().trim())
+    );
+  
   document.title = `Customers | ${pageTitle} `;
   return (
     <React.Fragment>
@@ -210,7 +218,28 @@ const ListCustomerTable = () => {
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Add, Edit & Remove</h4>
+                <div className="row align-items-md-center">
+                  <h4 className="card-title mb-0 col-md-8  p-3">Add, Edit & Remove <br/> 
+                   <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span></h4>
+                  <form className="col-md-4">
+                    <div className="form-group m-0">
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Search ..."
+                          onChange={(e)=>setSearchInp(e.target.value)}
+                          aria-label="Recipient's username"
+                        />
+                        <div className="input-group-append">
+                          <button className="btn btn-primary" type="button">
+                            <i className="ri-search-line" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    </form>
+                </div>  
                 </CardHeader>
                 <CardBody>
                   <div id="customerList">
@@ -266,7 +295,7 @@ const ListCustomerTable = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {customers?.map((item, index) => (
+                          {filteredCustomers?.map((item, index) => (
                             <tr key={item?.id}>
                               <th scope="row">
                                 {index + 1 + (pageNumber - 1) * pageLimit}
@@ -351,7 +380,7 @@ const ListCustomerTable = () => {
                             Previous
                           </Link>
                         ) : null}
-                        <ul className="pagination listjs-pagination mb-0"></ul>
+                        <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
                         {numberOfData > pageLimit * pageNumber ? (
                           <Link
                             className="page-item pagination-next"
@@ -517,9 +546,8 @@ const ListCustomerTable = () => {
                 name="id_proof_no"
                 className="form-control"
                 value={validation.values.id_proof_no || ""}
-                onChange={validation.handleChange}
+                onChange={validation.handleChange}  
                 placeholder="Enter Id Proof Number"
-                required
               />
             </div>
 

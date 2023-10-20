@@ -157,6 +157,11 @@ export const GET_TRIP_ALL_DATA_URL = apiBaseUrl + "/getAll/tripDetails";
 export const GET_VEHICLE_BREAKDOWN_ALL_DATA_URL = apiBaseUrl + "/list/breakDownVehicles";
 export const POST_VEHICLE_BREAKDOWN_DATA_URL = apiBaseUrl + "/add/breakDownVehicles";
 
+/**CMS*/
+export const GET_CMS_ABOUT_US_DATA_URL = apiBaseUrl + "/get/cms";
+export const PUT_CMS_ABOUT_US_DATA_URL = apiBaseUrl + "/edit/cms/about-us";
+
+
 export const POST_FAKE_LOGIN = "/post-fake-login";
 export const POST_FAKE_JWT_LOGIN = "/post-jwt-login";
 export const POST_FAKE_PASSWORD_FORGET = "/fake-forget-pwd";

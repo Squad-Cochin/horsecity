@@ -1321,3 +1321,28 @@ export async function getReviewsData(pageNumber, userId) {
     return errorObj.data;
   }
 }
+/**Below route for giving  aboutUs page data  */
+export async function getAboutUsPageData(URL) {
+  try {
+    // let pageLimit = config.pageLimit;
+
+    const data  = await axios.get(`${url.GET_CMS_ABOUT_US_DATA_URL}/${URL}`, {
+      headers: {
+        Authorization: `Bearer ${process.env.REACT_APP_ADMIN_API_TOKEN}`,
+      },
+    });
+
+    return data;
+  } catch (error) {
+    let errorObj = {
+      code: 500,
+      status: false,
+      message: "Server error",
+      data: {
+        totalCount: 0,
+        vehicles: [],
+      },
+    };
+    return errorObj.data;
+  }
+}

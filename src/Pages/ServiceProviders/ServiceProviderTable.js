@@ -53,6 +53,7 @@ const ListTables = () => {
   const [errors, setErrors] = useState("");
   const [roleList, setRoleList] = useState([]);
   const [pageTitle, setPageTitle] = useState("KailPlus");
+  const [searchInp, setSearchInp] = useState("");
   const pageLimit = config.pageLimit;
   const Roles = config.Role;
 
@@ -210,6 +211,15 @@ const ListTables = () => {
     }
   }
 
+
+  /**Filter data */
+  const filteredSProviders = sproviders?.filter(value => 
+    value?.name.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
+    value?.email.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
+    value?.contact_no.toLowerCase().includes(searchInp.toLowerCase().trim())
+  );
+
+  console.log("search value:", searchInp);
   document.title = `Service providers | ${pageTitle} `;
   return (
     <React.Fragment>
@@ -220,11 +230,31 @@ const ListTables = () => {
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">
-                    {Roles.service_provider === role
-                      ? "Edit "
-                      : "Add, Edit & Remove"}{" "}
-                  </h4>
+                  <div className="row align-items-md-center">
+                    <h4 className="card-title mb-0 col-md-8  p-3">
+                      {Roles.service_provider === role
+                        ? "Edit "
+                        : "Add, Edit & Remove"}{" "}  <br/>  <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span>
+                    </h4>
+                    <form className="col-md-4">
+                    <div className="form-group m-0">
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Search ..."
+                          aria-label="Recipient's username"
+                          onChange={(e)=>setSearchInp(e.target.value)}
+                        />
+                        <div className="input-group-append">
+                          <button className="btn btn-primary" type="button">
+                            <i className="ri-search-line" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    </form>
+                </div>
                 </CardHeader>
 
                 <CardBody>
@@ -285,7 +315,7 @@ const ListTables = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {sproviders?.map((value, index) => (
+                          {filteredSProviders?.map((value, index) => (
                             <tr key={value?.id}>
                               <th scope="row">
                                 {index + 1 + (pageNumber - 1) * pageLimit}
@@ -380,7 +410,7 @@ const ListTables = () => {
                             Previous
                           </Link>
                         ) : null}
-                        <ul className="pagination listjs-pagination mb-0"></ul>
+                        <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
                         {numberOfData > pageLimit * pageNumber ? (
                           <Link
                             className="page-item pagination-next"

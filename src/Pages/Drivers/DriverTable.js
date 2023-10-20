@@ -70,6 +70,7 @@ const ListTables = () => {
   const [errors, setErrors] = useState("");
   const pageLimit = config.pageLimit;
   const [pageTitle, setPageTitle] = useState("KailPlus");
+  const [searchInp, setSearchInp] = useState("");
   const role_id = config.Role;
 
   useEffect(() => {
@@ -282,7 +283,12 @@ const ListTables = () => {
     setSproviders(data.notexist);
     setAssignedSProviders(data.exist);
   }
-
+  /**Filter data */
+  const filteredDrivers = drivers?.filter(value => 
+    value?.name.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
+    value?.email.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
+    value?.contact_no.toLowerCase().includes(searchInp.toLowerCase().trim())
+  );
   document.title = `Drivers | ${pageTitle} `;
   return (
     <React.Fragment>
@@ -294,8 +300,28 @@ const ListTables = () => {
             <Col lg={12}>
               <Card>
                 <CardHeader>
+                <div className="row align-items-md-center">
                   {/* Header of the Particular Card */}
-                  <h4 className="card-title mb-0">Add, Edit & Remove</h4>
+                  <h4 className="card-title mb-0 col-md-8  p-3">Add, Edit & Remove  <br/>  <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span></h4>
+                  <form className="col-md-4">
+                    <div className="form-group m-0">
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Search ..."
+                          aria-label="Recipient's username"
+                          onChange={(e)=>setSearchInp(e.target.value)}
+                        />
+                        <div className="input-group-append">
+                          <button className="btn btn-primary" type="submit">
+                            <i className="ri-search-line" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    </form>
+                </div> 
                 </CardHeader>
                 <CardBody>
                   <div id="customerList">
@@ -358,7 +384,7 @@ const ListTables = () => {
                           {/* The data we will be getting to showcase on driver page is from an object. We will map and show them one by one. The below function will be used for this */}
                           {/* 'Driver' is having all the enquiry data. */}
                           {/* Index is the number of the data. i.e., Serial number */}
-                          {drivers?.map((item, index) => (
+                          {filteredDrivers?.map((item, index) => (
                             <tr key={item.id}>
                               {/* Below we are initializing the driver data */}
                               <th scope="row">
@@ -486,7 +512,7 @@ const ListTables = () => {
                             Previous
                           </Link>
                         ) : null}
-                        <ul className="pagination listjs-pagination mb-0"></ul>
+                        <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
                         {numberOfData > pageLimit * pageNumber ? (
                           <Link
                             className="page-item pagination-next"

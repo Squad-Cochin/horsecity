@@ -110,6 +110,14 @@ const SidebarData = [
             { id : 3,sublabel: "Taxations", link: "/taxation-list" },
             { id : 4,sublabel: "Settings", link: "/setting-page" },
         ],
+    },
+    {
+        id : 15,
+        label: "CMS",
+        icon: "mdi mdi-content-save-all",
+        subItem: [
+            { id : 1,sublabel: "About Us", link: "/about-us" }
+        ],
     }
 
 

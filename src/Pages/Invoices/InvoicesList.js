@@ -62,7 +62,7 @@ const ListInvoiceDetails = () => {
   const invoiceRef = useRef(null); // Reference to the invoice section for PDF generation
   const pageLimit = config.pageLimit;
   const [isActive, setActive] = useState(false);
-
+  const [searchInp, setSearchInp] = useState("");
   // THIS HOOK RENDERING INITIAL TIME
   useEffect(() => {
     const settings = JSON.parse(localStorage.getItem("settingsData"));
@@ -248,6 +248,18 @@ const ListInvoiceDetails = () => {
       pagination: true,
     });
   });
+
+  /**Filter data */
+  const filteredInvoice = invoices?.filter(
+    (value) =>
+      value?.iId
+        .toString()
+        .toLowerCase()
+        .includes(searchInp.toLowerCase().trim()) ||
+      value?.quotation_id.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
+      value?.customer_name.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
+      value?.customer_email.toLowerCase().includes(searchInp.toLowerCase().trim()) 
+  );
   document.title = `Invoice | ${pageTitle} `;
   return (
     <React.Fragment>
@@ -259,7 +271,27 @@ const ListInvoiceDetails = () => {
               <Card>
                 <CardHeader>
                   {" "}
-                  {/* <h4 className="card-title mb-0">Add, Edit & Remove</h4> */}{" "}
+                  <div className="row align-items-md-center">
+                    <h4 className="card-title mb-0 col-md-8  p-3"><br/>  <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span></h4>
+                    <form className="col-md-4">
+                      <div className="form-group m-0">
+                        <div className="input-group">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search ..."
+                            onChange={(e) => setSearchInp(e.target.value)}
+                            aria-label="Recipient's username"
+                          />
+                          <div className="input-group-append">
+                            <button className="btn btn-primary" type="button">
+                              <i className="ri-search-line" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
                 </CardHeader>
                 <CardBody>
                   <div id="invoiceList">
@@ -297,7 +329,7 @@ const ListInvoiceDetails = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {invoices?.map((item, index) => (
+                          {filteredInvoice?.map((item, index) => (
                             <tr key={index}>
                               <th scope="row">
                                 {index + 1 + (pageNumber - 1) * pageLimit}
@@ -316,7 +348,7 @@ const ListInvoiceDetails = () => {
                                 {" "}
                                 <button
                                   type="button"
-                                  className="btn btn-success"
+                                  className="btn btn-sm btn-success status-item-btn"  
                                   id="add-btn"
                                   onClick={() => tog_view(item.id)}
                                 >
@@ -328,7 +360,7 @@ const ListInvoiceDetails = () => {
                                 {" "}
                                 <button
                                   type="button"
-                                  className="btn btn-success"
+                                  className="btn btn-sm btn-success status-item-btn"
                                   id="add-btn"
                                   onClick={() => handleOpenModal(item.id)}
                                 >
@@ -345,7 +377,7 @@ const ListInvoiceDetails = () => {
                                     isTripStarted(item.id) ||
                                     isTripCancel(item.id)
                                   }
-                                  className="btn btn-success"
+                                  className="btn btn-sm btn-success status-item-btn"
                                   id="add-btn"
                                 >
                                   Start Journey
@@ -382,7 +414,7 @@ const ListInvoiceDetails = () => {
                             Previous{" "}
                           </Link>
                         ) : null}
-                        <ul className="pagination listjs-pagination mb-0"></ul>
+                        <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
                         {numberOfData > pageLimit * pageNumber ? (
                           <Link
                             className="page-item pagination-next"

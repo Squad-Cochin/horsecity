@@ -7,7 +7,6 @@
 import React, { useState, useEffect } from "react";
 import {
   Alert,
-  Button,
   Card,
   CardBody,
   CardHeader,
@@ -24,9 +23,9 @@ import Flatpickr from "react-flatpickr";
 import { useFormik } from "formik";
 
 /**IMPORTED FILES */
-import Breadcrumbs from "../../../components/Common/Breadcrumb";
-import config from "../../../config";
-import Logo from "../../../assets/images/black-logo.png";
+import Breadcrumbs from "../../components/Common/Breadcrumb";
+import config from "../../config";
+import Logo from "../../assets/images/black-logo.png";
 import {
   getQuotationData,
   getConfirmQut,
@@ -36,12 +35,12 @@ import {
   getSPDriverData,
   getDiscounts,
   getSPUserName,
-} from "../../../helpers/ApiRoutes/getApiRoutes";
-import { sendEmailFunction } from "../../../helpers/ApiRoutes/addApiRoutes";
+} from "../../helpers/ApiRoutes/getApiRoutes";
+import { sendEmailFunction } from "../../helpers/ApiRoutes/addApiRoutes";
 import {
   updatQuotation,
   confirmQuotation,
-} from "../../../helpers/ApiRoutes/editApiRoutes";
+} from "../../helpers/ApiRoutes/editApiRoutes";
 
 const ListQuotationsTable = () => {
   const [view_modal, setView_modal] = useState(false);
@@ -76,7 +75,9 @@ const ListQuotationsTable = () => {
   const [discountAmount, setDiscountAmount] = useState(0);
   const [pageTitle, setPageTitle] = useState("KailPlus");
   const [isActive, setActive] = useState(false);
-  const [transportationInsuranceCoverage, setTransportationInsuranceCoverage] =useState("FALSE");
+  const [transportationInsuranceCoverage, setTransportationInsuranceCoverage] =
+    useState("FALSE");
+  const [searchInp, setSearchInp] = useState("");
   const role_id = config.Role;
   const pageLimit = config.pageLimit;
   useEffect(() => {
@@ -127,7 +128,9 @@ const ListQuotationsTable = () => {
     driver_amount: quotation ? quotation[0]?.driver_amount : "",
     special_requirement: quotation ? quotation[0]?.special_requirement : "",
     additional_service: quotation ? quotation[0]?.additional_service : "",
-    transportation_insurance_coverage: quotation? quotation[0]?.transportation_insurance_coverage : "",
+    transportation_insurance_coverage: quotation
+      ? quotation[0]?.transportation_insurance_coverage
+      : "",
     drop_date: quotation ? quotation[0]?.drop_date : "",
     pickup_date: quotation ? quotation[0]?.pickup_date : "",
     pickup_time: quotation ? quotation[0]?.pickup_time : "",
@@ -552,7 +555,26 @@ const ListQuotationsTable = () => {
     setSPDrivers(sPDriverData.drivers);
     setSPVechiles(sPVechilesData.vehicles);
   }
- 
+  /**Filter data */
+  /**Filter data */
+  const filteredQuotation = quotations?.filter(
+    (value) =>
+      value?.enquiry_id
+        .toString()
+        .toLowerCase()
+        .includes(searchInp.toLowerCase().trim()) ||
+      value?.quotation_id
+        .toLowerCase()
+        .includes(searchInp.toLowerCase().trim()) ||
+      value?.customer_name
+        .toLowerCase()
+        .includes(searchInp.toLowerCase().trim()) ||
+      value?.customer_email
+        .toLowerCase()
+        .includes(searchInp.toLowerCase().trim()) ||
+      value?.status.toLowerCase().includes(searchInp.toLowerCase().trim())
+  );
+
   document.title = `Quotation | ${pageTitle} `;
   return (
     <React.Fragment>
@@ -563,7 +585,32 @@ const ListQuotationsTable = () => {
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Edit & Remove</h4>
+                  <div className="row align-items-md-center">
+                    <h4 className="card-title mb-0 col-md-8  p-3">
+                      Edit & Remove <br />{" "}
+                      <span className="d-block mt-2 fs-16 text-success">
+                        Total {numberOfData}
+                      </span>
+                    </h4>
+                    <form className="col-md-4">
+                      <div className="form-group m-0">
+                        <div className="input-group">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search ..."
+                            onChange={(e) => setSearchInp(e.target.value)}
+                            aria-label="Recipient's username"
+                          />
+                          <div className="input-group-append">
+                            <button className="btn btn-primary" type="button">
+                              <i className="ri-search-line" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div>
                 </CardHeader>
                 <CardBody>
                   <div id="customerList">
@@ -598,7 +645,7 @@ const ListQuotationsTable = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {quotations?.map((item, index) => (
+                          {filteredQuotation?.map((item, index) => (
                             <tr key={index}>
                               <th scope="row">
                                 {index + 1 + (pageNumber - 1) * pageLimit}
@@ -706,7 +753,9 @@ const ListQuotationsTable = () => {
                             Previous
                           </Link>
                         ) : null}
-                        <ul className="pagination listjs-pagination mb-0"></ul>
+                        <ul className="pagination listjs-pagination mb-0">
+                          <b>{pageNumber !== 1 ? pageNumber : null}</b>
+                        </ul>
                         {numberOfData > pageLimit * pageNumber ? (
                           <Link
                             className="page-item pagination-next"
@@ -781,7 +830,7 @@ const ListQuotationsTable = () => {
                 }}
                 onBlur={validation.handleBlur}
                 required
-                disabled={role == role_id.service_provider}
+                disabled={role === role_id.service_provider}
               >
                 <option value="">Select Service Provider</option>
                 {serviceProviders.map((item, index) => (
@@ -1252,7 +1301,7 @@ const ListQuotationsTable = () => {
                   type="submit"
                   className="btn btn-success"
                   id="add-btn"
-                  disabled={item.status == config.status.confirmed}
+                  disabled={item.status === config.status.confirmed}
                   onClick={() => {
                     window.location.href = "#exampleModalLabel"; // Change the URL here
                   }}
@@ -1701,7 +1750,7 @@ const ListQuotationsTable = () => {
                 <div key={index} className="tm_container">
                   <button
                     type="button"
-                    disabled={item.status == config.status.confirmed}
+                    disabled={item.status === config.status.confirmed}
                     onClick={() => {
                       confirmQut(item);
                       window.location.href = "#exampleModalLabel";

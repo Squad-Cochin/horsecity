@@ -1,5 +1,5 @@
 module.exports = {
-  pageLimit : 5,    
+  pageLimit : 10,    
      status : {
         TRUE : 'TRUE',
         FALSE : 'FALSE',

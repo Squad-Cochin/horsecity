@@ -165,7 +165,7 @@ const DiscountsDeatails = () => {
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Add, Edit & Remove</h4>
+                  <h4 className="card-title mb-0">Add, Edit & Remove <br/>  <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span></h4>
                 </CardHeader>
                 <CardBody>
                   <div id="customerList">
@@ -288,7 +288,7 @@ const DiscountsDeatails = () => {
                             Previous
                           </Link>
                         ) : null}
-                        <ul className="pagination listjs-pagination mb-0"></ul>
+                        <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
                         {numberOfData > pageLimit * pageNumber ? (
                           <Link
                             className="page-item pagination-next"

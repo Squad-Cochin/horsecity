@@ -21,11 +21,11 @@ import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
 
 //IMPORTED FILES
-import { getVehicleImageData } from "../../../helpers/ApiRoutes/getApiRoutes";
-import { removeVehicleImage } from "../../../helpers/ApiRoutes/removeApiRoutes";
-import { addNewImage } from "../../../helpers/ApiRoutes/addApiRoutes";
-import { updateVechileImageStatus } from "../../../helpers/ApiRoutes/editApiRoutes";
-import config from "../../../config";
+import { getVehicleImageData } from "../../helpers/ApiRoutes/getApiRoutes";
+import { removeVehicleImage } from "../../helpers/ApiRoutes/removeApiRoutes";
+import { addNewImage } from "../../helpers/ApiRoutes/addApiRoutes";
+import { updateVechileImageStatus } from "../../helpers/ApiRoutes/editApiRoutes";
+import config from "../../config";
 const ListVehicleImages = () => {
   const [vhImages, setVhImages] = useState([]); // State variable to store vehicle images
   const [image_view, setImageView] = useState(""); // State variable to store the image view
@@ -130,6 +130,12 @@ const ListVehicleImages = () => {
     await removeVehicleImage(id);
     getAllData(pageNumber);
   }
+
+    /**Filter data */
+  // const filteredVehicleImage = vhImages?.filter(value =>
+  //     value?.title?.toLowerCase().includes(searchInp.toLowerCase().trim()) 
+
+  // );
   document.title = `Vehicle images | ${pageTitle} `;
   return (
     <React.Fragment>
@@ -137,6 +143,7 @@ const ListVehicleImages = () => {
         <div className="page-content">
           <Container fluid>
             <div id="customerList">
+         
               <Row className="g-4 mb-3">
                 <Col className="col-sm-auto">
                   <div className="d-flex gap-1">
@@ -158,7 +165,34 @@ const ListVehicleImages = () => {
                     >
                       <i className="ri-add-line align-bottom me-1"></i> Add
                     </Button>
+                   
+
+                    {/* <div className="row align-items-md-center">
+                    <h4 className="card-title mb-0 col-md-8  p-3">
+          
+                    </h4>
+                    <form className="col-md-4">
+                      <div className="form-group m-0">
+                        <div className="input-group">
+                          <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Search ..."
+                            onChange={(e) => setSearchInp(e.target.value)}
+                            aria-label="Recipient's username"
+                          />
+                          <div className="input-group-append">
+                            <button className="btn btn-primary" type="button">
+                              <i className="ri-search-line" />
+                            </button>
+                          </div>
+                        </div>
+                      </div>
+                    </form>
+                  </div> */}
+
                   </div>
+                  <br/>  <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span>
                 </Col>
               </Row>
 
@@ -259,7 +293,7 @@ const ListVehicleImages = () => {
                       Previous
                     </Link>
                   ) : null}
-                  <ul className="pagination listjs-pagination mb-0"></ul>
+                  <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
                   {numberOfData > pageLimit * pageNumber ? (
                     <Link
                       className="page-item pagination-next"

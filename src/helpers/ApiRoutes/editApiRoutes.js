@@ -414,3 +414,25 @@ export async function updateReviewStatus(id) {
     return { error: "Faild !" };
   }
 }
+/**Update aboutUs page */
+export async function updateAboutUsPage(data,id) {
+  try {
+    console.log("id",id);
+    const formData = new FormData();
+    // Append the object data to the FormData instance
+    for (const key in data) {
+      formData.append(key, data[key]);
+    } 
+    // Send the form data as a PUT request using Axios
+    const response = await axios.put(`${url.PUT_CMS_ABOUT_US_DATA_URL}/${id}`, formData, {
+      headers: {
+        Authorization: `Bearer ${process.env.REACT_APP_ADMIN_API_TOKEN}`,
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    return response;
+  } catch (error) {
+    return { error: "Faild !" };
+  }
+}

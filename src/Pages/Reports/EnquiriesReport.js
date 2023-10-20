@@ -156,6 +156,9 @@ const EnquiryReport = () => {
                           Submit
                         </button>
                       </Col>
+                      <span className="d-block mt-2 fs-16 text-success">
+                        Total {numberOfData}
+                      </span>
                     </Row>
                   </form>
                 </CardHeader>
@@ -229,7 +232,7 @@ const EnquiryReport = () => {
                             Previous
                           </Link>
                         ) : null}
-                        <ul className="pagination listjs-pagination mb-0"></ul>
+                        <ul className="pagination listjs-pagination mb-0"><b>{pageNumber !== 1 ? pageNumber : null}</b></ul>
                         {numberOfData > pageLimit * pageNumber ? (
                           <Link
                             className="page-item pagination-next"

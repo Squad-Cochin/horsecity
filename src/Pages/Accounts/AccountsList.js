@@ -7,6 +7,7 @@
 import React, { useState, useEffect } from "react";
 import {
   Card,
+  CardHeader,
   CardBody,
   Col,
   Container,
@@ -37,6 +38,7 @@ const Accounts = () => {
   const [role, setRole] = useState("");
   const [userId, setUserId] = useState("");
   const [pageTitle, setPageTitle] = useState("KailPlus");
+  const [searchInp, setSearchInp] = useState("");
   const pageLimit = config.pageLimit;
   const role_id = config.Role;
 
@@ -69,7 +71,17 @@ const Accounts = () => {
     setSingleData(singleAccount?.accounts);
     setView_modal(!view_modal);
   }
-
+  /**Filter data */
+  const filteredAccounts = accounts?.filter(
+    (value) =>
+      value?.quotation_id
+        .toString()
+        .toLowerCase()
+        .includes(searchInp.toLowerCase().trim()) ||
+      value?.customer_name.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
+      value?.service_provider_name.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
+      value?.status.toLowerCase().includes(searchInp.toLowerCase().trim())
+  );
   document.title = `Accounts | ${pageTitle} `;
   return (
     <React.Fragment>
@@ -77,8 +89,33 @@ const Accounts = () => {
         <Container fluid>
           <Breadcrumbs title="Tables" breadcrumbItem="Accounts " />
           <Row>
+          <br/> 
+                  
             <Col lg={12}>
               <Card>
+              <CardHeader>
+                <div className="row align-items-md-center">
+                  <h4 className="card-title mb-0 col-md-8  p-3"> <br/>  <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span></h4>
+                  <form className="col-md-4">
+                    <div className="form-group m-0">
+                      <div className="input-group">
+                        <input
+                          type="text"
+                          className="form-control"
+                          placeholder="Search ..."
+                          onChange={(e)=>setSearchInp(e.target.value)}
+                          aria-label="Recipient's username"
+                        />
+                        <div className="input-group-append">
+                          <button className="btn btn-primary" type="button">
+                            <i className="ri-search-line" />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                    </form>
+                </div>  
+                </CardHeader>
                 <CardBody>
                   <div id="customerList">
                     <div className="table-responsive table-card mt-3 mb-1">
@@ -117,7 +154,7 @@ const Accounts = () => {
                           </tr>
                         </thead>
                         <tbody className="list form-check-all">
-                          {accounts?.map((item, index) => (
+                          {filteredAccounts?.map((item, index) => (
                             <tr key={index}>
                               <th scope="row">
                                 {index + 1 + (pageNumber - 1) * pageLimit}
@@ -166,7 +203,7 @@ const Accounts = () => {
                             Previous
                           </Link>
                         ) : null}
-                        <ul className="pagination listjs-pagination mb-0"></ul>
+                        <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
                         {numberOfData > pageLimit * pageNumber ? (
                           <Link
                             className="page-item pagination-next"
