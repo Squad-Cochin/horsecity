@@ -15,7 +15,6 @@ const DetailsReview2 = (props) => {
   useEffect(()=>{
     setReviews(props?.textReviews)
     if(props?.textReviewCount > 3){
-      console.log(props?.textReviewCount)
       setShowMoreButton(true)
     }else{
       setShowMoreButton(false)

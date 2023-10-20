@@ -14,7 +14,7 @@ import Router from "next/router";
 
 // Function for regsitration form 
 const SignUpForm = () => {
-  const [dateOfBirth, setDateOfBirth] = useState(new Date());
+  const [dateOfBirth, setDateOfBirth] = useState();
   const [ errors, setErrors ] = useState("");
   const [ success, setSuccess ] = useState("");
   const [ flag, setFlag ] = useState(false)
@@ -110,7 +110,11 @@ const SignUpForm = () => {
             onChange={(date) => {
               setDateOfBirth(date) ; 
             }}
-            maxDate={new Date()}
+            maxDate={new Date(
+              new Date().getFullYear() - 10,
+              new Date().getMonth(),
+              new Date().getDate()
+            )}
             dateFormat="MMM dd"
           />
          

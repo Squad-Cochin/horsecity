@@ -26,8 +26,7 @@ const LocationSearch = (props) => {
   const [description, setDescription] = useState("");
   const [pickupDate, setPickupDate] = useState("");
   const [isLogin, setLogin] = useState(false);
-  const [hourseCountSelected, setHourseCountSelected] = useState(false);
-
+  const [invalidHorseNoAlert ,setInvalidHorseNoAlert ] = useState(false);
   const { customer_id, vehicle_id, serviceprovider_id, no_of_horse } = useSelector((state) => state.bookingData) || {};
   const router = useRouter();
   useEffect(() => {
@@ -41,21 +40,22 @@ const LocationSearch = (props) => {
     if (Object.keys(loginData).length !== 0) {
       setLogin(true);
     }
-    console.log("noofhorse",bookings?.number_of_horses);
+
     setPickupLocation(bookings?.from_location);
     setDropLocation(bookings?.to_location);
     setTripType(bookings?.trip_type[0]); 
     setNoOfHorse(bookings?.number_of_horses);
     setPickupDate(bookings?.departDate);
+    if(bookings?.number_of_horses === props?.noOfHorse ){
+      setInvalidHorseNoAlert(true)
+    }
     let array = [];
-
       for(let i = 1 ;i<=parseInt(noOfHorse === '' ? props.noOfHorse : noOfHorse );i++){
         array.push(i)
       }
    const filterData = array.filter((value) => parseInt(value, 10) <= props.noOfHorse)
    setFilteredNoOfHorse(filterData);
   }
-
   // Options for selecting country
   const locationSearchContent = [
     {
@@ -109,7 +109,7 @@ const LocationSearch = (props) => {
       drop_country : `${dropCountry}`,
       drop_location : `${dropLocation}`,
       vehicle_type : `${tripType}`,
-      no_of_horse : `${parseInt(noOfHorse) > parseInt(filteredNoOfHorse) && !hourseCountSelected ? "" : noOfHorse}`,
+      no_of_horse : `${parseInt(noOfHorse) !== parseInt(props.noOfHorse) ? "": noOfHorse}`,
       pickup_date : `${pickupDate}`,
       description : `${description}`,
     };
@@ -127,7 +127,6 @@ const LocationSearch = (props) => {
           setDropLocation("");
           setNoOfHorse("");
           setPickupDate("");
-          setHourseCountSelected(false);
         }else{
           toast.error(packageDetails?.message, {
             position: 'top-right',
@@ -220,14 +219,15 @@ const LocationSearch = (props) => {
           </select>
         </div>
       </div>
-
+    
       <div className="searchMenu-loc px-20 mt-3 py-10 border-light rounded-4 js-form-dd js-liverSearch">
+     {!invalidHorseNoAlert? <span style={{ color: 'red' }}>This vehicle only allows {props.noOfHorse} horse.</span> : null}
         <h4 className="text-15 fw-500 ls-2 lh-16">No Of Horse</h4>
         <div className="text-15 text-light-1 ls-2 lh-16">
           <select
             className="js-search js-dd-focus"
             value={noOfHorse}
-            onChange={(e) => {setNoOfHorse(e.target.value); setHourseCountSelected(true)}}
+            onChange={(e) => {setNoOfHorse(e.target.value);setInvalidHorseNoAlert(true)}}
           >
             <option value=''>Select No OF Horse</option>
             {filteredNoOfHorse.map((item,index) => (

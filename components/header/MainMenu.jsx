@@ -32,8 +32,8 @@ const MainMenu = ({ style = "" }) => {
           <Link href="/">Home</Link>
         </li>
 
-        <li className={router.pathname === "/others-pages/about" ? "current" : ""}>
-          <Link href="/others-pages/about">Who We Are</Link>
+        <li className={router.pathname === "/others-pages/about-us" ? "current" : ""}>
+          <Link href="/others-pages/about-us">Who We Are</Link>
         </li>
 
         <li

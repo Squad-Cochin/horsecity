@@ -152,7 +152,6 @@ const PersonalInfo = () => {
               <div className="form-input ">
                 <input type="text"
                   name="id_proof_no"
-                  required
                   value={formData.id_proof_no}
                   onChange={handleInputChange} />
                 <label className="lh-1 text-16 text-light-1">Id Proof No</label>

@@ -18,7 +18,6 @@ const MainFilterSearchBox = () => {
     async function initialLoad(){
       const search = await JSON.parse((localStorage.getItem('searchObject')) ?? "{}");
       setSearchData(search)
-      console.log("ss",search)
     }
     initialLoad();
   },[])
