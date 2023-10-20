@@ -461,6 +461,22 @@ CREATE TABLE application_token (
     deleted_at DATETIME DEFAULT NULL
 );
 
+CREATE TABLE cms
+(
+    id INT(2) PRIMARY KEY NOT NULL AUTO_INCREMENT,
+    menu VARCHAR(50) NOT NULL,
+    title VARCHAR(50) NOT NULL,
+    caption VARCHAR(100) NOT NULL,
+    description TEXT NOT NULL,
+    image VARCHAR(255) NOT NULL,
+    status ENUM ('ACTIVE', 'INACTIVE') DEFAULT 'ACTIVE',
+    created_at DATETIME ,
+    updated_at DATETIME DEFAULT NULL,
+    deleted_at DATETIME DEFAULT NULL
+);
+
+
+
 ALTER TABLE `payment_records` CHANGE `status` `status` ENUM('PAID','PARTIALLY PAID','PENDING','CANCELLED') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;
 ALTER TABLE `payment_records` ADD `deleted_at` DATETIME NULL AFTER `updated_at`;
 ALTER TABLE `bookings` CHANGE `status` `status` ENUM('PAID','PENDING','REFUND', 'CANCELLED') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL;

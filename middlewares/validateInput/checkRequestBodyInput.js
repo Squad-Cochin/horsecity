@@ -363,7 +363,7 @@ exports.isValidLicenceNumber = async (req, res, next) =>
 // The below function is the id proof number validation.
 exports.idProofNumberValidation = async (req, res, next) =>
 {
-    if (!req.body.id_proof_no) 
+    if (!req.body.id_proof_no && req.url === `${url.customer.POST_ADD_CUSTOMER}${req.params?.id}`) 
     {
         return res.status(200).send
         ({
@@ -2153,3 +2153,28 @@ exports.passwordValidation = (feildName, message1, message2, message3) => async 
     };
 
 };
+
+// exports.cmsAddRequestBody = async (req, res, next) => 
+// {
+//     try
+//     {
+//         await this.checkValueEntered(req.body.title, 'Title')(req, res, next);
+//         await this.checkValueEntered(req.body.menu_name, 'Menu name')(req, res, next);
+//         await this.checkValueEntered(req.body.caption, 'Caption')(req, res, next);
+//         await this.checkValueEntered(req.body.licence_no, 'Licence number')(req, res, next);
+//         await this.checkValueEntered(req.body.contact_no, 'Contact number')(req, res, next);
+//         await this.checkValueEntered(req.body.date_of_birth, 'Date of birth')(req, res, next);
+//         await this.checkValueEntered(req.body.description, 'description')(req, res, next);
+//         next();
+//     }
+//     catch (error)
+//     { 
+//         // Handle any errors that might occur during the checks
+//         res.status(500).send
+//         ({
+//             code: 500,
+//             status: false,
+//             message: constants.responseMessage.universalError
+//         });
+//     }
+// }; 

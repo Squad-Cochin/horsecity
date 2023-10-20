@@ -5,11 +5,12 @@
 /////////////////////////////////////////////////////////////////////////////////////////
 
 const con = require('../../configs/db.configs');
+const mail = require('../../utils/mailer');
+const time = require('../../utils/helper/date');
 const constants = require('../../utils/constants');
 const commonfetching = require('../../utils/helper/commonfetching');
 const commonoperation = require('../../utils/helper/commonoperation');
-const time = require('../../utils/helper/date');
-const mail = require('../../utils/mailer')
+
 
 module.exports = class authentication
 {

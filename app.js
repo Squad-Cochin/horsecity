@@ -49,5 +49,6 @@ require("./routes/accounts/accounts.route")(app); //Accounts
 require("./routes/reports/reports.route")(app); // /**REPORTS */
 require("./routes/listingPage/listing.route")(app); /**Client */
 require("./routes/wishlist/wishlist")(app);
+require(`./routes/cms/cms.route`)(app);
 
 module.exports = app; // making the app variable for export

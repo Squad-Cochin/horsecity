@@ -483,3 +483,16 @@ exports.vehicleGetOneResponseObject = (data, name) =>
     "deleted_at": time.formatDateToDDMMYYYY(data[0].deleted_at)
   }
 }
+
+exports.customizeGetOneCMSResponseObject = (data) =>
+{
+  return [{
+    "id": data[0].id,
+    "url": data[0].url,
+    "menu":  data[0].menu,
+    "title":  data[0].title,
+    "caption":  data[0].caption,
+    "description":  data[0].description,
+    "image": `${process.env.PORT_SP}${constants.attachmentLocation.cms.about_us.view}${data[0].image}`,
+  }]
+}

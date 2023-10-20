@@ -11,7 +11,7 @@
 
 
 const dashboardData = require(`../../models/dashboard/dashboard.model`); // The model from where the logic is intantiate are written in dashboard model
-const constants = require('../../utils/constants');
+const defaults = require('../../utils/default');
 
 // The below will fetching the total counts for admin and service providers
 /**
@@ -29,22 +29,11 @@ exports.getDashboardDataForParticularProvider = async (req, res, next) =>
     const data = await dashboardData.getdashboarddataforparticularprovider(req.params.id)
     if(data === 'err')
     {
-        res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message: constants.responseMessage.universalError
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
-        res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getAll,
-            data : data
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, data, res);
     }
 };
 
@@ -54,22 +43,11 @@ exports.getMontlySalesReport = async (req, res, next) =>
     const data = await dashboardData.getmonthlysalesreport(req.params.id);
     if(data === 'err')
     {
-        res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message: constants.responseMessage.universalError
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
-        res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getAll,
-            data : data
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, data, res);
     }
 }
 
@@ -79,22 +57,11 @@ exports.getDashboardQuotationStatus = async (req, res, next) =>
     const data = await dashboardData.getdashboardquotationstatus(req.params.id);
     if(data === 'err')
     {
-        res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message: constants.responseMessage.universalError
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
-        res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getAll,
-            data : data
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, data, res);
     }
 };
 
@@ -104,21 +71,10 @@ exports.getLatestEnquiries = async (req, res) =>
     const data = await dashboardData.getlatestenquiries(req.params.id);
     if(data === 'err')
     {
-        res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message: constants.responseMessage.universalError
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
-        res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message: constants.responseMessage.getAll,
-            data : data
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, data, res);
     }
 };

@@ -71,6 +71,15 @@ const auth =
     POST_VERIFY_TOKEN : `/verify`
 }
 
+const cms = 
+{
+    POST_ADD_ABOUT_PAGE_DETAILS : `/about-us`,
+    GET_PARTICULAR_CMS_DATA : `/get/cms/:url`,
+    PUT_EDIT_CMS_DETAILS : `/edit/cms/about-us/:id`,
+    PUT_UPDATE_CMS_STATUS : `/change/cms/status/:id`,
+    PUT_REMOVED_CMS_DATA : `/remove/cms/:id`
+}
+
 const customer = 
 {
     POST_ALL_CUSTOMER: `/getAll/customers/:id`,
@@ -232,6 +241,7 @@ module.exports =
     account,
     application_settings,
     auth,
+    cms,
     customer,
     dashboard,
     driver,

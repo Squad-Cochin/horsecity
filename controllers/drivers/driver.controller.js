@@ -11,7 +11,7 @@
 const constants = require('../../utils/constants'); // Constant elements are stored in this file
 const driver = require('../../models/drivers/driver.model');  // The model from where the logic is intantiate are written in driver model
 const time = require('../../utils/helper/date'); // All the time related formating are written in this file.
-
+const defaults = require(`../../utils/default`);
 /**
  * The below function is for getting all the drivers details. Those drivers who deleted at feild are having
  * 'NULL' only those data will be shown or fetched.
@@ -23,23 +23,12 @@ exports.getAll = async (req, res) =>
     if(drivers === 'err')
     {
         // If there are no drivers in the database. Then these lines of code will be executed
-        return res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message : constants.responseMessage.universalError
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
         // If there are drivers in the database. Then these lines of code will be executed
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getAll,
-            data : drivers
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, drivers, res);
     }    
 }
 
@@ -60,24 +49,12 @@ exports.getOne= async (req, res) =>
     // If any wrong id or some thing wrong entered, If that Id has no data then this if block of code will be executed
     if(drivers.length === 0)
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.getAll,
-            data : []
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.getNoData, 0, res);
     }
     else
     {
         // Everythings went well and driver data is available then this else block of code will executed.
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getAll,
-            data : drivers
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, drivers, res);
     }
 }
 
@@ -105,58 +82,28 @@ exports.addDriver = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if (drivers === 'err')
     {
-        return res.status(200).json
-        ({
-            code: 400,
-            status: false,
-            message: constants.responseMessage.errorInsert,
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.errorInsert, 0, res);
     }
     else if(drivers === 'INVALIDATTACHMENTP')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.driverprofileimageinvalid
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.driverprofileimageinvalid, 0, res);
     }
     else if(drivers === 'NOATTACHP')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.driverprofileimagenotpresent,
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.driverprofileimagenotpresent, 0, res);
     }
     else if(drivers === 'INVALIDATTACHMENTL')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.driverlicenceimageinvalid
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.driverlicenceimageinvalid, 0, res);
     }
     else if(drivers === 'NOATTACHL')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.driverlicenseimagenotpresent,
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.driverlicenseimagenotpresent, 0, res);
     }
     // If input feild are in correct format and not already presnet in the database, then this else block of code will be executed.
     else
     {
-        return res.status(200).send
-        ({
-            code: 200,
-            status: true,
-            message: constants.responseMessage.insert
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.insert, 0, res);
     }
 };
 
@@ -167,23 +114,9 @@ exports.addDriver = async (req, res, next) =>
 exports.updateStatus= async (req, res) =>
 {
     const drivers = await driver.updatestatus(req.params.id);
-    if(drivers.length === 0)
+    if(drivers)
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.getAll
-        });
-    }
-    else
-    {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.statusChanged
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.statusChanged, 0, res);
     }
 }
 
@@ -195,21 +128,11 @@ exports.removeDriver = async (req, res) =>
     const drivers = await driver.removedriver(req.params.id);
     if(drivers.length === 0)
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.removeerror
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.alreadyremoved, 0, res);
     }
     else
     {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.removesuccess
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.removesuccess, 0, res);
     }
 }
 
@@ -237,58 +160,28 @@ exports.editDriver = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(drivers === 'err')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.erroredit,
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.erroredit, 0, res);
     }
     else if(drivers === 'INVALIDATTACHMENTP')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.driverprofileimageinvalid
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.driverprofileimageinvalid, 0, res);
     }
     else if(drivers === 'NOATTACHP')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.driverprofileimagenotpresent,
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.driverprofileimagenotpresent, 0, res);
     }
     else if(drivers === 'INVALIDATTACHMENTL')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.driverlicenceimageinvalid
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.driverlicenceimageinvalid, 0, res);
     }
     else if(drivers === 'NOATTACHL')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.driverlicenseimagenotpresent,
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.driverlicenseimagenotpresent, 0, res);
     }
     // If input feild are in correct format and not already present in the database, then this else block of code will be executed.
     else
     {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.edit,
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.edit, 0, res);
     }
 };
 
@@ -308,62 +201,32 @@ exports.AssignServiceProvider = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(drivers === 'err')
     {
-        res.status(200).send
-        ({
-            code : 500,
-            success : false,
-            message : constants.responseMessage.universalError
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     // If the entered driver id in the request body is not available in the database then this else if block of code will be executed.
     else if(drivers === 'noDriver')
     {
-        res.status(200).send
-        ({
-            code : 400,
-            success : false,
-            message : constants.responseMessage.backend3
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.backend3, 0, res);
     }
     // If the entered service provider id in the request body is not available in the database then this else if block of code will be executed.
     else if(drivers === 'noServiceProvider')
     {
-        res.status(200).send
-        ({
-            code : 400,
-            success : false,
-            message : constants.responseMessage.backend1
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.backend1, 0, res);
     }
     // When we want the details of driver where they worked last and any error came at that time then this else if block of code will be executed.
     else if(drivers === 'lastworkplaceerror')
     {
-        res.status(200).send
-        ({
-            code : 400,
-            success : false,
-            message : constants.responseMessage.backend5
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.backend5, 0, res);
     }
     // If the submitted driver id is already associated with some service provider id and not left the job, then this else if block of code will be executed.
     else if(drivers === 'notallowed')
     {
-        res.status(200).send
-        ({
-            code : 400,
-            success : false,
-            message : constants.responseMessage.backend2
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.backend2, 0, res);
     }
     // If every thing went well and no issue came then,  this else if block of code will be executed.
     else if(drivers === 'datainserted')
     {
-        res.status(200).send
-        ({
-            code : 200,
-            success : true,
-            message : constants.responseMessage.driverassigned
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.driverassigned, 0, res);
     }
 };
 
@@ -377,35 +240,18 @@ exports.getWorkPastServiceProvider = async (req, res, next) =>
     const drivers = await driver.getworkpastserviceprovider(req.params.id);
     if(drivers.exist.length == 0)
     {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.backend6,
-            data : drivers
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.backend6, drivers, res);
     }
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     else if(drivers === 'err')
     {
-        return res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message : constants.responseMessage.universalError
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     // If every thing went well and no issue came then,  this else if block of code will be executed.
     else
     {
         //`Driver's history.`
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getAll,
-            data : drivers
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, drivers, res);
     }
 };
 
@@ -422,34 +268,19 @@ exports.UnAssignServiceProvider = async (req, res, next) =>
     if(drivers === 'err')
     {
         // "Unable to proceed because the driver is not currently assigned to a service provider."
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.universalError
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     // If driver is successfully unassigned to the respective service provider then this if block of code will be executed.
     // We need to give assign_drivers table id in the params to remove this otherwise it will not work
     if(drivers === 'unassigned')
     {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.driverunassigned
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.driverunassigned, 0, res);
     }
     // If driver is already unassigned to the respective service provider then this if block of code will be executed.
     // We need to give assign_drivers table id in the params to remove this otherwise it will not work
     if(drivers === 'alreadyunassigned')
     {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.backend7
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.backend7, 0, res);
     }
 };
 
@@ -466,53 +297,27 @@ exports.UnAssignServiceProviderAndDriverBoth = async (req, res, next) =>
     if(drivers === 'err')
     {
         // "Unable to unassign driver from service provider."
-        return res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message : constants.responseMessage.universalError
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     // If driver is successfully unassigned to the respective service provider then this if block of code will be executed.
     // We need to give assign_drivers table id in the params to remove this otherwise it will not work
     if(drivers === 'unassigned')
     {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.driverunassigned
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.driverunassigned, 0, res);
     }
     // If driver is already unassigned to the respective service provider then this if block of code will be executed.
     // We need to give assign_drivers table id in the params to remove this otherwise it will not work
     if(drivers === 'alreadyunassigned')
     {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.backend8
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.backend8, 0, res);
     }
-
     if(drivers === 'noDriver')
     {
-        res.status(200).send
-        ({
-            code : 400,
-            success : false,
-            message : constants.responseMessage.backend3
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.backend3, 0, res);
     }
     // If the entered service provider id in the request body is not available in the database then this else if block of code will be executed.
     if(drivers === 'noServiceProvider')
     {
-        res.status(200).send
-        ({
-            code : 400,
-            success : false,
-            message : constants.responseMessage.backend1
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.backend1, 0, res);
     }
 };

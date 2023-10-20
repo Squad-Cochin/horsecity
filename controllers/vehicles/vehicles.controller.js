@@ -8,10 +8,10 @@
 //                                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-const constants = require('../../utils/constants'); // Constant elements are stored in this file
 const vehicle = require('../../models/vehicles/vehicle.model'); // The model from where the logic is intantiate are written in vehicle model
 const time = require('../../utils/helper/date'); // All the time related formating are written in this file.
+const defaults = require(`../../utils/default`); // Default elements are stored in this file
+
 
 /**
  * The below function is for add the new vehicle in the database. We need number of input from the end user to add or register the vehicle. 
@@ -62,40 +62,20 @@ exports.addNew = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(vehicles === 'err')
     {
-        return res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message : constants.responseMessage.universalError,
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else if(vehicles === 'INVALIDATTACHMENT')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.vehiclescertificateimageInvalid
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.vehiclescertificateimageInvalid, 0, res);
     }
     else if(vehicles === 'NOATTACHEMENT')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.vehiclescertificateimagenotpresent
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.vehiclescertificateimagenotpresent, 0, res);
     }
     // If input feild are in correct format and not present in the database, then this else block of code will be executed.
     else
     {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.insert,
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.insert, 0, res);
     }
 }
 
@@ -110,41 +90,17 @@ exports.getAll = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this else if block of code will be executed.
     if(vehicles === 'err')
     {
-        return res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message : constants.responseMessage.universalError,
-            data : vehicles
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     // If there are no vehicles in the database. Then these lines of code will be executed
     else if(vehicles.length == 0)
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.getAllErr,
-            data : vehicles
-        });
-
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.getAllErr, 0, res);
     }
     // Every things went well and vehicle data is available then this else block of code will executed.
     else
     {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getAll,
-            data : 
-                {
-                    totalCount : vehicles.length,
-                    vehicles : vehicles
-                }
-        });
-
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, {totalCount : vehicles.length, vehicles : vehicles}, res);
     }
 }
 
@@ -155,25 +111,9 @@ exports.updateStatus = async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for updating the status of the existing vehicle.
     const vehicles = await vehicle.updatestatus(req.params.id);
-    // If no data on the id is there then this if block will work
-    if(vehicles.length === 0)
+    if(vehicles)
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.tatuserror,
-        });
-    }   
-    // If there are vehiles in the database. Then these lines of code will be executed
-    else
-    {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.statusChanged
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.statusChanged, 0, res);
     }
 }
 
@@ -190,38 +130,22 @@ exports.getOne = async (req, res, next) =>
     const vehicles = await vehicle.getone(req.params.id)
     if(vehicles === 'nodata')
     {
-        // The below line is for going to the model function to implement the code for getting all details of particular vehicle.
-        // If any wrong id or some thing wrong entered, If that Id has no data then this if block of code will be executed
-        // Because we need vehicle id in the params for working of this route
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.getOneErr,
-            data : []
-        });
+        /**
+         * The below line is for going to the model function to implement the code for getting all details of particular vehicle.
+         * If any wrong id or some thing wrong entered, If that Id has no data then this if block of code will be executed.
+         * Because we need vehicle id in the params for working of this route.
+         */
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.getOneErr, 0, res);
     }
     // If any unwanted, unencounter, or unconventionaal error came then this else if block of code will be executed.
     else if(vehicles === 'err')
     {
-        return res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message : constants.responseMessage.universalError,
-            data : []
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
         // Every things went well and vehicle data is available then this else block of code will executed.
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getAll,
-            data : vehicles
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, vehicles, res);
     }    
 };
 
@@ -275,40 +199,20 @@ exports.updateData = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(vehicles === 'err')
     {
-        return res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message : constants.responseMessage.erroredit,
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.erroredit, 0, res);
     }
     else if(vehicles === 'INVALIDATTACHMENT')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.vehiclescertificateimageInvalid
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.vehiclescertificateimageInvalid, 0, res);
     }
     else if(vehicles === 'NOATTACHEMENT')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.vehiclescertificateimagenotpresent
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.vehiclescertificateimagenotpresent, 0, res);
     }
     // If input feild are in correct format and not already present in the database, then this else block of code will be executed
     else
     {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.edit,
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.edit, 0, res);
     }
 };
 
@@ -325,35 +229,18 @@ exports.getAllImages = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this else if block of code will be executed.
     if(vehicles === 'err')
     {
-        return res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message : constants.responseMessage.universalError,
-            data : []
-        });
+        
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     // No images are there for the vehicle whose id submitted in the params, then this else if block will be executed
     else if(vehicles.length === 0)
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.getNoData,
-            data : []
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.getNoData, 0, res);
     }
     // Every things went well and vehcile image data of a particular vehcle is available then this else block of code will executed.
     else
     {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getAll,
-            data : vehicles
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, vehicles, res);
     }
 }
 
@@ -368,22 +255,12 @@ exports.removeVehicle = async (req, res, next) =>
     // The id present in the params, But incorrect id then this if block of code will be executed
     if(vehicles.length === 0)
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.removeerror
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.removeerror, 0, res);
     }
     // If vehicle remove is done successfully
     else
     {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.removesuccess
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.removesuccess, 0, res);
     }
 };
 
@@ -398,35 +275,17 @@ exports.getVehicleDetailForCustomerPage = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(vehicles === 'err')
     {
-        return res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message : constants.responseMessage.universalError,
-            data : []
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     // If the vehicle data is not present, then this else if block of code will be executed. It will never come into play. But for safety purpose it is written because we are already checking the param id in the middleware 
     else if(vehicles.length === 0)
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.getAll,
-            data : []
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.getNoData, 0, res);
     }
     else
     {
         // Everythings went well and driver data is available then this else block of code will executed.
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getAll,
-            data : vehicles
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, vehicles, res);
     }
 };
 

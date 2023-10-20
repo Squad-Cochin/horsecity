@@ -8,10 +8,10 @@
 //                                                                                                            //
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
-
-const constants = require('../../utils/constants'); // Constant elements are stored in this file
+const defaults = require(`../../utils/default`); // Default elements are stored in this file
 const customer = require('../../models/customers/customer.model'); // The model from where the logic is intantiate are written in customer model
 const time = require('../../utils/helper/date'); // All the time relateed formating are written in this file.
+const url = require(`../../utils/url_helper`);
 
 /**
  * The below function is for getting all the customer details. Those customer who deleted at feild are having
@@ -24,23 +24,12 @@ exports.getAll = async (req, res, next) =>
     if(customers === 'err')
     {
         // If there are no customer in the database. Then these lines of code will be executed
-        return res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message : constants.responseMessage.universalError,
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
         // If there are customers in the database. Then these lines of code will be executed
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getAll,
-            data : customers
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, customers, res);
     }
 };
 
@@ -59,35 +48,17 @@ exports.getOne= async (req, res, next) =>
     // If any wrong id or some thing wrong entered, If that Id has no data then this if block of code will be executed
     if(customers === 'nodata')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.getOneErr,
-            data : []
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.getOneErr, 0, res);
     }
     // If any unwanted, unencounter, or unconventionaal error came then this else if block of code will be executed.
     else if(customers === 'err')
     {
-        return res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message : constants.responseMessage.universalError,
-            data : []
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
         // Every things went well and customer data is available then this else block of code will executed.
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getAll,
-            data : customers 
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, customers, res);
     }    
 }
 
@@ -117,51 +88,26 @@ exports.addCustomer = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if (customers === 'err')
     {
-        return res.status(200).json
-        ({
-            code: 400,
-            status: false,
-            message: constants.responseMessage.errorInsert,
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.errorInsert, 0, res);
     }
     // If the id proof image is in invalid format then this else if block of code will be executed.
     else if (customers === 'INVALIDFORMAT')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.invalididproofimageformat
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.invalididproofimageformat, 0, res);
     }
     // If the id proof image is not uploaded then this else if block of code will be executed.
     else if(customers === 'NOATTACHEMENT')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.idproofimagenotuploaded,
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.idproofimagenotuploaded, 0, res);
     }
     else if(customers.length === 0)
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.restacc,
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.restacc, 0, res);
     }
     // If input feild are in correct format and not already presnet in the database, then this else block of code will be executed.
     else
     {
-        return res.status(200).send
-        ({
-            code: 200,
-            status: true,
-            message: constants.responseMessage.insert,
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.insert, 0, res);
     }
 };
 
@@ -170,7 +116,6 @@ exports.addCustomer = async (req, res, next) =>
  * The most important thing is the customer id in the params.
  * We need number of input from the end user to editing or changing of the existing customer. 
  */
-
 exports.editCustomer = async (req, res, next) =>
 {
     // The below line is for going to the model function to implement the code for editing or updating the existing customer.
@@ -185,75 +130,41 @@ exports.editCustomer = async (req, res, next) =>
         // in this way "Fri Jul 14 2023 00:00:00 GMT+0530 (India Standard Time)". So a function
         // is written to convert them into SQL DATETIME format. FORMAT is YYYY-MM-DD HH-MM-SS
         time.changeDateToSQLFormat(req.body.date_of_birth), 
-        req.body.id_proof_no, // Identity proof number of the customer
+        // req.url === url.customer.PUT_EDIT_CUSTOMER ? req.body.id_proof_no : req.body.id_proof_no !== undefined ? req.body.id_proof_no : null, // Identity proof number of the customer
+        req.body.id_proof_no !== undefined ? req.body.id_proof_no : null, // Identity proof number of the customer
         req.files && req.files.id_proof_image !== undefined ? req.files.id_proof_image : null // Perform the null check here // Image of the identity proof
     );
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : true,
-            message : constants.responseMessage.universalError,
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.universalError, 0, res);
     }
     // If the id proof image is in invalid format then this else if block of code will be executed.
     else if(customers === 'INVALIDFORMAT')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : true,
-            message : constants.responseMessage.invalididproofimageformat
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.invalididproofimageformat, 0, res);
     }
     else if(customers === 'NOATTACHEMENT')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.idproofimagenotuploaded
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.idproofimagenotuploaded, 0, res);
     }
     // If input feild are in correct format and not already present in the database, then this else block of code will be executed.
     else
     {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.edit,
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.edit, 0, res);
     }
 };
 
 /**
  * The below function is for updating the status of the customer.
  */
-
 exports.updateStatus= async (req, res) =>
 {
     // The below line is for going to the model function to implement the code for updating the status of the existing customer.
     const customers = await customer.updatestatus(req.params.id);
-    if(customers.length === 0)
+    if(customers)
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.statuserror
-        });
-    }
-    else
-    {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.statusChanged
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.statusChanged, 0, res);
     }
 };
 
@@ -265,21 +176,11 @@ exports.removeCustomer = async (req, res) =>
     const customers = await customer.removecustomer(req.params.id);
     if(customers.length === 0)
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : `${constants.responseMessage.removeerror} Data may be already deleted.`
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.alreadyremoved, 0, res);
     }
     else
     {
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.removesuccess
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.removesuccess, 0, res);
     }
 }
 
@@ -292,64 +193,31 @@ exports.customerLogin = async (req, res) =>
     const customers = await customer.customerlogin(req.body.userName, req.body.password)
     if(customers === 'nocustomer')
     {
-        return res.status(200).send
-        ({
-            status : false,
-            code : 400,
-            message : constants.responseMessage.usernameincorrect,
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.usernameincorrect, 0, res);
     }
     // If any unspecified or unencountered error came. Which is not as per our code thinking, then this else if block
     else if(customers === 'err')
     {
-        return res.status(200).send
-        ({
-            status : false,
-            code : 500,
-            message : constants.responseMessage.universalError,
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     // If customer password is expired then this will be printed
     else if(customers.message === 'passwordexpired')
     {
-     
-        return res.status(200).send
-        ({
-            status : false,
-            code : 404,
-            message : constants.responseMessage.passwordexpired,
-            data : customers.data
-        });
+        await defaults.universalResponseFunction(404, false, defaults.responseMessage.passwordexpired, customers.data, res);
     } 
     // If wrong password is entered then, this below response will be displayed
     else if(customers === 'passwordnotmatched')
     {
-        return res.status(200).send
-        ({
-            status : false,
-            code : 400,
-            message : constants.responseMessage.passwordincorrect,
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.passwordincorrect, 0, res);
     }
     // If wrong password is entered then, this below response will be displayed
     else if(customers === 'customerinactive')
     {
-        return res.status(200).send
-        ({
-            status : false,
-            code : 400,
-            message : `The customer is currently inactive.`,
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.inactivecustomer, 0, res);
     }
     else
     {
-        return res.status(200).send
-        ({
-            status : true,
-            code : 200,
-            message : constants.responseMessage.logsuccess,
-            data : customers
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.logsuccess, customers, res);
     }
 };
 
@@ -362,21 +230,11 @@ exports.customerLogout = async (req, res) =>
     const customers = await customer.customerlogout(req.params.id);
     if(customers === 'logoutdone')
     {
-        res.status(200).send
-        ({
-            status : true,
-            code : 200,
-            message : constants.responseMessage.logoutsuccess
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.logoutsuccess, 0, res);
     }
     if(customers === 'notLogin')
     {
-        res.status(200).send
-        ({
-            status : false,
-            code : 400,
-            message : constants.responseMessage.restacc
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.restacc, 0, res);
     }
 };
 
@@ -390,40 +248,20 @@ exports.customerChangePassword = async (req, res, next) =>
     // The below if block will execute. when the entered username is not correct
     if(customers === 'nocustomer')
     {
-        return res.status(200).send
-        ({
-            status : false,
-            code : 400,
-            message : constants.responseMessage.validatorError46
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.validatorError46, 0, res);
     }
     // The below if block will execute. when any unhandled error came
     else if(customers === 'err')
     {
-        return res.status(200).send
-        ({
-            status : false,
-            code : 500,
-            message : constants.responseMessage.universalError,
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else if(customers === 'incorrectpassword')
     {
-        return res.status(200).send
-        ({
-            status : false,
-            code : 400,
-            message : constants.responseMessage.passwordincorrect,
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.passwordincorrect, 0, res);
     }
     else
     {
-        return res.status(200).send
-        ({
-            status : true,
-            code : 200,
-            message : constants.responseMessage.passwordupdate,
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.passwordupdate, 0, res);
     }
 };
 
@@ -450,41 +288,21 @@ exports.signup = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if (customers === 'err')
     {
-        return res.status(200).json
-        ({
-            code: 400,
-            status: false,
-            message: constants.responseMessage.errorInsert,
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.errorInsert, 0, res);
     }
     // If the id proof image is in invalid format then this else if block of code will be executed.
     else if (customers === 'INVALIDFORMAT')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.invalididproofimageformat
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.invalididproofimageformat, 0, res);
     }
     // If the id proof image is not uploaded then this else if block of code will be executed.
     else if(customers === 'NOATTACHEMENT')
     {
-        return res.status(200).send
-        ({
-            code : 400,
-            status : false,
-            message : constants.responseMessage.idproofimagenotuploaded
-        });
+        await defaults.universalResponseFunction(400, false, defaults.responseMessage.idproofimagenotuploaded, 0, res);
     }
-    else (customers === 'registered')
+    else if(customers === 'registered')
     {
-        return res.status(200).send
-        ({
-            code: 200,
-            status: true,
-            message: constants.responseMessage.insert,
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.insert, 0, res);
     }    
 };
 
@@ -498,34 +316,17 @@ exports.getParticularCustomerLogs = async(req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        return res.status(200).json
-        ({
-            code: 500,
-            status: false,
-            message: constants.responseMessage.universalError,
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else if(customers.length == 0)
     {
         // `No logs found for this customer.`,
-        res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getNoData,
-            data : customers
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getNoData, customers, res);
     }
     else 
     {
         // `Logs found for this customer.`,
-        res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getAll,
-            data : customers
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, customers, res);
     }
 };
 
@@ -539,22 +340,11 @@ exports.getParticularCustomerDashboard = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        return res.status(200).json
-        ({
-            code: 500,
-            status: false,
-            message: constants.responseMessage.universalError,
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
-        return res.status(200).json
-        ({
-            code: 200,
-            status: true,
-            message: constants.responseMessage.getAll,
-            data : customers
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, customers, res);
     }
 };
 
@@ -568,22 +358,11 @@ exports.getParticularBookinDetailsCompleted = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        return res.status(200).json
-        ({
-            code: 500,
-            status: false,
-            message: constants.responseMessage.universalError
-        });
+        await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
-        return res.status(200).json
-        ({
-            code: 200,
-            status: true,
-            message: constants.responseMessage.getAll,
-            data : customers
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, customers, res);
     }
 };
 
@@ -597,22 +376,11 @@ exports.getParticularBookinDetailsConfirm = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        return res.status(200).json
-        ({
-            code: 500,
-            status: false,
-            message: constants.responseMessage.universalError
-        });
+       await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
-        return res.status(200).json
-        ({
-            code: 200,
-            status: true,
-            message:  constants.responseMessage.getAll,
-            data : customers
-        });
+       await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, customers, res);
     }
 };
 
@@ -625,22 +393,11 @@ exports.getParticularBookinDetailsCancelled = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        return res.status(200).json
-        ({
-            code: 500,
-            status: false,
-            message: constants.responseMessage.universalError,
-        });
+       await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
-        return res.status(200).json
-        ({
-            code: 200,
-            status: true,
-            message: constants.responseMessage.getAll,
-            data : customers
-        });
+       await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, customers, res);
     }
 };
 
@@ -656,22 +413,12 @@ exports.getParticularBookinDetailsRecent = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        return res.status(200).json
-        ({
-            code: 500,
-            status: false,
-            message : constants.responseMessage.universalError,
-        });
+       await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
+
     }
     else
     {
-        return res.status(200).json
-        ({
-            code: 200,
-            status: true,
-            message: constants.responseMessage.getAll,
-            data : customers
-        });
+       await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, customers, res);
     }
 };
 
@@ -686,22 +433,11 @@ exports.getParticularCustomerAllBookings = async (req, res, next) =>
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        return res.status(200).json
-        ({
-            code: 500,
-            status: false,
-            message: constants.responseMessage.universalError,
-        });
+       await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
-        return res.status(200).json
-        ({
-            code: 200,
-            status: true,
-            message: constants.responseMessage.getAll,
-            data : customers
-        });
+       await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, customers, res);
     }
 }
 
@@ -714,22 +450,11 @@ exports.getParticularCustomerAllEnquiry = async (req, res, next)=>
     let customers = await customer.getparticularcustomerallenquiry(req.params.id);
     if(customers === 'err')
     {
-        return res.status(200).json
-        ({
-            code: 500,
-            status: false,
-            message: constants.responseMessage.universalError,
-        });
+       await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
-        return res.status(200).json
-        ({
-            code: 200,
-            status: true,
-            message: constants.responseMessage.getAll,
-            data : customers
-        });
+       await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, customers, res);
     }
 };
 
@@ -746,22 +471,11 @@ exports.getParticularCustomerAllBookingsDataFromInvoice = async (req, res, next)
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        return res.status(200).json
-        ({
-            code: 500,
-            status: false,
-            message: constants.responseMessage.universalError
-        });
+       await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
-        return res.status(200).json
-        ({
-            code: 200,
-            status: true,
-            message: constants.responseMessage.getAll,
-            data : customers
-        });
+       await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, customers, res);
     }
 
 };
@@ -779,22 +493,11 @@ exports.getParticularCustomerActiveBookingsDataFromInvoice = async (req, res, ne
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        return res.status(200).json
-        ({
-            code: 500,
-            status: false,
-            message: constants.responseMessage.universalError
-        });
+       await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
-        return res.status(200).json
-        ({
-            code: 200,
-            status: true,
-            message: constants.responseMessage.getAll,
-            data : customers
-        });
+       await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, customers, res);
     }
 };
 
@@ -813,22 +516,11 @@ exports.getParticularCustomerInactiveBookingsDataFromInvoice = async (req, res, 
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        return res.status(200).json
-        ({
-            code: 500,
-            status: false,
-            message: constants.responseMessage.universalError
-        });
+       await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
-        return res.status(200).json
-        ({
-            code: 200,
-            status: true,
-            message: constants.responseMessage.getAll,
-            data : customers
-        });
+       await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, customers, res);
     }
 };
 
@@ -848,22 +540,11 @@ exports.getParticularCustomerOngoingBookingsDataFromInvoice = async (req, res, n
     // If any unwanted, unencounter, or unconventionaal error came then this if block of code will be executed.
     if(customers === 'err')
     {
-        return res.status(200).json
-        ({
-            code: 500,
-            status: false,
-            message: constants.responseMessage.universalError
-        });
+       await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
-        return res.status(200).json
-        ({
-            code: 200,
-            status: true,
-            message: constants.responseMessage.getAll,
-            data : customers
-        });
+       await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, customers, res);
     }
 };
 
@@ -876,23 +557,11 @@ exports.getOneDetailsOnCustomerPage = async(req, res, next) =>
     let customers = await customer.getonedetailsoncustomerpage(req.params?.id);
     if(customers === 'err')
     {
-        return res.status(200).send
-        ({
-            code : 500,
-            status : false,
-            message : constants.responseMessage.universalError,
-            data : []
-        });
+       await defaults.universalResponseFunction(500, false, defaults.responseMessage.universalError, 0, res);
     }
     else
     {
         // Every things went well and customer data is available then this else block of code will executed.
-        return res.status(200).send
-        ({
-            code : 200,
-            status : true,
-            message : constants.responseMessage.getAll,
-            data : customers 
-        });
+        await defaults.universalResponseFunction(200, true, defaults.responseMessage.getAll, customers, res);
     }
 };

@@ -179,8 +179,8 @@ module.exports = (app) =>
     checkInput.usernameValidation(constants.tableName.customers),
     checkInput.contactNumberValidation(constants.tableName.customers),
     // checkInput.dateOfBirthValidation,
-    checkInput.idProofNumberValidation,
-    checkInput.isAttachmentUploaded(`id_proof_image`, constants.responseMessage.idproofimagenotuploaded),
+    // checkInput.idProofNumberValidation,
+    // checkInput.isAttachmentUploaded(`id_proof_image`, constants.responseMessage.idproofimagenotuploaded),
     customerController.editCustomer);
 
     // The below route is for display the present details of the customer. This route will be used in the NEXTJS
