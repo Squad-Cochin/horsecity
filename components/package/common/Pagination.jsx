@@ -18,13 +18,16 @@ const Pagination = () => {
 
   useEffect(()=>{
     initialLoad()
-  },[price_from, price_to, sort, limit, suppliers])
+  },[list_data])
   
 
   // Function for work only at the initial load of the page
   async function initialLoad(){
-    if(page == ""){
+    let totalPages =  Math.ceil(list_data?.totalCount / limit)
+    if(page == "" || page > totalPages){
+      let search = await JSON.parse(localStorage.getItem('searchObject'));
       dispatch(filter_page(1))
+      updateListData(1, search);
     }
     
   }

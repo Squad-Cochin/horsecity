@@ -23,11 +23,12 @@ const PackagePropertes = () => {
   const { list_data } = useSelector((state) => state.listData) || {};
   const [ isLogin, setLogin ] = useState(false);
   const [ customer_id, setCustomerId ] =  useState('');
+  const [ listingItems, setListingData ] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
     initialLoad();
-  },[])
+  },[suppliers])
 
   // Function for doing the functions at the first load of a page
   async function initialLoad(){
@@ -55,11 +56,12 @@ const PackagePropertes = () => {
       "suppliers" : suppliers,
       "sort" : sort,
       "customer_id" : cId,
-      "page" : page,
+      "page" : search?.page ?? page,
       "limit" : limit
     }
     let packageList = await listingDataApi(reqObj)
     dispatch(add_list_data(packageList))
+    setListingData(packageList.listing_data)
   }
 
   // Function hor handle wish list
@@ -86,7 +88,7 @@ const PackagePropertes = () => {
 
   return (
     <>
-      {list_data?.listing_data.map((item) => (
+      {listingItems?.map((item) => (
         <div className="col-12" key={item?.id}>
           <div className="border-top-light pt-30">
             <div className="row x-gap-20 y-gap-20">
