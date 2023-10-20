@@ -61,7 +61,7 @@ const PackagePropertes = () => {
     }
     let packageList = await listingDataApi(reqObj)
     dispatch(add_list_data(packageList))
-    setListingData(packageList.listing_data)
+    setListingData(packageList?.listing_data)
   }
 
   // Function hor handle wish list
@@ -88,7 +88,7 @@ const PackagePropertes = () => {
 
   return (
     <>
-      {listingItems?.map((item) => (
+      {list_data?.listing_data.map((item) => (
         <div className="col-12" key={item?.id}>
           <div className="border-top-light pt-30">
             <div className="row x-gap-20 y-gap-20">

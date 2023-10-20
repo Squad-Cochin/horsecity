@@ -34,6 +34,7 @@ const TourSingleV1Dynamic = () => {
   const [url,setUrl] =useState(false);
   const [noOfHorse ,setNoOfHorse ] = useState('');
   const [ reviewDetails, setReviewDetails ] = useState({});
+  const [ error, setError ] = useState("");
   const id = router.query.id;
   const dispatch = useDispatch();
 
@@ -53,7 +54,10 @@ const TourSingleV1Dynamic = () => {
       setUrl(false);
     }
     let packageDetails = await DetailsDataApi(id);
-
+    if(!packageDetails){
+      console.log("reach")
+      setError("Product is not available now, please try again later.")
+    }
     setReviewDetails( packageDetails ? ("reviews" in packageDetails? packageDetails?.reviews : {}) : {})
     setVehicle(packageDetails?.vehicle[0])
     setVehicleImages(packageDetails?.images);
@@ -78,7 +82,7 @@ const TourSingleV1Dynamic = () => {
 
       <Header11 />
       {/* End Header 1 */}
-
+      
       <section className="pt-40">
         <div className="container">
           <div className="row y-gap-30">
@@ -86,6 +90,7 @@ const TourSingleV1Dynamic = () => {
               <div className="row y-gap-20 justify-between items-end">
                 <div className="col-auto">
                 <a onClick={() =>url ? router.push("/package/listing") : router.push("/dashboard/db-wishlist")}  style={{ cursor: 'pointer' }}><IoIosArrowBack/><b>Back to page</b></a>
+                  {error != "" ? <h1 className="text-25 sm:text-15 fw-600" style={{ color: "red" }}>{error}</h1> : null}
                   <h1 className="text-30 sm:text-24 fw-600">{vehicle?.make} {vehicle?.model}</h1>
                   <div className="row x-gap-10 items-center pt-10">
                   </div>
@@ -93,41 +98,43 @@ const TourSingleV1Dynamic = () => {
                 {/* End title and other info */}
               </div>
               {/* End .row */}
-
+              {error == "" ?
               <div className="mt-40">
                 <SlideGallery images={vehicleImages} />
-              </div>
+              </div> : null }
             </div>
             {/* End col-lg-8 left car gallery */}
 
-            <div className="col-lg-4">
-              <div className="d-flex justify-end">
-                <div className="px-30 py-30 rounded-4 border-light shadow-4 bg-white w-360 lg:w-full">
-                  <div className="row y-gap-15 items-center justify-between">
-                    <div className="col-auto">
-                      <div className="text-14 text-light-1">
-                        From
-                        <span className="text-20 fw-500 text-dark-1 ml-5">
-                          {vehicle?.abbreviation} {vehicle?.price}
-                        </span>
+            {error == "" ?
+              <div className="col-lg-4">
+                <div className="d-flex justify-end">
+                  <div className="px-30 py-30 rounded-4 border-light shadow-4 bg-white w-360 lg:w-full">
+                    <div className="row y-gap-15 items-center justify-between">
+                      <div className="col-auto">
+                        <div className="text-14 text-light-1">
+                          From
+                          <span className="text-20 fw-500 text-dark-1 ml-5">
+                            {vehicle?.abbreviation} {vehicle?.price}
+                          </span>
+                        </div>
                       </div>
+                      {/* End .col-auto */}
+
+                      
+                      {/* End .col-auto */}
                     </div>
-                    {/* End .col-auto */}
+                    {/* End .row */}
 
-                    
-                    {/* End .col-auto */}
+                    <div className="row y-gap-20 pt-20">
+                      <FilterBox noOfHorse={noOfHorse}/>
+                    </div>
+                    {/* End .row */}
                   </div>
-                  {/* End .row */}
-
-                  <div className="row y-gap-20 pt-20">
-                    <FilterBox noOfHorse={noOfHorse}/>
-                  </div>
-                  {/* End .row */}
+                  {/* End px-30 */}
                 </div>
-                {/* End px-30 */}
+                {/* End d-flex */}
               </div>
-              {/* End d-flex */}
-            </div>
+            :null}
             {/* End col right car sidebar filter box */}
           </div>
           {/* End .row */}
@@ -135,80 +142,84 @@ const TourSingleV1Dynamic = () => {
         {/* End .containar */}
       </section>
       {/* End Galler single */}
-
-      <section className="pt-40">
-        <div className="container">
-          <div className="row">
-            <div className="col-lg-8">
-              <div>
-                <h3 className="text-22 fw-500">Property highlights</h3>
-                <PropertyHighlights vehicle={vehicle} />
-                <Overview vehicle={vehicle} />
+      {error == "" ?
+        <section className="pt-40">
+          <div className="container">
+            <div className="row">
+              <div className="col-lg-8">
+                <div>
+                  <h3 className="text-22 fw-500">Property highlights</h3>
+                  <PropertyHighlights vehicle={vehicle} />
+                  <Overview vehicle={vehicle} />
+                </div>
               </div>
+              {/* End .col-lg-8 */}
             </div>
-            {/* End .col-lg-8 */}
+            {/* End .row */}
           </div>
-          {/* End .row */}
-        </div>
-        {/* End container */}
-      </section>
+          {/* End container */}
+        </section>
+      : null }
       {/* End pt-40 */}
 
       {/* End main content section */}
+      {error == "" ?
+        <section className="pt-40">
+          <div className="container ">
+            <div className="row y-gap-20">
+              <div className="col-lg-4">
+                <h2 className="text-22 fw-500">
+                  FAQs about
+                  <br /> Best Package Model
+                </h2>
+              </div>
+              {/* End .row */}
 
-      <section className="pt-40">
-        <div className="container ">
-          <div className="row y-gap-20">
-            <div className="col-lg-4">
-              <h2 className="text-22 fw-500">
-                FAQs about
-                <br /> Best Package Model
-              </h2>
+              <div className="col-lg-8">
+                <div
+                  className="accordion -simple row y-gap-20 js-accordion"
+                  id="Faq1"
+                >
+                  <Faq />
+                </div>
+              </div>
+              {/* End .col */}
             </div>
             {/* End .row */}
-
-            <div className="col-lg-8">
-              <div
-                className="accordion -simple row y-gap-20 js-accordion"
-                id="Faq1"
-              >
-                <Faq />
-              </div>
-            </div>
-            {/* End .col */}
           </div>
-          {/* End .row */}
-        </div>
-        {/* End .container */}
-      </section>
+          {/* End .container */}
+        </section>
+      : null }
       {/* End Faq about sections */}
 
-      <section className="mt-40 border-top-light pt-40 layout-pb-lg">
-        <div className="container">
-          <div className="row y-gap-40 justify-between">
-            <div className="col-xl-3">
-              <h3 className="text-22 fw-500">Guest reviews</h3>
-              <ReviewProgress2 
-                reviewDetails={ reviewDetails }
-              />
-              {/* End review with progress */}
-            </div>
-            {/* End col-xl-3 */}
+      {error == "" ?
+        <section className="mt-40 border-top-light pt-40 layout-pb-lg">
+          <div className="container">
+            <div className="row y-gap-40 justify-between">
+              <div className="col-xl-3">
+                <h3 className="text-22 fw-500">Guest reviews</h3>
+                <ReviewProgress2 
+                  reviewDetails={ reviewDetails }
+                />
+                {/* End review with progress */}
+              </div>
+              {/* End col-xl-3 */}
 
-            <div className="col-xl-8">
-              <DetailsReview2 
-                textReviews = { "reviews_list" in reviewDetails? reviewDetails?.reviews_list : [] }
-                textReviewCount = { "total_text_reviews" in reviewDetails? reviewDetails?.total_text_reviews : 0 }
-                vehicleId = {id}
-              />
+              <div className="col-xl-8">
+                <DetailsReview2 
+                  textReviews = { "reviews_list" in reviewDetails? reviewDetails?.reviews_list : [] }
+                  textReviewCount = { "total_text_reviews" in reviewDetails? reviewDetails?.total_text_reviews : 0 }
+                  vehicleId = {id}
+                />
+              </div>
+              {/* End col-xl-8 */}
             </div>
-            {/* End col-xl-8 */}
+            {/* End .row */}
           </div>
-          {/* End .row */}
-        </div>
-        {/* End .container */}
-        {/* End container */}
-      </section>
+          {/* End .container */}
+          {/* End container */}
+        </section>
+      : null }
       {/* End Review section */}
 
       {/* <section className="mt-40 border-top-light pt-40 layout-pb-lg">

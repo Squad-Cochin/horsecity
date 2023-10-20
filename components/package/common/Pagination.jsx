@@ -75,7 +75,9 @@ const Pagination = () => {
 
     let totalPages =  Math.ceil(list_data?.totalCount / limit); // Change this to the actual total number of pages
     let pageNumbers = [];
-    pageNumbers.push("<<");
+    if(totalPages && totalPages > 0){
+      pageNumbers.push("<<");
+    }
     for (let i = 1; i <= totalPages; i++) {
       if (page === 1) {
         // If page is the first page, remove the first value
@@ -131,8 +133,9 @@ const Pagination = () => {
           }
       }
     }
-    
-    pageNumbers.push(">>");
+    if(totalPages && totalPages > 0){
+      pageNumbers.push(">>");
+    }
 
     // If page is the last page, remove the last value
     if (page === totalPages) {

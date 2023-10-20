@@ -5,11 +5,12 @@
 ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
 import { useSelector, useDispatch } from "react-redux";
-import { filter_sort } from "../../../features/listingFilter/listingFilter";
+import { filter_sort, filter_page } from "../../../features/listingFilter/listingFilter";
 import { useState } from "react";
 import { useEffect } from "react";
 import { add_list_data } from "../../../features/listData/listData";
 import listingDataApi from "../../../pages/api/listingDataApi";
+import colors from "react-multi-date-picker/plugins/colors";
 
 // Function for applying sort 
 const TopHeaderFilter = () => {
@@ -47,6 +48,7 @@ const TopHeaderFilter = () => {
     };
     let packageList = await listingDataApi(reqObj)
     dispatch(add_list_data(packageList))
+    dispatch(filter_page(1))
   };
   
   return (
@@ -54,7 +56,10 @@ const TopHeaderFilter = () => {
       <div className="row y-gap-10 items-center justify-between">
         <div className="col-auto">
           <div className="text-18">
-            <span className="fw-500">{list_data?.totalCount} Results</span>
+            {list_data ? 
+              <span className="fw-500">{list_data?.totalCount} Results</span> :
+              <span className="fw-500" style={{ color: "red" }}>Server error, please try again later.</span>
+            }
           </div>
         </div>
         {/* End .col */}
