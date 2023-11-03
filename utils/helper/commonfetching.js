@@ -672,171 +672,261 @@ exports.getInvoiceHtmlTemplate = async(invoiceData) =>
     <!DOCTYPE html>
     <html>
         <head>
-            <meta charset="UTF-8">
-            <meta name="viewport" content="width=device-width">
-            <title>Invoice</title>
+        <meta charset="UTF-8">
+        <title>Invoice</title>
+        <style>
+            body, table, td, a {
+                -webkit-text-size-adjust: 100%;
+                -ms-text-size-adjust: 100%;
+            }
+            @media screen and (max-width: 600px) 
+            {
+                table {
+                    width: 100% !important;
+                }
+                img {
+                    max-width: 100% !important;
+                    height: auto !important;
+                }
+            } 
+            table.invoice-template {
+                border: 1px solid #000;
+                border-radius: 10px; /* You can adjust this value */
+            }
+        </style>
         </head>
-                <body style="color: #666; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.6em; overflow-x: hidden; background-color: #ffffff;">
-                    <table width="600" cellspacing="0" cellpadding="0" border="0" align="center" style="margin: 0pt auto; padding: 0px; font-family: Arial,Helvetica,sans-serif; font-size: 13px;border: 1px solid;padding: 5px 5px;">
-                    <tbody>
-                <tr>
-                <td valign="top" bgcolor="#ffffff">
-                   <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div style="padding: 8px; text-align:left;"><a target="_blank" title="Horse City" href=""><img  border="0" height="50"  alt="Horse City" src=${logo} /></a></div>
-                            </td>
-                            <td>
-                                <div style="padding: 8px; text-align:right;color: #000;font-size:30px;">INVOICE</div>
-                            </td>                  
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top" bgcolor="#ffffff">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div style="width: 285px;background-color: #bdbababd;border-radius: 15px; margin: 0 15px;">&nbsp;</div>
-                            </td>
-                            <td>
-                                <div style="padding: 3px; text-align:right;color: #000;font-size:15px;">Invoice No : <b>${invoiceData.invoice[0].iId}</b></div>
-                            </td>
-                            <td>
-                                <div style="padding: 8px; text-align:right;color: #000;font-size:15px;">Date : <b>${invoiceData.invoice[0].iDate}</b></div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top" bgcolor="#ffffff">
-                <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
-                    <tbody>
-                        <tr>
-                            <td>
-                                <div style="padding: 8px; text-align:left;color: #000;font-size:15px;"><b>Invoice To :</b></div>
-                            </td>
-                            <td>
-                                <div style="padding: 8px; text-align:right;color: #000;font-size:15px;"><b>Pay To :</b></div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="padding: 0 10px; text-align:left;color: #000;font-size:13px;">${invoiceData.invoice[0].customer_name}</div>
-                            </td>
-                            <td>
-                                <div style="padding:0 10px; text-align:right;color: #000;font-size:13px;">${invoiceData.invoice[0].service_provider_name}</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="padding: 0 10px; text-align:left;color: #000;font-size:13px;">${invoiceData.invoice[0].customerAddress}</div>
-                            </td>
-                            <td>
-                                <div style="padding: 0 10px; text-align:right;color: #000;font-size:13px;">${invoiceData.invoice[0].companyAddress}</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="padding: 0 10px; text-align:left;color: #000;font-size:13px;">${invoiceData.invoice[0].cusCountry}</div>
-                            </td>
-                            <td>
-                                <div style="padding: 0 10px; text-align:right;color: #000;font-size:13px;">${invoiceData.invoice[0].comCountry}</div>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td>
-                                <div style="padding: 0 10px 25px; text-align:left;color: #000;font-size:13px;">${invoiceData.invoice[0].customer_email}</div>
-                            </td>
-                            <td>
-                                <div style="padding: 0 10px 25px; text-align:right;color: #000;font-size:13px;">${invoiceData.invoice[0].com_email}</div>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </td>
-        </tr>
-        <tr>
-            <td valign="top" style="background-color: #ffffff; color: #000;">
-            <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #b7a2a2; border-radius: 4px;">
-                    <tr style="background-color: #cecccc;height: 50px; text-align: center; ">
-                        <th>#</th>
-                        <th>Pick Up Location</th>
-                        <th>Vehicle Number</th>
-                        <th>Driver Name</th>
-                        <th>Drop Location</th>
-                    </tr>
-                    ${vehicleRows}         
-                </table>
-            </td>
-        </tr>
-        <tr style="padding-top: 10px;">&nbsp;</tr>
-            <tr>      
-                <td valign="top" style="background-color: #ffffff; color: #000;">
-                    <table width="100%" cellspacing="0" cellpadding="0" border="0" >
-                        <tr style="text-align: center; height: 60px;">
-                            <td>
-                                <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                                    <tr>&nbsp;</tr>
-                                    <tr style="text-align: left; ">
-                                        <th><b>Other Information</b> </th>
-                                    </tr>       
-                                    <tr style="text-align: left;">
-                                        <td> <div style="padding: 0 10px;">Horse - ${invoiceData.invoice[0].no_of_horse}</div></td>
-                                    </tr>        
-                                    <tr style="text-align: left;">
-                                        <td><div style="padding: 0 10px;"> Special Requirement : ${invoiceData.invoice[0].special_requirement} </div> </td>
-                                    </tr>
-                              </table>
-                            </td>
-                            <td>
-                                <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                                    <tr>&nbsp;</tr>
+            <body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" class="invoice-template">
+                    <tr>
+                        <td valign="top" bgcolor="#ffffff">
+                            <table width="80%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                <tr>
                                     <td>
-                                        <table width="100%" cellspacing="0" cellpadding="0" border="0">
-                                            <tr>&nbsp;</tr>
-                                            <tr>
-                                                <th><div style="padding: 0 10px;"><b>Subtotal</b></div></th>
-                                                <th><div style="padding: 0 10px;"><b>${invoiceData.invoice[0].iSubTotal} AED</b></div></th>
-                                            </tr>
-                                            <tr style="text-align: center;">
-                                                <td><div style="padding: 0 10px;">Discount <span style="color: #9d9d9d;;">(${invoiceData.invoice[0].iDiscountRate} %)</span></div></td>
-                                                <td><div style="padding: 0 10px;">- ${invoiceData.invoice[0].iDiscountAmount} AED </div></td>
-                                            </tr>
-                                            <tr style="text-align: center;">
-                                                <td>Tax <span style="color: #9d9d9d;;">(${invoiceData.invoice[0].iTaxRate} %)</span></td>
-                                                <td>+ ${invoiceData.invoice[0].iTaxAmount} AED </td>
-                                            </tr>
-                                            <tr style="text-align: center;">
-                                                <td><div style="font-size: 15px; margin-bottom: 20px;"><b>Grand Total </b></div></td>
-                                                <td><div style="font-size: 15px; margin-bottom: 20px;"><b>${invoiceData.invoice[0].iFinalAmount} AED</b></div> </td>
-                                            </tr>
-                                        </table>
+                                        <div style="padding: 8px; text-align:left;">
+                                            <a target="_blank" title="Horse City" href="">
+                                                <img  border="0" height="50"  alt="Horse City" src=${logo} />
+                                            </a>
+                                        </div>
                                     </td>
-                                </table>
-                            </td>
-                        </tr>
-                    </table>
-                </td>     
-            </tr>
-            <tr style="padding-top: 10px;">&nbsp;</tr>
-            <tr>
-                <td valign="top" style="background-color: #ffffff; color: #000;">
-                    <table width="100%" cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #b7a2a2; border-radius: 4px;">
-                    ${paymentDetails}
-                    </table>
-                </td>
-            </tr>
-        </tbody>
-        </table>
-        </body>
-        </html>`;
+                                    <td>
+                                        <div style="padding: 8px; text-align:right;color: #000;font-size:30px;">
+                                            INVOICE
+                                        </div>
+                                    </td>                  
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" bgcolor="#ffffff">
+                            <table width="80%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                <tr>
+                                    <td>
+                                        <div style="width: 285px;background-color: #bdbababd;border-radius: 15px; margin: 0 15px;">&nbsp;</div>
+                                    </td>
+                                    <td>
+                                        <div style="padding: 3px; text-align:right;color: #000;font-size:15px;">Invoice No : <b>${invoiceData.invoice[0].iId}</b></div>
+                                    </td>
+                                    <td>
+                                        <div style="padding: 8px; text-align:right;color: #000;font-size:15px;">Date : <b>${invoiceData.invoice[0].iDate}</b></div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" bgcolor="#ffffff">
+                            <table width="80%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                <tr>
+                                    <td>
+                                        <div style="padding: 8px; text-align:left;color: #000;font-size:15px;">
+                                            <b>
+                                                Invoice To :
+                                            </b>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="padding: 8px; text-align:right;color: #000;font-size:15px;">
+                                            <b>
+                                                Pay To :
+                                            </b>
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="padding: 0 10px; text-align:left;color: #000;font-size:13px;">
+                                            ${invoiceData.invoice[0].customer_name}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="padding:0 10px; text-align:right;color: #000;font-size:13px;">
+                                            ${invoiceData.invoice[0].service_provider_name}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="padding: 0 10px; text-align:left;color: #000;font-size:13px;">
+                                            ${invoiceData.invoice[0].customerAddress}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="padding: 0 10px; text-align:right;color: #000;font-size:13px;">
+                                            ${invoiceData.invoice[0].companyAddress}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="padding: 0 10px; text-align:left;color: #000;font-size:13px;">
+                                            ${invoiceData.invoice[0].cusCountry}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="padding: 0 10px; text-align:right;color: #000;font-size:13px;">
+                                            ${invoiceData.invoice[0].comCountry}
+                                        </div>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <div style="padding: 0 10px 25px; text-align:left;color: #000;font-size:13px;">
+                                            ${invoiceData.invoice[0].customer_email}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="padding: 0 10px 25px; text-align:right;color: #000;font-size:13px;">
+                                            ${invoiceData.invoice[0].com_email}
+                                        </div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td valign="top" style="background-color: #ffffff; color: #000;">
+                            <table width="80%" cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #b7a2a2; border-radius: 4px;">
+                                <tr style="background-color: #cecccc;height: 50px; text-align: center; ">
+                                    <th>#</th>
+                                    <th>Pick Up Location</th>
+                                    <th>Vehicle Number</th>
+                                    <th>Driver Name</th>
+                                    <th>Drop Location</th>
+                                </tr>
+                                ${vehicleRows}         
+                            </table>
+                        </td>
+                    </tr>
+                        <tr style="padding-top: 10px;">&nbsp;</tr>
+                            <tr>      
+                                <td valign="top" style="background-color: #ffffff; color: #000;">
+                                    <table width="80%" cellspacing="0" cellpadding="0" border="0" >
+                                        <tr style="text-align: center; height: 60px;">
+                                            <td>
+                                                <table width="80%" cellspacing="0" cellpadding="0" border="0">
+                                                    <tr>&nbsp;</tr>
+                                                    <tr style="text-align: left; ">
+                                                        <th>
+                                                            <b>Other Information</b>
+                                                        </th>
+                                                    </tr>       
+                                                    <tr style="text-align: left;">
+                                                        <td>
+                                                            <div style="padding: 0 10px;">
+                                                                Horse - ${invoiceData.invoice[0].no_of_horse}
+                                                            </div>
+                                                        </td>
+                                                    </tr>        
+                                                    <tr style="text-align: left;">
+                                                        <td>
+                                                            <div style="padding: 0 10px;">
+                                                                Special Requirement : ${invoiceData.invoice[0].special_requirement}
+                                                            </div>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                            <td>
+                                                <table width="80%" cellspacing="0" cellpadding="0" border="0">
+                                                    <tr>&nbsp;</tr>
+                                                            <td>
+                                                                <table width="80%" cellspacing="0" cellpadding="0" border="0">
+                                                                    <tr>&nbsp;</tr>
+                                                                        <tr>
+                                                                            <th>
+                                                                                <div style="padding: 0 10px;">
+                                                                                    <b>
+                                                                                        Subtotal
+                                                                                    </b>
+                                                                                </div>
+                                                                            </th>
+                                                                            <th>
+                                                                                <div style="padding: 0 10px;">
+                                                                                    <b>
+                                                                                        ${invoiceData.invoice[0].iSubTotal} AED
+                                                                                    </b>
+                                                                                </div>
+                                                                            </th>
+                                                                        </tr>
+                                                                        <tr style="text-align: center;">
+                                                                            <td>
+                                                                                <div style="padding: 0 10px;">Discount
+                                                                                    <span style="color: #9d9d9d;;">
+                                                                                        (${invoiceData.invoice[0].iDiscountRate} %)
+                                                                                    </span>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div style="padding: 0 10px;">
+                                                                                    - ${invoiceData.invoice[0].iDiscountAmount} AED
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr style="text-align: center;">
+                                                                            <td>
+                                                                                Tax <span style="color: #9d9d9d;;">(${invoiceData.invoice[0].iTaxRate} %)</span>
+                                                                            </td>
+                                                                            <td>
+                                                                                + ${invoiceData.invoice[0].iTaxAmount} AED
+                                                                            </td>
+                                                                        </tr>
+                                                                        <tr style="text-align: center;">
+                                                                            <td>
+                                                                                <div style="font-size: 15px; margin-bottom: 20px;">
+                                                                                    <b>
+                                                                                        Grand Total
+                                                                                    </b>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td>
+                                                                                <div style="font-size: 15px; margin-bottom: 20px;">
+                                                                                    <b>
+                                                                                        ${invoiceData.invoice[0].iFinalAmount} AED
+                                                                                    </b>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </table>
+                                                                </td>
+                                                            </table>
+                                                        </td>
+                                                    </tr>
+                                                </table>
+                                            </td>
+                                        </tr>
+                                        <tr style="padding-top: 10px;">&nbsp;</tr>
+                                        <tr>
+                                            <td valign="top" style="background-color: #ffffff; color: #000;">
+                                                <table width="80%" cellspacing="0" cellpadding="0" border="0" style="border: 1px solid #b7a2a2; border-radius: 4px;">
+                                                    ${paymentDetails}
+                                                </table>
+                                            </td>
+                                        </tr>
+
+                </table>
+            </body>
+    </html>`;
     return htmlContent;
 };
 
@@ -845,15 +935,31 @@ exports.getQuotationHtmlTemplate = async (quoteData) =>
 {
     // Generate the complete HTML content using the provided invoiceData and the generated vehicleRows and paymentDetails
     let htmlContent = 
-    `   <!DOCTYPE html>
+    `   
+        <!DOCTYPE html>
         <html>
             <head>
                 <meta charset="UTF-8">
-                <meta name="viewport" content="width=device-width">
                 <title>Quotation</title>
+                <style>
+                    body, table, td, a {
+                        -webkit-text-size-adjust: 100%;
+                        -ms-text-size-adjust: 100%;
+                    }
+                    @media screen and (max-width: 600px) 
+                    {
+                        table {
+                            width: 100% !important;
+                        }
+                        img {
+                            max-width: 100% !important;
+                            height: auto !important;
+                        }
+                    }
+                </style>
             </head>
-            <body style="color: #666; font-family: 'Inter', sans-serif; font-size: 14px; font-weight: 400; line-height: 1.6em; overflow-x: hidden; background-color: #ffffff;">
-                <table width="600" cellspacing="0" cellpadding="0" border="0" align="center" style=" margin: 0pt auto; padding: 0px; font-family: Arial,Helvetica,sans-serif; font-size: 13px;border: 1px solid;padding: 40px 5px;">
+            <body style="margin: 0; padding: 0; background-color: #f4f4f4; font-family: Arial, sans-serif;">
+                <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center" style=" margin: 0pt auto; padding: 0px; font-family: Arial,Helvetica,sans-serif; font-size: 13px;border: 1px solid;padding: 40px 5px;">
                     <tbody>
                         <tr>
                             <td valign="top" bgcolor="#ffffff">
@@ -861,10 +967,14 @@ exports.getQuotationHtmlTemplate = async (quoteData) =>
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <div style="padding: 8px; text-align:left;"><a target="_blank" title="Horse City" href=""><img  border="0" height="50" width="50" alt="Horse City" src="${logo}" /></a></div>
+                                                <div style="padding: 8px; text-align:left;">
+                                                    <a target="_blank" title="Horse City" href="">
+                                                        <img  border="0" height="50" width="50" alt="Horse City" src="${logo}" />
+                                                    </a>
+                                                </div>
                                             </td>
                                             <td>
-                                                <div style="padding: 8px; text-align:right;color: #000;font-size:30px;">QUOTATION</div>
+                                                <div style="padding: 8px; text-align:right;color: #000; font-size:30px;">QUOTATION</div>
                                             </td>                          
                                         </tr>
                                     </tbody>
@@ -873,7 +983,7 @@ exports.getQuotationHtmlTemplate = async (quoteData) =>
                         </tr>
                         <tr>
                             <td valign="top" bgcolor="#ffffff">
-                                <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                <table width="80%" cellspacing="0" cellpadding="0" border="0" align="center">
                                     <tbody>
                                         <tr>
                                             <td>
@@ -892,7 +1002,7 @@ exports.getQuotationHtmlTemplate = async (quoteData) =>
                         </tr>
                         <tr>
                             <td valign="top" bgcolor="#ffffff">
-                                <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                <table width="80%" cellspacing="0" cellpadding="0" border="0" align="center">
                                     <tbody>
                                         <tr>
                                             <td>
@@ -942,7 +1052,7 @@ exports.getQuotationHtmlTemplate = async (quoteData) =>
                         </tr>
                         <tr>
                             <td valign="top" bgcolor="#ffffff">
-                                <table width="100%" cellspacing="0" cellpadding="0" border="0" align="center">
+                                <table width="80%" cellspacing="0" cellpadding="0" border="0" align="center">
                                     <tbody>
                                         <tr>
                                             <td valign="top" style="width: 50%;">
@@ -977,7 +1087,7 @@ exports.getQuotationHtmlTemplate = async (quoteData) =>
                                                 </table>
                                             </td>
                                             <td valign="top" style="width: 50%; background-color: #ffffff; color: #000;">
-                                                <table cellspacing="0" cellpadding="0" border="0" style="width: 100%; border-radius: 4px;">
+                                                <table width="80%" cellspacing="0" cellpadding="0" border="0" style="width: 100%; border-radius: 4px;">
                                                     <tbody>
                                                         <tr style="background-color: #d7d4d4;height: 50px; text-align: left; padding: 5px;">
                                                             <th>
@@ -1074,7 +1184,7 @@ exports.getQuotationHtmlTemplate = async (quoteData) =>
                         </tr>
                         <tr style="padding-top: 10px;">&nbsp;</tr>
                     </tbody>
-                </table>
+                </table>     
             </body>
             </html>`;
       
@@ -1093,5 +1203,5 @@ exports.getForgotPasswordHTMLTemplate = async (id, email) =>
                             </p>
                         `
     return htmlContent;
-};
+}; 
 
