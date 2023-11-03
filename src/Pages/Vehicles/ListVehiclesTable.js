@@ -26,8 +26,11 @@ import Flatpickr from "react-flatpickr";
 import { useNavigate } from "react-router-dom";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
+import { useSelector } from "react-redux";
+import { withTranslation } from "react-i18next";
 
 //IMPORTED FILES
+import withRouter from "../../components/Common/withRouter";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { removeVehicle } from "../../helpers/ApiRoutes/removeApiRoutes";
 import {
@@ -42,7 +45,7 @@ import {
 } from "../../helpers/ApiRoutes/editApiRoutes";
 import config from "../../config";
 
-const ListVehiclesTable = () => {
+const ListVehiclesTable = (props) => {
   const [vehicles, setVehicles] = useState([]); // State variable to store vehicles
   const [modal_list, setmodal_list] = useState(false); // State variable to control list modal visibility
   const [add_list, setAdd_list] = useState(false); // State variable to control add modal visibility
@@ -264,22 +267,25 @@ const ListVehiclesTable = () => {
       value?.vehicle_number?.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
       value?.no_of_horse?.toString().toLowerCase().includes(searchInp.toLowerCase().trim())
   );
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
 
-  document.title = `Vehicles | ${pageTitle} `;
+  document.title = ` ${props.t("Vehicles")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+      <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
           {/* Header of the Page */}
-          <Breadcrumbs title="Tables" breadcrumbItem="Vehicles" />
+          <Breadcrumbs title={props.t("Tables")} breadcrumbItem={props.t("Vehicles")} />
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
                   <div className="row align-items-md-center">
                     <h4 className="card-title mb-0 col-md-8  p-3">
-                     Add, Edit & Remove  <br/> 
-                     <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span>
+                    {props.t("Add, Edit & Remove")}  <br/> 
+                     <span className="d-block mt-2 fs-16 text-success">{props.t("Total")} {numberOfData}</span>
                     </h4>
                     <form className="col-md-4">
                       <div className="form-group m-0">
@@ -287,7 +293,7 @@ const ListVehiclesTable = () => {
                           <input
                             type="text"
                             className="form-control"
-                            placeholder="Search ..."
+                            placeholder={props.t("Search") + "..."}
                             onChange={(e) => setSearchInp(e.target.value)}
                             aria-label="Recipient's username"
                           />
@@ -313,7 +319,7 @@ const ListVehiclesTable = () => {
                             id="create-btn"                            
                           >
                             <i className="ri-add-line align-bottom me-1"></i>{" "}
-                            Add
+                            {props.t("Add")}
                           </Button>
                         </div>
                       </Col>
@@ -330,23 +336,23 @@ const ListVehiclesTable = () => {
                             </th>
                             {roleID === role_Id.admin ? (
                               <th className="sort" data-sort="customer_name">
-                                Provider
+                                {props.t("Provider")}
                               </th>
                             ) : null}
                             <th className="sort" data-sort="vNumber">
-                              Vehicle Number
+                            {props.t("Vehicle Number")}
                             </th>
                             <th className="sort" data-sort="email">
-                              Make
+                              {props.t("Make")}
                             </th>
                             <th className="sort" data-sort="no_of_horse">
-                              Number of Horse
+                              {props.t("Number Of Horse")}
                             </th>
                             <th className="sort" data-sort="status">
-                              Status
+                            {props.t("Status")}
                             </th>
                             <th className="sort" data-sort="action">
-                              Action
+                            {props.t("Action")}
                             </th>
                           </tr>
                         </thead>
@@ -368,7 +374,7 @@ const ListVehiclesTable = () => {
                               <td className="no_of_horse text-center">
                                 {item.no_of_horse}
                               </td>
-                              <td>
+                              <td className="status">
                                 {item.status === "ACTIVE" ? (
                                   <button
                                     className="btn btn-sm btn-success status-item-btn"
@@ -403,7 +409,7 @@ const ListVehiclesTable = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
                                     >
-                                      View
+                                      {props.t("View")}
                                     </button>
                                   </div>
                                   {/* This is the place from where we are calling the edit button and function */}
@@ -414,7 +420,7 @@ const ListVehiclesTable = () => {
                                       data-bs-target="#showModal"
                                       onClick={() => tog_list("EDIT", item.id)}
                                     >
-                                      Edit
+                                      {props.t("Edit")}
                                     </button>
                                   </div>
                                   {/* This is the place from where we are calling the 'view image' button and function */}
@@ -427,7 +433,7 @@ const ListVehiclesTable = () => {
                                         navigate(`/image-gallery/${item.id}`)
                                       }
                                     >
-                                      View Images
+                                      {props.t("View Images")}
                                     </button>
                                   </div>
                                   {/* This is the place from where we are calling the remove button and function */}
@@ -438,7 +444,7 @@ const ListVehiclesTable = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#deleteRecordModal"
                                     >
-                                      Remove
+                                      {props.t("Remove")}
                                     </button>
                                   </div>
                                 </div>
@@ -458,7 +464,7 @@ const ListVehiclesTable = () => {
                             className="page-item pagination-prev disabled"
                             onClick={() => getAllData(pageNumber - 1)}
                           >
-                            Previous
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
@@ -467,7 +473,7 @@ const ListVehiclesTable = () => {
                             className="page-item pagination-next"
                             onClick={() => getAllData(pageNumber + 1)}
                           >
-                            Next
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -487,13 +493,13 @@ const ListVehiclesTable = () => {
         toggle={() => {
           setmodal_list(false);
           setCertificateImage("");
-          tog_list(add_list ? "ADD" : "EDIT");
+          tog_list(add_list ? `${props.t("ADD")}` : `${props.t("EDIT")}`);
         }}
         centered
       >
         {/* The below line is for the heading of pop up of edit exixing vehicle or adding new vehicle. */}
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             setCertificateImage(null);
@@ -502,7 +508,7 @@ const ListVehiclesTable = () => {
           }}
         >
           {" "}
-          {add_list ? "Add Vehicle" : "Edit Vehicle"}{" "}
+          {add_list ? props.t("Add Vehicle") : props.t("Edit Vehicle")}{" "}
         </ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>
@@ -515,7 +521,7 @@ const ListVehiclesTable = () => {
             <div className="mb-3">
               {roleID === role_Id.admin ? (
                 <label htmlFor="serviceprovider-field" className="form-label">
-                  Service Provider
+                  {props.t("Service Provider")}
                 </label>
               ) : null}
               {roleID === role_Id.admin ? (
@@ -541,7 +547,7 @@ const ListVehiclesTable = () => {
             {/* The below element is adding the number of the number plate of the vehcile */}
             <div className="mb-3">
               <label htmlFor="vehicle_number-field" className="form-label">
-                Vehicle Number
+              {props.t("Vehicle Number")}
               </label>
               <input
                 type="text"
@@ -550,14 +556,14 @@ const ListVehiclesTable = () => {
                 name="vehicle_number"
                 value={validation.values.vehicle_number || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Vehicle Number"
+                placeholder={props.t("Enter Vehicle Number")}
                 required
               />
             </div>
             {/* The below element is adding the name of the manufacturer of the vehicle */}
             <div className="mb-3">
               <label htmlFor="vehicle_company-field" className="form-label">
-                Vehicle Company
+              {props.t("Vehicle Company")}
               </label>
               <input
                 type="text"
@@ -566,14 +572,14 @@ const ListVehiclesTable = () => {
                 className="form-control"
                 value={validation.values.make || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Vehicle Company"
+                placeholder={props.t("Enter Vehicle Company")}
                 required
               />
             </div>
             {/* The below element is adding the model vehicle */}
             <div className="mb-3">
               <label htmlFor="modal-field" className="form-label">
-                Vehicle Model
+              {props.t("Vehicle Model")}
               </label>
               <input
                 type="text"
@@ -582,14 +588,14 @@ const ListVehiclesTable = () => {
                 className="form-control"
                 value={validation.values.model || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Vehicle Model"
+                placeholder={props.t("Enter Vehicle Model")}
                 required
               />
             </div>
             {/* The below element is for adding the color of the vehicle */}
             <div className="mb-3">
               <label htmlFor="vehicle_color-field" className="form-label">
-                Vehicle Color
+              {props.t("Vehicle Color")}
               </label>
               <input
                 type="color"
@@ -598,14 +604,14 @@ const ListVehiclesTable = () => {
                 name="color"
                 value={validation.values.color || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Vehicle Color"
+                placeholder={props.t("Enter Vehicle Color")}
                 required
               />
             </div>
             {/* The below element is for adding the length of the vehicle */}
             <div className="mb-3">
               <label htmlFor="vehicle_length-field" className="form-label">
-                Vehicle Length (feet)
+              {props.t("Vehicle Length (feet)")}
               </label>
               <input
                 type="text"
@@ -614,14 +620,14 @@ const ListVehiclesTable = () => {
                 name="length"
                 value={validation.values.length || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Vehicle Length In (feet)"
+                placeholder={props.t("Enter Vehicle Length In (feet)")}
                 required
               />
             </div>
             {/* The below element is for adding the breadth of the vehicle */}
             <div className="mb-3">
               <label htmlFor="vehicle_breadth-field" className="form-label">
-                Vehicle Breadth (feet)
+              {props.t("Vehicle Breadth (feet)")}
               </label>
               <input
                 type="text"
@@ -630,14 +636,14 @@ const ListVehiclesTable = () => {
                 name="breadth"
                 value={validation.values.breadth || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Vehicle Breadth In (feet)"
+                placeholder={props.t("Enter Vehicle Breadth In (feet)")}
                 required
               />
             </div>
             {/* The below element is for adding the height of the vehicle */}
             <div className="mb-3">
               <label htmlFor="vehicle_height-field" className="form-label">
-                Vehicle Height (feet)
+              {props.t("Vehicle Height (feet)")}
               </label>
               <input
                 type="text"
@@ -646,14 +652,14 @@ const ListVehiclesTable = () => {
                 name="height"
                 value={validation.values.height || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Vehicle Height in (feet)"
+                placeholder={props.t("Enter Vehicle Height in (feet)")}
                 required
               />
             </div>
             {/* The below element is for adding the price of the vehicle */}
             <div className="mb-3">
               <label htmlFor="vehicle_price-field" className="form-label">
-                Vehicle Minimum Price
+              {props.t("Vehicle Minimum Price")}
               </label>
               <input
                 type="text"
@@ -662,13 +668,13 @@ const ListVehiclesTable = () => {
                 name="price"
                 value={validation.values.price || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Vehicle Minimum Price"
+                placeholder={props.t("Enter Vehicle Minimum Price")}
                 required
               />
             </div>
             <div className="mb-3">
               <label htmlFor="no_of_horses-field" className="form-label">
-                Number Of Horses
+              {props.t("Number Of Horses")}
               </label>
               <select
                 id="no_of_horses-field"
@@ -688,8 +694,8 @@ const ListVehiclesTable = () => {
             </div>
             {/* The below element is for select. Whether the vehicle have a air conditioner or not. */}
             <div className="mb-3">
-              <label className="form-label">Air Conditioner</label>
-              <div className="form-check">
+              <label className="form-label">{props.t("Air Conditioner")}</label>
+              <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="air_conditioner-yes"
@@ -706,12 +712,12 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="air_conditioner-yes"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  YES
+                  {props.t("Yes")}
                 </label>
               </div>
-              <div className="form-check">
+              <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="air_conditioner-no"
@@ -728,16 +734,16 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="air_conditioner-no"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  NO
+                  {props.t("No")}
                 </label>
               </div>
             </div>
             {/* The below element is for select. Whether the vehicle have a Temperature Manageable functionality or not. */}
             <div className="mb-3">
-              <label className="form-label">Temperature Manageable</label>
-              <div className="form-check">
+              <label className="form-label">{props.t("Temperature Manageable")}</label>
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="temperature_manageable-yes"
@@ -753,12 +759,12 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="temperature_manageable-yes"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  YES
+                  {props.t("Yes")}
                 </label>
               </div>
-              <div className="form-check">
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="temperature_manageable-no"
@@ -774,9 +780,9 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="temperature_manageable-no"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  NO
+                  {props.t("No")}
                 </label>
               </div>
             </div>
@@ -793,14 +799,14 @@ const ListVehiclesTable = () => {
                 </div>
               )}
               <label htmlFor="vehicle_image-field" className="form-label">
-                Safety Certificate Image
+              {props.t("Safety Certificate Image")}
               </label>
               <input
                 type="file"
                 name="safety_certicate"
                 id="vehicle_image-field"
                 className="form-control"
-                placeholder="Upload Safety Certificate Image"
+                placeholder={props.t("Upload Safety Certificate Image")}
                 onChange={handleIdProofImageChange}
               />
             </div>
@@ -810,7 +816,7 @@ const ListVehiclesTable = () => {
                 htmlFor="vehicle_registration_number-field"
                 className="form-label"
               >
-                Vehicle Registration Number
+                {props.t("Vehicle Registration Number")}
               </label>
               <input
                 type="text"
@@ -819,14 +825,14 @@ const ListVehiclesTable = () => {
                 name="vehicle_registration_number"
                 value={validation.values.vehicle_registration_number || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Vehicle Registration Number"
+                placeholder={props.t("Enter Vehicle Registration Number")}
                 required
               />
             </div>
             {/* The below element is for Selecting. Whether vehicle is allowed to travel within the GCC countries. */}
             <div className="mb-3">
-              <label className="form-label">GCC Travel Allowed</label>
-              <div className="form-check">
+              <label className="form-label">{props.t("GCC Travel Allowed")}</label>
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="gcc_travel_allowed-yes"
@@ -842,12 +848,12 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="gcc_travel_allowed-yes"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  YES
+                  {props.t("Yes")}
                 </label>
               </div>
-              <div className="form-check">
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="gcc_travel_allowed-no"
@@ -863,16 +869,16 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="gcc_travel_allowed-no"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  NO
+                  {props.t("No")}
                 </label>
               </div>
             </div>
             {/* The below element is for selecting. Whether vehicle has the insuarance. */}
             <div className="mb-3">
-              <label className="form-label">Insurance Covered</label>
-              <div className="form-check">
+              <label className="form-label">{props.t("Insurance Covered")}</label>
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="insurance_covered-yes"
@@ -888,12 +894,12 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="insurance_covered-yes"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  YES
+                  {props.t("Yes")}
                 </label>
               </div>
-              <div className="form-check">
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="insurance_covered-no"
@@ -909,16 +915,16 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="insurance_covered-no"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  NO
+                  {props.t("No")}
                 </label>
               </div>
             </div>
             {/* The below element is for adding the insurance date of the vehicle. */}
             <div className="mb-3">
               <label htmlFor="insurance_date-field" className="form-label">
-                Insurance Date
+              {props.t("Insurance Date")}
               </label>
               <Flatpickr
                 className="form-control"
@@ -931,13 +937,13 @@ const ListVehiclesTable = () => {
                 onChange={(dates) =>
                   validation.setFieldValue("insurance_date", dates[0])
                 }
-                placeholder="Select Insurance Date"
+                placeholder={props.t("Select Insurance Date")}
               />
             </div>
             {/* The below element is for adding the insurance policy number of the vehicle. */}
             <div className="mb-3">
               <label htmlFor="insurance_policy_no-field" className="form-label">
-                Insurance Policy Number
+              {props.t("Insurance Policy Number")}
               </label>
               <input
                 type="text"
@@ -946,7 +952,7 @@ const ListVehiclesTable = () => {
                 name="insurance_policy_no"
                 value={validation.values.insurance_policy_no || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Insurance Policy Number"
+                placeholder={props.t("Enter Insurance Policy Number")}
                 required
               />
             </div>
@@ -956,7 +962,7 @@ const ListVehiclesTable = () => {
                 htmlFor="insurance_policy_provider-field"
                 className="form-label"
               >
-                Insurance Policy Provider
+                {props.t("Insurance Policy Provider")}
               </label>
               <input
                 type="text"
@@ -965,7 +971,7 @@ const ListVehiclesTable = () => {
                 name="insurance_policy_provider"
                 value={validation.values.insurance_policy_provider || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Insurance Policy Provider"
+                placeholder={props.t("Enter Insurance Policy Provider")}
                 required
               />
             </div>
@@ -974,7 +980,7 @@ const ListVehiclesTable = () => {
                 htmlFor="insurance_expiry_date-field"
                 className="form-label"
               >
-                Insurance Expiry Date
+                {props.t("Insurance Expiry Date")}
               </label>
               <Flatpickr
                 className="form-control"
@@ -987,13 +993,13 @@ const ListVehiclesTable = () => {
                 onChange={(dates) =>
                   validation.setFieldValue("insurance_expiry_date", dates[0])
                 }
-                placeholder="Select Insurance Expiry Date"
+                placeholder={props.t("Select Insurance Expiry Date")}
               />
             </div>
             {/* The below element is for seleting the type of vehicle. */}
             <div className="mb-3">
-              <label className="form-label">Vehicle Type</label>
-              <div className="form-check">
+              <label className="form-label">{props.t("Vehicle Type")}</label>
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="vehicle_type-private"
@@ -1010,12 +1016,12 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="vehicle_type-private"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  PRIVATE
+                  {props.t("PRIVATE")}
                 </label>
               </div>
-              <div className="form-check">
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="vehicle_type-sharing"
@@ -1032,9 +1038,9 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="vehicle_type-sharing"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  SHARING
+                  {props.t("SHARING")}
                 </label>
               </div>
             </div>
@@ -1044,7 +1050,7 @@ const ListVehiclesTable = () => {
                 htmlFor="vehicle_registration_date-field"
                 className="form-label"
               >
-                Vehicle Registration Date
+                {props.t("Vehicle Registration Date")}
               </label>
               <Flatpickr
                 className="form-control"
@@ -1060,7 +1066,7 @@ const ListVehiclesTable = () => {
                     dates[0]
                   )
                 }
-                placeholder="Select Vehicle Registration Date"
+                placeholder={props.t("Select Vehicle Registration Date")}
               />
             </div>
             <div className="mb-3">
@@ -1068,7 +1074,7 @@ const ListVehiclesTable = () => {
                 htmlFor="vehicle_exipration_date-field"
                 className="form-label"
               >
-                Vehicle Expiration Date
+                {props.t("Vehicle Expiration Date")}
               </label>
               <Flatpickr
                 className="form-control"
@@ -1081,7 +1087,7 @@ const ListVehiclesTable = () => {
                 onChange={(dates) =>
                   validation.setFieldValue("vehicle_exipration_date", dates[0])
                 }
-                placeholder="Select Vehicle Expiration Date"
+                placeholder={props.t("Select Vehicle Expiration Date")}
               />
             </div>
           </ModalBody>
@@ -1098,7 +1104,7 @@ const ListVehiclesTable = () => {
                   setAdd_list(false);
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
               {/* Add Driver or Update Driver button */}
               <button
@@ -1109,7 +1115,7 @@ const ListVehiclesTable = () => {
                   window.location.href = "#exampleModalLabel"; // Change the URL here
                 }}
               >
-                {add_list ? "Add Vehicle" : "Update vehicle"}
+                {add_list ? props.t("Add Vehicle") : props.t("Update vehicle")}
               </button>
             </div>
           </ModalFooter>
@@ -1127,21 +1133,21 @@ const ListVehiclesTable = () => {
       >
         {/* The below line is for the heading of pop up of view particular vehicle detail . */}
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             setView_modal(false);
           }}
         >
           {" "}
-          View Vehicles
+          {props.t("View Vehicles")}
         </ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>
             {/* The below element is displaying the name of the service provider. Whose vehicle is being added */}
             <div className="mb-3">
               <label htmlFor="serviceprovider-field" className="form-label">
-                Service Provider
+              {props.t("Service Provider")}
               </label>
               <input
                 type="text"
@@ -1155,7 +1161,7 @@ const ListVehiclesTable = () => {
             {/* The below element is displaying the number of the number plate of the vehcile */}
             <div className="mb-3">
               <label htmlFor="vehicle_number-field" className="form-label">
-                Vehicle Number
+              {props.t("Vehicle Number")}
               </label>
               <input
                 type="text"
@@ -1169,7 +1175,7 @@ const ListVehiclesTable = () => {
             {/* The below element is displaying the name of the manufacturer of the vehicle */}
             <div className="mb-3">
               <label htmlFor="vehicle_company-field" className="form-label">
-                Vehicle Company
+              {props.t("Vehicle Company")}
               </label>
               <input
                 type="text"
@@ -1183,7 +1189,7 @@ const ListVehiclesTable = () => {
             {/* The below element is displaying the model vehicle */}
             <div className="mb-3">
               <label htmlFor="modal-field" className="form-label">
-                Vehicle Model
+              {props.t("Vehicle Model")}
               </label>
               <input
                 type="text"
@@ -1197,7 +1203,7 @@ const ListVehiclesTable = () => {
             {/* The below element is for displaying the color of the vehicle */}
             <div className="mb-3">
               <label htmlFor="vehicle_color-field" className="form-label">
-                Vehicle Color
+              {props.t("Vehicle Color")}
               </label>
               <div className="col-md-10">
                 <input
@@ -1211,7 +1217,7 @@ const ListVehiclesTable = () => {
             {/* The below element is for displaying the length of the vehicle */}
             <div className="mb-3">
               <label htmlFor="vehicle_length-field" className="form-label">
-                Vehicle Length (feet)
+              {props.t("Vehicle Length (feet)")}
               </label>
               <input
                 type="text"
@@ -1225,7 +1231,7 @@ const ListVehiclesTable = () => {
             {/* The below element is for displaying the breadth of the vehicle */}
             <div className="mb-3">
               <label htmlFor="vehicle_breadth-field" className="form-label">
-                Vehicle Breadth (feet)
+              {props.t("Vehicle Breadth (feet)")}
               </label>
               <input
                 type="text"
@@ -1239,7 +1245,7 @@ const ListVehiclesTable = () => {
             {/* The below element is for displaying the height of the vehicle */}
             <div className="mb-3">
               <label htmlFor="vehicle_height-field" className="form-label">
-                Vehicle Height (feet)
+              {props.t("Vehicle Height (feet)")}
               </label>
               <input
                 type="text"
@@ -1253,7 +1259,7 @@ const ListVehiclesTable = () => {
             {/* The below element is for displaying the minimum price of the vehicle */}
             <div className="mb-3">
               <label htmlFor="vehicle_price-field" className="form-label">
-                Vehicle Minimum Price{" "}
+              {props.t("Vehicle Minimum Price")}
               </label>
               <input
                 type="text"
@@ -1267,7 +1273,7 @@ const ListVehiclesTable = () => {
             {/* The below element is for displaying the maximum number of horses a vehicle can carry. */}
             <div className="mb-3">
               <label htmlFor="no_of_horses-field" className="form-label">
-                Number Of Horses
+              {props.t("Number Of Horses")}
               </label>
               <input
                 type="text"
@@ -1280,8 +1286,8 @@ const ListVehiclesTable = () => {
             </div>
             {/* The below element is for select2. Whether the vehicle have a air conditioner or not. */}
             <div className="mb-3">
-              <label className="form-label">Air Conditioner</label>
-              <div className="form-check">
+              <label className="form-label">{props.t("Air Conditioner")}</label>
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="air_conditioner-yes"
@@ -1293,12 +1299,12 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="air_conditioner-yes"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  YES
+                  {props.t("Yes")}
                 </label>
               </div>
-              <div className="form-check">
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="air_conditioner-no"
@@ -1310,16 +1316,16 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="air_conditioner-no"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  NO
+                  {props.t("No")}
                 </label>
               </div>
             </div>
             {/* The below element is for select2. Whether the vehicle have a Temperature Manageable functionality or not. */}
             <div className="mb-3">
-              <label className="form-label">Temperature Manageable</label>
-              <div className="form-check">
+              <label className="form-label">{props.t("Temperature Manageable")}</label>
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="temperature_manageable-yes"
@@ -1331,12 +1337,12 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="temperature_manageable-yes"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  YES
+                  {props.t("Yes")}
                 </label>
               </div>
-              <div className="form-check">
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="temperature_manageable-no"
@@ -1348,9 +1354,9 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="temperature_manageable-no"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  NO
+                  {props.t("No")}
                 </label>
               </div>
             </div>
@@ -1360,7 +1366,7 @@ const ListVehiclesTable = () => {
                 htmlFor="vehicle_registration_number-field"
                 className="form-label"
               >
-                Vehicle Registration Number
+                {props.t("Vehicle Registration Number")}
               </label>
               <input
                 type="text"
@@ -1375,8 +1381,8 @@ const ListVehiclesTable = () => {
             </div>
             {/* The below element is for selecting2. Whether vehicle is allowed to travel within the GCC countries. */}
             <div className="mb-3">
-              <label className="form-label">GCC Travel Allowed</label>
-              <div className="form-check">
+              <label className="form-label">{props.t("GCC Travel Allowed")}</label>
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="gcc_travel_allowed-yes"
@@ -1388,12 +1394,12 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="gcc_travel_allowed-yes"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  YES
+                  {props.t("Yes")}
                 </label>
               </div>
-              <div className="form-check">
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="gcc_travel_allowed-no"
@@ -1405,16 +1411,16 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="gcc_travel_allowed-no"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  NO
+                  {props.t("No")}
                 </label>
               </div>
             </div>
             {/* The below element is for selecting2. Whether vehicle has the insuarance. */}
             <div className="mb-3">
-              <label className="form-label">Insurance Covered</label>
-              <div className="form-check">
+              <label className="form-label">{props.t("Insurance Covered")}</label>
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="insurance_covered-yes"
@@ -1426,12 +1432,12 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="insurance_covered-yes"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  YES
+                  {props.t("Yes")}
                 </label>
               </div>
-              <div className="form-check">
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="insurance_covered-no"
@@ -1443,16 +1449,16 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="insurance_covered-no"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  NO
+                  {props.t("No")}
                 </label>
               </div>
             </div>
             {/* The below element is for displaying the insurance date of the vehicle. */}
             <div className="mb-3">
               <label htmlFor="insurance_date-field" className="form-label">
-                Insurance Date
+              {props.t("Insurance Date")}
               </label>
               <input
                 type="text"
@@ -1466,7 +1472,7 @@ const ListVehiclesTable = () => {
             {/* The below element is for displaying the insurance policy number of the vehicle. */}
             <div className="mb-3">
               <label htmlFor="insurance_policy_no-field" className="form-label">
-                Insurance Policy Number
+              {props.t("Insurance Policy Number")}
               </label>
               <input
                 type="text"
@@ -1483,7 +1489,7 @@ const ListVehiclesTable = () => {
                 htmlFor="insurance_policy_provider-field"
                 className="form-label"
               >
-                Insurance Policy Provider
+                {props.t("Insurance Policy Provider")}
               </label>
               <input
                 type="text"
@@ -1500,7 +1506,7 @@ const ListVehiclesTable = () => {
                 htmlFor="insurance_expiry_date-field"
                 className="form-label"
               >
-                Insurance Expiry Date
+                {props.t("Insurance Expiry Date")}
               </label>
               <input
                 type="text"
@@ -1513,8 +1519,8 @@ const ListVehiclesTable = () => {
             </div>
             {/* The below element is for displaying the type of vehicle. */}
             <div className="mb-3">
-              <label className="form-label">Vehicle Type</label>
-              <div className="form-check">
+              <label className="form-label">{props.t("Vehicle Type")}</label>
+              <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="vehicle_type-private"
@@ -1526,12 +1532,12 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="vehicle_type-private"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  PRIVATE
+                  {props.t("PRIVATE")}
                 </label>
               </div>
-              <div className="form-check">
+            <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="vehicle_type-sharing"
@@ -1543,9 +1549,9 @@ const ListVehiclesTable = () => {
                 />
                 <label
                   htmlFor="vehicle_type-sharing"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  SHARING
+                  {props.t("SHARING")}
                 </label>
               </div>
             </div>
@@ -1555,7 +1561,7 @@ const ListVehiclesTable = () => {
                 htmlFor="vehicle_registration_date-field"
                 className="form-label"
               >
-                Vehicle Registration Date
+                {props.t("Vehicle Registration Date")}
               </label>
               <input
                 type="text"
@@ -1572,7 +1578,7 @@ const ListVehiclesTable = () => {
                 htmlFor="vehicle_exipration_date-field"
                 className="form-label"
               >
-                Vehicle Expiration Date
+                {props.t("Vehicle Expiration Date")}
               </label>
               <input
                 type="text"
@@ -1589,7 +1595,7 @@ const ListVehiclesTable = () => {
                   htmlFor="vehicle_certification_image-field"
                   className="form-label"
                 >
-                  Vehicle Safety Certicate
+                   {props.t("Vehicle Safety Certificate")}
                 </label>
               </div>
               <img
@@ -1613,7 +1619,7 @@ const ListVehiclesTable = () => {
                   setView_modal(false);
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
             </div>
           </ModalFooter>
@@ -1682,4 +1688,4 @@ const ListVehiclesTable = () => {
   );
 };
 
-export default ListVehiclesTable; // Export the ListVehicles function.
+export default withRouter(withTranslation()(ListVehiclesTable)); // Export the ListVehicles function.

@@ -6,6 +6,7 @@ import {
 const initialState = {
   error: "",
   data : "",
+
 };
 
 const settings = (state = initialState, action) => {
@@ -22,6 +23,7 @@ const settings = (state = initialState, action) => {
         error: action.payload
       };
       break;
+
 
     default:
       state = { ...state };

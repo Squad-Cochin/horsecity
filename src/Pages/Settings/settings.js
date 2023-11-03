@@ -7,11 +7,13 @@
 import React, { useEffect, useState } from "react";
 import { Alert, Card, CardBody, Col, Row, Container } from "reactstrap";
 import { useFormik } from "formik";
-import { useDispatch } from "react-redux";
+import { useSelector } from "react-redux";
+import { withTranslation } from "react-i18next";
 
 //IMPORTED FILES
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { updateSettings } from "../../helpers/ApiRoutes/editApiRoutes";
+import withRouter from "../../components/Common/withRouter";
 import {
   getSettingsPageData,
   getTaxationsNames,
@@ -21,7 +23,7 @@ import {
 //i18n
 import i18n from "../../i18n";
 
-const SettingPage = () => {
+const SettingPage = (props) => {
   const [faviconPreview, setFaviconPreview] = useState(null);
   const [loginPageLogoPreview, setLoginPageLogoPreview] = useState(null);
   const [loginPageBackgroundPreview, setloginPageBackgroundPreview] = useState(null);
@@ -36,7 +38,7 @@ const SettingPage = () => {
   const [currencies, setCurrencies] = useState([]);
   const [taxations, setTaxations] = useState([]);
   const [pageTitle, setPageTitle] = useState("KailPlus");
-  const dispatch = useDispatch();
+
 
   /**THIS HOOK WILL RENDER INITIAL TIME */
   useEffect(() => {
@@ -110,9 +112,9 @@ const SettingPage = () => {
         };
         localStorage.setItem("settingsData", JSON.stringify(obj));
         setPageTitle(values.application_title);
-        const data = languages?.find((item) => item?.id == values.language_id);
-        i18n.changeLanguage("en");
-        localStorage.setItem("I18N_LANGUAGE", "en");
+        const data = languages?.find((item) => parseInt(item?.id) === parseInt(values.language_id));
+        i18n.changeLanguage(data?.abbreviation);
+        localStorage.setItem("I18N_LANGUAGE", data?.abbreviation);
         window.location.reload();
       } else {
         setErrors("");
@@ -159,13 +161,15 @@ const SettingPage = () => {
     { code: "+966", country: "Saudi Arabia", region: "GCC" },
     { code: "+971", country: "United Arab Emirates", region: "GCC" },
   ];
-
-  document.title = `Settings | ${pageTitle} `;
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+  document.title = `${props.t("Settings")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+       <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid={true}>
-          <Breadcrumbs title="Forms" breadcrumbItem="Settings" />
+          <Breadcrumbs title="Forms" breadcrumbItem={props.t("Settings")} />
           <Row>
             <Col>
               <Card>
@@ -184,7 +188,9 @@ const SettingPage = () => {
                         className="col-md-2 col-form-label"
                       >
                         {" "}
-                        Company Title <span style={{ color: "red" }}>
+                        {props.t("Company Title")}
+                        
+                         <span style={{ color: "red" }}>
                           *
                         </span>{" "}
                       </label>
@@ -192,7 +198,7 @@ const SettingPage = () => {
                         <input
                           className="form-control"
                           type="text"
-                          placeholder="Enter Company Title"
+                          placeholder={props.t("Enter Company Title")}
                           name="application_title"
                           value={validation.values.application_title || ""}
                           onChange={validation.handleChange}
@@ -206,7 +212,7 @@ const SettingPage = () => {
                         htmlFor="example-search-input"
                         className="col-md-2 col-form-label"
                       >
-                        Contact Address <span style={{ color: "red" }}>*</span>{" "}
+                        {props.t("Contact Address")} <span style={{ color: "red" }}>*</span>{" "}
                       </label>
                       <div className="col-md-10">
                         <input
@@ -215,7 +221,7 @@ const SettingPage = () => {
                           value={validation.values.contact_address || ""}
                           onChange={validation.handleChange}
                           type="search"
-                          placeholder="Enter the Company Address" //defaultValue="How do I shoot web"
+                          placeholder={props.t("Enter the Company Address")} //defaultValue="How do I shoot web"
                           required
                         />
                       </div>
@@ -227,13 +233,13 @@ const SettingPage = () => {
                         className="col-md-2 col-form-label"
                       >
                         {" "}
-                        Email <span style={{ color: "red" }}>*</span>{" "}
+                        {props.t("Email")} <span style={{ color: "red" }}>*</span>{" "}
                       </label>
                       <div className="col-md-10">
                         <input
                           className="form-control"
                           type="email"
-                          placeholder="Enter the Company Email"
+                          placeholder={props.t("Enter the Company Email")}
                           name="email"
                           value={validation.values.email || ""}
                           onChange={validation.handleChange}
@@ -248,7 +254,7 @@ const SettingPage = () => {
                         className="col-md-2 col-form-label"
                       >
                         {" "}
-                        Phone Number <span style={{ color: "red" }}>
+                        {props.t("Phone Number")} <span style={{ color: "red" }}>
                           *
                         </span>{" "}
                       </label>
@@ -256,7 +262,7 @@ const SettingPage = () => {
                         <input
                           className="form-control"
                           type="number"
-                          placeholder="Enter the Company Phone Number"
+                          placeholder={props.t("Enter the Company Phone Number")}
                           name="phone"
                           value={validation.values.phone || ""}
                           onChange={validation.handleChange}
@@ -271,7 +277,7 @@ const SettingPage = () => {
                         className="col-md-2 col-form-label"
                       >
                         {" "}
-                        Country Code <span style={{ color: "red" }}>
+                        {props.t("Country Code")} <span style={{ color: "red" }}>
                           *
                         </span>{" "}
                       </label>
@@ -299,12 +305,12 @@ const SettingPage = () => {
                         htmlFor="example-tel-input"
                         className="col-md-2 col-form-label"
                       >
-                        Menu Logo <span style={{ color: "red" }}>*</span>{" "}
+                        {props.t("Menu Logo")} <span style={{ color: "red" }}>*</span>{" "}
                       </label>
                       <div className="col-md-10">
                         {menuLogoPreview && (
                           <div>
-                            <h5>Menu Logo Preview:</h5>
+                            <h5>{props.t("Menu Logo Preview")}:</h5>
                             <img
                               src={menuLogoPreview}
                               alt="Menu Logo Preview"
@@ -328,14 +334,14 @@ const SettingPage = () => {
                         className="col-md-2 col-form-label"
                       >
                         {" "}
-                        Login Page Logo <span style={{ color: "red" }}>
+                        {props.t("Login Page Logo")} <span style={{ color: "red" }}>
                           *
                         </span>{" "}
                       </label>
                       <div className="col-md-10">
                         {loginPageLogoPreview && (
                           <div>
-                            <h5>Login Page Logo Preview:</h5>
+                            <h5>{props.t("Login Page Logo Preview")}:</h5>
                             <img
                               src={loginPageLogoPreview}
                               alt="Login Page Logo Preview"
@@ -357,12 +363,12 @@ const SettingPage = () => {
                         htmlFor="example-tel-input"
                         className="col-md-2 col-form-label"
                       >
-                        Favicon <span style={{ color: "red" }}>*</span>
+                        {props.t("Favicon")} <span style={{ color: "red" }}>*</span>
                       </label>
                       <div className="col-md-10">
                         {faviconPreview && (
                           <div>
-                            <h5>Favicon Preview:</h5>
+                            <h5>{props.t("Favicon Preview")}:</h5>
                             <img
                               src={faviconPreview}
                               alt="Favicon Preview"
@@ -385,13 +391,13 @@ const SettingPage = () => {
                         htmlFor="example-tel-input"
                         className="col-md-2 col-form-label"
                       >
-                        Login Page Background Image
+                        {props.t("Login Page Background Image")}
                         <span style={{ color: "red" }}>*</span>
                       </label>
                       <div className="col-md-10">
                         {loginPageBackgroundPreview && (
                           <div>
-                            <h5>Login Page Background Image Preview:</h5>
+                            <h5>{props.t("Login Page Background Image Preview")}:</h5>
                             <img
                               src={loginPageBackgroundPreview}
                               alt="Login Background Preview"
@@ -414,7 +420,7 @@ const SettingPage = () => {
                         htmlFor="country-code-select"
                         className="col-md-2 col-form-label"
                       >
-                        Language <span style={{ color: "red" }}>*</span>
+                        {props.t("Language")} <span style={{ color: "red" }}>*</span>
                       </label>
                       <div className="col-md-10">
                         <select
@@ -440,7 +446,7 @@ const SettingPage = () => {
                         htmlFor="country-code-select"
                         className="col-md-2 col-form-label"
                       >
-                        Currency <span style={{ color: "red" }}>*</span>
+                        {props.t("Currency")} <span style={{ color: "red" }}>*</span>
                       </label>
                       <div className="col-md-10">
                         <select
@@ -450,7 +456,7 @@ const SettingPage = () => {
                           value={validation.values.currency_id || ""}
                           onChange={validation.handleChange}
                         >
-                          <option> Select Currency </option>
+                          <option>{props.t("Select Currency")} </option>
                           {currencies.map((item) => (
                             <option key={item?.id} value={item?.id}>
                               {`${item?.name}`}
@@ -465,7 +471,7 @@ const SettingPage = () => {
                         htmlFor="country-code-select"
                         className="col-md-2 col-form-label"
                       >
-                        Tax <span style={{ color: "red" }}>*</span>
+                        {props.t("Tax")} <span style={{ color: "red" }}>*</span>
                       </label>
                       <div className="col-md-10">
                         <select
@@ -476,7 +482,7 @@ const SettingPage = () => {
                           onChange={validation.handleChange}
                           required
                         >
-                          <option value={""}> Select Tax </option>
+                          <option value={""}>{props.t("Select Tax")}</option>
                           {taxations.map((item) => (
                             <option key={item?.id} value={item?.id}>
                               {`${item?.name}`}
@@ -492,7 +498,7 @@ const SettingPage = () => {
                         className="col-md-2 col-form-label"
                       >
                         {" "}
-                        Invoice Prefix <span style={{ color: "red" }}>
+                        {props.t("Invoice Prefix")} <span style={{ color: "red" }}>
                           *
                         </span>{" "}
                       </label>
@@ -514,7 +520,7 @@ const SettingPage = () => {
                         className="col-md-2 col-form-label"
                       >
                         {" "}
-                        Quotation Prefix <span style={{ color: "red" }}>
+                        {props.t("Quotation Prefix")} <span style={{ color: "red" }}>
                           *
                         </span>{" "}
                       </label>
@@ -537,7 +543,7 @@ const SettingPage = () => {
                         className="col-md-2 col-form-label"
                       >
                         {" "}
-                        Licensce Number <span style={{ color: "red" }}>
+                        {props.t("Licence Number")}  <span style={{ color: "red" }}>
                           *
                         </span>{" "}
                       </label>
@@ -560,7 +566,7 @@ const SettingPage = () => {
                         id="add-btn"
                       >
                         {" "}
-                        Submit{" "}
+                        {props.t("Submit")}{" "}
                       </button>
                     </div>
                   </form>
@@ -574,4 +580,4 @@ const SettingPage = () => {
   );
 };
 
-export default SettingPage;
+export default withRouter(withTranslation()(SettingPage));

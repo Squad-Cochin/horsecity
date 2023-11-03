@@ -7,6 +7,7 @@ import {
   SHOW_RIGHT_SIDEBAR,
   SHOW_SIDEBAR,
   TOGGLE_LEFTMENU,
+  DIR_UPDATED
 } from "./actionTypes";
 
 export const changeLayout = layout => ({
@@ -50,3 +51,9 @@ export const toggleLeftmenu = isopen => ({
   type: TOGGLE_LEFTMENU,
   payload: isopen,
 });
+export const updateDirection = (value) => {
+  return {
+    type: DIR_UPDATED,
+    payload: value,
+  }
+}

@@ -32,8 +32,8 @@ function App() {
   /**Set settings page title  & favicon */
   async function getAllData() {
     let settingsData = await getSettingsPageData();
-    setPageTitle(settingsData?.settingsPageData[0]?.application_title);
-    setFavicon(settingsData?.settingsPageData[0]?.favicon);
+    setPageTitle(settingsData && settingsData?.settingsPageData[0]?.application_title || "");
+    setFavicon(settingsData && settingsData?.settingsPageData[0]?.favicon);
   }
   return (
     <React.Fragment>

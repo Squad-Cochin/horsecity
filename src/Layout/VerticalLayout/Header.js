@@ -19,21 +19,19 @@ import {
   changeSidebarType,
 } from "../../store/actions";
 import ProfileMenu from "../../components/Common/TopbarDropdown/ProfileMenu";
-
+import DirectionDropdown from "../../components/Common/TopbarDropdown/DirectionMenu";
 // Header function
 const Header = (props) => {
   const [search, setsearch] = useState(false);
-  const [menulogo,setMenuLogo] = useState('')
+  const [menulogo,setMenuLogo] = useState('');
+
   useEffect(()=>{
     getAllData()
   },[])
-  const { file } = useSelector(state => ({
-    file: state.settings.file,
-  }));
- 
+
   async function getAllData() {
     let settingsData = await getSettingsPageData();
-    setMenuLogo(settingsData?.settingsPageData[0]?.logo);
+    setMenuLogo(settingsData && settingsData?.settingsPageData[0]?.logo);
    }
   // Toggle screen function
   function toggleFullscreen() {
@@ -62,6 +60,8 @@ const Header = (props) => {
       }
     }
   }
+  
+
 
   function tToggle() {
     var body = document.body;
@@ -72,11 +72,17 @@ const Header = (props) => {
       body.classList.toggle("sidebar-enable");
     }
   }
+  const {
+    dir
+  } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+
 
   return (
     <React.Fragment>
       <header id="page-topbar">
-        <div className="navbar-header">
+        <div className={`navbar-header  ${dir === 'rtl' ? 'navbar-header-rtl' : ''} `}>
           <div className="d-flex">
             <div className="navbar-brand-box text-center">
               <Link to="/" className="logo logo-dark">
@@ -165,9 +171,7 @@ const Header = (props) => {
                 <i className="ri-fullscreen-line" />
               </button>
             </div>
-
-            {/* <NotificationDropdown /> */}
-
+            <DirectionDropdown />
             <ProfileMenu />
           </div>
         </div>

@@ -20,6 +20,8 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
+import { useSelector } from "react-redux";
+import { withTranslation } from "react-i18next";
 
 //IMPORTED FILES
 import {
@@ -27,6 +29,7 @@ import {
   getSPUserName,
 } from "../../helpers/ApiRoutes/getApiRoutes";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
+import withRouter from "../../components/Common/withRouter";
 import {
   getLIstBreakDownVehicles,
   getSPVehiclesData,
@@ -35,7 +38,7 @@ import {
 import { updateTripStatus } from "../../helpers/ApiRoutes/addApiRoutes";
 import config from "../../config";
 
-const TripDeatails = () => {
+const TripDeatails = (props) => {
   const [modal_list, setmodal_list] = useState(false);
   const [tripDatas, setTripDatas] = useState([]);
   const [breakdown_list_modal, setBreakdown_list_modal] = useState(false);
@@ -173,26 +176,28 @@ const TripDeatails = () => {
         (value?.service_provider?.toLowerCase()?.includes(searchInp.toLowerCase().trim())) ||
         (value?.status?.toLowerCase()?.includes(searchInp.toLowerCase().trim()))
     );
-    
-  document.title = `Trip details | ${pageTitle} `;
+    const { dir } = useSelector(state => ({
+      dir: state.Layout.dir,
+    }));
+  document.title = `${props.t("Trip details")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+       <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
-          <Breadcrumbs title="Tables" breadcrumbItem="Trip Details" />
+          <Breadcrumbs title={props.t("Tables")} breadcrumbItem={props.t("Trip Details")} />
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
                 <div className="row align-items-md-center">
-                  <h4 className="card-title mb-0 col-md-8  p-3"> Edit & View <br/>  <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span></h4>
+                  <h4 className="card-title mb-0 col-md-8  p-3"> {props.t("Edit & View")}<br/>  <span className="d-block mt-2 fs-16 text-success">{props.t("Total")} {numberOfData}</span></h4>
                   <form className="col-md-4">
                       <div className="form-group m-0">
                         <div className="input-group">
                           <input
                             type="text"
                             className="form-control"
-                            placeholder="Search ..."
+                            placeholder={props.t("Search") + "..."}
                             onChange={(e) => setSearchInp(e.target.value)}
                             aria-label="Recipient's username"
                           />
@@ -219,25 +224,25 @@ const TripDeatails = () => {
                               #
                             </th>
                             <th className="sort" data-sort="number">
-                              Invoice Id
+                            {props.t("Invoice Id")}
                             </th>
                             <th className="sort" data-sort="service-provider">
-                              Customer Name
+                              {props.t("Customer Name")}
                             </th>
                             <th className="sort" data-sort="service-provider">
-                              Service Provider
+                            {props.t("Service Provider Name")}
                             </th>
                             <th className="sort" data-sort="start-date">
-                              Started At
+                              {props.t("Started At")}
                             </th>
                             <th className="sort" data-sort="End-date">
-                              Ended At
+                              {props.t("Ended At")}
                             </th>
                             <th className="sort" data-sort="booking-date">
-                              Trip status
+                              {props.t("Trip Status")}
                             </th>
                             <th className="sort" data-sort="quotation-date">
-                              Actions
+                              {props.t("Actions")}
                             </th>
                           </tr>
                         </thead>
@@ -275,7 +280,7 @@ const TripDeatails = () => {
                                           breakdown_list(item?.booking_id)
                                         }
                                       >
-                                        View
+                                        {props.t("View")}
                                       </button>
                                     </div>
                                   ) : null}
@@ -295,7 +300,7 @@ const TripDeatails = () => {
                                             )
                                           }
                                         >
-                                          Edit
+                                          {props.t("Edit")}
                                         </button>
                                       ) : null}
                                     </div>
@@ -314,7 +319,7 @@ const TripDeatails = () => {
                             className="page-item pagination-prev disabled"
                             onClick={() => getAllData(pageNumber - 1)}
                           >
-                            Previous
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
@@ -323,7 +328,7 @@ const TripDeatails = () => {
                             className="page-item pagination-next"
                             onClick={() => getAllData(pageNumber + 1)}
                           >
-                            Next
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -345,13 +350,13 @@ const TripDeatails = () => {
         centered
       >
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             setBreakdown_list_modal(false);
           }}
         >
-          {list_or_view ? "Break Down List" : "Trip Details"}
+          {list_or_view ? props.t("Break Down List") : props.t("Trip Details")}
         </ModalHeader>
         <form className="tablelist-form">
           <ModalBody>
@@ -376,22 +381,22 @@ const TripDeatails = () => {
                             </th>
 
                             <th className="sort" data-sort="customer_name">
-                              Service Provider
+                            {props.t("Service Provider Name")}
                             </th>
                             <th
                               className="sort"
                               data-sort="service_provider_name"
                             >
-                              Driver Name
+                              {props.t("Driver Name")}
                             </th>
                             <th className="sort" data-sort="quotation_id">
-                              Vehicle Number
+                              {props.t("Vehicle Number")}
                             </th>
                             <th className="sort" data-sort="view_invoice">
-                              Pickup Location
+                              {props.t("Pickup Location")}
                             </th>
                             <th className="sort" data-sort="send_email">
-                              Drop Location
+                              {props.t("Drop Location")}
                             </th>
                           </tr>
                         </thead>
@@ -438,7 +443,7 @@ const TripDeatails = () => {
                   setBreakdown_list_modal(false);
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
             </div>
           </ModalFooter>
@@ -455,20 +460,20 @@ const TripDeatails = () => {
         centered
       >
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             setmodal_list(false);
           }}
         >
           {" "}
-          Edit Trip Deatails{" "}
+          {props.t("Edit Trip Details")}{" "}
         </ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>
             <div className="mb-3">
               {/* <label className="form-label"></label> */}
-              <div className="form-check">
+              <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="air_conditioner-yes"
@@ -482,12 +487,12 @@ const TripDeatails = () => {
                 />
                 <label
                   htmlFor="air_conditioner-yes"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  COMPLETE
+                  {props.t("COMPLETE")}
                 </label>
               </div>
-              <div className="form-check">
+              <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="air_conditioner-no"
@@ -501,9 +506,9 @@ const TripDeatails = () => {
                 />
                 <label
                   htmlFor="air_conditioner-no"
-                  className="form-check-label"
+                  className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  BREAKDOWN
+                  {props.t("BREAKDOWN")}
                 </label>
               </div>
             </div>
@@ -516,7 +521,7 @@ const TripDeatails = () => {
                     htmlFor="service_provider_id-field"
                     className="form-label"
                   >
-                    Service Provider Name
+                    {props.t("Service Provider Name")}
                   </label>
                   <select
                     data-trigger
@@ -545,7 +550,7 @@ const TripDeatails = () => {
                 {/* Vehicle Number */}
                 <div className="mb-3">
                   <label htmlFor="vehicle_id-field" className="form-label">
-                    Vehicle Number
+                  {props.t("Vehicle Number")}
                   </label>
                   <select
                     data-trigger
@@ -570,7 +575,7 @@ const TripDeatails = () => {
                 {/* Driver */}
                 <div className="mb-3">
                   <label htmlFor="driver_id-field" className="form-label">
-                    Driver
+                  {props.t("Driver")}
                   </label>
                   <select
                     data-trigger
@@ -596,7 +601,7 @@ const TripDeatails = () => {
                 {/* Start Location */}
                 <div className="mb-3">
                   <label htmlFor="startLocation-field" className="form-label">
-                    Start Location
+                  {props.t("Start Location")}
                   </label>
                   <input
                     type="text"
@@ -605,7 +610,7 @@ const TripDeatails = () => {
                     className="form-control"
                     value={validation.values.pickup_location || ""}
                     onChange={validation.handleChange}
-                    placeholder="Enter Start Location"
+                    placeholder={props.t("Enter Start Location")}
                     required
                   />
                 </div>
@@ -619,10 +624,10 @@ const TripDeatails = () => {
                 className="btn btn-light"
                 onClick={() => setmodal_list(false)}
               >
-                Close
+                {props.t("Close")}
               </button>
               <button type="submit" className="btn btn-success" id="add-btn">
-                Update Trip Deatails
+              {props.t("Update Trip Details")}
               </button>
             </div>
           </ModalFooter>
@@ -632,4 +637,4 @@ const TripDeatails = () => {
   );
 };
 
-export default TripDeatails;
+export default withRouter(withTranslation()(TripDeatails));

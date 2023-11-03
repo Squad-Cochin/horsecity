@@ -9,12 +9,15 @@ import { Alert, Card, CardBody, Col, Row, Container } from "reactstrap";
 import { useFormik } from "formik";
 import { useNavigate } from "react-router-dom";
 import { useLocation } from "react-router-dom";
-
+import { useSelector } from "react-redux";
+import { withTranslation } from "react-i18next";
 //IMPORTED FILES
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { getAboutUsPageData } from "../../helpers/ApiRoutes/getApiRoutes";
 import { updateAboutUsPage } from "../../helpers/ApiRoutes/editApiRoutes";
-const AboutUS = () => {
+import withRouter from "../../components/Common/withRouter";
+
+const AboutUS = (props) => {
   const [imagePreview, setImagePreview] = useState(null);
   const [uploadImage, setUploadImage] = useState("");
   const [aboutPage_data, setAboutPage_data] = useState([]);
@@ -90,13 +93,16 @@ const AboutUS = () => {
     setUploadImage(file);
     setImagePreview(URL.createObjectURL(file));
   };
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
 
-  document.title = `About Us | ${pageTitle} `;
+  document.title = `${props.t("About Us")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+      <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid={true}>
-          <Breadcrumbs title="Forms" breadcrumbItem="About Us" />
+          <Breadcrumbs title={props.t("Forms")} breadcrumbItem={props.t("About Us")} />
           <Row>
             <Col>
               <Card>
@@ -118,13 +124,13 @@ const AboutUS = () => {
                         htmlFor="title"
                         className="col-md-2 col-form-label"
                       >
-                        Title <span style={{ color: "red" }}>*</span>{" "}
+                        {props.t("Title")} <span style={{ color: "red" }}>*</span>{" "}
                       </label>
                       <div className="col-md-10">
                         <input
                           className="form-control"
                           type="text"
-                          placeholder="Enter Title"
+                          placeholder={props.t("Enter Title")}
                           name="title"
                           value={validation.values.title || ""}
                           onChange={validation.handleChange}
@@ -139,7 +145,7 @@ const AboutUS = () => {
                         htmlFor="caption"
                         className="col-md-2 col-form-label"
                       >
-                        Caption <span style={{ color: "red" }}>*</span>{" "}
+                        {props.t("Caption")} <span style={{ color: "red" }}>*</span>{" "}
                       </label>
                       <div className="col-md-10">
                         <input
@@ -160,7 +166,7 @@ const AboutUS = () => {
                         htmlFor="description"
                         className="col-md-2 col-form-label"
                       >
-                        Description <span style={{ color: "red" }}>*</span>{" "}
+                        {props.t("Description")} <span style={{ color: "red" }}>*</span>{" "}
                       </label>
                       <div className="col-md-10">
                         <textarea
@@ -181,7 +187,7 @@ const AboutUS = () => {
                         htmlFor="image"
                         className="col-md-2 col-form-label"
                       >
-                        Image <span style={{ color: "red" }}>*</span>{" "}
+                        {props.t("Image")} <span style={{ color: "red" }}>*</span>{" "}
                       </label>
                       <div className="col-md-10">
                         {imagePreview && (
@@ -208,7 +214,7 @@ const AboutUS = () => {
                         className="btn btn-success"
                         id="add-btn"
                       >
-                        Submit
+                        {props.t("Submit")}
                       </button>
                     </div>
                   </form>
@@ -222,4 +228,4 @@ const AboutUS = () => {
   );
 };
 
-export default AboutUS;
+export default withRouter(withTranslation()(AboutUS));

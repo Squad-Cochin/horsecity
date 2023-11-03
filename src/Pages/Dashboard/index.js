@@ -6,7 +6,8 @@
 
 import React, { useState, useEffect } from "react";
 import { Row, Container } from "reactstrap";
-
+import { useSelector } from "react-redux";
+import { withTranslation } from "react-i18next";
 /**Api */
 import { getSettingsPageData } from "../../helpers/ApiRoutes/getApiRoutes";
 //Import Breadcrumb
@@ -15,8 +16,9 @@ import UsePanel from "./UserPanel";
 import OrderStatus from "./OrderStatus";
 import OverView from "./OverView";
 import LatestTransation from "./LatestTransation";
+import withRouter from "../../components/Common/withRouter";
 
-const Dashboard = () => {
+const Dashboard = (props) => {
   const [pageTitle, setPageTitle] = useState("KailPlus");
 
   useEffect(() => {
@@ -33,13 +35,17 @@ const Dashboard = () => {
     localStorage.setItem("settingsData", JSON.stringify(obj));
     setPageTitle(settingsData?.settingsPageData[0]?.application_title);
   }
-
-  document.title = `Dashboard | ${pageTitle} `;
+  const {
+    dir
+  } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+  document.title = `${props.t("Dashboard")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+      <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid={true}>
-          <Breadcrumbs title={pageTitle} breadcrumbItem="Dashboard" />
+          <Breadcrumbs title={pageTitle} breadcrumbItem={props.t("Dashboard")} />
           {/* User Panel Charts */}
           <UsePanel />
           <Row>
@@ -55,4 +61,4 @@ const Dashboard = () => {
   );
 };
 
-export default Dashboard;
+export default withRouter(withTranslation()(Dashboard));

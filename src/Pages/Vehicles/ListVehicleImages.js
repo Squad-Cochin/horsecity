@@ -19,14 +19,17 @@ import {
 import { useFormik } from "formik";
 import { useParams } from "react-router-dom";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { withTranslation } from "react-i18next";
 
 //IMPORTED FILES
 import { getVehicleImageData } from "../../helpers/ApiRoutes/getApiRoutes";
 import { removeVehicleImage } from "../../helpers/ApiRoutes/removeApiRoutes";
 import { addNewImage } from "../../helpers/ApiRoutes/addApiRoutes";
 import { updateVechileImageStatus } from "../../helpers/ApiRoutes/editApiRoutes";
+import withRouter from "../../components/Common/withRouter";
 import config from "../../config";
-const ListVehicleImages = () => {
+const ListVehicleImages = (props) => {
   const [vhImages, setVhImages] = useState([]); // State variable to store vehicle images
   const [image_view, setImageView] = useState(""); // State variable to store the image view
   const [modal_list, setmodal_list] = useState(false); // State variable to control list modal visibility
@@ -136,11 +139,16 @@ const ListVehicleImages = () => {
   //     value?.title?.toLowerCase().includes(searchInp.toLowerCase().trim()) 
 
   // );
-  document.title = `Vehicle images | ${pageTitle} `;
+
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+  document.title = `${props.t("Vehicle images")} | ${pageTitle} `;
+
   return (
     <React.Fragment>
       {id > 0 ? (
-        <div className="page-content">
+        <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
           <Container fluid>
             <div id="customerList">
          
@@ -154,7 +162,7 @@ const ListVehicleImages = () => {
                       id="previous-btn"
                     >
                       <i className="ri-arrow-left-line align-bottom me-1"></i>{" "}
-                      Vehicle List
+                      {props.t("Vehicle List")}
                     </Button>
                     {/* The below button is for add the vehicle */}
                     <Button
@@ -163,7 +171,7 @@ const ListVehicleImages = () => {
                       onClick={() => tog_list()}
                       id="create-btn"
                     >
-                      <i className="ri-add-line align-bottom me-1"></i> Add
+                      <i className="ri-add-line align-bottom me-1"></i> {props.t("Add")}
                     </Button>
                    
 
@@ -192,7 +200,7 @@ const ListVehicleImages = () => {
                   </div> */}
 
                   </div>
-                  <br/>  <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span>
+                  <br/>  <span className="d-block mt-2 fs-16 text-success">{props.t("Total")} {numberOfData}</span>
                 </Col>
               </Row>
 
@@ -208,19 +216,19 @@ const ListVehicleImages = () => {
                         #
                       </th>
                       <th className="sort" data-sort="vehicleimage">
-                        Image
+                      {props.t("Image")}
                       </th>
                       <th className="sort" data-sort="vehicletitle">
-                        Title
+                      {props.t("Title")}
                       </th>
                       <th className="sort" data-sort="created_at">
-                        Created At
+                      {props.t("Created At")}
                       </th>
                       <th className="sort" data-sort="status">
-                        Status
+                      {props.t("Status")}
                       </th>
                       <th className="sort" data-sort="action">
-                        Actions
+                      {props.t("Action")}
                       </th>
                     </tr>
                   </thead>
@@ -273,7 +281,7 @@ const ListVehicleImages = () => {
                               data-bs-target="#deleteRecordModal"
                               onClick={() => remove_data(imageItem?.id)}
                             >
-                              Remove
+                              {props.t("Remove")}
                             </button>
                           </div>
                         </td>
@@ -290,7 +298,7 @@ const ListVehicleImages = () => {
                       className="page-item pagination-prev disabled"
                       onClick={() => getAllData(pageNumber - 1)}
                     >
-                      Previous
+                      {props.t("Previous")}
                     </Link>
                   ) : null}
                   <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
@@ -299,7 +307,7 @@ const ListVehicleImages = () => {
                       className="page-item pagination-next"
                       onClick={() => getAllData(pageNumber + 1)}
                     >
-                      Next
+                      {props.t("Next")}
                     </Link>
                   ) : null}
                 </div>
@@ -321,13 +329,13 @@ const ListVehicleImages = () => {
       >
         {/* The below line is for the heading of pop up of edit and add driver */}
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             tog_list();
           }}
         >
-          Add Image
+          {props.t("Add Image")}
         </ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>
@@ -341,7 +349,7 @@ const ListVehicleImages = () => {
             <div className="mb-3">
               <label htmlFor="customerName-field" className="form-label">
                 {" "}
-                Image Title{" "}
+                {props.t("Image Title")}
               </label>
               <input
                 type="text"
@@ -349,7 +357,7 @@ const ListVehicleImages = () => {
                 id="customerName-field"
                 className="form-control"
                 value={validation.values.title}
-                placeholder="Enter image title"
+                placeholder={props.t("Enter image title")}
                 onChange={validation.handleChange}
                 onBlur={validation.handleBlur}
                 required
@@ -358,7 +366,7 @@ const ListVehicleImages = () => {
             {/* The Below element is uploading the image of the vehicle. */}
             <div className="mb-3">
               <label htmlFor="vehicleimage-field" className="form-label">
-                Add Image
+              {props.t("Add Image")}
               </label>
               <div className="col-md-10">
                 <div>
@@ -393,12 +401,12 @@ const ListVehicleImages = () => {
                   setmodal_list(false);
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
 
               {/* Add image Button */}
               <button type="submit" className="btn btn-success" id="add-btn">
-                Add Image
+              {props.t("Add Image")}
               </button>
             </div>
           </ModalFooter>
@@ -408,4 +416,4 @@ const ListVehicleImages = () => {
   );
 };
 
-export default ListVehicleImages;
+export default withRouter(withTranslation()(ListVehicleImages));

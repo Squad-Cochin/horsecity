@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import { Row, Col } from "reactstrap";
-import { getLatestEnquiryData } from "../../helpers/ApiRoutes/getApiRoutes";
+import { withTranslation } from "react-i18next";
 
-const LatestTransation = () => {
+import { getLatestEnquiryData } from "../../helpers/ApiRoutes/getApiRoutes";
+import withRouter from "../../components/Common/withRouter";
+const LatestTransation = (props) => {
   const [latestEnquiriesData, setlatestEnquiriesData] = useState([]);
   const [userId, setUserId] = useState("");
   const [roleName, setRoleName] = useState("");
@@ -30,19 +32,19 @@ const LatestTransation = () => {
         <Col lg={12}>
           <div className="card">
             <div className="card-body">
-              <h4 className="card-title mb-4">Latest Enquiries</h4>
+              <h4 className="card-title mb-4">{props.t("Latest Enquiries")}</h4>
               <div className="table-responsive">
                 <table className="table table-centered table-nowrap mb-0">
                   <thead>
                     <tr>
                       <th scope="col" style={{ width: "50px" }}></th>
-                      <th>Sr.no</th>
-                      <th scope="col">User Name & Name</th>
-                      <th scope="col">Enquiry Date</th>
-                      <th scope="col">Pickup Location</th>
-                      <th scope="col">Drop Location</th>
-                      <th scope="col">Horses</th>
-                      <th scope="col">Status</th>
+                      <th>{props.t("Sr.no")}</th>
+                      <th scope="col">{props.t("User Name")} & {props.t("Name")}</th>
+                      <th scope="col">{props.t("Enquiry Date")}</th>
+                      <th scope="col">{props.t("Pickup Location")}</th>
+                      <th scope="col">{props.t("Drop Location")}</th>
+                      <th scope="col">{props.t("Horses")}</th>
+                      <th scope="col">{props.t("Status")}</th>
                       {/* <th scope="col">Action</th> */}
                     </tr>
                   </thead>
@@ -81,4 +83,4 @@ const LatestTransation = () => {
   );
 };
 
-export default LatestTransation;
+export default withRouter(withTranslation()(LatestTransation));

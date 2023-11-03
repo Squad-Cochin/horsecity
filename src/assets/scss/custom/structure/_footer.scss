@@ -13,7 +13,13 @@
     box-shadow: $box-shadow;
     background-color: $footer-bg;
 }
-
+.footer.footer-rtl{
+    left: 0
+}
+.footer-rtl-item{
+    width: 100%;
+    text-align: left;
+}
 @media (max-width: 992px) {
     .footer {
         left: 0;

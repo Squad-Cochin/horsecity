@@ -359,11 +359,24 @@
         clear: both;
         margin-top: 20px;
     }
-
+    .status{
+        min-width: 137px;
+        max-width: 137px;
+    }
+   .tm_invoice_section.tm_invoice_to.tm-section-rtl{
+        text-align: right;
+    }
+    .tm_invoice_section.tm_pay_to.tm-section-rtl{
+        text-align: left;
+    }
     .tm_clearfix {
         clear: both;
     }
-
+    .sub-menu.mm-collapse.sub-menu-rtl{
+        position: absolute;
+        left: 0%;
+        right: 98%;
+    }
     .tm_card_footer {
         margin-top: 20px;
         
@@ -377,6 +390,12 @@
           }
         }
       }
+
+      .vertical-collpsed .vertical-menu #sidebar-menu > ul ul{
+        display: block;
+        position: absolute;
+        right: 100%;
+        }
 
       .tm_card_content {
         .tm_card_item {

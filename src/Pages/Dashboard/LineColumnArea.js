@@ -1,5 +1,9 @@
 import React, { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
+import { useSelector } from "react-redux";
+
+//IMPORTED
+import withRouter from "../../components/Common/withRouter";
 import { getMonthlySalesData } from "../../helpers/ApiRoutes/getApiRoutes";
 
 const LineColumnAreaData = {
@@ -109,16 +113,21 @@ const LineColumnArea = () => {
     let msReport = await getMonthlySalesData(data[0]?.user[0]?.id);
     setSalesReportData(msReport?.revenue);
   }
-
+  const {
+    dir
+  } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
   return (
     <React.Fragment>
       <ReactApexChart
         options={salesReportData?.options}
         series={salesReportData?.series}
+
         type="line"
         height="350"
         stacked="false"
-        className="apex-charts"
+        className={`apex-charts ${dir === 'rtl' ? 'monthly-report-rtl' : ''}`}
       />
     </React.Fragment>
   );

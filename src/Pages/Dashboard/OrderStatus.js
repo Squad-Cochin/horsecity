@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardBody, CardTitle, Col, Row } from "reactstrap";
+//i18n
+import { withTranslation } from "react-i18next";
 
 /**IMPORTED */
 import { getQuotationReportForDashboard } from "../../helpers/ApiRoutes/getApiRoutes";
-
-const OrderStatus = () => {
+import withRouter from "../../components/Common/withRouter";
+const OrderStatus = (props) => {
   const [dashboardQuotationData, setdashboardQuotationData] = useState([]);
   const [userId, setUserId] = useState("");
   const [roleName, setRoleName] = useState("");
@@ -30,10 +32,10 @@ const OrderStatus = () => {
       <Col xl={4}>
         <Card>
           <CardBody>
-            <CardTitle>Quotation Status</CardTitle>
+            <CardTitle>{props.t("Quotation Status")}</CardTitle>
             <div>
               <ul className="list-unstyled">
-                {dashboardQuotationData?.map((item, key) => (
+                {Array.isArray(dashboardQuotationData) && dashboardQuotationData?.map((item, key) => (
                   <li key={key} className="py-3">
                     <div className="d-flex">
                       <div className="avatar-xs align-self-center me-3">
@@ -80,4 +82,4 @@ const OrderStatus = () => {
   );
 };
 
-export default OrderStatus;
+export default withRouter(withTranslation()(OrderStatus));

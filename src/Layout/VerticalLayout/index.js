@@ -28,12 +28,15 @@ const Layout = props => {
     topbarTheme,
     showRightSidebar,
     leftSideBarTheme,
+    dir
+    
   } = useSelector(state => ({
     leftSideBarType: state.Layout.leftSideBarType,
     layoutWidth: state.Layout.layoutWidth,
     topbarTheme: state.Layout.topbarTheme,
     showRightSidebar: state.Layout.showRightSidebar,
     leftSideBarTheme: state.Layout.leftSideBarTheme,
+    dir: state.Layout.dir,
   }));
 
   // const [headerLogo, setHeaderLogo] = useState("white-logo.png");
@@ -109,7 +112,7 @@ const Layout = props => {
           type={leftSideBarType}
           isMobile={isMobile}
         />
-        <div className="main-content">{props.children}</div>
+        <div className={`main-content ${dir === 'ltr' ? "" : "main-content-rtl"}`}>{props.children}</div>
         <Footer />
       </div>
 

@@ -417,7 +417,7 @@ export async function updateReviewStatus(id) {
 /**Update aboutUs page */
 export async function updateAboutUsPage(data,id) {
   try {
-    console.log("id",id);
+
     const formData = new FormData();
     // Append the object data to the FormData instance
     for (const key in data) {

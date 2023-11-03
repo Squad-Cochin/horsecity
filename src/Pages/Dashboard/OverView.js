@@ -1,10 +1,12 @@
 import React, { useState, useEffect } from 'react';
-import LineColumnArea from './LineColumnArea';
-
+//i18n
+import { withTranslation } from "react-i18next";
 import { Card, CardBody, Col, Row } from "reactstrap";
-import { getMonthlySalesData } from '../../helpers/ApiRoutes/getApiRoutes';
 
-const MonthlySalesReport = () =>
+import LineColumnArea from './LineColumnArea';
+import { getMonthlySalesData } from '../../helpers/ApiRoutes/getApiRoutes';
+import withRouter from "../../components/Common/withRouter";
+const MonthlySalesReport = (props) =>
 {    
     const[salesGraphData, setSalesGraphData] = useState([]);
     const [userId, setUserId] = useState("");
@@ -38,7 +40,7 @@ const MonthlySalesReport = () =>
                     <CardBody>
                         <div className="d-flex align-items-center">
                             <div className="flex-grow-1">
-                                <h5 className="card-title">Monthly Sales Report</h5>
+                                <h5 className="card-title">{props.t("Monthly Sales Report")}</h5>
                             </div>
                         </div>
                         <div>
@@ -57,4 +59,4 @@ const MonthlySalesReport = () =>
     );
 };
 
-export default MonthlySalesReport;
+export default withRouter(withTranslation()(MonthlySalesReport));

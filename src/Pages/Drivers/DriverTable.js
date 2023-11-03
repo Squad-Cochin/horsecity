@@ -24,8 +24,11 @@ import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { useFormik } from "formik";
+import { useSelector } from "react-redux";
+import { withTranslation } from "react-i18next";
 
 /**IMPORTED FILES */
+import withRouter from "../../components/Common/withRouter";
 import {
   addNewDriver,
   assignNewSP,
@@ -46,7 +49,7 @@ import {
 } from "../../helpers/ApiRoutes/getApiRoutes";
 import config from "../../config";
 
-const ListTables = () => {
+const ListTables = (props) => {
   const [drivers, setDrivers] = useState([]); // Array to store drivers
   const [driver, setDriver] = useState([]); // Array to store a single driver
   const [updateLiscenceImage, setUpdateLiscenceImage] = useState(""); // String to store the updated image
@@ -289,27 +292,30 @@ const ListTables = () => {
     value?.email.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
     value?.contact_no.toLowerCase().includes(searchInp.toLowerCase().trim())
   );
-  document.title = `Drivers | ${pageTitle} `;
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+  document.title = `${props.t("Drivers")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+       <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
           {/* Header of the Page */}
-          <Breadcrumbs title="Tables" breadcrumbItem="Drivers" />
+          <Breadcrumbs title="Tables" breadcrumbItem={props.t("Drivers")} />
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
                 <div className="row align-items-md-center">
                   {/* Header of the Particular Card */}
-                  <h4 className="card-title mb-0 col-md-8  p-3">Add, Edit & Remove  <br/>  <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span></h4>
+                  <h4 className="card-title mb-0 col-md-8  p-3">{props.t("Add, Edit & Remove")}  <br/>  <span className="d-block mt-2 fs-16 text-success">{props.t("Total")} {numberOfData}</span></h4>
                   <form className="col-md-4">
                     <div className="form-group m-0">
                       <div className="input-group">
                         <input
                           type="text"
                           className="form-control"
-                          placeholder="Search ..."
+                          placeholder={props.t("Search") + "..."}
                           aria-label="Recipient's username"
                           onChange={(e)=>setSearchInp(e.target.value)}
                         />
@@ -336,7 +342,7 @@ const ListTables = () => {
                             id="create-btn"
                           >
                             <i className="ri-add-line align-bottom me-1"></i>{" "}
-                            Add
+                            {props.t("Add")}
                           </Button>
                         </div>
                       </Col>
@@ -354,29 +360,29 @@ const ListTables = () => {
                               #
                             </th>
                             <th className="sort" data-sort="driver_name">
-                              Name
+                            {props.t("Name")}
                             </th>
                             <th className="sort" data-sort="driver_email">
-                              Email
+                              {props.t("Email")}
                             </th>
                             <th className="sort" data-sort="driver_phone">
-                              Contact Number
+                              {props.t("Contact Number")}
                             </th>
                             <th className="sort" data-sort="registered_date">
-                              Registered Date
+                              {props.t("Registered Date")}
                             </th>
                             {roleId === role_id.admin ? (
                               <>
                                 <th className="sort" data-sort="status">
-                                  Assign To
+                                {props.t("Assign To")}
                                 </th>
                                 <th className="sort" data-sort="status">
-                                  Status
+                                  {props.t("Status")}
                                 </th>
                               </>
                             ) : null}
                             <th className="sort" data-sort="action">
-                              Action
+                            {props.t("Action")}
                             </th>
                           </tr>
                         </thead>
@@ -409,7 +415,7 @@ const ListTables = () => {
                                         toggleAssign(item.id);
                                       }}
                                     >
-                                      Assign
+                                      {props.t("Assign")}
                                     </button>
                                   </td>
                                   <td className="status">
@@ -454,7 +460,7 @@ const ListTables = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
                                     >
-                                      View
+                                      {props.t("View")}
                                     </button>
                                   </div>
                                   {/* This is the place from where we are calling the edit button and function. */}
@@ -465,7 +471,7 @@ const ListTables = () => {
                                       data-bs-target="#showModal"
                                       onClick={() => tog_list("EDIT", item.id)}
                                     >
-                                      Edit
+                                      {props.t("Edit")}
                                     </button>
                                   </div>
                                   {/* This is the place from where we are calling the remove button and function. */}
@@ -488,7 +494,7 @@ const ListTables = () => {
                                         data-bs-toggle="modal"
                                         data-bs-target="#deleteRecordModal"
                                       >
-                                        Remove
+                                        {props.t("Remove")}
                                       </button>
                                     )}
                                   </div>
@@ -509,7 +515,7 @@ const ListTables = () => {
                             className="page-item pagination-prev disabled"
                             onClick={() => getAllData(pageNumber - 1)}
                           >
-                            Previous
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
@@ -518,7 +524,7 @@ const ListTables = () => {
                             className="page-item pagination-next"
                             onClick={() => getAllData(pageNumber + 1)}
                           >
-                            Next
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -543,14 +549,14 @@ const ListTables = () => {
       >
         {/* The below line is for the heading of pop up of edit and add driver */}
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             setmodal_list(false);
             setAdd_list(false);
           }}
         >
-          {add_list ? "Add Driver" : "Edit Driver"}{" "}
+          {add_list ? `${props.t("Add Driver")}` : `${props.t("Edit Driver")}`}
         </ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>
@@ -562,7 +568,7 @@ const ListTables = () => {
             {/* The Below element is adding the name of the driver */}
             <div className="mb-3">
               <label htmlFor="driver-field" className="form-label">
-                Name
+              {props.t("Name")}
               </label>
               <input
                 type="text"
@@ -571,7 +577,7 @@ const ListTables = () => {
                 name="name"
                 value={validation.values.name || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Name"
+                placeholder={props.t("Enter Name")}
                 required
               />
             </div>
@@ -580,7 +586,7 @@ const ListTables = () => {
 
             <div className="mb-3">
               <label htmlFor="email-field" className="form-label">
-                Email
+              {props.t("Email")}
               </label>
               <input
                 type="email"
@@ -589,7 +595,7 @@ const ListTables = () => {
                 name="email"
                 value={validation.values.email || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Email"
+                placeholder={props.t("Enter Email")}
                 required
               />
             </div>
@@ -598,7 +604,7 @@ const ListTables = () => {
 
             <div className="mb-3">
               <label htmlFor="contactNumber-field" className="form-label">
-                Contact Number
+              {props.t("Contact Number")}
               </label>
               <input
                 type="text"
@@ -607,7 +613,7 @@ const ListTables = () => {
                 name="contact_no"
                 value={validation.values.contact_no || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Contact Number"
+                placeholder={props.t("Enter Contact Number")}
                 required
               />
             </div>
@@ -615,7 +621,7 @@ const ListTables = () => {
             {/* The Below element is adding the emenrgency contact number of the driver */}
             <div className="mb-3">
               <label htmlFor="emergencyContactNumber" className="form-label">
-                Emergency Contact Number
+              {props.t("Emergency Contact Number")}
               </label>
               <input
                 type="text"
@@ -624,7 +630,7 @@ const ListTables = () => {
                 name="emergency_contact_no"
                 value={validation.values.emergency_contact_no || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Emergency Contact Number"
+                placeholder={props.t("Enter Emergency Contact Number")}
                 required
               />
             </div>
@@ -632,7 +638,7 @@ const ListTables = () => {
             {/* The Below element is adding the date of birth of the driver */}
             <div className="mb-3">
               <label htmlFor="date_of_birth-field" className="form-label">
-                Date Of Birth
+              {props.t("Date Of Birth")}
               </label>
               <Flatpickr
                 className="form-control"
@@ -650,13 +656,13 @@ const ListTables = () => {
                 onChange={(dates) =>
                   validation.setFieldValue("date_of_birth", dates[0])
                 }
-                placeholder="Select Date"
+                placeholder={props.t("Select Date")}
               />
             </div>
 
             {/* Profile Photo Or Image of the driver*/}
             <label htmlFor="profileImage" className="form-label">
-              Profile Image
+            {props.t("Profile Image")}
             </label>
             {profileImagePreview && (
               <div>
@@ -673,7 +679,7 @@ const ListTables = () => {
                 className="form-control"
                 name="profile_image"
                 type="file"
-                placeholder="Profile Image"
+                placeholder={props.t("Profile Image")}
                 onChange={handleProfileImageChange}
               />
             </div>
@@ -681,7 +687,7 @@ const ListTables = () => {
             {/* The Below element is adding the licence number of the driver */}
             <div className="mb-3">
               <label htmlFor="idNumber" className="form-label">
-                Licence Number
+              {props.t("Licence Number")}
               </label>
               <input
                 type="text"
@@ -690,7 +696,7 @@ const ListTables = () => {
                 name="licence_no"
                 value={validation.values.licence_no || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Licensce Number"
+                placeholder={props.t("Enter License Number")}
                 required
               />
             </div>
@@ -698,7 +704,7 @@ const ListTables = () => {
             {/* Licence Photo Or Image of the driver*/}
 
             <label htmlFor="licenceImage" className="form-label">
-              Licence Image
+            {props.t("Licence Image")}
             </label>
             {licenceImagePreview && (
               <div>
@@ -714,7 +720,7 @@ const ListTables = () => {
                 className="form-control"
                 name="licence_image"
                 type="file"
-                placeholder="Profile Image"
+                placeholder={props.t("Profile Image")}
                 onChange={handleLicenceImageChange}
               />
             </div>
@@ -722,14 +728,14 @@ const ListTables = () => {
             {/* The Below element is adding the description of the driver */}
             <div className="mb-3">
               <label htmlFor="idProofImage" className="form-label">
-                Description:{" "}
+              {props.t("Description")}:
               </label>
               <input
                 type="text"
                 id="idProofImage"
                 className="form-control"
                 name="description"
-                placeholder="Enter Discription"
+                placeholder={props.t("Enter Description")}
                 value={validation.values.description || ""}
                 onChange={validation.handleChange}
                 required
@@ -749,7 +755,7 @@ const ListTables = () => {
                   setAdd_list(false);
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
               {/* Add Driver or Update Driver button */}
               <button
@@ -760,7 +766,7 @@ const ListTables = () => {
                   window.location.href = "#exampleModalLabel"; // Change the URL here
                 }}
               >
-                {add_list ? "Add Driver" : "Update Driver"}
+                {add_list ? props.t("Add Driver") : props.t("Update Driver")}
               </button>
             </div>
           </ModalFooter>
@@ -777,20 +783,20 @@ const ListTables = () => {
       >
         {/* The below line is for the heading of pop up of view driver */}
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             setView_modal(false);
           }}
         >
-          View Driver
+          {props.t("View Driver")}
         </ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>
             {/* The Below element is displaying the name of the driver */}
             <div className="mb-3">
               <label htmlFor="drivername-field" className="form-label">
-                Name
+              {props.t("Name")}
               </label>
               <input
                 type="text"
@@ -805,7 +811,7 @@ const ListTables = () => {
             {/* The Below element is displaying the email of the driver */}
             <div className="mb-3">
               <label htmlFor="email-field" className="form-label">
-                Email
+              {props.t("Email")}
               </label>
               <input
                 type="email"
@@ -820,7 +826,7 @@ const ListTables = () => {
             {/* The below element is displaying the contact number of the driver */}
             <div className="mb-3">
               <label htmlFor="contact_no-field" className="form-label">
-                Contact Number
+              {props.t("Contact Number")}
               </label>
               <input
                 type="text"
@@ -838,7 +844,7 @@ const ListTables = () => {
                 htmlFor="emergency_contact_no-field"
                 className="form-label"
               >
-                Emergency Contact Number
+                {props.t("Emergency Contact Number")}
               </label>
               <input
                 type="text"
@@ -853,7 +859,7 @@ const ListTables = () => {
             {/* The Below element is displaying the emergency date of birth of the driver */}
             <div className="mb-3">
               <label htmlFor="date_of_birth-field" className="form-label">
-                Date Of Birth
+              {props.t("Date Of Birth")}
               </label>
               <input
                 type="text"
@@ -868,7 +874,7 @@ const ListTables = () => {
             {/* The Below element is displaying the licence number of the driver */}
             <div className="mb-3">
               <label htmlFor="licence_number-field" className="form-label">
-                Licence Number
+              {props.t("Licence Number")}
               </label>
               <input
                 type="text"
@@ -883,7 +889,7 @@ const ListTables = () => {
             {/* The Below element is displaying the description of the driver */}
             <div className="mb-3">
               <label htmlFor="description-field" className="form-label">
-                Description
+              {props.t("Description")}
               </label>
               <input
                 type="text"
@@ -898,7 +904,7 @@ const ListTables = () => {
             {/* Profile image of the image*/}
             <div className="mb-3">
               <label htmlFor="profile_image-field" className="form-label">
-                Profile Image
+              {props.t("Profile Image")}
               </label>
               <div>
                 <img
@@ -912,7 +918,7 @@ const ListTables = () => {
             {/* Licensce image of the driver */}
             <div className="mb-3">
               <label htmlFor="licence_image-field" className="form-label">
-                Licence Image
+              {props.t("Licence Image")}
               </label>
               <div>
                 <img
@@ -934,7 +940,7 @@ const ListTables = () => {
                   setView_modal(false);
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
             </div>
           </ModalFooter>
@@ -951,13 +957,13 @@ const ListTables = () => {
         centered
       >
         <ModalHeader
-          className="bg-light p-3"
+           className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             setModal_assign(false);
           }}
         >
-          Assign To Provider
+          {props.t("Assign To Provider")}
         </ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>
@@ -969,7 +975,7 @@ const ListTables = () => {
             {/* The Below element is adding the name of the service rpovider */}
             <div className="mb-3">
               <label htmlFor="provider-field" className="form-label">
-                Service Provider Name
+              {props.t("Service Provider Name")}
               </label>
               <select
                 data-trigger
@@ -981,7 +987,7 @@ const ListTables = () => {
                 onBlur={validation.handleBlur}
                 required
               >
-                <option value="">Select Service Provider</option>
+                <option value="">{props.t("Select Service Provider")}</option>
                 {sproviders?.map((item, index) => (
                   <option key={index} value={item.id}>
                     {item.name}
@@ -1000,10 +1006,10 @@ const ListTables = () => {
                       #
                     </th>
                     <th className="sort" data-sort="provider_name">
-                      Provider Name
+                    {props.t("Provider Name")}
                     </th>
                     <th className="index" data-sort="action">
-                      Action
+                      {props.t("Action")}
                     </th>
                   </tr>
                 </thead>
@@ -1022,7 +1028,7 @@ const ListTables = () => {
                           type="button"
                           data-bs-target="#deleteRecordModal"
                         >
-                          Remove
+                          {props.t("Remove")}
                         </button>
                       </td>
                     </tr>
@@ -1040,11 +1046,11 @@ const ListTables = () => {
                   setModal_assign(false);
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
               {/* Assign Driver to provider */}
               <button type="submit" className="btn btn-success" id="add-btn">
-                Assign
+                {props.t("Assign")}
               </button>
             </div>
           </ModalFooter>
@@ -1054,4 +1060,4 @@ const ListTables = () => {
   );
 };
 
-export default ListTables;
+export default withRouter(withTranslation()(ListTables));

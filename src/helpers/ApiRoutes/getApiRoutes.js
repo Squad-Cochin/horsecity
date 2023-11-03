@@ -851,7 +851,6 @@ export async function startTrip(iId) {
     });
     return data;
   } catch (error) {
-    console.error("Error occurred:", error);
     let errObj = {
       code: error.response ? error.response.status : 500,
       error: error.message || "Failed!",
@@ -869,7 +868,6 @@ export async function cancelTrip(iId) {
     });
     return data;
   } catch (error) {
-    console.error("Error occurred:", error);
     let errObj = {
       code: error.response ? error.response.status : 500,
       error: error.message || "Failed!",

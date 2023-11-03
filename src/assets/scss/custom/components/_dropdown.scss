@@ -27,7 +27,10 @@
   left: auto !important;
   right: 0 !important;
 }
-
+.dropdown-menu-end.dropdown-menu-end-rtl.dropdown-menu.show{
+left:  6% !important;
+right: auto!important;
+}
 .dropdown-menu[data-popper-placement^="right"],
 .dropdown-menu[data-popper-placement^="top"],
 .dropdown-menu[data-popper-placement^="left"] {

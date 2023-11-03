@@ -5,6 +5,7 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////
 
 import PropTypes from "prop-types";
+import { withTranslation } from "react-i18next";
 import React, { useEffect, useState } from "react";
 import {
   Row,
@@ -78,8 +79,8 @@ const Login = (props) => {
       password: "" || "",
     },
     validationSchema: Yup.object({
-      userName: Yup.string().required("Please Enter Your Username"),
-      password: Yup.string().required("Please Enter Your Password"),
+      userName: Yup.string().required(props.t("Please Enter Your Username")),
+      password: Yup.string().required(props.t("Please Enter Your Password")),
     }),
     onSubmit: (values) => {
       localStorage.setItem("userName", values.userName);
@@ -92,7 +93,7 @@ const Login = (props) => {
     error: state.login.error,
   }));
 
-  document.title = `Login | ${app_name} `;
+  document.title = `${props.t("Login")} | ${app_name} `;
   return (
     <React.Fragment>
       <div className="bg-overlay"></div>
@@ -120,10 +121,10 @@ const Login = (props) => {
                       </Link>
                     </div>
                     <h4 className="font-size-18 text-muted mt-2 text-center">
-                      Welcome to {app_name} !
+                    {props.t("Welcome to")} {app_name} !
                     </h4>
                     <p className="mb-5 text-center">
-                      Sign in to continue with {app_name}.
+                    {props.t("Sign in to continue with")} {app_name}.
                     </p>
                     <Form
                       className="form-horizontal"
@@ -141,12 +142,12 @@ const Login = (props) => {
                       <Row>
                         <Col md={12}>
                           <div className="mb-4">
-                            <Label className="form-label">Username</Label>
+                            <Label className="form-label">{props.t("Username")}</Label>
                             <Input
                               name="userName"
                               value={validation.values.userName || ""}
                               type="text"
-                              placeholder="Enter User name"
+                              placeholder={props.t("Enter User Name")}
                               onChange={validation.handleChange}
                               onBlur={validation.handleBlur}
                               invalid={
@@ -165,7 +166,7 @@ const Login = (props) => {
                           </div>
 
                           <div className="mb-4">
-                            <Label className="form-label">Password</Label>
+                            <Label className="form-label">{props.t("Password")}</Label>
                             <div
                               className={
                                 !validation.errors.password ? "d-flex" : ""
@@ -176,7 +177,7 @@ const Login = (props) => {
                                 value={validation.values.password || ""}
                                 // type="password"
                                 type={showPassword ? "text" : "password"}
-                                placeholder="Enter Password"
+                                placeholder={props.t("Enter Password")}
                                 onChange={validation.handleChange}
                                 onBlur={validation.handleBlur}
                                 invalid={
@@ -224,8 +225,7 @@ const Login = (props) => {
                                   cursor: "pointer",
                                 }}
                               >
-                                <i className="mdi mdi-lock"></i> Forgot your
-                                password ?
+                                <i className="mdi mdi-lock"></i>{props.t("Forgot your password")} ?
                               </Link>
                             </span>
                           </div>
@@ -234,7 +234,7 @@ const Login = (props) => {
                               className="btn btn-primary waves-effect waves-light"
                               type="submit"
                             >
-                              Log In
+                              {props.t("Log In")}
                             </button>
                           </div>
                         </Col>
@@ -252,7 +252,7 @@ const Login = (props) => {
 };
 
 // Exporting the login funtion to the router
-export default withRouter(Login);
+export default withRouter(withTranslation()(Login));
 
 // Default property
 Login.propTypes = {

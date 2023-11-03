@@ -10,7 +10,7 @@ import { layoutTypes } from "../constants/layout";
 // layouts
 import NonAuthLayout from "../Layout/NonAuthLayout";
 import VerticalLayout from "../Layout/VerticalLayout/index";
-import HorizontalLayout from "../Layout/HorizontalLayout/index";
+// import HorizontalLayout from "../Layout/HorizontalLayout/index";
 import { AuthProtected } from "./AuthProtected";
 
 import { authProtectedRoutes, publicRoutes } from "./routes";
@@ -21,9 +21,9 @@ const getLayout = (layoutType) => {
     case layoutTypes.VERTICAL:
       Layout = VerticalLayout;
       break;
-    case layoutTypes.HORIZONTAL:
-      Layout = HorizontalLayout;
-      break;
+    // case layoutTypes.HORIZONTAL:
+    //   Layout = HorizontalLayout;
+    //   break;
     default:
       break;
   }

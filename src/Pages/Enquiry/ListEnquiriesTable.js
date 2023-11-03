@@ -21,9 +21,12 @@ import {
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import Flatpickr from "react-flatpickr";
+import { useSelector } from "react-redux";
+import { withTranslation } from "react-i18next";
 
 /**IMPORTED FILES */
 import config from "../../config";
+import withRouter from "../../components/Common/withRouter";
 import {
   getEnquiriesData,
   getSingleEnquiryData,
@@ -36,7 +39,7 @@ import { addNewQuotaion } from "../../helpers/ApiRoutes/addApiRoutes";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { date } from "yup";
 
-const ListEnquiriesTable = () => {
+const ListEnquiriesTable = (props) => {
   const [view_modal, setView_modal] = useState(false);
   const [enquiry, setEnquiry] = useState(null);
   const [enquiries, setEnquiries] = useState([]);
@@ -63,6 +66,7 @@ const ListEnquiriesTable = () => {
   const [pageTitle, setPageTitle] = useState("KailPlus");
   const [pickupDate, setPickupDate] = useState("");
   const [searchInp, setSearchInp] = useState("");
+  const [transportationInsuranceCoverage, setTransportationInsuranceCoverage] = useState("");
   const pageLimit = config.pageLimit;
   const role_id = config.Role;
 
@@ -478,23 +482,26 @@ const ListEnquiriesTable = () => {
         ?.includes(searchInp.toLowerCase().trim()) ||
       value?.status.toLowerCase().includes(searchInp.toLowerCase().trim())
   );
-  document.title = `Enquiry | ${pageTitle} `;
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+  document.title = `${props.t("Enquiries")} | ${pageTitle} `;
   // the execution of all the object and element are written inside the return. Whenever this file will be called only the code inside the return written will be returned
   return (
     <React.Fragment>
-      <div className="page-content">
+      <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
           {/* Header of the Page */}
-          <Breadcrumbs title="Tables" breadcrumbItem="Enquiries" />
+          <Breadcrumbs title="Tables" breadcrumbItem={props.t("Enquiries")} />
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
                   <div className="row align-items-md-center">
                     <h4 className="card-title mb-0 col-md-8  p-3">
-                      View <br />{" "}
+                    {props.t("View")} <br />{" "}
                       <span className="d-block mt-2 fs-16 text-success">
-                        Total {numberOfData}
+                      {props.t("Total")} {numberOfData}
                       </span>
                     </h4>
                     <form className="col-md-4">
@@ -503,7 +510,7 @@ const ListEnquiriesTable = () => {
                           <input
                             type="text"
                             className="form-control"
-                            placeholder="Search ..."
+                            placeholder={props.t("Search") + "..."}
                             onChange={(e) => setSearchInp(e.target.value)}
                             aria-label="Recipient's username"
                           />
@@ -533,24 +540,24 @@ const ListEnquiriesTable = () => {
                               #
                             </th>
                             <th className="sort" data-sort="enquiryId">
-                              Enquiry Id
+                            {props.t("Enquiry Id")}
                             </th>
                             <th className="sort" data-sort="customer_name">
-                              Customer Name
+                            {props.t("Customer Name")}
                             </th>
                             {!(role === role_id.service_provider) ? (
                               <th className="sort" data-sort="service_provider">
-                                Service Provider Name
+                                {props.t("Service Provider Name")}
                               </th>
                             ) : null}
                             <th className="sort" data-sort="status">
-                              Status
+                            {props.t("Status")}
                             </th>
                             <th className="sort" data-sort="created_date">
-                              Created At
+                            {props.t("Created At")}
                             </th>
                             <th className="sort" colSpan={2} data-sort="action">
-                              Action
+                            {props.t("Action")}
                             </th>
                           </tr>
                         </thead>
@@ -583,7 +590,7 @@ const ListEnquiriesTable = () => {
                                         data-bs-toggle="modal"
                                         data-bs-target="#showModal"
                                       >
-                                        View
+                                        {props.t("View")}
                                       </button>
                                     </div>
                                   </div>
@@ -600,7 +607,7 @@ const ListEnquiriesTable = () => {
                                           data-bs-toggle="modal"
                                           data-bs-target="#showModal"
                                         >
-                                          Confirm
+                                          {props.t("Confirm")}
                                         </button>
                                       </div>
                                     </div>
@@ -638,7 +645,7 @@ const ListEnquiriesTable = () => {
                             className="page-item pagination-prev disabled"
                             onClick={() => getAllData(pageNumber - 1)}
                           >
-                            Previous
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0">
@@ -649,7 +656,7 @@ const ListEnquiriesTable = () => {
                             className="page-item pagination-next"
                             onClick={() => getAllData(pageNumber + 1)}
                           >
-                            Next
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -672,13 +679,13 @@ const ListEnquiriesTable = () => {
         centered
       >
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             modalClose();
           }}
         >
-          Confirm Enquery
+          {props.t("Confirm Enquiry")}
         </ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>
@@ -689,7 +696,7 @@ const ListEnquiriesTable = () => {
             ) : null}
             <div className="mb-3">
               <label htmlFor="customerName-field" className="form-label">
-                Customer Name
+              {props.t("Customer Name")}
               </label>
               <input
                 type="text"
@@ -704,7 +711,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="service_provider_id-field" className="form-label">
-                Service Provider Name
+              {props.t("Service Provider Name")}
               </label>
               <select
                 data-trigger
@@ -720,7 +727,7 @@ const ListEnquiriesTable = () => {
                 required
                 disabled={role == role_id.service_provider}
               >
-                <option value="">Select Service Provider</option>
+                <option value="">{props.t("Select Service Provider")}</option>
                 {serviceProviders.map((item, index) => (
                   <option key={index} value={item.id}>
                     {item.name}
@@ -731,7 +738,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="vehicle_id-field" className="form-label">
-                Vehicle Number
+              {props.t("Vehicle Number")}
               </label>
               <select
                 data-trigger
@@ -745,7 +752,7 @@ const ListEnquiriesTable = () => {
                 required
                 // required
               >
-                <option value="">Select Any Vehicle Number</option>
+                <option value="">{props.t("Select Any Vehicle Number")}</option>
                 {sPVechiles.map((item, index) => (
                   <option key={index} value={item.id}>
                     {item.vehicle_number}
@@ -756,7 +763,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="trip_type-field" className="form-label">
-                Trip Type
+              {props.t("Trip Type")}
               </label>
               <select
                 data-trigger
@@ -769,16 +776,16 @@ const ListEnquiriesTable = () => {
                 onBlur={validation.handleBlur}
                 required
               >
-                <option value="">Select Trip Type</option>
-                <option value="PRIVATE">Private</option>
-                <option value="GCC">GCC</option>
-                <option value="SHARING">Sharing</option>
+                <option value="">{props.t("Select Trip Type")}</option>
+                <option value="PRIVATE">{props.t("Private")}</option>
+                <option value="GCC">{props.t("GCC")}</option>
+                <option value="SHARING">{props.t("Sharing")}</option>
               </select>
             </div>
 
             <div className="mb-3">
               <label htmlFor="pickup_country-field" className="form-label">
-                Pickup Country
+              {props.t("Pickup Country")}
               </label>
               <input
                 type="text"
@@ -793,7 +800,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="pickup_location-field" className="form-label">
-                Pickup Location
+              {props.t("Pickup Location")}
               </label>
               <input
                 type="text"
@@ -808,7 +815,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="drop_country-field" className="form-label">
-                Drop Country
+              {props.t("Drop Country")}
               </label>
               <input
                 type="text"
@@ -823,7 +830,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="drop_location-field" className="form-label">
-                Drop Location
+              {props.t("Drop Location")}
               </label>
               <input
                 type="text"
@@ -838,7 +845,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="no_of_horse-field" className="form-label">
-                Number of Hourse
+              {props.t("Number Of Horse")}
               </label>
               <input
                 type="text"
@@ -853,7 +860,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="driver_id-field" className="form-label">
-                Driver
+              {props.t("Driver")}
               </label>
               <select
                 data-trigger
@@ -865,7 +872,7 @@ const ListEnquiriesTable = () => {
                 onBlur={validation.handleBlur}
                 required
               >
-                <option value="">Select Any Vehicle Number</option>
+                <option value="">{props.t("Select Any Driver")}</option>
                 {sPDrivers.map((item, index) => (
                   <option key={index} value={item.id}>
                     {item.name}
@@ -876,7 +883,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="discount_type_id-field" className="form-label">
-                Discount
+              {props.t("Discount")}
               </label>
               <select
                 data-trigger
@@ -892,7 +899,7 @@ const ListEnquiriesTable = () => {
 
                 // required
               >
-                <option value="">Select Discount</option>
+                <option value="">{props.t("Select Discount")}</option>
                 {discounts.map((item, index) => (
                   <option key={index} value={item.id}>
                     {item.name}
@@ -903,7 +910,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="pickup_date-field" className="form-label">
-                Pickup Date
+              {props.t("Pickup Date")}
               </label>
               <Flatpickr
                 className="form-control"
@@ -919,13 +926,13 @@ const ListEnquiriesTable = () => {
                   setPickupDate(dates[0]);
                   validation.setFieldValue("drop_date", "");
                 }}
-                placeholder={validation.values.pickup_date || "Select Date"}
+                placeholder={validation.values.pickup_date || props.t("Select Date")}
               />
             </div>
 
             <div className="mb-3">
               <label htmlFor="pickup_time-field" className="form-label">
-                Pickup Time
+              {props.t("Pickup Time")}
               </label>
               <input
                 type="time"
@@ -940,7 +947,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="drop_date-field" className="form-label">
-                Drop Date
+              {props.t("Drop Date")}
               </label>
               <Flatpickr
                 className="form-control"
@@ -962,7 +969,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="drop_time-field" className="form-label">
-                Drop Time
+              {props.t("Drop Time")}
               </label>
               <input
                 type="time"
@@ -977,57 +984,56 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label className="form-label">
-                Transportation Insurance Coverage
+              {props.t("Transportation Insurance Coverage")}
               </label>
-              <div className="form-check">
+               <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="transportation-insurance-coverage-yes"
                   name="transportation_insurance_coverage"
                   className="form-check-input"
                   value="TRUE"
-                  checked={
-                    validation.values.transportation_insurance_coverage ===
-                    "TRUE"
-                  }
-                  onChange={validation.handleChange}
+                 
+                  onChange={(e) => {
+                    validation.handleChange(e);
+            
+                  }}
                   onBlur={validation.handleBlur}
                   required
                 />
                 <label
                   htmlFor="transportation-insurance-coverage-yes"
-                  className="form-check-label"
+                 className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  Yes
+                  {props.t("Yes")}
                 </label>
               </div>
-              <div className="form-check">
+               <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="transportation-insurance-coverage-no"
                   name="transportation_insurance_coverage"
                   className="form-check-input"
                   value="FALSE"
-                  checked={
-                    validation.values.transportation_insurance_coverage ===
-                    "FALSE  "
-                  }
-                  onChange={validation.handleChange}
+                  onChange={(e) => {
+                    validation.handleChange(e);
+                    
+                  }}
                   onBlur={validation.handleBlur}
                   required
                 />
                 <label
                   htmlFor="transportation-insurance-coverage-no"
-                  className="form-check-label"
+                 className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  No
+                  {props.t("No")}
                 </label>
               </div>
             </div>
 
             <div className="mb-3">
               <label htmlFor="additional_service-field" className="form-label">
-                Additional Service
+              {props.t("Additional Service")}
               </label>
               <input
                 type="text"
@@ -1042,7 +1048,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="special_requirement-field" className="form-label">
-                Special Requirement
+              {props.t("Special Requirement")}
               </label>
               <input
                 type="text"
@@ -1057,7 +1063,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="vehicle_amount-field" className="form-label">
-                Vehicle Payment
+              {props.t("Vehicle Payment")}
               </label>
               <input
                 type="text"
@@ -1076,7 +1082,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="driver_amount-field" className="form-label">
-                Driver Payment
+              {props.t("Driver Payment")}
               </label>
               <input
                 type="text"
@@ -1095,7 +1101,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="discount_amount-field" className="form-label">
-                Discount Payment
+              {props.t("Discount Payment")}
               </label>
               <input
                 type="text"
@@ -1109,8 +1115,8 @@ const ListEnquiriesTable = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Applay Tax</label>
-              <div className="form-check">
+              <label className="form-label">{props.t("Apply Tax")}</label>
+              <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="tax_applayed-yes"
@@ -1123,11 +1129,11 @@ const ListEnquiriesTable = () => {
                   onBlur={validation.handleBlur}
                   required
                 />
-                <label htmlFor="tax_applayed-yes" className="form-check-label">
-                  Yes
+                <label htmlFor="tax_applayed-yes" className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}>
+                {props.t("Yes")}
                 </label>
               </div>
-              <div className="form-check">
+              <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="tax_applayed-no"
@@ -1140,14 +1146,14 @@ const ListEnquiriesTable = () => {
                   onBlur={validation.handleBlur}
                   required
                 />
-                <label htmlFor="tax_applayed-no" className="form-check-label">
-                  No
+                <label htmlFor="tax_applayed-no" className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}>
+                {props.t("No")}
                 </label>
               </div>
             </div>
             <div className="mb-3">
               <label htmlFor="tax_amount-field" className="form-label">
-                Tax Payment
+                {props.t("Tax Payment")}
               </label>
               <input
                 type="text"
@@ -1162,7 +1168,7 @@ const ListEnquiriesTable = () => {
 
             <div className="mb-3">
               <label htmlFor="final_amount-field" className="form-label">
-                Final Payment
+              {props.t("Final Payment")}
               </label>
               <input
                 type="text"
@@ -1184,7 +1190,7 @@ const ListEnquiriesTable = () => {
                   modalClose();
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
               <button
                 type="submit"
@@ -1194,7 +1200,7 @@ const ListEnquiriesTable = () => {
                   window.location.href = "#exampleModalLabel"; // Change the URL here
                 }}
               >
-                Confirm Enquery
+                {props.t("Confirm Enquiry")}
               </button>
             </div>
           </ModalFooter>
@@ -1211,11 +1217,13 @@ const ListEnquiriesTable = () => {
         centered
       >
         <ModalHeader
+        className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
+        id="exampleModalLabel"
           toggle={() => {
             modalClose();
           }}
         >
-          View Enquiry
+          {props.t("View Enquiry")}
         </ModalHeader>
         <form className="tablelist-form">
           <ModalBody>
@@ -1227,7 +1235,7 @@ const ListEnquiriesTable = () => {
                                 Which is for details of particular enquiry detail */}
                   <div className="mb-3">
                     <label htmlFor="customerName-field" className="form-label">
-                      Customer Name
+                    {props.t("Customer Name")}
                     </label>
                     <input
                       type="text"
@@ -1245,7 +1253,7 @@ const ListEnquiriesTable = () => {
                       htmlFor="customer_contact_no-field"
                       className="form-label"
                     >
-                      Customer Contact Number
+                     {props.t("Customer Contact Number")}
                     </label>
                     <input
                       type="text"
@@ -1263,7 +1271,7 @@ const ListEnquiriesTable = () => {
                       htmlFor="service_provider-field"
                       className="form-label"
                     >
-                      Service Provider Name
+                      {props.t("Service Provider Name")}
                     </label>
                     <input
                       type="text"
@@ -1281,7 +1289,7 @@ const ListEnquiriesTable = () => {
                       htmlFor="vehicle_number-field"
                       className="form-label"
                     >
-                      Vehicle Number
+                      {props.t("Vehicle Number")}
                     </label>
                     <input
                       type="text"
@@ -1295,7 +1303,7 @@ const ListEnquiriesTable = () => {
 
                   <div className="mb-3">
                     <label htmlFor="trip_type-field" className="form-label">
-                      Trip Type
+                    {props.t("Trip Type")}
                     </label>
                     <input
                       type="text"
@@ -1312,7 +1320,7 @@ const ListEnquiriesTable = () => {
                       htmlFor="pickup_country-field"
                       className="form-label"
                     >
-                      Pickup Country
+                      {props.t("Pickup Country")}
                     </label>
                     <input
                       type="text"
@@ -1331,7 +1339,7 @@ const ListEnquiriesTable = () => {
                       htmlFor="pickup_location-field"
                       className="form-label"
                     >
-                      Pickup Location
+                      {props.t("Pickup Location")}
                     </label>
                     <input
                       type="text"
@@ -1345,7 +1353,7 @@ const ListEnquiriesTable = () => {
 
                   <div className="mb-3">
                     <label htmlFor="drop_country-field" className="form-label">
-                      Drop Country
+                    {props.t("Drop Country")}
                     </label>
                     <input
                       type="text"
@@ -1361,7 +1369,7 @@ const ListEnquiriesTable = () => {
                                 Which is for details of particular enquiry detail */}
                   <div className="mb-3">
                     <label htmlFor="drop_location-field" className="form-label">
-                      Drop Location
+                    {props.t("Drop Location")}
                     </label>
                     <input
                       type="text"
@@ -1375,7 +1383,7 @@ const ListEnquiriesTable = () => {
 
                   <div className="mb-3">
                     <label htmlFor="no_of_horse-field" className="form-label">
-                      Number of Hourse
+                    {props.t("Number Of Horse")}
                     </label>
                     <input
                       type="text"
@@ -1389,7 +1397,7 @@ const ListEnquiriesTable = () => {
 
                   <div className="mb-3">
                     <label htmlFor="created_at-field" className="form-label">
-                      Created At
+                    {props.t("Created At")}
                     </label>
                     <input
                       type="text"
@@ -1405,7 +1413,7 @@ const ListEnquiriesTable = () => {
                                 Which is for details of particular enquiry detail */}
                   <div className="mb-3">
                     <label htmlFor="description-field" className="form-label">
-                      Description
+                    {props.t("Description")}
                     </label>
                     <input
                       type="text"
@@ -1430,7 +1438,7 @@ const ListEnquiriesTable = () => {
                   modalClose();
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
             </div>
           </ModalFooter>
@@ -1440,4 +1448,4 @@ const ListEnquiriesTable = () => {
   );
 };
 
-export default ListEnquiriesTable;
+export default withRouter(withTranslation()(ListEnquiriesTable));

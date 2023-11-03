@@ -20,13 +20,15 @@ import {
   Row,
   ModalHeader,
 } from "reactstrap";
+import { withTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
 import Flatpickr from "react-flatpickr";
-
+import { useSelector } from "react-redux";
 /**IMPORTED FILES */
 import { removeCustomer } from "../../helpers/ApiRoutes/removeApiRoutes"; //For removing customers
 import { addNewCustomer } from "../../helpers/ApiRoutes/addApiRoutes"; //For adding new customer
+import withRouter from "../../components/Common/withRouter";
 import {
   updateCustomer,
   updateCustomerStatus,
@@ -37,9 +39,10 @@ import {
 } from "../../helpers/ApiRoutes/getApiRoutes";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import config from "../../config";
+import dateConverter from "../../helpers/dateConverter";
 
 // Function for customer page
-const ListCustomerTable = () => {
+const ListCustomerTable = (props) => {
   const [modal_list, setmodal_list] = useState(false); /**Using for showing ADD & EDIT modal */
   const [view_modal, setView_modal] = useState(false); /**Using for showing VIEW modal */
   const [add_list, setAdd_list] = useState(false); /**Using for controlling ADD & EDIT modal */
@@ -195,10 +198,10 @@ const ListCustomerTable = () => {
   async function getAllData(page) {
     if (userId) {
       let getCustomers = await getCustomersData(page || 1, userId);
-      setCustomers(getCustomers?.customer);
-      setModule(getCustomers?.module[0]);
+      setCustomers(getCustomers?.customer || []);
+      setModule(getCustomers?.module[0] || []);
       setPageNumber(page);
-      setNumberOfData(getCustomers?.totalCount);
+      setNumberOfData(getCustomers?.totalCount || "");
     }
   }
     /**Filter data */
@@ -207,27 +210,30 @@ const ListCustomerTable = () => {
       value?.email.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
       value?.contact_no.toLowerCase().includes(searchInp.toLowerCase().trim())
     );
+    const {  dir } = useSelector(state => ({
+      dir: state.Layout.dir,
+    }));
   
-  document.title = `Customers | ${pageTitle} `;
+  document.title = `${props.t("Customers")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+      <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
-          <Breadcrumbs title="Tables" breadcrumbItem="Customers" />
+          <Breadcrumbs title={props.t("Tables")} breadcrumbItem={props.t("Customers")} />
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
                 <div className="row align-items-md-center">
-                  <h4 className="card-title mb-0 col-md-8  p-3">Add, Edit & Remove <br/> 
-                   <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span></h4>
+                  <h4 className="card-title mb-0 col-md-8  p-3">{props.t("Add, Edit & Remove")} <br/> 
+                   <span className="d-block mt-2 fs-16 text-success">{props.t("Total")} {numberOfData}</span></h4>
                   <form className="col-md-4">
                     <div className="form-group m-0">
                       <div className="input-group">
                         <input
                           type="text"
                           className="form-control"
-                          placeholder="Search ..."
+                          placeholder={props.t("Search") + "..."}
                           onChange={(e)=>setSearchInp(e.target.value)}
                           aria-label="Recipient's username"
                         />
@@ -253,7 +259,7 @@ const ListCustomerTable = () => {
                             id="create-btn"
                           >
                             <i className="ri-add-line align-bottom me-1"></i>{" "}
-                            Add
+                            {props.t("Add")}
                           </Button>
                         </div>
                       </Col>
@@ -272,25 +278,25 @@ const ListCustomerTable = () => {
                               className="customer_name"
                               data-sort="customer_name"
                             >
-                              Name
+                              {props.t("Name")}
                             </th>
                             <th className="email" data-sort="email">
-                              Email
+                            {props.t("Email")}
                             </th>
                             <th className="contact_no" data-sort="contact_no">
-                              Contact Number
+                            {props.t("Contact Number")}
                             </th>
                             <th
                               className="registered_date"
                               data-sort="registered_date"
                             >
-                              Registered Date
+                              {props.t("Registered Date")}
                             </th>
                             <th className="status" data-sort="status">
-                              Status
+                              {props.t("Status")}
                             </th>
                             <th className="action" data-sort="action">
-                              Action
+                              {props.t("Action")}
                             </th>
                           </tr>
                         </thead>
@@ -340,7 +346,7 @@ const ListCustomerTable = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
                                     >
-                                      View
+                                      {props.t("View")}
                                     </button>
                                   </div>
                                   <div className="edit">
@@ -350,7 +356,7 @@ const ListCustomerTable = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
                                     >
-                                      Edit
+                                      {props.t("Edit")}
                                     </button>
                                   </div>
                                   <div className="remove">
@@ -360,7 +366,7 @@ const ListCustomerTable = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#deleteRecordModal"
                                     >
-                                      Remove
+                                      {props.t("Remove")}
                                     </button>
                                   </div>
                                 </div>
@@ -377,7 +383,7 @@ const ListCustomerTable = () => {
                             className="page-item pagination-prev disabled"
                             onClick={() => getAllData(pageNumber - 1)}
                           >
-                            Previous
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
@@ -386,7 +392,7 @@ const ListCustomerTable = () => {
                             className="page-item pagination-next"
                             onClick={() => getAllData(pageNumber + 1)}
                           >
-                            Next
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -411,7 +417,7 @@ const ListCustomerTable = () => {
         centered
       >
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             setmodal_list(false);
@@ -420,7 +426,7 @@ const ListCustomerTable = () => {
             setUpdateImage("");
           }}
         >
-          {add_list ? "Add Customer" : "Edit Customer"}{" "}
+          {add_list ? props.t("Add Customer") : props.t("Edit Customer")}{" "}
         </ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>
@@ -432,7 +438,7 @@ const ListCustomerTable = () => {
             {/** Customer name */}
             <div className="mb-3">
               <label htmlFor="customername-field" className="form-label">
-                Name
+              {props.t("Name")}
               </label>
               <input
                 type="text"
@@ -441,14 +447,14 @@ const ListCustomerTable = () => {
                 className="form-control"
                 value={validation.values.name || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Name"
+                placeholder={props.t("Enter Name")}
                 required
               />
             </div>
             {/** Customer email */}
             <div className="mb-3">
               <label htmlFor="email-field" className="form-label">
-                Email
+              {props.t("Email")}
               </label>
               <input
                 type="email"
@@ -457,14 +463,14 @@ const ListCustomerTable = () => {
                 value={validation.values.email || ""}
                 onChange={validation.handleChange}
                 className="form-control"
-                placeholder="Enter Email"
+                placeholder={props.t("Enter Email")}
                 required
               />
             </div>
             {/** Customer username */}
             <div className="mb-3">
               <label htmlFor="username-field" className="form-label">
-                Username
+              {props.t("Username")}
               </label>
               <input
                 type="text"
@@ -473,7 +479,7 @@ const ListCustomerTable = () => {
                 value={validation.values.userName || ""}
                 onChange={validation.handleChange}
                 className="form-control"
-                placeholder="Enter Username"
+                placeholder={props.t("Enter User Name")}
                 required
               />
             </div>
@@ -481,7 +487,7 @@ const ListCustomerTable = () => {
             {add_list ? (
               <div className="mb-3">
                 <label htmlFor="password-field" className="form-label">
-                  Password
+                {props.t("Password")}
                 </label>
                 <input
                   type="password"
@@ -490,7 +496,7 @@ const ListCustomerTable = () => {
                   value={validation.values.password || ""}
                   onChange={validation.handleChange}
                   className="form-control"
-                  placeholder="Enter Password"
+                  placeholder={props.t("Enter Password")}
                   required
                 />
               </div>
@@ -498,7 +504,7 @@ const ListCustomerTable = () => {
             {/** Customer contact_no number */}
             <div className="mb-3">
               <label htmlFor="contact_no-field" className="form-label">
-                Contact Number
+              {props.t("Contact Number")}
               </label>
               <input
                 type="text"
@@ -507,38 +513,34 @@ const ListCustomerTable = () => {
                 value={validation.values.contact_no || ""}
                 onChange={validation.handleChange}
                 className="form-control"
-                placeholder="Enter Contact Number"
+                placeholder={props.t("Enter Contact Number")}
                 required
               />
             </div>
 
             <div className="mb-3">
               <label htmlFor="date_of_birth-field" className="form-label">
-                Date Of Birth
+              {props.t("Date Of Birth")}
               </label>
               <Flatpickr
                 className="form-control"
                 name="date_of_birth"
                 options={{
                   dateFormat: "d-m-Y",
-                  maxDate: new Date(
-                    new Date().getFullYear() - 18,
-                    new Date().getMonth(),
-                    new Date().getDate()
-                  ), // Max date is 18 years ago
+                  maxDate: dateConverter.convertTodayDate_DD_MM_YYYY_ForDateOfBirth()
                 }}
                 value=""
                 onChange={(dates) =>
                   validation.setFieldValue("date_of_birth", dates[0])
                 }
-                placeholder={validation.values.date_of_birth || "Select Date"}
+                placeholder={validation.values.date_of_birth || props.t("Select Date")}
               />
             </div>
 
             {/** Customer Id proof no */}
             <div className="mb-3">
               <label htmlFor="id_proof_no-field" className="form-label">
-                Id Proof Number
+              {props.t("Id Proof Number")}
               </label>
               <input
                 type="text"
@@ -547,14 +549,14 @@ const ListCustomerTable = () => {
                 className="form-control"
                 value={validation.values.id_proof_no || ""}
                 onChange={validation.handleChange}  
-                placeholder="Enter Id Proof Number"
+                placeholder={props.t("Enter Id Proof Number")}
               />
             </div>
 
             {/* Id proof Image */}
             <div className="mb-3">
               <label htmlFor="id_proof-field" className="form-label">
-                Id Proof Image
+              {props.t("Id Proof Image")}
               </label>
               <div className="col-md-10">
                 {idProofPreview && (
@@ -571,7 +573,7 @@ const ListCustomerTable = () => {
                   className="form-control"
                   name="id_proof_image"
                   type="file"
-                  placeholder="Certificate Image"
+                  placeholder={props.t("Certificate Image")}
                   onChange={handleIdProofImageChange}
                 />
               </div>
@@ -589,7 +591,7 @@ const ListCustomerTable = () => {
                   setIdProofPreview(null);
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
               <button
                 type="submit"
@@ -599,7 +601,7 @@ const ListCustomerTable = () => {
                   window.location.href = "#exampleModalLabel"; // Change the URL here
                 }}
               >
-                {add_list ? "Add Customer" : "Update Customer"}
+                {add_list ? props.t("Add Customer") : props.t("Update Customer")}
               </button>
             </div>
           </ModalFooter>
@@ -614,20 +616,20 @@ const ListCustomerTable = () => {
         }}
       >
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             setView_modal(false);
           }}
         >
-          View Customer
+          {props.t("View Customer")}
         </ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>
             {/** Customer name */}
             <div className="mb-3">
               <label htmlFor="customername-field" className="form-label">
-                Name
+              {props.t("Name")}
               </label>
               <input
                 type="text"
@@ -641,7 +643,7 @@ const ListCustomerTable = () => {
             {/** Customer email */}
             <div className="mb-3">
               <label htmlFor="email-field" className="form-label">
-                Email
+              {props.t("Email")}
               </label>
               <input
                 type="email"
@@ -655,7 +657,7 @@ const ListCustomerTable = () => {
             {/** Customer username */}
             <div className="mb-3">
               <label htmlFor="username-field" className="form-label">
-                Username
+              {props.t("Username")}
               </label>
               <input
                 type="text"
@@ -669,7 +671,7 @@ const ListCustomerTable = () => {
             {/** Customer contact_no number */}
             <div className="mb-3">
               <label htmlFor="contact_no-field" className="form-label">
-                Contact Number
+              {props.t("Contact Number")}
               </label>
               <input
                 type="text"
@@ -683,7 +685,7 @@ const ListCustomerTable = () => {
             {/** Customer Date of Birth */}
             <div className="mb-3">
               <label htmlFor="date_of_birth-field" className="form-label">
-                Date Of Birth
+              {props.t("Date Of Birth")}
               </label>
               <input
                 type="text"
@@ -697,7 +699,7 @@ const ListCustomerTable = () => {
             {/** Customer Id proof no */}
             <div className="mb-3">
               <label htmlFor="id_proof_no-field" className="form-label">
-                Id Proof Number
+              {props.t("Id Proof Number")}
               </label>
               <input
                 type="text"
@@ -711,7 +713,7 @@ const ListCustomerTable = () => {
             {/* certificate image */}
             <div className="mb-3">
               <label htmlFor="id_proof_image-field" className="form-label">
-                Id Proof Image
+              {props.t("Id Proof Image")}
               </label>
               <div>
                 <img
@@ -731,7 +733,7 @@ const ListCustomerTable = () => {
                   setView_modal(false);
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
             </div>
           </ModalFooter>
@@ -741,4 +743,4 @@ const ListCustomerTable = () => {
   );
 };
 
-export default ListCustomerTable;
+export default withRouter(withTranslation()(ListCustomerTable));

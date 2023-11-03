@@ -1,6 +1,7 @@
 import {
   SETTINGS_SUCCESS,
   // API_ERROR,
+  DIR_UPDATED
 } from "./actionTypes"
 
 export const uploadSettings = (data) => {
@@ -10,4 +11,6 @@ export const uploadSettings = (data) => {
     payload: data,
   }
 }
+
+
 

@@ -18,6 +18,8 @@ import {
   ModalHeader,
 } from "reactstrap";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { withTranslation } from "react-i18next";
 
 /**IMPORTED FILES */
 import Breadcrumbs from "../../components/Common/Breadcrumb";
@@ -25,9 +27,10 @@ import {
   getAccountsData,
   getSingleAccountsData,
 } from "../../helpers/ApiRoutes/getApiRoutes";
+import withRouter from "../../components/Common/withRouter";
 import config from "../../config";
 
-const Accounts = () => {
+const Accounts = (props) => {
   const [accounts, setAccounts] = useState([]);
   const [singleData, setSingleData] = useState([]);
   const [view_modal, setView_modal] =
@@ -82,12 +85,16 @@ const Accounts = () => {
       value?.service_provider_name.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
       value?.status.toLowerCase().includes(searchInp.toLowerCase().trim())
   );
-  document.title = `Accounts | ${pageTitle} `;
+  
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+  document.title = `${props.t("Accounts")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+     <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
-          <Breadcrumbs title="Tables" breadcrumbItem="Accounts " />
+          <Breadcrumbs title={props.t("Tables")} breadcrumbItem={props.t("Accounts")} />
           <Row>
           <br/> 
                   
@@ -95,7 +102,7 @@ const Accounts = () => {
               <Card>
               <CardHeader>
                 <div className="row align-items-md-center">
-                  <h4 className="card-title mb-0 col-md-8  p-3"> <br/>  <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span></h4>
+                  <h4 className="card-title mb-0 col-md-8  p-3"> <br/>  <span className="d-block mt-2 fs-16 text-success">{props.t("Total")} {numberOfData}</span></h4>
                   <form className="col-md-4">
                     <div className="form-group m-0">
                       <div className="input-group">
@@ -129,27 +136,27 @@ const Accounts = () => {
                               #
                             </th>
                             <th className="sort" data-sort="month">
-                              Customer Name
+                            {props.t("Customer Name")}
                             </th>
                             {!(role === role_id.service_provider) ? (
                               <th className="sort" data-sort="month">
-                                Service Provider Name
+                                {props.t("Service Provider Name")}
                               </th>
                             ) : null}
                             <th className="sort" data-sort="number">
-                              Quotation Id
+                            {props.t("Quotation Id")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Total Payment
+                            {props.t("Total Payment")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Pending Payment
+                            {props.t("Pending Payment")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Status
+                            {props.t("Status")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Payment Details
+                            {props.t("Payment Details")}
                             </th>
                           </tr>
                         </thead>
@@ -182,7 +189,7 @@ const Accounts = () => {
                                       data-bs-toggle="modal"
                                       data-bs-target="#showModal"
                                     >
-                                      View
+                                      {props.t("View")}
                                     </button>
                                   </div>
                                 ) : null}
@@ -200,7 +207,7 @@ const Accounts = () => {
                             className="page-item pagination-prev disabled"
                             onClick={() => getAllData(pageNumber - 1)}
                           >
-                            Previous
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
@@ -209,7 +216,7 @@ const Accounts = () => {
                             className="page-item pagination-next"
                             onClick={() => getAllData(pageNumber + 1)}
                           >
-                            Next
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -232,14 +239,14 @@ const Accounts = () => {
         centered
       >
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             tog_view("view");
             setView_modal(false);
           }}
         >
-          Payment Details
+          {props.t("Payment Details")}
         </ModalHeader>
         <form className="tablelist-form">
           <ModalBody>
@@ -254,13 +261,13 @@ const Accounts = () => {
                       #
                     </th>
                     <th className="sort" data-sort="month">
-                      Received Payment
+                    {props.t("Received Payment")}
                     </th>
                     <th className="sort" data-sort="month">
-                      Recived Date
+                      {props.t("Received Date")}
                     </th>
                     <th className="sort" data-sort="number">
-                      Pending Payment
+                      {props.t("Pending Payment")}
                     </th>
                   </tr>
                 </thead>
@@ -287,7 +294,7 @@ const Accounts = () => {
                   setSingleData([]);
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
             </div>
           </ModalFooter>
@@ -297,4 +304,4 @@ const Accounts = () => {
   );
 };
 
-export default Accounts;
+export default withRouter(withTranslation()(Accounts));

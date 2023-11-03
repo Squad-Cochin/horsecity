@@ -9,13 +9,17 @@ import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
 import { useFormik } from "formik";
+import { useSelector } from "react-redux";
+import { withTranslation } from "react-i18next";
 
 /**IMPORTED */
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { getAccountsReport } from "../../helpers/ApiRoutes/getApiRoutes";
 import config from "../../config";
+import dateConveter from "../../helpers/dateConverter"
+import withRouter from "../../components/Common/withRouter";
 
-const AccountsReport = () => {
+const AccountsReport = (props) => {
   const [accountsReport, setAccountsReport] = useState([]);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
@@ -78,12 +82,15 @@ const AccountsReport = () => {
       setNumberOfData(getAllData?.totalCount);
     }
   }
-  document.title = `Report | ${pageTitle} `;
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+  document.title = `${props.t("Reports")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+      <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
-          <Breadcrumbs title="Tables" breadcrumbItem="Accounts Reports" />
+          <Breadcrumbs title={props.t("Tables")} breadcrumbItem={props.t("Accounts Reports")} />
           <Row>
             <Col lg={12}>
               <Card>
@@ -97,21 +104,21 @@ const AccountsReport = () => {
                         {/* <h4 className="card-title mb-0">Add, Edit & Remove</h4> */}
                         <div className="mb-3">
                           <label htmlFor="from-field" className="form-label">
-                            From date
+                          {props.t("From Date")}
                           </label>
                           <Flatpickr
                             className="form-control"
                             name="from_date"
                             options={{
                               dateFormat: "d-m-Y",
-                              maxDate: new Date(),
+                              maxDate: dateConveter.convertTodayDate_DD_MM_YYYY()
                             }}
                             value={fromDate}
                             onChange={(dates) => {
                               validation.setFieldValue("from_date", dates[0]);
                               setFromDate(dates[0]);
                             }}
-                            placeholder="Select from date"
+                            placeholder={props.t("Select from date")}
                             required
                           />
                         </div>
@@ -119,7 +126,7 @@ const AccountsReport = () => {
                       <Col lg={5}>
                         <div className="mb-3">
                           <label htmlFor="to-field" className="form-label">
-                            To date
+                          {props.t("To Date")}
                           </label>
                           <Flatpickr
                             className="form-control"
@@ -134,9 +141,10 @@ const AccountsReport = () => {
                               validation.setFieldValue("to_date", dates[0]);
                               setToDate(dates[0]);
                             }}
-                            placeholder="Select to date"
+                            placeholder={props.t("Select to date")}
                             required
                           />
+
                         </div>
                       </Col>
                       <Col lg={2} className="mt-3">
@@ -145,11 +153,11 @@ const AccountsReport = () => {
                           className="btn btn-success"
                           id="add-btn"
                         >
-                          Submit
+                          {props.t("Submit")}
                         </button>
                       </Col>
                       <span className="d-block mt-2 fs-16 text-success">
-                        Total {numberOfData}
+                      {props.t("Total")} {numberOfData}
                       </span>
                     </Row>
                   </form>
@@ -168,24 +176,24 @@ const AccountsReport = () => {
                               #
                             </th>
                             <th className="sort" data-sort="month">
-                              Customer Name
+                            {props.t("Customer Name")}
                             </th>
                             {!(config.Role.service_provider === role) ? (
                               <th className="sort" data-sort="month">
-                                Service Provider Name
+                                {props.t("Service Provider Name")}
                               </th>
                             ) : null}
                             <th className="sort" data-sort="number">
-                              Quotation Id
+                            {props.t("Quotation Id")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Total Payment
+                              {props.t("Total Payment")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Pending Payment
+                              {props.t("Pending Payment")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Paid At
+                              {props.t("Paid At")}
                             </th>
                           </tr>
                         </thead>
@@ -225,7 +233,7 @@ const AccountsReport = () => {
                               })
                             }
                           >
-                            Previous
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0"><b>{pageNumber !== 1 ? pageNumber : null}</b></ul>
@@ -239,7 +247,7 @@ const AccountsReport = () => {
                               })
                             }
                           >
-                            Next
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -255,4 +263,4 @@ const AccountsReport = () => {
   );
 };
 
-export default AccountsReport;
+export default withRouter(withTranslation()(AccountsReport));

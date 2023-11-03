@@ -8,6 +8,7 @@ import {
   SHOW_RIGHT_SIDEBAR,
   TOGGLE_LEFTMENU,
   SHOW_SIDEBAR,
+  DIR_UPDATED
 } from "./actionTypes";
 
 //constants
@@ -29,6 +30,7 @@ const INIT_STATE = {
   isMobile: false,
   showSidebar: true,
   leftMenu: false,
+  dir : "ltr"
 };
 
 const Layout = (state = INIT_STATE, action) => {
@@ -73,7 +75,12 @@ const Layout = (state = INIT_STATE, action) => {
         ...state,
         leftMenu: action.payload,
       };
-
+    case DIR_UPDATED:
+      return {
+           ...state,
+           dir: action.payload
+          };
+          break;
     default:
       return state;
   }

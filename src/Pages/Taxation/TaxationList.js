@@ -21,6 +21,9 @@ import {
 } from "reactstrap";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { useFormik } from "formik";
+import { withTranslation } from "react-i18next";
 
 //IMPORTED FILES
 import { removeTaxation } from "../../helpers/ApiRoutes/removeApiRoutes";
@@ -33,9 +36,10 @@ import {
   getTaxationsData,
   getSingleTaxationData,
 } from "../../helpers/ApiRoutes/getApiRoutes";
-import { useFormik } from "formik";
+import withRouter from "../../components/Common/withRouter";
 import config from "../../config";
-const TaxationDeatails = () => {
+
+const TaxationDeatails = (props) => {
   const [modal_list, setmodal_list] = useState(false);
   const [taxations, setTaxations] = useState([]);
   const [taxation, setTaxation] = useState([]);
@@ -151,17 +155,20 @@ const TaxationDeatails = () => {
       getAllData(pageNumber);
     }
   }
-  document.title = `Taxation | ${pageTitle} `;
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+  document.title = `${props.t("Taxation")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+     <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
-          <Breadcrumbs title="Tables" breadcrumbItem="Taxations" />
+          <Breadcrumbs title={props.t("Tables")} breadcrumbItem={props.t("Taxations")} />
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Add, Edit & Remove <br/>  <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span></h4>
+                  <h4 className="card-title mb-0">{props.t("Add, Edit & Remove")} <br/>  <span className="d-block mt-2 fs-16 text-success">{props.t("Total")} {numberOfData}</span></h4>
                 </CardHeader>
                 <CardBody>
                   <div id="customerList">
@@ -175,7 +182,7 @@ const TaxationDeatails = () => {
                             id="create-btn"
                           >
                             <i className="ri-add-line align-bottom me-1"></i>{" "}
-                            Add
+                            {props.t("Add")}
                           </Button>
                         </div>
                       </Col>
@@ -191,22 +198,22 @@ const TaxationDeatails = () => {
                               #
                             </th>
                             <th className="sort" data-sort="name">
-                              Name
+                            {props.t("Name")}
                             </th>
                             <th className="sort" data-sort="type">
-                              Type
+                            {props.t("Type")}
                             </th>
                             <th className="sort" data-sort="value">
-                              Value
+                            {props.t("Value")}
                             </th>
                             <th className="sort" data-sort="created_at">
-                              Created At
+                            {props.t("Created At")}
                             </th>
                             <th className="sort" data-sort="status">
-                              Status
+                            {props.t("Status")}
                             </th>
                             <th className="sort" data-sort="action">
-                              Action
+                            {props.t("Action")}
                             </th>
                           </tr>
                         </thead>
@@ -254,7 +261,7 @@ const TaxationDeatails = () => {
                                       data-bs-target="#showModal"
                                       onClick={() => tog_list("EDIT", item.id)}
                                     >
-                                      Edit
+                                      {props.t("Edit")}
                                     </button>
                                   </div>
                                   <div className="remove">
@@ -264,7 +271,7 @@ const TaxationDeatails = () => {
                                       data-bs-target="#deleteRecordModal"
                                       onClick={() => remove_data(item?.id)}
                                     >
-                                      Remove
+                                      {props.t("Remove")}
                                     </button>
                                   </div>
                                 </div>
@@ -281,7 +288,7 @@ const TaxationDeatails = () => {
                             className="page-item pagination-prev disabled"
                             onClick={() => getAllData(pageNumber - 1)}
                           >
-                            Previous
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
@@ -290,7 +297,7 @@ const TaxationDeatails = () => {
                             className="page-item pagination-next"
                             onClick={() => getAllData(pageNumber + 1)}
                           >
-                            Next
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -314,14 +321,14 @@ const TaxationDeatails = () => {
         centered
       >
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             setmodal_list(false);
             setAdd_list(false);
           }}
         >
-          {add_list ? "Add taxation" : "Edit taxation"}{" "}
+          {add_list ? props.t("Add Taxation") : props.t("Edit Taxation")}{" "}
         </ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>
@@ -333,14 +340,14 @@ const TaxationDeatails = () => {
             {/* Tax Name */}
             <div className="mb-3">
               <label htmlFor="tax-field" className="form-label">
-                Name
+              {props.t("Name")}
               </label>
               <input
                 type="text"
                 id="tax-field"
                 className="form-control"
                 name="name"
-                placeholder="Enter Tax Name"
+                placeholder={props.t("Enter Tax Name")}
                 value={validation.values.name || ""}
                 onChange={validation.handleChange}
                 required
@@ -350,7 +357,7 @@ const TaxationDeatails = () => {
             {/* Tax Type */}
             <div className="mb-3">
               <label htmlFor="taxtype-field" className="form-label">
-                Tax Type
+              {props.t("Tax Type")}
               </label>
               <select
                 data-trigger
@@ -362,16 +369,16 @@ const TaxationDeatails = () => {
                 onBlur={validation.handleBlur}
                 required
               >
-                <option value="">Select Tax Type</option>
-                <option value="PERCENTAGE">PERCENTAGE</option>
-                <option value="FLAT">FLAT</option>
+                <option value="">{props.t("Select Tax Type")}</option>
+                <option value="PERCENTAGE">{props.t("PERCENTAGE")}</option>
+                <option value="FLAT">{props.t("FLAT")}</option>
               </select>
             </div>
 
             {/* Tax Value */}
             <div className="mb-3">
               <label htmlFor="value-field" className="form-label">
-                Value
+              {props.t("Value")}
               </label>
               <input
                 type="number"
@@ -380,7 +387,7 @@ const TaxationDeatails = () => {
                 name="value"
                 value={validation.values.value || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Value"
+                placeholder={props.t("Enter Value")}
                 required
               />
             </div>
@@ -395,10 +402,10 @@ const TaxationDeatails = () => {
                   setAdd_list(false);
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
               <button type="submit" className="btn btn-success" id="add-btn">
-                {add_list ? "Add taxation" : "Update taxation"}
+                {add_list ? props.t("Add Taxation") : props.t("Update Taxation")}
               </button>
             </div>
           </ModalFooter>
@@ -408,4 +415,4 @@ const TaxationDeatails = () => {
   );
 };
 
-export default TaxationDeatails;
+export default withRouter(withTranslation()(TaxationDeatails));

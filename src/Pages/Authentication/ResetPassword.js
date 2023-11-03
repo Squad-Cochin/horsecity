@@ -22,6 +22,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
 import { useParams } from "react-router-dom";
+import { withTranslation } from "react-i18next";
 
 /**IMPORTED */
 import { verifyResetPasswordUrl } from "../../helpers/ApiRoutes/getApiRoutes";
@@ -31,6 +32,7 @@ import logo from "../../assets/images/logo.png";
 import withRouter from "../../components/Common/withRouter";
 import { useNavigate } from "react-router-dom";
 import { getSettingsPageData } from "../../helpers/ApiRoutes/getApiRoutes";
+
 
 const ResetPasswordPage = (props) => {
   const [backgroundImage, setBackgroundImage] = useState(
@@ -91,9 +93,9 @@ const ResetPasswordPage = (props) => {
       token: "",
     },
     validationSchema: Yup.object({
-      newpassword: Yup.string().required("Please Enter Your New Password"),
+      newpassword: Yup.string().required(props.t("Please Enter Your New Password")),
       confirmnewpassword: Yup.string().required(
-        "Please Enter Your Confirm Password"
+        props.t("Please Enter Your Confirm Password")
       ),
     }),
     onSubmit: (values) => {
@@ -109,7 +111,7 @@ const ResetPasswordPage = (props) => {
     resetSuccessMsg: state.forgetPassword.resetSuccessMsg,
   }));
 
-  document.title = `Reset Password | ${app_name} `;
+  document.title = `${props.t("Reset Password")} | ${app_name} `;
   return (
     <React.Fragment>
       <div className="bg-overlay"></div>
@@ -153,7 +155,7 @@ const ResetPasswordPage = (props) => {
                             cursor: "pointer",
                           }}
                         >
-                          Go Back To Login ?
+                          {props.t("Go Back To Login")} ?
                         </Link>
                       </Alert>
                     ) : null}
@@ -166,11 +168,11 @@ const ResetPasswordPage = (props) => {
                       }}
                     >
                       <div className="mb-3">
-                        <Label className="form-label">New Password</Label>
+                        <Label className="form-label">{props.t("New Password")}</Label>
                         <Input
                           name="newpassword"
                           className="form-control"
-                          placeholder="Enter password"
+                          placeholder={props.t("Enter password")}
                           type="text"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
@@ -190,11 +192,11 @@ const ResetPasswordPage = (props) => {
                         ) : null}
                       </div>
                       <div className="mb-3">
-                        <Label className="form-label">Confirm Password</Label>
+                        <Label className="form-label">{props.t("Confirm Password")}</Label>
                         <Input
                           name="confirmnewpassword"
                           className="form-control"
-                          placeholder="Enter confirm password"
+                          placeholder={props.t("Enter confirm password")}
                           type="password"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
@@ -219,7 +221,7 @@ const ResetPasswordPage = (props) => {
                             className="btn btn-primary w-md "
                             type="submit"
                           >
-                            Reset
+                            {props.t("Reset")}
                           </button>
                         </Col>
                       </Row>
@@ -239,4 +241,4 @@ ResetPasswordPage.propTypes = {
   history: PropTypes.object,
 };
 
-export default withRouter(ResetPasswordPage);
+export default withRouter(withTranslation()(ResetPasswordPage));

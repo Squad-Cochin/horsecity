@@ -21,11 +21,14 @@ import {
 import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
 import { useFormik } from "formik";
+import { useSelector } from "react-redux";
+import { withTranslation } from "react-i18next";
 
 /**IMPORTED FILES */
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import config from "../../config";
 import Logo from "../../assets/images/black-logo.png";
+import withRouter from "../../components/Common/withRouter";
 import {
   getQuotationData,
   getConfirmQut,
@@ -42,7 +45,7 @@ import {
   confirmQuotation,
 } from "../../helpers/ApiRoutes/editApiRoutes";
 
-const ListQuotationsTable = () => {
+const ListQuotationsTable = (props) => {
   const [view_modal, setView_modal] = useState(false);
   const [quatlist_modal, setQuatList_modal] = useState(false);
   const [quotations, setQuotations] = useState([]);
@@ -95,8 +98,8 @@ const ListQuotationsTable = () => {
   async function getAllData(page) {
     if (userId) {
       let quotationData = await getQuotationData(page || 1, userId);
-      setQuotations(quotationData?.quotations);
-      setModule(quotationData?.module[0]);
+      setQuotations(quotationData && quotationData?.quotations);
+      setModule(quotationData && quotationData?.module[0]);
       setPageNumber(page);
       setNumberOfData(quotationData?.totalCount);
     }
@@ -575,21 +578,25 @@ const ListQuotationsTable = () => {
       value?.status.toLowerCase().includes(searchInp.toLowerCase().trim())
   );
 
-  document.title = `Quotation | ${pageTitle} `;
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+
+  document.title = `${props.t("Quotations")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+       <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
-          <Breadcrumbs title="Tables" breadcrumbItem="Quotations" />
+          <Breadcrumbs title="Tables" breadcrumbItem={props.t("Quotations")} />
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
                   <div className="row align-items-md-center">
                     <h4 className="card-title mb-0 col-md-8  p-3">
-                      Edit & Remove <br />{" "}
+                    {props.t("Edit & Remove")} <br />{" "}
                       <span className="d-block mt-2 fs-16 text-success">
-                        Total {numberOfData}
+                        {props.t("Total")} {numberOfData}
                       </span>
                     </h4>
                     <form className="col-md-4">
@@ -598,7 +605,7 @@ const ListQuotationsTable = () => {
                           <input
                             type="text"
                             className="form-control"
-                            placeholder="Search ..."
+                            placeholder={props.t("Search") + "..."}
                             onChange={(e) => setSearchInp(e.target.value)}
                             aria-label="Recipient's username"
                           />
@@ -625,22 +632,22 @@ const ListQuotationsTable = () => {
                               #
                             </th>
                             <th className="sort" data-sort="quatationId">
-                              Quatation Id
+                            {props.t("Quotation Id")}
                             </th>
                             <th className="sort" data-sort="enquiryId">
-                              Enquiry Id
+                              {props.t("Enquiry Id")}
                             </th>
                             <th className="sort" data-sort="name">
-                              Customer Name
+                              {props.t("Customer Name")}
                             </th>
                             <th className="sort" data-sort="email">
-                              Customer Email
+                              {props.t("Customer Email")}
                             </th>
                             <th className="sort" data-sort="status">
-                              Status
+                              {props.t("Status")}
                             </th>
                             <th className="sort" data-sort="action">
-                              Actions
+                              {props.t("Actions")}
                             </th>
                           </tr>
                         </thead>
@@ -673,7 +680,7 @@ const ListQuotationsTable = () => {
                                           tog_view(item?.quotation_id)
                                         }
                                       >
-                                        Confirm
+                                        {props.t("Confirm")}
                                       </button>
                                     </div>
                                   ) : null}
@@ -687,7 +694,7 @@ const ListQuotationsTable = () => {
                                           quat_list(item?.quotation_id)
                                         }
                                       >
-                                        Quot List
+                                        {props.t("Quot List")}
                                       </button>
                                     </div>
                                   ) : null}
@@ -701,7 +708,7 @@ const ListQuotationsTable = () => {
                                           tog_list(item?.quotation_id)
                                         }
                                       >
-                                        Edit
+                                        {props.t("Edit")}
                                       </button>
                                     </div>
                                   ) : null}
@@ -716,7 +723,7 @@ const ListQuotationsTable = () => {
                                       )
                                     }
                                   >
-                                    Send Email
+                                    {props.t("Send Email")}
                                   </button>
                                 </div>
                               </td>
@@ -750,7 +757,7 @@ const ListQuotationsTable = () => {
                             className="page-item pagination-prev disabled"
                             onClick={() => getAllData(pageNumber - 1)}
                           >
-                            Previous
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0">
@@ -761,7 +768,7 @@ const ListQuotationsTable = () => {
                             className="page-item pagination-next"
                             onClick={() => getAllData(pageNumber + 1)}
                           >
-                            Next
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -784,13 +791,13 @@ const ListQuotationsTable = () => {
         centered
       >
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             modalClose();
           }}
         >
-          Edit Quotation
+          {props.t("Edit Quotation")}
         </ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>
@@ -801,7 +808,7 @@ const ListQuotationsTable = () => {
             ) : null}
             <div className="mb-3">
               <label htmlFor="customerName-field" className="form-label">
-                Customer Name
+              {props.t("Customer Name")}
               </label>
               <input
                 type="text"
@@ -816,7 +823,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="service_provider_id-field" className="form-label">
-                Service Provider Name
+              {props.t("Service Provider Name")}
               </label>
               <select
                 data-trigger
@@ -832,7 +839,7 @@ const ListQuotationsTable = () => {
                 required
                 disabled={role === role_id.service_provider}
               >
-                <option value="">Select Service Provider</option>
+                <option value="">{props.t("Select Service Provider")}</option>
                 {serviceProviders.map((item, index) => (
                   <option key={index} value={item.id}>
                     {item.name}
@@ -843,7 +850,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="vehicle_id-field" className="form-label">
-                Vehicle Number
+              {props.t("Vehicle Number")}
               </label>
               <select
                 data-trigger
@@ -856,7 +863,7 @@ const ListQuotationsTable = () => {
                 onBlur={validation.handleBlur}
                 required
               >
-                <option value="">Select Any Vehicle Number</option>
+                <option value="">{props.t("Select Any Vehicle Number")}</option>
                 {sPVechiles.map((item, index) => (
                   <option key={index} value={item.id}>
                     {item.vehicle_number}
@@ -867,7 +874,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="trip_type-field" className="form-label">
-                Trip Type
+              {props.t("Trip Type")}
               </label>
               <select
                 data-trigger
@@ -880,16 +887,16 @@ const ListQuotationsTable = () => {
                 onBlur={validation.handleBlur}
                 required
               >
-                <option value="">Select Trip Type</option>
-                <option value="PRIVATE">Private</option>
-                <option value="GCC">GCC</option>
-                <option value="SHARING">Sharing</option>
+                <option value="">{props.t("Select Trip Type")}</option>
+                <option value="PRIVATE">{props.t("Private")}</option>
+                <option value="GCC">{props.t("GCC")}</option>
+                <option value="SHARING">{props.t("Sharing")}</option>
               </select>
             </div>
 
             <div className="mb-3">
               <label htmlFor="pickup_country-field" className="form-label">
-                Pickup Country
+              {props.t("Pickup Country")}
               </label>
               <input
                 type="text"
@@ -904,7 +911,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="pickup_location-field" className="form-label">
-                Pickup Location
+              {props.t("Pickup Location")}
               </label>
               <input
                 type="text"
@@ -919,7 +926,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="drop_country-field" className="form-label">
-                Drop Country
+              {props.t("Drop Country")}
               </label>
               <input
                 type="text"
@@ -934,7 +941,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="drop_location-field" className="form-label">
-                Drop Location
+              {props.t("Drop Location")}
               </label>
               <input
                 type="text"
@@ -949,7 +956,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="no_of_horse-field" className="form-label">
-                Number of Hourse
+              {props.t("No Of Horse")}
               </label>
               <input
                 type="text"
@@ -964,7 +971,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="driver_id-field" className="form-label">
-                Driver
+              {props.t("Driver")}
               </label>
               <select
                 data-trigger
@@ -976,7 +983,7 @@ const ListQuotationsTable = () => {
                 onBlur={validation.handleBlur}
                 required
               >
-                <option value="">Select Any Driver</option>
+                <option value="">{props.t("Select Any Driver")}</option>
                 {sPDrivers.map((item, index) => (
                   <option key={index} value={item.id}>
                     {item.name}
@@ -987,7 +994,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="discount_type_id-field" className="form-label">
-                Discount
+              {props.t("Discount")}
               </label>
               <select
                 data-trigger
@@ -1002,7 +1009,7 @@ const ListQuotationsTable = () => {
                 onBlur={validation.handleBlur}
                 // required
               >
-                <option value="">Select Discount</option>
+                <option value="">{props.t("Select Discount")}</option>
                 {discounts.map((item, index) => (
                   <option key={index} value={item.id}>
                     {item.name}
@@ -1013,7 +1020,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="pickup_date-field" className="form-label">
-                Pickup Date
+              {props.t("Pickup Date")}
               </label>
               <Flatpickr
                 className="form-control"
@@ -1034,7 +1041,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="pickup_time-field" className="form-label">
-                Pickup Time
+              {props.t("Pickup Time")}
               </label>
               <input
                 type="time"
@@ -1049,7 +1056,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="drop_date-field" className="form-label">
-                Drop Date
+              {props.t("Drop Date")}
               </label>
               <Flatpickr
                 className="form-control"
@@ -1069,7 +1076,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="drop_time-field" className="form-label">
-                Drop Time
+              {props.t("Drop Time")}
               </label>
               <input
                 type="time"
@@ -1084,9 +1091,9 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label className="form-label">
-                Transportation Insurance Coverage
+              {props.t("Transportation Insurance Coverage")}
               </label>
-              <div className="form-check">
+               <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="transportation-insurance-coverage-yes"
@@ -1103,12 +1110,12 @@ const ListQuotationsTable = () => {
                 />
                 <label
                   htmlFor="transportation-insurance-coverage-yes"
-                  className="form-check-label"
+                 className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  Yes
+                  {props.t("Yes")}
                 </label>
               </div>
-              <div className="form-check">
+               <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="transportation-insurance-coverage-no"
@@ -1125,16 +1132,16 @@ const ListQuotationsTable = () => {
                 />
                 <label
                   htmlFor="transportation-insurance-coverage-no"
-                  className="form-check-label"
+                 className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}
                 >
-                  No
+                  {props.t("No")}
                 </label>
               </div>
             </div>
 
             <div className="mb-3">
               <label htmlFor="additional_service-field" className="form-label">
-                Additional Service
+              {props.t("Additional Service")}
               </label>
               <input
                 type="text"
@@ -1149,7 +1156,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="special_requirement-field" className="form-label">
-                Special Requirement
+              {props.t("Special Requirement")}
               </label>
               <input
                 type="text"
@@ -1164,7 +1171,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="vehicle_amount-field" className="form-label">
-                Vehicle Payment
+              {props.t("Vehicle Payment")}
               </label>
               <input
                 type="text"
@@ -1183,7 +1190,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="driver_amount-field" className="form-label">
-                Driver Payment
+              {props.t("Driver Payment")}
               </label>
               <input
                 type="text"
@@ -1202,7 +1209,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="discount_amount-field" className="form-label">
-                Discount Payment
+              {props.t("Discount Payment")}
               </label>
               <input
                 type="text"
@@ -1216,8 +1223,8 @@ const ListQuotationsTable = () => {
             </div>
 
             <div className="mb-3">
-              <label className="form-label">Applay Tax</label>
-              <div className="form-check">
+              <label className="form-label">{props.t("Apply Tax")}</label>
+               <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="tax_applayed-yes"
@@ -1231,11 +1238,11 @@ const ListQuotationsTable = () => {
                   }}
                   onBlur={validation.handleBlur}
                 />
-                <label htmlFor="tax_applayed-yes" className="form-check-label">
-                  Yes
+                <label htmlFor="tax_applayed-yes"className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}>
+                {props.t("Yes")}
                 </label>
               </div>
-              <div className="form-check">
+               <div className={`form-check ${dir === 'rtl' ? 'form-check-rtl' : ''}`}>
                 <input
                   type="radio"
                   id="tax_applayed-no"
@@ -1249,14 +1256,14 @@ const ListQuotationsTable = () => {
                   }}
                   onBlur={validation.handleBlur}
                 />
-                <label htmlFor="tax_applayed-no" className="form-check-label">
-                  No
+                <label htmlFor="tax_applayed-no"className={`form-check-label ${dir === 'rtl' ? 'form-check-label-rtl': ''}`}>
+                {props.t("No")}
                 </label>
               </div>
             </div>
             <div className="mb-3">
               <label htmlFor="tax_amount-field" className="form-label">
-                Tax Payment
+              {props.t("Tax Payment")}
               </label>
               <input
                 type="text"
@@ -1271,7 +1278,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="final_amount-field" className="form-label">
-                Final Payment
+              {props.t("Final Payment")}
               </label>
               <input
                 type="text"
@@ -1294,7 +1301,7 @@ const ListQuotationsTable = () => {
                     modalClose();
                   }}
                 >
-                  Close
+                  {props.t("Close")}
                 </button>
 
                 <button
@@ -1306,7 +1313,7 @@ const ListQuotationsTable = () => {
                     window.location.href = "#exampleModalLabel"; // Change the URL here
                   }}
                 >
-                  Edit Quotation
+                  {props.t("Edit Quotation")}
                 </button>
               </div>
             ))}
@@ -1324,13 +1331,13 @@ const ListQuotationsTable = () => {
         centered
       >
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             setQuatList_modal(false);
           }}
         >
-          Quotation List
+          {props.t("Quotation List")}
         </ModalHeader>
         <form className="tablelist-form">
           <ModalBody>
@@ -1354,7 +1361,7 @@ const ListQuotationsTable = () => {
                         </div>
                         <div className="tm_invoice_right tm_text_right">
                           <div className="tm_primary_color tm_f50 tm_text_uppercase tm_font_sixe=50px">
-                            <font size="6">QUOTATION</font>
+                            <font size="6">{props.t("QUOTATION")}</font>
                           </div>
                         </div>
                       </div>
@@ -1362,13 +1369,13 @@ const ListQuotationsTable = () => {
                         <div className="tm_invoice_seperator tm_gray_bg"></div>
                         <div className="tm_invoice_info_list">
                           <p className="tm_invoice_number tm_m0 ms-2">
-                            Quotation No:{" "}
+                          {props.t("Quotation No")}:{" "}
                             <b className="tm_primary_color ms-2">
                               {item?.quotation_id}
                             </b>
                           </p>
                           <p className="tm_invoice_date tm_m0 ms-2">
-                            Enquiry Date:{" "}
+                            {props.t("Enquiry Date")}:{" "}
                             <b className="tm_primary_color ms-2">
                               {item?.enquiry_date}
                             </b>
@@ -1376,40 +1383,40 @@ const ListQuotationsTable = () => {
                         </div>
                       </div>
                       <div className="tm_invoice_head tm_mb10">
-                        <div className="tm_invoice_section tm_invoice_to">
+                        <div className={`tm_invoice_section tm_invoice_to ${dir === 'rtl' ? 'tm-section-rtl': ''} `}>
                           <p className="tm_mb2">
                             <b className="tm_primary_color">
-                              Customer Details:
+                            {props.t("Customer Details")}:
                             </b>
                           </p>
                           <div>
                             <div>
-                              <b>Name:</b> {item?.customer_name}
+                              <b>{props.t("Name")}:</b> {item?.customer_name}
                               <br />
-                              <b>Email:</b> {item?.customer_email}
+                              <b>{props.t("Email")}:</b> {item?.customer_email}
                               <br />
-                              <b>Phone:</b> {item?.customer_contact_no}
+                              <b>{props.t("Phone Number")}:</b> {item?.customer_contact_no}
                               <br />
-                              <b>Id Proof No:</b> {item?.customer_id_proof_no}
+                              <b>{props.t("Id Proof No")}:</b> {item?.customer_id_proof_no}
                             </div>
                           </div>
                         </div>
-                        <div className="tm_invoice_section tm_pay_to">
+                        <div className={`tm_invoice_section tm_pay_to ${dir === 'rtl' ? 'tm-section-rtl': ''}`}>
                           <p className="tm_mb2">
                             <b className="tm_primary_color">
-                              Service Provider Details:
+                            {props.t("Service Provider Details")}:
                             </b>
                           </p>
                           <div>
-                            <b>Name:</b> {item?.service_provider_name}
+                            <b>{props.t("Name")}:</b> {item?.service_provider_name}
                             <br />
-                            <b>Vehicle Number:</b> {item?.vehicle_number}
+                            <b>{props.t("Vehicle Number")}:</b> {item?.vehicle_number}
                             <br />
-                            <b>Make:</b> {item?.make}
+                            <b>{props.t("Make")}:</b> {item?.make}
                             <br />
-                            <b>Model:</b> {item?.model}
+                            <b>{props.t("Model")}:</b> {item?.model}
                             <br />
-                            <b>Driver:</b> {item?.driver}
+                            <b>{props.t("Driver")}:</b> {item?.driver}
                           </div>
                         </div>
                       </div>
@@ -1422,25 +1429,25 @@ const ListQuotationsTable = () => {
                             <tr>
                               {/* <th className="index" data-sort="index">#</th> */}
                               <th className="sort" data-sort="customer_name">
-                                Quot ID
+                              {props.t("Quot Id")}
                               </th>
                               <th
                                 className="sort"
                                 data-sort="service_provider_name"
                               >
-                                Trip Type
+                                {props.t("Trip Type")}
                               </th>
                               <th className="sort" data-sort="quotation_id">
-                                Pickup Location
+                                {props.t("Pickup Location")}
                               </th>
                               <th className="sort" data-sort="view_invoice">
-                                Drop Location
+                                {props.t("Drop Location")}
                               </th>
                               <th className="sort" data-sort="send_email">
-                                No Of Horse
+                                {props.t("No Of Horse")}
                               </th>
                               <th className="sort" data-sort="send_email">
-                                Final Payment
+                                {props.t("Final Payment")}
                               </th>
                             </tr>
                           </thead>
@@ -1489,7 +1496,7 @@ const ListQuotationsTable = () => {
                   setQuatList_modal(false);
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
             </div>
           </ModalFooter>
@@ -1506,13 +1513,13 @@ const ListQuotationsTable = () => {
         centered
       >
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             modalClose();
           }}
         >
-          Confirm Quotation
+          {props.t("Confirm Quotation")}
         </ModalHeader>
         {errors !== "" ? (
           <Alert color="danger">
@@ -1541,7 +1548,7 @@ const ListQuotationsTable = () => {
                         </div>
                         <div className="tm_invoice_right tm_text_right">
                           <div className="tm_primary_color tm_f50 tm_text_uppercase tm_font_sixe=50px">
-                            <font size="6">QUOTATION</font>
+                            <font size="6">{props.t("QUOTATION")}</font>
                           </div>
                         </div>
                       </div>
@@ -1549,13 +1556,13 @@ const ListQuotationsTable = () => {
                         <div className="tm_invoice_seperator tm_gray_bg"></div>
                         <div className="tm_invoice_info_list">
                           <p className="tm_invoice_number tm_m0 ms-2">
-                            Quotation No:{" "}
+                          {props.t("Quotation No")}:{" "}
                             <b className="tm_primary_color ms-2">
                               {item?.quotation_id}
                             </b>
                           </p>
                           <p className="tm_invoice_date tm_m0 ms-2">
-                            Enquiry Date:{" "}
+                          {props.t("Enquiry Date")}:{" "}
                             <b className="tm_primary_color ms-2">
                               {item?.enquiry_date}
                             </b>
@@ -1563,45 +1570,45 @@ const ListQuotationsTable = () => {
                         </div>
                       </div>
                       <div className="tm_invoice_head tm_mb10">
-                        <div className="tm_invoice_section tm_invoice_to">
+                      <div className={`tm_invoice_section tm_invoice_to ${dir === 'rtl' ? 'tm-section-rtl': ''} `}>
                           <p className="tm_mb2">
                             <b className="tm_primary_color">
-                              Customer Details:
+                            {props.t("Customer Details")}:
                             </b>
                           </p>
                           <div>
                             <p>
-                              Name:
+                            {props.t("Name")}:
                               {item?.cName}
                               <br />
-                              Email:
+                              {props.t("Email")}:
                               {item?.customer_email}
                               <br />
-                              Username:
+                              {props.t("Username")}:
                               {item?.customer_user_name}
                               <br />
-                              Phone:
+                              {props.t("Phone Number")}:
                               {item?.customer_contact_no}
                               <br />
-                              Id Proof No:
+                              {props.t("Id Proof No")}:
                               {item?.customer_id_proof_no}
                             </p>
                           </div>
                         </div>
-                        <div className="tm_invoice_section tm_pay_to">
+                        <div className={`tm_invoice_section tm_pay_to ${dir === 'rtl' ? 'tm-section-rtl': ''}`}>
                           <p className="tm_mb2">
                             <b className="tm_primary_color">
-                              Service Provider Details:
+                            {props.t("Service Provider Details")}:
                             </b>
                           </p>
                           <p>
-                            Name:
+                          {props.t("Name")}:
                             {item?.service_provider_name}
                             <br />
-                            Vehicle Number:
+                            {props.t("Vehicle Number")}:
                             {item?.vehicle_number}
                             <br />
-                            Make:
+                            {props.t("Make")}:
                             {item?.make}
                           </p>
                         </div>
@@ -1609,25 +1616,25 @@ const ListQuotationsTable = () => {
                       <div className="tm_invoice_footer">
                         <div className="tm_left_footer">
                           <p className="tm_mb2">
-                            <b className="tm_primary_color">Reqirments:</b>
+                            <b className="tm_primary_color">{props.t("Requirements")}:</b>
                           </p>
                           <p className="tm_m0">
-                            <h5>Special Requirements : </h5>
+                            <h5>{props.t("Special Requirements")} : </h5>
                             {item?.special_requirement}
                             <br />
-                            <h5>Additional Service :</h5>
+                            <h5>{props.t("Additional Service")} :</h5>
                             {item?.additional_service}
                           </p>
                         </div>
                         <div className="tm_right_footer">
                           <div className="tm_card">
                             <div className="tm_card_header">
-                              Quotation Summary
+                            {props.t("Quotation Summary")}
                             </div>
                             <div className="tm_card_content">
                               <div className="tm_card_item">
                                 <span className="tm_card_label">
-                                  Trip Type:
+                                {props.t("Trip Type")}:
                                 </span>
                                 <span className="tm_card_value">
                                   {item?.trip_type}
@@ -1635,7 +1642,7 @@ const ListQuotationsTable = () => {
                               </div>
                               <div className="tm_card_item">
                                 <span className="tm_card_label">
-                                  Pickup Location:
+                                {props.t("Pickup Location")}:
                                 </span>
                                 <span className="tm_card_value">
                                   {item?.pickup_location},{" "}
@@ -1644,7 +1651,7 @@ const ListQuotationsTable = () => {
                               </div>
                               <div className="tm_card_item">
                                 <span className="tm_card_label">
-                                  Pickup Date:
+                                {props.t("Pickup Date")}:
                                 </span>
                                 <span className="tm_card_value">
                                   {item?.pickup_date}
@@ -1652,7 +1659,7 @@ const ListQuotationsTable = () => {
                               </div>
                               <div className="tm_card_item">
                                 <span className="tm_card_label">
-                                  Pickup Time:
+                                {props.t("Pickup Time")}:
                                 </span>
                                 <span className="tm_card_value">
                                   {item?.pickup_time}
@@ -1660,7 +1667,7 @@ const ListQuotationsTable = () => {
                               </div>
                               <div className="tm_card_item">
                                 <span className="tm_card_label">
-                                  Drop Location:
+                                {props.t("Drop Location")}:
                                 </span>
                                 <span className="tm_card_value">
                                   {item?.drop_location}, {item?.drop_country}
@@ -1668,7 +1675,7 @@ const ListQuotationsTable = () => {
                               </div>
                               <div className="tm_card_item">
                                 <span className="tm_card_label">
-                                  Drop Time:
+                                {props.t("Drop Time")}:
                                 </span>
                                 <span className="tm_card_value">
                                   {item?.drop_time}
@@ -1676,7 +1683,7 @@ const ListQuotationsTable = () => {
                               </div>
                               <div className="tm_card_item">
                                 <span className="tm_card_label">
-                                  Drop Date:
+                                {props.t("Drop Date")}:
                                 </span>
                                 <span className="tm_card_value">
                                   {item?.drop_date}
@@ -1684,7 +1691,7 @@ const ListQuotationsTable = () => {
                               </div>
                               <div className="tm_card_item">
                                 <span className="tm_card_label">
-                                  Number of Horses:
+                                {props.t("Number of Horses")}:
                                 </span>
                                 <span className="tm_card_value">
                                   {item?.no_of_horse}
@@ -1694,7 +1701,7 @@ const ListQuotationsTable = () => {
                             <div className="tm_card_footer">
                               <div className="tm_card_footer_item">
                                 <span className="tm_card_footer_label">
-                                  Transportation Insurance:
+                                {props.t("Transportation Insurance")}:
                                 </span>
                                 <span className="tm_card_footer_value">
                                   {item?.transportation_insurance_coverage}
@@ -1702,7 +1709,7 @@ const ListQuotationsTable = () => {
                               </div>
                               <div className="tm_card_footer_item">
                                 <span className="tm_card_footer_label">
-                                  Tax:
+                                {props.t("Tax")}:
                                 </span>
                                 <span className="tm_card_footer_value">
                                   {item?.tax_amount}
@@ -1710,7 +1717,7 @@ const ListQuotationsTable = () => {
                               </div>
                               <div className="tm_card_footer_item">
                                 <span className="tm_card_footer_label">
-                                  Discount:
+                                {props.t("Discount")}:
                                 </span>
                                 <span className="tm_card_footer_value">
                                   {item?.discount_amount}
@@ -1718,7 +1725,7 @@ const ListQuotationsTable = () => {
                               </div>
                               <div className="tm_card_footer_item">
                                 <span className="tm_card_footer_label tm_bold">
-                                  Final Amount:
+                                {props.t("Final Amount")}:
                                 </span>
                                 <span className="tm_card_footer_value tm_bold">
                                   {item?.final_amount}
@@ -1744,7 +1751,7 @@ const ListQuotationsTable = () => {
                   modalClose();
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
               {quotation?.map((item, index) => (
                 <div key={index} className="tm_container">
@@ -1758,7 +1765,7 @@ const ListQuotationsTable = () => {
                     className="btn btn-success"
                     id="edit-btn"
                   >
-                    Confirm
+                    {props.t("Confirm")}
                   </button>
                 </div>
               ))}
@@ -1776,13 +1783,13 @@ const ListQuotationsTable = () => {
         centered
       >
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             modalClose();
           }}
         >
-          Send Mail
+          {props.t("Send Email")}
         </ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>
@@ -1793,7 +1800,7 @@ const ListQuotationsTable = () => {
             ) : null}
             <div className="mb-3">
               <label htmlFor="customer_email-field" className="form-label">
-                Customer Email
+              {props.t("Customer Email")}
               </label>
               <input
                 type="text"
@@ -1808,7 +1815,7 @@ const ListQuotationsTable = () => {
 
             <div className="mb-3">
               <label htmlFor="subject-field" className="form-label">
-                Subject
+              {props.t("Subject")}
               </label>
               <input
                 type="text"
@@ -1830,7 +1837,7 @@ const ListQuotationsTable = () => {
                   modalClose();
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
               <button
                 type="submit"
@@ -1838,7 +1845,7 @@ const ListQuotationsTable = () => {
                 id="add-btn"
                 disabled={isActive}
               >
-                Send Email
+                {props.t("Send Email")}
               </button>
             </div>
           </ModalFooter>
@@ -1848,4 +1855,4 @@ const ListQuotationsTable = () => {
   );
 };
 
-export default ListQuotationsTable;
+export default withRouter(withTranslation()(ListQuotationsTable));

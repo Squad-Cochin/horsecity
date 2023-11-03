@@ -9,13 +9,16 @@ import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
 import { useFormik } from "formik";
+import { useSelector } from "react-redux";
+import { withTranslation } from "react-i18next";
 
 //IMPORTED
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { getQuotationReport } from "../../helpers/ApiRoutes/getApiRoutes";
 import config from "../../config";
-
-const QuotationReport = () => {
+import dateConveter from "../../helpers/dateConverter"
+import withRouter from "../../components/Common/withRouter";
+const QuotationReport = (props) => {
   const [quotationReport, setQuotationReport] = useState([]);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
@@ -78,13 +81,15 @@ const QuotationReport = () => {
       setNumberOfData(getAllData?.totalCount);
     }
   }
-
-  document.title = `Report | ${pageTitle} `;
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+  document.title = `${props.t("Reports")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+        <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
-          <Breadcrumbs title="Tables" breadcrumbItem="Quotation Reports" />
+          <Breadcrumbs title={props.t("Tables")} breadcrumbItem={props.t("Quotation Reports")} />
           <Row>
             <Col lg={12}>
               <Card>
@@ -97,21 +102,21 @@ const QuotationReport = () => {
                       <Col lg={5}>
                         <div className="mb-3">
                           <label htmlFor="from-field" className="form-label">
-                            From date
+                          {props.t("From Date")}
                           </label>
                           <Flatpickr
                             className="form-control"
                             name="from_date"
                             options={{
                               dateFormat: "d-m-Y",
-                              maxDate: new Date(),
+                              maxDate: dateConveter.convertTodayDate_DD_MM_YYYY()
                             }}
                             value={fromDate}
                             onChange={(dates) => {
                               validation.setFieldValue("from_date", dates[0]);
                               setFromDate(dates[0]);
                             }}
-                            placeholder="Select from date"
+                            placeholder={props.t("Select from date")}
                             required
                           />
                         </div>
@@ -119,7 +124,7 @@ const QuotationReport = () => {
                       <Col lg={5}>
                         <div className="mb-3">
                           <label htmlFor="to-field" className="form-label">
-                            To date
+                          {props.t("To Date")}
                           </label>
                           <Flatpickr
                             className="form-control"
@@ -134,7 +139,7 @@ const QuotationReport = () => {
                               validation.setFieldValue("to_date", dates[0]);
                               setToDate(dates[0]);
                             }}
-                            placeholder="Select to date"
+                            placeholder={props.t("Select to date")}
                             required
                           />
                         </div>
@@ -145,11 +150,11 @@ const QuotationReport = () => {
                           className="btn btn-success"
                           id="add-btn"
                         >
-                          Submit
+                          {props.t("Submit")}
                         </button>
                       </Col>
                       <span className="d-block mt-2 fs-16 text-success">
-                        Total {numberOfData}
+                      {props.t("Total")} {numberOfData}
                       </span>
                     </Row>
                   </form>
@@ -167,21 +172,21 @@ const QuotationReport = () => {
                               #
                             </th>
                             <th className="sort" data-sort="month">
-                              Customer Name
+                            {props.t("Customer Name")}
                             </th>
                             {!(config.Role.service_provider === role) ? (
                               <th className="sort" data-sort="month">
-                                Service Provider Name
+                                {props.t("Service Provider Name")}
                               </th>
                             ) : null}
                             <th className="sort" data-sort="number">
-                              Quotation Id
+                            {props.t("Quotation Id")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Quotation Date
+                            {props.t("Quotation Date")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Status
+                            {props.t("Status")}
                             </th>
                           </tr>
                         </thead>
@@ -220,7 +225,7 @@ const QuotationReport = () => {
                               })
                             }
                           >
-                            Previous
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0"><b>{pageNumber !== 1 ? pageNumber : null}</b></ul>
@@ -234,7 +239,7 @@ const QuotationReport = () => {
                               })
                             }
                           >
-                            Next
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -250,4 +255,4 @@ const QuotationReport = () => {
   );
 };
 
-export default QuotationReport;
+export default withRouter(withTranslation()(QuotationReport));

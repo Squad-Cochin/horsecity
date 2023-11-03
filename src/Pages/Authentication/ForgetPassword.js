@@ -21,6 +21,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { Link } from "react-router-dom";
 import * as Yup from "yup";
+import { withTranslation } from "react-i18next";
 
 /**IMPORTED */
 import { useFormik } from "formik";
@@ -30,15 +31,16 @@ import logo from "../../assets/images/logo.png";
 import withRouter from "../../components/Common/withRouter";
 import { getSettingsPageData } from "../../helpers/ApiRoutes/getApiRoutes";
 
+
 const ForgetPasswordPage = (props) => {
-  const dispatch = useDispatch();
+
   const [isActive, setActive] = useState(false);
   const [loginpage_logo, setLoginPageLogo] = useState("");
   const [backgroundImage, setBackgroundImage] = useState(
     "../../assets/images/bg.jpg"
   );
   const [app_name, setAppName] = useState("");
-
+  const dispatch = useDispatch();
   /**THIS HOOK WILL RENDER INITIAL TIME */
   useEffect(() => {
     dispatch(clearForgotResponseMessages());
@@ -69,7 +71,7 @@ const ForgetPasswordPage = (props) => {
       email: "",
     },
     validationSchema: Yup.object({
-      email: Yup.string().required("Please Enter Your Email"),
+      email: Yup.string().required(props.t("Please Enter Your Email")),
     }),
     onSubmit: (values) => {
       setActive(true);
@@ -92,7 +94,7 @@ const ForgetPasswordPage = (props) => {
     }
   }, [forgetError, forgetSuccessMsg]);
 
-  document.title = `Forgot Password | ${app_name} `;
+  document.title = `${props.t("Forgot Password")} | ${app_name} `;
   return (
     <React.Fragment>
       <div className="bg-overlay"></div>
@@ -139,11 +141,11 @@ const ForgetPasswordPage = (props) => {
                       }}
                     >
                       <div className="mb-3">
-                        <Label className="form-label">Email</Label>
+                        <Label className="form-label">{props.t("Email")}</Label>
                         <Input
                           name="email"
                           className="form-control"
-                          placeholder="Enter email"
+                          placeholder={props.t("Enter Email")}
                           type="email"
                           onChange={validation.handleChange}
                           onBlur={validation.handleBlur}
@@ -167,7 +169,7 @@ const ForgetPasswordPage = (props) => {
                             type="submit"
                             disabled={isActive}
                           >
-                            Send
+                            {props.t("Send")}
                           </button>
                         </Col>
                       </Row>
@@ -177,9 +179,9 @@ const ForgetPasswordPage = (props) => {
               </Card>
               <div className="mt-5 text-center">
                 <p>
-                  Go back to{" "}
-                  <Link to="/login" className="font-weight-medium text-primary">
-                    Login
+                {props.t("Go back to")} 
+                  <Link to="/login" className="font-weight-medium text-primary ms-2">
+                   {props.t("Log In")}
                   </Link>{" "}
                 </p>
               </div>
@@ -195,4 +197,4 @@ ForgetPasswordPage.propTypes = {
   history: PropTypes.object,
 };
 
-export default withRouter(ForgetPasswordPage);
+export default withRouter(withTranslation()(ForgetPasswordPage));

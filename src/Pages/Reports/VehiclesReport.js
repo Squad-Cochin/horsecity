@@ -7,16 +7,20 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import { Link } from "react-router-dom";
-
+import { useSelector } from "react-redux";
 import Flatpickr from "react-flatpickr";
 import { useFormik } from "formik";
+import { withTranslation } from "react-i18next";
+
 
 /**IMPORTED */
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { getVehicleReport } from "../../helpers/ApiRoutes/getApiRoutes";
 import config from "../../config";
+import dateConveter from "../../helpers/dateConverter";
+import withRouter from "../../components/Common/withRouter";
 
-const VehicleReport = () => {
+const VehicleReport = (props) => {
   const [vehicleReport, setVehicleReport] = useState([]);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
@@ -80,12 +84,15 @@ const VehicleReport = () => {
       setNumberOfData(getAllData?.totalCount);
     }
   }
-  document.title = `Report | ${pageTitle} `;
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+  document.title = `${props.t("Reports")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+        <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
-          <Breadcrumbs title="Tables" breadcrumbItem="Vehicles Reports" />
+          <Breadcrumbs title={props.t("Tables")} breadcrumbItem={props.t("Vehicles Reports")} />
           <Row>
             <Col lg={12}>
               <Card>
@@ -98,21 +105,21 @@ const VehicleReport = () => {
                       <Col lg={5}>
                         <div className="mb-3">
                           <label htmlFor="from-field" className="form-label">
-                            From date
+                          {props.t("From Date")}
                           </label>
                           <Flatpickr
                             className="form-control"
                             name="from_date"
                             options={{
                               dateFormat: "d-m-Y",
-                              maxDate: new Date(),
+                              maxDate: dateConveter.convertTodayDate_DD_MM_YYYY()
                             }}
                             value={fromDate}
                             onChange={(dates) => {
                               validation.setFieldValue("from_date", dates[0]);
                               setFromDate(dates[0]);
                             }}
-                            placeholder="Select from date"
+                            placeholder={props.t("Select from date")}
                             required
                           />
                         </div>
@@ -120,7 +127,7 @@ const VehicleReport = () => {
                       <Col lg={5}>
                         <div className="mb-3">
                           <label htmlFor="to-field" className="form-label">
-                            To date
+                          {props.t("To Date")}
                           </label>
                           <Flatpickr
                             className="form-control"
@@ -135,7 +142,7 @@ const VehicleReport = () => {
                               validation.setFieldValue("to_date", dates[0]);
                               setToDate(dates[0]);
                             }}
-                            placeholder="Select to date"
+                            placeholder={props.t("Select to date")}
                             required
                           />
                         </div>
@@ -150,7 +157,7 @@ const VehicleReport = () => {
                         </button>
                       </Col>
                       <span className="d-block mt-2 fs-16 text-success">
-                        Total {numberOfData}
+                        {props.t("Total")} {numberOfData}
                       </span>
                     </Row>
                   </form>
@@ -170,26 +177,26 @@ const VehicleReport = () => {
                             </th>
                             {!(config.Role.service_provider === role) ? (
                               <th className="sort" data-sort="month">
-                                Service Provider Name
+                                {props.t("Service Provider Name")}
                               </th>
                             ) : null}
                             <th className="sort" data-sort="number">
-                              Vehicle Number
+                            {props.t("Vehicle Number")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Make
+                            {props.t("Make")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Model
+                            {props.t("Model")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Horse Capacity
+                            {props.t("Horse Capacity")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Vehicle Added On
+                            {props.t("Vehicle Added On")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Status
+                            {props.t("Status")}
                             </th>
                           </tr>
                         </thead>
@@ -228,7 +235,7 @@ const VehicleReport = () => {
                               })
                             }
                           >
-                            Previous
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0"><b>{pageNumber !== 1 ? pageNumber : null}</b></ul>
@@ -242,7 +249,7 @@ const VehicleReport = () => {
                               })
                             }
                           >
-                            Next
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -258,4 +265,4 @@ const VehicleReport = () => {
   );
 };
 
-export default VehicleReport;
+export default withRouter(withTranslation()(VehicleReport));

@@ -1,6 +1,7 @@
 import React,{useEffect,useState} from "react"
 import { Container, Row, Col } from "reactstrap"
 import { getSettingsPageData } from '../../helpers/ApiRoutes/getApiRoutes'; 
+import { useSelector } from "react-redux";
 // import { useSelector } from "react-redux";
 const Footer = () => {
   const [pageTitle, setPageTitle] = useState('HORSCITY');
@@ -12,15 +13,17 @@ const Footer = () => {
 
   async function getAllData() {
     let settingsData = await getSettingsPageData();
-    setPageTitle(settingsData?.settingsPageData[0]?.application_title);
+    setPageTitle(settingsData && settingsData?.settingsPageData[0]?.application_title);
    }
-
+   const {  dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
   return (
     <React.Fragment>
-      <footer className="footer">
+      <footer className={`footer ${dir ==='rtl'? 'footer-rtl' : ''}`}>
         <Container fluid ={true}>
           <Row>
-            <Col sm={6}>{new Date().getFullYear()} © {pageTitle}.</Col>
+            <Col sm={6} className={` ${dir ==='rtl'? 'footer-rtl-item' : ''}`}>{new Date().getFullYear()} © {pageTitle}.</Col>
             <Col sm={6}>
       
             </Col>

@@ -17,13 +17,18 @@ import {
 import { Link } from "react-router-dom";
 import Flatpickr from "react-flatpickr";
 import { useFormik } from "formik";
+import { useSelector } from "react-redux";
+import { withTranslation } from "react-i18next";
 
 /**IMPORTED */
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { getDriverReport } from "../../helpers/ApiRoutes/getApiRoutes";
 import config from "../../config";
+import withRouter from "../../components/Common/withRouter";
+import dateConveter from "../../helpers/dateConverter";
 
-const DriverReport = () => {
+
+const DriverReport = (props) => {
   const [driverReport, setDriverReport] = useState([]);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
@@ -84,13 +89,16 @@ const DriverReport = () => {
       setNumberOfData(getAllData?.totalCount);
     }
   }
-  document.title = `Report | ${pageTitle} `;
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+  document.title = `${props.t("Reports")} | ${pageTitle} `;
 
   return (
     <React.Fragment>
-      <div className="page-content">
+     <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
-          <Breadcrumbs title="Tables" breadcrumbItem="Driver Reports" />
+          <Breadcrumbs title={props.t("Tables")} breadcrumbItem={props.t("Driver Reports")} />
           <Row>
             <Col lg={12}>
               <Card>
@@ -104,14 +112,14 @@ const DriverReport = () => {
                         {/* <h4 className="card-title mb-0">Add, Edit & Remove</h4> */}
                         <div className="mb-3">
                           <label htmlFor="from-field" className="form-label">
-                            From date
+                          {props.t("From Date")}
                           </label>
                           <Flatpickr
                             className="form-control"
                             name="from_date"
                             options={{
                               dateFormat: "d-m-Y",
-                              maxDate: new Date(),
+                              maxDate: dateConveter.convertTodayDate_DD_MM_YYYY()
                             }}
                             value={fromDate}
                             onChange={(dates) => {
@@ -126,7 +134,7 @@ const DriverReport = () => {
                       <Col lg={5}>
                         <div className="mb-3">
                           <label htmlFor="to-field" className="form-label">
-                            To date
+                          {props.t("To Date")}
                           </label>
                           <Flatpickr
                             className="form-control"
@@ -152,11 +160,11 @@ const DriverReport = () => {
                           className="btn btn-success"
                           id="add-btn"
                         >
-                          Submit
+                          {props.t("Submit")}
                         </button>
                       </Col>
                       <span className="d-block mt-2 fs-16 text-success">
-                        Total {numberOfData}
+                      {props.t("Total")} {numberOfData}
                       </span>
                     </Row>
                   </form>
@@ -175,19 +183,19 @@ const DriverReport = () => {
                               #
                             </th>
                             <th className="sort" data-sort="month">
-                              Driver Name
+                            {props.t("Driver Name")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Email
+                            {props.t("Email")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Contact Number
+                            {props.t("Contact Number")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Registration Date
+                            {props.t("Registration Date")}
                             </th>
                             <th className="sort" data-sort="number">
-                              Status
+                            {props.t("Status")}
                             </th>
                           </tr>
                         </thead>
@@ -222,7 +230,7 @@ const DriverReport = () => {
                               })
                             }
                           >
-                            Previous
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0"><b>{pageNumber !== 1 ? pageNumber : null}</b></ul>
@@ -236,7 +244,7 @@ const DriverReport = () => {
                               })
                             }
                           >
-                            Next
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -252,4 +260,4 @@ const DriverReport = () => {
   );
 };
 
-export default DriverReport;
+export default withRouter(withTranslation()(DriverReport));

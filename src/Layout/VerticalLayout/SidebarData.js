@@ -91,7 +91,7 @@ const SidebarData = [
         subItem: [
             { id : 1, sublabel: "Service Providers", link: "/serviceprovider-reports" },
             { id : 2, sublabel: "Customers", link: "/customer-reports" },
-            { id : 3, sublabel: "vehicles", link: "/vehicle-reports" },
+            { id : 3, sublabel: "Vehicles", link: "/vehicle-reports" },
             { id : 4, sublabel: "Drivers", link: "/driver-reports" },
             { id : 5, sublabel: "Enquiries", link: "/enquiry-reports" },
             { id : 6, sublabel: "Quotations", link: "/quotation-reports" },

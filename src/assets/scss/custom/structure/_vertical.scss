@@ -42,7 +42,19 @@
     top: $header-height;
     box-shadow: $box-shadow;
 }
+.exampleModalLabel-rtl{
 
+    position: relative;
+    .modal-title{
+        margin-right: 24px;
+    }
+    button{
+        position: absolute;
+    }
+}
+#vehicle_color-field{
+    width: 20%;
+}
 .main-content {
     margin-left: $sidebar-width;
     overflow: hidden;
@@ -52,7 +64,18 @@
         margin-top: $header-height;
     }
 }
-
+.main-content.main-content-rtl {
+    margin-left: 0px;
+}
+.text-muted-rtl{
+    column-gap: 10px;
+}
+.form-check-rtl{
+    display: flex;
+}
+.form-check-label-rtl{
+    margin-right: 25px;
+}
 #sidebar-menu {
     padding: 10px 0 30px 0;
 
@@ -148,7 +171,15 @@
     font-family: $font-family-secondary;
     opacity: 0.5;
 }
-
+//Rtl dashboard
+.page-content-rtl .container-fluid{
+    padding: 0px !important;;
+    width: 80% !important; ;
+    margin-left: 0px !important;;
+}
+#sidebar-menu  .side-menu-item-rtl {
+    padding-right: 0px;
+}
 .mm-active {
     color: $sidebar-menu-item-active-color !important;
     > a {
@@ -182,6 +213,12 @@
         .vertical-menu {
             display: block;
         }
+    }
+}
+.monthly-report-rtl .apexcharts-inner.apexcharts-graphical{
+    transform: translate(184.276px, 30px) !important;
+    @media (max-width : 1366px) {
+        transform: translate(161.276px, 30px) !important;
     }
 }
 
@@ -351,7 +388,13 @@
                 }
             }
         }
-    }
+       
+}}
+
+.vertical-collpsed .vertical-menu #sidebar-menu > ul.side-menu-item-rtl > li:hover > ul{
+    display: block !important;
+    position: absolute !important;
+    right: 100% !important;
 }
 
 body[data-sidebar="dark"] {

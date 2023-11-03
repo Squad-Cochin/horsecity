@@ -6,6 +6,7 @@
 
 import PropTypes from "prop-types";
 import React, { useEffect, useState } from "react";
+import { withTranslation } from "react-i18next";
 import {
   Row,
   Col,
@@ -56,11 +57,9 @@ const ChangePassword = (props) => {
       confirmPassword: "" || "",
     },
     validationSchema: Yup.object({
-      oldPassword: Yup.string().required("Please Enter Your Old password"),
-      password: Yup.string().required("Please Enter Your Password"),
-      confirmPassword: Yup.string().required(
-        "Please Enter Your Confirm Password"
-      ),
+      oldPassword: Yup.string().required(props.t("Please Enter Your Old password")),
+      password: Yup.string().required(props.t("Please Enter Your Password")),
+      confirmPassword: Yup.string().required(props.t("Please Enter Your Confirm Password")),
     }),
     onSubmit: (values) => {
       let username = localStorage.getItem("userName");
@@ -95,7 +94,7 @@ const ChangePassword = (props) => {
     };
   });
 
-  document.title = `Change Password | ${appName} `;
+  document.title = `${props.t("Change Password")} | ${appName} `;
   return (
     <React.Fragment>
       <div className="bg-overlay"></div>
@@ -123,10 +122,10 @@ const ChangePassword = (props) => {
                       </Link>
                     </div>
                     <h4 className="font-size-18 text-muted mt-2 text-center">
-                      Change Password
+                    {props.t("Change Password")}
                     </h4>
                     <p className="mb-5 text-center">
-                      Update password to continue with {appName}.
+                    {props.t("Update password to continue with")} {appName}.
                     </p>
                     <Form
                       className="form-horizontal"
@@ -149,12 +148,12 @@ const ChangePassword = (props) => {
                       <Row>
                         <Col md={12}>
                           <div className="mb-4">
-                            <Label className="form-label">Old password</Label>
+                            <Label className="form-label">{props.t("Old password")}</Label>
                             <Input
                               name="oldPassword"
                               value={validation.values.oldPassword || ""}
                               type="text"
-                              placeholder="Enter Old Password"
+                              placeholder={props.t("Enter Old Password")}
                               onChange={validation.handleChange}
                               onBlur={validation.handleBlur}
                               invalid={
@@ -173,12 +172,12 @@ const ChangePassword = (props) => {
                           </div>
 
                           <div className="mb-4">
-                            <Label className="form-label">Password</Label>
+                            <Label className="form-label">{props.t("Password")}</Label>
                             <Input
                               name="password"
                               value={validation.values.password || ""}
                               type="password"
-                              placeholder="Enter Password"
+                              placeholder={props.t("Enter Password")}
                               onChange={validation.handleChange}
                               onBlur={validation.handleBlur}
                               invalid={
@@ -198,13 +197,13 @@ const ChangePassword = (props) => {
 
                           <div className="mb-4">
                             <Label className="form-label">
-                              Confirm Password
+                            {props.t("Confirm Password")}
                             </Label>
                             <Input
                               name="confirmPassword"
                               value={validation.values.confirmPassword || ""}
                               type="password"
-                              placeholder="Enter Confirm Password"
+                              placeholder={props.t("Enter Confirm Password")}
                               onChange={validation.handleChange}
                               onBlur={validation.handleBlur}
                               invalid={
@@ -226,7 +225,7 @@ const ChangePassword = (props) => {
                               className="btn btn-primary waves-effect waves-light"
                               type="submit"
                             >
-                              Update Password
+                              {props.t("Update Password")}
                             </button>
                           </div>
                         </Col>
@@ -237,10 +236,10 @@ const ChangePassword = (props) => {
               </Card>
               <div className="mt-5 text-center">
                 <p className="text-white-50">
-                  Go back to{" "}
+                {props.t("Go back to")}
                   <Link to="/login" className="fw-medium text-primary">
                     {" "}
-                    Login{" "}
+                    {props.t("Login")}
                   </Link>{" "}
                 </p>
               </div>
@@ -252,7 +251,7 @@ const ChangePassword = (props) => {
   );
 };
 
-export default withRouter(ChangePassword);
+export default withRouter(withTranslation()(ChangePassword));
 
 ChangePassword.propTypes = {
   history: PropTypes.object,

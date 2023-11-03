@@ -21,6 +21,8 @@ import {
 } from "reactstrap";
 import { Link } from "react-router-dom";
 import { useFormik } from "formik";
+import { useSelector } from "react-redux";
+import { withTranslation } from "react-i18next";
 
 /**IMPORTED FILES */
 import Breadcrumbs from "../../components/Common/Breadcrumb";
@@ -28,13 +30,14 @@ import { addNewLanguage } from "../../helpers/ApiRoutes/addApiRoutes";
 import { updateLanguage } from "../../helpers/ApiRoutes/editApiRoutes";
 import { removeLanguage } from "../../helpers/ApiRoutes/removeApiRoutes";
 import { updateLanguageStatus } from "../../helpers/ApiRoutes/editApiRoutes";
+import withRouter from "../../components/Common/withRouter";
 import {
   getLanguagesPageData,
   getSingleLanguageData,
 } from "../../helpers/ApiRoutes/getApiRoutes";
 import config from "../../config";
 
-const LanguageDeatails = () => {
+const LanguageDeatails = (props) => {
   const [modal_list, setmodal_list] = useState(false);
   const [languages, setLanguges] = useState([]);
   const [add_list, setAdd_list] = useState(false);
@@ -159,13 +162,15 @@ const LanguageDeatails = () => {
       getAllData(pageNumber);
     }
   }
-
-  document.title = `Language | ${pageTitle} `;
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+  document.title = `${props.t("Language")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+     <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
-          <Breadcrumbs title="Tables" breadcrumbItem="Languages" />
+          <Breadcrumbs title={props.t("Tables")} breadcrumbItem={props.t("Languages")} />
           <Row>
             <Col lg={12}>
               <Card>
@@ -189,19 +194,19 @@ const LanguageDeatails = () => {
                               #
                             </th>
                             <th className="sort" data-sort="name">
-                              Name
+                            {props.t("Name")}
                             </th>
                             <th className="sort" data-sort="abbreviation">
-                              Abbreviation
+                              {props.t("Abbreviation")}
                             </th>
                             <th className="sort" data-sort="created_at">
-                              Created At
+                              {props.t("Created At")}
                             </th>
                             <th className="sort" data-sort="status">
-                              status
+                              {props.t("Status")}
                             </th>
                             <th className="sort" data-sort="action">
-                              Action
+                              {props.t("Action")}
                             </th>
                           </tr>
                         </thead>
@@ -216,7 +221,7 @@ const LanguageDeatails = () => {
                                 {item.abbreviation}
                               </td>
                               <td className="created_at">{item.created_at}</td>
-                              <td>
+                              <td className="status">
                                 {item.status === "ACTIVE" ? (
                                   <button
                                     className="btn btn-sm btn-success status-item-btn"
@@ -249,7 +254,7 @@ const LanguageDeatails = () => {
                                     data-bs-target="#deleteRecordModal"
                                     onClick={() => remove_data(item?.id)}
                                   >
-                                    Remove
+                                    {props.t("Remove")}
                                   </button>
                                 </div>
                               </td>
@@ -265,7 +270,7 @@ const LanguageDeatails = () => {
                             className="page-item pagination-prev disabled"
                             onClick={() => getAllData(pageNumber - 1)}
                           >
-                            Previous
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0"></ul>
@@ -274,7 +279,7 @@ const LanguageDeatails = () => {
                             className="page-item pagination-next"
                             onClick={() => getAllData(pageNumber + 1)}
                           >
-                            Next
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -317,7 +322,7 @@ const LanguageDeatails = () => {
             <div>
               <div className="mb-3">
                 <label htmlFor="languagename-field" className="form-label">
-                  Name
+                {props.t("Name")}
                 </label>
                 <input
                   type="text"
@@ -325,20 +330,20 @@ const LanguageDeatails = () => {
                   name="name"
                   value={validation.values.name || ""}
                   onChange={validation.handleChange}
-                  placeholder="Enter  Name"
+                  placeholder={props.t("Enter  Name")}
                   required
                 />
               </div>
 
               <div className="mb-3">
                 <label htmlFor="abb-field" className="form-label">
-                  Abbreviation
+                {props.t("Abbreviation")}
                 </label>
                 <input
                   type="text"
                   name="abbreviation"
                   className="form-control"
-                  placeholder="Enter Abbreviation"
+                  placeholder={props.t("Enter Abbreviation")}
                   value={validation.values.abbreviation || ""}
                   onChange={validation.handleChange}
                   required
@@ -347,7 +352,7 @@ const LanguageDeatails = () => {
               {add_list ? (
                 <div className="mb-3">
                   <label htmlFor="languagefile-field" className="form-label">
-                    Language File
+                  {props.t("Language File")}
                   </label>
                   <input
                     type="file"
@@ -361,7 +366,7 @@ const LanguageDeatails = () => {
               ) : (
                 <div className="mb-3">
                   <label htmlFor="languagefile-field" className="form-label">
-                    Language File
+                  {props.t("Language File")}
                   </label>
                   <input
                     type="file"
@@ -384,7 +389,7 @@ const LanguageDeatails = () => {
                   setAdd_list(false);
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
               <button type="submit" className="btn btn-success" id="add-btn">
                 {add_list ? "Add language" : "Update language"}
@@ -397,4 +402,4 @@ const LanguageDeatails = () => {
   );
 };
 
-export default LanguageDeatails;
+export default withRouter(withTranslation()(LanguageDeatails));

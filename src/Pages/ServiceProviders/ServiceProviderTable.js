@@ -22,10 +22,11 @@ import {
 import { Link } from "react-router-dom";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { useFormik } from "formik";
-
+import { withTranslation } from "react-i18next";
 /**IMPORTED FILES */
 import { addNewProvider } from "../../helpers/ApiRoutes/addApiRoutes"; //For adding new service providers
 import { removeSProvider } from "../../helpers/ApiRoutes/removeApiRoutes"; //For removing service providers
+import withRouter from "../../components/Common/withRouter";
 import {
   updateSProvider,
   updateSPStatus,
@@ -36,8 +37,8 @@ import {
   getRoleList,
 } from "../../helpers/ApiRoutes/getApiRoutes"; //For getting all service providers
 import config from "../../config";
-
-const ListTables = () => {
+import { useSelector } from "react-redux";
+const ListTables = (props) => {
   const [modal_list, setmodal_list] = useState(false); /**Using for showing ADD & EDIT modal */
   const [view_modal, setView_modal] = useState(false); /**Using for showing VIEW modal */
   const [add_list, setAdd_list] = useState(false); /**Using for controlling ADD & EDIT modal */
@@ -218,14 +219,18 @@ const ListTables = () => {
     value?.email.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
     value?.contact_no.toLowerCase().includes(searchInp.toLowerCase().trim())
   );
+  const {
+    dir
+  } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
 
-  console.log("search value:", searchInp);
-  document.title = `Service providers | ${pageTitle} `;
+  document.title = `${props.t("Service providers")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+      <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
-          <Breadcrumbs title="Tables" breadcrumbItem="Service Providers" />
+          <Breadcrumbs title={props.t("Tables")} breadcrumbItem={props.t("Service Providers")} />
           <Row>
             <Col lg={12}>
               <Card>
@@ -233,8 +238,8 @@ const ListTables = () => {
                   <div className="row align-items-md-center">
                     <h4 className="card-title mb-0 col-md-8  p-3">
                       {Roles.service_provider === role
-                        ? "Edit "
-                        : "Add, Edit & Remove"}{" "}  <br/>  <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span>
+                        ? props.t("Edit")
+                        : props.t("Add, Edit & Remove")}{" "}  <br/>  <span className="d-block mt-2 fs-16 text-success">{props.t("Total")} {numberOfData}</span>
                     </h4>
                     <form className="col-md-4">
                     <div className="form-group m-0">
@@ -242,7 +247,7 @@ const ListTables = () => {
                         <input
                           type="text"
                           className="form-control"
-                          placeholder="Search ..."
+                          placeholder={props.t("Search") + "..."}
                           aria-label="Recipient's username"
                           onChange={(e)=>setSearchInp(e.target.value)}
                         />
@@ -266,11 +271,17 @@ const ListTables = () => {
                             <Button
                               color="success"
                               className="add-btn"
-                              onClick={() => tog_list("ADD")}
+                              onClick={() => {
+                                tog_list("ADD");
+                                setTimeout(()=>{
+                                  document.querySelector('body').style.removeProperty('padding-right');
+                                },30)
+                              }
+                              }
                               id="create-btn"
                             >
                               <i className="ri-add-line align-bottom me-1"></i>{" "}
-                              Add
+                              {props.t("Add")}
                             </Button>
                           ) : null}
                         </div>
@@ -290,27 +301,27 @@ const ListTables = () => {
                               className="sprovider_name"
                               data-sort="sprovider_name"
                             >
-                              Name
+                              {props.t("Name")}
                             </th>
                             <th className="email" data-sort="email">
-                              Email
+                            {props.t("Email")}
                             </th>
                             <th
                               className="contactperson"
                               data-sort="contactperson"
                             >
-                              Contact Person
+                              {props.t("Contact Person")}
                             </th>
                             <th className="phone" data-sort="phone">
-                              Contact Number
+                            {props.t("Contact Number")}
                             </th>
                             {!(config.Role.service_provider === role) ? (
                               <th className="status" data-sort="status">
-                                Status
+                                {props.t("Status")}
                               </th>
                             ) : null}
                             <th className="action" data-sort="action">
-                              Action
+                            {props.t("Action")}
                             </th>
                           </tr>
                         </thead>
@@ -359,11 +370,15 @@ const ListTables = () => {
                                     <div className="edit">
                                       <button
                                         className="btn btn-sm btn-success edit-item-btn"
-                                        onClick={() => tog_view(value.id)}
+                                        onClick={() => {
+                                          tog_view(value.id);
+                                           setTimeout(()=>{
+                                          document.querySelector('body').style.removeProperty('padding-right');
+                                        },30)}}
                                         data-bs-toggle="modal"
                                         data-bs-target="#showModal"
                                       >
-                                        View
+                                        {props.t("View")}
                                       </button>
                                     </div>
                                   ) : null}
@@ -377,7 +392,7 @@ const ListTables = () => {
                                         data-bs-toggle="modal"
                                         data-bs-target="#showModal"
                                       >
-                                        Edit
+                                        {props.t("Edit")}
                                       </button>
                                     ) : null}
                                   </div>
@@ -389,7 +404,7 @@ const ListTables = () => {
                                         data-bs-toggle="modal"
                                         data-bs-target="#deleteRecordModal"
                                       >
-                                        Remove
+                                        {props.t("Remove")}
                                       </button>
                                     ) : null}
                                   </div>
@@ -407,7 +422,7 @@ const ListTables = () => {
                             className="page-item pagination-prev disabled"
                             onClick={() => getAllData(pageNumber - 1)}
                           >
-                            Previous
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
@@ -416,7 +431,7 @@ const ListTables = () => {
                             className="page-item pagination-next"
                             onClick={() => getAllData(pageNumber + 1)}
                           >
-                            Next
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -441,7 +456,8 @@ const ListTables = () => {
         centered
       >
         <ModalHeader
-          className="bg-light p-3"
+
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             setmodal_list(false);
@@ -449,7 +465,7 @@ const ListTables = () => {
             setLicenscePreview(null);
           }}
         >
-          {add_list ? "Add Service Provider" : "Edit Service Provider"}
+          {add_list ? `${props.t("Add Service Provider")}` : `${props.t("Edit Service Provider")}`}
         </ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>
@@ -462,7 +478,7 @@ const ListTables = () => {
             {/* Provider Name */}
             <div className="mb-3">
               <label htmlFor="providerName-field" className="form-label">
-                Provider Name
+              {props.t("Provider Name")}
               </label>
               <input
                 type="text"
@@ -471,7 +487,7 @@ const ListTables = () => {
                 className="form-control"
                 value={validation.values.name || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Provider Name"
+                placeholder={props.t("Enter Provider Name")}
                 required
               />
             </div>
@@ -479,7 +495,7 @@ const ListTables = () => {
             {/* Email */}
             <div className="mb-3">
               <label htmlFor="email-field" className="form-label">
-                Email
+              {props.t("Email")}
               </label>
               <input
                 type="email"
@@ -488,7 +504,7 @@ const ListTables = () => {
                 className="form-control"
                 value={validation.values.email || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Email"
+                placeholder={props.t("Enter Email")}
                 required
               />
             </div>
@@ -496,7 +512,7 @@ const ListTables = () => {
             {/* User Name */}
             <div className="mb-3">
               <label htmlFor="userName-field" className="form-label">
-                User Name
+              {props.t("User Name")}
               </label>
               <input
                 type="text"
@@ -505,7 +521,7 @@ const ListTables = () => {
                 className="form-control"
                 value={validation.values.user_name || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter User Name"
+                placeholder={props.t("Enter User Name")}
                 required
               />
             </div>
@@ -514,7 +530,7 @@ const ListTables = () => {
             {add_list ? (
               <div className="mb-3">
                 <label htmlFor="userName-field" className="form-label">
-                  Password
+                {props.t("Password")}
                 </label>
                 <input
                   type="password"
@@ -523,7 +539,7 @@ const ListTables = () => {
                   className="form-control"
                   value={validation.values.password || ""}
                   onChange={validation.handleChange}
-                  placeholder="Enter User Password"
+                  placeholder={props.t("Enter User Password")}
                   required
                 />
               </div>
@@ -531,7 +547,7 @@ const ListTables = () => {
             {!(config.Role.service_provider === role) ? (
               <div className="mb-3">
                 <label htmlFor="status-field" className="form-label">
-                  Role
+                {props.t("Role")}
                 </label>
                 <select
                   className="form-control"
@@ -554,7 +570,7 @@ const ListTables = () => {
                     </>
                   ) : (
                     <>
-                      <option value="">Select Role</option>
+                      <option value="">{props.t("Select Role")}</option>
                       {roleList?.map((item) => (
                         <option key={item.id} value={item.id}>
                           {" "}
@@ -570,7 +586,7 @@ const ListTables = () => {
             {/* Contact Person */}
             <div className="mb-3">
               <label htmlFor="contactPerson-field" className="form-label">
-                Contact Person
+              {props.t("Contact Person")}
               </label>
               <input
                 type="text"
@@ -579,7 +595,7 @@ const ListTables = () => {
                 name="contact_person"
                 value={validation.values.contact_person || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Person Name"
+                placeholder={props.t("Enter Person Name")}
                 required
               />
             </div>
@@ -587,7 +603,7 @@ const ListTables = () => {
             {/* Contact Number */}
             <div className="mb-3">
               <label htmlFor="phone-field" className="form-label">
-                Contact Number
+              {props.t("Contact Number")}
               </label>
               <input
                 type="number"
@@ -596,7 +612,7 @@ const ListTables = () => {
                 name="contact_no"
                 value={validation.values.contact_no || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Phone No"
+                placeholder={props.t("Enter Phone No")}
                 required
               />
             </div>
@@ -604,7 +620,7 @@ const ListTables = () => {
             {/* Emergency Contact Number */}
             <div className="mb-3">
               <label htmlFor="emergencyPhone-field" className="form-label">
-                Emergency Contact Number
+              {props.t("Emergency Contact Number")}
               </label>
               <input
                 type="number"
@@ -613,7 +629,7 @@ const ListTables = () => {
                 className="form-control"
                 value={validation.values.emergency_contact_no || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Emergency Phone No."
+                placeholder={props.t("Enter Emergency Phone No")}
                 required
               />
             </div>
@@ -621,7 +637,7 @@ const ListTables = () => {
             {/* Contact Address */}
             <div className="mb-3">
               <label htmlFor="contactAddress-field" className="form-label">
-                Contact Address
+              {props.t("Contact Address")}
               </label>
               <input
                 type="text"
@@ -630,7 +646,7 @@ const ListTables = () => {
                 className="form-control"
                 value={validation.values.contact_address || ""}
                 onChange={validation.handleChange}
-                placeholder="Enter Contact Address"
+                placeholder={props.t("Enter Contact Address")}
                 required
               />
             </div>
@@ -638,7 +654,7 @@ const ListTables = () => {
             {/* Certificate Number */}
             <div className="mb-3">
               <label htmlFor="LicenceNumber-field" className="form-label">
-                Licence Number
+              {props.t("Licence Number")}
               </label>
               <input
                 type="text"
@@ -647,7 +663,7 @@ const ListTables = () => {
                 value={validation.values.licence_no || ""}
                 onChange={validation.handleChange}
                 className="form-control"
-                placeholder="Enter Licence Number"
+                placeholder={props.t("Enter Licence Number")}
                 required
               />
             </div>
@@ -655,7 +671,7 @@ const ListTables = () => {
             {/* Certificate Image */}
             <div className="mb-3">
               <label htmlFor="LicenseImage-field" className="form-label">
-                Licence Image
+              {props.t("Licence Image")}
               </label>
               <div className="col-md-10">
                 {licenscePreview && (
@@ -671,7 +687,7 @@ const ListTables = () => {
                   className="form-control"
                   name="licence_image"
                   type="file"
-                  placeholder="Licence Image"
+                  placeholder={props.t("Licence Image")}
                   onChange={handleLicensceImageChange}
                 />
               </div>
@@ -688,7 +704,7 @@ const ListTables = () => {
                   setLicenscePreview(null);
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
               <button
                 type="submit"
@@ -698,7 +714,7 @@ const ListTables = () => {
                   window.location.href = "#exampleModalLabel"; // Change the URL here
                 }}
               >
-                {add_list ? "Add Service Provider" : "Update Service Provider"}
+                {add_list ? `${props.t("Add Service Provider")}` : `${props.t("Update Service Provider")}`}
               </button>
             </div>
           </ModalFooter>
@@ -715,14 +731,16 @@ const ListTables = () => {
         centered
       >
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             tog_view("view");
+  
             setView_modal(false);
+      
           }}
         >
-          View Service Provider
+          {props.t("View Service Provider")}
         </ModalHeader>
         <form className="tablelist-form">
           <ModalBody>
@@ -731,7 +749,7 @@ const ListTables = () => {
                 {/* Provider Name */}
                 <div className="mb-3">
                   <label htmlFor="providerName-field" className="form-label">
-                    Provider Name
+                  {props.t("Provider Name")}
                   </label>
                   <input
                     type="text"
@@ -746,7 +764,7 @@ const ListTables = () => {
                 {/* Email */}
                 <div className="mb-3">
                   <label htmlFor="email-field" className="form-label">
-                    Email
+                  {props.t("Email")}
                   </label>
                   <input
                     type="email"
@@ -761,7 +779,7 @@ const ListTables = () => {
                 {/* User Name */}
                 <div className="mb-3">
                   <label htmlFor="userName-field" className="form-label">
-                    User Name
+                  {props.t("User Name")}
                   </label>
                   <input
                     type="text"
@@ -776,7 +794,7 @@ const ListTables = () => {
                 {/* Role */}
                 <div className="mb-3">
                   <label htmlFor="role-field" className="form-label">
-                    Role
+                  {props.t("Role")}
                   </label>
                   <input
                     type="text"
@@ -790,7 +808,7 @@ const ListTables = () => {
                 {/* Contact Person */}
                 <div className="mb-3">
                   <label htmlFor="contactPerson-field" className="form-label">
-                    Contact Person
+                  {props.t("Contact Person")}
                   </label>
                   <input
                     type="text"
@@ -805,7 +823,7 @@ const ListTables = () => {
                 {/* Contact Number */}
                 <div className="mb-3">
                   <label htmlFor="phone-field" className="form-label">
-                    Contact Number
+                  {props.t("Contact Number")}
                   </label>
                   <input
                     type="text"
@@ -820,7 +838,7 @@ const ListTables = () => {
                 {/* Emergency Contact Number */}
                 <div className="mb-3">
                   <label htmlFor="emergencyPhone-field" className="form-label">
-                    Emergency Contact Number
+                  {props.t("Emergency Contact Number")}
                   </label>
                   <input
                     type="text"
@@ -835,7 +853,7 @@ const ListTables = () => {
                 {/* Contact Address */}
                 <div className="mb-3">
                   <label htmlFor="contactAddress-field" className="form-label">
-                    Contact Address
+                  {props.t("Contact Address")}
                   </label>
                   <input
                     type="text"
@@ -850,7 +868,7 @@ const ListTables = () => {
                 {/* Certificate Number */}
                 <div className="mb-3">
                   <label htmlFor="licensceNumber-field" className="form-label">
-                    Licence Number
+                  {props.t("Licence Number")}
                   </label>
                   <input
                     type="text"
@@ -865,7 +883,7 @@ const ListTables = () => {
                 {/* certificate image */}
                 <div className="mb-3">
                   <label htmlFor="LicenceImage-field" className="form-label">
-                    Licence Image
+                  {props.t("Licence Image")}
                   </label>
                   <div>
                     <img
@@ -887,7 +905,7 @@ const ListTables = () => {
                   setView_modal(false);
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
             </div>
           </ModalFooter>
@@ -897,4 +915,4 @@ const ListTables = () => {
   );
 };
 
-export default ListTables;
+export default withRouter(withTranslation()(ListTables));

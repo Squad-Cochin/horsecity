@@ -10,10 +10,12 @@ import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
 import SimpleBar from "simplebar-react";
 import MetisMenu from "metismenujs";
+
 //IMPOTED FILES
 import withRouter from "../../components/Common/withRouter";
 import sidebarData from "./SidebarData";
 import { useLocation } from 'react-router-dom';
+import { useSelector } from "react-redux";
 //i18n
 import { withTranslation } from "react-i18next";
 import config from '../../config'
@@ -29,7 +31,7 @@ const Sidebar = (props) => {
       const modules = data[1]?.modules;
       /**filtering sidebar data basis of module id */
       const sidebarItems = sidebarData.filter((element) => 
-      modules.some((value) => element.id === value.module_id)
+      modules?.some((value) => element.id === value.module_id)
       );
       const role = config.Role
       const user_role = data[0]?.user[0]?.role_Id
@@ -179,14 +181,17 @@ const Sidebar = (props) => {
   useEffect(() => {
     activeMenu();
   }, [location.pathname, activeMenu]);
-
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+  
 
   return (
     <React.Fragment>
-      <div className="vertical-menu">
+    <div className="vertical-menu" style={{ right: dir === 'rtl' ? '0px' : '' }}>
         <SimpleBar className="h-100" ref={ref}>
-          <div id="sidebar-menu">
-            <ul className="metismenu list-unstyled" id="side-menu-item">
+          <div id="sidebar-menu" className={`sidebar-menu ${dir === 'rtl' ? '' : ''}`}>
+            <ul className={`metismenu list-unstyled ${dir === 'rtl' ? 'side-menu-item-rtl':''} `}  id="side-menu-item">
 
                 {sidebar_items.map((item, key) => (
                 <React.Fragment key={key}>
@@ -211,7 +216,7 @@ const Sidebar = (props) => {
                         <span>{props.t(item.label)}</span>
                       </Link>
                       {item.subItem && (
-                        <ul className="sub-menu">
+                        <ul className={`sub-menu`}>
                           {item.subItem.map((items, key) => (
                             <li key={key}>
                               <Link
@@ -223,7 +228,7 @@ const Sidebar = (props) => {
                                 {props.t(items.sublabel)}
                               </Link>
                               {items.subMenu && (
-                                <ul className="sub-menu">
+                                <ul className={`sub-menu`}>
                                   {items.subMenu.map((item, key) => (
                                     <li key={key}>
                                       <Link to="#">

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import PropTypes from 'prop-types';
+import PropTypes from "prop-types";
 import {
   Dropdown,
   DropdownToggle,
@@ -13,11 +13,11 @@ import { withTranslation } from "react-i18next";
 import { connect } from "react-redux";
 import { Link } from "react-router-dom";
 import withRouter from "../withRouter";
-
+import { useSelector } from "react-redux";
 // users
 import user1 from "../../../assets/images/users/profile.png";
 
-const ProfileMenu = props => {
+const ProfileMenu = (props) => {
   // Declare a new state variable, which we'll call "menu"
   const [menu, setMenu] = useState(false);
 
@@ -25,11 +25,13 @@ const ProfileMenu = props => {
 
   useEffect(() => {
     if (localStorage.getItem("authUser")) {
-
       const obj = JSON.parse(localStorage.getItem("authUser"));
       setusername(obj.username);
     }
   }, [props.success]);
+  const { dir } = useSelector((state) => ({
+    dir: state.Layout.dir,
+  }));
 
   return (
     <React.Fragment>
@@ -51,25 +53,15 @@ const ProfileMenu = props => {
           <span className="d-none d-xl-inline-block ms-2 me-2">{username}</span>
           <i className="mdi mdi-chevron-down d-none d-xl-inline-block" />
         </DropdownToggle>
-        <DropdownMenu className="dropdown-menu-end">
-          {/* <DropdownItem tag="a" href="/dashboard">
-            {" "}
-            <i className="ri-user-line align-middle me-2" />
-            {props.t("Profile")}{" "}
-          </DropdownItem> */}
+        <DropdownMenu
+          className={`dropdown-menu-end ${
+            dir === "rtl" ? "dropdown-menu-end-rtl" : ""
+          } `}
+        >
           <DropdownItem tag="a" href="/change-password">
             <i className="ri-wallet-2-line align-middle me-2" />
             {props.t("Change Password")}
           </DropdownItem>
-          {/* <DropdownItem tag="a" href="#">
-            <span className="badge bg-success float-end mt-1">11</span>
-            <i className="ri-settings-2-line align-middle me-2" />
-            {props.t("Settings")}
-          </DropdownItem> */}
-          {/* <DropdownItem tag="a" href="auth-lock-screen">
-            <i className="ri-lock-unlock-line align-middle me-2" />
-            {props.t("Lock screen")}
-          </DropdownItem> */}
           <div className="dropdown-divider" />
           <Link to="/logout" className="dropdown-item">
             <i className="ri-shut-down-line align-middle me-2 text-danger" />
@@ -83,10 +75,10 @@ const ProfileMenu = props => {
 
 ProfileMenu.propTypes = {
   success: PropTypes.any,
-  t: PropTypes.any
+  t: PropTypes.any,
 };
 
-const mapStatetoProps = state => {
+const mapStatetoProps = (state) => {
   const { error, success } = state.profile;
   return { error, success };
 };

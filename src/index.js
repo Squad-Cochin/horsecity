@@ -5,7 +5,7 @@ import App from './App';
 import { BrowserRouter } from "react-router-dom";
 import { Provider } from "react-redux";
 import "./i18n";
-import * as serviceWorker from "./serviceWorker";
+// import * as serviceWorker from "./serviceWorker";
 import {configureStore} from "./store/store";
  
 const root = ReactDOM.createRoot(document.getElementById("root"));
@@ -20,4 +20,4 @@ root.render(
 );
 
 
-serviceWorker.register();
+// serviceWorker.register();

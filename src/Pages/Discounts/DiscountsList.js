@@ -21,7 +21,9 @@ import {
 } from "reactstrap";
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { Link } from "react-router-dom";
-
+import { useSelector } from "react-redux";
+import { useFormik } from "formik";
+import { withTranslation } from "react-i18next";
 //Import discounts Api's functions
 import {
   getDiscountsPageData,
@@ -31,11 +33,10 @@ import { updateDiscountStatus } from "../../helpers/ApiRoutes/editApiRoutes";
 import { removeDiscount } from "../../helpers/ApiRoutes/removeApiRoutes";
 import { addNewDiscounts } from "../../helpers/ApiRoutes/addApiRoutes";
 import { updateDiscounts } from "../../helpers/ApiRoutes/editApiRoutes";
-import { useFormik } from "formik";
-
+import withRouter from "../../components/Common/withRouter";
 import config from "../../config";
 
-const DiscountsDeatails = () => {
+const DiscountsDeatails = (props) => {
   const [modal_list, setmodal_list] = useState(false);
   const [discounts, setDiscounts] = useState([]);
   const [add_list, setAdd_list] = useState(false);
@@ -154,18 +155,21 @@ const DiscountsDeatails = () => {
       getAllData(pageNumber);
     }
   }
-  document.title = `Discount | ${pageTitle} `;
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+  document.title = `${props.t("Discount")} | ${pageTitle} `;
 
   return (
     <React.Fragment>
-      <div className="page-content">
+    <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
-          <Breadcrumbs title="Tables" breadcrumbItem="Discounts" />
+          <Breadcrumbs title={props.t("Tables")} breadcrumbItem={props.t("Discounts")} />
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  <h4 className="card-title mb-0">Add, Edit & Remove <br/>  <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span></h4>
+                  <h4 className="card-title mb-0">{props.t("Add, Edit & Remove")}<br/>  <span className="d-block mt-2 fs-16 text-success">{props.t("Total")} {numberOfData}</span></h4>
                 </CardHeader>
                 <CardBody>
                   <div id="customerList">
@@ -179,7 +183,7 @@ const DiscountsDeatails = () => {
                             id="create-btn"
                           >
                             <i className="ri-add-line align-bottom me-1"></i>{" "}
-                            Add
+                            {props.t("Add")}
                           </Button>
                         </div>
                       </Col>
@@ -195,22 +199,22 @@ const DiscountsDeatails = () => {
                               #
                             </th>
                             <th className="sort" data-sort="name">
-                              Name
+                            {props.t("Name")}
                             </th>
                             <th className="sort" data-sort="type">
-                              Type
+                              {props.t("Type")}
                             </th>
                             <th className="sort" data-sort="abbreviation">
-                              Rate
+                              {props.t("Rate")}
                             </th>
                             <th className="sort" data-sort="date">
-                              Created At
+                              {props.t("Created At")}
                             </th>
                             <th className="sort" data-sort="status">
-                              status
+                              {props.t("Status")}
                             </th>
                             <th className="sort" data-sort="action">
-                              Action
+                              {props.t("Action")}
                             </th>
                           </tr>
                         </thead>
@@ -224,7 +228,7 @@ const DiscountsDeatails = () => {
                               <td className="name">{item.type}</td>
                               <td className="abbreviation">{item.rate}</td>
                               <td className="created_at">{item.created_at}</td>
-                              <td>
+                              <td className="status ">
                                 {item.status === "ACTIVE" ? (
                                   <button
                                     className="btn btn-sm btn-success status-item-btn"
@@ -258,7 +262,7 @@ const DiscountsDeatails = () => {
                                       data-bs-target="#showModal"
                                       onClick={() => tog_list("EDIT", item.id)}
                                     >
-                                      Edit
+                                      {props.t("Edit")}
                                     </button>
                                   </div>
                                   <div className="remove">
@@ -268,7 +272,7 @@ const DiscountsDeatails = () => {
                                       data-bs-target="#deleteRecordModal"
                                       onClick={() => remove_data(item?.id)}
                                     >
-                                      Remove
+                                      {props.t("Remove")}
                                     </button>
                                   </div>
                                 </div>
@@ -285,7 +289,7 @@ const DiscountsDeatails = () => {
                             className="page-item pagination-prev disabled"
                             onClick={() => getAllData(pageNumber - 1)}
                           >
-                            Previous
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
@@ -294,7 +298,7 @@ const DiscountsDeatails = () => {
                             className="page-item pagination-next"
                             onClick={() => getAllData(pageNumber + 1)}
                           >
-                            Next
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -318,14 +322,14 @@ const DiscountsDeatails = () => {
         centered
       >
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             setmodal_list(false);
             setAdd_list(false);
           }}
         >
-          {add_list ? "Add discount" : "Edit discount"}
+          {add_list ? props.t("Add Discount") : props.t("Edit Discount")}
         </ModalHeader>
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
           <ModalBody>
@@ -336,14 +340,14 @@ const DiscountsDeatails = () => {
             ) : null}
             <div className="mb-3">
               <label htmlFor="taxationname-field" className="form-label">
-                Name
+              {props.t("Name")}
               </label>
               <input
                 type="text"
                 id="taxationname-field"
                 name="name"
                 className="form-control"
-                placeholder="Enter Name"
+                placeholder={props.t("Enter Name")}
                 value={validation.values.name || ""}
                 onChange={validation.handleChange}
                 required
@@ -351,7 +355,7 @@ const DiscountsDeatails = () => {
             </div>
             <div className="mb-3">
               <label htmlFor="discount-type-field" className="form-label">
-                Discount Type
+              {props.t("Discount Type")}
               </label>
               <select
                 data-trigger
@@ -363,22 +367,22 @@ const DiscountsDeatails = () => {
                 onBlur={validation.handleBlur}
                 required
               >
-                <option value="">Select Type</option>
-                <option value="PERCENTAGE">PERCENTAGE</option>
-                <option value="FLAT">FLAT</option>
+                <option value="">{props.t("Select Type")}</option>
+                <option value="PERCENTAGE">{props.t("PERCENTAGE")}</option>
+                <option value="FLAT">{props.t("FLAT")}</option>
               </select>
             </div>
 
             <div className="mb-3">
               <label htmlFor="rate-field" className="form-label">
-                Rate{" "}
+              {props.t("Rate")}
               </label>
               <input
                 type="number"
                 id="rate-field"
                 name="rate"
                 className="form-control"
-                placeholder="Enter Rate"
+                placeholder={props.t("Enter Rate")}
                 value={validation.values.rate || ""}
                 onChange={validation.handleChange}
                 required
@@ -395,10 +399,10 @@ const DiscountsDeatails = () => {
                   setAdd_list(false);
                 }}
               >
-                Close
+                {props.t("Close")}
               </button>
               <button type="submit" className="btn btn-success" id="add-btn">
-                {add_list ? "Add discount" : "Update discount"}
+                {add_list ? props.t("Add Discount") : props.t("Update Discount")}
               </button>
             </div>
           </ModalFooter>
@@ -408,4 +412,4 @@ const DiscountsDeatails = () => {
   );
 };
 
-export default DiscountsDeatails;
+export default withRouter(withTranslation()(DiscountsDeatails));

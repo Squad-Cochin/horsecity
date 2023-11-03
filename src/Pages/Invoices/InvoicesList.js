@@ -22,11 +22,13 @@ import {
   Row,
   ModalHeader,
 } from "reactstrap";
-
+import { useSelector } from "react-redux";
+import { withTranslation } from "react-i18next";
 /**IMPORTED*/
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import Logo from "../../assets/images/black-logo.png";
 import html2pdf from "html2pdf.js"; // Make sure to include the library properly
+import withRouter from "../../components/Common/withRouter";
 import config from "../../config";
 import {
   getInvoicesData,
@@ -38,7 +40,7 @@ import {
 } from "../../helpers/ApiRoutes/getApiRoutes";
 import { addAmount, sendEmail } from "../../helpers/ApiRoutes/addApiRoutes";
 
-const ListInvoiceDetails = () => {
+const ListInvoiceDetails = (props) => {
   const [ledg, setLedg] = useState([]);
   const [isActiveTwo, setActiveTwo] = useState(false);
   const [vehicles, setVehicles] = useState([]);
@@ -260,26 +262,29 @@ const ListInvoiceDetails = () => {
       value?.customer_name.toLowerCase().includes(searchInp.toLowerCase().trim()) ||
       value?.customer_email.toLowerCase().includes(searchInp.toLowerCase().trim()) 
   );
-  document.title = `Invoice | ${pageTitle} `;
+  
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
+  document.title = `${props.t("Invoice")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+      <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
-          <Breadcrumbs title="Tables" breadcrumbItem="Invoices" />
+          <Breadcrumbs title={props.t("Tables")} breadcrumbItem={props.t("Invoices")} />
           <Row>
             <Col lg={12}>
               <Card>
                 <CardHeader>
-                  {" "}
                   <div className="row align-items-md-center">
-                    <h4 className="card-title mb-0 col-md-8  p-3"><br/>  <span className="d-block mt-2 fs-16 text-success">Total {numberOfData}</span></h4>
+                    <h4 className="card-title mb-0 col-md-8  p-3"><br/>  <span className="d-block mt-2 fs-16 text-success">{props.t("Total")} {numberOfData}</span></h4>
                     <form className="col-md-4">
                       <div className="form-group m-0">
                         <div className="input-group">
                           <input
                             type="text"
                             className="form-control"
-                            placeholder="Search ..."
+                            placeholder={props.t("Search") + "..."}
                             onChange={(e) => setSearchInp(e.target.value)}
                             aria-label="Recipient's username"
                           />
@@ -306,25 +311,25 @@ const ListInvoiceDetails = () => {
                               #
                             </th>
                             <th className="sort" data-sort="invoice_number">
-                              Invoice Number
+                            {props.t("Invoice Number")}
                             </th>
                             <th className="sort" data-sort="quotation_id">
-                              Quotation Id
+                            {props.t("Quotation Id")}
                             </th>
                             <th className="sort" data-sort="customer_name">
-                              Customer Name
+                              {props.t("Customer Name")}
                             </th>
                             <th className="sort" data-sort="customer_email">
-                              Customer Email
+                            {props.t("Customer Email")}
                             </th>
                             <th className="sort" data-sort="view_invoice">
-                              View Invoice
+                            {props.t("View Invoice")}
                             </th>
                             <th className="sort" data-sort="send_email">
-                              Send Email
+                            {props.t("Send Email")}
                             </th>
                             <th className="sort" data-sort="action">
-                              Action
+                            {props.t("Action")}
                             </th>
                           </tr>
                         </thead>
@@ -353,7 +358,7 @@ const ListInvoiceDetails = () => {
                                   onClick={() => tog_view(item.id)}
                                 >
                                   {" "}
-                                  View Invoice{" "}
+                                  {props.t("View Invoice")}
                                 </button>{" "}
                               </td>
                               <td className="send_email">
@@ -365,7 +370,7 @@ const ListInvoiceDetails = () => {
                                   onClick={() => handleOpenModal(item.id)}
                                 >
                                   {" "}
-                                  Send Mail{" "}
+                                  {props.t("Send Email")}
                                 </button>{" "}
                               </td>
                               <td className="start_booking">
@@ -380,7 +385,7 @@ const ListInvoiceDetails = () => {
                                   className="btn btn-sm btn-success status-item-btn"
                                   id="add-btn"
                                 >
-                                  Start Journey
+                                  {props.t("Start Journey")}
                                 </button>{" "}
                               </td>
                               <td className="cancel_booking">
@@ -395,7 +400,7 @@ const ListInvoiceDetails = () => {
                                   className="btn btn-danger"
                                   id="add-btn"
                                 >
-                                  Cancel
+                                  {props.t("Cancel")}
                                 </button>{" "}
                               </td>
                             </tr>
@@ -411,7 +416,7 @@ const ListInvoiceDetails = () => {
                             onClick={() => getAllData(pageNumber - 1)}
                           >
                             {" "}
-                            Previous{" "}
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0"><b>{pageNumber!== 1 ? pageNumber : null}</b></ul>
@@ -421,7 +426,7 @@ const ListInvoiceDetails = () => {
                             onClick={() => getAllData(pageNumber + 1)}
                           >
                             {" "}
-                            Next{" "}
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -443,13 +448,13 @@ const ListInvoiceDetails = () => {
         centered
       >
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={() => {
             setView_modal(false);
           }}
         >
-          Invoice
+          {props.t("Invoice")}
         </ModalHeader>
         <ModalBody>
           {invoice.map((item, index) => (
@@ -469,7 +474,7 @@ const ListInvoiceDetails = () => {
                       </div>
                       <div className="tm_invoice_right tm_text_right">
                         <div className="tm_primary_color tm_f50 tm_text_uppercase tm_font_sixe=50px">
-                          <font size="6">INVOICE</font>
+                          <font size="6">{props.t("INVOICE")}</font>
                         </div>
                       </div>
                     </div>
@@ -477,20 +482,20 @@ const ListInvoiceDetails = () => {
                       <div className="tm_invoice_seperator tm_gray_bg"></div>
                       <div className="tm_invoice_info_list">
                         <p className="tm_invoice_number tm_m0">
-                          Invoice No:{" "}
+                        {props.t("Invoice No")}:{" "}
                           <b className="tm_primary_color">{item.iId}</b>
                         </p>{" "}
                         &nbsp; &nbsp; &nbsp;
                         <p className="tm_invoice_date tm_m0">
                           {" "}
-                          Date: <b className="tm_primary_color">{item.iDate}</b>
+                          {props.t("Date")}: <b className="tm_primary_color">{item.iDate}</b>
                         </p>
                       </div>
                     </div>
                     <div className="tm_invoice_head tm_mb10">
-                      <div className="tm_invoice_section tm_invoice_to">
+                    <div className={`tm_invoice_section tm_invoice_to ${dir === 'rtl' ? 'tm-section-rtl': ''}`}>
                         <p className="tm_mb2">
-                          <b className="tm_primary_color">Invoice To:</b>
+                          <b className="tm_primary_color">{props.t("Invoice To")}:</b>
                         </p>
                         <div>
                           <p>
@@ -504,9 +509,9 @@ const ListInvoiceDetails = () => {
                           </p>
                         </div>
                       </div>
-                      <div className="tm_invoice_section tm_pay_to">
+                      <div className={`tm_invoice_section tm_pay_to ${dir === 'rtl' ? 'tm-section-rtl': ''}`}>
                         <p className="tm_mb2">
-                          <b className="tm_primary_color">Pay To:</b>
+                          <b className="tm_primary_color">{props.t("Pay To")}:</b>
                         </p>
                         <p>
                           {item.service_provider_name}
@@ -530,16 +535,16 @@ const ListInvoiceDetails = () => {
                                 #
                               </th>
                               <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center">
-                                Pick Up Location
+                              {props.t("Pick Up Location")}
                               </th>
                               <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center">
-                                Vehicle Number
+                              {props.t("Vehicle Number")}
                               </th>
                               <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center">
-                                Driver Name
+                                {props.t("Driver Name")}
                               </th>
                               <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center">
-                                Drop Location
+                                {props.t("Drop Location")}
                               </th>
                             </tr>
                           </thead>
@@ -571,11 +576,11 @@ const ListInvoiceDetails = () => {
                   <div className="tm_invoice_footer">
                     <div className="tm_left_footer">
                       <p className="tm_mb2">
-                        <b className="tm_primary_color"> Other Information :</b>
+                        <b className="tm_primary_color"> {props.t("Other Information")} :</b>
                       </p>
                       <p className="tm_m0">
-                        Horse - {item.no_of_horse} <br />
-                        Special Requirement : {item.special_requirement}
+                      {props.t("Horse")} - {item.no_of_horse} <br />
+                        {props.t("Special Requirement")} : {item.special_requirement}
                       </p>
                     </div>
                     <div className="tm_right_footer">
@@ -583,7 +588,7 @@ const ListInvoiceDetails = () => {
                         <tbody>
                           <tr>
                             <td className="tm_width_3 tm_primary_color tm_border_none tm_bold">
-                              Subtotal
+                            {props.t("Subtotal")}
                             </td>
                             <td className="tm_width_3 tm_primary_color tm_text_right tm_border_none tm_bold">
                               {item.iSubTotal} AED
@@ -591,7 +596,7 @@ const ListInvoiceDetails = () => {
                           </tr>
                           <tr>
                             <td className="tm_width_3 tm_primary_color tm_border_none tm_pt0">
-                              Discount{" "}
+                            {props.t("Discount")}
                               <span className="tm_ternary_color">
                                 ({item.iDiscountRate}%)
                               </span>
@@ -602,7 +607,7 @@ const ListInvoiceDetails = () => {
                           </tr>
                           <tr>
                             <td className="tm_width_3 tm_primary_color tm_border_none tm_pt0">
-                              Tax{" "}
+                            {props.t("Tax")}
                               <span className="tm_ternary_color">
                                 ({item.iTaxRate}%)
                               </span>
@@ -613,7 +618,7 @@ const ListInvoiceDetails = () => {
                           </tr>
                           <tr className="tm_border_top tm_border_bottom">
                             <td className="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color">
-                              Grand Total
+                            {props.t("Grand Total")}
                             </td>
                             <td className="tm_width_3 tm_border_top_0 tm_bold tm_f16 tm_primary_color tm_text_right">
                               {item.iFinalAmount} AED
@@ -632,7 +637,7 @@ const ListInvoiceDetails = () => {
                     onClick={toggleModal}
                   >
                     {" "}
-                    Enter Amount{" "}
+                    {props.t("Enter Amount")}
                   </Button>
                 )}
                 <div className="tm_padd_15_20 no-padding tm_round_border .tm_table_responsive">
@@ -646,13 +651,13 @@ const ListInvoiceDetails = () => {
                           #
                         </th>
                         <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center">
-                          Received Payment
+                        {props.t("Received Payment")}
                         </th>
                         <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd text-center">
-                          Received Date
+                        {props.t("Received Date")}
                         </th>
                         <th className="tm_width_4 tm_semi_bold tm_primary_color tm_gray_bg tm_invoice_padd3 text-center">
-                          Remaining Payment
+                        {props.t("Remaining Payment")}
                         </th>
                       </tr>
                     </thead>
@@ -693,10 +698,10 @@ const ListInvoiceDetails = () => {
               setView_modal(false);
             }}
           >
-            Close
+            {props.t("Close")}
           </Button>
           <Button color="primary" onClick={handleDownloadPDF}>
-            Download PDF{" "}
+          {props.t("Download PDF")}
           </Button>
         </ModalFooter>
 
@@ -707,7 +712,7 @@ const ListInvoiceDetails = () => {
             id="exampleModalLabel"
             toggle={toggleModal}
           >
-            Enter Payment
+            {props.t("Enter Payment")}
           </ModalHeader>
           <form className="tablelist-form" onSubmit={validation.handleSubmit}>
             <ModalBody>
@@ -720,7 +725,7 @@ const ListInvoiceDetails = () => {
                 <div key={index} className="tm_container">
                   <div className="mb-3">
                     <label htmlFor="total_amount-field" className="form-label">
-                      Total Invoice Payment
+                    {props.t("Total Invoice Payment")}
                     </label>
                     <input
                       type="text"
@@ -735,7 +740,7 @@ const ListInvoiceDetails = () => {
                       htmlFor="remaining_amount-field"
                       className="form-label"
                     >
-                      Total Remaining Payment
+                      {props.t("Total Remaining Payment")}
                     </label>
                     <input
                       type="text"
@@ -749,7 +754,7 @@ const ListInvoiceDetails = () => {
               ))}
               <div className="mb-3">
                 <label htmlFor="total_amount-field" className="form-label">
-                  Received Payment
+                {props.t("Received Payment")}
                 </label>
                 <input
                   type="text"
@@ -758,7 +763,7 @@ const ListInvoiceDetails = () => {
                   name="totalRecievedAmount"
                   id="total_amount-field"
                   className="form-control"
-                  placeholder="Enter Received Amount"
+                  placeholder={props.t("Enter Received Amount")}
                   required
                 />
               </div>
@@ -766,12 +771,12 @@ const ListInvoiceDetails = () => {
 
             <ModalFooter>
               <Button color="primary" type="submit" disabled={isActiveTwo}>
-                {" "}
-                Save{" "}
+         
+                {props.t("Save")}
               </Button>
 
               <Button color="secondary" onClick={toggleModal}>
-                Cancel
+              {props.t("Cancel")}
               </Button>
             </ModalFooter>
           </form>
@@ -785,11 +790,11 @@ const ListInvoiceDetails = () => {
         centered
       >
         <ModalHeader
-          className="bg-light p-3"
+          className={`bg-light p-3 ${dir === 'rtl' ? 'exampleModalLabel-rtl' : ''}`}
           id="exampleModalLabel"
           toggle={handleCloseModal}
         >
-          Send Email
+          {props.t("Send Email")}
         </ModalHeader>
 
         <form className="tablelist-form" onSubmit={validation.handleSubmit}>
@@ -804,7 +809,7 @@ const ListInvoiceDetails = () => {
               <div className="tm_container">
                 <div className="mb-3">
                   <label htmlFor="recipient-email-field" className="form-label">
-                    To:
+                  {props.t("To")}:
                   </label>
 
                   <input
@@ -819,7 +824,7 @@ const ListInvoiceDetails = () => {
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="subject-field">Subject:</label>
+                  <label htmlFor="subject-field">{props.t("Subject")}:</label>
 
                   <input
                     type="text"
@@ -836,7 +841,7 @@ const ListInvoiceDetails = () => {
               <div className="tm_container">
                 <div className="mb-3">
                   <label htmlFor="recipient-email-field" className="form-label">
-                    To:
+                  {props.t("To")}:
                   </label>
 
                   <input
@@ -851,7 +856,7 @@ const ListInvoiceDetails = () => {
                 </div>
 
                 <div className="mb-3">
-                  <label htmlFor="subject-field">Subject:</label>
+                  <label htmlFor="subject-field">{props.t("Subject")}:</label>
 
                   <input
                     type="text"
@@ -869,11 +874,11 @@ const ListInvoiceDetails = () => {
 
           <ModalFooter>
             <Button color="secondary" onClick={handleCloseModal}>
-              Close
+            {props.t("Close")}
             </Button>
 
             <Button color="success" type="submit" disabled={isActive}>
-              Send
+            {props.t("Send")}
             </Button>
           </ModalFooter>
         </form>
@@ -882,4 +887,4 @@ const ListInvoiceDetails = () => {
   );
 };
 
-export default ListInvoiceDetails;
+export default (withTranslation()(ListInvoiceDetails));

@@ -8,13 +8,17 @@ import React, { useState, useEffect } from "react";
 import { Card, CardBody, CardHeader, Col, Container, Row } from "reactstrap";
 import { Link } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
+import { withTranslation } from "react-i18next";
 
 /**IMPORTED FILES */
 import Breadcrumbs from "../../components/Common/Breadcrumb";
 import { updateReviewStatus } from "../../helpers/ApiRoutes/editApiRoutes";
 import { getReviewsData } from "../../helpers/ApiRoutes/getApiRoutes";
+import withRouter from "../../components/Common/withRouter";
 import config from "../../config";
-const LanguageDeatails = () => {
+
+const LanguageDeatails = (props) => {
   const [reviews, setReviews] = useState([]);
   const [pageNumber, setPageNumber] = useState(1);
   const [numberOfData, setNumberOfData] = useState(0);
@@ -88,13 +92,16 @@ const LanguageDeatails = () => {
         .includes(searchInp.toLowerCase().trim()) ||
       value?.vehicle_no.toLowerCase().includes(searchInp.toLowerCase().trim())
   );
+  const { dir } = useSelector(state => ({
+    dir: state.Layout.dir,
+  }));
 
-  document.title = `Reviews | ${pageTitle} `;
+  document.title = `${props.t("Reviews")} | ${pageTitle} `;
   return (
     <React.Fragment>
-      <div className="page-content">
+       <div className={`page-content ${dir === 'rtl' ? 'page-content-rtl' : ''}`}>
         <Container fluid>
-          <Breadcrumbs title="Tables" breadcrumbItem="Reviews" />
+          <Breadcrumbs title={props.t("Tables")} breadcrumbItem={props.t("Reviews")} />
           <Row>
             <Col lg={12}>
               <Card>
@@ -103,7 +110,7 @@ const LanguageDeatails = () => {
                     <h4 className="card-title mb-0 col-md-8  p-3">
                       <br />{" "}
                       <span className="d-block mt-2 fs-16 text-success">
-                        Total {numberOfData}
+                      {props.t("Total")} {numberOfData}
                       </span>
                     </h4>
                     <form className="col-md-4">
@@ -112,7 +119,7 @@ const LanguageDeatails = () => {
                           <input
                             type="text"
                             className="form-control"
-                            placeholder="Search ..."
+                            placeholder={props.t("Search") + "..."}
                             onChange={(e) => setSearchInp(e.target.value)}
                             aria-label="Recipient's username"
                           />
@@ -144,22 +151,22 @@ const LanguageDeatails = () => {
                               #
                             </th>
                             <th className="sort" data-sort="name">
-                              Customer Name
+                            {props.t("Customer Name")}
                             </th>
                             <th className="sort" data-sort="abbreviation">
-                              Customer Email
+                            {props.t("Customer Email")}
                             </th>
                             <th className="sort" data-sort="created_at">
-                              Vehicle Number
+                            {props.t("Vehicle Number")}
                             </th>
                             <th className="sort" data-sort="created_at">
-                              Rating
+                            {props.t("Rating")}
                             </th>
                             <th className="sort" data-sort="created_at">
-                              Reviews
+                            {props.t("Reviews")}
                             </th>
                             <th className="sort" data-sort="status">
-                              status
+                            {props.t("Status")}
                             </th>
                           </tr>
                         </thead>
@@ -212,7 +219,7 @@ const LanguageDeatails = () => {
                             className="page-item pagination-prev disabled"
                             onClick={() => getAllData(pageNumber - 1)}
                           >
-                            Previous
+                            {props.t("Previous")}
                           </Link>
                         ) : null}
                         <ul className="pagination listjs-pagination mb-0">
@@ -223,7 +230,7 @@ const LanguageDeatails = () => {
                             className="page-item pagination-next"
                             onClick={() => getAllData(pageNumber + 1)}
                           >
-                            Next
+                            {props.t("Next")}
                           </Link>
                         ) : null}
                       </div>
@@ -239,4 +246,4 @@ const LanguageDeatails = () => {
   );
 };
 
-export default LanguageDeatails;
+export default withRouter(withTranslation()(LanguageDeatails));
